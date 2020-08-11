@@ -1,0 +1,1571 @@
+﻿:root{
+--Titulo-fondo-color: lightgray;
+--Cuadro-principal-color: lightgray;
+--Formulario-fondo-color: #d9d9d9;
+--CuadroPrincipal-borde-color:darkgray;
+--Ventana-fondo-color:#525252;
+--Grid-fondo-color: #b0b0b0;
+--VentanaPopUp-fondo-color: #165c1c;
+}
+
+#container {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    vertical-align: central;
+}
+
+body {
+    background-color: var(--Formulario-fondo-color);
+}
+
+table{
+    border-collapse: collapse;
+    border-width:0;
+    border-style:none;
+    border-spacing:0;
+    width:100%; 
+    padding:0;
+}
+
+td, th, tr {
+    border-collapse: collapse;
+    border-width:0;
+    border-spacing:0;
+    padding:0;
+}
+
+.TableFormatoTitulo {
+    color: white;
+    font-family: 'Microsoft Tai Le';
+    Font-Size: 12px;
+    font-weight: bold;
+    text-indent: 5px;
+}
+
+.TableFormatoTituloGrande {
+    color: white;
+    font-family: 'Microsoft Tai Le';
+    Font-Size: 14px;
+    font-weight: bold;
+    text-indent: 5px;
+}
+
+form {
+    background-color: var(--Formulario-fondo-color);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+/*---------------------------------------------*/
+/*             Formatos de cabecera            */
+/*---------------------------------------------*/
+.frmCabecera {
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-image: url(/Imagenes/TabMenuCabecera.png);
+    background-repeat: repeat-x;
+    background-color: var(--Formulario-fondo-color);
+    height: 45px;
+}
+
+.DivCabecera {
+    background-color: #f5f5f5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
+}
+
+.ibtnOpcionUnica {
+    width: 306px;
+    border: solid;
+    border-color: var(--Formulario-fondo-color);
+    border-width: 1px;
+    margin-top: 2px;
+    margin-left: 5px;
+    box-shadow: 0 4px 2px -2px rgba(0,0,0,0.3);
+    background-color: whitesmoke;
+    text-align: center;
+    padding-left: 26px;
+    padding-right: 26px;
+    height: 30px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 5px;
+    border-radius: 2px;
+}
+
+    .ibtnOpcionUnica:hover {
+        background-color: white;
+        color: black;
+    }
+
+/*---------------------------------------------*/
+/*             Formatos para DIV               */
+/*---------------------------------------------*/
+.DivTituloPanel {
+    height: 24px;
+    /*background-color: #4c4f53;*/
+    background-color: var(--Ventana-fondo-color);
+    color: white;
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+    font-weight: bold;
+}
+
+.DivTituloPanelPopUp {
+    height: 24px;
+    /*background-color: #4c4f53;*/
+    background-color: var(--VentanaPopUp-fondo-color);
+    color: white;
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+    font-weight: bold;
+}
+
+
+.DivTituloPanelGrande {
+    height: 30px;
+    /*background-color: #4c4f53;*/
+    background-color: var(--Ventana-fondo-color);
+    color: white;
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+    font-weight: bold;
+}
+
+.DivTituloGrid {
+    height: 24px;
+    /*background-color: #4c4f53;*/
+    background-color: var(--Grid-fondo-color);
+    color: white;
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+}
+
+.DivTituloGridSmall {
+    height: 20px;
+    /*background-color: #4c4f53;*/
+    background-color: var(--Grid-fondo-color);
+    color: white;
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+}
+
+.DivPanelMenu {
+    top: 5px;
+    background-color: white;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    /*box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.2);*/
+    width: 216px;
+}
+
+.DivPanelSubMarco {
+    background-color: white;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+}
+
+.DivPanelWhiteSmoke {
+    background-color: whitesmoke;
+    top: 5px;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    /*box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.2);*/
+    width: 316px;
+}
+
+.DivPanelMenuEspaciadorTransparente {
+    background-color: transparent;
+    height: 5px;
+}
+
+.DivPanelMenuEspaciadorTop {
+    height: 5px;
+}
+
+.DivPanelMenuEspaciadorItems {
+    height: 1px;
+    background-color: white;
+}
+
+.DivPanelMenuEspaciadorPaneles{
+height: 5px;
+background-color:white;
+}
+
+.DivPanelScroll {
+    overflow-y: scroll;
+    height: 100%;
+}
+.DivPanelExploracion {
+    background-color: white;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    /*box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.2);*/
+    width: 98%;
+}
+
+.DivPanelListas {
+    background-color: white;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    /*box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.2);*/
+    width: 316px;
+}
+
+.DivPanelListasScroll {
+    width: 316px;
+    height: calc(100vh - 55px);
+    overflow-y: scroll;
+}
+
+.DivPanelGridScrollFull {
+    width: 900px;
+    height: calc(100vh - 55px);
+    overflow-y: scroll;
+}
+
+.DivPanelGridScroll {
+    width: 890px;
+    height: calc(100vh - 55px);
+    overflow-y: scroll;
+}
+
+.DivPanelGridScrollAuto {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.DivPanelGridScrollAutoSub {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    height: calc(100vh - 211px);
+    overflow-y: scroll;
+}
+
+.DivPanelGridScrollMax {
+    width: 900px;
+    background-color: white;
+    /*border-color: darkgray;*/
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    height: calc(100vh - 211px);
+    overflow-y: scroll;
+}
+/**********************************************/
+/*         Formatos para tablas HTML          */
+/**********************************************/
+
+.TableFormatoTituloGrid {
+    border-collapse: collapse;
+    border-width: 0;
+    border-style: none;
+    border-spacing: 10px;
+    width: 100%;
+    height:100%;
+    text-align:center;
+}
+
+.TableFormatoTituloGridSmall {
+    border-collapse: collapse;
+    border-width: 0;
+    border-style: none;
+    border-spacing: 10px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size:10px;
+}
+
+.TableFormatoPrecalificado {
+    font-family: 'Microsoft Tai Le';
+    Font-Size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+/*---------------------------------------------*/
+/*           Formatos para Panel               */
+/*---------------------------------------------*/
+.FormatoPanelLogin {
+    position: relative;
+    background-color: white;
+}
+
+
+.FormatoPanelTodoBlanco {
+    position: relative;
+    border-style: none;
+    background-color: white;
+}
+
+.FormatoPanelTodoBlancoHumo {
+    position: relative;
+    border-style: none;
+    background-color: whitesmoke;
+}
+
+.FormatoPanelNOAB {
+    position: relative;
+    left: 0;
+    /*border-color: darkgray;*/
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: whitesmoke;
+    /*box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.2);*/
+}
+
+.FormatoPanelNOABWhiteSmoke{
+    position: relative;
+    left: 0;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: whitesmoke;
+    /*box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.2);*/
+}
+
+.FormatoPanelPerfilUsuario {
+    position: relative;
+    left:0;
+    top:0;
+    height: 100%;
+    width: 100%;
+    /*border-color: darkgray;*/
+    /*border-color: darkgray;*/
+    border-width:0;
+    border-style: solid;
+    background-color: transparent;
+}
+
+.FormatoPanel {
+    position: absolute;
+    left: 0;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: whitesmoke;
+    /*box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.2);*/
+}
+
+
+.FormatoPanelPrincipal {
+    position: absolute;
+    /*margin-left: 2px;*/
+    left: 0;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: whitesmoke;
+    /*box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.2);*/
+}
+
+.FormatoPanelPrincipalBlanco {
+    position: absolute;
+    /*margin-left: 2px;*/
+    left: 0;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: white;
+    /*box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.2);*/
+}
+
+.FormatoPanelSub {
+    position: absolute;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: white;
+    border-radius: 2px;
+}
+
+.FormatoPanelSubNoBlanco {
+    position: absolute;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: whitesmoke;
+    border-radius: 2px;
+}
+
+.FormatoPanelSubNOAB {
+    position: relative;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: white;
+    border-radius: 2px;
+}
+
+.FormatoPanelSubNOABWhiteSmoke {
+    position: relative;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: whitesmoke;
+    border-radius: 2px;
+}
+
+.FormatoPanelView {
+    position: absolute;
+    border-width: 0;
+    border-style: solid;
+    background-color: white;
+    border-radius: 2px;
+}
+
+.FormatoPanelViewNOAB {
+    position: relative;
+    border-width: 0;
+    border-style: solid;
+    background-color: white;
+    border-radius: 2px;
+}
+
+.FormatoPanelViewNoBlanco {
+    position: absolute;
+    border-width: 0;
+    border-style: solid;
+    background-color: whitesmoke;
+    border-radius: 2px;
+}
+
+.FormatoPanelSubView {
+    position: absolute;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: white;
+    top: 23px;
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+}
+
+.FormatoPanelSubViewNoBlanco {
+    position: absolute;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: whitesmoke;
+    top: 23px;
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+}
+
+.FormatoPanelFlotante {
+    position: absolute;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 2px;
+    border-style: solid;
+    background-color: white;
+    border-radius: 2px;
+}
+
+.FormatoPanelElevado {
+    position: absolute;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.FormatoPanelSobraCompleta {
+    position: absolute;
+    border-width: 0;
+    background-repeat:repeat;
+    background-image: url('/Imagenes/fondoTransparencia.png');
+}
+
+.FormatoPanelContenedor {
+    position: absolute;
+    border-width: 0;
+    border-style: none;
+    background-color: transparent;
+}
+
+.FormatoPanelContenedorNOAB {
+    position: relative;
+    border-width: 0;
+    border-style: none;
+    background-color: transparent;
+}
+
+
+.FormatoPanelContenedorNOABWhiteSmoke {
+    position: relative;
+    border-width: 0;
+    border-style: none;
+    background-color: whitesmoke
+}
+
+.FormatoPanelContenedorBordes {
+    position: absolute;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    background-color: white;
+    border-radius: 2px;
+}
+
+.FormatoPanelAlertaRojo {
+    position: absolute;
+    left: calc(100vw - 400px);
+    top: 10px;
+    background-color: darkred;
+    border-color: red;
+    border-width: 1px;
+    border-style: solid;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /*box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.2);*/
+    background-image:url('/Imagenes/iconoError50.png');
+    background-repeat:no-repeat;
+    border-radius: 2px;
+}
+/*---------------------------------------------*/
+/*            Formato para botones             */
+/*---------------------------------------------*/
+.FormatoButtonNOAB {
+    top: 0;
+    height: 28px;
+    width: 200px;
+    border-style:solid;
+    border-width: 1px;
+    border-color: darkgray;
+    font-family: 'Microsoft Tai Le';
+    font-size: medium;
+    box-shadow: none !important;
+    outline: none !important;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+
+.FormatoButton_Azul {
+    position: absolute;
+    top: 0;
+    height: 28px;
+    width: 200px;
+    border: solid;
+    border-style:solid;
+    border-width: 1px;
+    border-color: #003366;
+    background-color: darkgray;
+    font-family: 'Microsoft Tai Le';
+    font-size: medium;
+    color: white;
+    box-shadow: none !important;
+    outline: none !important;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+    .FormatoButton_Azul:hover {
+        background-color: cornflowerblue;
+    }
+
+.FormatoBotones {
+    position: absolute;
+    /*background-color: whitesmoke;*/
+    background-color: whitesmoke;
+    border-style:solid;
+    border-color: lightgray;
+    border-width: 1px;
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    text-align: center;
+    padding-left: 30px;
+    padding-right: 30px;
+    height: 30px;
+    width: 160px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 3px;
+    box-shadow: none !important;
+    outline: none !important;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+    .FormatoBotones:hover {
+        background-color: white;
+    }
+
+.FormatoBotonesSmall {
+    position: absolute;
+    /*background-color: whitesmoke;*/
+    background-color: whitesmoke;
+    border-style:solid;
+    border-color: lightgray;
+    border-width: 1px;    
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 24px;
+    width: 130px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 2px;
+    box-shadow: none !important;
+    outline: none !important;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+
+    .FormatoBotonesSmall:hover {
+        background-color: white;
+    }
+
+.FormatoBotonesAzulSmall {
+    position: absolute;
+    /*background-color: whitesmoke;*/
+    background-color: #e6e6e6
+    /*background-color: cornflowerblue;
+    border-color: #9bc2e5;
+    color: white;
+    padding: 5px 5px;*/
+    border-style:solid;
+    border-color: lightgray;
+    border-width: 1px;
+    color: black;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 24px;
+    width: 130px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 2px;
+    box-shadow: none !important;
+    outline: none !important;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+
+    .FormatoBotonesAzulSmall:hover {
+        background-color: #00a9fe;
+        color: white;
+    }
+
+.FormatoBotonesAzul {
+    position: absolute;
+    /*background-color: whitesmoke;*/
+    background-color: #e6e6e6
+    /*background-color: cornflowerblue;
+    border-color: #9bc2e5;*/
+    border-style:solid;
+    /*border-color: lightgray;*/
+    border-color: Silver;
+    border-width: 1px;
+    color: black;
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    text-align: center;
+    padding-left: 30px;
+    padding-right: 30px;
+    height: 30px;
+    width: 160px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 3px;
+    box-shadow: none !important;
+    outline: none !important;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+    .FormatoBotonesAzul:hover {
+        background-color: #00a9fe;
+        color: white;
+    }
+
+.FormatoBotonesAzulBuscador {
+    position: absolute;
+    background-color: whitesmoke;
+    border-style:solid;
+    border-color: lightgray;
+    border-width: 1px;
+    font-weight:bold;
+    color: black;
+    text-align: center;
+    padding-left: 30px;
+    padding-right: 30px;
+    height: 30px;
+    width: 160px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 3px;
+    box-shadow: none !important;
+    outline: none !important;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    background-image:url('/Imagenes/iconoBuscar24.png');
+}
+    .FormatoBotonesAzulBuscador:hover {
+        background-color: #cce8ff;
+        font-weight:bold;
+	color: steelblue;
+	border-width: 1px;
+        border-color: steelblue !important;
+        box-shadow: none !important;
+    }
+
+.FormatoBotonesAzul45 {
+    position: absolute;
+    background-color: whitesmoke;
+    border: solid;
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    border-style:solid;
+    border-color: lightgray;
+    border-width: 1px;
+    margin: 0;
+    white-space: normal !important;
+    vertical-align: text-top;
+    text-align: center;
+    padding-left: 45px;
+    padding-right: 45px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    height: 45px;
+    width: 150px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 10px;
+}
+
+    .FormatoBotonesAzul45:hover {
+        background-color: #00a9fe;
+        color: white;
+    }
+
+.FormatoBotonesIconoArriba {
+    position: absolute;
+    background-color: whitesmoke;
+    border-style:solid;
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    border-color: lightgray;
+    border-width: 1px;
+    margin: 0;
+    white-space: normal !important;
+    vertical-align: text-top;
+    text-align: center;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 30px;
+    padding-bottom: 5px;
+    height: 50px;
+    width: 100px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: 5px;
+    background-position-x: center;
+}
+
+    .FormatoBotonesIconoArriba:hover {
+        background-color: #00a9fe;
+        color: white;
+    }
+
+.FormatoBotonesIconoArribaCuadrado {
+    position: absolute;
+    background-color: white
+    border-style:solid;
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    border-color: lightgray;
+    border-width: 1px;
+    margin: 0;
+    white-space: normal !important;
+    vertical-align: text-top;
+    text-align: center;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 45px;
+    padding-bottom: 5px;
+    height: 80px;
+    width: 80px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: 20px;
+    background-position-x: center;
+}
+
+    .FormatoBotonesIconoArribaCuadrado:hover {
+        background-color: #00a9fe;
+        color: white;
+    }
+
+
+.FormatoBotonesIconoArribaCuadrado60 {
+    position: absolute;
+    background-color: white;
+    border-style:solid;
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    border-color: lightgray;
+    border-width: 1px;
+    margin: 0;
+    white-space: normal !important;
+    vertical-align: text-top;
+    text-align: center;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 42px;
+    padding-bottom: 5px;
+    height: 60px;
+    width: 60px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: 12px;
+    background-position-x: center;
+}
+
+    .FormatoBotonesIconoArribaCuadrado60:hover {
+        background-color: cornflowerblue;
+        color: white;
+    }
+
+
+.FormatoBotonesAzulIcono {
+    position: absolute;
+    background-color: whitesmoke;
+    /*background-color: cornflowerblue;
+    border-color: #9bc2e5;
+    color: white;
+    padding: 5px 5px;*/
+    border-style:solid;
+    border-color: lightgray;
+    border-width: 1px;
+    color: black;
+    text-align: center;
+    padding-left: 4px;
+    padding-right: 4px;
+    height: 24px;
+    width: 24px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 2px;
+    box-shadow: none !important;
+    outline: none !important;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+
+    .FormatoBotonesAzulIcono:hover {
+        background-color: #00a9fe;
+        color: white;
+    }
+
+/*---------------------------------------------*/
+/*           Formato para GridViews            */
+/*---------------------------------------------*/
+.FormatoEtiquetasGrid {
+    height: 24px;
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    font-size: small;
+    background-color: dodgerblue;
+    color: white;
+    text-align: center;
+}
+.GridViewFormatoGeneral {
+    font-family: 'Microsoft Tai Le';
+    font-size: 12px;
+	cursor: default;
+}
+    .GridViewFormatoGeneral tr td:first-child {
+        padding-left: 5px;
+    }
+    .GridViewFormatoGeneral tr td:last-child {
+        padding-right: 5px;
+    }
+
+
+.GridViewFormatoSIE {
+    font-family: 'Microsoft Tai Le';
+    font-size: 12px;
+    border-collapse: collapse;
+    border-spacing: 0px;
+	cursor: default;
+}
+
+.GridViewFormatoEstadodeCuenta {
+    font-family: 'Microsoft Tai Le';
+    font-size: 12px;
+	cursor: default;
+}
+    .GridViewFormatoEstadodeCuenta tr td:last-child {
+        padding-right: 5px;
+    }
+
+.GridViewCabecera {
+    background-color: #646464;
+    color: White;
+    border: none 0 transparent;
+    height: 24px;
+    text-align: center;
+	cursor: default;
+}
+
+.GridViewFilasNeutral {
+    background-color: #fff;
+    color: #000;
+    min-height: 24px;
+    height: 24px;
+    border: none 0 transparent;
+	cursor: default;
+}
+
+.GridViewFilas {
+    background-color: #fff;
+    color: #000;
+    height: 20px;
+    text-align: left;
+    border: none 0 transparent;
+	cursor: default;
+}
+
+    .GridViewFilas:hover {
+        background-color: #cce8ff;
+        color: black;
+        text-align: left;
+	cursor: default;
+    }
+
+.GridViewFilasBitacoras{
+    background-color: #fff;
+    color: #000;
+    height: 20px;
+    text-align: left;
+    cursor: default;
+    border-bottom: solid 1px lightgray;
+}
+
+    .GridViewFilasBitacoras:hover {
+        background-color: #cce8ff;
+        color: black;
+        text-align: left;
+	cursor: default;
+	border-bottom: solid 1px lightgray;
+	/*box-shadow: 2px 2px 2px 2px lightgray;*/
+    }
+
+.GridViewFilasCuadro {
+    max-height: 26px;
+    height: 24px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-collapse: separate;
+    border: solid;
+    border-color: transparent;
+	cursor: default;
+}
+
+    .GridViewFilasCuadro:hover {
+        border-left-width: 0px;
+        border-right-width: 0px;
+        background-color: #cce8ff;
+        border-bottom: solid;
+        border-bottom-color: #9cd2ff;
+        border-bottom-width: 1px;
+        border-top: solid;
+        border-top-color: #9cd2ff;
+        border-top-width: 1px;
+		cursor: default;
+    }
+.GridViewItemWhiteSmokeRight {
+    background-color:whitesmoke;
+    text-align: right;
+	cursor: default;
+}
+
+.GridViewItemWhiteSmokeCenter {
+    background-color: whitesmoke;
+    text-align: center;
+	cursor: default;
+}
+
+.GridViewItemWhiteRight {
+    text-align: right;
+	cursor: default;
+}
+
+.GridViewItemWhiteCenter {
+    text-align: center;
+	cursor: default;
+}
+
+
+
+.GridViewFormatoGeneralSmall {
+    font-family: 'Microsoft Tai Le';
+    font-size: 10px;
+	cursor: default;
+}
+
+.GridViewCabeceraSmall {
+    background-color: #646464;
+    color: White;
+    border: none 0 transparent;
+    font-size: 10px;
+    height: 16px;
+    text-align: center;
+	cursor: default;
+}
+
+.GridViewFilasSmall {
+    background-color: #fff;
+    color: #000;
+    min-height: 25px;
+    font-size: 10px;
+    text-align: left;
+    border: none 0 transparent;
+	cursor: default;
+}
+    .GridViewFilasSmall:hover {
+        background-color: lightskyblue;
+        color: black;
+        text-align: left;
+		cursor: default;
+    }
+
+.selectedrow {
+    background-color: #ff8000;
+    color: #fff;
+    font-weight: bold;
+    text-align: left;
+	cursor: default;
+}
+
+.GridViewItemDesbordamiento {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
+    vertical-align: central;
+    padding-top:4px;
+}
+
+
+.GridViewSpanNegro{
+    font-weight: bold;
+}
+/*---------------------------------------------*/
+/*      Formatos para Etiquetas y TextBox      */
+/*---------------------------------------------*/
+.FormatolblNOAB {
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    Font-Size: small;
+}
+
+.Formatolbl {
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+    position: absolute;
+}
+
+.FormatoRadioBoton {
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+    position: absolute;
+}    
+    .FormatoRadioBoton:hover {
+        background-color: white;
+        color: black;
+        font-weight:bold;
+    }
+
+.FormatoRadioBotonSelected {
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+    background-color: white;
+    color: black;
+    font-weight:bold;
+}  
+
+.FormatolblBold {
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+    position: absolute;
+    font-weight:bold;
+}
+
+.FormatolblBoldNOAB {
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+    font-weight:bold;
+}
+
+.FormatolblScore {
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    Font-Size: 36px;
+    width: 100%;
+    height: 100%;
+}
+
+.FormatolblMediano {
+    font-family: 'Microsoft Tai Le';
+    Font-Size: medium;
+    position: absolute;
+    font-weight: bold;
+}
+
+.FormatolblGrande {
+    font-family: 'Microsoft Tai Le';
+    Font-Size: large;
+    position: absolute;
+    font-weight: bold;
+}
+
+.Formatotxt {
+    position: absolute;
+    border: solid;
+    border-color: silver;
+    border-width: 1px;
+    font-family: 'Microsoft Tai Le';
+    height: 20px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+    .Formatotxt:hover {
+        border-color:royalblue;
+    }
+
+.FormatotxtMoneda {
+    position: absolute;
+    border: solid;
+    border-color: silver;
+    border-width: 1px;
+    font-family: 'Microsoft Tai Le';
+    height: 20px;
+    text-align: right;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+    .FormatotxtMoneda:hover {
+        border-color: royalblue;
+    }
+
+.FormatotxtMonedaROBold {
+    position: absolute;
+    background-color: lightpink;
+    border: solid;
+    border-color: indianred;
+    border-width: 1px;
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    height: 20px;
+    text-align: right;
+    padding-right: 5px;
+    padding-left: 5px;
+    outline: none;
+}
+
+.FormatotxtCentradoRO {
+    position: absolute;
+    border: solid;
+    border-color: silver;
+    border-width: 1px;
+    font-family: 'Microsoft Tai Le';
+    height: 20px;
+    text-align: center;
+    padding-right: 5px;
+    padding-left: 5px;
+    outline: none;
+}
+
+.FormatotxtMonedaRO {
+    position: absolute;
+    border: solid;
+    border-color: silver;
+    border-width: 1px;
+    font-family: 'Microsoft Tai Le';
+    height: 20px;
+    text-align: right;
+    padding-right: 5px;
+    padding-left: 5px;
+    outline: none;
+}
+
+.FormatotxtMonedaROBlanco {
+    position: absolute;
+    border: solid;
+    border-color: silver;
+    border-width: 1px;
+    font-family: 'Microsoft Tai Le';
+    height: 20px;
+    text-align: right;
+    padding-right: 5px;
+    padding-left: 5px;
+    outline: none;
+    background-color:white;
+}
+.FormatotxtRO {
+    position: absolute;
+    border: solid;
+    border-color: silver;
+    border-width: 1px;
+    font-family: 'Microsoft Tai Le';
+    height: 20px;
+    padding-right: 5px;
+    padding-left: 5px;
+    outline:none;
+}
+
+.FormatotxtROBlanco {
+    position: absolute;
+    border: solid;
+    border-color: silver;
+    border-width: 1px;
+    font-family: 'Microsoft Tai Le';
+    height: 20px;
+    padding-right: 5px;
+    padding-left: 5px;
+    outline: none;
+    background-color:white;
+}
+
+.FormatotxtRW {
+    position: absolute;
+    border: solid;
+    border-color: red;
+    border-width: 1px;
+    font-family: 'Microsoft Tai Le';
+    height: 20px;
+}
+
+.FormatoDDL {
+    position: absolute;
+    border: solid;
+    border-color: silver;
+    border-width: 1px;
+    font-family: 'Microsoft Tai Le';
+    height: 24px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+    .FormatoDDL:hover {
+        border-color: royalblue;
+    }
+
+.FormatotxtGrande {
+    font-family: 'Microsoft Tai Le';
+    position: absolute;
+    Font-Size: large;
+    font-weight: bold;
+    border: solid;
+    border-color: silver;
+    border-width: 1px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.FormatotxtMonedaGrande {
+    font-family: 'Microsoft Tai Le';
+    position: absolute;
+    Font-Size: large;
+    font-weight: bold;
+    text-align: right;
+    border: solid;
+    border-color: silver;
+    border-width: 1px;
+    padding-right: 5px;
+    padding-left: 5px;
+    background-color: white;
+}
+
+.FormatotxtMonedaCuadroGrande {
+    font-family: 'Microsoft Tai Le';
+    position: inherit;
+    Font-Size: large;
+    font-weight: bold;
+    text-align: right;
+    border: none;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/**************************************/
+/*     Botones de menus cabecera      */
+/**************************************/
+.btnMenuCabecera {
+    background-color: whitesmoke;
+    border: none;
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    text-align: center;
+    padding-left: 30px;
+    padding-right: 30px;
+    height: 30px;
+    width: 160px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 3px;
+}
+
+    .btnMenuCabecera:hover {
+        background-color: white;
+        color: black;
+    }
+
+.btnMenuCabecera45 {
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    white-space: normal !important;
+    vertical-align:text-top;
+    text-align: center;
+    padding-left: 45px;
+    padding-right: 45px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    height: 45px;
+    width: 150px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 10px;
+}
+
+    .btnMenuCabecera45:hover {
+        background-color: white;
+        color: black;
+    }
+
+.btnMenuCabecera40 {
+    background-color: transparent;
+    border: none;
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    margin: 0;
+    white-space: normal !important;
+    vertical-align: text-top;
+    text-align: center;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    height: 40px;
+    width: 140px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 8px;
+}
+
+    .btnMenuCabecera40:hover {
+        background-color: white;
+        color: black;
+    }
+/*---------------------------------------------*/
+/*        Formato para Menus laterales         */
+/*---------------------------------------------*/
+
+.btnMenuLateral {
+    background-color: white;
+    border: none;
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    text-align: left;
+    padding-left: 26px;
+    height: 30px;
+    width: 216px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 5px;
+}
+
+    .btnMenuLateral:hover {
+        background-color: whitesmoke;
+        color: black;
+    }
+
+/*---------------------------------------------*/
+/*        Formato para TabViews                */
+/*---------------------------------------------*/
+.btnTabButton {
+    position: absolute;
+    color: gray;
+    background-color: transparent;
+    border-style:solid;
+    border-width: 1px;
+    /*border-color: darkgray;*/
+    border-color: lightgray;
+    border-bottom-width: 0;
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    top: 0;
+    height: 24px;
+    width: 125px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 2px;
+}
+
+    .btnTabButton:hover {
+        /*background-color: whitesmoke;*/
+        color: black;
+	font-weight: bold;
+    }
+
+    .btnTabButton:focus {
+        outline: none;
+    }
+
+/*---------------------------------------------*/
+/*           Formato para Imagenes             */
+/*---------------------------------------------*/
+.ImgIcono24 {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+}
+.ImgIcono24NOAB {
+    width: 24px;
+    height: 24px;
+}
+.ImgIcono30 {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-width: 2px;
+    border: solid;
+    border-color: darkgrey;
+    background-color: whitesmoke;
+}
+.ImgIcono32 {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-width: 2px;
+    border: solid;
+    border-color: darkgrey;
+    background-color: whitesmoke;
+}
+
+.ImgIcono48 {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border-width: 2px;
+    border: solid;
+    border-color: darkgrey;
+    background-color: whitesmoke;
+}
+
+/*---------------------------------------------*/
+/*           Formato para Graficas             */
+/*---------------------------------------------*/
+.GraficoBarras100 {
+    position: relative;
+    height: 100px;
+    width: 350px;
+    border-color: Gainsboro;
+    border: solid;
+}
+
+
+/*---------------------------------------------*/
+/*     Formato para Etiqueta de solicitudes    */
+/*---------------------------------------------*/
+.TablaEtiquetaProceso {
+    text-align:left;
+    vertical-align:central; 
+    padding-left:36px; 
+    padding-top:2px; 
+    padding-bottom:2px; 
+    background-color: AntiqueWhite;
+    background-image:url('/Imagenes/iconoChevroDerecha24.png'); 
+    background-position-x:left; 
+    background-position-y:center; 
+    background-repeat:no-repeat;
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    width:20%;
+}
+
+.TablaEtiquetaOK {
+    text-align:left;
+    vertical-align:central; 
+    padding-left:36px; 
+    padding-top:2px; 
+    padding-bottom:2px; 
+    background-image:url('/Imagenes/iconoChevroOK24.png'); 
+    background-position-x:left; 
+    background-position-y:center; 
+    background-repeat:no-repeat;
+    font-family: 'Microsoft Tai Le';
+    width:20%;
+}
+
+.TablaEtiquetaLimpio {
+    text-align:left;
+    vertical-align:central; 
+    padding-left:36px; 
+    padding-top:2px; 
+    padding-bottom:2px; 
+    background-position-x:left; 
+    background-position-y:center; 
+    background-repeat:no-repeat;
+    font-family: 'Microsoft Tai Le';
+    width:20%;
+}

@@ -1,0 +1,112 @@
+﻿/* color de la pantalla */
+html {
+    background-color: #d9d9d9;
+}
+
+/* eliminar el padding derecho */
+body {
+    padding-right: 0 !important
+}
+
+/* eliminar espacios en blanco arriba y abajo */
+.EliminarEspacios {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+/* eliminar espacios en blanco arriba y abajo */
+.FilaCondensada {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+/* tamano responsivo del texto de los titulos */
+.titulo-10vw {
+    font-size: 1.5vw;
+}
+
+/* eliminar oscurecimiento al abrirse un modal */
+.modal-backdrop {
+    background-color: transparent !important;
+}
+
+/* borde de los modales */
+.modal-dialog {
+    -webkit-box-shadow: 0 0 15px rgba(133,133,133,1);
+    box-shadow: 0 0 15px rgba(133,133,133,1);
+}
+
+/* eliminar sombra del card */
+.card {
+    box-shadow: none !important;
+    margin-bottom: 0;
+}
+
+.card-header {
+    background-color: #fff;
+    padding-bottom: 0px;
+}
+
+.card-body {
+    background-color: #fff;
+}
+
+.EstiloBody {
+    max-width: 1100px;
+    border-style: solid;
+    border-color: darkgray;
+    border-width: 1px;
+    /*height: 100vh;*/
+    background-color: white;
+}
+
+.EstiloBody-Listado {
+    max-width: 1500px;
+    border-style: solid;
+    border-color: darkgray;
+    border-width: 1px;
+    min-height: calc(100vh - 5px);
+    background-color: white;
+}
+
+.EstiloBody-Listado-W1100px {
+    max-width: 1100px;
+    border-style: solid;
+    border-color: darkgray;
+    border-width: 1px;
+    min-height: calc(100vh - 5px);
+    background-color: white;
+}
+
+.LogoPrestamo {
+    position: relative;
+    top: -8px;
+    padding-right: 5px;
+}
+
+.panel-heading {
+    background-color: #e9ecef;
+}
+
+.TituloDivDocumentacion {
+    text-align: center;
+    display: block;
+}
+
+.BotonSubirArchivo {
+    background:none !important;
+    background-color:#6c757d !important;
+}
+
+.fileuploader-input-button {
+    background: none !important;
+    background-color: #6c757d !important;
+}
+
+.ListadoSolicitudes{
+
+}

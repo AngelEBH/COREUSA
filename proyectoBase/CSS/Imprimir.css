@@ -1,0 +1,133 @@
+﻿p {
+    font-family: 'Microsoft Tai Le';
+    font-size: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+.ParBold {
+    font-family: 'Microsoft Tai Le';
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.ClaseTDJ {
+    font-family: 'Microsoft Tai Le';
+    font-size: 15px;
+    text-align: justify;
+}
+
+.ClaseTDDerecha {
+    font-family: 'Microsoft Tai Le';
+    font-size: 15px;
+    text-align: right;
+}
+
+.ClaseTDDerechaBold {
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    font-size: 15px;
+    text-align: right;
+}
+
+.ClaseTDDerechaGrande {
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    font-size: 18px;
+    text-align: right;
+}
+
+.ClaseTDC {
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+}
+
+.ClaseTDB {
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+    border-left: solid;
+    border-right: solid;
+    border-width: 1px;
+}
+
+.ClaseTDBU {
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+    border-bottom: solid;
+    border-width: 1px;
+    border-bottom-color:black;
+}
+
+.ClaseTDBUR {
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+    border-bottom: solid;
+    border-width: 1px;
+    border-bottom-color:black;
+    text-align:right;
+}
+
+.ClaseTDBD {
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+    border-top: solid;
+    border-width: 1px;
+}
+
+.ClaseTDBUD {
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+    border-left: solid;
+    border-right: solid;
+    border-bottom: solid;
+    border-width: 1px;
+}
+
+.ClaseTDL {
+    font-family: 'Microsoft Tai Le';
+    font-weight: bold;
+    font-size: 15px;
+    text-align: justify;
+}
+
+.DivImpresion {
+    border-color: lightgray;
+    background-color: white;
+}
+
+/* Titulos */
+.TableFormatoTituloImpresion {
+    color: white;
+    font-family: 'Microsoft Tai Le';
+    Font-Size: 12px;
+    font-weight: bold;
+    text-indent: 5px;
+}
+
+.DivTituloPanelImpresion {
+    height: 24px;
+    background-color: black;
+    color: white;
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+    font-weight: bold;
+}
+
+.EquitetaBold
+{
+    font-family: 'Microsoft Tai Le';
+    font-size: 15px;
+    font-weight:bold;
+}
