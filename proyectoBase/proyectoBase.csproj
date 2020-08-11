@@ -764,10 +764,10 @@
     <Content Include="Forms\Aval\Aval_Detalles.aspx" />
     <Content Include="Forms\Aval\Aval_Precalificar.aspx" />
     <Content Include="Forms\Aval\Aval_Registrar.aspx" />
+    <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
     <Content Include="Forms\Precalificado\precalificado_buscador.aspx" />
     <Content Include="Forms\Precalificado\Precalificado_Puesto110.aspx" />
     <Content Include="Forms\Precalificado\ProcesarPrecalificado.aspx" />
-    <Content Include="Forms\Readecuacion\ConvenioReadecuacion.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Analisis.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Bandeja.aspx" />
@@ -781,6 +781,7 @@
     <Content Include="Forms\Solicitudes_CANEX\SolicitudesCANEX_SeguimientoDetalles.aspx" />
     <Content Include="Forms\Solicitudes_CANEX\Solicitudes_CANEX.aspx" />
     <Content Include="Forms\Solicitudes_CANEX\Solicitudes_CANEX_Detalles.aspx" />
+    <Content Include="Forms\SRC\ConvenioReadecuacion.aspx" />
     <Content Include="Forms\SRC\ImprimirAdendum31a120.aspx" />
     <Content Include="Forms\SRC\ImprimirConvenio.aspx" />
     <Content Include="Global.asax" />
@@ -1281,6 +1282,12 @@
     <Content Include="Scripts\plugins\summernote\lang\summernote-zh-TW.min.js" />
     <Content Include="Scripts\plugins\summernote\summernote-bs4.css" />
     <Content Include="Scripts\plugins\summernote\summernote-bs4.min.js" />
+    <Content Include="Scripts\plugins\sweet-alert2\sweetalert2.all.min.js" />
+    <Content Include="Scripts\plugins\sweet-alert2\sweetalert2.common.js" />
+    <Content Include="Scripts\plugins\sweet-alert2\sweetalert2.css" />
+    <Content Include="Scripts\plugins\sweet-alert2\sweetalert2.js" />
+    <Content Include="Scripts\plugins\sweet-alert2\sweetalert2.min.css" />
+    <Content Include="Scripts\plugins\sweet-alert2\sweetalert2.min.js" />
     <Content Include="Scripts\plugins\validate\jquery.validate.min.js" />
     <Content Include="Scripts\WebForms\DetailsView.js" />
     <Content Include="Scripts\WebForms\Focus.js" />
@@ -1310,6 +1317,7 @@
     <Content Include="Site.Mobile.Master" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Data\Correos.cs" />
     <Compile Include="App_Data\DSCore.cs" />
     <Compile Include="App_Data\ExceptionLogging.cs" />
     <Compile Include="App_Data\Funciones.cs" />
@@ -1350,6 +1358,13 @@
     <Compile Include="Forms\Aval\Aval_Registrar.aspx.designer.cs">
       <DependentUpon>Aval_Registrar.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Clientes\Precalificado_Resolucion.aspx.cs">
+      <DependentUpon>Precalificado_Resolucion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Clientes\Precalificado_Resolucion.aspx.designer.cs">
+      <DependentUpon>Precalificado_Resolucion.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Precalificado\precalificado_buscador.aspx.cs">
       <DependentUpon>precalificado_buscador.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1370,13 +1385,6 @@
     </Compile>
     <Compile Include="Forms\Precalificado\ProcesarPrecalificado.aspx.designer.cs">
       <DependentUpon>ProcesarPrecalificado.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Readecuacion\ConvenioReadecuacion.aspx.cs">
-      <DependentUpon>ConvenioReadecuacion.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Readecuacion\ConvenioReadecuacion.aspx.designer.cs">
-      <DependentUpon>ConvenioReadecuacion.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx.cs">
       <DependentUpon>SolicitudesCredito_ActualizarSolicitud.aspx</DependentUpon>
@@ -1468,6 +1476,13 @@
     </Compile>
     <Compile Include="Forms\Solicitudes_CANEX\Solicitudes_CANEX_Detalles.aspx.designer.cs">
       <DependentUpon>Solicitudes_CANEX_Detalles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SRC\ConvenioReadecuacion.aspx.cs">
+      <DependentUpon>ConvenioReadecuacion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SRC\ConvenioReadecuacion.aspx.designer.cs">
+      <DependentUpon>ConvenioReadecuacion.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\SRC\ImprimirAdendum31a120.aspx.cs">
       <DependentUpon>ImprimirAdendum31a120.aspx</DependentUpon>

@@ -9,9 +9,8 @@
 
 
 
-public partial class ConvenioReadecuacion
-{
-
+public partial class ConvenioReadecuacion {
+    
     /// <summary>
     /// Control lblNoAdendum.
     /// </summary>
@@ -20,7 +19,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblNoAdendum;
-
+    
     /// <summary>
     /// Control lblNombreCliente.
     /// </summary>
@@ -29,7 +28,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblNombreCliente;
-
+    
     /// <summary>
     /// Control lblIdentidadCliente.
     /// </summary>
@@ -38,7 +37,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblIdentidadCliente;
-
+    
     /// <summary>
     /// Control lblNoPrestamo.
     /// </summary>
@@ -47,7 +46,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblNoPrestamo;
-
+    
     /// <summary>
     /// Control lblAbonoInicial.
     /// </summary>
@@ -56,7 +55,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblAbonoInicial;
-
+    
     /// <summary>
     /// Control lblTipoCuotaTabla.
     /// </summary>
@@ -65,7 +64,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTipoCuotaTabla;
-
+    
     /// <summary>
     /// Control lblCantidadCuotas.
     /// </summary>
@@ -74,7 +73,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblCantidadCuotas;
-
+    
     /// <summary>
     /// Control lblPlazoReadecuacion.
     /// </summary>
@@ -83,7 +82,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblPlazoReadecuacion;
-
+    
     /// <summary>
     /// Control lblMontoReadecuar.
     /// </summary>
@@ -92,7 +91,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMontoReadecuar;
-
+    
     /// <summary>
     /// Control lblFechaInicialContrato.
     /// </summary>
@@ -101,7 +100,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblFechaInicialContrato;
-
+    
     /// <summary>
     /// Control lblFechaFinalContrato.
     /// </summary>
@@ -110,7 +109,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblFechaFinalContrato;
-
+    
     /// <summary>
     /// Control lblTipodeCuota.
     /// </summary>
@@ -119,7 +118,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblTipodeCuota;
-
+    
     /// <summary>
     /// Control lblFechaPrimeraCuota.
     /// </summary>
@@ -128,7 +127,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblFechaPrimeraCuota;
-
+    
     /// <summary>
     /// Control lblFechaUltimaCuota.
     /// </summary>
@@ -137,7 +136,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblFechaUltimaCuota;
-
+    
     /// <summary>
     /// Control lblCiudad.
     /// </summary>
@@ -146,7 +145,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblCiudad;
-
+    
     /// <summary>
     /// Control lblDepartamento.
     /// </summary>
@@ -155,7 +154,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblDepartamento;
-
+    
     /// <summary>
     /// Control lblDias.
     /// </summary>
@@ -164,7 +163,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblDias;
-
+    
     /// <summary>
     /// Control lblMes.
     /// </summary>
@@ -173,7 +172,7 @@ public partial class ConvenioReadecuacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMes;
-
+    
     /// <summary>
     /// Control lblAnio.
     /// </summary>

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ConvenioReadecuacion.aspx.cs" Inherits="ConvenioReadecuacion" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="ConvenioReadecuacion" Codebehind="ConvenioReadecuacion.aspx.cs" %>
 
 <!DOCTYPE html>
 <html lang="es" xmlns="http://www.w3.org/1999/xhtml">
@@ -6,17 +6,18 @@
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style type="text/css">
         html * {
-            font-family: "DejaVu Sans", "Arial", sans-serif !important;
+            font-family: "DejaVu Sans", "Arial", sans-serif !important; font-size: 14px !important;
         }
 
         p {
-            font-size: 12px !important;
+            font-size: 14px !important;
         }
 
         label {
-            font-size: 12px !important;
+            font-size: 14px !important;
         }
 
         .Negrita {
@@ -51,13 +52,13 @@
                 <div class="form-group row">
                     <div class="col-sm-12">
                         <p>
-                            El señor
-                            <asp:Label CssClass="Negrita" runat="server" ID="lblNombreCliente" Text="" />con
+                            El señor(a)
+                            <asp:Label CssClass="Negrita" runat="server" ID="lblNombreCliente" Text="" />&nbsp;con
                             número de identidad
-                            <asp:Label runat="server" CssClass="Negrita" ID="lblIdentidadCliente" Text="" />y
+                            <asp:Label runat="server" CssClass="Negrita" ID="lblIdentidadCliente" Text="" />&nbsp;y
                             el acreedor <span class="Negrita">PRESTADITO S.A. de C.V.</span>
                             acuerdan hacer la readecuación de su préstamo No.
-                            <asp:Label CssClass="Negrita" runat="server" ID="lblNoPrestamo" Text="" />a
+                            <asp:Label CssClass="Negrita" runat="server" ID="lblNoPrestamo" Text="" />&nbsp;a
                             un nuevo préstamo el cual tendrá las siguientes condiciones:
                         </p>
                     </div>
@@ -68,7 +69,7 @@
                     <label class="col-sm-5" runat="server" id="lblTipoCuotaTabla">Cuota quincenal</label>
                     <asp:Label CssClass="col-sm-5" runat="server" ID="lblCantidadCuotas" Style="font-weight: bold; font-size: 12px;" Text="" />
 
-                    <label class="col-sm-5">Plazo readecuacion</label>
+                    <label class="col-sm-5">Plazo readecuación</label>
                     <asp:Label class="col-sm-5" runat="server" ID="lblPlazoReadecuacion" Style="font-weight: bold; font-size: 12px;" Text="" />
 
                     <label class="col-sm-5">Monto a readecuar</label>
@@ -85,7 +86,7 @@
                 <div class="form-group row">
                     <div class="col-sm-12">
                         <p>
-                            El presente adendums pasa a formar parte del convenio de crédito, modifica el plazo, cantidad a pagar y cantidad de cuotas.
+                            El presente adendum pasa a formar parte del convenio de crédito, modifica el plazo, cantidad a pagar y cantidad de cuotas.
                         </p>
                         <p>
                             El cliente empezará a pagar su primera cuota 
@@ -97,16 +98,13 @@
                         </p>
                         <p>
                             El cliente se da por enterado y acepta cada una de las modificaciones que en este documento se estipulan, en fe de lo cual se firma
-                            En la ciudad de
+                            en la ciudad de
                             <asp:Label runat="server" ID="lblCiudad" Text="" />,
                             Departamento de
                             <asp:Label runat="server" ID="lblDepartamento" Text="" />
                             a los
-                            <asp:Label runat="server" ID="lblDias" Text="" />
-                            del mes de
-                            <asp:Label runat="server" ID="lblMes" Text="" />
-                            del año
-                            <asp:Label runat="server" ID="lblAnio" Text="" />.
+                            <asp:Label runat="server" ID="lblDias" Text="" /> dias del mes de
+                            <asp:Label runat="server" ID="lblMes" Text="" /> del año <asp:Label runat="server" ID="lblAnio" Text="" />.
                         </p>
                     </div>
                 </div>
@@ -136,7 +134,6 @@
             </div>
         </div>
     </div>
-
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/js/metisMenu.min.js"></script>
@@ -144,8 +141,10 @@
     <script src="/Scripts/js/waves.min.js"></script>
     <script src="/Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
+
     <script src="/Scripts/plugins/kendo/jszip.min.js"></script>
     <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
+    <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
     <script>
         function ExportHtmlToPdf(element, docName) {
 
@@ -164,13 +163,27 @@
         }
 
         var CerrarVentana = function () {
-            setTimeout(function () { window.close(); }, 1000);
+            Swal.fire(
+                {
+                    title: 'Descarga Exitosa!',
+                    text: 'El archivo se guardó en la carpeta de descargas!',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: "#58db83",
+                    confirmButtonText: "OK"
+                }
+            ).then(function () {
+                window.close();
+            });
         };
+        
+        $(document).ready(function ()
+        {
+            var NombrePDF = $('#lblNombreCliente').text();
 
-        $(document).ready(function () {
-            ExportHtmlToPdf('#GenerarConvenio', 'ConvenioRecaudacion').done(CerrarVentana());
-        });
-
+            ExportHtmlToPdf('#GenerarConvenio', NombrePDF).done(CerrarVentana());
+        }
+        );
     </script>
 </body>
 </html>

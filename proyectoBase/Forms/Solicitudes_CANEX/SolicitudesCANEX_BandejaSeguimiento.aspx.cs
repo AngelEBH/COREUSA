@@ -64,7 +64,7 @@ public partial class SolicitudesCANEX_BandejaSeguimiento : System.Web.UI.Page
 
             string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
             SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            SqlCommand sqlComando = new SqlCommand("dbo.sp_CANEX_BandejaSolicitudes_Seguimiento", sqlConexion);
+            SqlCommand sqlComando = new SqlCommand("dbo.sp_CANEX_Solicitudes", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);

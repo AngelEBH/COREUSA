@@ -47,17 +47,18 @@ $(document).ready(function () {
                     return return_data;
                 }
             },
+            order: [[1, 'desc']],
             "columns": [
-                { "data": "NombreSocio" },
-                { "data": "IDSolicitudCanex" },
+                { "data": "NombreSocio", "orderable": false },
+                { "data": "IDSolicitudCanex", "orderable": false },
                 {
-                    "data": "FechaIngresoSolicitud",
+                    "data": "FechaIngresoSolicitud", "orderable": false, 
                     "render": function (value) {
                         if (value === null) return "";
                         return moment(value).lang('es').format('MMMM Do YYYY, h:mm:ss a');
                     }
                 },
-                { "data": "Identidad" },
+                { "data": "Identidad", "orderable": false },
                 { "data": "NombreCliente" },
                 { "data": "NombreProducto" },
                 { "data": "ValorGlobal" },
@@ -74,6 +75,9 @@ $(document).ready(function () {
                         return btnDetalles;
                     }
                 }
+            ],
+            "columnDefs": [
+                { "orderable": false, "targets": 0 }
             ]
         });
 
