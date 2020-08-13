@@ -51,7 +51,7 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<SeguimientoSupervisorColadeLlamadasViewModel> CargarSolicitudes(string dataCrypt)
+    public static List<SeguimientoSupervisorColadeLlamadasViewModel> CargarSolicitudes(string dataCrypt, int IDAgente, int IDActividad)
     {
         List<SeguimientoSupervisorColadeLlamadasViewModel> ListadoRegistros = new List<SeguimientoSupervisorColadeLlamadasViewModel>();
         try
@@ -69,9 +69,9 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-            sqlComando.Parameters.AddWithValue("@piIDAgente", 0);
-            sqlComando.Parameters.AddWithValue("@piIDActividad", 1);
+            sqlComando.Parameters.AddWithValue("@piIDUsuario", 87);
+            sqlComando.Parameters.AddWithValue("@piIDAgente", IDAgente);
+            sqlComando.Parameters.AddWithValue("@piIDActividad", IDActividad);
             sqlConexion.Open();
             SqlDataReader reader = sqlComando.ExecuteReader();
 

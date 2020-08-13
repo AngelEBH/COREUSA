@@ -26,6 +26,7 @@
 };
 
 var FiltroActual = "";
+var Actividad = 1;
 
 $(document).ready(function () {
     dtClientes = $('#datatable-clientes').DataTable({
@@ -38,7 +39,7 @@ $(document).ready(function () {
             url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarSolicitudes",
             contentType: 'application/json; charset=utf-8',
             data: function (dtParms) {
-                return JSON.stringify({ dataCrypt: window.location.href });
+                return JSON.stringify({ dataCrypt: window.location.href, IDAgente: 0, IDActividad: 1 });
             },
             "dataSrc": function (json) {
                 var return_data = json.d;
@@ -85,17 +86,20 @@ $(document).ready(function () {
             case "hoy":
                 $(".RangoFechas").css('display', 'none');
                 FiltroActual = "hoy";
-                dtClientes.draw();
+                Actividad = 2;
+                FiltrarInformacion(Actividad);
                 break;
             case "porHacer":
                 $(".RangoFechas").css('display', 'none');
                 FiltroActual = "porHacer";
-                dtClientes.draw();
+                Actividad = 3;
+                FiltrarInformacion(Actividad);
                 break;
             case "anteriores":
                 $(".RangoFechas").css('display', '');
+                Actividad = 1;
                 FiltroActual = "anteriores";
-                dtClientes.draw();
+                FiltrarInformacion(Actividad);
                 break;
         }
     });
@@ -172,5 +176,56 @@ function hhmmss(secs) {
     var hours = Math.floor(minutes / 60)
     minutes = minutes % 60;
     return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
-    // return pad(hours)+":"+pad(minutes)+":"+pad(secs); for old browsers
+}
+
+$("#ddlAgentesActivos").change(function () {
+    if ($("#ddlAgentesActivos :selected").val() != '') {
+        FiltrarInformacion(Actividad);
+    }
+    else {
+        MensajeError('Seleccione un agente');
+    }    
+});
+
+function FiltrarInformacion(Actividad) {
+
+    $.ajax({
+        type: "POST",
+        url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarSolicitudes",
+        data: JSON.stringify({ dataCrypt: window.location.href, IDAgente: $("#ddlAgentesActivos :selected").val(), IDActividad: Actividad }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo cargar la información');
+        },
+        success: function (data) {
+
+            var Listado = data.d;
+            console.log(Listado);
+
+            $('#datatable-clientes').DataTable().clear();
+
+            var InicioLlamada = ''
+            var FinLlamada = ''
+            var duracion = '';
+            for (var i = 0; i < Listado.length; i++) {
+
+                InicioLlamada = Listado[i].InicioLlamada == null ? '' : moment(Listado[i].InicioLlamada).locale('es').format('YYYY/MM/DD h:mm:ss a');
+
+                FinLlamada = Listado[i].FinLlamada == null ? '' : moment(Listado[i].FinLlamada).locale('es').format('YYYY/MM/DD h:mm:ss a');
+                duracion = hhmmss(Listado[i].SegundosDuracionLlamada);
+
+                $('#datatable-clientes').dataTable().fnAddData([
+                    Listado[i].NombreAgente,
+                    Listado[i].IDCliente,
+                    Listado[i].NombreCompletoCliente,
+                    Listado[i].TelefonoCliente,
+                    Listado[i].PrimerComentario,
+                    Listado[i].SegundoComentario,
+                    InicioLlamada,
+                    FinLlamada,
+                    duracion
+                ]);
+            }
+        }
+    });
 }

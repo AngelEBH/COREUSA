@@ -16,6 +16,7 @@
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
 </head>
 <body runat="server" class="EstiloBody-Listado">
@@ -95,6 +96,8 @@
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="/Scripts/plugins/iziToast/js/iziToast.js"></script>
+    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/app/SRC/Seguimientos/SeguimientoSupervisorColadeLlamadas.js"></script>
 </body>
 </html>
