@@ -33,55 +33,11 @@ $(document).ready(function () {
         "responsive": true,
         "language": lenguaje,
         "pageLength": 10,
-        "aaSorting": [],
-        "ajax": {
-            type: "POST",
-            url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarSolicitudes",
-            contentType: 'application/json; charset=utf-8',
-            data: function (dtParms) {
-                return JSON.stringify({ dataCrypt: window.location.href, IDAgente: 0, IDActividad: 1 });
-            },
-            "dataSrc": function (json) {
-                var return_data = json.d;
-                return return_data;
-            }
-        },
-        "columns": [
-            { "data": "NombreAgente" },
-            { "data": "IDCliente" },
-            { "data": "NombreCompletoCliente" },
-            { "data": "TelefonoCliente" },
-            { "data": "PrimerComentario" },
-            { "data": "SegundoComentario" },
-
-            {
-                "data": "InicioLlamada",
-                "render": function (value) {
-                    if (value === null) return "";
-                    return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
-                }
-            },
-            {
-                "data": "FinLlamada",
-                "render": function (value) {
-                    if (value === null) return "";
-                    return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
-                }
-            },
-            {
-                "data": "SegundosDuracionLlamada",
-                "render": function (value) {
-                    return hhmmss(value);
-                }
-            }
-        ],
-        columnDefs: [
-            { targets: 'no-sort', orderable: false }
-        ]
+        "aaSorting": []
     });
 
     $("input[type=radio][name=filtros]").change(function () {
-        var filtro = this.value;        
+        var filtro = this.value;
         switch (filtro) {
             case "hoy":
                 $(".RangoFechas").css('display', 'none');
@@ -103,31 +59,10 @@ $(document).ready(function () {
                 break;
         }
     });
-    $.fn.dataTable.ext.search.push(
-        function (settings, data, dataIndex) {
-
-            var EstadoRetornar = false;
-            var hoy = moment().format('YYYY/MM/DD');
-            var promesaPago = data[6];
-
-            if (FiltroActual == "") {
-                EstadoRetornar = true;
-            }
-            else if (FiltroActual == "incumplidas") {
-                EstadoRetornar = data[7] == 'Incumplida' ? true : false;
-            }
-            else if (FiltroActual == "futuras" && (moment(promesaPago).isAfter(hoy))) {
-                EstadoRetornar = true;
-            }
-            else if (FiltroActual == "hoy" && (moment(promesaPago).isSame(hoy))) {
-                EstadoRetornar = true;
-            }
-            return EstadoRetornar;
-        }
-    );
 
     $("#min").datepicker({
         onSelect: function () {
+            FiltroActual = 'rangoFechas'
             dtClientes.draw();
         },
         changeMonth: !0,
@@ -135,22 +70,35 @@ $(document).ready(function () {
     });
     $("#max").datepicker({
         onSelect: function () {
+            FiltroActual = 'rangoFechas'
             dtClientes.draw();
         },
         changeMonth: !0,
         changeYear: !0,
     });
     $.fn.dataTable.ext.search.push(function (e, a, i) {
-        var t = $("#min").datepicker("getDate"),
-            l = $("#max").datepicker("getDate"),
-            n = new Date(a[6]);
-        return ("Invalid Date" == t && "Invalid Date" == l) || ("Invalid Date" == t && n <= l) || ("Invalid Date" == l && n >= t) || (n <= l && n >= t);
+        if (FiltroActual == 'rangoFechas') {
+            var t = $("#min").datepicker("getDate"),
+                l = $("#max").datepicker("getDate"),
+                n = new Date(a[6]);
+            return ("Invalid Date" == t && "Invalid Date" == l) || ("Invalid Date" == t && n <= l) || ("Invalid Date" == l && n >= t) || (n <= l && n >= t);
+        }
+        else {
+            return true;
+        }
     });
 });
 
 function MensajeError(mensaje) {
     iziToast.error({
         title: 'Error',
+        message: mensaje
+    });
+}
+
+function MensajeInformacion(mensaje) {
+    iziToast.info({
+        title: 'Info',
         message: mensaje
     });
 }
@@ -184,48 +132,55 @@ $("#ddlAgentesActivos").change(function () {
     }
     else {
         MensajeError('Seleccione un agente');
-    }    
+    }
 });
 
 function FiltrarInformacion(Actividad) {
+    
+    if ($("#ddlAgentesActivos :selected").val() != '') {
 
-    $.ajax({
-        type: "POST",
-        url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarSolicitudes",
-        data: JSON.stringify({ dataCrypt: window.location.href, IDAgente: $("#ddlAgentesActivos :selected").val(), IDActividad: Actividad }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudo cargar la información');
-        },
-        success: function (data) {
+        MensajeInformacion('Cargando información, espere...');
+        $('#datatable-clientes').DataTable().clear().draw();
 
-            var Listado = data.d;
-            console.log(Listado);
+        $.ajax({
+            type: "POST",
+            url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarSolicitudes",
+            data: JSON.stringify({ dataCrypt: window.location.href, IDAgente: $("#ddlAgentesActivos :selected").val(), IDActividad: Actividad }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('No se pudo cargar la información');
+            },
+            success: function (data) {
 
-            $('#datatable-clientes').DataTable().clear();
+                var Listado = data.d;
+                var InicioLlamada = ''
+                var FinLlamada = ''
+                var duracion = '';
+                for (var i = 0; i < Listado.length; i++) {
 
-            var InicioLlamada = ''
-            var FinLlamada = ''
-            var duracion = '';
-            for (var i = 0; i < Listado.length; i++) {
+                    InicioLlamada = Listado[i].InicioLlamada == '/Date(-62135575200000)/' ? '' : moment(Listado[i].InicioLlamada).locale('es').format('YYYY/MM/DD h:mm:ss a');
 
-                InicioLlamada = Listado[i].InicioLlamada == null ? '' : moment(Listado[i].InicioLlamada).locale('es').format('YYYY/MM/DD h:mm:ss a');
+                    FinLlamada = Listado[i].FinLlamada == '/Date(-62135575200000)/' ? '' : moment(Listado[i].FinLlamada).locale('es').format('YYYY/MM/DD h:mm:ss a');
+                    duracion = Listado[i].SegundosDuracionLlamada == 0 ? '' : hhmmss(Listado[i].SegundosDuracionLlamada);
 
-                FinLlamada = Listado[i].FinLlamada == null ? '' : moment(Listado[i].FinLlamada).locale('es').format('YYYY/MM/DD h:mm:ss a');
-                duracion = hhmmss(Listado[i].SegundosDuracionLlamada);
+                    $('#datatable-clientes').dataTable().fnAddData([
+                        Listado[i].NombreAgente,
+                        Listado[i].IDCliente,
+                        Listado[i].NombreCompletoCliente,
+                        Listado[i].TelefonoCliente,
+                        Listado[i].PrimerComentario,
+                        Listado[i].SegundoComentario,
+                        InicioLlamada,
+                        FinLlamada,
+                        duracion
+                    ]);
+                }
 
-                $('#datatable-clientes').dataTable().fnAddData([
-                    Listado[i].NombreAgente,
-                    Listado[i].IDCliente,
-                    Listado[i].NombreCompletoCliente,
-                    Listado[i].TelefonoCliente,
-                    Listado[i].PrimerComentario,
-                    Listado[i].SegundoComentario,
-                    InicioLlamada,
-                    FinLlamada,
-                    duracion
-                ]);
+                MensajeInformacion('Información cargada correctamente');
             }
-        }
-    });
+        });
+    }
+    else {
+        MensajeError('Seleccione un agente');
+    }    
 }

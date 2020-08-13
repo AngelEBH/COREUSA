@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web;
 using System.Web.Services;
+using System.Web.UI.WebControls;
 
 public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
 {
@@ -34,7 +35,6 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
             string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + 1 + "," + 101 + "," + 87;
             SqlDataAdapter AdapterDDLCondiciones = new SqlDataAdapter(Comando, sqlConexion);
             DataTable dtAgentes = new DataTable();
-            
             sqlConexion.Open();
             AdapterDDLCondiciones.Fill(dtAgentes);
             ddlAgentesActivos.DataSource = dtAgentes;
@@ -46,6 +46,8 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
             AdapterDDLCondiciones.Dispose();
             if (sqlConexion.State == ConnectionState.Open)
                 sqlConexion.Close();
+            ddlAgentesActivos.Items.Insert(0, new ListItem("Seleccionar Agente", String.Empty));
+            ddlAgentesActivos.SelectedIndex = 0;
         }
         /* FIN de captura de parametros y desencriptado de cadena, realizar validaciones que se lleguen a necesitar */
     }
@@ -69,7 +71,7 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-            sqlComando.Parameters.AddWithValue("@piIDUsuario", 87);
+            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
             sqlComando.Parameters.AddWithValue("@piIDAgente", IDAgente);
             sqlComando.Parameters.AddWithValue("@piIDActividad", IDActividad);
             sqlConexion.Open();
@@ -88,7 +90,7 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
                     SegundoComentario = (string)reader["fcComentario2"],
                     InicioLlamada = ConvertFromDBVal<DateTime>((object)reader["fdInicioLlamada"]),
                     FinLlamada = ConvertFromDBVal<DateTime>((object)reader["fdFinLlamada"]),
-                    SegundosDuracionLlamada = (int)reader["fiSegundos"]
+                    SegundosDuracionLlamada = ConvertFromDBVal<int>((object)reader["fiSegundos"])
                 });
             }
         }

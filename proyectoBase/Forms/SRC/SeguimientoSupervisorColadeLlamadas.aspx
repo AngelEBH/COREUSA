@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title></title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -22,61 +22,61 @@
 <body runat="server" class="EstiloBody-Listado">
     <form runat="server">
         <div class="card">
-        <div class="card-header">
-            <h6>Seguimiento Cola de Llamadas</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive p-0">
-                <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
-                    <label class="btn btn-success">
-                        <input id="recepcion" type="radio" name="filtros" value="hoy" />
-                        <a href="#" class="text-white">Llamadas de Hoy</a>
-                    </label>
-                    <label class="btn btn-danger">
-                        <input id="campo" type="radio" name="filtros" value="porHacer" />
-                        <a href="#" class="text-white">LLamadas Por Hacer</a>
-                    </label>                    
-                    <label class="btn btn-info">
-                        <input id="analisis" type="radio" name="filtros" value="anteriores" />
-                        <a href="#" class="text-white">Llamadas Días Anteriores</a>
-                    </label>
-                </div>
+            <div class="card-header">
+                <h6>Seguimiento Cola de Llamadas</h6>
             </div>
-            <br/>
-            <div class="form-group row">                
-                <label class="col-sm-2 col-form-label pr-0">Filtrar por Agente</label>
-                <div class="col-sm-3 pl-0">
-                    <asp:DropDownList ID="ddlAgentesActivos" runat="server" required="required" class="form-control form-control-sm pl-0"></asp:DropDownList>
-                </div>
-                <label class="col-sm-2 col-form-label RangoFechas" style="display:none;">Búsqueda por Fecha</label>
-                <div class="col-sm-3 RangoFechas" style="display:none;">
-                    <div class="input-daterange input-group" id="date-range">
-                        <input type="text" class="form-control form-control-sm" name="min" id="min" />
-                        <input type="text" class="form-control form-control-sm" name="max" id="max" />
+            <div class="card-body">
+                <div class="table-responsive p-0">
+                    <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
+                        <label class="btn btn-success">
+                            <input id="recepcion" type="radio" name="filtros" value="hoy" />
+                            <a href="#" class="text-white">Llamadas de Hoy</a>
+                        </label>
+                        <label class="btn btn-danger">
+                            <input id="campo" type="radio" name="filtros" value="porHacer" />
+                            <a href="#" class="text-white">LLamadas Por Hacer</a>
+                        </label>
+                        <label class="btn btn-info active">
+                            <input id="analisis" type="radio" name="filtros" value="anteriores" />
+                            <a href="#" class="text-white">Llamadas Días Anteriores</a>
+                        </label>
                     </div>
                 </div>
+                <br />
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label pr-0">Filtrar por Agente</label>
+                    <div class="col-sm-3 pl-0">
+                        <asp:DropDownList ID="ddlAgentesActivos" runat="server" required="required" class="form-control form-control-sm pl-0">
+                        </asp:DropDownList>
+                    </div>
+                    <label class="col-sm-2 col-form-label RangoFechas" style="display: none;">Búsqueda por Fecha</label>
+                    <div class="col-sm-3 RangoFechas" style="display: none;">
+                        <div class="input-daterange input-group" id="date-range">
+                            <input type="text" class="form-control form-control-sm" name="min" id="min" />
+                            <input type="text" class="form-control form-control-sm" name="max" id="max" />
+                        </div>
+                    </div>
+                </div>
+                <table id="datatable-clientes" class="display compact table-striped table-bordered nowrap table-condensed" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>Agente</th>
+                            <th>ID Cliente</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Comentario 1</th>
+                            <th>Comentario 2</th>
+                            <th>Inicio Llamada</th>
+                            <th>Fin Llamada</th>
+                            <th>Duración</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
             </div>
-            <table id="datatable-clientes" class="display compact table-striped table-bordered nowrap table-condensed" style="width: 100%">
-                <thead>
-                    <tr>
-                        <th>Agente</th>
-                        <th>ID Cliente</th>
-                        <th>Nombre</th>
-                        <th>Teléfono</th>
-                        <th>Comentario 1</th>
-                        <th>Comentario 2</th>
-                        <th>Inicio Llamada</th>
-                        <th>Fin Llamada</th>
-                        <th>Duración</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-                <tfoot></tfoot>
-            </table>
         </div>
-    </div>
     </form>
-
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/js/metisMenu.min.js"></script>
