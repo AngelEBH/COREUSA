@@ -11,7 +11,6 @@
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Content/css/style.css" rel="stylesheet" />
-    <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
@@ -108,15 +107,15 @@
                                 <div class="col-sm-3">
                                     <button id="btnGroupVerticalDrop1" type="button" class="btn btn-sm btn-secondary btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Otras opciones
-                                        <li class="mdi mdi-arrow-down"></li>
+                                    <li class="mdi mdi-arrow-down"></li>
                                     </button>
                                     <div class="dropdown-menu EliminarEspacios" aria-labelledby="btnGroupVerticalDrop1">
                                         <button id="btnResumen" type="button" data-toggle="modal" data-target="#modalResumen" class="btn btn-sm btn-success btn-block mt-0" style="border-radius: 0;">
                                             Resumen Sol.
                                         </button>
                                         <%--<button id="btnImprimirReporte" type="button" class="btn btn-sm btn-success btn-block mt-0" onclick="ExportHtmlToPdf('#ReporteSolicitud','Reporte_Solitud','Reporte de la Solicitud')" style="border-radius: 0;">
-                                            Generar PDF
-                                        </button>--%>
+                                        Generar PDF
+                                    </button>--%>
                                         <button id="btnHistorialInterno" title="Ver Historial interno del cliente" disabled="disabled" type="button" class="btn btn-sm btn-success btn-block waves-effect waves-light mt-0" style="border-radius: 0;">
                                             Historial I
                                         </button>
@@ -155,19 +154,19 @@
                                     <thead class="thead-light">
                                         <tr>
                                             <th class="text-center">No. Solicitud:
-                                                <asp:Label ID="lblNoSolicitud" runat="server"></asp:Label>
+                                            <asp:Label ID="lblNoSolicitud" runat="server"></asp:Label>
                                             </th>
                                             <th class="text-center">No. Cliente:
-                                                <asp:Label ID="lblNoCliente" runat="server"></asp:Label>
+                                            <asp:Label ID="lblNoCliente" runat="server"></asp:Label>
                                             </th>
                                             <th class="text-center">Tipo Solicitud:
-                                                <asp:Label ID="lblTipoSolicitud" runat="server"></asp:Label>
+                                            <asp:Label ID="lblTipoSolicitud" runat="server"></asp:Label>
                                             </th>
                                             <th class="text-center">Agente Ventas:
-                                                <asp:Label ID="lblAgenteDeVentas" runat="server"></asp:Label>
+                                            <asp:Label ID="lblAgenteDeVentas" runat="server"></asp:Label>
                                             </th>
                                             <th class="text-center">Agencia:
-                                                <asp:Label ID="lblAgencia" runat="server"></asp:Label>
+                                            <asp:Label ID="lblAgencia" runat="server"></asp:Label>
                                             </th>
                                         </tr>
                                     </thead>
@@ -496,35 +495,41 @@
                                                             <div class="form-group row">
                                                                 <label class="col-sm-12 h6 text-center p-t-10">Capacidad de Pago - Precalificado</label>
 
-                                                                <label class="col-sm-6 col-form-label">Ingresos precalificado</label>
+                                                                <label class="col-sm-6">Ingresos precalificado</label>
                                                                 <asp:Label ID="lblIngresosPrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label">Obligaciones precalificado</label>
+                                                                <label class="col-sm-6">Obligaciones precalificado</label>
                                                                 <asp:Label ID="lblObligacionesPrecalificado" CssClass="col-sm-6 text-danger" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label">Disponible precalificado</label>
+                                                                <label class="col-sm-6">Disponible precalificado</label>
                                                                 <asp:Label ID="lblDisponiblePrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
+                                                                <label class="col-sm-6">Capacidad de pago mensual</label>
                                                                 <asp:Label ID="lblCapacidadPagoMensual" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label">Capacidad de quincenal</label>
+                                                                <label class="col-sm-6">Capacidad de quincenal</label>
                                                                 <asp:Label ID="lblCapacidadPagoQuincenal" CssClass="col-sm-6" runat="server"></asp:Label>
                                                             </div>
                                                         </div>
+
+
+
+
+
+
                                                         <!-- INFORMACION DEL PRESTAMO CON LOS DATOS DEL PRECALIFICADO-->
                                                         <div class="col-md-6 border">
                                                             <div class="form-group row">
                                                                 <label class="col-sm-12 h6 text-center p-t-10">Información del préstamo</label>
 
-                                                                <label class="col-sm-6 col-form-label" id="lblTituloValorPMO">Préstamo Aprobado</label>
+                                                                <label class="col-sm-6" id="lblTituloValorPMO">Préstamo Aprobado</label>
                                                                 <asp:Label ID="lblValorPmoSugeridoSeleccionado" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label id="lblValorVehiculoTitulo" class="col-sm-6 col-form-label" style="display: none;">Valor del vehiculo</label>
+                                                                <label id="lblValorVehiculoTitulo" class="col-sm-6" style="display: none;">Valor del vehiculo</label>
                                                                 <asp:Label ID="lblMontoValorVehiculo" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label id="lblPrimaTitulo" class="col-sm-6 col-form-label">Prima</label>
-                                                                <asp:Label ID="lblMontoPrima" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                                <label id="lblPrimaTitulo" class="col-sm-6">Prima</label>
+                                                                <asp:Label ID="lblMontoPrima" Font-Bold="true" CssClass="col-sm-6" runat="server"></asp:Label>
                                                             </div>
                                                             <div class="form-group row" id="divCargando">
                                                                 <div class="col-sm-12 text-center p-t-10">
@@ -538,69 +543,72 @@
 
                                                             <div class="form-group row" id="divCalculoPrestamo" style="display: none;">
 
-                                                                <strong class="col-sm-6 col-form-label">Monto a financiar</></strong>
-                                                                <strong>
-                                                                    <asp:Label ID="lblMontoFinanciarCalculo" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+                                                                <strong class="col-sm-6">Monto a financiar</strong>
+                                                                <asp:Label ID="lblMontoFinanciarCalculo" Font-Bold="true" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label" id="lblTituloCuotaCalculo">X Cuotas</label>
-                                                                <strong>s
-                                                                    <asp:Label ID="lblMontoCuota" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+                                                                <strong class="col-sm-6">Frecuencia de Pago</></strong>
+                                                                <asp:Label ID="lblFrecuenciadePagoCalculo" Font-Bold="true" CssClass="col-sm-6" runat="server"></asp:Label>
+
+                                                                <label class="col-sm-6">Plazo</></label>
+                                                                <asp:Label ID="lblPlazoCalculo" Font-Bold="true" CssClass="col-sm-6" runat="server"></asp:Label>
+
+                                                                <label class="col-sm-6 calculoVehiculo" id="lblValorCuotaVehiculoTitulo">Valor Cuota Vehiculo</label>
+                                                                <asp:Label ID="lblValorCuotaVehiculo" Font-Bold="true" CssClass="col-sm-6 calculoVehiculo" runat="server"></asp:Label>
+
+                                                                <label class="col-sm-6 calculoVehiculo" id="lblValorCuotaSeguroTitulo">Valor Cuota Seguro</label>
+                                                                <asp:Label ID="lblValorCuotaSeguro" Font-Bold="true" CssClass="col-sm-6 calculoVehiculo" runat="server"></asp:Label>
+
+                                                                <label class="col-sm-6" id="lblTituloCuotaCalculo">Cuota Total a Pagar</label>
+                                                                <asp:Label ID="lblCuotaTotalaPagar" Font-Bold="true" CssClass="col-sm-6" runat="server"></asp:Label>
                                                             </div>
 
                                                             <!-- DIV CALCULO PRESTAMO EFECTIVO-->
                                                             <div class="form-group row" id="divPrestamoEfectivo" style="display: none;">
+                                                                <strong class="col-sm-6">Monto a financiar</></strong>
+                                                                <asp:Label ID="lblMontoFinanciarEfectivo" Font-Bold="true" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <strong class="col-sm-6 col-form-label">Monto a financiar</></strong>
-                                                                <strong>
-                                                                    <asp:Label ID="lblMontoFinanciarEfectivo" CssClass="col-sm-6" runat="server"></asp:Label></strong>
-
-                                                                <label class="col-sm-6 col-form-label" id="lblTituloCuotaEfectivo">X Cuotas</label>
-                                                                <strong>
-                                                                    <asp:Label ID="lblMontoCuotaEfectivo" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+                                                                <label class="col-sm-6" id="lblTituloCuotaEfectivo">X Cuotas</label>
+                                                                <asp:Label ID="lblMontoCuotaEfectivo" Font-Bold="true" CssClass="col-sm-6" runat="server"></asp:Label>
                                                             </div>
                                                             <!-- DIV CALCULO PRESTAMO VEHICULO MOTO -->
                                                             <div class="form-group row" id="divPrestamoMoto" style="display: none;">
-                                                                <label class="col-sm-6 col-form-label"><strong>Monto a financiar</strong></label>
-                                                                <strong>
-                                                                    <asp:Label ID="lblMontoFinanciarMoto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+                                                                <label class="col-sm-6"><strong>Monto a financiar</strong></label>
+                                                                <asp:Label ID="lblMontoFinanciarMoto" Font-Bold="true" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label" id="lblTituloCuotaMoto">X Cuotas</label>
-                                                                <strong>
-                                                                    <asp:Label ID="lblMontoCuotaMoto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+                                                                <label class="col-sm-6" id="lblTituloCuotaMoto">X Cuotas</label>
+                                                                <asp:Label ID="lblMontoCuotaMoto" Font-Bold="true" CssClass="col-sm-6" runat="server"></asp:Label>
                                                             </div>
                                                             <!-- DIV CALCULO PRESTAMO VEHICULO AUTO -->
                                                             <div class="form-group row" id="divPrestamoAuto" style="display: none;">
-                                                                <label class="col-sm-6 col-form-label"><strong>Monto a financiar</strong></label>
-                                                                <strong>
-                                                                    <asp:Label ID="lblMontoFinanciarAuto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+                                                                <label class="col-sm-6"><strong>Monto a financiar</strong></label>
+                                                                <asp:Label ID="lblMontoFinanciarAuto" Font-Bold="true" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label" id="lblTituloCuotaAuto">X Cuotas</label>
-                                                                <strong>
-                                                                    <asp:Label ID="lblMontoCuotaTotalAuto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+                                                                <label class="col-sm-6" id="lblTituloCuotaAuto">X Cuotas</label>
+                                                                <asp:Label ID="lblMontoCuotaTotalAuto" Font-Bold="true" CssClass="col-sm-6" runat="server"></asp:Label>
                                                             </div>
                                                         </div>
                                                         <!--
-                                                            EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-                                                            MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
-                                                        -->
+                                                        EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+                                                        MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+                                                    -->
                                                         <div class="col-md-6 border" id="divRecalculoReal" style="display: none;">
                                                             <div class="form-group row">
 
                                                                 <label class="col-sm-12 h6 text-center p-t-10">Recalculo de Capacidad de Pago - Ingresos Reales</label>
 
-                                                                <label class="col-sm-6 col-form-label">Ingresos reales</label>
+                                                                <label class="col-sm-6">Ingresos reales</label>
                                                                 <asp:Label ID="lblIngresosReales" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label">Obligaciones</label>
+                                                                <label class="col-sm-6">Obligaciones</label>
                                                                 <asp:Label ID="lblObligacionesReales" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label">Disponible real</label>
+                                                                <label class="col-sm-6">Disponible real</label>
                                                                 <asp:Label ID="lblDisponibleReal" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
+                                                                <label class="col-sm-6">Capacidad de pago mensual</label>
                                                                 <asp:Label ID="lblCapacidadPagoMensualReal" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label">Capacidad de pago quincenal</label>
+                                                                <label class="col-sm-6">Capacidad de pago quincenal</label>
                                                                 <asp:Label ID="lblCapacidadPagoQuincenalReal" CssClass="col-sm-6" runat="server"></asp:Label>
                                                             </div>
                                                         </div>
@@ -608,12 +616,12 @@
                                                         <div class="col-md-6 border border-success" id="divPmoSugeridoReal">
 
                                                             <div class="form-group row" id="divPrestamoElegido" style="display: none;">
-                                                                <label class="col-sm-12 h6 text-center p-t-10">Monto a Financiar Actual</label>
+                                                                <label class="col-sm-12 h6 text-center p-t-10">Préstamo Final - Aprobado</label>
 
-                                                                <label class="col-sm-6 col-form-label">Monto final a financiar</label>
+                                                                <label class="col-sm-6">Monto final a financiar</label>
                                                                 <asp:Label ID="lblMontoPrestamoEscogido" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6 col-form-label">Plazo final aprobado</label>
+                                                                <label class="col-sm-6">Plazo final aprobado</label>
                                                                 <asp:Label ID="lblPlazoEscogido" CssClass="col-sm-6" runat="server"></asp:Label>
                                                             </div>
                                                             <div class="form-group row" id="cargandoPrestamosSugeridosReales" style="display: none;">
@@ -1434,10 +1442,8 @@
                 </div>
                 <form action="#" id="frmObservacionReferencia">
                     <div class="modal-body">
-                        ¿Está seguro de actualizar las observaciones de la referencia personal 
-                        <strong>
-                            <label id="lblNombreReferenciaModal"></label>
-                        </strong>?<br />
+                        ¿Está seguro de actualizar las observaciones de la referencia personal
+                        <asp:Label ID="lblNombreReferenciaModal" Font-Bold="true" runat="server"></asp:Label>?<br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
                             <textarea id="txtObservacionesReferencia" required="required" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="informacionLaboral"></textarea>
@@ -1724,7 +1730,7 @@
                         <div class="col-sm-8">
                             <input class="form-control col-form-label MascaraCantidad" id="txtMontoaFinanciarManual" readonly="readonly" required="required" type="text" value="" />
                             <br />
-                        </div>                        
+                        </div>
 
                         <label class="col-sm-4 col-form-label" id="lblTituloCantidadCuotaManual">X Cuotas</label>
                         <div class="col-sm-8">
@@ -1790,16 +1796,16 @@
     <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
     <script src="/Scripts/plugins/kendo/PrintHtmlToPDF.js"></script>
     <script type="x/kendo-template" id="page-template">
-        <div class="page-template">
-            <div class="header">
-                <%--<img src="http://crediflash.prestadito.corp/documentos/base/logo_prestadito.png" style="width:150px;" />--%>
-                <img src="/Imagenes/LogoPrestaditoMediano.png" style="width:150px; float:left;" />
-                <h3 id="titleTemplate"></h3>
-            </div>
-            <div class="footer">
-                Pagina #: pageNum # de #: totalPages #
-            </div>
+    <div class="page-template">
+        <div class="header">
+            <%--<img src="http://crediflash.prestadito.corp/documentos/base/logo_prestadito.png" style="width:150px;" />--%>
+            <img src="/Imagenes/LogoPrestaditoMediano.png" style="width:150px; float:left;" />
+            <h3 id="titleTemplate"></h3>
         </div>
+        <div class="footer">
+            Pagina #: pageNum # de #: totalPages #
+        </div>
+    </div>
     </script>
 </body>
 </html>

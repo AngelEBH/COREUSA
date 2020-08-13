@@ -784,6 +784,10 @@
     <Content Include="Forms\SRC\ConvenioReadecuacion.aspx" />
     <Content Include="Forms\SRC\ImprimirAdendum31a120.aspx" />
     <Content Include="Forms\SRC\ImprimirConvenio.aspx" />
+    <Content Include="Forms\SRC\SeguimientoColadeLlamadas.aspx" />
+    <Content Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx" />
+    <Content Include="Forms\SRC\SeguimientoSupervisorColadeLlamadas.aspx" />
+    <Content Include="Forms\SRC\SeguimientoSupervisorPromesasdePago.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Content\css\font\font-fileuploader.ttf" />
     <Content Include="Content\css\font\font-fileuploader.woff" />
@@ -1060,6 +1064,10 @@
     <Content Include="Scripts\app\Solicitudes_CANEX\SolicitudesCANEX_SeguimientoDetalles.js" />
     <Content Include="Scripts\app\Solicitudes_CANEX\Solicitudes_CANEX.js" />
     <Content Include="Scripts\app\Solicitudes_CANEX\Solicitudes_CANEX_Detalles.js" />
+    <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoColadeLlamadas.js" />
+    <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoJefePromesasdePago.js" />
+    <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoSupervisorColadeLlamadas.js" />
+    <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoSupervisorPromesasdePago.js" />
     <Content Include="Scripts\js\app.js" />
     <Content Include="Scripts\js\bootstrap.bundle.min.js" />
     <Content Include="Scripts\js\jquery.min.js" />
@@ -1497,6 +1505,34 @@
     </Compile>
     <Compile Include="Forms\SRC\ImprimirConvenio.aspx.designer.cs">
       <DependentUpon>ImprimirConvenio.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoColadeLlamadas.aspx.cs">
+      <DependentUpon>SeguimientoColadeLlamadas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoColadeLlamadas.aspx.designer.cs">
+      <DependentUpon>SeguimientoColadeLlamadas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx.cs">
+      <DependentUpon>SeguimientoJefePromesasdePago.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx.designer.cs">
+      <DependentUpon>SeguimientoJefePromesasdePago.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoSupervisorColadeLlamadas.aspx.cs">
+      <DependentUpon>SeguimientoSupervisorColadeLlamadas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoSupervisorColadeLlamadas.aspx.designer.cs">
+      <DependentUpon>SeguimientoSupervisorColadeLlamadas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoSupervisorPromesasdePago.aspx.cs">
+      <DependentUpon>SeguimientoSupervisorPromesasdePago.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoSupervisorPromesasdePago.aspx.designer.cs">
+      <DependentUpon>SeguimientoSupervisorPromesasdePago.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

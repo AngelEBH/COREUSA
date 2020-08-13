@@ -1961,7 +1961,8 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
 
             var objCalculo = data.d;
             if (objCalculo != null) {
-                /* variables globales */
+            /* variables globales */
+                console.log(objCalculo);
                 gMontoFinal = objCalculo.ValoraFinanciar;
                 gPlazoFinal = plazoMensual;
                 $("#lblMontoFinanciarAuto").text(addComasFormatoNumerico(objCalculo.ValoraFinanciar));

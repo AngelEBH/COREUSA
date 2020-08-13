@@ -12,12 +12,12 @@
     <link href="../../Content/css/icons.css" rel="stylesheet" />
     <link href="../../Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
-    <link href="../../Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
-    <link href="../../Content/css/bandejaSolicitudes.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="/Content/css/bandejaSolicitudes.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
 </head>
 <body runat="server" class="EstiloBody-Listado">
