@@ -22,11 +22,6 @@
         .opcion {
             cursor: pointer;
         }
-        .active {
-            /*border-style: solid !important;
-            border-width: 1px !important;
-            border-color: black !important;*/
-        }
         #datatable-recuperacion tbody tr {
             cursor: pointer;
         }
@@ -39,12 +34,23 @@
     <form runat="server">
         <div class="card">
             <div class="card-header">
-                <h6>Recuperación del Dia</h6>
+                <div class="row">
+                    <div class="col-8">
+                        <h6 class="">Recuperación del Dia</h6>
+                    </div>                    
+                    <div class="col-4">                      
+                      <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
+                        aria-label="Buscar"/>
+                    </div>                    
+                </div>
             </div>
             <div class="card-body">
                 <div class="form-group row justify-content-center">
-                    <label class="col-sm-2 col-form-label h6">Total Recuperado Hoy</label>
-                    <label class="col-sm-2 col-form-label h6" id="lblTotalRecuperadoHoy"></label>
+                    <div class="col-md-1 form-inline"></div>
+                    <div class="col-md-4">
+                        <label class="col-form-label">Total Recuperado Hoy</label>
+                        <label class="col-form-label" style="font-weight:bold;" id="lblTotalRecuperadoHoy"></label>
+                    </div>
                 </div>
                 <table id="datatable-recuperacion" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                     <thead>
@@ -66,11 +72,6 @@
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="/Scripts/js/metisMenu.min.js"></script>
-    <script src="/Scripts/js/jquery.slimscroll.js"></script>
-    <script src="/Scripts/js/waves.min.js"></script>
-    <script src="/Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="/Scripts/js/app.js"></script>
     <!-- DATATABLES -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
@@ -79,11 +80,7 @@
     <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
     <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
-    <script src="/Scripts/plugins/moment/moment.js"></script>
-    <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="/Scripts/plugins/iziToast/js/iziToast.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/app/SRC/Seguimientos/SeguimientoRecuperacionDelDiaPorAgente.js"></script>
 </body>

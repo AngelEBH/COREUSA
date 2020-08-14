@@ -1,4 +1,5 @@
-﻿var lenguaje = {
+﻿var IDAgente = 0;
+var lenguajeEspanol = {
     "sProcessing": "Cargando registros...",
     "sLengthMenu": "Mostrar _MENU_ registros",
     "sZeroRecords": "No se encontraron resultados",
@@ -24,15 +25,17 @@
     "decimal": ".",
     "thousands": ","
 };
-var IDAgente = 0;
 
 $(document).ready(function () {
     dtClientes = $('#datatable-recuperacion').DataTable({
         "responsive": true,
-        "language": lenguaje,
+        "language": lenguajeEspanol,
         "pageLength": 10,
         "aaSorting": [],
         "processing": true,
+        "dom": "<'row'<'col-sm-6'><'col-sm-6'T>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
         "ajax": {
             type: "POST",
             url: "SeguimientoRecuperacionDelDiaPorSupervisor.aspx/CargarRegistros",
@@ -60,14 +63,14 @@ $(document).ready(function () {
                 "data": "SaldoInicialPonerAlDia",
                 "className": 'text-right',
                 "render": function (data, type, row) {
-                    return row["Moneda"] + ' ' + addComasFormatoNumerico(parseFloat(row["SaldoInicialPonerAlDia"]).toFixed(2))
+                    return row["Moneda"] + ' ' + addFormatoNumerico(parseFloat(row["SaldoInicialPonerAlDia"]).toFixed(2))
                 }
             },
             {
                 "data": "AbonosHoy",
                 "className": 'text-right sum',
                 "render": function (data, type, row) {
-                    return row["Moneda"] + ' ' + addComasFormatoNumerico(parseFloat(row["AbonosHoy"]).toFixed(2))
+                    return row["Moneda"] + ' ' + addFormatoNumerico(parseFloat(row["AbonosHoy"]).toFixed(2))
                 }
             }
         ],
@@ -82,27 +85,48 @@ $(document).ready(function () {
                     .reduce(function (a, b) {
                         var x = parseFloat(a) || 0;
                         var y = parseFloat(b) || 0;
-                        return x + y;
+                        return x + y;                        
                     }, 0);
-                $($("#lblTotalRecuperadoHoy").empty()).html('L ' + addComasFormatoNumerico(parseFloat(sum).toFixed(2)));
+                $($("#lblTotalRecuperadoHoy").empty()).html('L ' + addFormatoNumerico(parseFloat(sum).toFixed(2)));
             });
+        }
+    });
+
+    /* Buscador */
+    $('#txtDatatableFilter').keyup(function () {
+        dtClientes.search($(this).val()).draw();
+    })
+
+    /* Listas seleccionables */
+    $(".buscadorddl").select2({
+        language: {
+            errorLoading: function () { return "No se pudieron cargar los resultados" },
+            inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+            inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+            loadingMore: function () { return "Cargando más resultados…" },
+            maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
+            noResults: function () { return "No se encontraron resultados" },
+            searching: function () { return "Buscando…" },
+            removeAllItems: function () { return "Eliminar todos los elementos" }
         }
     });
 });
 
+/* Filtar por Agente */
 $("#ddlAgentesActivos").change(function () {
     if ($("#ddlAgentesActivos :selected").val() != '') {
         FiltrarInformacion();
     }
 });
 
+/* Recargar DataTable */
 function FiltrarInformacion() {
     if ($("#ddlAgentesActivos :selected").val() != '') {
         dtClientes.ajax.reload(null, false);
     }
 }
 
-function addComasFormatoNumerico(nStr) {
+function addFormatoNumerico(nStr) {
     nStr += '';
     x = nStr.split('.');
     x1 = x[0];

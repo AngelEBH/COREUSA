@@ -15,18 +15,9 @@
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
-    <style>
-        .opcion {
-            cursor: pointer;
-        }
-        .active {
-            /*border-style: solid !important;
-            border-width: 1px !important;
-            border-color: black !important;*/
-        }
+    <style>        
         #datatable-recuperacion tbody tr {
             cursor: pointer;
         }
@@ -39,18 +30,28 @@
     <form runat="server">
         <div class="card">
             <div class="card-header">
-                <h6>Recuperación del Dia</h6>
+                <div class="row">
+                    <div class="col-8">
+                        <h6 class="">Recuperación del Dia</h6>
+                    </div>                    
+                    <div class="col-4">                      
+                      <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
+                        aria-label="Buscar"/>
+                    </div>                    
+                </div>
             </div>
             <div class="card-body">
                 <div class="form-group row justify-content-center">
-                    <label class="col-sm-2 col-form-label pr-0">Filtrar por Agente</label>
-                    <div class="col-sm-3 pl-0">
-                        <asp:DropDownList ID="ddlAgentesActivos" runat="server" required="required" class="form-control form-control-sm pl-0">
+                    <div class="col-md-4 form-inline">
+                        <label class="col-form-label pr-0">Filtrar por Agente&nbsp;</label>
+                        <asp:DropDownList ID="ddlAgentesActivos" runat="server" required="required" class="form-control w-auto">
                         </asp:DropDownList>
                     </div>
 
-                    <label class="col-sm-2 col-form-label">Total Recuperado Hoy</label>
-                    <label class="col-sm-3 col-form-label" id="lblTotalRecuperadoHoy">L 20,000.00</label>
+                    <div class="col-md-4">
+                        <label class="col-form-label">Total Recuperado Hoy</label>
+                        <label class="col-form-label" style="font-weight:bold;" id="lblTotalRecuperadoHoy"></label>
+                    </div>
                 </div>
                 <table id="datatable-recuperacion" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                     <thead>
@@ -72,11 +73,6 @@
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="/Scripts/js/metisMenu.min.js"></script>
-    <script src="/Scripts/js/jquery.slimscroll.js"></script>
-    <script src="/Scripts/js/waves.min.js"></script>
-    <script src="/Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="/Scripts/js/app.js"></script>
     <!-- DATATABLES -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
@@ -85,11 +81,8 @@
     <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
     <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
-    <script src="/Scripts/plugins/moment/moment.js"></script>
-    <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="/Scripts/plugins/iziToast/js/iziToast.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/app/SRC/Seguimientos/SeguimientoRecuperacionDelDiaPorSupervisor.js"></script>
 </body>

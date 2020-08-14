@@ -21,11 +21,6 @@
         .opcion {
             cursor: pointer;
         }
-        .active {
-            /*border-style: solid !important;
-            border-width: 1px !important;
-            border-color: black !important;*/
-        }
         #datatable-clientes tbody tr {
             cursor: pointer;
         }
@@ -37,31 +32,38 @@
 <body runat="server" class="EstiloBody-Listado-W1100px">
     <div class="card">
         <div class="card-header">
-            <h6>Seguimiento Promesas de Pago</h6>
+            <div class="row">
+                <div class="col-8">
+                    <h6>Seguimiento Promesas de Pago</h6>
+                </div>
+                <div class="col-4">
+                    <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
+                        aria-label="Buscar" />
+                </div>
+            </div>            
         </div>
         <div class="card-body">
             <div class="table-responsive p-0">
                 <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
-                    <label class="btn btn-danger">
+                    <label class="btn btn-danger active opcion">
                         <input id="campo" type="radio" name="filtros" value="incumplidas" />
-                        <a href="#" class="text-white">Incumplidas</a>
+                        Incumplidas
                     </label>
-                    <label class="btn btn-success">
+                    <label class="btn btn-success opcion">
                         <input id="recepcion" type="radio" name="filtros" value="hoy" />
-                        <a href="#" class="text-white">Para Hoy</a>
+                        Para Hoy
                     </label>
-                    <label class="btn btn-info">
+                    <label class="btn btn-info opcion">
                         <input id="analisis" type="radio" name="filtros" value="futuras" />
-                        <a href="#" class="text-white">Futuras</a>
+                        Futuras
                     </label>
-
                 </div>
             </div>
             <br />
             <table id="datatable-clientes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%">
                 <thead>
                     <tr>
-                        <th>Agente &nbsp;</th>
+                        <th>Agente</th>
                         <th>ID Cliente</th>
                         <th>Nombre</th>
                         <th>Atraso</th>
@@ -78,11 +80,6 @@
     </div>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="/Scripts/js/metisMenu.min.js"></script>
-    <script src="/Scripts/js/jquery.slimscroll.js"></script>
-    <script src="/Scripts/js/waves.min.js"></script>
-    <script src="/Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="/Scripts/js/app.js"></script>
     <!-- DATATABLES -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>

@@ -16,19 +16,17 @@
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
         .opcion {
             cursor: pointer;
         }
-        .active {
-            /*border-style: solid !important;
-            border-width: 1px !important;
-            border-color: black !important;*/
-        }
+
         #datatable-clientes tbody tr {
             cursor: pointer;
         }
+
         #datatable-clientes tbody td {
             outline: none;
         }
@@ -37,35 +35,42 @@
 <body runat="server" class="EstiloBody-Listado-W1100px">
     <div class="card">
         <div class="card-header">
-            <h6>Seguimiento Promesas de Pago</h6>
+            <div class="row">
+                <div class="col-8">
+                    <h6>Seguimiento Promesas de Pago</h6>
+                </div>
+                <div class="col-4">
+                    <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
+                        aria-label="Buscar" />
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive p-0">
                 <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
+                    <label class="btn btn-secondary active opcion">
                         <input id="general" type="radio" name="filtros" value="0" />
                         General
                     </label>
-                    <label class="btn btn-danger">
+                    <label class="btn btn-danger opcion">
                         <input id="campo" type="radio" name="filtros" value="incumplidas" />
-                        <a href="#" class="text-white">Incumplidas</a>
+                        Incumplidas
                     </label>
-                    <label class="btn btn-success">
+                    <label class="btn btn-success opcion">
                         <input id="recepcion" type="radio" name="filtros" value="hoy" />
-                        <a href="#" class="text-white">Para Hoy</a>
+                        Para Hoy
                     </label>
-                    <label class="btn btn-info">
+                    <label class="btn btn-info opcion">
                         <input id="analisis" type="radio" name="filtros" value="futuras" />
-                        <a href="#" class="text-white">Futuras</a>
+                        Futuras
                     </label>
-
                 </div>
             </div>
             <br />
             <table id="datatable-clientes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%">
                 <thead>
                     <tr>
-                        <th>Agente &nbsp;</th>
+                        <th>Agente</th>
                         <th>ID Cliente</th>
                         <th>Nombre</th>
                         <th>Atraso</th>
@@ -82,11 +87,6 @@
     </div>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="/Scripts/js/metisMenu.min.js"></script>
-    <script src="/Scripts/js/jquery.slimscroll.js"></script>
-    <script src="/Scripts/js/waves.min.js"></script>
-    <script src="/Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="/Scripts/js/app.js"></script>
     <!-- DATATABLES -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
@@ -97,6 +97,7 @@
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
+    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/app/SRC/Seguimientos/SeguimientoJefePromesasdePago.js"></script>
 </body>
 </html>

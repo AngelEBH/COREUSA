@@ -1,4 +1,6 @@
-﻿var lenguaje = {
+﻿var FiltroActual = "";
+var Actividad = 1;
+var lenguajeEspanol = {
     "sProcessing": "Cargando registros...",
     "sLengthMenu": "Mostrar _MENU_ registros",
     "sZeroRecords": "No se encontraron resultados",
@@ -24,15 +26,17 @@
     "decimal": ".",
     "thousands": ","
 };
-var FiltroActual = "";
-var Actividad = 1;
 
 $(document).ready(function () {
     dtClientes = $('#datatable-clientes').DataTable({
         "responsive": true,
-        "language": lenguaje,
+        "language": lenguajeEspanol,
         "pageLength": 10,
-        "aaSorting": []
+        "aaSorting": [],
+        "processing": true,
+        "dom": "<'row'<'col-sm-6'><'col-sm-6'T>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
     });
 
     $("input[type=radio][name=filtros]").change(function () {
@@ -66,6 +70,7 @@ $(document).ready(function () {
         changeMonth: !0,
         changeYear: !0,
     });
+
     $("#max").datepicker({
         onSelect: function () {
             FiltroActual = 'rangoFechas';
@@ -99,8 +104,7 @@ $("#ddlAgentesActivos").change(function () {
 function FiltrarInformacion(Actividad) {
 
     if ($("#ddlAgentesActivos :selected").val() != '') {
-
-        MensajeInformacion('Cargando información, espere...');
+        
         $('#datatable-clientes').DataTable().clear().draw();
 
         $.ajax({
@@ -138,6 +142,8 @@ function FiltrarInformacion(Actividad) {
                     ], false);
                 }
                 DatatableColaLlamadas.fnDraw();
+
+                MensajeInformacion('La información se cargó correctamente');
             }
         });
     }
@@ -158,7 +164,14 @@ function hhmmss(secs) {
     return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
 }
 
-function MensajeError(mensaje) {
+function MensajeAdvertencia(mensaje) {
+    iziToast.error({
+        title: 'Error',
+        message: mensaje
+    });
+}
+
+function MensajeAdvertencia(mensaje) {
     iziToast.warning({
         title: 'Atención',
         message: mensaje
@@ -170,16 +183,4 @@ function MensajeInformacion(mensaje) {
         title: 'Info',
         message: mensaje
     });
-}
-
-function addComasFormatoNumerico(nStr) {
-    nStr += '';
-    x = nStr.split('.');
-    x1 = x[0];
-    x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
 }

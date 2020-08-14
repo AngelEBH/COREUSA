@@ -22,14 +22,11 @@
         .opcion {
             cursor: pointer;
         }
-        .active {
-            /*border-style: solid !important;
-            border-width: 1px !important;
-            border-color: black !important;*/
-        }
+
         #datatable-clientes tbody tr {
             cursor: pointer;
         }
+
         #datatable-clientes tbody td {
             outline: none;
         }
@@ -39,22 +36,30 @@
     <form runat="server">
         <div class="card">
             <div class="card-header">
-                <h6>Seguimiento Cola de Llamadas</h6>
+                <div class="row">
+                    <div class="col-8">
+                        <h6>Seguimiento Cola de Llamadas</h6>
+                    </div>
+                    <div class="col-4">
+                        <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
+                            aria-label="Buscar" />
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive p-0">
                     <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
                         <label class="btn btn-success active opcion">
                             <input id="recepcion" type="radio" name="filtros" value="hoy" />
-                            <a href="#" class="text-white">Llamadas de Hoy</a>
+                            Llamadas de Hoy
                         </label>
                         <label class="btn btn-danger opcion">
                             <input id="campo" type="radio" name="filtros" value="porHacer" />
-                            <a href="#" class="text-white">LLamadas Por Hacer</a>
+                            LLamadas Por Hacer
                         </label>
                         <label class="btn btn-info opcion">
                             <input id="analisis" type="radio" name="filtros" value="anteriores" />
-                            <a href="#" class="text-white">Llamadas Días Anteriores</a>
+                            Llamadas Días Anteriores
                         </label>
                     </div>
                 </div>
@@ -95,11 +100,6 @@
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="/Scripts/js/metisMenu.min.js"></script>
-    <script src="/Scripts/js/jquery.slimscroll.js"></script>
-    <script src="/Scripts/js/waves.min.js"></script>
-    <script src="/Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="/Scripts/js/app.js"></script>
     <!-- DATATABLES -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
@@ -112,7 +112,6 @@
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="/Scripts/plugins/iziToast/js/iziToast.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/app/SRC/Seguimientos/SeguimientoSupervisorColadeLlamadas.js"></script>
 </body>
