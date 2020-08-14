@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SeguimientoSupervisorColadeLlamadas.aspx.cs" Inherits="SeguimientoSupervisorColadeLlamadas" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SeguimientoSupervisorColadeLlamadas.aspx.cs" Inherits="SeguimientoSupervisorColadeLlamadas" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title></title>
     <!-- BOOTSTRAP -->
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -18,8 +18,24 @@
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
+    <style>
+        .opcion {
+            cursor: pointer;
+        }
+        .active {
+            /*border-style: solid !important;
+            border-width: 1px !important;
+            border-color: black !important;*/
+        }
+        #datatable-clientes tbody tr {
+            cursor: pointer;
+        }
+        #datatable-clientes tbody td {
+            outline: none;
+        }
+    </style>
 </head>
-<body runat="server" class="EstiloBody-Listado">
+<body class="EstiloBody-Listado">
     <form runat="server">
         <div class="card">
             <div class="card-header">
@@ -28,15 +44,15 @@
             <div class="card-body">
                 <div class="table-responsive p-0">
                     <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
-                        <label class="btn btn-success">
+                        <label class="btn btn-success active opcion">
                             <input id="recepcion" type="radio" name="filtros" value="hoy" />
                             <a href="#" class="text-white">Llamadas de Hoy</a>
                         </label>
-                        <label class="btn btn-danger">
+                        <label class="btn btn-danger opcion">
                             <input id="campo" type="radio" name="filtros" value="porHacer" />
                             <a href="#" class="text-white">LLamadas Por Hacer</a>
                         </label>
-                        <label class="btn btn-info active">
+                        <label class="btn btn-info opcion">
                             <input id="analisis" type="radio" name="filtros" value="anteriores" />
                             <a href="#" class="text-white">Llamadas Días Anteriores</a>
                         </label>
@@ -57,7 +73,7 @@
                         </div>
                     </div>
                 </div>
-                <table id="datatable-clientes" class="display compact table-striped table-bordered nowrap table-condensed" style="width: 100%">
+                <table id="datatable-clientes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                     <thead>
                         <tr>
                             <th>Agente</th>

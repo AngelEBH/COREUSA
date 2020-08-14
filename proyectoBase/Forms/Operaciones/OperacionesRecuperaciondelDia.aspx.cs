@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI.WebControls;
 
-public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
+public partial class OperacionesRecuperaciondelDia : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -31,8 +31,8 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
             /* Agentes Activos */
             string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
             SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
-            //string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + 1 + "," + 101 + "," + 87;
+            //string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
+            string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + 1 + "," + 101 + "," + 87;
             SqlDataAdapter AdapterDDLCondiciones = new SqlDataAdapter(Comando, sqlConexion);
             DataTable dtAgentes = new DataTable();
             sqlConexion.Open();
@@ -46,16 +46,16 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
             AdapterDDLCondiciones.Dispose();
             if (sqlConexion.State == ConnectionState.Open)
                 sqlConexion.Close();
-            ddlAgentesActivos.Items.Insert(0, new ListItem("Seleccionar Agente", String.Empty));
+            ddlAgentesActivos.Items.Insert(0, new ListItem("Seleccionar Agente", "0"));
             ddlAgentesActivos.SelectedIndex = 0;
         }
         /* FIN de captura de parametros y desencriptado de cadena, realizar validaciones que se lleguen a necesitar */
     }
 
     [WebMethod]
-    public static List<SeguimientoSupervisorColadeLlamadasViewModel> CargarSolicitudes(string dataCrypt, int IDAgente, int IDActividad)
+    public static List<OperacionesRecuperaciondelDiaViewModel> CargarRegistros(string dataCrypt, int IDAgente)
     {
-        List<SeguimientoSupervisorColadeLlamadasViewModel> ListadoRegistros = new List<SeguimientoSupervisorColadeLlamadasViewModel>();
+        List<OperacionesRecuperaciondelDiaViewModel> ListadoRegistros = new List<OperacionesRecuperaciondelDiaViewModel>();
         try
         {
             /* Desencriptar parametros */
@@ -67,30 +67,30 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
 
             string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
             SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_ColaPorAgente", sqlConexion);
+            SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_RecuperacionPorAgente", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+            sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
+            sqlComando.Parameters.AddWithValue("@piIDApp", 101);
+            sqlComando.Parameters.AddWithValue("@piIDUsuarioSupervisor", 87);
             sqlComando.Parameters.AddWithValue("@piIDAgente", IDAgente);
-            sqlComando.Parameters.AddWithValue("@piIDActividad", IDActividad);
+
             sqlConexion.Open();
             SqlDataReader reader = sqlComando.ExecuteReader();
-
             while (reader.Read())
             {
-                ListadoRegistros.Add(new SeguimientoSupervisorColadeLlamadasViewModel()
+                ListadoRegistros.Add(new OperacionesRecuperaciondelDiaViewModel()
                 {
-                    IDAgente = (int)reader["fiIDUsuario"],
-                    NombreAgente = (string)reader["fcNombreCorto"],
+                    IDUsuarioSupervisor = (int)reader["fiIDUsuarioSupervisor"],
+                    NombreSupervisor = (string)reader["fcNombreSupervisor"],
+                    IDAgente = (int)reader["fiIDUsuarioAgente"],
+                    NombreAgente = (string)reader["fcNombreAgente"],
                     IDCliente = (string)reader["fcIDCliente"],
                     NombreCompletoCliente = (string)reader["fcNombreSAF"],
-                    TelefonoCliente = (string)reader["fcTelefono"],
-                    PrimerComentario = (string)reader["fcComentario1"],
-                    SegundoComentario = (string)reader["fcComentario2"],
-                    InicioLlamada = ConvertFromDBVal<DateTime>((object)reader["fdInicioLlamada"]),
-                    FinLlamada = ConvertFromDBVal<DateTime>((object)reader["fdFinLlamada"]),
-                    SegundosDuracionLlamada = ConvertFromDBVal<int>((object)reader["fiSegundos"])
+                    Descripcion = (string)reader["fcDescripcion"],
+                    DiasAtraso = (short)reader["fiDiasAtraso"],
+                    SaldoInicialPonerAlDia = (decimal)reader["fnInicialSaldoPonerAlDia"],
+                    AbonosHoy = (decimal)reader["fnAbonosdeHoy"],
+                    Moneda = "L"
                 });
             }
         }
@@ -130,25 +130,19 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
         return lURLDesencriptado;
     }
 
-    public static T ConvertFromDBVal<T>(object obj)
-    {
-        if (obj == null || obj == DBNull.Value)
-            return default(T);
-        else
-            return (T)obj;
-    }
 }
 
-public class SeguimientoSupervisorColadeLlamadasViewModel
+public class OperacionesRecuperaciondelDiaViewModel
 {
+    public int IDUsuarioSupervisor { get; set; }
+    public string NombreSupervisor { get; set; }
     public int IDAgente { get; set; }
     public string NombreAgente { get; set; }
     public string IDCliente { get; set; }
     public string NombreCompletoCliente { get; set; }
-    public string TelefonoCliente { get; set; }
-    public string PrimerComentario { get; set; }
-    public string SegundoComentario { get; set; }
-    public DateTime InicioLlamada { get; set; }
-    public DateTime FinLlamada { get; set; }
-    public int SegundosDuracionLlamada { get; set; }
+    public string Descripcion { get; set; }
+    public int DiasAtraso { get; set; }
+    public decimal SaldoInicialPonerAlDia { get; set; }
+    public decimal AbonosHoy { get; set; }
+    public string Moneda { get; set; }
 }

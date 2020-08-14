@@ -25,7 +25,7 @@
     "thousands": ","
 };
 
-var FiltroActual = "";
+var FiltroActual = "incumplidas";
 
 $(document).ready(function () {
     dtClientes = $('#datatable-clientes').DataTable({

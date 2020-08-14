@@ -765,6 +765,7 @@
     <Content Include="Forms\Aval\Aval_Precalificar.aspx" />
     <Content Include="Forms\Aval\Aval_Registrar.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
+    <Content Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx" />
     <Content Include="Forms\Precalificado\precalificado_buscador.aspx" />
     <Content Include="Forms\Precalificado\Precalificado_Puesto110.aspx" />
     <Content Include="Forms\Precalificado\ProcesarPrecalificado.aspx" />
@@ -786,6 +787,8 @@
     <Content Include="Forms\SRC\ImprimirConvenio.aspx" />
     <Content Include="Forms\SRC\SeguimientoColadeLlamadas.aspx" />
     <Content Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx" />
+    <Content Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorAgente.aspx" />
+    <Content Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorSupervisor.aspx" />
     <Content Include="Forms\SRC\SeguimientoSupervisorColadeLlamadas.aspx" />
     <Content Include="Forms\SRC\SeguimientoSupervisorPromesasdePago.aspx" />
     <Content Include="Global.asax" />
@@ -1064,8 +1067,11 @@
     <Content Include="Scripts\app\Solicitudes_CANEX\SolicitudesCANEX_SeguimientoDetalles.js" />
     <Content Include="Scripts\app\Solicitudes_CANEX\Solicitudes_CANEX.js" />
     <Content Include="Scripts\app\Solicitudes_CANEX\Solicitudes_CANEX_Detalles.js" />
+    <Content Include="Scripts\app\SRC\Operaciones\OperacionesRecuperaciondelDia.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoColadeLlamadas.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoJefePromesasdePago.js" />
+    <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoRecuperacionDelDiaPorAgente.js" />
+    <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoRecuperacionDelDiaPorSupervisor.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoSupervisorColadeLlamadas.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoSupervisorPromesasdePago.js" />
     <Content Include="Scripts\js\app.js" />
@@ -1373,6 +1379,13 @@
     <Compile Include="Forms\Clientes\Precalificado_Resolucion.aspx.designer.cs">
       <DependentUpon>Precalificado_Resolucion.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx.cs">
+      <DependentUpon>OperacionesRecuperaciondelDia.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx.designer.cs">
+      <DependentUpon>OperacionesRecuperaciondelDia.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Precalificado\precalificado_buscador.aspx.cs">
       <DependentUpon>precalificado_buscador.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1519,6 +1532,20 @@
     </Compile>
     <Compile Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx.designer.cs">
       <DependentUpon>SeguimientoJefePromesasdePago.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorAgente.aspx.cs">
+      <DependentUpon>SeguimientoRecuperacionDelDiaPorAgente.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorAgente.aspx.designer.cs">
+      <DependentUpon>SeguimientoRecuperacionDelDiaPorAgente.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorSupervisor.aspx.cs">
+      <DependentUpon>SeguimientoRecuperacionDelDiaPorSupervisor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorSupervisor.aspx.designer.cs">
+      <DependentUpon>SeguimientoRecuperacionDelDiaPorSupervisor.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\SRC\SeguimientoSupervisorColadeLlamadas.aspx.cs">
       <DependentUpon>SeguimientoSupervisorColadeLlamadas.aspx</DependentUpon>
