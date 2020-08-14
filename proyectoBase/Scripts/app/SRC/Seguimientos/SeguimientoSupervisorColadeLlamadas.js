@@ -129,7 +129,7 @@ function FiltrarInformacion(Actividad) {
 
         $.ajax({
             type: "POST",
-            url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarSolicitudes",
+            url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarRegistros",
             data: JSON.stringify({ dataCrypt: window.location.href, IDAgente: $("#ddlAgentesActivos :selected").val(), IDActividad: Actividad }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {

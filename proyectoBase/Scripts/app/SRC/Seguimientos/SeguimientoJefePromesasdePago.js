@@ -1,4 +1,4 @@
-﻿var FiltroActual = "";
+﻿var FiltroActual = "incumplidas";
 var lenguajeEspanol = {
     "sProcessing": "Cargando información...",
     "sLengthMenu": "Mostrar _MENU_ registros",

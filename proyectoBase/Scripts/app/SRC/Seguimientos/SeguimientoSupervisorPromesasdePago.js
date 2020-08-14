@@ -56,7 +56,7 @@ $(document).ready(function () {
         },
         "ajax": {
             type: "POST",
-            url: "SeguimientoSupervisorPromesasdePago.aspx/CargarSolicitudes",
+            url: "SeguimientoSupervisorPromesasdePago.aspx/CargarRegistros",
             contentType: 'application/json; charset=utf-8',
             data: function (dtParms) {
                 return JSON.stringify({ dataCrypt: window.location.href });

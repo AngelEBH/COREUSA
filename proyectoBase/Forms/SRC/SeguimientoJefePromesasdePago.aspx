@@ -48,7 +48,7 @@
         <div class="card-body">
             <div class="table-responsive p-0">
                 <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
-                    <label class="btn btn-secondary active opcion">
+                    <label class="btn btn-secondary active opcion" style="display:none;">
                         <input id="general" type="radio" name="filtros" value="0" />
                         General
                     </label>

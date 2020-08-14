@@ -53,7 +53,7 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<SeguimientoSupervisorColadeLlamadasViewModel> CargarSolicitudes(string dataCrypt, int IDAgente, int IDActividad)
+    public static List<SeguimientoSupervisorColadeLlamadasViewModel> CargarRegistros(string dataCrypt, int IDAgente, int IDActividad)
     {
         List<SeguimientoSupervisorColadeLlamadasViewModel> ListadoRegistros = new List<SeguimientoSupervisorColadeLlamadasViewModel>();
         try
