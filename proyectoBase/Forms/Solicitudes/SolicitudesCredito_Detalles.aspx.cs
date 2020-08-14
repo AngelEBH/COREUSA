@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-using proyectoBase.Models.ViewModel;
+﻿using proyectoBase.Models.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Net;
 using System.Web;
 using System.Web.Services;
 
@@ -14,6 +12,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
     private String pcEncriptado = "";
     private string pcIDUsuario = "";
     private string pcIDApp = "";
+    private string pcIDSesion = "";
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -44,7 +43,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    bool AccesoAlAnalisis = CargarInformacionSolicitud(Convert.ToInt32(pcIDUsuario), IDSOL, pcIDApp);
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    bool AccesoAlAnalisis = CargarInformacionSolicitud(Convert.ToInt32(pcIDUsuario), IDSOL, pcIDApp, pcIDSesion);
                 }
                 else
                 {
@@ -64,7 +64,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         }
     }
 
-    public bool CargarInformacionSolicitud(int IDUsuario, int IDSolicitud, string pcIDApp)
+    public bool CargarInformacionSolicitud(int IDUsuario, int IDSolicitud, string pcIDApp, string pcIDSesion)
     {
         bool resultado = true;
         SqlConnection sqlConexion = null;
@@ -73,13 +73,12 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         BandejaSolicitudesViewModel solicitudes = new BandejaSolicitudesViewModel();
         try
         {
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
-            SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
+            SqlCommand sqlComando = new SqlCommand("dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitud);
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
             sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", IDUsuario);
@@ -137,11 +136,10 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
             #region OBTENER TODA LA INFORMACION DE LA SOLICITUD
 
@@ -150,6 +148,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
             sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -250,6 +249,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ObtenerSolicitudDocumentos", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
             sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -284,7 +284,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Listar", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@fiIDCliente", ObjSolicitud.solicitud.fiIDCliente);
-            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+            sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
             reader = sqlComando.ExecuteReader();
@@ -332,7 +333,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
             sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+            sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
             reader = sqlComando.ExecuteReader();
@@ -390,7 +392,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
             sqlComando.Parameters.AddWithValue("@fiIDSOlicitud", IDSOL);
-            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+            sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
             reader = sqlComando.ExecuteReader();
@@ -423,7 +426,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
             sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+            sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
             reader = sqlComando.ExecuteReader();
@@ -474,7 +478,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
             sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+            sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
             reader = sqlComando.ExecuteReader();
@@ -539,16 +544,17 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
+
 
             #region OBTENER INFORMACION DEL ESTADO DE LA SOLICITUD
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredSolicitud_SolicitudEstadoProcesamiento", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
             sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -623,18 +629,6 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static TasaDeCambioViewModel obtenerTasaCambio()
-    {
-        string url = "https://api.cambio.today/v1/quotes/USD/HNL/json?quantity=1&key=4375|KX6gvgUBdp8LVfbc6O2HFwmcGdHTHb0B";
-        WebRequest oRequeste = WebRequest.Create(url);
-        WebResponse oRespone = oRequeste.GetResponse();
-        StreamReader sr = new StreamReader(oRespone.GetResponseStream());
-        string resultado = sr.ReadToEnd().Trim();
-        TasaDeCambioViewModel objTasaCambio = JsonConvert.DeserializeObject<TasaDeCambioViewModel>(resultado);
-        return objTasaCambio;
-    }
-
-    [WebMethod]
     public static string ObtenerUrlEncriptado()
     {
         string lcURL = HttpContext.Current.Request.Url.ToString();
@@ -650,11 +644,12 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
     [WebMethod]
     public static PrecalificadoViewModel GetPrestamosSugeridos(decimal ValorProducto, decimal ValorPrima)
     {
-        PrecalificadoViewModel objPrecalificado = new PrecalificadoViewModel();
-        List<cotizadorProductosViewModel> listaCotizadorProductos = new List<cotizadorProductosViewModel>();
-        string connectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = WebUser; Password = WebUser123*;Max Pool Size=200;MultipleActiveResultSets=true";
         SqlConnection conn = null;
         SqlDataReader reader = null;
+
+        PrecalificadoViewModel objPrecalificado = new PrecalificadoViewModel();
+        List<cotizadorProductosViewModel> listaCotizadorProductos = new List<cotizadorProductosViewModel>();
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         try
         {
             string lcURL = HttpContext.Current.Request.Url.ToString();
@@ -662,7 +657,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             string identidad = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
             int IDUSR = int.Parse(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr").ToString());
 
-            conn = new SqlConnection(connectionString);
+            string connectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            conn = new SqlConnection(DSC.Desencriptar(connectionString));
             SqlCommand cmd = new SqlCommand("dbo.sp_CredCotizador_ConPrima", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@pcIdentidad", identidad);
@@ -710,6 +706,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         SqlConnection sqlConexion = null;
         SqlDataReader reader = null;
         CalculoPrestamoViewModel objCalculo = null;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         try
         {
             string lcURL = HttpContext.Current.Request.Url.ToString();
@@ -717,17 +714,17 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             int IDUSR = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             DateTime fechaActual = DateTime.Now;
             string MensajeError = String.Empty;
             int IDPRODUCTO = 0;
 
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
             sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", IDUSR);
