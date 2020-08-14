@@ -31,8 +31,8 @@ public partial class SeguimientoRecuperacionDelDiaPorSupervisor : System.Web.UI.
             /* Agentes Activos */
             string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
             SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            //string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
-            string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + 1 + "," + 101 + "," + 87;
+            string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
+            //string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + 1 + "," + 101 + "," + 87;
             SqlDataAdapter AdapterDDLCondiciones = new SqlDataAdapter(Comando, sqlConexion);
             DataTable dtAgentes = new DataTable();
             sqlConexion.Open();

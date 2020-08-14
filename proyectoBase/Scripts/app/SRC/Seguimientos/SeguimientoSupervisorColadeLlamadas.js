@@ -1,7 +1,7 @@
 ﻿var FiltroActual = "";
 var Actividad = 1;
 var lenguajeEspanol = {
-    "sProcessing": "Cargando registros...",
+    "sProcessing": "Cargando información...",
     "sLengthMenu": "Mostrar _MENU_ registros",
     "sZeroRecords": "No se encontraron resultados",
     "sEmptyTable": "Ningún dato disponible en esta tabla",
@@ -12,7 +12,7 @@ var lenguajeEspanol = {
     "sSearch": "Buscar:",
     "sUrl": "",
     "sInfoThousands": ",",
-    "sLoadingRecords": "Cargando solicitudes...",
+    "sLoadingRecords": "Cargando información...",
     "oPaginate": {
         "sFirst": "Primero",
         "sLast": "Último",
@@ -84,15 +84,35 @@ $(document).ready(function () {
         dtClientes.draw();
     });
 
+    /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
         if (FiltroActual == 'rangoFechas') {
-        var t = $("#min").datepicker("getDate"),
-            l = $("#max").datepicker("getDate"),
-            n = new Date(a[6]);
+            var t = $("#min").datepicker("getDate"),
+                l = $("#max").datepicker("getDate"),
+                n = new Date(a[6]);
             return ("Invalid Date" == t && "Invalid Date" == l) || ("Invalid Date" == t && n <= l) || ("Invalid Date" == l && n >= t) || (n <= l && n >= t);
         }
         else { return true; }
+    });
+
+    /* Buscador */
+    $('#txtDatatableFilter').keyup(function () {
+        dtClientes.search($(this).val()).draw();
     })
+
+    /* Listas seleccionables */
+    $(".buscadorddl").select2({
+        language: {
+            errorLoading: function () { return "No se pudieron cargar los resultados" },
+            inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+            inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+            loadingMore: function () { return "Cargando más resultados…" },
+            maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
+            noResults: function () { return "No se encontraron resultados" },
+            searching: function () { return "Buscando…" },
+            removeAllItems: function () { return "Eliminar todos los elementos" }
+        }
+    });
 });
 
 $("#ddlAgentesActivos").change(function () {
@@ -104,7 +124,7 @@ $("#ddlAgentesActivos").change(function () {
 function FiltrarInformacion(Actividad) {
 
     if ($("#ddlAgentesActivos :selected").val() != '') {
-        
+
         $('#datatable-clientes').DataTable().clear().draw();
 
         $.ajax({
@@ -148,7 +168,7 @@ function FiltrarInformacion(Actividad) {
         });
     }
     else {
-        MensajeError('Seleccione un agente');
+        MensajeAdvertencia('Seleccione un agente');
     }
 }
 

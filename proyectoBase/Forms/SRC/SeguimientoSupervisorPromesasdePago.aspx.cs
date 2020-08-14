@@ -46,8 +46,8 @@ public partial class SeguimientoSupervisorPromesasdePago : System.Web.UI.Page
             SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
             SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_AdminSeguimientoPromesasdePago", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@piIDApp", 101);
-            sqlComando.Parameters.AddWithValue("@piIDUsuario", 87);
+            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
             sqlComando.Parameters.AddWithValue("@piIDAgente", 0);
 
             sqlConexion.Open();

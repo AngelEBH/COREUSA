@@ -31,7 +31,7 @@ public partial class Seguimientos_SeguimientoJefePromesasdePago : System.Web.UI.
     }
 
     [WebMethod]
-    public static List<SeguimientoJefePromesasPagoViewModel> CargarSolicitudes(string dataCrypt)
+    public static List<SeguimientoJefePromesasPagoViewModel> CargarRegistros(string dataCrypt)
     {
         List<SeguimientoJefePromesasPagoViewModel> ListadoRegistros = new List<SeguimientoJefePromesasPagoViewModel>();
         try

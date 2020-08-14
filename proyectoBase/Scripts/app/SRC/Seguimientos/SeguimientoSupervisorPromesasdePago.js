@@ -1,6 +1,6 @@
 ﻿var FiltroActual = "incumplidas";
 var lenguajeEspanol = {
-    "sProcessing": "Cargando registros...",
+    "sProcessing": "Cargando información...",
     "sLengthMenu": "Mostrar _MENU_ registros",
     "sZeroRecords": "No se encontraron resultados",
     "sEmptyTable": "Ningún dato disponible en esta tabla",
@@ -11,7 +11,7 @@ var lenguajeEspanol = {
     "sSearch": "Buscar:",
     "sUrl": "",
     "sInfoThousands": ",",
-    "sLoadingRecords": "Cargando solicitudes...",
+    "sLoadingRecords": "Cargando información...",
     "oPaginate": {
         "sFirst": "Primero",
         "sLast": "Último",
