@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Bandeja de solicitudes</title>
     <!-- BOOTSTRAP -->
-    <link href="../../Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../../Content/css/icons.css" rel="stylesheet" />
-    <link href="../../Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -19,54 +19,67 @@
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/Content/css/bandejaSolicitudes.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
+    <style>
+        .opcion {
+            cursor: pointer;
+        }
+
+        #datatable-bandeja tbody tr {
+            cursor: pointer;
+        }
+
+        #datatable-bandeja tbody td {
+            outline: none;
+        }
+    </style>
 </head>
-<body runat="server" class="EstiloBody-Listado">
+<body runat="server" class="EstiloBody-Listado-PRUEBA">
     <div class="card">
         <div class="card-header">
-            <h4>Bandeja general de solicitudes</h4>
+            <h6>Bandeja general de solicitudes</h6>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <div class="btn-group btn-group-toggle col-lg-12" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
+            <div class="table-responsive p-0">
+                <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
+                    <label class="btn btn-secondary active opcion">
                         <input id="general" type="radio" name="filtros" value="0" />
                         General
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-secondary opcion">
                         <input id="recepcion" type="radio" name="filtros" value="7" />
-                        <a href="#" class="text-white">En Recepción</a>
+                        En Recepción
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-secondary opcion">
                         <input id="analisis" type="radio" name="filtros" value="8" />
-                        <a href="#" class="text-white">En Analisis</a>
+                        En Analisis
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-secondary opcion">
                         <input id="campo" type="radio" name="filtros" value="9" />
-                        <a href="#" class="text-white">En Campo</a>
+                        En Campo
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-secondary opcion">
                         <input id="condicionadas" type="radio" name="filtros" value="10" />
-                        <a href="#" class="text-white">Condicionadas</a>
+                        Condicionadas
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-secondary opcion">
                         <input id="reprogramadas" type="radio" name="filtros" value="11" />
-                        <a href="#" class="text-white">Reprogramadas</a>
+                        Reprogramadas
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-secondary opcion">
                         <input id="validacion" type="radio" name="filtros" value="12" />
-                        <a href="#" class="text-white">Validación</a>
+                        Validación
                     </label>
-                    <label class="btn btn-warning">
+                    <label class="btn btn-warning opcion">
                         <input id="pendientes" type="radio" name="filtros" value="13" />
-                        <a href="#" class="text-white">Pendientes</a>
+                        Pendientes
                     </label>
-                    <label class="btn btn-success">
+                    <label class="btn btn-success opcion">
                         <input id="aprobadas" type="radio" name="filtros" value="14" />
-                        <a href="#" class="text-white">Aprobadas</a>
+                        Aprobadas
                     </label>
-                    <label class="btn btn-danger">
+                    <label class="btn btn-danger opcion">
                         <input id="rechazadas" type="radio" name="filtros" value="15" />
-                        <a href="#" class="text-white">Rechazadas</a>
+                        Rechazadas
                     </label>
                 </div>
             </div>
@@ -114,7 +127,7 @@
                 </div>
             </div>
 
-            <table id="datatable-bandeja" class="display compact table-striped table-bordered nowrap table-condensed" style="width: 100%">
+            <table id="datatable-bandeja" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                 <thead>
                     <tr>
                         <th>Solicitud</th>
@@ -135,6 +148,7 @@
                 </thead>
                 <tbody>
                 </tbody>
+                <tfoot></tfoot>
             </table>
         </div>
     </div>
@@ -163,15 +177,9 @@
             </div>
         </div>
     </div>
-    <script src="../../Scripts/js/jquery.min.js"></script>
-    <script src="../../Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="../../Scripts/js/metisMenu.min.js"></script>
-    <script src="../../Scripts/js/jquery.slimscroll.js"></script>
-    <script src="../../Scripts/js/waves.min.js"></script>
-    <script src="../../Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="../../Scripts/js/app.js"></script>
+    <script src="/Scripts/js/jquery.min.js"></script>
+    <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
-    <script src="../../Scripts/plugins/iziToast/js/iziToast.js"></script>
     <script src="../../Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="../../Scripts/plugins/parsleyjs/parsley.js"></script>
     <!-- DATATABLES -->

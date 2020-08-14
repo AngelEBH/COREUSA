@@ -515,7 +515,7 @@ function cargarInformacionSolicitud() {
             }
             else if (rowDataSolicitud.fiIDTipoPrestamo == '201') {
 
-                $('#lblValorVehiculoTitulo,#lblMontoValorVehiculo').css('display', '');
+                $('#lblValorVehiculo,#lblMontoValorVehiculo').css('display', '');
                 $('#lblMontoValorVehiculo').text(addComasFormatoNumerico(rowDataSolicitud.fnValorGarantia));
                 prestamoMoto(rowDataSolicitud.fnPrima, rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fiPlazoPmoSeleccionado);
 
@@ -524,7 +524,7 @@ function cargarInformacionSolicitud() {
             }
             else if (rowDataSolicitud.fiIDTipoPrestamo == '202') {
                 tipodeCuota = 'Mensual';
-                $('#lblValorVehiculoTitulo,#lblMontoValorVehiculo').css('display', '');
+                $('#lblValorVehiculo,#lblMontoValorVehiculo').css('display', '');
                 $('#lblMontoValorVehiculo').text(addComasFormatoNumerico(rowDataSolicitud.fnValorGarantia));
                 prestamoAuto(rowDataSolicitud.fnPrima, rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fiPlazoPmoSeleccionado)
 
@@ -1881,7 +1881,7 @@ function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
                 $("#lblMontoCuotaEfectivo").text(addComasFormatoNumerico(objCalculo.CuotaQuincenal));
                 $("#lblTituloCuotaEfectivo").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota);
                 /* Mostrar div del calculo del prestamo efectivo */
-                $("#lblPrimaTitulo").css('display', 'none');
+                $("#lblPrima").css('display', 'none');
                 $("#lblMontoPrima").css('display', 'none');
                 $("#divCargando,#divCargandoAnalisis").css('display', 'none');
                 $("#LogoPrestamo").css('display', '');
@@ -1961,8 +1961,7 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
 
             var objCalculo = data.d;
             if (objCalculo != null) {
-            /* variables globales */
-                console.log(objCalculo);
+                /* variables globales */
                 gMontoFinal = objCalculo.ValoraFinanciar;
                 gPlazoFinal = plazoMensual;
                 $("#lblMontoFinanciarAuto").text(addComasFormatoNumerico(objCalculo.ValoraFinanciar));
