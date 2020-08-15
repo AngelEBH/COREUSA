@@ -205,18 +205,18 @@
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
-    <script src="../../Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="../../Scripts/plugins/parsleyjs/parsley.js"></script>
+    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
+    <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <!-- DATATABLES -->
-    <script src="../../Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/buttons.bootstrap4.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/jszip.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/buttons.html5.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
-    <script src="../../Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="../../Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.bootstrap4.min.js"></script>
+    <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js"></script>
 </body>
 </html>
