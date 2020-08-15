@@ -30,13 +30,22 @@
 
         #datatable-bandeja tbody td {
             outline: none;
+            padding:0 !important;
         }
     </style>
 </head>
 <body runat="server" class="EstiloBody-Listado-PRUEBA">
     <div class="card">
         <div class="card-header">
-            <h6>Bandeja general de solicitudes</h6>
+            <div class="row">
+                <div class="col-8">
+                    <h6>Bandeja general de solicitudes</h6>
+                </div>
+                <div class="col-4">
+                    <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
+                        aria-label="Buscar" />
+                </div>
+            </div>  
         </div>
         <div class="card-body">
             <div class="table-responsive p-0">
@@ -146,9 +155,25 @@
                         <th>Resolución</th>
                     </tr>
                 </thead>
-                <tbody>
-                </tbody>
-                <tfoot></tfoot>
+                <tbody></tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

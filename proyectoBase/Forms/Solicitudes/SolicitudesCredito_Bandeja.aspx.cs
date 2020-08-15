@@ -61,7 +61,8 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+            sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
             sqlConexion.Open();
