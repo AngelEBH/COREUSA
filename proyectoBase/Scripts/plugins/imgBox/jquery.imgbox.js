@@ -55,7 +55,7 @@
 
 			var scale = width / height;
 
-			$('html,body').append(image).css({
+			$('html').append(image).css({
 				overflow: 'hidden'
 			});
 
@@ -102,15 +102,16 @@
 					$(this).remove();
 				});
 
-				//$("body").css({
-				//	overflow: "auto"
-				//});
-
-				$('html, body').css({
-					overflow: 'auto',
-					height: 'auto',
-					'overflow-x':'hidden'
+				$('html').css({
+					overflow: "auto"
 				});
+
+				//$('body').css({
+				//	//overflow: 'auto',
+				//	////height: 'auto',
+				//	////height: 'calc(100vh - 5px)',
+				//	//'overflow-x':'hidden'
+				//});
 
 				$(viewbtn).remove();
 				$(closebtn).remove();

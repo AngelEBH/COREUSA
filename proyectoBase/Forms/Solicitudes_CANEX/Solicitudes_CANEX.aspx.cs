@@ -76,7 +76,9 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
                     ValorGlobal = (decimal)reader["fnValorGlobal"],
                     ValorPrima = (decimal)reader["fnValorPrima"],
                     ValorPrestamo = (decimal)reader["fnValorPrestamo"],
-                    FechaIngresoSolicitud = (DateTime)reader["fdIngresoSolicitud"]
+                    FechaIngresoSolicitud = (DateTime)reader["fdIngresoSolicitud"],
+                    EstadoSolicitud = (string)reader["fcEstadoSolicitud"],
+                    Moneda = "L"
                 });
             }
         }
@@ -156,7 +158,8 @@ public class SolcitudesCanexViewModel
     public decimal ValorGlobal { get; set; }
     public decimal ValorPrima { get; set; }
     public decimal ValorPrestamo { get; set; }
+    public string Moneda { get; set; }
     public DateTime FechaIngresoSolicitud { get; set; }
     public string NombreUsuario { get; set; }
-    public int EstadoSolicitud { get; set; }
+    public string EstadoSolicitud { get; set; }
 }

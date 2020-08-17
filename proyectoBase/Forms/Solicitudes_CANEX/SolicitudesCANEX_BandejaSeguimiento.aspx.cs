@@ -89,7 +89,8 @@ public partial class SolicitudesCANEX_BandejaSeguimiento : System.Web.UI.Page
                     ValorPrima = (decimal)reader["fnValorPrima"],
                     ValorPrestamo = (decimal)reader["fnValorPrestamo"],
                     FechaIngresoSolicitud = (DateTime)reader["fdIngresoSolicitud"],
-                    DescripcionEstadoSolicitud = (string)reader["fcEstadoSolicitud"]
+                    DescripcionEstadoSolicitud = (string)reader["fcEstadoSolicitud"],
+                    Moneda = "L"
                 });
             }
         }
@@ -173,4 +174,5 @@ public class SolicitudesCANEX_BandejaSeguimientoViewModel
     public string NombreUsuario { get; set; }
     public int EstadoSolicitud { get; set; }
     public string DescripcionEstadoSolicitud { get; set; }
+    public string Moneda { get; set; }
 }

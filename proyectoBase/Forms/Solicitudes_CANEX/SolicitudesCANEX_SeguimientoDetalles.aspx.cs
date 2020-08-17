@@ -216,7 +216,7 @@ public partial class SolicitudesCANEX_SeguimientoDetalles : System.Web.UI.Page
                             reader.Close();
 
                         /* Verficar si la solicitud tiene condicionamientos pendientes */
-                        sqlComando = new SqlCommand("EXEC CoreFinanciero.dbo.sp_CANEX_Solicitud_Condiciones @piIDSesion, @piIDApp, @piIDUsuario, @piIDSolicitud", sqlConexion);
+                        sqlComando = new SqlCommand("EXEC dbo.sp_CANEX_Solicitud_Condiciones @piIDSesion, @piIDApp, @piIDUsuario, @piIDSolicitud", sqlConexion);
                         sqlComando.CommandType = CommandType.Text;
                         sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -283,7 +283,7 @@ public partial class SolicitudesCANEX_SeguimientoDetalles : System.Web.UI.Page
 
             string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
             sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CANEX_Solicitud_Documentos", sqlConexion);
+            SqlCommand sqlComando = new SqlCommand("dbo.sp_CANEX_Solicitud_Documentos", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);

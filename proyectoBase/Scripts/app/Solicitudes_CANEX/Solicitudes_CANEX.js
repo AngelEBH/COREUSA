@@ -1,15 +1,18 @@
 ﻿var Identidad = '';
 var IDSol = 0;
+var FiltroActual = "";
 $(document).ready(function () {
     var tablaSolicitudes = $('#tblSolicitudesCanex').DataTable(
         {
-            lengthChange: false,
-            "pageLength": 50,
-            "paging": true,
-            "responsive": true,
-            dom: "rt<'row'<'col-sm-4'i><'col-sm-8'p>>",
+            //"responsive": true,
+            "pageLength": 10,
+            "aaSorting": [],
+            "processing": true,
+            "dom": "<'row'<'col-sm-6'><'col-sm-6'T>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-6'i><'col-sm-6'p>>",
             "language": {
-                "sProcessing": "Cargando solicitudes...",
+                "sProcessing": "Cargando información...",
                 "sLengthMenu": "Mostrar _MENU_ registros",
                 "sZeroRecords": "No se encontraron resultados",
                 "sEmptyTable": "Ningún dato disponible en esta tabla",
@@ -20,7 +23,7 @@ $(document).ready(function () {
                 "sSearch": "Buscar:",
                 "sUrl": "",
                 "sInfoThousands": ",",
-                "sLoadingRecords": "Cargando solicitudes...",
+                "sLoadingRecords": "Cargando información...",
                 "oPaginate": {
                     "sFirst": "Primero",
                     "sLast": "Último",
@@ -54,17 +57,36 @@ $(document).ready(function () {
                     "data": "FechaIngresoSolicitud",
                     "render": function (value) {
                         if (value === null) return "";
-                        return moment(value).lang('es').format('MMMM Do YYYY, h:mm:ss a');
+                        return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
                     }
                 },
                 { "data": "Identidad" },
                 { "data": "NombreCliente" },
                 { "data": "NombreProducto" },
-                { "data": "ValorGlobal" },
-                { "data": "ValorPrima" },
-                { "data": "ValorPrestamo" },
+                {
+                    "data": "ValorGlobal",
+                    "className": 'text-right sum',
+                    "render": function (data, type, row) {
+                        return row["Moneda"] + ' ' + addFormatoNumerico(parseFloat(row["ValorGlobal"]).toFixed(2))
+                    }
+                },
+                {
+                    "data": "ValorPrima",
+                    "className": 'text-right sum',
+                    "render": function (data, type, row) {
+                        return row["Moneda"] + ' ' + addFormatoNumerico(parseFloat(row["ValorPrima"]).toFixed(2))
+                    }
+                },
+                {
+                    "data": "ValorPrestamo",
+                    "className": 'text-right sum',
+                    "render": function (data, type, row) {
+                        return row["Moneda"] + ' ' + addFormatoNumerico(parseFloat(row["ValorPrestamo"]).toFixed(2))
+                    }
+                },
                 { "data": "NombreAgencia" },
                 { "data": "NombreUsuario" },
+                { "data": "EstadoSolicitud" },
                 {
                     "data": "IDSolicitudCanex",
                     "render": function (value) {
@@ -76,23 +98,11 @@ $(document).ready(function () {
             ]
         });
 
-    /* busqueda por nombre del cliente */
-    $('#nombreCliente').on('keyup', function () {
-        tablaSolicitudes.columns(4)
-            .search(this.value)
-            .draw();
-    });
-    /* busqueda por identidad del cliente */
-    $('#identidadCliente').on('keyup', function () {
-        tablaSolicitudes.columns(3)
-            .search(this.value)
-            .draw();
-    });
     /* busqueda por mes de ingreso */
     $('#mesIngreso').on('change', function () {
         if (this.value != '') {
             tablaSolicitudes.columns(2)
-                .search(this.value)
+                .search('/' + this.value + '/')
                 .draw();
         }
         else {
@@ -101,34 +111,44 @@ $(document).ready(function () {
                 .draw();
         }
     });
+
     /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
         tablaSolicitudes.columns(2)
-            .search(this.value)
+            .search(this.value + '/')
             .draw();
     });
-    $.fn.dataTable.ext.search.push(
-        function (settings, data, dataIndex) {
-            var min = $('#min').datepicker('getDate');
-            var max = $('#max').datepicker('getDate');
-            //var startDate = new Date(data[2]);
-            var startDate = moment(data[2], 'MMMM Do YYYY, h:mm:ss a');
 
-            if (min == 'Invalid Date' && max == 'Invalid Date')
-                return true;
-            if (min == 'Invalid Date' && startDate <= max)
-                return true;
-            if (max == 'Invalid Date' && startDate >= min)
-                return true;
-            if (startDate <= max && startDate >= min)
-                return true;
-            return false;
-        }
-    );
-    $('#min').datepicker({ onSelect: function () { tablaSolicitudes.draw(); }, changeMonth: true, changeYear: true });
-    $('#max').datepicker({ onSelect: function () { tablaSolicitudes.draw(); }, changeMonth: true, changeYear: true });
-    $('#min, #max').change(function () {
+    $("#min").datepicker({
+        onSelect: function () {
+            FiltroActual = 'rangoFechas';
+        },
+        changeMonth: !0,
+        changeYear: !0,
+    });
+
+    $("#max").datepicker({
+        onSelect: function () {
+            FiltroActual = 'rangoFechas';
+        },
+        changeMonth: !0,
+        changeYear: !0,
+    });
+
+    $("#min, #max").change(function () {
+        FiltroActual = 'rangoFechas';
         tablaSolicitudes.draw();
+    });
+
+    /* Agregar Filtros */
+    $.fn.dataTable.ext.search.push(function (e, a, i) {
+        if (FiltroActual == 'rangoFechas') {
+            var t = $("#min").datepicker("getDate"),
+                l = $("#max").datepicker("getDate"),
+                n = new Date(a[2]);
+            return ("Invalid Date" == t && "Invalid Date" == l) || ("Invalid Date" == t && n <= l) || ("Invalid Date" == l && n >= t) || (n <= l && n >= t);
+        }
+        else { return true; }
     });
 
     $("#añoIngreso").datepicker({
@@ -167,6 +187,11 @@ $(document).ready(function () {
             });
         }
     });
+
+    /* Buscador */
+    $('#txtDatatableFilter').keyup(function () {
+        tablaSolicitudes.search($(this).val()).draw();
+    })
 });
 
 function MensajeError(mensaje) {
@@ -174,4 +199,16 @@ function MensajeError(mensaje) {
         title: 'Error',
         message: mensaje
     });
+}
+
+function addFormatoNumerico(nStr) {
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
 }
