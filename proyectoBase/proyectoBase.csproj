@@ -766,6 +766,7 @@
     <Content Include="Forms\Aval\Aval_Registrar.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
     <Content Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx" />
+    <Content Include="Forms\Otros\CompromisoLegal.aspx" />
     <Content Include="Forms\Precalificado\precalificado_buscador.aspx" />
     <Content Include="Forms\Precalificado\Precalificado_Puesto110.aspx" />
     <Content Include="Forms\Precalificado\ProcesarPrecalificado.aspx" />
@@ -1385,6 +1386,13 @@
     </Compile>
     <Compile Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx.designer.cs">
       <DependentUpon>OperacionesRecuperaciondelDia.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Otros\CompromisoLegal.aspx.cs">
+      <DependentUpon>CompromisoLegal.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Otros\CompromisoLegal.aspx.designer.cs">
+      <DependentUpon>CompromisoLegal.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Precalificado\precalificado_buscador.aspx.cs">
       <DependentUpon>precalificado_buscador.aspx</DependentUpon>

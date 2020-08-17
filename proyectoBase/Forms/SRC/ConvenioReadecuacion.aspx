@@ -136,10 +136,6 @@
     </div>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="/Scripts/js/metisMenu.min.js"></script>
-    <script src="/Scripts/js/jquery.slimscroll.js"></script>
-    <script src="/Scripts/js/waves.min.js"></script>
-    <script src="/Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
 
     <script src="/Scripts/plugins/kendo/jszip.min.js"></script>
