@@ -49,7 +49,7 @@ public partial class Seguimientos_SeguimientoJefePromesasdePago : System.Web.UI.
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
             sqlComando.Parameters.AddWithValue("@piIDAgente", 0);
-
+            sqlComando.CommandTimeout = 120;
             sqlConexion.Open();
             SqlDataReader reader = sqlComando.ExecuteReader();
 

@@ -5,7 +5,7 @@ $(document).ready(function () {
     var tablaSolicitudes = $('#tblSolicitudesCanex').DataTable(
         {
             //"responsive": true,
-            "pageLength": 10,
+            "pageLength": 20,
             "aaSorting": [],
             "processing": true,
             "dom": "<'row'<'col-sm-6'><'col-sm-6'T>>" +

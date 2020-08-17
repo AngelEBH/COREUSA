@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title></title>
     <!-- BOOTSTRAP -->
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -29,6 +29,8 @@
 
         #datatable-clientes tbody td {
             outline: none;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
         }
     </style>
 </head>
@@ -98,6 +100,7 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
+    <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/app/SRC/Seguimientos/SeguimientoJefePromesasdePago.js"></script>
 </body>
 </html>
