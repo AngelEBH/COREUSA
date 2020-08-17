@@ -149,38 +149,46 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion);
-            sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-            sqlConexion.Open();
-            reader = sqlComando.ExecuteReader();
-            while (reader.Read())
-            {
-                solicitudes = new BandejaSolicitudesViewModel()
-                {
-                    fiIDAnalista = (int)reader["fiIDAnalista"],
-                    fcNombreCortoAnalista = (string)reader["fcNombreCortoAnalista"]
-                };
-            }
 
-            //if (solicitudes.fiIDAnalista == IDUSR || solicitudes.fiIDAnalista == 0)
-            if (1 == 1)
-            {
-                string lcParametros = "usr=" + pcIDUsuario +
+            /* Validar que solo el primer usuario en iniciar el analisis de la solicitud tenga acceso al analisis de la misma */
+
+            //string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
+            //SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion);
+            //sqlComando.CommandType = CommandType.StoredProcedure;
+            //sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+            //sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+            //sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+            //sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+            //sqlConexion.Open();
+            //reader = sqlComando.ExecuteReader();
+            //while (reader.Read())
+            //{
+            //    solicitudes = new BandejaSolicitudesViewModel()
+            //    {
+            //        fiIDAnalista = (int)reader["fiIDAnalista"],
+            //        fcNombreCortoAnalista = (string)reader["fcNombreCortoAnalista"]
+            //    };
+            //}
+
+            //if (solicitudes.fiIDAnalista == IDUSR || solicitudes.fiIDAnalista == 0)            
+            //{
+            //    string lcParametros = "usr=" + pcIDUsuario +
+            //    "&IDApp=" + pcIDApp +
+            //    "&pcID=" + Identidad +
+            //    "&IDSOL=" + IDSOL;
+            //    resultado = DSC.Encriptar(lcParametros);
+            //}
+            //else
+            //{
+            //    resultado = "-1";
+            //}
+
+            string lcParametros = "usr=" + pcIDUsuario +
                 "&IDApp=" + pcIDApp +
                 "&pcID=" + Identidad +
                 "&IDSOL=" + IDSOL;
-                resultado = DSC.Encriptar(lcParametros);
-            }
-            else
-            {
-                resultado = "-1";
-            }
+            resultado = DSC.Encriptar(lcParametros);
         }
         catch (Exception ex)
         {

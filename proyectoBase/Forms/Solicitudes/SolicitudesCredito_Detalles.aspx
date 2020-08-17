@@ -358,44 +358,49 @@
                                         <div class="row">
                                             <!-- INFORMACION DEL PRECALIFICADO -->
                                             <div class="col-md-6 border">
-                                                <label class="col-sm-12 h6 text-center p-t-10">Capacidad de Pago - Precalificado</label>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-12 h6 text-center p-t-10">Capacidad de Pago - Precalificado</label>
 
-                                                <label class="col-sm-6 col-form-label">Ingresos precalificado</label>
-                                                <asp:Label ID="lblIngresosPrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <label class="col-sm-6 col-form-label">Ingresos precalificado</label>
+                                                    <asp:Label ID="lblIngresosPrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                <label class="col-sm-6 col-form-label">Obligaciones precalificado</label>
-                                                <asp:Label ID="lblObligacionesPrecalificado" CssClass="col-sm-6 text-danger" runat="server"></asp:Label>
+                                                    <label class="col-sm-6 col-form-label">Obligaciones precalificado</label>
+                                                    <asp:Label ID="lblObligacionesPrecalificado" CssClass="col-sm-6 text-danger" runat="server"></asp:Label>
 
-                                                <label class="col-sm-6 col-form-label">Disponible precalificado</label>
-                                                <asp:Label ID="lblDisponiblePrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <label class="col-sm-6 col-form-label">Disponible precalificado</label>
+                                                    <asp:Label ID="lblDisponiblePrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                <label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
-                                                <asp:Label ID="lblCapacidadPagoMensual" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
+                                                    <asp:Label ID="lblCapacidadPagoMensual" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                <label class="col-sm-6 col-form-label">Capacidad de quincenal</label>
-                                                <asp:Label ID="lblCapacidadPagoQuincenal" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <label class="col-sm-6 col-form-label">Capacidad de quincenal</label>
+                                                    <asp:Label ID="lblCapacidadPagoQuincenal" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                </div>
                                             </div>
                                             <!-- INFORMACION DEL PRESTAMO CON LOS DATOS DEL PRECALIFICADO-->
                                             <div class="col-md-6 border">
-                                                <label class="col-sm-12 h6 text-center p-t-10">Préstamo Sugerido - Precalificado</label>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-12 h6 text-center p-t-10">Préstamo Sugerido - Precalificado</label>
 
-                                                <label class="col-sm-6 col-form-label" id="lblTituloValorPMO">PRESTAMO APROBADO</label>
-                                                <asp:Label ID="lblValorPmoSugeridoSeleccionado" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <label class="col-sm-6 col-form-label" id="lblTituloValorPMO">PRESTAMO APROBADO</label>
+                                                    <asp:Label ID="lblValorPmoSugeridoSeleccionado" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                <label id="lblValorVehiculo" class="col-sm-6 col-form-label" style="display: none;">Valor del vehiculo</label>
-                                                <asp:Label ID="lblMontoValorVehiculo" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <label id="lblValorVehiculo" class="col-sm-6 col-form-label" style="display: none;">Valor del vehiculo</label>
+                                                    <asp:Label ID="lblMontoValorVehiculo" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                <label id="lblPrima" class="col-sm-6 col-form-label">Prima</label>
-                                                <asp:Label ID="lblMontoPrima" CssClass="col-sm-6" runat="server"></asp:Label>
-                                                <div class="form-group row" id="divCargando">
-                                                    <div class="col-sm-12 text-center p-t-10">
-                                                        <div class="spinner-border" role="status">
-                                                            <span class="sr-only">Calculando...</span>
+                                                    <label id="lblPrima" class="col-sm-6 col-form-label">Prima</label>
+                                                    <asp:Label ID="lblMontoPrima" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <div class="form-group row" id="divCargando">
+                                                        <div class="col-sm-12 text-center p-t-10">
+                                                            <div class="spinner-border" role="status">
+                                                                <span class="sr-only">Calculando...</span>
+                                                            </div>
+                                                            <br />
+                                                            Calculando...
                                                         </div>
-                                                        <br />
-                                                        Calculando...
                                                     </div>
                                                 </div>
+
                                                 <!-- DIV CALCULO PRESTAMO EFECTIVO-->
                                                 <div class="form-group row" id="divPrestamoEfectivo" style="display: none;">
 
@@ -427,22 +432,24 @@
                                             MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                         -->
                                             <div class="col-md-6 border" id="divRecalculoReal" style="display: none;">
-                                                <label class="col-sm-12 h6 text-center p-t-10">Recalculo de Capacidad de Pago - Ingresos Reales</label>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-12 h6 text-center p-t-10">Recalculo de Capacidad de Pago - Ingresos Reales</label>
 
-                                                <label class="col-sm-6 col-form-label">Ingresos reales</label>
-                                                <asp:Label ID="lblIngresosReales" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <label class="col-sm-6 col-form-label">Ingresos reales</label>
+                                                    <asp:Label ID="lblIngresosReales" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                <label class="col-sm-6 col-form-label">Obligaciones</label>
-                                                <asp:Label ID="lblObligacionesReales" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <label class="col-sm-6 col-form-label">Obligaciones</label>
+                                                    <asp:Label ID="lblObligacionesReales" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                <label class="col-sm-6 col-form-label">Disponible real</label>
-                                                <asp:Label ID="lblDisponibleReal" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <label class="col-sm-6 col-form-label">Disponible real</label>
+                                                    <asp:Label ID="lblDisponibleReal" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                <label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
-                                                <asp:Label ID="lblCapacidadPagoMensualReal" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
+                                                    <asp:Label ID="lblCapacidadPagoMensualReal" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                <label class="col-sm-6 col-form-label">Capacidad de pago quincenal</label>
-                                                <asp:Label ID="lblCapacidadPagoQuincenalReal" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                    <label class="col-sm-6 col-form-label">Capacidad de pago quincenal</label>
+                                                    <asp:Label ID="lblCapacidadPagoQuincenalReal" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                </div>
                                             </div>
                                             <!-- PRESTAMOS SUGERIDOS CON LOS INGRESOS REALES-->
                                             <div class="col-md-6 border border-success" id="divPmoSugeridoReal">

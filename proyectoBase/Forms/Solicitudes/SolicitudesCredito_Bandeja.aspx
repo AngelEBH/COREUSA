@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Bandeja de solicitudes</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -30,11 +30,12 @@
 
         #datatable-bandeja tbody td {
             outline: none;
-            padding:0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
         }
     </style>
 </head>
-<body runat="server" class="EstiloBody-Listado-PRUEBA">
+<body runat="server" class="EstiloBody-Listado">
     <div class="card">
         <div class="card-header">
             <div class="row">
@@ -45,7 +46,7 @@
                     <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
                         aria-label="Buscar" />
                 </div>
-            </div>  
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive p-0">
@@ -93,20 +94,12 @@
                 </div>
             </div>
             <br />
-            <div class="form-group row">
-                <label for="example-text-input" class="col-sm-2">Nombre cliente</label>
-                <div class="col-sm-4">
-                    <input id="nombreCliente" class="form-control form-control-sm" type="text" />
-                </div>
 
-                <label for="example-text-input" class="col-sm-2">Identidad cliente</label>
-                <div class="col-sm-4">
-                    <input id="identidadCliente" class="form-control form-control-sm" type="text" />
+            <div class="form-inline justify-content-center">
+                <div class="form-group mb-2">
+                    <label class="form-control-plaintext">Búsqueda por Mes</label>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-2">Búsqueda por Mes</label>
-                <div class="col-sm-2">
+                <div class="form-group mx-sm-3 mb-2">
                     <select id="mesIngreso" class="form-control form-control-sm">
                         <option value="" selected="selected">Seleccionar</option>
                         <option value="01">Enero</option>
@@ -123,12 +116,18 @@
                         <option value="12">Diciembre</option>
                     </select>
                 </div>
-                <label class="col-sm-2 col-form-label">Búsqueda por Año</label>
-                <div class="col-sm-1">
+
+                <div class="form-group mb-2">
+                    <label class="form-control-plaintext">Búsqueda por Año</label>
+                </div>
+                <div class="form-group mx-sm-3 mb-2">
                     <input id="añoIngreso" class="form-control form-control-sm" type="text" />
                 </div>
-                <label class="col-sm-2 col-form-label">Búsqueda por Fecha</label>
-                <div class="col-sm-3">
+
+                <div class="form-group mb-2">
+                    <label class="form-control-plaintext">Búsqueda por Fecha</label>
+                </div>
+                <div class="form-group mx-sm-3 mb-2 col-sm-2">
                     <div class="input-daterange input-group" id="date-range">
                         <input type="text" class="form-control form-control-sm" name="min" id="min" />
                         <input type="text" class="form-control form-control-sm" name="max" id="max" />
@@ -136,45 +135,31 @@
                 </div>
             </div>
 
-            <table id="datatable-bandeja" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
-                <thead>
-                    <tr>
-                        <th>Solicitud</th>
-                        <th>Agencia</th>
-                        <th>Prod.</th>
-                        <th>Identidad</th>
-                        <th>Nombre cliente</th>
-                        <th>Fecha de ingreso</th>
-                        <th>En ingreso</th>
-                        <th>En recepción</th>
-                        <th>En analisis</th>
-                        <th>En Campo</th>
-                        <th>Condicio.</th>
-                        <th>Reprog.</th>
-                        <th>Validación</th>
-                        <th>Resolución</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-            </table>
+
+            <div class="table-responsive">
+                <table id="datatable-bandeja" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                    <thead>
+                        <tr>
+                            <th>Solicitud</th>
+                            <th>Agencia</th>
+                            <th>Prod.</th>
+                            <th>Identidad</th>
+                            <th>Nombre cliente</th>
+                            <th>Fecha de ingreso</th>
+                            <th>En ingreso</th>
+                            <th>En recepción</th>
+                            <th>En analisis</th>
+                            <th>En Campo</th>
+                            <th>Condicio.</th>
+                            <th>Reprog.</th>
+                            <th>Validación</th>
+                            <th>Resolución</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -207,7 +192,6 @@
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
-    <!-- DATATABLES -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
@@ -217,6 +201,8 @@
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="/Scripts/plugins/moment/moment.js"></script>
+    <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js"></script>
 </body>
 </html>
