@@ -46,7 +46,7 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
             AdapterDDLCondiciones.Dispose();
             if (sqlConexion.State == ConnectionState.Open)
                 sqlConexion.Close();
-            ddlAgentesActivos.Items.Insert(0, new ListItem("Seleccionar Agente", String.Empty));
+            ddlAgentesActivos.Items.Insert(0, new ListItem("Seleccionar Agente", "0"));
             ddlAgentesActivos.SelectedIndex = 0;
         }
         /* FIN de captura de parametros y desencriptado de cadena, realizar validaciones que se lleguen a necesitar */
@@ -56,6 +56,10 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
     public static List<SeguimientoSupervisorColadeLlamadasViewModel> CargarRegistros(string dataCrypt, int IDAgente, int IDActividad)
     {
         List<SeguimientoSupervisorColadeLlamadasViewModel> ListadoRegistros = new List<SeguimientoSupervisorColadeLlamadasViewModel>();
+
+        if (IDAgente == 0)
+            return ListadoRegistros;
+
         try
         {
             /* Desencriptar parametros */

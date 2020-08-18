@@ -1,35 +1,34 @@
 ﻿var IDAgente = 0;
-var lenguajeEspanol = {
-    "sProcessing": "Cargando información...",
-    "sLengthMenu": "Mostrar _MENU_ registros",
-    "sZeroRecords": "No se encontraron resultados",
-    "sEmptyTable": "Ningún dato disponible en esta tabla",
-    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-    "sInfoPostFix": "",
-    "sSearch": "Buscar:",
-    "sUrl": "",
-    "sInfoThousands": ",",
-    "sLoadingRecords": "Cargando información...",
-    "oPaginate": {
-        "sFirst": "Primero",
-        "sLast": "Último",
-        "sNext": "Siguiente",
-        "sPrevious": "Anterior"
-    },
-    "oAria": {
-        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-    },
-    "decimal": ".",
-    "thousands": ","
-};
 
 $(document).ready(function () {
     dtClientes = $('#datatable-recuperacion').DataTable({
         "responsive": true,
-        "language": lenguajeEspanol,
+        "language": {
+            "sProcessing": "Cargando información...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando información...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            },
+            "decimal": ".",
+            "thousands": ","
+        },
         "pageLength": 10,
         "aaSorting": [],
         "processing": true,
@@ -97,19 +96,19 @@ $(document).ready(function () {
         dtClientes.search($(this).val()).draw();
     })
 
-    /* Listas seleccionables */
-    $(".buscadorddl").select2({
-        language: {
-            errorLoading: function () { return "No se pudieron cargar los resultados" },
-            inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-            inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-            loadingMore: function () { return "Cargando más resultados…" },
-            maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
-            noResults: function () { return "No se encontraron resultados" },
-            searching: function () { return "Buscando…" },
-            removeAllItems: function () { return "Eliminar todos los elementos" }
-        }
-    });
+    /* Buscador para listas seleccionables */
+    //$(".buscadorddl").select2({
+    //    language: {
+    //        errorLoading: function () { return "No se pudieron cargar los resultados" },
+    //        inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+    //        inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+    //        loadingMore: function () { return "Cargando más resultados…" },
+    //        maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
+    //        noResults: function () { return "No se encontraron resultados" },
+    //        searching: function () { return "Buscando…" },
+    //        removeAllItems: function () { return "Eliminar todos los elementos" }
+    //    }
+    //});
 });
 
 /* Filtar por Agente */

@@ -8,9 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title></title>
     <!-- BOOTSTRAP -->
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -64,14 +63,20 @@
                     </div>
                 </div>
                 <br />
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label pr-0">Filtrar por Agente</label>
-                    <div class="col-sm-3 pl-0">
+
+                <div class="form-inline justify-content-center">
+                    <div class="form-group mb-2">
+                        <label class="form-control-plaintext">Filtrar por Agente</label>
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
                         <asp:DropDownList ID="ddlAgentesActivos" runat="server" required="required" class="form-control form-control-sm pl-0">
                         </asp:DropDownList>
                     </div>
-                    <label class="col-sm-2 col-form-label RangoFechas" style="display: none;">Búsqueda por Fecha</label>
-                    <div class="col-sm-3 RangoFechas" style="display: none;">
+
+                    <div class="form-group mb-2">
+                        <label class="form-control-plaintext">Búsqueda por Fecha</label>
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
                         <div class="input-daterange input-group" id="date-range">
                             <input type="text" class="form-control form-control-sm" name="min" id="min" />
                             <input type="text" class="form-control form-control-sm" name="max" id="max" />
@@ -110,7 +115,7 @@
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
+    <%--<script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>--%>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/app/SRC/Seguimientos/SeguimientoSupervisorColadeLlamadas.js"></script>

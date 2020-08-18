@@ -1,42 +1,82 @@
 ﻿var FiltroActual = "";
 var Actividad = 1;
-var lenguajeEspanol = {
-    "sProcessing": "Cargando información...",
-    "sLengthMenu": "Mostrar _MENU_ registros",
-    "sZeroRecords": "No se encontraron resultados",
-    "sEmptyTable": "Ningún dato disponible en esta tabla",
-    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-    "sInfoPostFix": "",
-    "sSearch": "Buscar:",
-    "sUrl": "",
-    "sInfoThousands": ",",
-    "sLoadingRecords": "Cargando información...",
-    "oPaginate": {
-        "sFirst": "Primero",
-        "sLast": "Último",
-        "sNext": "Siguiente",
-        "sPrevious": "Anterior"
-    },
-    "oAria": {
-        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-    },
-    "decimal": ".",
-    "thousands": ","
-};
 
 $(document).ready(function () {
     dtClientes = $('#datatable-clientes').DataTable({
         "responsive": true,
-        "language": lenguajeEspanol,
+        "language": {
+            "sProcessing": "Cargando información...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando información...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            },
+            "decimal": ".",
+            "thousands": ","
+        },
         "pageLength": 10,
         "aaSorting": [],
         "processing": true,
         "dom": "<'row'<'col-sm-6'><'col-sm-6'T>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+        "ajax": {
+            type: "POST",
+            url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarRegistros",
+            contentType: 'application/json; charset=utf-8',
+            data: function (dtParms) {
+                return JSON.stringify({ dataCrypt: window.location.href, IDAgente: $("#ddlAgentesActivos :selected").val(), IDActividad: Actividad });
+            },
+            "dataSrc": function (json) {
+                var return_data = json.d;
+                return return_data;
+            }
+        },
+        "columns": [
+            { "data": "NombreAgente" },
+            { "data": "IDCliente" },
+            { "data": "NombreCompletoCliente" },
+            { "data": "TelefonoCliente" },
+            { "data": "PrimerComentario" },
+            { "data": "SegundoComentario" },
+            {
+                "data": "InicioLlamada",
+                "render": function (value) {
+                    return value == '/Date(-62135575200000)/' ? '' : moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
+                }
+            },
+            {
+                "data": "FinLlamada",
+                "render": function (value) {
+                    return value == '/Date(-62135575200000)/' ? '' : moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
+                }
+            },
+            {
+                "data": "SegundosDuracionLlamada",
+                "render": function (value) {
+                    return value == 0 ? '' : hhmmss(value);
+                }
+            }
+        ],
+        columnDefs: [
+            { targets: 'no-sort', orderable: false }
+        ]
     });
 
     $("input[type=radio][name=filtros]").change(function () {
@@ -46,19 +86,19 @@ $(document).ready(function () {
                 $(".RangoFechas").css('display', 'none');
                 FiltroActual = "hoy";
                 Actividad = 1;
-                FiltrarInformacion(Actividad);
+                FiltrarInformacion();
                 break;
             case "porHacer":
                 $(".RangoFechas").css('display', 'none');
                 FiltroActual = "porHacer";
                 Actividad = 2;
-                FiltrarInformacion(Actividad);
+                FiltrarInformacion();
                 break;
             case "anteriores":
                 $(".RangoFechas").css('display', '');
                 Actividad = 3;
                 FiltroActual = "anteriores";
-                FiltrarInformacion(Actividad);
+                FiltrarInformacion();
                 break;
         }
     });
@@ -100,72 +140,31 @@ $(document).ready(function () {
         dtClientes.search($(this).val()).draw();
     })
 
-    /* Listas seleccionables */
-    $(".buscadorddl").select2({
-        language: {
-            errorLoading: function () { return "No se pudieron cargar los resultados" },
-            inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-            inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-            loadingMore: function () { return "Cargando más resultados…" },
-            maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
-            noResults: function () { return "No se encontraron resultados" },
-            searching: function () { return "Buscando…" },
-            removeAllItems: function () { return "Eliminar todos los elementos" }
-        }
-    });
+    /* Buscador para listas seleccionables */
+    //$(".buscadorddl").select2({
+    //    language: {
+    //        errorLoading: function () { return "No se pudieron cargar los resultados" },
+    //        inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+    //        inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+    //        loadingMore: function () { return "Cargando más resultados…" },
+    //        maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
+    //        noResults: function () { return "No se encontraron resultados" },
+    //        searching: function () { return "Buscando…" },
+    //        removeAllItems: function () { return "Eliminar todos los elementos" }
+    //    }
+    //});
 });
 
 $("#ddlAgentesActivos").change(function () {
-    if ($("#ddlAgentesActivos :selected").val() != '') {
-        FiltrarInformacion(Actividad);
+    if ($("#ddlAgentesActivos :selected").val() != '0') {
+        FiltrarInformacion();
     }
 });
 
-function FiltrarInformacion(Actividad) {
+function FiltrarInformacion() {
 
-    if ($("#ddlAgentesActivos :selected").val() != '') {
-
-        $('#datatable-clientes').DataTable().clear().draw();
-
-        $.ajax({
-            type: "POST",
-            url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarRegistros",
-            data: JSON.stringify({ dataCrypt: window.location.href, IDAgente: $("#ddlAgentesActivos :selected").val(), IDActividad: Actividad }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo cargar la información');
-            },
-            success: function (data) {
-
-                var Listado = data.d;
-                var InicioLlamada = ''
-                var FinLlamada = ''
-                var duracion = '';
-                var DatatableColaLlamadas = $('#datatable-clientes').dataTable();
-
-                for (var i = 0; i < Listado.length; i++) {
-
-                    InicioLlamada = Listado[i].InicioLlamada == '/Date(-62135575200000)/' ? '' : moment(Listado[i].InicioLlamada).locale('es').format('YYYY/MM/DD h:mm:ss a');
-                    FinLlamada = Listado[i].FinLlamada == '/Date(-62135575200000)/' ? '' : moment(Listado[i].FinLlamada).locale('es').format('YYYY/MM/DD h:mm:ss a');
-                    duracion = Listado[i].SegundosDuracionLlamada == 0 ? '' : hhmmss(Listado[i].SegundosDuracionLlamada);
-
-                    DatatableColaLlamadas.fnAddData([
-                        Listado[i].NombreAgente,
-                        Listado[i].IDCliente,
-                        Listado[i].NombreCompletoCliente,
-                        Listado[i].TelefonoCliente,
-                        Listado[i].PrimerComentario,
-                        Listado[i].SegundoComentario,
-                        InicioLlamada,
-                        FinLlamada,
-                        duracion
-                    ], false);
-                }
-                DatatableColaLlamadas.fnDraw();
-
-                MensajeInformacion('La información se cargó correctamente');
-            }
-        });
+    if ($("#ddlAgentesActivos :selected").val() != '0') {
+        dtClientes.ajax.reload(null, false);
     }
     else {
         MensajeAdvertencia('Seleccione un agente');
@@ -184,7 +183,7 @@ function hhmmss(secs) {
     return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
 }
 
-function MensajeAdvertencia(mensaje) {
+function MensajeError(mensaje) {
     iziToast.error({
         title: 'Error',
         message: mensaje

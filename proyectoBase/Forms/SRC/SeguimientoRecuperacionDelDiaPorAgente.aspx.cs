@@ -47,10 +47,6 @@ public partial class SeguimientoRecuperacionDelDiaPorAgente : System.Web.UI.Page
             SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
             SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_RecuperacionPorAgente", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
-            //sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
-            //sqlComando.Parameters.AddWithValue("@piIDApp", 101);
-            //sqlComando.Parameters.AddWithValue("@piIDUsuarioSupervisor", 87);
-            //sqlComando.Parameters.AddWithValue("@piIDAgente", 36);
 
             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);

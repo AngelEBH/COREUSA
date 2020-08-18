@@ -8,13 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title></title>
     <!-- BOOTSTRAP -->
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <%--<link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />--%>
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
@@ -45,10 +44,12 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="form-group row justify-content-center">
-                    <div class="col-md-1 form-inline"></div>
-                    <div class="col-md-4">
-                        <label class="col-form-label">Total Recuperado Hoy</label>
+
+                <div class="form-inline justify-content-center">
+                    <div class="form-group mb-2">
+                        <label class="form-control-plaintext">Total Recuperado Hoy</label>
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
                         <label class="col-form-label" style="font-weight:bold;" id="lblTotalRecuperadoHoy"></label>
                     </div>
                 </div>
@@ -80,7 +81,7 @@
     <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
     <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
-    <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
+    <%--<script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>--%>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/app/SRC/Seguimientos/SeguimientoRecuperacionDelDiaPorAgente.js"></script>
 </body>
