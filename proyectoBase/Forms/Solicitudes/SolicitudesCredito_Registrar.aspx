@@ -84,11 +84,12 @@
                         </div>
                         <label class="col-sm-2 col-form-label" id="titleOrigen" style="display: none;">Origen</label>
                         <div class="col-sm-2">
-                            <select name="ddlOrigen" id="ddlOrigen" class="form-control form-control-sm" disabled="disabled" style="display: none;" data-parsley-group="informacionPrestamo" required="required">
-                                <option value="">Seleccione una opción</option>
-                            </select>
+                            <asp:DropDownList ID="ddlOrigen" Enabled="false" Style="display: none;" CssClass="form-control form-control-sm" runat="server" required="required" data-parsley-group="informacionPrestamo">
+                            </asp:DropDownList>
                         </div>
-                        
+
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Nombre completo</label>
                         <div class="col-sm-2">
                             <asp:TextBox ID="primerNombreCliente" placeholder="Primer nombre" CssClass="form-control" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
@@ -103,409 +104,409 @@
                             <asp:TextBox ID="segundoApellidoCliente" placeholder="Segundo apellido" CssClass="form-control" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">No. Identidad</label>
-                        <div class="col-sm-2">
-                            <asp:TextBox ID="identidadCliente" CssClass="form-control identidad" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                        </div>
-                        <label class="col-sm-2 col-form-label">RTN numérico</label>
-                        <div class="col-sm-2">
-                            <asp:TextBox ID="rtnCliente" CssClass="form-control formatoRTN" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Ingresos precalificado</label>
-                        <div class="col-sm-2">
-                            <asp:TextBox ID="ingresosPrecalificado" CssClass="form-control MascaraCantidad" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                        </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">No. Identidad</label>
+                    <div class="col-sm-2">
+                        <asp:TextBox ID="identidadCliente" CssClass="form-control identidad" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                     </div>
-                    <div class="form-group row">
-                        <label id="lblMontoPmo" class="col-sm-2 col-form-label">Monto</label>
-                        <div class="col-sm-2">
-                            <input id="txtMontoPrestamo" class="form-control MascaraCantidad" type="text" required="required" data-parsley-group="informacionPrestamo" />
-                        </div>
-                        <label id="lblMontoPrima" class="col-sm-2 col-form-label">Prima</label>
-                        <div class="col-sm-2">
-                            <input id="txtMontoPrima" class="form-control MascaraCantidad" type="text" value="0.00" required="required" data-parsley-group="informacionPrestamo" />
-                        </div>
-                        <label class="col-sm-2 col-form-label">Moneda</label>
-                        <div class="col-sm-2">
-                            <select name="TipoMoneda" id="TipoMoneda" class="form-control" data-parsley-group="informacionPrestamo" required="required">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                        </div>
+                    <label class="col-sm-2 col-form-label">RTN numérico</label>
+                    <div class="col-sm-2">
+                        <asp:TextBox ID="rtnCliente" CssClass="form-control formatoRTN" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                     </div>
-                    <div class="form-group row">
-                        <label id="lblPlazo" class="col-sm-2 col-form-label">Plazo</label>
-                        <div class="col-sm-2">
-                            <input id="txtPlazoPrestamo" class="form-control MascaraEnteros" type="text" required="required" data-parsley-group="informacionPrestamo" />
-                        </div>
-                        <label id="lblTituloMontoFinanciar" class="col-sm-2 col-form-label">Monto a Financiar</label>
-                        <div class="col-sm-2">
-                            <input id="txtMontoFinanciar" class="form-control MascaraCantidad" readonly="readonly" type="text" required="required" data-parsley-group="informacionPrestamo" />
-                        </div>
-                        <label id="lblTituloCuotaCalculada" class="col-sm-2 col-form-label">Cuota</label>
-                        <div class="col-sm-2">
-                            <input id="txtCuotaCalculada" class="form-control MascaraCantidad" readonly="readonly" type="text" required="required" data-parsley-group="informacionPrestamo" />
-                        </div>
+                    <label class="col-sm-2 col-form-label">Ingresos precalificado</label>
+                    <div class="col-sm-2">
+                        <asp:TextBox ID="ingresosPrecalificado" CssClass="form-control MascaraCantidad" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                     </div>
-
-                    <h6 class="border-bottom border-gray pb-2">Información del precalificado (Máximo sugerido)</h6>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">PMO sugerido</label>
-                        <div class="col-sm-2">
-                            <select name="pmoSugeridoSeleccionado" id="pmoSugeridoSeleccionado" disabled="disabled" class="form-control" data-parsley-group="informacionPrestamo" required="required">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 col-form-label" id="lblPlazoPMO">Plazo</label>
-                        <div class="col-sm-2">
-                            <input id="plazoPmoSeleccionado" readonly="readonly" class="form-control MascaraEnteros" type="text" required="required" data-parsley-group="informacionPrestamo" />
-                        </div>
-                        <label class="col-sm-2 col-form-label">Cuota</label>
-                        <div class="col-sm-2">
-                            <input id="cutoaQuinceal" class="form-control MascaraCantidad" readonly="readonly" type="text" required="required" data-parsley-group="informacionPrestamo" />
-                        </div>
+                </div>
+                <div class="form-group row">
+                    <label id="lblMontoPmo" class="col-sm-2 col-form-label">Monto</label>
+                    <div class="col-sm-2">
+                        <input id="txtMontoPrestamo" class="form-control MascaraCantidad" type="text" required="required" data-parsley-group="informacionPrestamo" />
+                    </div>
+                    <label id="lblMontoPrima" class="col-sm-2 col-form-label">Prima</label>
+                    <div class="col-sm-2">
+                        <input id="txtMontoPrima" class="form-control MascaraCantidad" type="text" value="0.00" required="required" data-parsley-group="informacionPrestamo" />
+                    </div>
+                    <label class="col-sm-2 col-form-label">Moneda</label>
+                    <div class="col-sm-2">
+                        <select name="TipoMoneda" id="TipoMoneda" class="form-control" data-parsley-group="informacionPrestamo" required="required">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label id="lblPlazo" class="col-sm-2 col-form-label">Plazo</label>
+                    <div class="col-sm-2">
+                        <input id="txtPlazoPrestamo" class="form-control MascaraEnteros" type="text" required="required" data-parsley-group="informacionPrestamo" />
+                    </div>
+                    <label id="lblTituloMontoFinanciar" class="col-sm-2 col-form-label">Monto a Financiar</label>
+                    <div class="col-sm-2">
+                        <input id="txtMontoFinanciar" class="form-control MascaraCantidad" readonly="readonly" type="text" required="required" data-parsley-group="informacionPrestamo" />
+                    </div>
+                    <label id="lblTituloCuotaCalculada" class="col-sm-2 col-form-label">Cuota</label>
+                    <div class="col-sm-2">
+                        <input id="txtCuotaCalculada" class="form-control MascaraCantidad" readonly="readonly" type="text" required="required" data-parsley-group="informacionPrestamo" />
                     </div>
                 </div>
 
-                <!-- INFORMACION PERSONAL DEL CLIENTE -->
-                <div id="step-2" class="form-section">
-                    <h5 class="border-bottom border-gray pb-2">Información personal</h5>
-
-                    <div class="form-group row">
-                        <label class="col-sm-1 col-form-label">Profesión</label>
-                        <div class="col-sm-2">
-                            <input id="profesion" class="form-control" type="text" required="required" data-parsley-group="informacionPersonal" />
-                        </div>
-                        <label class="col-sm-1 col-form-label">Nacionalidad</label>
-                        <div class="col-sm-2">
-                            <select name="nacionalidad" id="nacionalidad" class="form-control buscadorddl" required="required" data-parsley-group="informacionPersonal">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Fecha de Nac.</label>
-                        <div class="col-sm-2">
-                            <input id="fechaNacimiento" class="form-control datepicker" type="date" required="required" data-parsley-group="informacionPersonal" />
-                        </div>
+                <h6 class="border-bottom border-gray pb-2">Información del precalificado (Máximo sugerido)</h6>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">PMO sugerido</label>
+                    <div class="col-sm-2">
+                        <select name="pmoSugeridoSeleccionado" id="pmoSugeridoSeleccionado" disabled="disabled" class="form-control" data-parsley-group="informacionPrestamo" required="required">
+                            <option value="">Seleccione una opción</option>
+                        </select>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-1 col-form-label">Email</label>
-                        <div class="col-sm-2">
-                            <input id="correoElectronico" class="form-control" type="email" required="required" data-parsley-group="informacionPersonal" />
-                        </div>
-                        <label class="col-sm-1 col-form-label">Télefono</label>
-                        <div class="col-sm-2">
-                            <asp:TextBox ID="numeroTelefono" CssClass="form-control Telefono" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Edad cliente</label>
-                        <div class="col-sm-2">
-                            <input id="edadCliente" class="form-control" readonly=" " type="text" data-parsley-group="informacionPersonal" />
-                        </div>
+                    <label class="col-sm-2 col-form-label" id="lblPlazoPMO">Plazo</label>
+                    <div class="col-sm-2">
+                        <input id="plazoPmoSeleccionado" readonly="readonly" class="form-control MascaraEnteros" type="text" required="required" data-parsley-group="informacionPrestamo" />
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-1 col-form-label">Tipo cliente</label>
-                        <div class="col-sm-2">
-                            <select name="TipodeCliente" id="TipodeCliente" class="form-control" required="required" data-parsley-group="informacionPersonal">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- SEXO -->
-                    <div class="form-group row">
-                        <div class="col-sm-10 border border-gray">
-                            <label class="col-form-label col-sm-2">Sexo</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="sexo" value="M" />
-                                <label class="form-check-label" for="inlineRadio1">Masculino</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="sexo" value="F" />
-                                <label class="form-check-label" for="inlineRadio2">Femenino</label>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- INPUTS RADIO DE ESTADO CIVIL (GENERADOS CON JS) -->
-                    <div class="form-group row">
-                        <div class="col-sm-10 border border-gray" id="divEstadoCivil">
-                            <label class="col-form-label col-sm-2">Estado civil</label>
-                        </div>
-                    </div>
-                    <!-- TIPO DE VIVIENDA -->
-                    <div class="form-group row">
-                        <div class="col-sm-10 border border-gray">
-                            <div class="form-group row">
-                                <div class="col-sm-12">&nbsp;</div>
-                                <label class="col-form-label col-sm-2">Tipo de vivienda</label>
-                                <div class="col-sm-3">
-                                    <select name="vivivenda" id="vivivenda" class="form-control buscadorddl" required="required" data-parsley-group="informacionPersonal">
-                                        <option value="">Seleccione una opción</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-5"></div>
-                            </div>
-                            <!--TIEMPO DE RESIDIR-->
-                            <div class="form-group row">
-                                <div class="col-sm-10">
-                                    <label class="col-form-label">Tiempo residir</label>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="tiempoResidir" value="0" />
-                                        <label class="form-check-label" for="inlineRadio1">-1 año</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="tiempoResidir" value="1" />
-                                        <label class="form-check-label" for="inlineRadio2">1 año</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="tiempoResidir" value="2" />
-                                        <label class="form-check-label" for="inlineRadio2">2 años</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="tiempoResidir" value="3" />
-                                        <label class="form-check-label" for="inlineRadio2">+2 años</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- INFORMACION DEL DOMICILIO DEL CLIENTE -->
-                <div id="step-3" class="form-section">
-                    <h5 class="border-bottom border-gray pb-2">Información domicilio</h5>
-
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Departamento</label>
-                        <div class="col-sm-3">
-                            <select name="departamento" id="departamento" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-depto" data-parsley-group="informacionDomiciliar">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                            <span id="error-depto"></span>
-                        </div>
-
-                        <label class="col-sm-3 col-form-label">Municipio</label>
-                        <div class="col-sm-3">
-                            <select disabled="disabled" name="municipio" id="municipio" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-municipio" data-parsley-group="informacionDomiciliar">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                            <span id="error-municipio"></span>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Ciudad/Poblado</label>
-                        <div class="col-sm-3">
-                            <select disabled="disabled" name="ciudad" id="ciudad" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-ciudad" data-parsley-group="informacionDomiciliar">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                            <span id="error-ciudad"></span>
-                        </div>
-                        <label class="col-sm-3 col-form-label">Barrio o Colonia</label>
-                        <div class="col-sm-3">
-                            <select disabled="disabled" name="barrioColonia" id="barrioColonia" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-colonia" data-parsley-group="informacionDomiciliar">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                            <span id="error-colonia"></span>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Telefono casa</label>
-                        <div class="col-sm-3">
-                            <input id="telefonoCasa" class="form-control Telefono" type="text" data-parsley-group="informacionDomiciliar" />
-                        </div>
-                        <label class="col-sm-3 col-form-label">Telefono movil</label>
-                        <div class="col-sm-3">
-                            <asp:TextBox ID="telefonoMovil" CssClass="form-control Telefono" type="text" required="required" data-parsley-group="informacionDomiciliar" runat="server"></asp:TextBox>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Detalle dirección</label>
-                        <div class="col-sm-3">
-                            <input placeholder="Calle, avenida, bloque, etc" id="direccionDetallada" class="form-control" type="text" required="required" data-parsley-group="informacionDomiciliar" />
-                        </div>
-                        <div class="col-sm-3"></div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-12 col-form-label text-center">Referencias del domicilio</label>
-                        <div class="col-sm-12">
-                            <textarea id="referenciaDireccionDetallada" required="required" class="form-control" maxlength="225" rows="2" data-parsley-group="informacionDomiciliar"></textarea>
-                        </div>
-                        <div class="col-sm-12"></div>
-                    </div>
-                </div>
-                <!-- INFORMACION LABORAL DEL CLIENTE -->
-                <div id="step-4" class="form-section">
-                    <h5 class="border-bottom border-gray pb-2">Información laboral</h5>
-
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Nombre del trabajo</label>
-                        <div class="col-sm-3">
-                            <input id="nombreDelTrabajo" name="nombreDelTrabajo" class="form-control" type="text" required="required" data-parsley-group="informacionLaboral" />
-                        </div>
-                        <label class="col-sm-3 col-form-label">Ingresos mensuales</label>
-                        <div class="col-sm-3">
-                            <input id="ingresosMensuales" class="form-control MascaraCantidad" type="text" required="required" data-parsley-group="informacionLaboral" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Puesto asignado</label>
-                        <div class="col-sm-3">
-                            <input id="puestoAsignado" name="puestoAsignado" class="form-control" type="text" required="required" data-parsley-group="informacionLaboral" />
-                        </div>
-                        <label class="col-sm-3 col-form-label">Fecha de ingreso</label>
-                        <div class="col-sm-3">
-                            <input id="fechaIngreso" name="fechaIngreso" class="form-control datepicker" type="date" required="required" data-parsley-group="informacionLaboral" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Telefono de la empresa</label>
-                        <div class="col-sm-3">
-                            <input id="telefonoEmpresa" name="telefonoEmpresa" class="form-control Telefono" type="text" required="required" data-parsley-group="informacionLaboral" />
-                        </div>
-                        <label class="col-sm-2 col-form-label">Extension RRHH</label>
-                        <div class="col-sm-1">
-                            <input id="extensionRRHH" name="extensionRRHH" class="form-control Extension" type="text" data-parsley-group="informacionLaboral" data-parsley-required-message="Requerido" />
-                        </div>
-                        <label class="col-sm-2 col-form-label">Extension cliente</label>
-                        <div class="col-sm-1">
-                            <input id="extensionCliente" name="extensionCliente" class="form-control Extension" type="text" data-parsley-group="informacionLabral" data-parsley-required-message="Requerido" />
-                        </div>
-                    </div>
-                    <!-- AQUI TEMRMINA INFO GENERAL Y EMPIEZA UBICACION DE LA EMPRESA -->
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <hr />
-                            <h5 class="">Dirección Empresa</h5>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Departamento empresa</label>
-                        <div class="col-sm-3">
-                            <select name="departamentoEmpresa" id="departamentoEmpresa" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-deptoEmpresa" data-parsley-group="informacionLaboral">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                            <span id="error-deptoEmpresa"></span>
-                        </div>
-                        <label class="col-sm-3 col-form-label">Municipio</label>
-                        <div class="col-sm-3">
-                            <select disabled="disabled" name="municipioEmpresa" id="municipioEmpresa" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-municipioEmpresa" data-parsley-group="informacionLaboral">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                            <span id="error-municipioEmpresa"></span>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Ciudad/Poblado empresa</label>
-                        <div class="col-sm-3">
-                            <select disabled="disabled" name="ciudadEmpresa" id="ciudadEmpresa" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-ciudadEmpresa" data-parsley-group="informacionLaboral">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                            <span id="error-ciudadEmpresa"></span>
-                        </div>
-                        <label class="col-sm-3 col-form-label">Barrio o Colonia empresa</label>
-                        <div class="col-sm-3">
-                            <select disabled="disabled" name="barrioColoniaEmpresa" id="barrioColoniaEmpresa" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-coloniaEmpresa" data-parsley-group="informacionLaboral">
-                                <option value="">Seleccione una opción</option>
-                            </select>
-                            <span id="error-coloniaEmpresa"></span>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Detalle dirección</label>
-                        <div class="col-sm-3">
-                            <input placeholder="Calle, avenida, bloque, etc" id="direccionDetalladaEmpresa" name="direccionDetalladaEmpresa" class="form-control" type="text" required="required" data-parsley-group="informacionLaboral" />
-                        </div>
-                        <div class="col-sm-6"></div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-12 col-form-label text-center">Referencia ubicación empresa</label>
-                        <div class="col-sm-12">
-                            <textarea id="referenciaDireccionDetalladaEmpresa" required="required" class="form-control" maxlength="225" rows="2" data-parsley-group="informacionLaboral"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Fuente otros ingresos</label>
-                        <div class="col-sm-3">
-                            <input id="fuenteOtrosIngresos" name="fuenteOtrosIngresos" class="form-control" type="text" data-parsley-group="informacionLaboral" />
-                        </div>
-                        <label class="col-sm-3 col-form-label">Valor otros ingresos</label>
-                        <div class="col-sm-3">
-                            <input id="valorOtrosIngresos" class="form-control MascaraCantidad" type="text" data-parsley-group="informacionLaboral" />
-                        </div>
-                    </div>
-                </div>
-                <!-- INFORMACION DEL CONYUGUE -->
-                <div id="step-5" class="form-section">
-                    <h5 class="border-bottom border-gray pb-2">Información conyugal</h5>
-
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Nombres del conyugue</label>
-                        <div class="col-sm-3">
-                            <input id="nombresConyugue" class="form-control infoConyugal" type="text" required="required" data-parsley-group="informacionConyugal" />
-                        </div>
-                        <label class="col-sm-3 col-form-label">Apellidos del conyugue</label>
-                        <div class="col-sm-3">
-                            <input id="apellidosConyugue" class="form-control infoConyugal" type="text" required="required" data-parsley-group="informacionConyugal" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Identidad conyugue</label>
-                        <div class="col-sm-3">
-                            <input id="identidadConyugue" class="form-control infoConyugal identidad" type="text" required="required" data-parsley-group="informacionConyugal" />
-                        </div>
-                        <label class="col-sm-3 col-form-label">Fecha nacimiento</label>
-                        <div class="col-sm-3">
-                            <input id="fechaNacimientoConyugue" class="form-control infoConyugal datepicker" type="date" required="required" data-parsley-group="informacionConyugal" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Telefono del conyugue</label>
-                        <div class="col-sm-3">
-                            <input id="telefonoConyugue" class="form-control infoConyugal Telefono" type="text" required="required" data-parsley-group="informacionConyugal" />
-                        </div>
-                        <label class="col-sm-3 col-form-label">Lugar de trabajo</label>
-                        <div class="col-sm-3">
-                            <input id="lugarTrabajoConyugue" class="form-control infoConyugal" type="text" required="required" data-parsley-group="informacionConyugal" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Ingreso mensual</label>
-                        <div class="col-sm-3">
-                            <input id="ingresoMensualesConyugue" class="form-control infoConyugal MascaraCantidad" type="text" required="required" data-parsley-group="informacionConyugal" />
-                        </div>
-                        <label class="col-sm-3 col-form-label">Telefono trabajo </label>
-                        <div class="col-sm-3">
-                            <input id="telefonoTrabajoConyugue" class="form-control infoConyugal Telefono" type="text" required="required" data-parsley-group="informacionConyugal" />
-                        </div>
-                    </div>
-                </div>
-                <!-- REFERENCIAS PERSONALES DEL CLIENTE -->
-                <div id="step-6" class="form-section">
-                    <h5 class="border-bottom border-gray pb-2">Referencias personales del cliente</h5>
-                    <button id="btnNuevaReferencia" data-toggle="modal" data-target="#modalAddReferencia" type="button" class="btn btn-success waves-effect waves-light float-right">
-                        Nuevo
-                    </button>
-                    <br />
-                    <br />
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered dt-responsive nowrap" id="datatable-buttons">
-                            <thead>
-                                <tr>
-                                    <th>Nombre completo</th>
-                                    <th>Lugar de trabajo ref</th>
-                                    <th>Tiempo de conocer ref</th>
-                                    <th>Telefono ref</th>
-                                    <th>Parentesco ref</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- DOCUMENTACION -->
-                <div id="step-7" class="form-section">
-                    <h5 class="border-bottom border-gray pb-2">Documentación</h5>
-
-                    <div class="form-group row text-center" id="DivDocumentacion">
+                    <label class="col-sm-2 col-form-label">Cuota</label>
+                    <div class="col-sm-2">
+                        <input id="cutoaQuinceal" class="form-control MascaraCantidad" readonly="readonly" type="text" required="required" data-parsley-group="informacionPrestamo" />
                     </div>
                 </div>
             </div>
+
+            <!-- INFORMACION PERSONAL DEL CLIENTE -->
+            <div id="step-2" class="form-section">
+                <h5 class="border-bottom border-gray pb-2">Información personal</h5>
+
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label">Profesión</label>
+                    <div class="col-sm-2">
+                        <input id="profesion" class="form-control" type="text" required="required" data-parsley-group="informacionPersonal" />
+                    </div>
+                    <label class="col-sm-1 col-form-label">Nacionalidad</label>
+                    <div class="col-sm-2">
+                        <select name="nacionalidad" id="nacionalidad" class="form-control buscadorddl" required="required" data-parsley-group="informacionPersonal">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 col-form-label">Fecha de Nac.</label>
+                    <div class="col-sm-2">
+                        <input id="fechaNacimiento" class="form-control datepicker" type="date" required="required" data-parsley-group="informacionPersonal" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label">Email</label>
+                    <div class="col-sm-2">
+                        <input id="correoElectronico" class="form-control" type="email" required="required" data-parsley-group="informacionPersonal" />
+                    </div>
+                    <label class="col-sm-1 col-form-label">Télefono</label>
+                    <div class="col-sm-2">
+                        <asp:TextBox ID="numeroTelefono" CssClass="form-control Telefono" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                    </div>
+                    <label class="col-sm-2 col-form-label">Edad cliente</label>
+                    <div class="col-sm-2">
+                        <input id="edadCliente" class="form-control" readonly=" " type="text" data-parsley-group="informacionPersonal" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-1 col-form-label">Tipo cliente</label>
+                    <div class="col-sm-2">
+                        <select name="TipodeCliente" id="TipodeCliente" class="form-control" required="required" data-parsley-group="informacionPersonal">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- SEXO -->
+                <div class="form-group row">
+                    <div class="col-sm-10 border border-gray">
+                        <label class="col-form-label col-sm-2">Sexo</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="sexo" value="M" />
+                            <label class="form-check-label" for="inlineRadio1">Masculino</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="sexo" value="F" />
+                            <label class="form-check-label" for="inlineRadio2">Femenino</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- INPUTS RADIO DE ESTADO CIVIL (GENERADOS CON JS) -->
+                <div class="form-group row">
+                    <div class="col-sm-10 border border-gray" id="divEstadoCivil">
+                        <label class="col-form-label col-sm-2">Estado civil</label>
+                    </div>
+                </div>
+                <!-- TIPO DE VIVIENDA -->
+                <div class="form-group row">
+                    <div class="col-sm-10 border border-gray">
+                        <div class="form-group row">
+                            <div class="col-sm-12">&nbsp;</div>
+                            <label class="col-form-label col-sm-2">Tipo de vivienda</label>
+                            <div class="col-sm-3">
+                                <select name="vivivenda" id="vivivenda" class="form-control buscadorddl" required="required" data-parsley-group="informacionPersonal">
+                                    <option value="">Seleccione una opción</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-5"></div>
+                        </div>
+                        <!--TIEMPO DE RESIDIR-->
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <label class="col-form-label">Tiempo residir</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tiempoResidir" value="0" />
+                                    <label class="form-check-label" for="inlineRadio1">-1 año</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tiempoResidir" value="1" />
+                                    <label class="form-check-label" for="inlineRadio2">1 año</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tiempoResidir" value="2" />
+                                    <label class="form-check-label" for="inlineRadio2">2 años</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tiempoResidir" value="3" />
+                                    <label class="form-check-label" for="inlineRadio2">+2 años</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- INFORMACION DEL DOMICILIO DEL CLIENTE -->
+            <div id="step-3" class="form-section">
+                <h5 class="border-bottom border-gray pb-2">Información domicilio</h5>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Departamento</label>
+                    <div class="col-sm-3">
+                        <select name="departamento" id="departamento" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-depto" data-parsley-group="informacionDomiciliar">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                        <span id="error-depto"></span>
+                    </div>
+
+                    <label class="col-sm-3 col-form-label">Municipio</label>
+                    <div class="col-sm-3">
+                        <select disabled="disabled" name="municipio" id="municipio" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-municipio" data-parsley-group="informacionDomiciliar">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                        <span id="error-municipio"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Ciudad/Poblado</label>
+                    <div class="col-sm-3">
+                        <select disabled="disabled" name="ciudad" id="ciudad" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-ciudad" data-parsley-group="informacionDomiciliar">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                        <span id="error-ciudad"></span>
+                    </div>
+                    <label class="col-sm-3 col-form-label">Barrio o Colonia</label>
+                    <div class="col-sm-3">
+                        <select disabled="disabled" name="barrioColonia" id="barrioColonia" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-colonia" data-parsley-group="informacionDomiciliar">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                        <span id="error-colonia"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Telefono casa</label>
+                    <div class="col-sm-3">
+                        <input id="telefonoCasa" class="form-control Telefono" type="text" data-parsley-group="informacionDomiciliar" />
+                    </div>
+                    <label class="col-sm-3 col-form-label">Telefono movil</label>
+                    <div class="col-sm-3">
+                        <asp:TextBox ID="telefonoMovil" CssClass="form-control Telefono" type="text" required="required" data-parsley-group="informacionDomiciliar" runat="server"></asp:TextBox>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Detalle dirección</label>
+                    <div class="col-sm-3">
+                        <input placeholder="Calle, avenida, bloque, etc" id="direccionDetallada" class="form-control" type="text" required="required" data-parsley-group="informacionDomiciliar" />
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-12 col-form-label text-center">Referencias del domicilio</label>
+                    <div class="col-sm-12">
+                        <textarea id="referenciaDireccionDetallada" required="required" class="form-control" maxlength="225" rows="2" data-parsley-group="informacionDomiciliar"></textarea>
+                    </div>
+                    <div class="col-sm-12"></div>
+                </div>
+            </div>
+            <!-- INFORMACION LABORAL DEL CLIENTE -->
+            <div id="step-4" class="form-section">
+                <h5 class="border-bottom border-gray pb-2">Información laboral</h5>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Nombre del trabajo</label>
+                    <div class="col-sm-3">
+                        <input id="nombreDelTrabajo" name="nombreDelTrabajo" class="form-control" type="text" required="required" data-parsley-group="informacionLaboral" />
+                    </div>
+                    <label class="col-sm-3 col-form-label">Ingresos mensuales</label>
+                    <div class="col-sm-3">
+                        <input id="ingresosMensuales" class="form-control MascaraCantidad" type="text" required="required" data-parsley-group="informacionLaboral" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Puesto asignado</label>
+                    <div class="col-sm-3">
+                        <input id="puestoAsignado" name="puestoAsignado" class="form-control" type="text" required="required" data-parsley-group="informacionLaboral" />
+                    </div>
+                    <label class="col-sm-3 col-form-label">Fecha de ingreso</label>
+                    <div class="col-sm-3">
+                        <input id="fechaIngreso" name="fechaIngreso" class="form-control datepicker" type="date" required="required" data-parsley-group="informacionLaboral" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Telefono de la empresa</label>
+                    <div class="col-sm-3">
+                        <input id="telefonoEmpresa" name="telefonoEmpresa" class="form-control Telefono" type="text" required="required" data-parsley-group="informacionLaboral" />
+                    </div>
+                    <label class="col-sm-2 col-form-label">Extension RRHH</label>
+                    <div class="col-sm-1">
+                        <input id="extensionRRHH" name="extensionRRHH" class="form-control Extension" type="text" data-parsley-group="informacionLaboral" data-parsley-required-message="Requerido" />
+                    </div>
+                    <label class="col-sm-2 col-form-label">Extension cliente</label>
+                    <div class="col-sm-1">
+                        <input id="extensionCliente" name="extensionCliente" class="form-control Extension" type="text" data-parsley-group="informacionLabral" data-parsley-required-message="Requerido" />
+                    </div>
+                </div>
+                <!-- AQUI TEMRMINA INFO GENERAL Y EMPIEZA UBICACION DE LA EMPRESA -->
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <hr />
+                        <h5 class="">Dirección Empresa</h5>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Departamento empresa</label>
+                    <div class="col-sm-3">
+                        <select name="departamentoEmpresa" id="departamentoEmpresa" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-deptoEmpresa" data-parsley-group="informacionLaboral">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                        <span id="error-deptoEmpresa"></span>
+                    </div>
+                    <label class="col-sm-3 col-form-label">Municipio</label>
+                    <div class="col-sm-3">
+                        <select disabled="disabled" name="municipioEmpresa" id="municipioEmpresa" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-municipioEmpresa" data-parsley-group="informacionLaboral">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                        <span id="error-municipioEmpresa"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Ciudad/Poblado empresa</label>
+                    <div class="col-sm-3">
+                        <select disabled="disabled" name="ciudadEmpresa" id="ciudadEmpresa" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-ciudadEmpresa" data-parsley-group="informacionLaboral">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                        <span id="error-ciudadEmpresa"></span>
+                    </div>
+                    <label class="col-sm-3 col-form-label">Barrio o Colonia empresa</label>
+                    <div class="col-sm-3">
+                        <select disabled="disabled" name="barrioColoniaEmpresa" id="barrioColoniaEmpresa" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-coloniaEmpresa" data-parsley-group="informacionLaboral">
+                            <option value="">Seleccione una opción</option>
+                        </select>
+                        <span id="error-coloniaEmpresa"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Detalle dirección</label>
+                    <div class="col-sm-3">
+                        <input placeholder="Calle, avenida, bloque, etc" id="direccionDetalladaEmpresa" name="direccionDetalladaEmpresa" class="form-control" type="text" required="required" data-parsley-group="informacionLaboral" />
+                    </div>
+                    <div class="col-sm-6"></div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-12 col-form-label text-center">Referencia ubicación empresa</label>
+                    <div class="col-sm-12">
+                        <textarea id="referenciaDireccionDetalladaEmpresa" required="required" class="form-control" maxlength="225" rows="2" data-parsley-group="informacionLaboral"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Fuente otros ingresos</label>
+                    <div class="col-sm-3">
+                        <input id="fuenteOtrosIngresos" name="fuenteOtrosIngresos" class="form-control" type="text" data-parsley-group="informacionLaboral" />
+                    </div>
+                    <label class="col-sm-3 col-form-label">Valor otros ingresos</label>
+                    <div class="col-sm-3">
+                        <input id="valorOtrosIngresos" class="form-control MascaraCantidad" type="text" data-parsley-group="informacionLaboral" />
+                    </div>
+                </div>
+            </div>
+            <!-- INFORMACION DEL CONYUGUE -->
+            <div id="step-5" class="form-section">
+                <h5 class="border-bottom border-gray pb-2">Información conyugal</h5>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Nombres del conyugue</label>
+                    <div class="col-sm-3">
+                        <input id="nombresConyugue" class="form-control infoConyugal" type="text" required="required" data-parsley-group="informacionConyugal" />
+                    </div>
+                    <label class="col-sm-3 col-form-label">Apellidos del conyugue</label>
+                    <div class="col-sm-3">
+                        <input id="apellidosConyugue" class="form-control infoConyugal" type="text" required="required" data-parsley-group="informacionConyugal" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Identidad conyugue</label>
+                    <div class="col-sm-3">
+                        <input id="identidadConyugue" class="form-control infoConyugal identidad" type="text" required="required" data-parsley-group="informacionConyugal" />
+                    </div>
+                    <label class="col-sm-3 col-form-label">Fecha nacimiento</label>
+                    <div class="col-sm-3">
+                        <input id="fechaNacimientoConyugue" class="form-control infoConyugal datepicker" type="date" required="required" data-parsley-group="informacionConyugal" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Telefono del conyugue</label>
+                    <div class="col-sm-3">
+                        <input id="telefonoConyugue" class="form-control infoConyugal Telefono" type="text" required="required" data-parsley-group="informacionConyugal" />
+                    </div>
+                    <label class="col-sm-3 col-form-label">Lugar de trabajo</label>
+                    <div class="col-sm-3">
+                        <input id="lugarTrabajoConyugue" class="form-control infoConyugal" type="text" required="required" data-parsley-group="informacionConyugal" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Ingreso mensual</label>
+                    <div class="col-sm-3">
+                        <input id="ingresoMensualesConyugue" class="form-control infoConyugal MascaraCantidad" type="text" required="required" data-parsley-group="informacionConyugal" />
+                    </div>
+                    <label class="col-sm-3 col-form-label">Telefono trabajo </label>
+                    <div class="col-sm-3">
+                        <input id="telefonoTrabajoConyugue" class="form-control infoConyugal Telefono" type="text" required="required" data-parsley-group="informacionConyugal" />
+                    </div>
+                </div>
+            </div>
+            <!-- REFERENCIAS PERSONALES DEL CLIENTE -->
+            <div id="step-6" class="form-section">
+                <h5 class="border-bottom border-gray pb-2">Referencias personales del cliente</h5>
+                <button id="btnNuevaReferencia" data-toggle="modal" data-target="#modalAddReferencia" type="button" class="btn btn-success waves-effect waves-light float-right">
+                    Nuevo
+                </button>
+                <br />
+                <br />
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" id="datatable-buttons">
+                        <thead>
+                            <tr>
+                                <th>Nombre completo</th>
+                                <th>Lugar de trabajo ref</th>
+                                <th>Tiempo de conocer ref</th>
+                                <th>Telefono ref</th>
+                                <th>Parentesco ref</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- DOCUMENTACION -->
+            <div id="step-7" class="form-section">
+                <h5 class="border-bottom border-gray pb-2">Documentación</h5>
+
+                <div class="form-group row text-center" id="DivDocumentacion">
+                </div>
+            </div>
+        </div>
         </div>
     </form>
 

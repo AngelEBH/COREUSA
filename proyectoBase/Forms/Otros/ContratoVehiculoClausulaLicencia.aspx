@@ -82,24 +82,25 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class=""></td>
+                                    <td class="">1</td>
                                     <td class="">
                                         <b>Marca</b>: BAJAJ <b>modelo:</b> PULSAR NS 125 <b>año:</b> 2020 <b>cilindraje:</b> 125 <b>color:</b> NEGRO MULTICOLOR
                                         <b>tipo: </b>MOTOCICLETA <b>motor:</b> JEYWKC38252
                                     </td>
-                                    <td class="text-center">38,999.00
+                                    <td class="text-center">39,999.00
                                     </td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="2" class="text-right">PRECIO</td>
-                                    <td colspan="1" class="text-center">38,999.00</td>
-                                </tr>
-                                <tr>
                                     <td colspan="2" class="text-right">PRIMA</td>
                                     <td colspan="1" class="text-center">4,000.00</td>
                                 </tr>
+                                <tr>
+                                    <td colspan="2" class="text-right">MONTO A FINANCIAR</td>
+                                    <td colspan="1" class="text-center">35,999.00</td>
+                                </tr>
+
                             </tfoot>
                         </table>
                         <br />
@@ -107,10 +108,10 @@
                             Mismo que será desembolsado por <b>PRESTADITO</b> a la persona que distribuya o sea propietario del vehículo y este ultimo deberá de entregárselo al Cliente
                             cuando sea autorizado por <b>PRESTADITO</b>.
                             <b>- B) COMISIONES.-TASAS DE INTERES.-COSTO ANUAL TOTAL.- EL CLIENTE</b> se obliga a pagar a <b>PRESTADITO</b>, a partir de esta fecha una tasa de
-                            interés fluctuante del <b>3.16% PORCIENTO MENSUAL</b>, pagadero quincenal en moneda de curso legal en Honduras, sobre el saldo total de la deuda.
+                            interés fluctuante del <b>3.75% PORCIENTO MENSUAL</b>, pagadero quincenal en moneda de curso legal en Honduras, sobre el saldo total de la deuda.
                             <b>Por la falta de pago</b> a su vencimiento de cualquiera de los abonos a capital, intereses y/o comisiones, <b>EL CLIENTE</b> pagará intereses moratorios
-                            del <b>4.31% PORCIENTO MENSUAL</b> sobre el saldo de capital vencido, por razón de daños y perjuicios hasta que se cancele la totalidad de la
-                            mora, sin que deba considerarse prorrogado el plazo.<b>-COSTO ANUAL TOTAL:</b> El costo anual total del préstamo (CAT) es de <u>38%</u> incluye
+                            del <b>3.75% PORCIENTO MENSUAL</b> sobre el saldo de capital vencido, por razón de daños y perjuicios hasta que se cancele la totalidad de la
+                            mora, sin que deba considerarse prorrogado el plazo.<b>-COSTO ANUAL TOTAL:</b> El costo anual total del préstamo (CAT) es de <u>45%</u> incluye
                             el cobro y pago del capital, los intereses ordinarios, y bajo la condición que <b>EL CLIENTE</b> cumpla con sus obligaciones en las formas y plazos convenidos.
                             El valor de pago del presente contrato se describe a continuación
                         </p>
@@ -134,25 +135,25 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="3" class="text-right">SEGURO</td>
+                                    <td colspan="3" class="text-right">SEGURO DE DAÑOS</td>
                                     <td class="text-right">48 Cuotas de Lps 113.75
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="3" class="text-right">GPS</td>
+                                    <td colspan="3" class="text-right">SERVICIO DE GPS</td>
                                     <td class="text-right">48 Cuotas de Lps 0.00
                                     </td>
                                 </tr>
-                                <tr>
+                                <%--<tr>
                                     <td colspan="3" class="text-right">CUOTA TOTAL</td>
                                     <td class="text-right">Lps 1397.04
                                     </td>
-                                </tr>
+                                </tr>--%>
                             </tbody>
                         </table>
                         <p>
                             <b>C) EL PLAZO DEL FINANCIAMENTO:</b> El plazo de este préstamo es de 48 cuotas (quincenales) dividido así: 47 cuotas de 1,283.30 y una (1) cuota
-                            de 1,283.14 (L. 67.057.92) mas el seguro y GPS correspondientes, los cuales se detallan en el cuadro anterior
+                            de 1,283.14 (L. 67.057.92) mas la cuota del seguro de daños y el servicio de GPS correspondientes, en caso de que lo hubiere, los cuales se detallan en el cuadro anterior
                             y en el plan de pago, debiendo hacer efectivo el pago de la primera cuota el 30 de septiembre de 2019 y así sucesivamente de forma <u>quincenal</u>
                             hasta la completa cancelación de la deuda.
                             <b>D) DE LA FORMA, DE LA MONEDA Y LUGAR DE PAGO:</b> Los contratantes acuerdan que: <b>I)</b>
@@ -246,7 +247,7 @@
                             según lo establecido en la ley del sistema financiero. En caso de ejecución de la presente obligación las partes nos sometemos a la jurisdicción y competencia de los Juzgados de San Pedro Sula, Cortés
                             <b>.- DÉCIMO PRIMERA: <em>MEDIOS PARA COMUNICACIONES</em>.- EL CLIENTE y PRESTADITO</b> establecen y a la vez autorizan, que para las distintas notificaciones que se deban hacer conforme a lo estipulado por este contrato
                             o por lo dispuesto por la ley, se harán efectivas a través de uno solo de los siguientes medios: <b>A)</b> Correspondencia ordinaria escrita dirigida a las direcciones indicadas en el preámbulo de este contrato;
-                            <b>B)</b> Notificación por la vía electrónica a su correo electrónico info@alorica.com; <b>C)</b> Notificación mediante cualquier red sociales que pudiese pertenecer al Cliente, <b>D)</b> o a las direcciones indicadas
+                            <b>B)</b> Notificación por la vía electrónica a su correo electrónico corre@cliente.com; <b>C)</b> Notificación mediante cualquier red sociales que pudiese pertenecer al Cliente, <b>D)</b> o a las direcciones indicadas
                             en cualquiera de los documentos suscritos con <b>“ PRESTADITO ”</b>. Cualquier cambio de dirección o número telefónico deberá notificarse fehacientemente, con una anticipación razonable a <b>PRESTADITO</b> y
                             hasta entonces se considera efectiva.<b>-DÉCIMO SEGUNDA: DE LAS AUTORIZACIONES ESPECIALES. EL CLIENTE</b> otorga de manera expresa, voluntaria e irrevocable su consentimiento para que en caso de mora,
                             <b>PRESTADITO</b> o sus representantes puedan ingresar a su domicilio a retirar el vehículo, y por lo tanto lo exime de toda responsabilidad que pueda incurrir según el artículo 99 de la Constitución de la Republica.
@@ -260,7 +261,8 @@
                             ha recibido toda la orientación y explicación necesaria sobre las condiciones del convenio, las consecuencias legales y judiciales de su incumplimiento, así como que ha recibido una copia íntegra de este documento
                             y del plan de pagos respectivo.- Finalmente las partes declaramos que es cierto todo lo anteriormente expresado, y que por ser ello lo convenido, aceptamos libre y voluntariamente, todas estipulaciones, condiciones
                             y cláusulas contenidas en el presente contrato de préstamo. En fe de lo cual firmamos en la Ciudad de <b>SAN PEDRO SULA, a los 20 días del mes de septiembre del año 2020. 
-                                <br />Última línea.</b>
+                                <br />
+                                Última línea.</b>
                             <br />
                             <br />
                             <br />
@@ -281,6 +283,7 @@
                             <td class="text-center">JOSE RAMIRO RUBIO CHAVARRIA
                                 <br />
                                 0301199800931
+                                <br />
                                 EL CLIENTE</td>
                             <td style="width: 50px;"></td>
                             <td class="text-center">ERICK GEOVANY MOLINA PADILLA

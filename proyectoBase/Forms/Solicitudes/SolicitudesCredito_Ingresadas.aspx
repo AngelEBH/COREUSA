@@ -8,36 +8,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Mis solicitudes</title>
     <!-- BOOTSTRAP -->
-    <link href="../../Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../../Content/css/style.css" rel="styleshee" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
-    <link href="../../Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
-    <link href="../../Content/css/bandejaSolicitudes.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="/Content/css/bandejaSolicitudes.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
+    <style>
+        .opcion {
+            cursor: pointer;
+        }
+
+        #datatable-bandeja tbody tr {
+            cursor: pointer;
+        }
+
+        #datatable-bandeja tbody td {
+            outline: none;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+    </style>
 </head>
 <body class="EstiloBody-Listado-W1100px">
     <div class="card">
         <div class="card-header">
-            <h4>Solicitudes ingresadas</h4>
-        </div>
-        <div class="card-body">
-            <div class="form-group row">
-                <label class="col-sm-2">Nombre cliente</label>
-                <div class="col-sm-4">
-                    <input id="nombreCliente" class="form-control form-control-sm" type="text" />
+            <div class="row">
+                <div class="col-8">
+                    <h6>Solicitudes ingresadas</h6>
                 </div>
-                <label class="col-sm-2">Identidad cliente</label>
-                <div class="col-sm-4">
-                    <input id="identidadCliente" class="form-control form-control-sm" type="text" />
+                <div class="col-4">
+                    <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
+                        aria-label="Buscar" />
                 </div>
             </div>
-            <div class="form-group row">
-                <label class="col-sm-2">Búsqueda por Mes</label>
-                <div class="col-sm-2">
+        </div>
+        <div class="card-body">
+
+            <div class="form-inline justify-content-center">
+                <div class="form-group mb-2">
+                    <label class="form-control-plaintext">Búsqueda por Mes</label>
+                </div>
+                <div class="form-group mx-sm-3 mb-2">
                     <select id="mesIngreso" class="form-control form-control-sm">
                         <option value="" selected="selected">Seleccionar</option>
                         <option value="01">Enero</option>
@@ -54,19 +70,26 @@
                         <option value="12">Diciembre</option>
                     </select>
                 </div>
-                <label class="col-sm-2 col-form-label">Búsqueda por Año</label>
-                <div class="col-sm-1">
+
+                <div class="form-group mb-2">
+                    <label class="form-control-plaintext">Búsqueda por Año</label>
+                </div>
+                <div class="form-group mx-sm-3 mb-2">
                     <input id="añoIngreso" class="form-control form-control-sm" type="text" />
                 </div>
-                <label class="col-sm-2 col-form-label">Búsqueda por Fecha</label>
-                <div class="col-sm-3">
+
+                <div class="form-group mb-2">
+                    <label class="form-control-plaintext">Búsqueda por Fecha</label>
+                </div>
+                <div class="form-group mx-sm-3 mb-2 col-sm-2">
                     <div class="input-daterange input-group" id="date-range">
                         <input type="text" class="form-control form-control-sm" name="min" id="min" />
                         <input type="text" class="form-control form-control-sm" name="max" id="max" />
                     </div>
                 </div>
             </div>
-            <table id="datatable-bandeja" class="display compact table-striped table-bordered nowrap table-condensed" style="width: 100%">
+
+            <table id="datatable-bandeja" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                 <thead>
                     <tr>
                         <th>Identidad</th>
@@ -105,24 +128,19 @@
             </div>
         </div>
     </div>
-    <script src="../../Scripts/js/jquery.min.js"></script>
-    <script src="../../Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="../../Scripts/js/metisMenu.min.js"></script>
-    <script src="../../Scripts/js/jquery.slimscroll.js"></script>
-    <script src="../../Scripts/js/waves.min.js"></script>
-    <script src="../../Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="../../Scripts/js/app.js"></script>
+    <script src="/Scripts/js/jquery.min.js"></script>
+    <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
-    <script src="../../Scripts/plugins/iziToast/js/iziToast.js"></script>
-    <script src="../../Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="../../Scripts/plugins/parsleyjs/parsley.js"></script>
+    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
+    <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <!-- DATATABLES -->
-    <script src="../../Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
-    <script src="../../Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="../../Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="/Scripts/plugins/moment/moment.js"></script>
+    <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Ingresadas.js"></script>
 </body>
 </html>
