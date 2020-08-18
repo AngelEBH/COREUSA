@@ -1,9 +1,9 @@
 ﻿using adminfiles;
 using Newtonsoft.Json;
-using proyectoBase.Models;
 using proyectoBase.Models.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -18,6 +18,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     private string pcIDUsuario = "";
     private string pcID = "";
     private string pcIDApp = "";
+    public DateTime FechaCarga;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -81,6 +82,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                 GuardarDetallesPrecalificado(pcID);
             }
+            FechaCarga = DateTime.Now;
         }
     }
 
@@ -220,10 +222,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string identidad = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
 
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
             #region CLIENTES MASTER
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_ObtenerInformacion", sqlConexion);
@@ -420,10 +420,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
             #region DEPARTAMENTOS
             List<DepartamentosViewModel> viewModelDepto = new List<DepartamentosViewModel>();
@@ -648,10 +646,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         List<MunicipiosViewModel> municipios = new List<MunicipiosViewModel>();
         try
         {
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoMunicipio", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@piPais", 1);
@@ -695,10 +691,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         List<CiudadesViewModel> ciudades = new List<CiudadesViewModel>();
         try
         {
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoPoblado", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@piPais", 1);
@@ -744,10 +738,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         List<BarriosColoniasViewModel> Barrios = new List<BarriosColoniasViewModel>();
         try
         {
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
+
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoBarrios", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@piPais", 1);
@@ -802,10 +795,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         ResponseEntitie resultadoProceso = new ResponseEntitie();
 
-        sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-        //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-        //using (sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString)))
-        using (SqlConnection sqlConexion = new SqlConnection(sqlConnectionString))
+        sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+        using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString)))
         {
             sqlConexion.Open();
             using (SqlTransaction tran = sqlConexion.BeginTransaction())
@@ -816,11 +807,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     Uri lURLDesencriptado = DesencriptarURL(lcURL);
                     int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
                     string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                    string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                     string nombreUsuario = "";
                     DateTime fechaActual = DateTime.Now;
 
                     int contadorErrores = 0;
                     int clienteMaster = 0;
+
                     if (clienteNuevo == true)
                     {
                         #region VERIFICAR DUPLICIDAD DE LA IDENTIDAD
@@ -832,7 +825,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", ClienteMaster.fcIdentidadCliente);
                             sqlComando.Parameters.AddWithValue("@fcRTN", ClienteMaster.RTNCliente);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             using (reader = sqlComando.ExecuteReader())
@@ -908,6 +901,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             return resultadoProceso;
                         }
                         SolicitudesMaster.fiIDCliente = clienteMaster;
+
                         #endregion
                     }
                     if (clienteNuevo == false)
@@ -919,7 +913,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@fiIDCliente", SolicitudesMaster.fiIDCliente);
                             sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", "");
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             using (reader = sqlComando.ExecuteReader())
@@ -959,9 +953,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@fiIDOrigen", SolicitudesMaster.fiIDOrigen);
                         sqlComando.Parameters.AddWithValue("@fdFechaIngresoLaborarCliente", ClientesInformacionLaboral.fcFechaIngreso);
                         sqlComando.Parameters.AddWithValue("@fcCentrodeCosteAsignado", "");
-                        sqlComando.Parameters.AddWithValue("@fiIDUsuarioAsignado", 5);
+                        sqlComando.Parameters.AddWithValue("@fiIDUsuarioAsignado", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@fdEnIngresoInicio", bitacora.fdEnIngresoInicio);
-                        sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                        sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
@@ -1093,7 +1087,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     #endregion
 
                     #endregion
-                    
+
                     #region REGISTRAR CLIENTE INFORMACION LABORAL
                     using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionLaboral_Insert", sqlConexion, tran))
                     {
@@ -1298,13 +1292,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         SqlDataReader reader = null;
         List<OrigenesViewModel> origenes = new List<OrigenesViewModel>();
         DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        string MensajeError = String.Empty;
         try
         {
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredCatalogo_Origenes", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@piIDProducto", COD);
@@ -1337,12 +1328,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 reader.Close();
         }
         return origenes;
-    }
-
-    [WebMethod]
-    public static DateTime GetFecha()
-    {
-        return DateTime.Now;
     }
 
     public static Uri DesencriptarURL(string URL)
@@ -1380,19 +1365,16 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         SqlConnection sqlConexion = null;
         SqlDataReader reader = null;
         CalculoPrestamoViewModel objCalculo = null;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         try
         {
             string lcURL = HttpContext.Current.Request.Url.ToString();
             Uri lURLDesencriptado = DesencriptarURL(lcURL);
             int IDUSR = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            DateTime fechaActual = DateTime.Now;
-            string MensajeError = String.Empty;
 
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredSolicitud_CalculoPrestamo", sqlConexion);
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@piIDProducto", TipoProducto);

@@ -1,6 +1,7 @@
 ﻿var Identidad = '';
 var IDSol = 0;
 var FiltroActual = "";
+
 $(document).ready(function () {
     var tablaSolicitudes = $('#tblSolicitudesCanex').DataTable(
         {

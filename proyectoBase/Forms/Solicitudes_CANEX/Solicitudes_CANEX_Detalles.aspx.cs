@@ -311,7 +311,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<SolicitudesDocumentosViewModel> CargarDocumentos()
+    public static List<SolicitudesDocumentosViewModel> CargarDocumentos(string dataCrypt)
     {
         List<SolicitudesDocumentosViewModel> ListadoDocumentos = new List<SolicitudesDocumentosViewModel>();
         SqlDataReader reader = null;

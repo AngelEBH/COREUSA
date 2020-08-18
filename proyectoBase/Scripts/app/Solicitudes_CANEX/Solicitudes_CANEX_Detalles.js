@@ -9,6 +9,7 @@
             MensajeError('No se pudo carga la documentacion, contacte al administrador');//mostrar mensaje de error
         },
         success: function (data) {
+
             var rowDataDocumentos = data.d;
             var divDocumentacionCedula = $("#divDocumentacionCedula");
             var divDocumentacionCedulaModal = $("#divDocumentacionCedulaModal");
@@ -92,6 +93,7 @@
             $("#LogoPrestamo").css('display', '');
         }
     });
+
     var EstadoRechazada = 5;
     var EstadoAprobada = 4;
     var EstadoEnRevision = 3;
@@ -115,6 +117,7 @@
 });
 
 $("#btnHistorialExterno").click(function () {
+
     MensajeInformacion('Cargando buro externo');
     var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
@@ -182,6 +185,7 @@ $(document).on('click', 'button#btnQuitarCondicion', function () {
 });
 
 $("#btnCondicionarSolicitudConfirmar").click(function () {
+
     var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",

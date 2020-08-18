@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ContratoVehiculoClausulaLicencia.aspx.cs" Inherits="proyectoBase.Forms.Otros.ContratoVehiculoClausulaLicencia" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ContratoVehiculoClausulaLicencia.aspx.cs" Inherits="ContratoVehiculoClausulaLicencia" %>
 
 <!DOCTYPE html>
 <html lang="es" xmlns="http://www.w3.org/1999/xhtml">

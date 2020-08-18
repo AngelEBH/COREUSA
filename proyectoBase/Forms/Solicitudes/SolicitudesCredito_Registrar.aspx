@@ -8,17 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Ingresar solicitud de crédito</title>
     <!-- BOOTSTRAP -->
-    <link href="../../Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../../Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
-    <link href="../../Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="../../Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="../../Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="../../Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
+    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
 </head>
 <body class="EstiloBody">
@@ -65,6 +65,7 @@
             <div>
                 <!-- INFORMACION DEL PRESTAMO Y LA SOLICITUD -->
                 <div id="step-1" class="form-section">
+
                     <div class="float-right" id="spinnerCargando">
                         <div class="spinner-border" role="status">
                             <span class="sr-only"></span>
@@ -87,8 +88,7 @@
                                 <option value="">Seleccione una opción</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="form-group row">
+                        
                         <label class="col-sm-2 col-form-label">Nombre completo</label>
                         <div class="col-sm-2">
                             <asp:TextBox ID="primerNombreCliente" placeholder="Primer nombre" CssClass="form-control" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
@@ -565,14 +565,9 @@
         </div>
     </div>
 
-    <script src="../../Scripts/js/jquery.min.js"></script>
-    <script src="../../Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="../../Scripts/js/metisMenu.min.js"></script>
-    <script src="../../Scripts/js/jquery.slimscroll.js"></script>
-    <script src="../../Scripts/js/waves.min.js"></script>
-    <script src="../../Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="../../Scripts/js/app.js"></script>
-    <script src="../../Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
+    <script src="/Scripts/js/jquery.min.js"></script>
+    <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
+    <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script>
         $(document).ready(function () {
             $("input")
@@ -608,21 +603,20 @@
         });
     </script>
     <!-- SCRIPTS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
-    <script src="../../Scripts/plugins/steps/js/jquery.smartWizard.js"></script>
-    <script src="../../Scripts/plugins/iziToast/js/iziToast.js"></script>
-    <script src="../../Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="../../Scripts/plugins/parsleyjs/parsley.js"></script>
-    <script src="../../Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/buttons.bootstrap4.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/jszip.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/buttons.html5.min.js"></script>
-    <script src="../../Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
-    <script src="../../Scripts/app/uploader/js/custom.js"></script>
-    <script src="../../Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
-    <script src="../../Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="../../Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Registrar.js"></script>
+    <script src="/Scripts/plugins/steps/js/jquery.smartWizard.js"></script>
+    <script src="/Scripts/plugins/iziToast/js/iziToast.js"></script>
+    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
+    <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
+    <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.bootstrap4.min.js"></script>
+    <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
+    <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar.js"></script>
 </body>
 </html>

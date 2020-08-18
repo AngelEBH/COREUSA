@@ -7,11 +7,8 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace proyectoBase.Forms.Otros
+
+
+public partial class ContratoVehiculoClausulaLicencia
 {
-
-
-    public partial class ContratoVehiculoClausulaLicencia
-    {
-    }
 }

@@ -1069,7 +1069,6 @@
     <Content Include="Scripts\app\Solicitudes_CANEX\SolicitudesCANEX_SeguimientoDetalles.js" />
     <Content Include="Scripts\app\Solicitudes_CANEX\Solicitudes_CANEX.js" />
     <Content Include="Scripts\app\Solicitudes_CANEX\Solicitudes_CANEX_Detalles.js" />
-    <Content Include="Scripts\app\SRC\Operaciones\OperacionesRecuperaciondelDia.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoColadeLlamadas.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoJefePromesasdePago.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoRecuperacionDelDiaPorAgente.js" />
@@ -1664,6 +1663,9 @@
     <Folder Include="Content\images\users\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </Content>
     <None Include="packages.config" />
     <Content Include="Scripts\plugins\datatables\json\scroller-demo.json" />
     <Content Include="Scripts\plugins\dropzone\dist\readme.md" />

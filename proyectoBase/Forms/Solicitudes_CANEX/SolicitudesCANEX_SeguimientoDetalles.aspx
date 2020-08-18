@@ -364,27 +364,27 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <%--<div class="form-group row" id="divAval">
-                                                        <h4>Aval</h4>
-                                                        <div class="table-responsive">
-                                                            <table runat="server" class="table table-condensed" id="tblAvales">
-                                                                <thead class="thead-light">
-                                                                    <tr>
-                                                                        <th>Nombre completo</th>
-                                                                        <th>Identidad</th>
-                                                                        <th>Telefono</th>
-                                                                        <th>Lugar de trabajo</th>
-                                                                        <th>Puesto asignado</th>
-                                                                        <th>Ingresos</th>
-                                                                        <th>Estado</th>
-                                                                        <th></th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>--%>
+                                    <%--<div class="form-group row" id="divAval">
+                                            <h4>Aval</h4>
+                                            <div class="table-responsive">
+                                                <table runat="server" class="table table-condensed" id="tblAvales">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>Nombre completo</th>
+                                                            <th>Identidad</th>
+                                                            <th>Telefono</th>
+                                                            <th>Lugar de trabajo</th>
+                                                            <th>Puesto asignado</th>
+                                                            <th>Ingresos</th>
+                                                            <th>Estado</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>--%>
                                     </div>
                                 </div>
                             </div>
