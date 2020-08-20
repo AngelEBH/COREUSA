@@ -125,12 +125,12 @@ $(document).ready(function () {
     });
 
     /* Agregar Filtros */
-    $.fn.dataTable.ext.search.push(function (e, a, i) {
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         if (FiltroActual == 'rangoFechas') {
-            var Desde = $("#min").datepicker("getDate"),
-                Hasta = $("#max").datepicker("getDate"),
-                FechaLlamada = new Date(a[6]);
-            return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaLlamada <= Hasta) || ("Invalid Date" == Hasta && FechaLlamada >= Desde) || (FechaLlamada <= Hasta && FechaLlamada >= Desde);
+            var Desde = moment($("#min").datepicker("getDate")).format('YYYY/MM/DD'),
+                Hasta = moment($("#max").datepicker("getDate")).format('YYYY/MM/DD'),
+                FechaLlamada = moment(data[6]).format('YYYY/MM/DD');
+            return (Desde == "Invalid Date" && Hasta == "Invalid Date") || (Desde == "Invalid Date" && FechaLlamada <= Hasta) || (Hasta == "Invalid Date" && FechaLlamada >= Desde) || (FechaLlamada <= Hasta && FechaLlamada >= Desde);
         }
         else { return true; }
     });
@@ -139,20 +139,6 @@ $(document).ready(function () {
     $('#txtDatatableFilter').keyup(function () {
         dtClientes.search($(this).val()).draw();
     })
-
-    /* Buscador para listas seleccionables */
-    //$(".buscadorddl").select2({
-    // language: {
-    // errorLoading: function () { return "No se pudieron cargar los resultados" },
-    // inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-    // inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-    // loadingMore: function () { return "Cargando más resultados…" },
-    // maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
-    // noResults: function () { return "No se encontraron resultados" },
-    // searching: function () { return "Buscando…" },
-    // removeAllItems: function () { return "Eliminar todos los elementos" }
-    // }
-    //});
 });
 
 $("#ddlAgentesActivos").change(function () {

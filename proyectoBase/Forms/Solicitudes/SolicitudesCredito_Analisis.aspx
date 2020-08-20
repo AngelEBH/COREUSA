@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Analisis de solicitud de crédito</title>
     <!-- BOOTSTRAP -->
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
@@ -1093,7 +1093,6 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
     </div>
 
     <!-- modal estado del resumen de la solicitud -->
-    <!-- modal estado del resumen de la solicitud -->
     <div id="modalResumen" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalResumenLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -1686,14 +1685,9 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
         </div>
     </div>
 
-    <script src="../../Scripts/js/jquery.min.js"></script>
-    <script src="../../Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="../../Scripts/js/metisMenu.min.js"></script>
-    <script src="../../Scripts/js/jquery.slimscroll.js"></script>
-    <script src="../../Scripts/js/waves.min.js"></script>
-    <script src="../../Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="../../Scripts/js/app.js"></script>
-    <script src="../../Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
+    <script src="/Scripts/js/jquery.min.js"></script>
+    <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
+    <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script>
         $(document).ready(function () {
             $(".MascaraCantidad").inputmask("decimal", {
@@ -1720,7 +1714,6 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
         });
     </script>
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
-    <script src="/Scripts/plugins/iziToast/js/iziToast.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/plugins/magnific-popup/jquery.magnific-popup.min.js"></script>
@@ -1733,7 +1726,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Analisis.js"></script>
     <script type="x/kendo-template" id="page-template">
         <div class="page-template">
-            div class="header">
+            <div class="header">
                 <%--<img src="http://crediflash.prestadito.corp/documentos/base/logo_prestadito.png" style="width:150px;" />--%>
                 <img src="/Imagenes/LogoPrestaditoMediano.png" style="width:150px; float:left;" />
                 <h3 id="titleTemplate"></h3>
