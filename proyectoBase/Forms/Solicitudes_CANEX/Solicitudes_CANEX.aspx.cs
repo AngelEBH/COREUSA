@@ -67,6 +67,7 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
                     {
                         while (reader.Read())
                         {
+                            var x = reader["fiEstadoSolicitud"].GetType();
                             ListadoSolicitudes.Add(new SolcitudesCanexViewModel()
                             {
                                 NombreSocio = (string)reader["fcNombreSocio"],
@@ -81,6 +82,7 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
                                 ValorPrestamo = (decimal)reader["fnValorPrestamo"],
                                 FechaIngresoSolicitud = (DateTime)reader["fdIngresoSolicitud"],
                                 EstadoSolicitud = (string)reader["fcEstadoSolicitud"],
+                                IDEstadoSolicitud = (decimal)reader["fiEstadoSolicitud"],
                                 Moneda = "L"
                             });
                         }
@@ -167,4 +169,5 @@ public class SolcitudesCanexViewModel
     public DateTime FechaIngresoSolicitud { get; set; }
     public string NombreUsuario { get; set; }
     public string EstadoSolicitud { get; set; }
+    public decimal IDEstadoSolicitud { get; set; }
 }

@@ -785,8 +785,6 @@
     <Content Include="Forms\Solicitudes_CANEX\Solicitudes_CANEX.aspx" />
     <Content Include="Forms\Solicitudes_CANEX\Solicitudes_CANEX_Detalles.aspx" />
     <Content Include="Forms\SRC\ConvenioReadecuacion.aspx" />
-    <Content Include="Forms\SRC\ImprimirAdendum31a120.aspx" />
-    <Content Include="Forms\SRC\ImprimirConvenio.aspx" />
     <Content Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx" />
     <Content Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorAgente.aspx" />
     <Content Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorSupervisor.aspx" />
@@ -1518,20 +1516,6 @@
     </Compile>
     <Compile Include="Forms\SRC\ConvenioReadecuacion.aspx.designer.cs">
       <DependentUpon>ConvenioReadecuacion.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SRC\ImprimirAdendum31a120.aspx.cs">
-      <DependentUpon>ImprimirAdendum31a120.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\SRC\ImprimirAdendum31a120.aspx.designer.cs">
-      <DependentUpon>ImprimirAdendum31a120.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SRC\ImprimirConvenio.aspx.cs">
-      <DependentUpon>ImprimirConvenio.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\SRC\ImprimirConvenio.aspx.designer.cs">
-      <DependentUpon>ImprimirConvenio.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx.cs">
       <DependentUpon>SeguimientoJefePromesasdePago.aspx</DependentUpon>

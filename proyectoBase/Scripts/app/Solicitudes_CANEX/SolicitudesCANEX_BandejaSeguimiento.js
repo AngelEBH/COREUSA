@@ -8,7 +8,7 @@ $(document).ready(function () {
             //"responsive": true,
             "pageLength": 20,
             "aaSorting": [],
-            "processing": true,
+            //"processing": true,
             "dom": "<'row'<'col-sm-6'><'col-sm-6'T>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-6'i><'col-sm-6'p>>",
@@ -87,7 +87,12 @@ $(document).ready(function () {
                 },
                 { "data": "NombreAgencia" },
                 { "data": "NombreUsuario" },
-                { "data": "DescripcionEstadoSolicitud" },
+                {
+                    "data": "DescripcionEstadoSolicitud",
+                    "render": function (data, type, row) {
+                        return '<label class="btn btn-sm btn-block mb-0 btn-' + GetEstadoClass(row["IDEstadoSolicitud"]) + '">' + row["DescripcionEstadoSolicitud"] + '</label>'
+                    }
+                },
                 {
                     "data": "IDSolicitudCanex",
                     "render": function (value) {
@@ -217,4 +222,29 @@ function addFormatoNumerico(nStr) {
         x1 = x1.replace(rgx, '$1' + ',' + '$2');
     }
     return x1 + x2;
+}
+
+function GetEstadoClass(IDEstado) {
+    switch (IDEstado) {
+        case 1:
+            return "primary"
+            break;
+        case 2:
+            return "info"
+            break;
+        case 3:
+        case 7:
+        case 6:
+            return "warning";
+            break;
+        case 4:
+            return "success";
+            break;
+        case 5:
+            return "danger";
+            break;
+        default:
+            return "secondary";
+            break;
+    }
 }
