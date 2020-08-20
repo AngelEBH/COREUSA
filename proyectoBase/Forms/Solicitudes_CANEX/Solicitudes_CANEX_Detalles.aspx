@@ -44,18 +44,18 @@
                     <!-- Acciones generales -->
                     <div class="col-md-6 form-inline justify-content-end pr-0">
                         <div class="button-items">
-                            <button runat="server" ID="btnHistorialExterno" class="btn btn-sm btn-success waves-effect waves-light" type="button">
+                            <button runat="server" id="btnHistorialExterno" class="btn btn-sm btn-success waves-effect waves-light" type="button">
                                 Buro externo
                             </button>
 
-                            <button runat="server" ID="btnValidoDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-success btn-sm waves-effect waves-light">
+                            <button runat="server" id="btnValidoDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-success btn-sm waves-effect waves-light">
                                 <small>Ver docs</small>
                             </button>
 
-                            <button runat="server" ID="btnCondicionarSolicitud" class="btn btn-sm btn-warning validador" runat="server" data-toggle="modal" data-target="#modalCondicionarSolicitud" type="button">
+                            <button runat="server" id="btnCondicionarSolicitud" class="btn btn-sm btn-warning validador" runat="server" data-toggle="modal" data-target="#modalCondicionarSolicitud" type="button">
                                 Condicionar
                             </button>
-                            <button runat="server" ID="btnRechazar" class="btn btn-sm btn-danger waves-effect waves-light validador" data-toggle="modal" data-target="#modalResolucionRechazar" type="button">
+                            <button runat="server" id="btnRechazar" class="btn btn-sm btn-danger waves-effect waves-light validador" data-toggle="modal" data-target="#modalResolucionRechazar" type="button">
                                 Rechazar
                             </button>
                             <button runat="server" id="btnAceptarSolicitud" class="btn btn-sm btn-warning waves-effect waves-light validador" disabled="disabled" data-toggle="modal" data-target="#modalResolucionAprobar" title="" type="button">
@@ -359,7 +359,7 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                        <%--<div class="form-group row" id="divAval">
+                                            <%--<div class="form-group row" id="divAval">
                                                 <h4>Aval</h4>
                                                 <div class="table-responsive">
                                                     <table runat="server" class="table table-condensed" id="tblAvales">
@@ -507,7 +507,7 @@
                                     <span class="d-none d-sm-block">Agregar Nuevas Condiciones</span>
                                 </a>
                             </li>
-                            <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones" style="display:none;">
+                            <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones" style="display: none;">
                                 <a class="nav-link" data-toggle="tab" href="#listaCondiciones" role="tab">
                                     <span class="d-none d-sm-block">Condiciones de la solictud</span>
                                 </a>
@@ -643,6 +643,6 @@
             IDSolicitudImportada = <%=this.IDSolicitudPrestadito%>;
         });
     </script>
-    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=1"></script>
 </body>
 </html>

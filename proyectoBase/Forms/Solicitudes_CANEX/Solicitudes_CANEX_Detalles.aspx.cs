@@ -28,7 +28,6 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            SqlDataReader reader = null;
             DSCore.DataCrypt DSC = new DSCore.DataCrypt();
             try
             {
@@ -51,8 +50,8 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcSesionID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                     int IDPRODUCTO = 0;
@@ -64,155 +63,157 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         sqlConexion.Open();
 
                         /* Informacion de la solicitud */
-                        SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CANEX_Solicitud_Detalle", sqlConexion);
-                        sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
-                        sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
-                        sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                        sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                        using (reader = sqlComando.ExecuteReader())
+                        using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Detalle", sqlConexion))
                         {
-                            while (reader.Read())
-                            {
-                                IDPRODUCTO = (short)reader["fiIDProducto"];
-                                EstadoSolicitud = (decimal)reader["fiEstadoSolicitud"];
-                                IDEstadoSolicitud = EstadoSolicitud;
-                                IDPais = (short)reader["fiIDPais"];
-                                IDSocio = (short)reader["fiIDSocio"];
-                                IDAgencia = (short)reader["fiIDAgencia"];
-                                IDSolicitudPrestadito = (int)reader["fiIDSolicitudPrestadito"];
-                                string NombreLogo = IDPRODUCTO == 101 ? "iconoRecibirDinero48.png" : IDPRODUCTO == 201 ? "iconoMoto48.png" : IDPRODUCTO == 202 ? "iconoAuto48.png" : IDPRODUCTO == 301 ? "iconoConsumo48.png" : "iconoConsumo48.png";
-                                IdentidadCLTE = reader["fcIdentidad"].ToString();
-                                int IDSolicitud = (int)reader["fiIDSolicitudCANEX"];
-                                DateTime FechaNacimientoCliente = (DateTime)reader["fdNacimientoCliente"];
-                                decimal EsComisionista = (decimal)reader["fiComisionista"];
-
-                                /* Verificar si la solicitud estaba en estado "enviada" y hay que pasarla a estatus "en revision" */
-                                if (EstadoSolicitud == 2)
-                                    CambiarEstadoAEnRevision(IDSolicitud);
-
-                                lblTipoPrestamo.Text = (string)reader["fcNombreProducto"];
-                                LogoPrestamo.ImageUrl = "/Imagenes/" + NombreLogo;
-                                spanNombreCliente.Text = reader["fcNombreCliente"].ToString();
-                                spanIdentidadCliente.Text = IdentidadCLTE;
-                                lblNoSolicitud.Text = reader["fiIDSolicitudCANEX"].ToString();
-                                lblNoCliente.Text = reader["fiIDCliente"].ToString();
-                                lblTipoSolicitud.Text = "Solicitud CANEX";
-                                lblAgenteDeVentas.Text = reader["fcNombreUsuario"].ToString();
-                                lblAgencia.Text = reader["fcNombreAgencia"].ToString();
-                                lblEstadoSolicitud.Text = reader["fcEstadoSolicitud"].ToString();
-                                lblRtnCliente.Text = reader["fcRTN"].ToString();
-                                lblNumeroTelefono.NavigateUrl = "tel:" + reader["fcTelefonoPrimario"].ToString();
-                                lblNumeroTelefono.Text = reader["fcTelefonoPrimario"].ToString();
-                                lblNumeroTelefonoAlternativo.NavigateUrl = "tel:" + reader["fcTelefonoAlternativo"].ToString();
-                                lblNumeroTelefonoAlternativo.Text = reader["fcTelefonoAlternativo"].ToString();
-                                lblNacionalidad.Text = reader["fcNacionalidadCliente"].ToString();
-                                /* Calcular edad del cliente */
-                                var hoy = DateTime.Today;
-                                var edad = hoy.Year - FechaNacimientoCliente.Year;
-                                if (FechaNacimientoCliente.Date > hoy.AddYears(-edad)) edad--;
-                                lblFechaNacimientoCliente.Text = FechaNacimientoCliente.ToString("MM/dd/yyyy");
-                                lblEdadCliente.Text = edad.ToString();
-                                lblProfesionCliente.Text = reader["fcProfesionuOficio"].ToString();
-                                lblSexoCliente.Text = reader["fcSexoCliente"].ToString();
-                                lblEstadoCivilCliente.Text = reader["fcEstadoCivilCliente"].ToString();
-                                lblViviendaCliente.Text = reader["fcTipoResidenciaCliente"].ToString();
-                                lblTiempoResidirCliente.Text = "n/a";
-                                lblDeptoCliente.Text = reader["fcDepartamentoDomicilio"].ToString();
-                                lblMunicipioCliente.Text = reader["fcMunicipioDomicilio"].ToString();
-                                lblCiudadCliente.Text = reader["fcCiudadDomicilio"].ToString();
-                                lblBarrioColoniaCliente.Text = reader["fcBarrioColoniaDomicilio"].ToString();
-                                lblDireccionDetalladaCliente.Text = reader["fcDireccionDetallada"].ToString();
-                                lblReferenciaDomicilioCliente.Text = reader["fcDireccionReferencias"].ToString();
-                                String NombreCompletoConyugue = reader["fcPrimerNombreConyugue"].ToString() + reader["fcSegundoNombreConyugue"].ToString() + reader["fcPrimerApellidoConyugue"].ToString() + reader["fcSegundoApellidoConyugue"].ToString();
-                                if (string.IsNullOrEmpty(reader["fcPrimerNombreConyugue"].ToString()))
-                                {
-                                    divConyugueCliente.Visible = false;
-                                }
-                                else
-                                {
-                                    lblNombreConyugue.Text = NombreCompletoConyugue.Replace(" ", " ");
-                                    DateTime FechaNacimientoConyugue = (DateTime)reader["fdNacimientoCliente"];
-                                    lblFechaNacimientoConygue.Text = FechaNacimientoConyugue.ToString("MM/dd/yyyy");
-                                    lblTelefonoConyugue.NavigateUrl = "tel:" + reader["fcTelefonoConyugue"].ToString();
-                                    lblTelefonoConyugue.Text = reader["fcTelefonoConyugue"].ToString();
-                                    lblOcupacionConyugue.Text = reader["fcOcupacionConyugue"].ToString();
-                                    lblProfesionOficioConyugue.Text = reader["fcProfesionuOficioConyugue"].ToString();
-                                    lblPuestoAsignadoConyugue.Text = reader["fcPuestoConyugue"].ToString();
-                                    lblLugarTrabajoConyugue.Text = reader["fcNombreEmpresaConyugue"].ToString();
-                                }
-                                lblNombreTrabajoCliente.Text = reader["fcNombreEmpresa"].ToString();
-                                lblIngresosMensualesCliente.Text = reader["fnIngresoMensualBase"].ToString();
-                                if (EsComisionista == 0)
-                                {
-                                    lblComisionesClienteTitulo.Visible = false;
-                                    lblComisionesCliente.Visible = false;
-                                }
-                                else
-                                    lblComisionesCliente.Text = reader["fnIngresoMensualComisiones"].ToString();
-                                lblPuestoAsignadoCliente.Text = reader["fcPuesto"].ToString();
-                                lblTelefonoEmpresaCliente.NavigateUrl = "tel:" + reader["fcTelefonoEmpresa"].ToString();
-                                lblTelefonoEmpresaCliente.Text = reader["fcTelefonoEmpresa"].ToString();
-                                lblExtension.Text = reader["fcExtension"].ToString();
-                                lblDeptoEmpresa.Text = reader["fcDepartamentoEmpresa"].ToString();
-                                lblMunicipioEmpresa.Text = reader["fcMunicipioEmpresa"].ToString();
-                                lblCiudadEmpresa.Text = reader["fcCiudadEmpresa"].ToString();
-                                lblBarrioColoniaEmpresa.Text = reader["fcBarrioColoniaEmpresa"].ToString();
-                                lblDireccionDetalladaEmpresa.Text = reader["fcDireccionDetalladaEmpresa"].ToString();
-                                lblReferenciaUbicacionEmpresa.Text = reader["fcDireccionReferenciasEmpresa"].ToString();
-                                /* Informacion del préstamo requerido */
-                                lblValorGlobal.Text = ((decimal)reader["fnValorGlobal"]).ToString("N");
-                                lblValorPrima.Text = ((decimal)reader["fnValorPrima"]).ToString("N");
-                                lblPlazoTitulo.Text = "Plazo " + reader["fcTipodeCuota"].ToString();
-                                lblPlazo.Text = reader["fcPlazo"].ToString();
-                                lblMontoFinanciar.Text = ((decimal)reader["fnValorPrestamo"]).ToString("N");
-
-                                /* Habilitar/Inhabilitar botones de acciones */
-                                int EstadoRechazada = 5;
-                                int EstadoAprobada = 4;
-                                int EstadoEnRevision = 3;
-                                string Title = string.Empty;
-
-                                if (EstadoSolicitud == EstadoAprobada || EstadoSolicitud == EstadoRechazada)
-                                {
-                                    string Desicion = EstadoSolicitud == EstadoAprobada ? "Aprobada" : "Rechazada";
-                                    Title = "La solicitud ya fue " + Desicion;
-
-                                    btnAceptarSolicitud.Disabled = true;
-                                    btnRechazar.Disabled = true;
-                                    btnCondicionarSolicitud.Disabled = true;
-                                }
-                                else if (IDSolicitudPrestadito != 0)
-                                {
-                                    Title = "La solicitud ya fue importada";
-                                    btnAceptarSolicitud.Disabled = true;
-                                    btnRechazar.Disabled = true;
-                                    btnCondicionarSolicitud.Disabled = true;
-                                }
-                                else if (EstadoSolicitud == EstadoEnRevision && IDSolicitudPrestadito == 0)
-                                {
-                                    btnAceptarSolicitud.Disabled = false;
-                                }
-                                else if (EstadoSolicitud != EstadoRechazada && EstadoSolicitud != EstadoAprobada && IDSolicitudPrestadito == 0)
-                                {
-                                    btnRechazar.Disabled = true;
-                                }
-
-                                btnAceptarSolicitud.Attributes.Add("title", Title);
-                                btnRechazar.Attributes.Add("title", Title);
-                                btnCondicionarSolicitud.Attributes.Add("title", Title);
-                            }
-
-                            /* Referencias del cliente */
-                            sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CANEX_Solicitud_Referencias", sqlConexion);
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            using (SqlDataReader reader = sqlComando.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    IDPRODUCTO = (short)reader["fiIDProducto"];
+                                    EstadoSolicitud = (decimal)reader["fiEstadoSolicitud"];
+                                    IDEstadoSolicitud = EstadoSolicitud;
+                                    IDPais = (short)reader["fiIDPais"];
+                                    IDSocio = (short)reader["fiIDSocio"];
+                                    IDAgencia = (short)reader["fiIDAgencia"];
+                                    IDSolicitudPrestadito = (int)reader["fiIDSolicitudPrestadito"];
+                                    string NombreLogo = IDPRODUCTO == 101 ? "iconoRecibirDinero48.png" : IDPRODUCTO == 201 ? "iconoMoto48.png" : IDPRODUCTO == 202 ? "iconoAuto48.png" : IDPRODUCTO == 301 ? "iconoConsumo48.png" : "iconoConsumo48.png";
+                                    IdentidadCLTE = reader["fcIdentidad"].ToString();
+                                    int IDSolicitud = (int)reader["fiIDSolicitudCANEX"];
+                                    DateTime FechaNacimientoCliente = (DateTime)reader["fdNacimientoCliente"];
+                                    decimal EsComisionista = (decimal)reader["fiComisionista"];
 
-                            using (reader = sqlComando.ExecuteReader())
+                                    /* Verificar si la solicitud estaba en estado "enviada" y hay que pasarla a estatus "en revision" */
+                                    if (EstadoSolicitud == 2)
+                                        CambiarEstadoAEnRevision(IDSolicitud);
+
+                                    lblTipoPrestamo.Text = (string)reader["fcNombreProducto"];
+                                    LogoPrestamo.ImageUrl = "/Imagenes/" + NombreLogo;
+                                    spanNombreCliente.Text = reader["fcNombreCliente"].ToString();
+                                    spanIdentidadCliente.Text = IdentidadCLTE;
+                                    lblNoSolicitud.Text = reader["fiIDSolicitudCANEX"].ToString();
+                                    lblNoCliente.Text = reader["fiIDCliente"].ToString();
+                                    lblTipoSolicitud.Text = "Solicitud CANEX";
+                                    lblAgenteDeVentas.Text = reader["fcNombreUsuario"].ToString();
+                                    lblAgencia.Text = reader["fcNombreAgencia"].ToString();
+                                    lblEstadoSolicitud.Text = reader["fcEstadoSolicitud"].ToString();
+                                    lblRtnCliente.Text = reader["fcRTN"].ToString();
+                                    lblNumeroTelefono.NavigateUrl = "tel:" + reader["fcTelefonoPrimario"].ToString();
+                                    lblNumeroTelefono.Text = reader["fcTelefonoPrimario"].ToString();
+                                    lblNumeroTelefonoAlternativo.NavigateUrl = "tel:" + reader["fcTelefonoAlternativo"].ToString();
+                                    lblNumeroTelefonoAlternativo.Text = reader["fcTelefonoAlternativo"].ToString();
+                                    lblNacionalidad.Text = reader["fcNacionalidadCliente"].ToString();
+                                    /* Calcular edad del cliente */
+                                    var hoy = DateTime.Today;
+                                    var edad = hoy.Year - FechaNacimientoCliente.Year;
+                                    if (FechaNacimientoCliente.Date > hoy.AddYears(-edad)) edad--;
+                                    lblFechaNacimientoCliente.Text = FechaNacimientoCliente.ToString("MM/dd/yyyy");
+                                    lblEdadCliente.Text = edad.ToString();
+                                    lblProfesionCliente.Text = reader["fcProfesionuOficio"].ToString();
+                                    lblSexoCliente.Text = reader["fcSexoCliente"].ToString();
+                                    lblEstadoCivilCliente.Text = reader["fcEstadoCivilCliente"].ToString();
+                                    lblViviendaCliente.Text = reader["fcTipoResidenciaCliente"].ToString();
+                                    lblTiempoResidirCliente.Text = "n/a";
+                                    lblDeptoCliente.Text = reader["fcDepartamentoDomicilio"].ToString();
+                                    lblMunicipioCliente.Text = reader["fcMunicipioDomicilio"].ToString();
+                                    lblCiudadCliente.Text = reader["fcCiudadDomicilio"].ToString();
+                                    lblBarrioColoniaCliente.Text = reader["fcBarrioColoniaDomicilio"].ToString();
+                                    lblDireccionDetalladaCliente.Text = reader["fcDireccionDetallada"].ToString();
+                                    lblReferenciaDomicilioCliente.Text = reader["fcDireccionReferencias"].ToString();
+                                    String NombreCompletoConyugue = reader["fcPrimerNombreConyugue"].ToString() + reader["fcSegundoNombreConyugue"].ToString() + reader["fcPrimerApellidoConyugue"].ToString() + reader["fcSegundoApellidoConyugue"].ToString();
+                                    if (string.IsNullOrEmpty(reader["fcPrimerNombreConyugue"].ToString()))
+                                    {
+                                        divConyugueCliente.Visible = false;
+                                    }
+                                    else
+                                    {
+                                        lblNombreConyugue.Text = NombreCompletoConyugue.Replace(" ", " ");
+                                        DateTime FechaNacimientoConyugue = (DateTime)reader["fdNacimientoCliente"];
+                                        lblFechaNacimientoConygue.Text = FechaNacimientoConyugue.ToString("MM/dd/yyyy");
+                                        lblTelefonoConyugue.NavigateUrl = "tel:" + reader["fcTelefonoConyugue"].ToString();
+                                        lblTelefonoConyugue.Text = reader["fcTelefonoConyugue"].ToString();
+                                        lblOcupacionConyugue.Text = reader["fcOcupacionConyugue"].ToString();
+                                        lblProfesionOficioConyugue.Text = reader["fcProfesionuOficioConyugue"].ToString();
+                                        lblPuestoAsignadoConyugue.Text = reader["fcPuestoConyugue"].ToString();
+                                        lblLugarTrabajoConyugue.Text = reader["fcNombreEmpresaConyugue"].ToString();
+                                    }
+                                    lblNombreTrabajoCliente.Text = reader["fcNombreEmpresa"].ToString();
+                                    lblIngresosMensualesCliente.Text = reader["fnIngresoMensualBase"].ToString();
+                                    if (EsComisionista == 0)
+                                    {
+                                        lblComisionesClienteTitulo.Visible = false;
+                                        lblComisionesCliente.Visible = false;
+                                    }
+                                    else
+                                        lblComisionesCliente.Text = reader["fnIngresoMensualComisiones"].ToString();
+                                    lblPuestoAsignadoCliente.Text = reader["fcPuesto"].ToString();
+                                    lblTelefonoEmpresaCliente.NavigateUrl = "tel:" + reader["fcTelefonoEmpresa"].ToString();
+                                    lblTelefonoEmpresaCliente.Text = reader["fcTelefonoEmpresa"].ToString();
+                                    lblExtension.Text = reader["fcExtension"].ToString();
+                                    lblDeptoEmpresa.Text = reader["fcDepartamentoEmpresa"].ToString();
+                                    lblMunicipioEmpresa.Text = reader["fcMunicipioEmpresa"].ToString();
+                                    lblCiudadEmpresa.Text = reader["fcCiudadEmpresa"].ToString();
+                                    lblBarrioColoniaEmpresa.Text = reader["fcBarrioColoniaEmpresa"].ToString();
+                                    lblDireccionDetalladaEmpresa.Text = reader["fcDireccionDetalladaEmpresa"].ToString();
+                                    lblReferenciaUbicacionEmpresa.Text = reader["fcDireccionReferenciasEmpresa"].ToString();
+                                    /* Informacion del préstamo requerido */
+                                    lblValorGlobal.Text = ((decimal)reader["fnValorGlobal"]).ToString("N");
+                                    lblValorPrima.Text = ((decimal)reader["fnValorPrima"]).ToString("N");
+                                    lblPlazoTitulo.Text = "Plazo " + reader["fcTipodeCuota"].ToString();
+                                    lblPlazo.Text = reader["fcPlazo"].ToString();
+                                    lblMontoFinanciar.Text = ((decimal)reader["fnValorPrestamo"]).ToString("N");
+
+                                    /* Habilitar/Inhabilitar botones de acciones */
+                                    int EstadoRechazada = 5;
+                                    int EstadoAprobada = 4;
+                                    int EstadoEnRevision = 3;
+                                    string Title = string.Empty;
+
+                                    if (EstadoSolicitud == EstadoAprobada || EstadoSolicitud == EstadoRechazada)
+                                    {
+                                        string Desicion = EstadoSolicitud == EstadoAprobada ? "Aprobada" : "Rechazada";
+                                        Title = "La solicitud ya fue " + Desicion;
+
+                                        btnAceptarSolicitud.Disabled = true;
+                                        btnRechazar.Disabled = true;
+                                        btnCondicionarSolicitud.Disabled = true;
+                                    }
+                                    else if (IDSolicitudPrestadito != 0)
+                                    {
+                                        Title = "La solicitud ya fue importada";
+                                        btnAceptarSolicitud.Disabled = true;
+                                        btnRechazar.Disabled = true;
+                                        btnCondicionarSolicitud.Disabled = true;
+                                    }
+                                    else if (EstadoSolicitud == EstadoEnRevision && IDSolicitudPrestadito == 0)
+                                    {
+                                        btnAceptarSolicitud.Disabled = false;
+                                    }
+                                    else if (EstadoSolicitud != EstadoRechazada && EstadoSolicitud != EstadoAprobada && IDSolicitudPrestadito == 0)
+                                    {
+                                        btnRechazar.Disabled = true;
+                                    }
+
+                                    btnAceptarSolicitud.Attributes.Add("title", Title);
+                                    btnRechazar.Attributes.Add("title", Title);
+                                    btnCondicionarSolicitud.Attributes.Add("title", Title);
+                                }
+                            }
+                        }
+
+                        /* Referencias del cliente */
+                        using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Referencias", sqlConexion))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            using (SqlDataReader reader = sqlComando.ExecuteReader())
                             {
                                 /* Llenar table de referencias */
                                 HtmlTableRow tRowReferencias = null;
@@ -227,14 +228,15 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     tblReferencias.Rows.Add(tRowReferencias);
                                 }
                             }
-
-                            /* Informacion del precalificado */
-                            sqlComando = new SqlCommand("EXEC CoreAnalitico.dbo.sp_info_ConsultaEjecutivos @piIDApp, @piIDUsuario, @pcIdentidad", sqlConexion);
+                        }
+                        /* Informacion del precalificado */
+                        using (SqlCommand sqlComando = new SqlCommand("EXEC CoreAnalitico.dbo.sp_info_ConsultaEjecutivos @piIDApp, @piIDUsuario, @pcIdentidad", sqlConexion))
+                        {
                             sqlComando.CommandType = CommandType.Text;
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcIdentidad", IdentidadCLTE);
-                            using (reader = sqlComando.ExecuteReader())
+                            using (SqlDataReader reader = sqlComando.ExecuteReader())
                             {
                                 while (reader.Read())
                                 {
@@ -260,15 +262,16 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     lblCapacidadPagoQuincenal.Text = (CapacidadPagoMensual / 2).ToString("N");
                                 }
                             }
-
-                            /* Verficar si la solicitud tiene condicionamientos pendientes */
-                            sqlComando = new SqlCommand("EXEC CoreFinanciero.dbo.sp_CANEX_Solicitud_Condiciones @piIDSesion, @piIDApp, @piIDUsuario, @piIDSolicitud", sqlConexion);
+                        }
+                        /* Verficar si la solicitud tiene condicionamientos pendientes */
+                        using (SqlCommand sqlComando = new SqlCommand("EXEC sp_CANEX_Solicitud_Condiciones @piIDSesion, @piIDApp, @piIDUsuario, @piIDSolicitud", sqlConexion))
+                        {
                             sqlComando.CommandType = CommandType.Text;
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
-                            using (reader = sqlComando.ExecuteReader())
+                            using (SqlDataReader reader = sqlComando.ExecuteReader())
                             {
                                 if (reader.HasRows)
                                 {
@@ -290,10 +293,11 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     }
                                 }
                             }
-
-                            /* Catalogo de condiciones */
-                            string Comando = "EXEC dbo.sp_CANEX_Catalogo_Condiciones " + pcSesionID + "," + pcIDApp + "," + pcIDUsuario;
-                            SqlDataAdapter AdapterDDLCondiciones = new SqlDataAdapter(Comando, sqlConexion);
+                        }
+                        /* Catalogo de condiciones */
+                        string Comando = "EXEC sp_CANEX_Catalogo_Condiciones " + pcSesionID + "," + pcIDApp + "," + pcIDUsuario;
+                        using (SqlDataAdapter AdapterDDLCondiciones = new SqlDataAdapter(Comando, sqlConexion))
+                        {
                             DataTable dtCondiciones = new DataTable();
                             AdapterDDLCondiciones.Fill(dtCondiciones);
                             ddlCondiciones.DataSource = dtCondiciones;
@@ -303,7 +307,6 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             ddlCondiciones.DataBind();
                             dtCondiciones.Dispose();
                             AdapterDDLCondiciones.Dispose();
-                            sqlComando.Dispose();
                         }
                     }
                 }
@@ -311,11 +314,6 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             catch (Exception ex)
             {
                 ex.Message.ToString();
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
             }
         }
     }
@@ -351,15 +349,15 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             int pcIDSesion = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID"));
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
-                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CANEX_Solicitud_Documentos", sqlConexion))
+                using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
@@ -414,13 +412,11 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
                     string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-
-                    SqlCommand sqlComandoList = null;
                     long MensajeError = 0;
 
                     foreach (SolicitudesCondicionamientosViewModel item in SolicitudCondiciones)
                     {
-                        using (sqlComandoList = new SqlCommand("dbo.sp_CANEX_Solicitud_Condicionar", sqlConexion, transaccion))
+                        using (SqlCommand sqlComandoList = new SqlCommand("sp_CANEX_Solicitud_Condicionar", sqlConexion, transaccion))
                         {
                             sqlComandoList.CommandType = CommandType.StoredProcedure;
                             sqlComandoList.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
@@ -473,9 +469,9 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         {
             DSCore.DataCrypt DSC = new DSCore.DataCrypt();
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
             int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             int pcIDSesion = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID"));
-            int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             long MensajeError = 0;
 
@@ -485,7 +481,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                string lcSQLInstruccion = "exec CoreFinanciero.dbo.sp_CANEX_Solicitud_CambiarEstado '" + pcIDSesion + "', '" + pcIDApp + "','" + pcIDUsuario + "', '" + IDSOL + "', '" + IDPais + "', '" + IDSocio + "', '" + IDAgencia + "', '" + Resolucion + "'";
+                string lcSQLInstruccion = "exec sp_CANEX_Solicitud_CambiarEstado '" + pcIDSesion + "', '" + pcIDApp + "','" + pcIDUsuario + "', '" + IDSOL + "', '" + IDPais + "', '" + IDSocio + "', '" + IDAgencia + "', '" + Resolucion + "'";
                 using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.Text;
@@ -522,7 +518,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             int pcIDSesion = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID"));
             int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            int pcIDApp = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp"));
 
             bool ResultadoSp = false;
             string fcMensajeResultado = string.Empty;
@@ -533,7 +529,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
-                string lcSQLInstruccion = "exec dbo.sp_CANEX_Solicitud_ImportarSolicitud '" + pcIDSesion + "', '" + pcIDApp + "','" + pcIDUsuario + "', '" + IDSOL + "', '" + IDPais + "', '" + IDSocio + "', '" + IDAgencia + "'";
+                string lcSQLInstruccion = "exec dbo.sp_CANEX_Solicitud_ImportarSolicitud " + pcIDSesion + ", " + pcIDApp + "," + pcIDUsuario + ", " + IDSOL + ", " + IDPais + ", " + IDSocio + ", " + IDAgencia;
 
                 using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
                 {
@@ -555,7 +551,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                 if (ResultadoSp == true)
                 {
                     #region REGISTRAR DOCUMENTACIÓN DE LA SOLICITUD
-                    using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CANEX_Solicitud_Documentos", sqlConexion))
+                    using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
