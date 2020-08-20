@@ -153,7 +153,7 @@ $(document).ready(function () {
     /* Buscador */
     $('#txtDatatableFilter').keyup(function () {
         dtClientes.search($(this).val()).draw();
-    })
+    });
 
     /* Buscador para listas seleccionables */
     //$(".buscadorddl").select2({

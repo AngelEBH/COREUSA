@@ -144,10 +144,10 @@ $(document).ready(function () {
     /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
         if (FiltroActual == 'rangoFechas') {
-            var t = $("#min").datepicker("getDate"),
-                l = $("#max").datepicker("getDate"),
-                n = new Date(a[2]);
-            return ("Invalid Date" == t && "Invalid Date" == l) || ("Invalid Date" == t && n <= l) || ("Invalid Date" == l && n >= t) || (n <= l && n >= t);
+            var Desde = $("#min").datepicker("getDate"),
+                Hasta = $("#max").datepicker("getDate"),
+                FechaIngreso = new Date(a[2]);
+            return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaIngreso <= Hasta) || ("Invalid Date" == Hasta && FechaIngreso >= Desde) || (FechaIngreso <= Hasta && FechaIngreso >= Desde);
         }
         else { return true; }
     });

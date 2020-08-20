@@ -127,10 +127,10 @@ $(document).ready(function () {
     /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
         if (FiltroActual == 'rangoFechas') {
-            var t = $("#min").datepicker("getDate"),
-                l = $("#max").datepicker("getDate"),
-                n = new Date(a[6]);
-            return ("Invalid Date" == t && "Invalid Date" == l) || ("Invalid Date" == t && n <= l) || ("Invalid Date" == l && n >= t) || (n <= l && n >= t);
+            var Desde = $("#min").datepicker("getDate"),
+                Hasta = $("#max").datepicker("getDate"),
+                FechaLlamada = new Date(a[6]);
+            return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaLlamada <= Hasta) || ("Invalid Date" == Hasta && FechaLlamada >= Desde) || (FechaLlamada <= Hasta && FechaLlamada >= Desde);
         }
         else { return true; }
     });
