@@ -40,6 +40,24 @@ public partial class Solicitudes_CANEX_Detalles
     protected global::System.Web.UI.WebControls.Label lblTipoPrestamo;
 
     /// <summary>
+    /// Control btnHistorialExterno.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnHistorialExterno;
+
+    /// <summary>
+    /// Control btnValidoDocumentacionModal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnValidoDocumentacionModal;
+
+    /// <summary>
     /// Control btnCondicionarSolicitud.
     /// </summary>
     /// <remarks>
@@ -47,6 +65,24 @@ public partial class Solicitudes_CANEX_Detalles
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlButton btnCondicionarSolicitud;
+
+    /// <summary>
+    /// Control btnRechazar.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnRechazar;
+
+    /// <summary>
+    /// Control btnAceptarSolicitud.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnAceptarSolicitud;
 
     /// <summary>
     /// Control spanNombreCliente.

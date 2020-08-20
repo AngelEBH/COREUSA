@@ -1,12 +1,13 @@
 ﻿$(document).ready(function () {
 
-    var qString = "?" + window.location.href.split("?")[1];
+    // Cargar documentos de la solicitud 
     $.ajax({
         type: "POST",
-        url: "Solicitudes_CANEX_Detalles.aspx/CargarDocumentos" + qString,
+        url: "Solicitudes_CANEX_Detalles.aspx/CargarDocumentos",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudo carga la documentacion, contacte al administrador');//mostrar mensaje de error
+            MensajeError('No se pudo carga la documentacion, contacte al administrador');
         },
         success: function (data) {
 
@@ -93,36 +94,16 @@
             $("#LogoPrestamo").css('display', '');
         }
     });
-
-    var EstadoRechazada = 5;
-    var EstadoAprobada = 4;
-    var EstadoEnRevision = 3;
-
-    if (IDEstado == EstadoAprobada || EstadoAprobada == EstadoRechazada) {
-
-        var Desicion = IDEstado == EstadoAprobada ? 'Aprobada' : 'Rechazada';
-        $("#btnAceptarSolicitud,#btnRechazar,#btnCondicionarSolicitud").prop('disabled', true);
-        $("#btnAceptarSolicitud,#btnRechazar,#btnCondicionarSolicitud").prop('title','La solicitud ya fue '+ Desicion);
-    }
-    else if (IDSolicitudImportada != 0) {
-        $("#btnAceptarSolicitud,#btnRechazar,#btnCondicionarSolicitud").prop('disabled', true);
-        $("#btnAceptarSolicitud,#btnRechazar,#btnCondicionarSolicitud").prop('title', 'La solicitud ya fue importada');
-    }
-    else if (IDEstado == EstadoEnRevision && IDSolicitudImportada == 0) {
-        $("#btnAceptarSolicitud").prop('disabled', false);
-    }
-    else if (IDEstado != EstadoRechazada && IDEstado != EstadoAprobada && IDSolicitudImportada == 0) {
-        $("#btnRechazar").prop('disabled', true);
-    }
 });
 
 $("#btnHistorialExterno").click(function () {
 
     MensajeInformacion('Cargando buro externo');
-    var qString = "?" + window.location.href.split("?")[1];
+
     $.ajax({
         type: "POST",
-        url: 'Solicitudes_CANEX_Detalles.aspx/ObtenerUrlEncriptado' + qString,
+        url: 'Solicitudes_CANEX_Detalles.aspx/ObtenerUrlEncriptado',
+        data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al cargar buro externo');
@@ -142,17 +123,20 @@ var listaCondicionamientos = [];
 $("#btnAgregarCondicion").click(function () {
 
     if ($($("#ddlCondiciones")).parsley().isValid() && $($("#txtComentarioAdicional")).parsley().isValid()) {
+
         var condicionID = $("#ddlCondiciones :selected").val();
         var descripcionCondicion = $("#ddlCondiciones :selected").text();
         var comentarioAdicional = $("#txtComentarioAdicional").val();
-        var btnQuitarCondicion = '<button type="button" data-id=' + condicionID + ' data-comentario="' + comentarioAdicional + '" id="btnQuitarCondicion" class="btn btn-sm btn-danger">Quitar</button>';
+        var btnQuitarCondicion = '<button type="button" data-id=' + condicionID + ' data-comentario="' + comentarioAdicional + '" id="btnQuitarCondicion" data-condicion="' + descripcionCondicion + '" class="btn btn-sm btn-danger">Quitar</button>';
         var newRowContent = '<tr><td>' + descripcionCondicion + '</td><td>' + comentarioAdicional + '</td><td>' + btnQuitarCondicion + '</td></tr>';
+
         $("#tblCondiciones tbody").append(newRowContent);
         $("#txtComentarioAdicional").val('');
 
         listaCondicionamientos.push({
             fiIDCondicion: condicionID,
-            fcComentarioAdicional: comentarioAdicional
+            fcComentarioAdicional: comentarioAdicional,
+            fcCondicion: descripcionCondicion
         });
         contadorCondiciones = contadorCondiciones + 1;
 
@@ -164,7 +148,8 @@ $(document).on('click', 'button#btnQuitarCondicion', function () {
     $(this).closest('tr').remove();
     var condicion = {
         fiIDCondicion: $(this).data('id').toString(),
-        fcComentarioAdicional: $(this).data('comentario')
+        fcComentarioAdicional: $(this).data('comentario'),
+        fcCondicion: $(this).data('condicion')
     };
     var list = [];
     if (listaCondicionamientos.length > 0) {
@@ -173,7 +158,8 @@ $(document).on('click', 'button#btnQuitarCondicion', function () {
 
             var iter = {
                 fiIDCondicion: listaCondicionamientos[i].fiIDCondicion,
-                fcComentarioAdicional: listaCondicionamientos[i].fcComentarioAdicional
+                fcComentarioAdicional: listaCondicionamientos[i].fcComentarioAdicional,
+                fcCondicion: listaCondicionamientos[i].fcCondicion
             };
             if (JSON.stringify(iter) != JSON.stringify(condicion)) {
                 list.push(iter);
@@ -186,11 +172,10 @@ $(document).on('click', 'button#btnQuitarCondicion', function () {
 
 $("#btnCondicionarSolicitudConfirmar").click(function () {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: "Solicitudes_CANEX_Detalles.aspx/CondicionarSolicitud" + qString,
-        data: JSON.stringify({ SolicitudCondiciones: listaCondicionamientos, IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia }),
+        url: "Solicitudes_CANEX_Detalles.aspx/CondicionarSolicitud",
+        data: JSON.stringify({ SolicitudCondiciones: listaCondicionamientos, IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la información, contacte al administrador');
@@ -200,8 +185,21 @@ $("#btnCondicionarSolicitudConfirmar").click(function () {
                 $("#modalCondicionarSolicitud").modal('hide');
                 MensajeExito('Estado de la solicitud actualizado');
                 $("#tblCondiciones tbody").empty();
+
+                var tblListaSolicitudCondiciones = $("#tblListaSolicitudCondiciones tbody");
+
+                // Actualizar Tabla de Condicionamientos 
+                var Condicion = '';
+                for (var i = 0; i < listaCondicionamientos.length; i++) {
+
+                    Condicion = listaCondicionamientos[i];                    
+
+                    tblListaSolicitudCondiciones.append('<tr><td><label class="btn btn-sm btn-block btn-info mb-0">Nuevo</label></td><td>' + Condicion.fcCondicion + '</td><td>' + Condicion.fcComentarioAdicional + '</td><td><label class="btn btn-sm btn-block btn-danger mb-0">Pendiente</label></td></tr>');
+                }
+
                 listaCondicionamientos = [];
                 contadorCondiciones = 0;
+                $("#pestanaListaSolicitudCondiciones").css('display','');
             }
             else { MensajeError('Error al condicionar la solicitud, contacte al administrador'); }
         }
@@ -210,11 +208,10 @@ $("#btnCondicionarSolicitudConfirmar").click(function () {
 
 $("#btnRechazarConfirmar").click(function () {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: "Solicitudes_CANEX_Detalles.aspx/SolicitudResolucion" + qString,
-        data: JSON.stringify({ IDEstado: 0, IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia }),
+        url: "Solicitudes_CANEX_Detalles.aspx/SolicitudResolucion",
+        data: JSON.stringify({ IDEstado: 0, IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia, Comentario: '', dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al actualizar estado de la solicitud, contacte al administrador');
@@ -233,11 +230,10 @@ $("#btnRechazarConfirmar").click(function () {
 
 $("#btnAceptarSolicitudConfirmar").click(function () {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: "Solicitudes_CANEX_Detalles.aspx/ImportarSolicitud" + qString,
-        data: JSON.stringify({ IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia }),
+        url: "Solicitudes_CANEX_Detalles.aspx/ImportarSolicitud",
+        data: JSON.stringify({ IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al actualizar estado de la solicitud, contacte al administrador');

@@ -27,8 +27,6 @@ var btnFinish = $('<button id="btnActualizarSolicitud" type="button"></button>')
                 if (data.d == "Solicitud actualizada correctamente") {
 
                     MensajeExito(data.d);
-
-                    localStorage.clear();
                     clienteID = 0;
                     window.location = "SolicitudesCredito_Ingresadas.aspx" + qString;
                 }

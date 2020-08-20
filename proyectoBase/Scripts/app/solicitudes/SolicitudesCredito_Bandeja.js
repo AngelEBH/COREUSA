@@ -116,12 +116,10 @@ $(document).ready(function () {
 
                     var Resultado = '';
 
-                    if (row["fdEnCampoFin"] != ProcesoPendiente || row["fiEstadoDeCampo"] == 2) {
-                        Resultado = IconoExito;
-                    }
-                    else {
-                        Resultado = IconoPendiente;
-                    }
+                    if (row["fdEnvioARutaAnalista"] != ProcesoPendiente) {
+
+                        Resultado = (row["fdEnCampoFin"] != ProcesoPendiente || row["fiEstadoDeCampo"] == 2) ? IconoExito : IconoPendiente;
+                    }                    
 
                     if (row["fdEnCampoFin"] == ProcesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
                         Resultado = row["fiEstadoSolicitud"] == 7 ? IconoExito : IconoRojo;

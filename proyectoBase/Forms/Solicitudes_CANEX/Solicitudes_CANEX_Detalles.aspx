@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Solicitudes_CANEX_Detalles.aspx.cs" Inherits="Solicitudes_CANEX_Detalles" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Solicitudes_CANEX_Detalles.aspx.cs" Inherits="Solicitudes_CANEX_Detalles" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -44,21 +44,21 @@
                     <!-- Acciones generales -->
                     <div class="col-md-6 form-inline justify-content-end pr-0">
                         <div class="button-items">
-                            <button id="btnHistorialExterno" class="btn btn-sm btn-success waves-effect waves-light" type="button">
+                            <button runat="server" ID="btnHistorialExterno" class="btn btn-sm btn-success waves-effect waves-light" type="button">
                                 Buro externo
                             </button>
 
-                            <button id="btnValidoDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-success btn-sm waves-effect waves-light">
+                            <button runat="server" ID="btnValidoDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-success btn-sm waves-effect waves-light">
                                 <small>Ver docs</small>
                             </button>
 
-                            <button id="btnCondicionarSolicitud" class="btn btn-sm btn-warning validador" runat="server" data-toggle="modal" data-target="#modalCondicionarSolicitud" type="button">
+                            <button runat="server" ID="btnCondicionarSolicitud" class="btn btn-sm btn-warning validador" runat="server" data-toggle="modal" data-target="#modalCondicionarSolicitud" type="button">
                                 Condicionar
                             </button>
-                            <button id="btnRechazar" class="btn btn-sm btn-danger waves-effect waves-light validador" data-toggle="modal" data-target="#modalResolucionRechazar" type="button">
+                            <button runat="server" ID="btnRechazar" class="btn btn-sm btn-danger waves-effect waves-light validador" data-toggle="modal" data-target="#modalResolucionRechazar" type="button">
                                 Rechazar
                             </button>
-                            <button id="btnAceptarSolicitud" class="btn btn-sm btn-warning waves-effect waves-light validador" disabled="disabled" data-toggle="modal" data-target="#modalResolucionAprobar" title="" type="button">
+                            <button runat="server" id="btnAceptarSolicitud" class="btn btn-sm btn-warning waves-effect waves-light validador" disabled="disabled" data-toggle="modal" data-target="#modalResolucionAprobar" title="" type="button">
                                 Aceptar
                             </button>
                         </div>
@@ -75,27 +75,27 @@
                     <!-- Información de la solicitud -->
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         No. Solicitud:&nbsp;
-                    <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                        <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         No. Cliente:&nbsp;
-                    <asp:Label ID="lblNoCliente" CssClass="col-form-label" runat="server"></asp:Label>
+                        <asp:Label ID="lblNoCliente" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         Tipo Solicitud:&nbsp;
-                    <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                        <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         Agente Ventas:&nbsp;
-                    <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
+                        <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         Agencia:&nbsp;
-                    <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
+                        <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         Estado:&nbsp;
-                    <asp:Label ID="lblEstadoSolicitud" runat="server"></asp:Label>
+                        <asp:Label ID="lblEstadoSolicitud" runat="server"></asp:Label>
                     </div>
                 </div>
             </div>
@@ -359,27 +359,27 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <%--<div class="form-group row" id="divAval">
-                                                        <h4>Aval</h4>
-                                                        <div class="table-responsive">
-                                                            <table runat="server" class="table table-condensed" id="tblAvales">
-                                                                <thead class="thead-light">
-                                                                    <tr>
-                                                                        <th>Nombre completo</th>
-                                                                        <th>Identidad</th>
-                                                                        <th>Telefono</th>
-                                                                        <th>Lugar de trabajo</th>
-                                                                        <th>Puesto asignado</th>
-                                                                        <th>Ingresos</th>
-                                                                        <th>Estado</th>
-                                                                        <th></th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>--%>
+                                        <%--<div class="form-group row" id="divAval">
+                                                <h4>Aval</h4>
+                                                <div class="table-responsive">
+                                                    <table runat="server" class="table table-condensed" id="tblAvales">
+                                                        <thead class="thead-light">
+                                                            <tr>
+                                                                <th>Nombre completo</th>
+                                                                <th>Identidad</th>
+                                                                <th>Telefono</th>
+                                                                <th>Lugar de trabajo</th>
+                                                                <th>Puesto asignado</th>
+                                                                <th>Ingresos</th>
+                                                                <th>Estado</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>--%>
                                         </div>
                                     </div>
                                 </div>
@@ -433,7 +433,7 @@
                                                         <label id="lblValorPrimaTitulo" class="col-sm-6">Valor Prima</label>
                                                         <asp:Label ID="lblValorPrima" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                        <asp:Label ID="lblPlazoTitulo" CssClass="col-sm-6" Text="Plazo" runat="server" style="font-weight: 500; margin-bottom: .5rem;"></asp:Label>
+                                                        <asp:Label ID="lblPlazoTitulo" CssClass="col-sm-6" Text="Plazo" runat="server" Style="font-weight: 500; margin-bottom: .5rem;"></asp:Label>
                                                         <asp:Label ID="lblPlazo" CssClass="col-sm-6" runat="server"></asp:Label>
 
                                                         <label class="col-sm-6">Monto Financiar</label>
@@ -507,7 +507,7 @@
                                     <span class="d-none d-sm-block">Agregar Nuevas Condiciones</span>
                                 </a>
                             </li>
-                            <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones" visible="false">
+                            <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones" style="display:none;">
                                 <a class="nav-link" data-toggle="tab" href="#listaCondiciones" role="tab">
                                     <span class="d-none d-sm-block">Condiciones de la solictud</span>
                                 </a>
@@ -640,7 +640,7 @@
             IDAgencia = <%=this.IDAgencia%>;
             IDSocio = <%=this.IDSocio%>;
             IDEstado = <%=this.IDEstadoSolicitud%>;
-            IDSolicitudImportada = <%=this.IDSolcitudPrestadito%>;
+            IDSolicitudImportada = <%=this.IDSolicitudPrestadito%>;
         });
     </script>
     <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js"></script>

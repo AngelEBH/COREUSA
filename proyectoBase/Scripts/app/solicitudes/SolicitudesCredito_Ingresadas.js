@@ -1,5 +1,5 @@
 ﻿var FiltroActual = "";
-var idSolicitud_abrir = 0;
+var idSolicitud = 0;
 estadoMasRelevante = '';
 
 $(document).ready(function () {
@@ -60,7 +60,7 @@ $(document).ready(function () {
             {
                 "data": "fdFechaCreacionSolicitud",
                 "render": function (value) {
-                    if (value === null) return "";
+                    if (value === '/Date(-62135575200000)/') return "";
                     return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
                 }
             },
@@ -96,7 +96,7 @@ $(document).ready(function () {
                         estadoMasRelevante = '<button id="btnActualizar" data-id="' + row["fiIDSolicitud"] + '" class="btn btn-sm btn-block btn-warning mb-0">Condicionada</button>';
                     }
                     if (row["fiEstadoSolicitud == 4"] || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7) {
-                    estadoMasRelevante = row["fiEstadoSolicitud"] == 7 ? '<label class="btn btn-sm btn-block btn-success mb-0">Aprobada</label>' : '<label class="btn btn-sm btn-block btn-danger mb-0">Rechazada</label>';
+                        estadoMasRelevante = row["fiEstadoSolicitud"] == 7 ? '<label class="btn btn-sm btn-block btn-success mb-0">Aprobada</label>' : '<label class="btn btn-sm btn-block btn-danger mb-0">Rechazada</label>';
                     }
 
                     return estadoMasRelevante;
@@ -175,30 +175,23 @@ $(document).ready(function () {
     $("#datatable-bandeja tbody").on("click", "tr", function () {
         var row = dtBandeja.row(this).data();
 
-        idSolicitud_abrir = row.fiIDSolicitud;
+        idSolicitud = row.fiIDSolicitud;
         $("#lblCliente").text(row.fcPrimerNombreCliente + ' ' + row.fcSegundoNombreCliente + ' ' + row.fcPrimerApellidoCliente + ' ' + row.fcSegundoApellidoCliente + ' ');
         $("#lblIdentidadCliente").text(row.fcIdentidadCliente);
         $("#modalAbrirSolicitud").modal();
     });
 });
 
-//abrir modal de actualizar solicitud condicionada
-var idSolicitudActualizar = 0;
 $(document).on('click', 'button#btnActualizar', function () {
-
-    idSolicitudActualizar = idSolicitud_abrir;
     $("#modalActualizarSolicitud").modal();
 });
 
-//abrir pantalla de actualizar informacion de la solicitud
 $('#btnActualizar').click(function (e) {
-
-    var IDSOL = idSolicitudActualizar;
 
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Ingresadas.aspx/EncriptarParametros",
-        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: IDSOL }),
+        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: idSolicitud }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la solicitud, contacte al administrador');
@@ -218,12 +211,10 @@ $('#btnActualizar').click(function (e) {
 
 $(document).on('click', 'button#btnDetalles', function () {
 
-    var IDSOL = idSolicitud_abrir;
-
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Ingresadas.aspx/EncriptarParametros",
-        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: IDSOL }),
+        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: idSolicitud }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la solicitud, contacte al administrador');

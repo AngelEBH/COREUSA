@@ -203,6 +203,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js"></script>
+    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=1"></script>
 </body>
 </html>

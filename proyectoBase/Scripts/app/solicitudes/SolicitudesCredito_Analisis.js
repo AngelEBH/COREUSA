@@ -401,16 +401,27 @@ function cargarInformacionSolicitud() {
             var divDocumentacionCampoTrabajo = $("#divDocumentacionCampoTrabajo");
             var divDocumentacionCampoTrabajoModal = $("#divDocumentacionCampoTrabajoModal");
             var contador = 0;
+            var ruta = '';
+            var img = '';
+            var imgModal = '';
+
             for (var i = 0; i < rowDataDocumentos.length; i++) {
 
-                var ruta = rowDataDocumentos[i].URLArchivo;
+                ruta = rowDataDocumentos[i].URLArchivo;
+
+                img = '<img class="img" class="img-responsive" src="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />'
+                imgModal = '<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '">' +
+                    '<div class="img-responsive">' +
+                    '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
+                    '</div>' +
+                    '</a>'
 
                 if (rowDataDocumentos[i].fiTipoDocumento == 1 || rowDataDocumentos[i].fiTipoDocumento == 2 || rowDataDocumentos[i].fiTipoDocumento == 18 || rowDataDocumentos[i].fiTipoDocumento == 19) {
 
                     if (contador < 2) {
                         divDocumentacionCedula.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '">' +
                             '<div class="img-responsive">' +
-                            '<img class="img" src="' + ruta + '" style="width: 100%; height: auto; float: left; cursor: zoom-in;" />' +
+                            '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 100%; height: auto; float: left; cursor: zoom-in;" />' +
                             '</div>' +
                             '</a>');
                     }
@@ -420,57 +431,38 @@ function cargarInformacionSolicitud() {
                         '</div>' +
                         '</a>');
                     contador = contador + 1;
-                }
-                else if (rowDataDocumentos[i].fiTipoDocumento == 3) {
-                    divDocumentacionDomicilio.append(
-                        '<img class="img" class="img-responsive" src="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Documentacion de domicilio" style="width: 50%; height: auto; float:left;" />');
-                    divDocumentacionDomicilioModal.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '">' +
-                        '<div class="img-responsive">' +
-                        '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-                        '</div>' +
-                        '</a>');
-                }
-                else if (rowDataDocumentos[i].fiTipoDocumento == 5) {
-                    divDocumentacionDomicilio.append(
-                        '<img class="img" class="img-responsive" src="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Documentacion domicilio" style="width: 50%; height: auto; float:left;" />');
-                    divDocumentacionDomicilioModal.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Documentacion domicilio">' +
-                        '<div class="img-responsive">' +
-                        '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-                        '</div>' +
-                        '</a>');
-                }
-                else if (rowDataDocumentos[i].fiTipoDocumento == 4) {
-                    divDocumentacionLaboral.append(
-                        '<img class="img" class="img-responsive" src="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Comprobante de ingresos" style="width: 50%; height: auto; float:left;"/>');
-                    divDocumentacionLaboralModal.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Comprobante de ingresos">' +
-                        '<div class="img-responsive">' +
-                        '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-                        '</div>' +
-                        '</a>');
 
                 }
+                else if (rowDataDocumentos[i].fiTipoDocumento == 3) {
+
+                    divDocumentacionDomicilio.append(img);
+                    divDocumentacionDomicilioModal.append();
+
+                }
+                else if (rowDataDocumentos[i].fiTipoDocumento == 5) {
+
+                    divDocumentacionDomicilio.append(img);
+                    divDocumentacionDomicilioModal.append(imgModal);
+
+                }
+                else if (rowDataDocumentos[i].fiTipoDocumento == 4) {
+
+                    divDocumentacionLaboral.append(img);
+                    divDocumentacionLaboralModal.append(imgModal);
+                }
                 else if (rowDataDocumentos[i].fiTipoDocumento == 6) {
-                    divDocumentacionLaboral.append(
-                        '<img class="img" class="img-responsive" src="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Croquis empleo" style="width: 50%; height: auto; float:left;"/>');
-                    divDocumentacionLaboralModal.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Croquis empleo">' +
-                        '<div class="img-responsive">' +
-                        '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-                        '</div>' +
-                        '</a>');
+
+                    divDocumentacionLaboral.append(img);
+                    divDocumentacionLaboralModal.append(imgModal);
+
                 }
                 else if (rowDataDocumentos[i].fiTipoDocumento == 7) {
-                    divDocumentacionLaboral.append(
-                        '<img class="img" class="img-responsive" src="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Solicitud fisica" style="width: 50%; height: auto; float:left;"/>');
-                    divDocumentacionFisicaModal.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Solicitud fisica">' +
-                        '<div class="img-responsive">' +
-                        '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-                        '</div>' +
-                        '</a>');
+                    divDocumentacionLaboral.append(img);
+                    divDocumentacionFisicaModal.append(imgModal);
                 }
 
                 else if (rowDataDocumentos[i].fiTipoDocumento == 8) {
-                    divDocumentacionCampoDomicilio.append(
-                        '<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de casa" style="width: 50%; height: auto; float:left;"/>');
+                    divDocumentacionCampoDomicilio.append(img);
                     divDocumentacionCampoDomicilioModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de casa">' +
                         '<div class="img-responsive">' +
                         '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
@@ -478,8 +470,8 @@ function cargarInformacionSolicitud() {
                         '</a>');
                 }
                 else if (rowDataDocumentos[i].fiTipoDocumento == 9) {
-                    divDocumentacionCampoTrabajo.append(
-                        '<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de trabajo" style="width: 50%; height: auto; float:left;"/>');
+
+                    divDocumentacionCampoTrabajo.append(img);
                     divDocumentacionCampoTrabajoModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de trabajo">' +
                         '<div class="img-responsive">' +
                         '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
@@ -648,7 +640,7 @@ function cargarInformacionSolicitud() {
             // FICHA DE RESUMEN
             $("#lblResumenVendedor").text(rowDataSolicitud.fcNombreCortoVendedor); // ficha de resumen
             $("#lblResumenAnalista").text(rowDataSolicitud.fcNombreUsuarioModifica); // ficha de resumen
-            
+
         }
     });
 }
@@ -1001,7 +993,7 @@ $('#txtValorGlobalManual,#txtValorPrimaManual,#txtValorPlazoManual').blur(functi
     cantidadPlazos = parseInt(cantidadPlazos);
 
     var montoFinanciar = valorGlobal - valorPrima;
-    
+
 
     if (valorGlobal > 0 && valorPrima >= 0 && valorGlobal > valorPrima && cantidadPlazos > 0 && montoFinanciar > 0) {
 
@@ -1038,7 +1030,7 @@ $('#txtValorGlobalManual,#txtValorPrimaManual,#txtValorPlazoManual').blur(functi
     }
 });
 
-// DEBUGUEAR ESTE 
+// DEBUGUEAR ESTE
 var montoFinanciarCalculado = 0;
 $("#btnActualizarMontoManualmente").click(function () {
     var valorGlobal = $("#txtValorGlobalManual").val().replace(/,/g, '') == '' ? 0 : $('#txtValorGlobalManual').val().replace(/,/g, '');
@@ -2207,15 +2199,15 @@ function actualizarEstadoSolicitud() {
                 //var tiempoValidacion = ValidacionInicio != '' ? ValidacionFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.PasoFinalInicio, rowDataSolicitud.PasoFinalFin) : '' : '';
                 //var timer = rowDataSolicitud.fcTiempoTotalTranscurrido.split(':');
                 //$('#tblEstadoSolicitud tbody').append('<tr>' +
-                //    '<td class="text-center">' + tiempoIngreso + '</td>' +
-                //    '<td class="text-center">' + tiempoTramite + '</td>' +
-                //    '<td class="text-center">' + tiempoAnalisis + '</td>' +
-                //    '<td class="text-center">' + tiempoCampo + '</td>' +
-                //    '<td class="text-center">' + tiempoCondicionado + '</td>' +
-                //    '<td class="text-center">' + tiempoReprogramado + '</td>' +
-                //    '<td class="text-center">' + tiempoValidacion + '</td>' +
-                //    '<td class="text-center">' + timer + '</td>' +
-                //    '</tr>');
+                // '<td class="text-center">' + tiempoIngreso + '</td>' +
+                // '<td class="text-center">' + tiempoTramite + '</td>' +
+                // '<td class="text-center">' + tiempoAnalisis + '</td>' +
+                // '<td class="text-center">' + tiempoCampo + '</td>' +
+                // '<td class="text-center">' + tiempoCondicionado + '</td>' +
+                // '<td class="text-center">' + tiempoReprogramado + '</td>' +
+                // '<td class="text-center">' + tiempoValidacion + '</td>' +
+                // '<td class="text-center">' + timer + '</td>' +
+                // '</tr>');
 
                 //validar si ya se puede tomar una resolucion
                 if (rowDataSolicitud.ftAnalisisTiempoValidacionReferenciasPersonales != ProcesoPendiente) {
