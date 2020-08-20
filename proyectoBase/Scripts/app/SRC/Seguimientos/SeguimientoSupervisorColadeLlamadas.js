@@ -142,16 +142,16 @@ $(document).ready(function () {
 
     /* Buscador para listas seleccionables */
     //$(".buscadorddl").select2({
-    //    language: {
-    //        errorLoading: function () { return "No se pudieron cargar los resultados" },
-    //        inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-    //        inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-    //        loadingMore: function () { return "Cargando más resultados…" },
-    //        maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
-    //        noResults: function () { return "No se encontraron resultados" },
-    //        searching: function () { return "Buscando…" },
-    //        removeAllItems: function () { return "Eliminar todos los elementos" }
-    //    }
+    // language: {
+    // errorLoading: function () { return "No se pudieron cargar los resultados" },
+    // inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+    // inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+    // loadingMore: function () { return "Cargando más resultados…" },
+    // maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
+    // noResults: function () { return "No se encontraron resultados" },
+    // searching: function () { return "Buscando…" },
+    // removeAllItems: function () { return "Eliminar todos los elementos" }
+    // }
     //});
 });
 
@@ -193,13 +193,6 @@ function MensajeError(mensaje) {
 function MensajeAdvertencia(mensaje) {
     iziToast.warning({
         title: 'Atención',
-        message: mensaje
-    });
-}
-
-function MensajeInformacion(mensaje) {
-    iziToast.info({
-        title: 'Info',
         message: mensaje
     });
 }

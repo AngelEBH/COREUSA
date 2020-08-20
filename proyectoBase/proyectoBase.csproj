@@ -787,7 +787,6 @@
     <Content Include="Forms\SRC\ConvenioReadecuacion.aspx" />
     <Content Include="Forms\SRC\ImprimirAdendum31a120.aspx" />
     <Content Include="Forms\SRC\ImprimirConvenio.aspx" />
-    <Content Include="Forms\SRC\SeguimientoColadeLlamadas.aspx" />
     <Content Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx" />
     <Content Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorAgente.aspx" />
     <Content Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorSupervisor.aspx" />
@@ -1533,13 +1532,6 @@
     </Compile>
     <Compile Include="Forms\SRC\ImprimirConvenio.aspx.designer.cs">
       <DependentUpon>ImprimirConvenio.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SRC\SeguimientoColadeLlamadas.aspx.cs">
-      <DependentUpon>SeguimientoColadeLlamadas.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\SRC\SeguimientoColadeLlamadas.aspx.designer.cs">
-      <DependentUpon>SeguimientoColadeLlamadas.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx.cs">
       <DependentUpon>SeguimientoJefePromesasdePago.aspx</DependentUpon>

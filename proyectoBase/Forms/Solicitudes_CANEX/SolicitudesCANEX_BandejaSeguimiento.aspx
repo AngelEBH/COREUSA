@@ -8,8 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Bandeja de seguimiento de solicitudes CANEX</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -84,7 +84,7 @@
                     </div>
                 </div>
 
-                <%--<div class="form-group row">
+            <%--<div class="form-group row">
                     <label class="col-sm-2">Nombre cliente</label>
                     <div class="col-sm-4">
                         <input id="nombreCliente" class="form-control form-control-sm" type="text" />
@@ -132,6 +132,6 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="/Scripts/app/Solicitudes_CANEX/SolicitudesCANEX_BandejaSeguimiento.js"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/SolicitudesCANEX_BandejaSeguimiento.js?v=1.1"></script>
 </body>
 </html>

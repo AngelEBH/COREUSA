@@ -109,10 +109,10 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
             DateTime fechaActual = DateTime.Now;
 
             string lcParametros = "usr=" + pcIDUsuario +
-                    "&IDApp=" + pcIDApp +
-                    "&IDSOL=" + ID +
-                    "&SID=" + pcIDSesion +
-                    "&pcID=" + Identidad;
+            "&IDApp=" + pcIDApp +
+            "&IDSOL=" + ID +
+            "&SID=" + pcIDSesion +
+            "&pcID=" + Identidad;
             resultado = DSC.Encriptar(lcParametros);
         }
         catch

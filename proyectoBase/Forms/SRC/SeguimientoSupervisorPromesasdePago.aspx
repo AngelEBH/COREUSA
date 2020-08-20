@@ -20,9 +20,11 @@
         .opcion {
             cursor: pointer;
         }
+
         #datatable-clientes tbody tr {
             cursor: pointer;
         }
+
         #datatable-clientes tbody td {
             outline: none;
         }
@@ -39,7 +41,7 @@
                     <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
                         aria-label="Buscar" />
                 </div>
-            </div>            
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive p-0">
@@ -90,6 +92,6 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <%--<script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>--%>
-    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoSupervisorPromesasdePago.js"></script>
+    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoSupervisorPromesasdePago.js?v=1.1"></script>
 </body>
 </html>

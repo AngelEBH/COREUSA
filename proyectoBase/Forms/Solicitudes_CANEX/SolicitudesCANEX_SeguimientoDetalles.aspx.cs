@@ -122,7 +122,7 @@ public partial class SolicitudesCANEX_SeguimientoDetalles : System.Web.UI.Page
                                     }
                                     else
                                     {
-                                        lblNombreConyugue.Text = NombreCompletoConyugue.Replace("  ", " ");
+                                        lblNombreConyugue.Text = NombreCompletoConyugue.Replace(" ", " ");
                                         DateTime FechaNacimientoConyugue = (DateTime)reader["fdNacimientoCliente"];
                                         lblFechaNacimientoConygue.Text = FechaNacimientoConyugue.ToString("MM/dd/yyyy");
                                         lblTelefonoConyugue.NavigateUrl = "tel:" + reader["fcTelefonoConyugue"].ToString();

@@ -16,10 +16,11 @@
     <%--<link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />--%>
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
-    <style>        
+    <style>
         #datatable-recuperacion tbody tr {
             cursor: pointer;
         }
+
         #datatable-recuperacion tbody td {
             outline: none;
         }
@@ -32,11 +33,11 @@
                 <div class="row">
                     <div class="col-8">
                         <h6 class="">Recuperación del Dia</h6>
-                    </div>                    
-                    <div class="col-4">                      
-                      <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
-                        aria-label="Buscar"/>
-                    </div>                    
+                    </div>
+                    <div class="col-4">
+                        <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
+                            aria-label="Buscar" />
+                    </div>
                 </div>
             </div>
             <div class="card-body">
@@ -54,7 +55,7 @@
                         <label class="form-control-plaintext">Total Recuperado Hoy</label>
                     </div>
                     <div class="form-group mx-sm-3 mb-2">
-                        <label class="col-form-label" style="font-weight:bold;" id="lblTotalRecuperadoHoy"></label>
+                        <label class="col-form-label" style="font-weight: bold;" id="lblTotalRecuperadoHoy"></label>
                     </div>
                 </div>
                 <table id="datatable-recuperacion" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
@@ -88,6 +89,6 @@
     <%--<script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>--%>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoRecuperacionDelDiaPorSupervisor.js"></script>
+    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoRecuperacionDelDiaPorSupervisor.js?v=1.1"></script>
 </body>
 </html>

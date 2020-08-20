@@ -480,11 +480,12 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
+                sqlConexion.Open();
                 string lcSQLInstruccion = "exec sp_CANEX_Solicitud_CambiarEstado '" + pcIDSesion + "', '" + pcIDApp + "','" + pcIDUsuario + "', '" + IDSOL + "', '" + IDPais + "', '" + IDSocio + "', '" + IDAgencia + "', '" + Resolucion + "'";
+
                 using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.Text;
-                    sqlConexion.Open();
                     using (SqlDataReader reader = sqlComando.ExecuteReader())
                     {
                         while (reader.Read())

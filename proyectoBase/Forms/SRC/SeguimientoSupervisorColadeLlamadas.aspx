@@ -118,6 +118,6 @@
     <%--<script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>--%>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoSupervisorColadeLlamadas.js"></script>
+    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoSupervisorColadeLlamadas.js?v=1.1"></script>
 </body>
 </html>

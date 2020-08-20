@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Solicitudes_CANEX_Detalles.aspx.cs" Inherits="Solicitudes_CANEX_Detalles" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Solicitudes_CANEX_Detalles.aspx.cs" Inherits="Solicitudes_CANEX_Detalles" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles de la solicitud CANEX</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
@@ -359,7 +359,7 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <%--<div class="form-group row" id="divAval">
+                                        <%--<div class="form-group row" id="divAval">
                                                 <h4>Aval</h4>
                                                 <div class="table-responsive">
                                                     <table runat="server" class="table table-condensed" id="tblAvales">
@@ -643,6 +643,6 @@
             IDSolicitudImportada = <%=this.IDSolicitudPrestadito%>;
         });
     </script>
-    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=1"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=1.1"></script>
 </body>
 </html>

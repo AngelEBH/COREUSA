@@ -46,9 +46,9 @@ public partial class Gestion_ImprimirAdendum31a120 : System.Web.UI.Page
                 try
                 {
                     sqlConexion.Open();
-
                     //sp_SRC_ClientesConvenios_Imprimir(@piIDSesion Int, @piIDApp SmallInt, @piIDUsuario Int, @pcIDCliente VarChar(11), @pcIDCOnvenio VarChar(30))
                     string lcSQLInstruccion = "exec sp_SRC_ClientesConvenios_Imprimir 1," + pcIDApp + "," + pcIDUsuario + ",'" + lcIDCliente.Trim() + "','" + pcIDConvenio + "'";
+                    
                     using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
                     {
                         using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())

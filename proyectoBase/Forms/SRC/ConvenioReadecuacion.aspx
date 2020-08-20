@@ -1,11 +1,11 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="ConvenioReadecuacion" CodeBehind="ConvenioReadecuacion.aspx.cs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="ConvenioReadecuacion" CodeFile="ConvenioReadecuacion.aspx.cs" %>
 
 <!DOCTYPE html>
 <html lang="es" xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style type="text/css">
         html * {
@@ -27,7 +27,7 @@
 
         @font-face {
             font-family: "DejaVu Sans";
-            src: url("/Content/fonts/DejaVu/DejaVuSans.ttf") format("truetype");
+            src: url("/CSS/Content/fonts/DejaVu/DejaVuSans.ttf") format("truetype");
         }
     </style>
 </head>
@@ -90,7 +90,7 @@
                             El presente adendum pasa a formar parte del convenio de crédito, modifica el plazo, cantidad a pagar y cantidad de cuotas.
                         </p>
                         <p>
-                            El cliente empezará a pagar su primera cuota 
+                            El cliente empezará a pagar su primera cuota
                             <asp:Label runat="server" ID="lblTipodeCuota" Text="quincenal" />
                             a partir de la fecha
                             <asp:Label runat="server" ID="lblFechaPrimeraCuota" Text="" />

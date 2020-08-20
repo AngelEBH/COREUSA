@@ -21,9 +21,11 @@
         .opcion {
             cursor: pointer;
         }
+
         #datatable-recuperacion tbody tr {
             cursor: pointer;
         }
+
         #datatable-recuperacion tbody td {
             outline: none;
         }
@@ -36,21 +38,20 @@
                 <div class="row">
                     <div class="col-8">
                         <h6 class="">Recuperación del Dia</h6>
-                    </div>                    
-                    <div class="col-4">                      
-                      <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
-                        aria-label="Buscar"/>
-                    </div>                    
+                    </div>
+                    <div class="col-4">
+                        <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
+                            aria-label="Buscar" />
+                    </div>
                 </div>
             </div>
             <div class="card-body">
-
                 <div class="form-inline justify-content-center">
                     <div class="form-group mb-2">
                         <label class="form-control-plaintext">Total Recuperado Hoy</label>
                     </div>
                     <div class="form-group mx-sm-3 mb-2">
-                        <label class="col-form-label" style="font-weight:bold;" id="lblTotalRecuperadoHoy"></label>
+                        <label class="col-form-label" style="font-weight: bold;" id="lblTotalRecuperadoHoy"></label>
                     </div>
                 </div>
                 <table id="datatable-recuperacion" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
@@ -83,6 +84,6 @@
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
     <%--<script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>--%>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoRecuperacionDelDiaPorAgente.js"></script>
+    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoRecuperacionDelDiaPorAgente.js?v=1.1"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
 
-    /* Cargar documentos de la solicitud  */
+    /* Cargar documentos de la solicitud */
     $.ajax({
         type: "POST",
         url: "Solicitudes_CANEX_Detalles.aspx/CargarDocumentos",

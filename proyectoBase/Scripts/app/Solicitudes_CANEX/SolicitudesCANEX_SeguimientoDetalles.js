@@ -3,7 +3,7 @@
     /* Cargar documentos de la solicitud  */
     $.ajax({
         type: "POST",
-        url: "Solicitudes_CANEX_Detalles.aspx/CargarDocumentos",
+        url: "SolicitudesCANEX_SeguimientoDetalles.aspx/CargarDocumentos",
         data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {

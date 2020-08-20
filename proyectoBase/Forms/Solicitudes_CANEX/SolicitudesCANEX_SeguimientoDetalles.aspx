@@ -66,27 +66,27 @@
                     <!-- Información de la solicitud -->
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         No. Solicitud:&nbsp;
-                    <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                        <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         No. Cliente:&nbsp;
-                    <asp:Label ID="lblNoCliente" CssClass="col-form-label" runat="server"></asp:Label>
+                        <asp:Label ID="lblNoCliente" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         Tipo Solicitud:&nbsp;
-                    <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                        <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         Agente Ventas:&nbsp;
-                    <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
+                        <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         Agencia:&nbsp;
-                    <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
+                        <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         Estado:&nbsp;
-                    <asp:Label ID="lblEstadoSolicitud" runat="server"></asp:Label>
+                        <asp:Label ID="lblEstadoSolicitud" runat="server"></asp:Label>
                     </div>
                 </div>
             </div>
@@ -352,7 +352,7 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <%--<div class="form-group row" id="divAval">
+                                    <%--<div class="form-group row" id="divAval">
                                             <h4>Aval</h4>
                                             <div class="table-responsive">
                                                 <table runat="server" class="table table-condensed" id="tblAvales">
@@ -539,6 +539,6 @@
             IDEstado = <%=this.IDEstadoSolicitud%>;
         });
     </script>
-    <script src="/Scripts/app/Solicitudes_CANEX/SolicitudesCANEX_SeguimientoDetalles.js"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/SolicitudesCANEX_SeguimientoDetalles.js?v=1.1"></script>
 </body>
 </html>
