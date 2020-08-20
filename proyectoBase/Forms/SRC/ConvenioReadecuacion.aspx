@@ -1,15 +1,16 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="ConvenioReadecuacion" Codebehind="ConvenioReadecuacion.aspx.cs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="ConvenioReadecuacion" CodeBehind="ConvenioReadecuacion.aspx.cs" %>
 
 <!DOCTYPE html>
 <html lang="es" xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style type="text/css">
         html * {
-            font-family: "DejaVu Sans", "Arial", sans-serif !important; font-size: 14px !important;
+            font-family: "DejaVu Sans", "Arial", sans-serif !important;
+            font-size: 14px !important;
         }
 
         p {
@@ -26,7 +27,7 @@
 
         @font-face {
             font-family: "DejaVu Sans";
-            src: url("/CSS/Content/fonts/DejaVu/DejaVuSans.ttf") format("truetype");
+            src: url("/Content/fonts/DejaVu/DejaVuSans.ttf") format("truetype");
         }
     </style>
 </head>
@@ -103,8 +104,11 @@
                             Departamento de
                             <asp:Label runat="server" ID="lblDepartamento" Text="" />
                             a los
-                            <asp:Label runat="server" ID="lblDias" Text="" /> dias del mes de
-                            <asp:Label runat="server" ID="lblMes" Text="" /> del año <asp:Label runat="server" ID="lblAnio" Text="" />.
+                            <asp:Label runat="server" ID="lblDias" Text="" />
+                            dias del mes de
+                            <asp:Label runat="server" ID="lblMes" Text="" />
+                            del año
+                            <asp:Label runat="server" ID="lblAnio" Text="" />.
                         </p>
                     </div>
                 </div>
@@ -137,7 +141,6 @@
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
-
     <script src="/Scripts/plugins/kendo/jszip.min.js"></script>
     <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
@@ -172,14 +175,11 @@
                 window.close();
             });
         };
-        
-        $(document).ready(function ()
-        {
-            var NombrePDF = $('#lblNombreCliente').text();
 
+        $(document).ready(function () {
+            var NombrePDF = '<%= this.lcNombreArchivoPDF %>';
             ExportHtmlToPdf('#GenerarConvenio', NombrePDF).done(CerrarVentana());
-        }
-        );
+        });
     </script>
 </body>
 </html>

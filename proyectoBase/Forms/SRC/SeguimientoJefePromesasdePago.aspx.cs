@@ -42,34 +42,40 @@ public partial class Seguimientos_SeguimientoJefePromesasdePago : System.Web.UI.
             int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
-            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_AdminSeguimientoPromesasdePago", sqlConexion);
-            sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-            sqlComando.Parameters.AddWithValue("@piIDAgente", 0);
-            sqlComando.CommandTimeout = 120;
-            sqlConexion.Open();
-            SqlDataReader reader = sqlComando.ExecuteReader();
-
-            while (reader.Read())
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                ListadoRegistros.Add(new SeguimientoJefePromesasPagoViewModel()
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_AdminSeguimientoPromesasdePago", sqlConexion))
                 {
-                    NombreAgente = (string)reader["fcNombreCorto"],
-                    IDCliente = (string)reader["fcIDCliente"],
-                    NombreCompletoCliente = (string)reader["fcNombreCompleto"],
-                    Atraso = (decimal)reader["fnSaldoPonerAlDia"],
-                    Moneda = "L",
-                    DiasMora = (short)reader["fiDiasAtraso"],
-                    UrlCliente = "../Gestion/GestionCobranzaCliente.aspx?" + DSC.Encriptar(reader["urlCliente"].ToString().Trim()),
-                    UrlEstadodeCuenta = (string)reader["fcURLEstadodeCuenta"],
-                    UrlImagen = (string)reader["fcURLImagen"],
-                    FechaRegistrado = (DateTime)reader["fdGestion"],
-                    FechaPromesa = (DateTime)reader["fdFechaVolveraLlamar"],
-                    EstadoActual = (string)reader["fcEstadoActual"]
-                });
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDAgente", 0);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ListadoRegistros.Add(new SeguimientoJefePromesasPagoViewModel()
+                            {
+                                NombreAgente = (string)reader["fcNombreCorto"],
+                                IDCliente = (string)reader["fcIDCliente"],
+                                NombreCompletoCliente = (string)reader["fcNombreCompleto"],
+                                Atraso = (decimal)reader["fnSaldoPonerAlDia"],
+                                Moneda = "L",
+                                DiasMora = (short)reader["fiDiasAtraso"],
+                                UrlCliente = "../Gestion/GestionCobranzaCliente.aspx?" + DSC.Encriptar(reader["urlCliente"].ToString().Trim()),
+                                UrlEstadodeCuenta = (string)reader["fcURLEstadodeCuenta"],
+                                UrlImagen = (string)reader["fcURLImagen"],
+                                FechaRegistrado = (DateTime)reader["fdGestion"],
+                                FechaPromesa = (DateTime)reader["fdFechaVolveraLlamar"],
+                                EstadoActual = (string)reader["fcEstadoActual"]
+                            });
+                        }
+                    }
+                }
             }
         }
         catch (Exception ex)

@@ -31,15 +31,6 @@ public partial class Gestion_ImprimirConvenio
     protected global::System.Web.UI.WebControls.Panel Panel1;
 
     /// <summary>
-    /// Control lblNumerodeContrato.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblNumerodeContrato;
-
-    /// <summary>
     /// Control lblNombreCliente.
     /// </summary>
     /// <remarks>

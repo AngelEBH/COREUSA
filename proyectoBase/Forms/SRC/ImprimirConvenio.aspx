@@ -44,10 +44,6 @@
                         <tr><td>&nbsp;</td></tr>
                         <tr><td class="ClaseTDC" style="font-size:20px;">Acuerdo de “CONGELAMIENTO TOTAL DE DEUDA”</td></tr>
                         <tr><td style="font-size:10px;">&nbsp;</td></tr>
-                        <!--
-                        <tr><td class="ClaseTDC" style="font-size:14px;"><asp:Label runat="server" ID="lblNumerodeContrato" style="left:  260px; top:108px; "></asp:Label></td></tr>
-                        <tr><td style="font-size:10px;">&nbsp;</td></tr>
-                        -->
                     </table>
                 </div>
                 <div style="margin-left:5px; margin-right:5px;">

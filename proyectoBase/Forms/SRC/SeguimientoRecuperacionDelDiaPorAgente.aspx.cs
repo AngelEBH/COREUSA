@@ -43,34 +43,38 @@ public partial class SeguimientoRecuperacionDelDiaPorAgente : System.Web.UI.Page
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_RecuperacionPorAgente", sqlConexion);
-            sqlComando.CommandType = CommandType.StoredProcedure;
-
-            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-            sqlComando.Parameters.AddWithValue("@piIDUsuarioSupervisor", pcIDUsuario);
-            sqlComando.Parameters.AddWithValue("@piIDAgente", 0);
-
-            sqlConexion.Open();
-            SqlDataReader reader = sqlComando.ExecuteReader();
-            while (reader.Read())
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                ListadoRegistros.Add(new SeguimientoRecuperacionDelDiaPorAgenteViewModel()
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_SRC_CallCenter_RecuperacionPorAgente", sqlConexion))
                 {
-                    IDUsuarioSupervisor = (int)reader["fiIDUsuarioSupervisor"],
-                    NombreSupervisor = (string)reader["fcNombreSupervisor"],
-                    IDAgente = (int)reader["fiIDUsuarioAgente"],
-                    NombreAgente = (string)reader["fcNombreAgente"],
-                    IDCliente = (string)reader["fcIDCliente"],
-                    NombreCompletoCliente = (string)reader["fcNombreSAF"],
-                    Descripcion = (string)reader["fcDescripcion"],
-                    DiasAtraso = (short)reader["fiDiasAtraso"],
-                    SaldoInicialPonerAlDia = (decimal)reader["fnInicialSaldoPonerAlDia"],
-                    AbonosHoy = (decimal)reader["fnAbonosdeHoy"],
-                    Moneda = "L"
-                });
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuarioSupervisor", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDAgente", 0);
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ListadoRegistros.Add(new SeguimientoRecuperacionDelDiaPorAgenteViewModel()
+                            {
+                                IDUsuarioSupervisor = (int)reader["fiIDUsuarioSupervisor"],
+                                NombreSupervisor = (string)reader["fcNombreSupervisor"],
+                                IDAgente = (int)reader["fiIDUsuarioAgente"],
+                                NombreAgente = (string)reader["fcNombreAgente"],
+                                IDCliente = (string)reader["fcIDCliente"],
+                                NombreCompletoCliente = (string)reader["fcNombreSAF"],
+                                Descripcion = (string)reader["fcDescripcion"],
+                                DiasAtraso = (short)reader["fiDiasAtraso"],
+                                SaldoInicialPonerAlDia = (decimal)reader["fnInicialSaldoPonerAlDia"],
+                                AbonosHoy = (decimal)reader["fnAbonosdeHoy"],
+                                Moneda = "L"
+                            });
+                        }
+                    }
+                }
             }
         }
         catch (Exception ex)

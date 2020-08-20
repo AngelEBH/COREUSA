@@ -29,25 +29,26 @@ public partial class SeguimientoRecuperacionDelDiaPorSupervisor : System.Web.UI.
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             /* Agentes Activos */
-            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
-            //string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + 1 + "," + 101 + "," + 87;
-            SqlDataAdapter AdapterDDLCondiciones = new SqlDataAdapter(Comando, sqlConexion);
-            DataTable dtAgentes = new DataTable();
-            sqlConexion.Open();
-            AdapterDDLCondiciones.Fill(dtAgentes);
-            ddlAgentesActivos.DataSource = dtAgentes;
-            ddlAgentesActivos.DataBind();
-            ddlAgentesActivos.DataTextField = "fcNombreCorto";
-            ddlAgentesActivos.DataValueField = "fiIDUsuario";
-            ddlAgentesActivos.DataBind();
-            dtAgentes.Dispose();
-            AdapterDDLCondiciones.Dispose();
-            if (sqlConexion.State == ConnectionState.Open)
-                sqlConexion.Close();
-            ddlAgentesActivos.Items.Insert(0, new ListItem("Seleccionar Agente", "0"));
-            ddlAgentesActivos.SelectedIndex = 0;
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
+
+                using (SqlDataAdapter AdapterDDLCondiciones = new SqlDataAdapter(Comando, sqlConexion))
+                {
+                    DataTable dtAgentes = new DataTable();
+                    AdapterDDLCondiciones.Fill(dtAgentes);
+                    ddlAgentesActivos.DataSource = dtAgentes;
+                    ddlAgentesActivos.DataBind();
+                    ddlAgentesActivos.DataTextField = "fcNombreCorto";
+                    ddlAgentesActivos.DataValueField = "fiIDUsuario";
+                    ddlAgentesActivos.DataBind();
+                    dtAgentes.Dispose();
+                    AdapterDDLCondiciones.Dispose();
+                    ddlAgentesActivos.Items.Insert(0, new ListItem("Seleccionar Agente", "0"));
+                    ddlAgentesActivos.SelectedIndex = 0;
+                }
+            }
         }
         /* FIN de captura de parametros y desencriptado de cadena, realizar validaciones que se lleguen a necesitar */
     }
@@ -65,33 +66,38 @@ public partial class SeguimientoRecuperacionDelDiaPorSupervisor : System.Web.UI.
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_RecuperacionPorAgente", sqlConexion);
-            sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-            sqlComando.Parameters.AddWithValue("@piIDUsuarioSupervisor", pcIDUsuario);
-            sqlComando.Parameters.AddWithValue("@piIDAgente", IDAgente);
-
-            sqlConexion.Open();
-            SqlDataReader reader = sqlComando.ExecuteReader();
-            while (reader.Read())
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                ListadoRegistros.Add(new SeguimientoRecuperacionDelDiaPorSupervisorViewModel()
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_RecuperacionPorAgente", sqlConexion))
                 {
-                    IDUsuarioSupervisor = (int)reader["fiIDUsuarioSupervisor"],
-                    NombreSupervisor = (string)reader["fcNombreSupervisor"],
-                    IDAgente = (int)reader["fiIDUsuarioAgente"],
-                    NombreAgente = (string)reader["fcNombreAgente"],
-                    IDCliente = (string)reader["fcIDCliente"],
-                    NombreCompletoCliente = (string)reader["fcNombreSAF"],
-                    Descripcion = (string)reader["fcDescripcion"],
-                    DiasAtraso = (short)reader["fiDiasAtraso"],
-                    SaldoInicialPonerAlDia = (decimal)reader["fnInicialSaldoPonerAlDia"],
-                    AbonosHoy = (decimal)reader["fnAbonosdeHoy"],
-                    Moneda = "L"
-                });
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuarioSupervisor", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDAgente", IDAgente);
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ListadoRegistros.Add(new SeguimientoRecuperacionDelDiaPorSupervisorViewModel()
+                            {
+                                IDUsuarioSupervisor = (int)reader["fiIDUsuarioSupervisor"],
+                                NombreSupervisor = (string)reader["fcNombreSupervisor"],
+                                IDAgente = (int)reader["fiIDUsuarioAgente"],
+                                NombreAgente = (string)reader["fcNombreAgente"],
+                                IDCliente = (string)reader["fcIDCliente"],
+                                NombreCompletoCliente = (string)reader["fcNombreSAF"],
+                                Descripcion = (string)reader["fcDescripcion"],
+                                DiasAtraso = (short)reader["fiDiasAtraso"],
+                                SaldoInicialPonerAlDia = (decimal)reader["fnInicialSaldoPonerAlDia"],
+                                AbonosHoy = (decimal)reader["fnAbonosdeHoy"],
+                                Moneda = "L"
+                            });
+                        }
+                    }
+                }
             }
         }
         catch (Exception ex)
