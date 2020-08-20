@@ -12,6 +12,7 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
     private String pcEncriptado = "";
     private string pcIDUsuario = "";
     private string pcIDApp = "";
+    private string pcIDSesion = "";
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -34,6 +35,7 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
                 Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             }
         }
     }
@@ -46,7 +48,7 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
@@ -65,75 +67,68 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
 
     [WebMethod]
     public static List<BandejaSolicitudesViewModel> CargarSolicitudes(string dataCrypt)
-    {
-        SqlConnection sqlConexion = null;
-        SqlDataReader reader = null;
-        string sqlConnectionString;
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    {        
         List<BandejaSolicitudesViewModel> solicitudes = new List<BandejaSolicitudesViewModel>();
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            string MensajeError = String.Empty;
-            sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            SqlCommand sqlComando = new SqlCommand("dbo.sp_CREDSolicitud_ListarSolicitudesPorUsuario", sqlConexion);
-            sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
-            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-            sqlConexion.Open();
-            reader = sqlComando.ExecuteReader();
-            while (reader.Read())
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                solicitudes.Add(new BandejaSolicitudesViewModel()
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ListarSolicitudesPorUsuario", sqlConexion))
                 {
-                    fiIDSolicitud = (int)reader["fiIDSolicitud"],
-                    fiIDTipoPrestamo = (int)reader["fiIDTipoProducto"],
-                    fcDescripcion = (string)reader["fcProducto"],
-                    fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                    fdFechaCreacionSolicitud = (DateTime)reader["fdFechaCreacionSolicitud"],
-                    //informacion cliente
-                    fiIDCliente = (int)reader["fiIDCliente"],
-                    fcIdentidadCliente = (string)reader["fcIdentidadCliente"],
-                    fcPrimerNombreCliente = (string)reader["fcPrimerNombreCliente"],
-                    fcSegundoNombreCliente = (string)reader["fcSegundoNombreCliente"],
-                    fcPrimerApellidoCliente = (string)reader["fcPrimerApellidoCliente"],
-                    fcSegundoApellidoCliente = (string)reader["fcSegundoApellidoCliente"],
-                    //bitacora
-                    fdEnTramiteInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnColaInicio"]),
-                    fdEnTramiteFin = ConvertFromDBVal<DateTime>((object)reader["fdEnColaFin"]),
-                    fdEnAnalisisInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisInicio"]),
-                    fdEnAnalisisFin = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisFin"]),
-                    fdCondicionadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdCondicionadoInicio"]),
-                    fdCondificionadoFin = ConvertFromDBVal<DateTime>((object)reader["fdCondificionadoFin"]),
-                    //proceso de campo
-                    fdEnCampoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionInicio"]),
-                    fdEnCampoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionFin"]),
-                    fdReprogramadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoInicio"]),
-                    fdReprogramadoFin = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoFin"]),
-                    fiEstadoSolicitud = ConvertFromDBVal<byte>((object)reader["fiEstadoSolicitud"]),
-                });
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            solicitudes.Add(new BandejaSolicitudesViewModel()
+                            {
+                                fiIDSolicitud = (int)reader["fiIDSolicitud"],
+                                fiIDTipoPrestamo = (int)reader["fiIDTipoProducto"],
+                                fcDescripcion = (string)reader["fcProducto"],
+                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                                fdFechaCreacionSolicitud = (DateTime)reader["fdFechaCreacionSolicitud"],
+                                //informacion cliente
+                                fiIDCliente = (int)reader["fiIDCliente"],
+                                fcIdentidadCliente = (string)reader["fcIdentidadCliente"],
+                                fcPrimerNombreCliente = (string)reader["fcPrimerNombreCliente"],
+                                fcSegundoNombreCliente = (string)reader["fcSegundoNombreCliente"],
+                                fcPrimerApellidoCliente = (string)reader["fcPrimerApellidoCliente"],
+                                fcSegundoApellidoCliente = (string)reader["fcSegundoApellidoCliente"],
+                                //bitacora
+                                fdEnTramiteInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnColaInicio"]),
+                                fdEnTramiteFin = ConvertFromDBVal<DateTime>((object)reader["fdEnColaFin"]),
+                                fdEnAnalisisInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisInicio"]),
+                                fdEnAnalisisFin = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisFin"]),
+                                fdCondicionadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdCondicionadoInicio"]),
+                                fdCondificionadoFin = ConvertFromDBVal<DateTime>((object)reader["fdCondificionadoFin"]),
+                                //proceso de campo
+                                fdEnCampoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionInicio"]),
+                                fdEnCampoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionFin"]),
+                                fdReprogramadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoInicio"]),
+                                fdReprogramadoFin = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoFin"]),
+                                fiEstadoSolicitud = ConvertFromDBVal<byte>((object)reader["fiEstadoSolicitud"]),
+                            });
+                        }
+                    }
+                }
             }
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
-        }
-        finally
-        {
-            if (sqlConexion != null)
-            {
-                if (sqlConexion.State == ConnectionState.Open)
-                    sqlConexion.Close();
-            }
-            if (reader != null)
-                reader.Close();
         }
         return solicitudes;
     }

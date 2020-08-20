@@ -515,7 +515,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
@@ -599,7 +599,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
         Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-        int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+        string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
         string pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
         string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp").ToString();
         string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString();
@@ -618,7 +618,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string identidad = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
-            int pcIDUsuario = int.Parse(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr").ToString());
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr").ToString();
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -669,8 +669,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             int IDPRODUCTO = 0;

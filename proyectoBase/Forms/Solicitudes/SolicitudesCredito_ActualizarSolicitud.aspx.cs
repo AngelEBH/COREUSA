@@ -76,8 +76,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                 string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                 pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                 bool AccesoSolicitud = ValidarVendedor(IDSOL);
@@ -151,22 +151,23 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
-            int pcIDApp = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp"));
-            int pcIDSesion = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID"));
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                #region SOLICITUD MAESTRO
+                /* Informacion de la solicitud */
                 BandejaSolicitudesViewModel SolicitudMaestro = new BandejaSolicitudesViewModel();
+
                 using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
@@ -260,12 +261,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                 ObjSolicitud.solicitud = SolicitudMaestro;
 
-                #endregion
-
-                #region INFORMACION DEL CLIENTE
+                /* Informacion del cliente */
                 ClientesViewModel objCliente = new ClientesViewModel();
 
-                #region CLIENTES MASTER
+                /* Cliente Maestro */
                 using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_Maestro_Listar", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
@@ -312,9 +311,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         }
                     }
                 }
-                #endregion
 
-                #region CLIENTE INFORMACION LABORAL
+                /* Informacion Laboral */
                 using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_Laboral_Listar", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
@@ -359,9 +357,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         }
                     }
                 }
-                #endregion
 
-                #region CLIENTE INFORMACION CONYUGAL
+                /* Informacion del conyugue */
                 using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_InformacionConyugal_Listar", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
@@ -394,9 +391,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         }
                     }
                 }
-                #endregion
 
-                #region CLIENTE INFORMACION DOMICILIAR
+                /* Informacion del domicilio */
                 using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_InformacionDomiciliar_Listar", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
@@ -433,10 +429,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         }
                     }
                 }
-                #endregion
 
-                #region CLIENTE REFERENCIAS PERSONALES
+                /* Referencias personales */
                 objCliente.ClientesReferenciasPersonales = new List<ClientesReferenciasViewModel>();
+
                 using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Listar", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
@@ -472,10 +468,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         }
                     }
                 }
-                #endregion
 
                 ObjSolicitud.cliente = objCliente;
-                #endregion
             } // using connection
         }
         catch (Exception ex)
@@ -497,10 +491,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
             JavaScriptSerializer json_serializer = new JavaScriptSerializer();
 
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
 
             switch (seccionFormulario)
             {
@@ -546,7 +540,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredSolicitud_ActualizarCondicion", sqlConexion))
+                using (SqlCommand sqlComando = new SqlCommand("sp_CredSolicitud_ActualizarCondicion", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@fiIDSolicitudCondicion", ID);
@@ -578,10 +572,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
-            int pcIDApp = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp"));
-            int pcIDSesion = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID"));
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -609,7 +603,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     }
                 }
 
-                //quitar condicionamiento de la solicitud
+                /* quitar condicionamiento de la solicitud */
                 using (SqlCommand sqlComando = new SqlCommand("sp_CredSolicitud_FinalizarCondicionamiento", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
@@ -896,7 +890,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 {
                     try
                     {
-                        #region OBTENER REFERENCIAS PERSONALES EXISTENTES DEL CLIENTE
+                        /* Referencias existentes del cliente */
                         List<ClientesReferenciasViewModel> referenciasExistentes = new List<ClientesReferenciasViewModel>();
 
                         using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Listar", sqlConexion, tran))
@@ -936,9 +930,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             }
                         }
                         IDCliente = referenciasExistentes[0].fiIDCliente;
-                        #endregion
 
-                        #region INSERTAR NUEVAS REFERENCIAS
+                        /* Nuevas referencias personales de deben ser insertadas */
                         List<ClientesReferenciasViewModel> referenciasInsertar = new List<ClientesReferenciasViewModel>();
 
                         foreach (ClientesReferenciasViewModel item in ClientesReferencias)
@@ -989,9 +982,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                 }
                             }
                         }
-                        #endregion
 
-                        #region REFERENCIAS PERSONALES QUE SE VAN A ELIMINAR/INACTIVAR
+                        /* Referencias personales que deben ser eliminadas */
                         List<ClientesReferenciasViewModel> referenciasInactivar = new List<ClientesReferenciasViewModel>();
 
                         foreach (ClientesReferenciasViewModel item in referenciasExistentes)
@@ -1028,9 +1020,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                 }
                             }
                         }
-                        #endregion
 
-                        #region REFERENCIAS PERSONALES QUE SE VAN A EDITAR
+                        /* Referencias personales que se van a editar */
                         List<ClientesReferenciasViewModel> referenciasEditar = new List<ClientesReferenciasViewModel>();
 
                         foreach (ClientesReferenciasViewModel item in referenciasExistentes)
@@ -1080,8 +1071,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                 }
                             }
                         }
-                        #endregion
-
                         tran.Commit();
                     }
                     catch (Exception ex)
@@ -1197,7 +1186,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     if (!FileUploader.GuardarSolicitudDocumentos(IDSOL, SolicitudesDocumentos))
                         contadorErrores++;
 
-                    //verificar resultado del proceso
+                    /* Verificar resultado del proceso */
                     if (contadorErrores == 0)
                         tran.Commit();
                     else
@@ -1459,8 +1448,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
         Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-        int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-        int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+        string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+        string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
         string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
         string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
