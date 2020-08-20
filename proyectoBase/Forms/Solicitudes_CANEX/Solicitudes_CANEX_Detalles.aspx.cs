@@ -462,7 +462,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static int SolicitudResolucion(int IDEstado, int IDPais, int IDSocio, int IDAgencia, string Comentario, string dataCrypt)
+    public static int RechazarSolicitud(int IDPais, int IDSocio, int IDAgencia, string Comentario, string dataCrypt)
     {
         int resultadoProceso = 0;
         try
@@ -475,9 +475,8 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             long MensajeError = 0;
 
-            const int EstadoAprobado = 4;
             const int EstadoRechazado = 5;
-            int Resolucion = IDEstado == 1 ? EstadoAprobado : EstadoRechazado;
+            int Resolucion = EstadoRechazado;
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -529,7 +528,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
-                string lcSQLInstruccion = "exec dbo.sp_CANEX_Solicitud_ImportarSolicitud " + pcIDSesion + ", " + pcIDApp + "," + pcIDUsuario + ", " + IDSOL + ", " + IDPais + ", " + IDSocio + ", " + IDAgencia;
+                string lcSQLInstruccion = "exec sp_CANEX_Solicitud_ImportarSolicitud " + pcIDSesion + ", " + pcIDApp + "," + pcIDUsuario + ", " + IDSOL + ", " + IDPais + ", " + IDSocio + ", " + IDAgencia;
 
                 using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
                 {
@@ -550,7 +549,6 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                 /* si se importó todo correctamente, guardar la documentacion */
                 if (ResultadoSp == true)
                 {
-                    #region REGISTRAR DOCUMENTACIÓN DE LA SOLICITUD
                     using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
@@ -579,7 +577,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                 });
                             }
                         }
-                    }// using cm
+                    }// using cmd
 
                     int DocumentacionCliente = 1;
                     int DocumentacionAval = 2;
@@ -657,7 +655,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     }
                     foreach (SolicitudesDocumentosViewModel documento in SolicitudesDocumentos)
                     {
-                        using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_Documentos_Insert", sqlConexion))
+                        using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_Documentos_Insert", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitudPrestadito);
@@ -695,8 +693,6 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         resultadoProceso.message = "Error al guardar la documentación de la solicitud";
                         return resultadoProceso;
                     }
-
-                    #endregion
 
                 } // if SP == true
 

@@ -210,8 +210,8 @@ $("#btnRechazarConfirmar").click(function () {
 
     $.ajax({
         type: "POST",
-        url: "Solicitudes_CANEX_Detalles.aspx/SolicitudResolucion",
-        data: JSON.stringify({ IDEstado: 0, IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia, Comentario: '', dataCrypt: window.location.href }),
+        url: "Solicitudes_CANEX_Detalles.aspx/RechazarSolicitud",
+        data: JSON.stringify({ IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia, Comentario: '', dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al actualizar estado de la solicitud, contacte al administrador');

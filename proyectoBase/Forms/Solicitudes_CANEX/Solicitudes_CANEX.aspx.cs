@@ -29,12 +29,12 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            // Hacer aqui las validaciones que se lleguen a necesitar
+            /* Hacer aqui las validaciones que se lleguen a necesitar */
         }
     }
 
     [WebMethod]
-    public static List<SolcitudesCanexViewModel> CargarSolicitudes()
+    public static List<SolcitudesCanexViewModel> CargarSolicitudes(string dataCrypt)
     {
         List<SolcitudesCanexViewModel> ListadoSolicitudes = new List<SolcitudesCanexViewModel>();
         try
@@ -44,42 +44,48 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
 
             /* Desencriptar parametros */
             DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            string lcURL = HttpContext.Current.Request.Url.ToString();
-            Uri lURLDesencriptado = DesencriptarURL(lcURL);
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+
             int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            string sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            SqlCommand sqlComando = new SqlCommand("dbo.sp_CANEX_Solicitudes", sqlConexion);
-            sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-            sqlComando.Parameters.AddWithValue("@piIDSocioComercial", IDSocioComercial);
-            sqlComando.Parameters.AddWithValue("@piIDEstadoSolicitud", IDEstadoSolicitud);
-            sqlConexion.Open();
-            SqlDataReader reader = sqlComando.ExecuteReader();
-
-            while (reader.Read())
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                ListadoSolicitudes.Add(new SolcitudesCanexViewModel()
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("dbo.sp_CANEX_Solicitudes", sqlConexion))
                 {
-                    NombreSocio = (string)reader["fcNombreSocio"],
-                    NombreAgencia = (string)reader["fcNombreAgencia"],
-                    IDSolicitudCanex = (int)reader["fiIDSolicitudCANEX"],
-                    NombreUsuario = (string)reader["fcNombreUsuario"],
-                    Identidad = (string)reader["fcIdentidad"],
-                    NombreCliente = (string)reader["fcNombreCliente"],
-                    NombreProducto = (string)reader["fcNombreProducto"],
-                    ValorGlobal = (decimal)reader["fnValorGlobal"],
-                    ValorPrima = (decimal)reader["fnValorPrima"],
-                    ValorPrestamo = (decimal)reader["fnValorPrestamo"],
-                    FechaIngresoSolicitud = (DateTime)reader["fdIngresoSolicitud"],
-                    EstadoSolicitud = (string)reader["fcEstadoSolicitud"],
-                    Moneda = "L"
-                });
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSocioComercial", IDSocioComercial);
+                    sqlComando.Parameters.AddWithValue("@piIDEstadoSolicitud", IDEstadoSolicitud);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ListadoSolicitudes.Add(new SolcitudesCanexViewModel()
+                            {
+                                NombreSocio = (string)reader["fcNombreSocio"],
+                                NombreAgencia = (string)reader["fcNombreAgencia"],
+                                IDSolicitudCanex = (int)reader["fiIDSolicitudCANEX"],
+                                NombreUsuario = (string)reader["fcNombreUsuario"],
+                                Identidad = (string)reader["fcIdentidad"],
+                                NombreCliente = (string)reader["fcNombreCliente"],
+                                NombreProducto = (string)reader["fcNombreProducto"],
+                                ValorGlobal = (decimal)reader["fnValorGlobal"],
+                                ValorPrima = (decimal)reader["fnValorPrima"],
+                                ValorPrestamo = (decimal)reader["fnValorPrestamo"],
+                                FechaIngresoSolicitud = (DateTime)reader["fdIngresoSolicitud"],
+                                EstadoSolicitud = (string)reader["fcEstadoSolicitud"],
+                                Moneda = "L"
+                            });
+                        }
+                    }
+                }
             }
         }
         catch (Exception ex)
@@ -90,20 +96,19 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string AbrirSolicitudDetalles(int ID, string Identidad)
+    public static string AbrirSolicitudDetalles(int ID, string Identidad, string dataCrypt)
     {
-        string resultado = "-1";
         DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        string resultado;
         try
         {
-            string lcURL = HttpContext.Current.Request.Url.ToString();
-            Uri lURLDesencriptado = DesencriptarURL(lcURL);
-            int IDUSR = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             DateTime fechaActual = DateTime.Now;
 
-            string lcParametros = "usr=" + IDUSR +
+            string lcParametros = "usr=" + pcIDUsuario +
                     "&IDApp=" + pcIDApp +
                     "&IDSOL=" + ID +
                     "&SID=" + pcIDSesion +

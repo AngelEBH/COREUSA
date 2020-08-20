@@ -156,18 +156,14 @@
                         <!-- INFORMACION DOMICILIO -->
                         <div class="panel panel-default">
                             <div class="panel-heading card-header p-1 seccion-header" role="tab" id="headingTwo">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h6 class="panel-title m-0 font-14">
-                                            <a href="#collapseInformacionDomiciliar" class="text-dark collapsed h5 collapsed" data-toggle="collapse"
-                                                aria-expanded="false"
-                                                aria-controls="collapseTwo">
-                                                <i class="mdi mdi-home-variant mdi-24px"></i>
-                                                Informacion Domicilio
-                                            </a>
-                                        </h6>
-                                    </div>
-                                </div>
+                                <h6 class="panel-title m-0 font-14">
+                                    <a href="#collapseInformacionDomiciliar" class="text-dark collapsed h5 collapsed" data-toggle="collapse"
+                                        aria-expanded="false"
+                                        aria-controls="collapseTwo">
+                                        <i class="mdi mdi-home-variant mdi-24px"></i>
+                                        Informacion Domicilio
+                                    </a>
+                                </h6>
                             </div>
                             <div id="collapseInformacionDomiciliar" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                                 <div class="panel-body">
@@ -214,18 +210,14 @@
                         <!-- INFORMACION CONYUGAL -->
                         <div runat="server" class="panel panel-default" id="divConyugueCliente">
                             <div class="panel-heading card-header p-1 seccion-header" role="tab" id="headingThree">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h6 class="m-0 font-14">
-                                            <a href="#collapseThree" class="text-dark collapsed h5" data-toggle="collapse"
-                                                aria-expanded="false"
-                                                aria-controls="collapseThree">
-                                                <i class="mdi mdi-account-multiple mdi-24px"></i>
-                                                Informacion Conyugal
-                                            </a>
-                                        </h6>
-                                    </div>
-                                </div>
+                                <h6 class="m-0 font-14">
+                                    <a href="#collapseThree" class="text-dark collapsed h5" data-toggle="collapse"
+                                        aria-expanded="false"
+                                        aria-controls="collapseThree">
+                                        <i class="mdi mdi-account-multiple mdi-24px"></i>
+                                        Informacion Conyugal
+                                    </a>
+                                </h6>
                             </div>
                             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                                 <div class="panel-body">
@@ -264,18 +256,14 @@
                         <!-- INFORMACION LABORAL -->
                         <div class="panel panel-default">
                             <div class="panel-heading card-header p-1 seccion-header" role="tab" id="headingFour">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h6 class="m-0 font-14">
-                                            <a href="#collapseInformacionLaboral" class="text-dark collapsed h5" data-toggle="collapse"
-                                                aria-expanded="false"
-                                                aria-controls="collapseThree">
-                                                <i class="mdi mdi-briefcase-check mdi-24px"></i>
-                                                Informacion Laboral
-                                            </a>
-                                        </h6>
-                                    </div>
-                                </div>
+                                <h6 class="m-0 font-14">
+                                    <a href="#collapseInformacionLaboral" class="text-dark collapsed h5" data-toggle="collapse"
+                                        aria-expanded="false"
+                                        aria-controls="collapseThree">
+                                        <i class="mdi mdi-briefcase-check mdi-24px"></i>
+                                        Informacion Laboral
+                                    </a>
+                                </h6>
                             </div>
                             <div id="collapseInformacionLaboral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
                                 <div class="panel-body">
@@ -364,7 +352,7 @@
                                                 </table>
                                             </div>
                                         </div>
-                                    <%--<div class="form-group row" id="divAval">
+                                        <%--<div class="form-group row" id="divAval">
                                             <h4>Aval</h4>
                                             <div class="table-responsive">
                                                 <table runat="server" class="table table-condensed" id="tblAvales">
@@ -439,7 +427,7 @@
                                                         <label id="lblValorPrimaTitulo" class="col-sm-6 ">Valor Prima</label>
                                                         <asp:Label ID="lblValorPrima" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                        <asp:Label ID="lblPlazoTitulo" CssClass="col-sm-6" Text="Plazo" runat="server" style="font-weight: 500; margin-bottom: .5rem;"></asp:Label>
+                                                        <asp:Label ID="lblPlazoTitulo" CssClass="col-sm-6" Text="Plazo" runat="server" Style="font-weight: 500; margin-bottom: .5rem;"></asp:Label>
                                                         <asp:Label ID="lblPlazo" CssClass="col-sm-6" runat="server"></asp:Label>
 
                                                         <label class="col-sm-6 ">Monto Financiar</label>
@@ -467,32 +455,31 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        Documentos adjuntados en la solicitud
 
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación identidad</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionCedulaModal">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="mt-0 header-title text-center">Documentación identidad</label>
+                                    <div runat="server" class="popup-gallery" id="divDocumentacionCedulaModal">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación domicilio</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionDomicilioModal">
+                                <div class="col-md-12">
+                                    <label class="mt-0 header-title text-center">Documentación domicilio</label>
+                                    <div runat="server" class="popup-gallery" id="divDocumentacionDomicilioModal">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación laboral</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionLaboralModal">
+                                <div class="col-md-12">
+                                    <label class="mt-0 header-title text-center">Documentación laboral</label>
+                                    <div runat="server" class="popup-gallery" id="divDocumentacionLaboralModal">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Solicitud fisica</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionSoliFisicaModal">
+                                <div class="col-md-12">
+                                    <label class="mt-0 header-title text-center">Solicitud fisica</label>
+                                    <div runat="server" class="popup-gallery" id="divDocumentacionSoliFisicaModal">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </div>
                     <div class="modal-footer">
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">

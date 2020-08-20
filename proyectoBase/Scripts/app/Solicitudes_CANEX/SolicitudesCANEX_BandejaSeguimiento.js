@@ -41,10 +41,10 @@ $(document).ready(function () {
             "ajax":
             {
                 type: "POST",
-                url: "SolicitudesCANEX_BandejaSeguimiento.aspx/CargarSolicitudesCANEXSeguimiento?" + window.location.href.split("?")[1],
+                url: "SolicitudesCANEX_BandejaSeguimiento.aspx/CargarSolicitudesCANEXSeguimiento",
                 contentType: 'application/json; charset=utf-8',
-                data: function (d) {
-                    return d;
+                data: function (dtParms) {
+                    return JSON.stringify({ dataCrypt: window.location.href });
                 },
                 "dataSrc": function (json) {
                     var return_data = json.d;
@@ -55,7 +55,7 @@ $(document).ready(function () {
                 { "data": "NombreSocio" },
                 { "data": "IDSolicitudCanex" },
                 {
-                    "data": "FechaIngresoSolicitud", "orderable": false, 
+                    "data": "FechaIngresoSolicitud", "orderable": false,
                     "render": function (value) {
                         if (value === null) return "";
                         return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
@@ -169,13 +169,14 @@ $(document).ready(function () {
     });
 
     $(document).on('click', 'button#btnDetalles', function () {
+
         if (Identidad != '') {
+
             IDSol = $(this).data('id');
-            var qString = "?" + window.location.href.split("?")[1];
             $.ajax({
                 type: "POST",
-                url: 'SolicitudesCANEX_BandejaSeguimiento.aspx/AbrirSolicitudSeguimientoDetalles' + qString,
-                data: JSON.stringify({ ID: IDSol, Identidad: Identidad }),
+                url: 'SolicitudesCANEX_BandejaSeguimiento.aspx/AbrirSolicitudSeguimientoDetalles',
+                data: JSON.stringify({ ID: IDSol, Identidad: Identidad, dataCrypt: window.location.href }),
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr, ajaxOptions, thrownError) {
                     MensajeError('Error al cargar detalles de la solicitud');
@@ -192,6 +193,7 @@ $(document).ready(function () {
         }
 
     });
+
     /* Buscador */
     $('#txtDatatableFilter').keyup(function () {
         tablaSolicitudes.search($(this).val()).draw();

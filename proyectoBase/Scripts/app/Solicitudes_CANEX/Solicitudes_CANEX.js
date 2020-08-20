@@ -41,10 +41,10 @@ $(document).ready(function () {
             "ajax":
             {
                 type: "POST",
-                url: "Solicitudes_CANEX.aspx/CargarSolicitudes?" + window.location.href.split("?")[1],
+                url: "Solicitudes_CANEX.aspx/CargarSolicitudes",
                 contentType: 'application/json; charset=utf-8',
-                data: function (d) {
-                    return d;
+                data: function (dtParms) {
+                    return JSON.stringify({ dataCrypt: window.location.href });
                 },
                 "dataSrc": function (json) {
                     var return_data = json.d;
@@ -166,13 +166,13 @@ $(document).ready(function () {
     });
 
     $(document).on('click', 'button#btnDetalles', function () {
+
         if (Identidad != '') {
             IDSol = $(this).data('id');
-            var qString = "?" + window.location.href.split("?")[1];
             $.ajax({
                 type: "POST",
-                url: 'Solicitudes_CANEX.aspx/AbrirSolicitudDetalles' + qString,
-                data: JSON.stringify({ ID: IDSol, Identidad: Identidad }),
+                url: 'Solicitudes_CANEX.aspx/AbrirSolicitudDetalles',
+                data: JSON.stringify({ ID: IDSol, Identidad: Identidad, dataCrypt: window.location.href }),
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr, ajaxOptions, thrownError) {
                     MensajeError('Error al cargar detalles de la solicitud');
