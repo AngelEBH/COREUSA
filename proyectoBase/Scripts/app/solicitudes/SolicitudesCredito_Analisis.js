@@ -19,11 +19,14 @@ function cargarInformacionSolicitud() {
 
             //variable de informacion del cliente
             var rowDataCliente = data.d.cliente;
+
             //variable de informacion de la solicitud
             var rowDataSolicitud = data.d.solicitud;
+
             //variable de documentacion de la solicitud
             var rowDataDocumentos = data.d.documentos;
             objSolicitud = data.d.solicitud;
+
             //variable para determinar si se puede dar resolucion a una solicitud dependiendo del estado de su procesamiento
             var habilitarResolucion = true;
             $("#btnHistorialExterno,#btnHistorialInterno").prop('disabled', false);
