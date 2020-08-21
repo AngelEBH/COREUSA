@@ -469,7 +469,7 @@ function cargarInformacionSolicitud() {
                 }
 
                 else if (rowDataDocumentos[i].fiTipoDocumento == 8) {
-                    divDocumentacionCampoDomicilio.append(img);
+                    divDocumentacionCampoDomicilio.append('<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />');
                     divDocumentacionCampoDomicilioModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de casa">' +
                         '<div class="img-responsive">' +
                         '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
@@ -478,7 +478,7 @@ function cargarInformacionSolicitud() {
                 }
                 else if (rowDataDocumentos[i].fiTipoDocumento == 9) {
 
-                    divDocumentacionCampoTrabajo.append(img);
+                    divDocumentacionCampoTrabajo.append('<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />');
                     divDocumentacionCampoTrabajoModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de trabajo">' +
                         '<div class="img-responsive">' +
                         '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +

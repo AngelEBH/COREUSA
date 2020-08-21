@@ -884,6 +884,8 @@
     <Content Include="Content\icons\typicons\typicons.scss" />
     <Content Include="Content\icons\typicons\typicons.ttf" />
     <Content Include="Content\icons\typicons\typicons.woff" />
+    <Content Include="Imagenes\PulgarAbajoIcon.png" />
+    <Content Include="Imagenes\PulgarArribaIcon.png" />
     <Content Include="Imagenes\Thumbs.db" />
     <Content Include="Imagenes\AnimacionCargando.gif" />
     <Content Include="Imagenes\BannerBuenasNoches.PNG" />
