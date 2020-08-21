@@ -21,7 +21,7 @@ namespace proyectoBase.Models.ViewModel
         public decimal fdObligacionesPrecalificado { get; set; }
         public decimal fdDisponiblePrecalificado { get; set; }
         public Nullable<decimal> fnPrima { get; set; }
-        //public Nullable<decimal> fnValorVehiculo { get; set; }
+        
         public Nullable<decimal> fnValorGarantia { get; set; }
         public Nullable<short> fiEdadCliente { get; set; }
         public System.DateTime fdFechaIngresoArraigoLaboral { get; set; }
@@ -39,6 +39,10 @@ namespace proyectoBase.Models.ViewModel
         // informacion del analista
         public int? fiIDAnalista { get; set; }
         public string fcNombreCortoAnalista { get; set; }
+
+        // informacion del gestor de lasolicitud
+        public int? IDGestor { get; set; }
+        public string NombreGestor { get; set; }
 
         // informacion de analisis de la solicitud
         public string fcTipoEmpresa { get; set; }

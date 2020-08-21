@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Analisis de solicitud de crédito</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
@@ -139,27 +139,33 @@
                     <label class="col-form-label-lg EliminarEspacios mt-1">Identidad:&nbsp;</label>
                     <asp:Label ID="spanIdentidadCliente" CssClass="col-form-label-lg EliminarEspacios mt-1" runat="server"></asp:Label>
                 </div>
-                <!-- Información de la solicitud -->
-                <div class="col-md-2 form-inline seccion-header border-bottom-0">
-                    No. Solicitud:&nbsp;
-                    <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
-                </div>
-                <div class="col-md-2 form-inline seccion-header border-bottom-0">
-                    No. Cliente:&nbsp;
-                    <asp:Label ID="lblNoCliente" CssClass="col-form-label" runat="server"></asp:Label>
-                </div>
-                <div class="col-md-2 form-inline seccion-header border-bottom-0">
-                    Tipo Solicitud:&nbsp;
-                    <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
-                </div>
-                <div class="col-md-3 form-inline seccion-header border-bottom-0">
-                    Agente Ventas:&nbsp;
-                    <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
-                </div>
-                <div class="col-md-3 form-inline seccion-header border-bottom-0">
-                    Agencia:&nbsp;
-                    <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
-                </div>
+
+                <table class="table table-condensed m-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="text-center">No. Solicitud:</th>
+                            <th class="text-center">
+                                <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                            </th>
+                            <th class="text-center">Tipo Solicitud:</th>
+                            <th class="text-center">
+                                <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                            </th>
+                            <th class="text-center">Agente de Ventas:</th>
+                            <th class="text-center">
+                                <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
+                            </th>
+                            <th class="text-center">Agencia:</th>
+                            <th class="text-center">
+                                <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
+                            </th>
+                            <th class="text-center">Gestor:</th>
+                            <th class="text-center">
+                                <asp:Label ID="lblNombreGestor" CssClass="col-form-label" runat="server"></asp:Label>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
                 <!-- Información del procesamiento de la solicitud -->
                 <div class="table-responsive">
                     <table class="table table-condensed m-0" id="tblEstadoSolicitud">
@@ -533,9 +539,9 @@
                                             </div>
                                         </div>
                                         <!--
-EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
--->
+                                            EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+                                            MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+                                        -->
                                         <div class="col-md-6 border" id="divRecalculoReal" style="display: none;">
                                             <div class="form-group row">
 
@@ -1723,7 +1729,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
     <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
     <script src="/Scripts/plugins/kendo/PrintHtmlToPDF.js"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Analisis.js"></script>
+    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Analisis.js?v=202008211137"></script>
     <script type="x/kendo-template" id="page-template">
         <div class="page-template">
             <div class="header">

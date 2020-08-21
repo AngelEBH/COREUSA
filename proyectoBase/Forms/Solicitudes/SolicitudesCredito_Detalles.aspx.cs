@@ -26,7 +26,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                 string lcParametros = "";
                 string lcParametroDesencriptado = "";
                 Uri lURLDesencriptado = null;
-                int IDSOL = 0;
+                string IDSOL = "0";
                 lcURL = Request.Url.ToString();
                 liParamStart = lcURL.IndexOf("?");
 
@@ -40,11 +40,12 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                     pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                    IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+                    IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-                    bool AccesoAlAnalisis = CargarInformacionSolicitud(IDSOL);
+                    //pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    pcIDSesion = "1";
+                    bool AccesoAlAnalisis = CargarInformacion(IDSOL);
                 }
                 else
                 {
@@ -64,12 +65,12 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         }
     }
 
-    public bool CargarInformacionSolicitud(int IDSolicitud)
+    public bool CargarInformacion(string IDSolicitud)
     {
         DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         BandejaSolicitudesViewModel solicitudes = new BandejaSolicitudesViewModel();
-        bool resultado = true;
-        int IDPRODUCTO = 0;
+        int idProducto = 0;
+        bool resultado;
         try
         {
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
@@ -93,14 +94,14 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 fiIDAnalista = (int)reader["fiIDAnalista"],
                                 fcNombreCortoAnalista = (string)reader["fcNombreCortoAnalista"]
                             };
-                            IDPRODUCTO = (int)reader["fiIDTipoProducto"];
+                            idProducto = (int)reader["fiIDTipoProducto"];
                             lblArraigoLaboral.Text = (string)reader["fcClienteArraigoLaboral"].ToString();
                         }
                     }
                 }
             } // using connection
 
-            string NombreLogo = IDPRODUCTO == 101 ? "iconoRecibirDinero48.png" : IDPRODUCTO == 201 ? "iconoMoto48.png" : IDPRODUCTO == 202 ? "iconoAuto48.png" : IDPRODUCTO == 301 ? "iconoConsumo48.png" : "iconoConsumo48.png";
+            string NombreLogo = idProducto == 101 ? "iconoRecibirDinero48.png" : idProducto == 201 ? "iconoMoto48.png" : idProducto == 202 ? "iconoAuto48.png" : idProducto == 301 ? "iconoConsumo48.png" : "iconoConsumo48.png";
             LogoPrestamo.ImageUrl = "http://172.20.3.140/Imagenes/" + NombreLogo;
 
             if (solicitudes.fiIDAnalista == Convert.ToInt32(pcIDUsuario))
@@ -124,10 +125,11 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -154,7 +156,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 fcDescripcion = (string)reader["fcProducto"],
                                 fiTipoSolicitud = (short)reader["fiTipoSolicitud"],
                                 TipoNegociacion = (short)reader["fiTipoNegociacion"],
-                                // informacion del precalificado
+                                // Informacion del precalificado
                                 fdValorPmoSugeridoSeleccionado = (decimal)reader["fnValorSeleccionado"],
                                 fiPlazoPmoSeleccionado = (int)reader["fiPlazoSeleccionado"],
                                 fdIngresoPrecalificado = (decimal)reader["fnIngresoPrecalificado"],
@@ -165,11 +167,11 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 fiEdadCliente = (short)reader["fiEdadCliente"],
                                 fnSueldoBaseReal = (decimal)reader["fnSueldoBaseReal"],
                                 fnBonosComisionesReal = (decimal)reader["fnBonosComisionesReal"],
-                                // informacion del vendedor
+                                // Informacion del vendedor
                                 fiIDUsuarioVendedor = (int)reader["fiIDUsuarioVendedor"],
                                 fcNombreCortoVendedor = (string)reader["fcNombreCortoVendedor"],
                                 fdFechaCreacionSolicitud = (DateTime)reader["fdFechaCreacionSolicitud"],
-                                // informacion del analista
+                                // Informacion del analista
                                 fiIDUsuarioModifica = (int)reader["fiIDAnalista"],
                                 fcNombreUsuarioModifica = (string)reader["fcNombreCortoAnalista"],
                                 fcTipoEmpresa = (string)reader["fcTipoEmpresa"],
@@ -181,16 +183,16 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 fiPlazoFinalAprobado = (int)reader["fiPlazoFinalAprobado"],
                                 fiEstadoSolicitud = (byte)reader["fiEstadoSolicitud"],
                                 fiSolicitudActiva = (byte)reader["fiSolicitudActiva"],
-                                //informacion cliente
+                                // Informacion cliente
                                 fiIDCliente = (int)reader["fiIDCliente"],
                                 fcNoAgencia = (string)reader["fcCentrodeCosto"],
                                 fcAgencia = (string)reader["fcNombreAgencia"],
-                                //bitacora
+                                // Bitacora
                                 fdEnIngresoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnIngresoInicio"]),
                                 fdEnIngresoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnIngresoFin"]),
                                 fdEnTramiteInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnColaInicio"]),
                                 fdEnTramiteFin = ConvertFromDBVal<DateTime>((object)reader["fdEnColaFin"]),
-                                //todo el proceso de analisis
+                                // Todo el proceso de analisis
                                 fdEnAnalisisInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisInicio"]),
                                 ftAnalisisTiempoValidarInformacionPersonal = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarInformacionPersonal"]),
                                 fcComentarioValidacionInfoPersonal = (string)reader["fcComentarioValidacionInfoPersonal"],
@@ -208,12 +210,12 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 fcObservacionesDeCredito = (string)reader["fcObservacionesDeCredito"],
                                 fcComentarioResolucion = (string)reader["fcComentarioResolucion"],
                                 fdEnAnalisisFin = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisFin"]),
-                                //todo el proceso de analisis
+                                // Todo el proceso de analisis
                                 fdCondicionadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdCondicionadoInicio"]),
                                 fcCondicionadoComentario = (string)reader["fcCondicionadoComentario"],
                                 fdCondificionadoFin = ConvertFromDBVal<DateTime>((object)reader["fdCondificionadoFin"]),
                                 fiIDOrigen = (short)reader["fiIDOrigen"],
-                                //proceso de campo
+                                // Proceso de campo
                                 fdEnvioARutaAnalista = ConvertFromDBVal<DateTime>((object)reader["fdEnvioARutaAnalista"]),
                                 fiEstadoDeCampo = (byte)reader["fiEstadoDeCampo"],
                                 fdEnCampoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionInicio"]),
@@ -225,7 +227,10 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 PasoFinalInicio = (DateTime)reader["fdPasoFinalInicio"],
                                 IDUsuarioPasoFinal = (int)reader["fiIDUsuarioPasoFinal"],
                                 ComentarioPasoFinal = (string)reader["fcComentarioPasoFinal"],
-                                PasoFinalFin = (DateTime)reader["fdPasoFinalFin"]
+                                PasoFinalFin = (DateTime)reader["fdPasoFinalFin"],
+                                // Informacion del gestor
+                                IDGestor = (int)reader["fiIDGestor"],
+                                NombreGestor = (string)reader["fcNombreGestor"]
                             };
                         }
                     }
@@ -354,7 +359,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 fdFechaCrea = (DateTime)reader["fdFechaCrea"],
                                 fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
                                 fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
-                                // proceso de campo
+                                // Proceso de campo
                                 fcLatitud = (string)reader["fcLatitud"],
                                 fcLongitud = (string)reader["fcLongitud"],
                                 fiIDGestorValidador = (int)reader["fiIDGestorValidador"],
@@ -439,7 +444,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 fdFechaCrea = (DateTime)reader["fdFechaCrea"],
                                 fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
                                 fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
-                                // proceso de campo
+                                // Proceso de campo
                                 fcLatitud = (string)reader["fcLatitud"],
                                 fcLongitud = (string)reader["fcLongitud"],
                                 fiIDGestorValidador = (int)reader["fiIDGestorValidador"],
@@ -514,10 +519,11 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -544,7 +550,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 fdEnIngresoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnIngresoFin"]),
                                 fdEnTramiteInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnColaInicio"]),
                                 fdEnTramiteFin = ConvertFromDBVal<DateTime>((object)reader["fdEnColaFin"]),
-                                //todo el proceso de analisis
+                                // Todo el proceso de analisis
                                 fdEnAnalisisInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisInicio"]),
                                 ftAnalisisTiempoValidarInformacionPersonal = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarInformacionPersonal"]),
                                 fcComentarioValidacionInfoPersonal = (string)reader["fcComentarioValidacionInfoPersonal"],
@@ -562,11 +568,11 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 fcObservacionesDeCredito = (string)reader["fcObservacionesDeCredito"],
                                 fcComentarioResolucion = (string)reader["fcComentarioResolucion"],
                                 fdEnAnalisisFin = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisFin"]),
-                                //todo el proceso de analisis
+                                // Todo el proceso de analisis
                                 fdCondicionadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdCondicionadoInicio"]),
                                 fcCondicionadoComentario = (string)reader["fcCondicionadoComentario"],
                                 fdCondificionadoFin = ConvertFromDBVal<DateTime>((object)reader["fdCondificionadoFin"]),
-                                //proceso de campo
+                                // Proceso de campo
                                 fdEnvioARutaAnalista = ConvertFromDBVal<DateTime>((object)reader["fdEnvioARutaAnalista"]),
                                 fiEstadoDeCampo = (byte)reader["fiEstadoDeCampo"],
                                 fdEnCampoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionInicio"]),
@@ -602,7 +608,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
         string pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
         string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp").ToString();
-        string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString();
+        //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString();
+        string pcIDSesion = "1";
 
         string parametrosEncriptados = DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
         return parametrosEncriptados;
@@ -672,7 +679,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
             int IDPRODUCTO = 0;
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))

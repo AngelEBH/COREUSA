@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using proyectoBase.Models.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -81,143 +82,136 @@ namespace proyectoBase.Forms.Aval
                     pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
                     string NombreCliente = String.Empty;
-                    int IDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-                    int IDCliente = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("cltID"));
+                    string IDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                    string IDCliente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("cltID");
+                    string IDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
                     pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    string IDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                    GuardarDetallesPrecalificado(pcID, IDUsuario);
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    GuardarDetallesPrecalificado();
 
-                    SqlConnection sqlConexion = null;
-                    string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-                    sqlConexion = new SqlConnection(sqlConnectionString);
-                    SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Listar", sqlConexion);
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDCliente", IDCliente);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", IDUsuario);
-                    sqlConexion.Open();
-                    SqlDataReader reader = sqlComando.ExecuteReader();
-
-                    while (reader.Read())
+                    using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
                     {
-                        NombreCliente = (string)reader["fcPrimerNombreCliente"] + " " + (string)reader["fcSegundoNombreCliente"] + " " + (string)reader["fcPrimerApellidoCliente"] + " " + (string)reader["fcSegundoApellidoCliente"];
-                    }
+                        sqlConexion.Open();
 
-                    if (sqlConexion != null)
-                    {
-                        if (sqlConexion.State == ConnectionState.Open)
-                            sqlConexion.Close();
-                    }
-                    if (reader != null)
-                        reader.Close();
+                        using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Listar", sqlConexion))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@fiIDCliente", IDCliente);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", IDUsuario);
 
+                            using (SqlDataReader reader = sqlComando.ExecuteReader())
+                            {
+                                reader.Read();
+                                NombreCliente = (string)reader["fcPrimerNombreCliente"] + " " + (string)reader["fcSegundoNombreCliente"] + " " + (string)reader["fcPrimerApellidoCliente"] + " " + (string)reader["fcSegundoApellidoCliente"];
+                            }
+                        }
+                    }
                     lblIDSolicitud.Text = IDSolicitud;
                     lblNombreCliente.Text = NombreCliente;
                 }
             }
         }
 
-        public void GuardarDetallesPrecalificado(string identidad, int pcIDUsuario)
+        public void GuardarDetallesPrecalificado()
         {
             PrecalificadoViewModel objPrecalificado = null;
             List<cotizadorProductosViewModel> listaCotizadorProductos = new List<cotizadorProductosViewModel>();
-            string connectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = WebUser; Password = WebUser123*;Max Pool Size=200;MultipleActiveResultSets=true";
-            SqlConnection conn = null;
-            SqlDataReader reader = null;
+            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
             try
             {
-                conn = new SqlConnection(connectionString);
-                SqlCommand cmd = new SqlCommand("EXEC CoreAnalitico.dbo.sp_info_ConsultaEjecutivos @piIDApp, @piIDUsuario, @pcIdentidad", conn);
-                cmd.Parameters.AddWithValue("@piIDApp", 103);
-                cmd.Parameters.AddWithValue("@piIDUsuario", 1);
-                cmd.Parameters.AddWithValue("@pcIdentidad", identidad);
-                conn.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
+                using (SqlConnection conn = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
                 {
-                    identidadAval.Text = (string)reader["fcIdentidad"];
-                    identidadAval.Enabled = false;
-                    primerNombreAval.Text = (string)reader["fcPrimerNombre"];
-                    primerNombreAval.Enabled = false;
-                    SegundoNombreAval.Text = (string)reader["fcSegundoNombre"];
-                    SegundoNombreAval.Enabled = false;
-                    primerApellidoAval.Text = (string)reader["fcPrimerApellido"];
-                    primerApellidoAval.Enabled = false;
-                    segundoApellidoAval.Text = (string)reader["fcSegundoApellido"];
-                    segundoApellidoAval.Enabled = false;
-                    numeroTelefono.Text = (string)reader["fcTelefono"];
-                    numeroTelefono.Enabled = false;
-                    objPrecalificado = new PrecalificadoViewModel()
-                    {
-                        identidad = (string)reader["fcIdentidad"],
-                        primerNombre = (string)reader["fcPrimerNombre"],
-                        segundoNombre = (string)reader["fcSegundoNombre"],
-                        primerApellido = (string)reader["fcPrimerApellido"],
-                        segundoApellido = (string)reader["fcSegundoApellido"],
-                        telefono = (string)reader["fcTelefono"],
-                        obligaciones = Decimal.Parse(reader["fnTotalObligaciones"].ToString()),
-                        ingresos = Decimal.Parse(reader["fnIngresos"].ToString()),
-                        disponible = Decimal.Parse(reader["fnCapacidadDisponible"].ToString()),
-                        fechaNacimiento = DateTime.Parse(reader["fdFechadeNacimiento"].ToString()),
-                        tipoSolicitud = (int)reader["fiTipoSolicitudCliente"],
-                        tipoProducto = (int)reader["fiIDProducto"],
-                        Producto = (string)reader["fcProducto"]
-                    };
-                }
+                    conn.Open();
 
-                cmd = new SqlCommand("EXEC CoreFinanciero.dbo.sp_CotizadorProductos @piIDUsuario, @piIDProducto, @pcIdentidad, @piConObligaciones, @pnIngresosBrutos, @pnIngresosDisponibles", conn);
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                cmd.Parameters.AddWithValue("@piIDProducto", objPrecalificado.tipoProducto);
-                cmd.Parameters.AddWithValue("@pcIdentidad", objPrecalificado.identidad);
-                cmd.Parameters.AddWithValue("@piConObligaciones", objPrecalificado.obligaciones == 0 ? "0" : "1");
-                cmd.Parameters.AddWithValue("@pnIngresosBrutos", objPrecalificado.ingresos);
-                cmd.Parameters.AddWithValue("@pnIngresosDisponibles", objPrecalificado.disponible);
-                reader = cmd.ExecuteReader();
-                //cambios nuevos
-                cotizadorProductosViewModel objCotizador = new cotizadorProductosViewModel();
-                decimal valorMasAlto = 0;
-
-                int IDContador = 1;
-                while (reader.Read())
-                {
-                    if (valorMasAlto < decimal.Parse(reader["fnMontoOfertado"].ToString()))
+                    using (SqlCommand cmd = new SqlCommand("EXEC CoreAnalitico.dbo.sp_info_ConsultaEjecutivos @piIDApp, @piIDUsuario, @pcIdentidad", conn))
                     {
-                        objCotizador = new cotizadorProductosViewModel()
+                        cmd.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                        cmd.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                        cmd.Parameters.AddWithValue("@pcIdentidad", pcID);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            IDCotizacion = IDContador,
-                            IDProducto = (int)reader["fiIDProducto"],
-                            ProductoDescripcion = reader["fcProducto"].ToString(),
-                            fnMontoOfertado = decimal.Parse(reader["fnMontoOfertado"].ToString()),
-                            fiPlazo = int.Parse(reader["fiPlazo"].ToString()),
-                            fnCuotaQuincenal = decimal.Parse(reader["fnCuotaQuincenal"].ToString())
-                        };
+                            reader.Read();
+                            identidadAval.Text = (string)reader["fcIdentidad"];
+                            identidadAval.Enabled = false;
+                            primerNombreAval.Text = (string)reader["fcPrimerNombre"];
+                            primerNombreAval.Enabled = false;
+                            SegundoNombreAval.Text = (string)reader["fcSegundoNombre"];
+                            SegundoNombreAval.Enabled = false;
+                            primerApellidoAval.Text = (string)reader["fcPrimerApellido"];
+                            primerApellidoAval.Enabled = false;
+                            segundoApellidoAval.Text = (string)reader["fcSegundoApellido"];
+                            segundoApellidoAval.Enabled = false;
+                            numeroTelefono.Text = (string)reader["fcTelefono"];
+                            numeroTelefono.Enabled = false;
+                            objPrecalificado = new PrecalificadoViewModel()
+                            {
+                                identidad = (string)reader["fcIdentidad"],
+                                primerNombre = (string)reader["fcPrimerNombre"],
+                                segundoNombre = (string)reader["fcSegundoNombre"],
+                                primerApellido = (string)reader["fcPrimerApellido"],
+                                segundoApellido = (string)reader["fcSegundoApellido"],
+                                telefono = (string)reader["fcTelefono"],
+                                obligaciones = Decimal.Parse(reader["fnTotalObligaciones"].ToString()),
+                                ingresos = Decimal.Parse(reader["fnIngresos"].ToString()),
+                                disponible = Decimal.Parse(reader["fnCapacidadDisponible"].ToString()),
+                                fechaNacimiento = DateTime.Parse(reader["fdFechadeNacimiento"].ToString()),
+                                tipoSolicitud = (int)reader["fiTipoSolicitudCliente"],
+                                tipoProducto = (int)reader["fiIDProducto"],
+                                Producto = (string)reader["fcProducto"]
+                            };
+                        }
                     }
-                    valorMasAlto = decimal.Parse(reader["fnMontoOfertado"].ToString());
-                    IDContador += 1;
-                }
-                //objPrecalificado.cotizadorProductos = listaCotizadorProductos;
-                objPrecalificado.cotizadorProductos = new List<cotizadorProductosViewModel>();
-                objPrecalificado.cotizadorProductos.Add(objCotizador);
 
+                    using (SqlCommand cmd = new SqlCommand("CoreFinanciero.dbo.sp_CotizadorProductos", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                        cmd.Parameters.AddWithValue("@piIDProducto", objPrecalificado.tipoProducto);
+                        cmd.Parameters.AddWithValue("@pcIdentidad", objPrecalificado.identidad);
+                        cmd.Parameters.AddWithValue("@piConObligaciones", objPrecalificado.obligaciones == 0 ? "0" : "1");
+                        cmd.Parameters.AddWithValue("@pnIngresosBrutos", objPrecalificado.ingresos);
+                        cmd.Parameters.AddWithValue("@pnIngresosDisponibles", objPrecalificado.disponible);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            cotizadorProductosViewModel objCotizador = new cotizadorProductosViewModel();
+                            decimal valorMasAlto = 0;
+                            int IDContador = 1;
+
+                            while (reader.Read())
+                            {
+                                if (valorMasAlto < decimal.Parse(reader["fnMontoOfertado"].ToString()))
+                                {
+                                    objCotizador = new cotizadorProductosViewModel()
+                                    {
+                                        IDCotizacion = IDContador,
+                                        IDProducto = (int)reader["fiIDProducto"],
+                                        ProductoDescripcion = reader["fcProducto"].ToString(),
+                                        fnMontoOfertado = decimal.Parse(reader["fnMontoOfertado"].ToString()),
+                                        fiPlazo = int.Parse(reader["fiPlazo"].ToString()),
+                                        fnCuotaQuincenal = decimal.Parse(reader["fnCuotaQuincenal"].ToString())
+                                    };
+                                }
+                                valorMasAlto = decimal.Parse(reader["fnMontoOfertado"].ToString());
+                                IDContador += 1;
+                            }
+                            //objPrecalificado.cotizadorProductos = listaCotizadorProductos;
+                            objPrecalificado.cotizadorProductos = new List<cotizadorProductosViewModel>();
+                            objPrecalificado.cotizadorProductos.Add(objCotizador);
+                        }
+                    }                    
+                }
                 HttpContext.Current.Session["precalificadoDelCliente"] = objPrecalificado;
             }
             catch (Exception ex)
             {
                 ex.Message.ToString();
-            }
-            finally
-            {
-                if (conn != null)
-                {
-                    if (conn.State == ConnectionState.Open)
-                        conn.Close();
-                }
-                if (reader != null)
-                    reader.Close();
             }
         }
 

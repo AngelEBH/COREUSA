@@ -4,30 +4,30 @@ var objSolicitud = [];
 var resolucionHabilitada = false;
 cargarInformacionSolicitud();
 
-/******** Cargar la informacion de la solicitud que se va a analizar ********/
+/* Cargar la informacion de la solicitud que se va a analizar */
 function cargarInformacionSolicitud() {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/CargarInformacionSolicitud" + qString,
+        url: "SolicitudesCredito_Analisis.aspx/CargarInformacionSolicitud",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo carga la información, contacte al administrador');
         },
         success: function (data) {
 
-            //variable de informacion del cliente
+            /* Variable de informacion del cliente */
             var rowDataCliente = data.d.cliente;
 
-            //variable de informacion de la solicitud
+            /* Variable de informacion de la solicitud */
             var rowDataSolicitud = data.d.solicitud;
 
-            //variable de documentacion de la solicitud
+            /* Variable de documentacion de la solicitud */
             var rowDataDocumentos = data.d.documentos;
             objSolicitud = data.d.solicitud;
 
-            //variable para determinar si se puede dar resolucion a una solicitud dependiendo del estado de su procesamiento
+            /* Variable para determinar si se puede dar resolucion a una solicitud dependiendo del estado de su procesamiento */
             var habilitarResolucion = true;
             $("#btnHistorialExterno,#btnHistorialInterno").prop('disabled', false);
             var ProcesoPendiente = '/Date(-2208967200000)/';
@@ -35,13 +35,13 @@ function cargarInformacionSolicitud() {
             var IconoPendiente = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
             var IconoRojo = '<i class="mdi mdi mdi-close-circle-outline mdi-18px text-danger"></i>';
 
-            //cargar status de la solicitud
+            /* Cargar status de la solicitud */
             var statusIngreso = '';
             if (rowDataSolicitud.fdEnIngresoInicio != ProcesoPendiente) {
                 statusIngreso = rowDataSolicitud.fdEnIngresoFin != ProcesoPendiente ? IconoExito : IconoPendiente;
             }
 
-            //estado en tramite de la solicitud
+            /* Estado en tramite de la solicitud */
             var statusTramite = '';
             if (rowDataSolicitud.fdEnTramiteInicio != ProcesoPendiente) {
 
@@ -58,7 +58,7 @@ function cargarInformacionSolicitud() {
                 }
             }
 
-            //validar si ya se inició y terminó el proceso de analisis de la solicitud
+            /* Validar si ya se inició y terminó el proceso de analisis de la solicitud */
             var statusAnalisis = '';
             if (rowDataSolicitud.fdEnAnalisisInicio != ProcesoPendiente) {
                 if (rowDataSolicitud.fdEnAnalisisFin != ProcesoPendiente) {
@@ -74,11 +74,10 @@ function cargarInformacionSolicitud() {
                 }
             }
             else {
-                habilitarResolucion = false; //si la solicitud no ha iniciado el analisis, no se puede tomar una resolucion
+                habilitarResolucion = false; // Si la solicitud no ha iniciado el analisis, no se puede tomar una resolucion
             }
 
-
-            //validar si ya se envió a campo y si ya se recibió respuesta de gestoria
+            /* Validar si ya se envió a campo y si ya se recibió respuesta de gestoria */
             var statusCampo = '';
             if (rowDataSolicitud.fdEnvioARutaAnalista != ProcesoPendiente) {
 
@@ -99,10 +98,10 @@ function cargarInformacionSolicitud() {
                 }
             }
             else {
-                habilitarResolucion = false;//si la solicitud no se ha enviado a campo, no se puede tomar una resolucion
+                habilitarResolucion = false; // Si la solicitud no se ha enviado a campo, no se puede tomar una resolucion
             }
 
-            //validar si la solicitud está condicionada y sigue sin recibirse actualizacion del agente de ventas
+            /* Validar si la solicitud está condicionada y sigue sin recibirse actualizacion del agente de ventas */
             var statusCondicionada = '';
             if (rowDataSolicitud.fdCondicionadoInicio != ProcesoPendiente) {
 
@@ -119,7 +118,7 @@ function cargarInformacionSolicitud() {
                 }
             }
 
-            //validar si la solicitud está reprogramada
+            /* Validar si la solicitud está reprogramada */
             var statusReprogramado = '';
             if (rowDataSolicitud.fdReprogramadoInicio != ProcesoPendiente) {
 
@@ -136,7 +135,7 @@ function cargarInformacionSolicitud() {
                 }
             }
 
-            //validar proceso de validacion
+            /* Validar proceso de validacion */
             var statusValidacion = '';
             if (rowDataSolicitud.PasoFinalInicio != ProcesoPendiente) {
 
@@ -154,7 +153,7 @@ function cargarInformacionSolicitud() {
                 habilitarResolucion = false;
             }
 
-            //validar si la solicitud ya ha sido aprobada o rechazada
+            /* Validar si la solicitud ya ha sido aprobada o rechazada */
             var resolucionFinal = '';
             if (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7) {
 
@@ -164,7 +163,7 @@ function cargarInformacionSolicitud() {
                 }
                 else {
                     resolucionFinal = IconoRojo;
-                    habilitarResolucion = false;//si ya se determinó una resolucion para la solicitud, no se puede tomar una resolucion
+                    habilitarResolucion = false; // Si ya se determinó una resolucion para la solicitud, no se puede tomar una resolucion
                 }
             }
             else {
@@ -182,7 +181,8 @@ function cargarInformacionSolicitud() {
                 '<td class="text-center">' + statusValidacion + '</td>' +
                 '<td class="text-center">' + resolucionFinal + '</td>' +
                 '</tr>');
-            //verificar si la solicitud está condicionada
+
+            /* Verificar si la solicitud está condicionada */
             if ((rowDataSolicitud.fiEstadoSolicitud == 3)) {
                 $("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('disabled', true).prop('title', 'La solicitud ya está condicionada, esperando actualización de agente de ventas').removeClass('btn-warning').addClass('btn-success');
             }
@@ -228,12 +228,13 @@ function cargarInformacionSolicitud() {
             else if (rowDataSolicitud.fcTipoEmpresa != '' && rowDataSolicitud.fcTipoPerfil != '' && rowDataSolicitud.fcTipoEmpleado != '' && rowDataSolicitud.fcBuroActual != '' && rowDataSolicitud.fiEstadoDeCampo == 0 && rowDataSolicitud.ftAnalisisTiempoValidarDocumentos != ProcesoPendiente && rowDataSolicitud.ftAnalisisTiempoValidarInformacionPersonal != ProcesoPendiente && rowDataSolicitud.ftAnalisisTiempoValidarInformacionLaboral != ProcesoPendiente) {
                 $("#btnEnviarCampo, #btnEnviarCampoConfirmar").prop('disabled', false);
             }
-            //informacion principal de la solicitud
+            /* Informacion principal de la solicitud */
             $('#lblNoSolicitud').text(rowDataSolicitud.fiIDSolicitud);
-            $('#lblNoCliente').text(rowDataSolicitud.fiIDCliente);
+            //$('#lblNoCliente').text(rowDataSolicitud.fiIDCliente);
+            $('#lblNombreGestor').text(rowDataSolicitud.NombreGestor);
             var nombreCompletoCliente = rowDataCliente.clientesMaster.fcPrimerNombreCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoNombreCliente + ' ' + rowDataCliente.clientesMaster.fcPrimerApellidoCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoApellidoCliente;
             $('#lblNombreCliente').text(nombreCompletoCliente);
-            $('#lblResumenCliente').text(nombreCompletoCliente); // ficha de resumen
+            $('#lblResumenCliente').text(nombreCompletoCliente); // Ficha de resumen
             $("#spanNombreCliente").text(nombreCompletoCliente);
             $('#lblIdentidadCliente').text(rowDataCliente.clientesMaster.fcIdentidadCliente);
             $("#spanIdentidadCliente").text(rowDataCliente.clientesMaster.fcIdentidadCliente);
@@ -242,7 +243,7 @@ function cargarInformacionSolicitud() {
             $('#lblTipoSolicitud').text(rowDataSolicitud.fiTipoSolicitud == 1 ? 'NUEVO' : rowDataSolicitud.fiTipoSolicitud == 2 ? 'REFINANCIAMIENTO' : rowDataSolicitud.fiTipoSolicitud == 3 ? 'RECOMPRA' : '');
             $('#lblAgenteDeVentas').text(rowDataSolicitud.fcNombreCortoVendedor);
             $('#lblAgencia').text(rowDataSolicitud.fcAgencia);
-            //informacion personal
+            /* Informacion personal */
             var infoPersonal = rowDataCliente.clientesMaster;
             $('#lblRtnCliente').text(infoPersonal.RTNCliente);
             $('#lblNumeroTelefono').text(infoPersonal.fcTelefonoCliente);
@@ -257,7 +258,7 @@ function cargarInformacionSolicitud() {
             $('#lblEstadoCivilCliente').text(infoPersonal.fcDescripcionEstadoCivil);
             $('#lblViviendaCliente').text(infoPersonal.fcDescripcionVivienda);
             $('#lblTiempoResidirCliente').text(infoPersonal.fiTiempoResidir > 2 ? 'Más de 2 años' : infoPersonal.fiTiempoResidir + ' años');
-            //informacion domiciliar
+            /* Informacion domiciliar */
             var infoDomiciliar = rowDataCliente.ClientesInformacionDomiciliar;
             $('#lblDeptoCliente').text(infoDomiciliar.fcNombreDepto);
             $('#lblMunicipioCliente').text(infoDomiciliar.fcNombreMunicipio);
@@ -265,12 +266,13 @@ function cargarInformacionSolicitud() {
             $('#lblBarrioColoniaCliente').text(infoDomiciliar.fcNombreBarrioColonia);
             $('#lblDireccionDetalladaCliente').text(infoDomiciliar.fcDireccionDetallada);
             $('#lblReferenciaDomicilioCliente').text(infoDomiciliar.fcReferenciasDireccionDetallada);
-            $('#lblResumenDeptoResidencia').text(infoDomiciliar.fcNombreDepto); // ficha de resumen
-            $('#lblResumenMuniResidencia').text(infoDomiciliar.fcNombreMunicipio); // ficha de resumen
-            $('#lblResumenColResidencia').text(infoDomiciliar.fcNombreBarrioColonia); // ficha de resumen
-            $('#lblResumenTipoVivienda').text(infoPersonal.fcDescripcionVivienda); // ficha de resumen
-            $('#lblResumenTiempoResidir').text(infoPersonal.fiTiempoResidir > 2 ? 'Más de 2 años' : infoPersonal.fiTiempoResidir + ' años'); // ficha de resumen
-            // si el proceso de campo del domicilio ya se completo, mostrarlo
+            $('#lblResumenDeptoResidencia').text(infoDomiciliar.fcNombreDepto); // Ficha de resumen
+            $('#lblResumenMuniResidencia').text(infoDomiciliar.fcNombreMunicipio); // Ficha de resumen
+            $('#lblResumenColResidencia').text(infoDomiciliar.fcNombreBarrioColonia); // Ficha de resumen
+            $('#lblResumenTipoVivienda').text(infoPersonal.fcDescripcionVivienda); // Ficha de resumen
+            $('#lblResumenTiempoResidir').text(infoPersonal.fiTiempoResidir > 2 ? 'Más de 2 años' : infoPersonal.fiTiempoResidir + ' años'); // Ficha de resumen
+
+            /* Si el proceso de campo del domicilio ya se completo, mostrarlo */
             if (infoDomiciliar.fiIDInvestigacionDeCampo != 0) {
                 $("#divInformaciondeCampo,#divResolucionDomicilio,#tituloCampoDomicilioModal").css('display', '');
                 var ClassResultadodeCampo = infoDomiciliar.IDTipoResultado == 1 ? 'text-success' : infoDomiciliar.IDTipoResultado == 2 ? 'text-danger' : '';
@@ -281,11 +283,11 @@ function cargarInformacionSolicitud() {
                 $("#lblObservacionesCampoDomicilio").text(infoDomiciliar.fcObservacionesCampo);
                 $("#lblResumenGestorDomicilio").text(infoDomiciliar.fcGestorValidadorDomicilio); // ficha de resumen
             }
-            //informacion laboral
+            /* Informacion laboral */
             var infoLaboral = rowDataCliente.ClientesInformacionLaboral;
             $('#lblNombreTrabajoCliente').text(infoLaboral.fcNombreTrabajo);
             $('#lblResumenTrabajo').text(infoLaboral.fcNombreTrabajo); // ficha de resumen
-            $('#lblIngresosMensualesCliente').text(addComasFormatoNumerico(infoLaboral.fiIngresosMensuales));
+            $('#lblIngresosMensualesCliente').text(addFormatoNumerico(infoLaboral.fiIngresosMensuales));
             $('#lblPuestoAsignadoCliente').text(infoLaboral.fcPuestoAsignado);
             $('#lblResumenPuesto').text(infoLaboral.fcPuestoAsignado); // ficha de resumen
             var fechaIngresoCliente = FechaFormato(infoLaboral.fcFechaIngreso);
@@ -300,7 +302,8 @@ function cargarInformacionSolicitud() {
             $('#lblBarrioColoniaEmpresa').text(infoLaboral.fcNombreBarrioColonia);
             $('#lblDireccionDetalladaEmpresa').text(infoLaboral.fcDireccionDetalladaEmpresa);
             $('#lblReferenciaUbicacionEmpresa').text(infoLaboral.fcReferenciasDireccionDetallada);
-            // si el proceso de campo del trabajo ya se completo, mostrarlo
+
+            /* Si el proceso de campo del trabajo ya se completo, mostrarlo */
             if (infoLaboral.fiIDInvestigacionDeCampo != 0) {
                 $("#divInformaciondeCampo,#divResolucionTrabajo,#tituloCampoTrabajoModal").css('display', '');
                 var ClassResultadodeCampoLaboral = infoLaboral.IDTipoResultado == 1 ? 'text-success' : infoLaboral.IDTipoResultado == 2 ? 'text-danger' : '';
@@ -311,7 +314,8 @@ function cargarInformacionSolicitud() {
                 $("#lblObservacionesCampoTrabajo").text(infoLaboral.fcObservacionesCampo);
                 $("#lblResumenGestorTrabajo").text(infoLaboral.fcGestorValidadorTrabajo); // ficha de resumen
             }
-            //informacion conyugal
+
+            /* Informacion conyugal */
             if (rowDataCliente.ClientesInformacionConyugal != null) {
                 var infoConyugue = rowDataCliente.ClientesInformacionConyugal;
                 $('#lblNombreConyugue').text(infoConyugue.fcNombreCompletoConyugue);
@@ -321,13 +325,13 @@ function cargarInformacionSolicitud() {
                 $('#lblTelefonoConyugue').text(infoConyugue.fcTelefonoConyugue);
                 $('#lblLugarTrabajoConyugue').text(infoConyugue.fcLugarTrabajoConyugue);
                 $('#lblTelefonoTrabajoConyugue').text(infoConyugue.fcTelefonoTrabajoConyugue);
-                $('#lblIngresosConyugue').text(addComasFormatoNumerico(infoConyugue.fcIngresosMensualesConyugue));
+                $('#lblIngresosConyugue').text(addFormatoNumerico(infoConyugue.fcIngresosMensualesConyugue));
             }
             else {
                 $("#titleConyugal").css('display', 'none');
                 $("#divConyugueCliente").css('display', 'none');
             }
-            //Referencias personales del cliente
+            /* Referencias personales del cliente */
             if (rowDataCliente.ClientesReferenciasPersonales != null) {
                 if (rowDataCliente.ClientesReferenciasPersonales.length > 0) {
 
@@ -358,7 +362,7 @@ function cargarInformacionSolicitud() {
                     }
                 }
             }
-            //avales del cliente
+            /* Avales del cliente */
             if (rowDataCliente.Avales != null) {
 
                 var listaAvales = rowDataCliente.Avales;
@@ -380,7 +384,7 @@ function cargarInformacionSolicitud() {
                             '</td>' +
                             '<td class="FilaCondensada">' + listaAvales[i].fcNombreTrabajo + '</td>' +
                             '<td class="FilaCondensada">' + listaAvales[i].fcPuestoAsignado + '</td>' +
-                            '<td class="FilaCondensada">' + addComasFormatoNumerico(listaAvales[i].fiIngresosMensuales) + '</td>' +
+                            '<td class="FilaCondensada">' + addFormatoNumerico(listaAvales[i].fiIngresosMensuales) + '</td>' +
                             '<td class="FilaCondensada">' + estadoAval + '</td>' +
                             '<td class="FilaCondensada">' + btnDetalleAvalModal + '</td>' +
                             '</tr>');
@@ -390,7 +394,7 @@ function cargarInformacionSolicitud() {
             }
             else { $('#divAval').css('display', 'none'); }
 
-            //cargar documentación de la solicitud
+            /* Cargar documentación de la solicitud */
             var divDocumentacionCedula = $("#divDocumentacionCedula");
             var divDocumentacionCedulaModal = $("#divDocumentacionCedulaModal");
             var divDocumentacionDomicilio = $("#divDocumentacionDomicilio");
@@ -487,21 +491,20 @@ function cargarInformacionSolicitud() {
                 drag: true
             });
 
-            $('#lblValorPmoSugeridoSeleccionado').text(addComasFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado));
-            $('#lblPlazoSeleccionado').text(addComasFormatoNumerico(rowDataSolicitud.fiPlazoPmoSeleccionado));
-            $('#lblIngresosPrecalificado').text(addComasFormatoNumerico(rowDataSolicitud.fdIngresoPrecalificado));
-            $('#lblObligacionesPrecalificado').text(addComasFormatoNumerico(rowDataSolicitud.fdObligacionesPrecalificado));
-            $('#lblDisponiblePrecalificado').text(addComasFormatoNumerico(rowDataSolicitud.fdDisponiblePrecalificado));
+            $('#lblValorPmoSugeridoSeleccionado').text(addFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado));
+            $('#lblPlazoSeleccionado').text(addFormatoNumerico(rowDataSolicitud.fiPlazoPmoSeleccionado));
+            $('#lblIngresosPrecalificado').text(addFormatoNumerico(rowDataSolicitud.fdIngresoPrecalificado));
+            $('#lblObligacionesPrecalificado').text(addFormatoNumerico(rowDataSolicitud.fdObligacionesPrecalificado));
+            $('#lblDisponiblePrecalificado').text(addFormatoNumerico(rowDataSolicitud.fdDisponiblePrecalificado));
 
-            //calcular capacidad de pago mensual
+            /* Calcular capacidad de pago mensual */
             var capacidadPago = calcularCapacidadPago(rowDataSolicitud.fiIDTipoPrestamo, rowDataSolicitud.fdObligacionesPrecalificado, rowDataSolicitud.fdIngresoPrecalificado);
-            $('#lblCapacidadPagoMensual').text(addComasFormatoNumerico(capacidadPago));
-            $('#lblResumenCapacidadPagoMensual').text(addComasFormatoNumerico(capacidadPago)); // ficha de resumen
+            $('#lblCapacidadPagoMensual').text(addFormatoNumerico(capacidadPago));
+            $('#lblResumenCapacidadPagoMensual').text(addFormatoNumerico(capacidadPago)); // ficha de resumen
             var CapacidaddePagoQuincenal = (capacidadPago / 2).toFixed(2);
-            $('#lblCapacidadPagoQuincenal').text(addComasFormatoNumerico(capacidadPago / 2));
-            $('#lblResumenCapacidadPagoQuincenal').text(addComasFormatoNumerico(CapacidaddePagoQuincenal)); // ficha de resumen
-
-            $('#lblResumenPrestamoSugeridoSeleccionado').text(addComasFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // ficha de resumen
+            $('#lblCapacidadPagoQuincenal').text(addFormatoNumerico(capacidadPago / 2));
+            $('#lblResumenCapacidadPagoQuincenal').text(addFormatoNumerico(CapacidaddePagoQuincenal)); // ficha de resumen
+            $('#lblResumenPrestamoSugeridoSeleccionado').text(addFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // ficha de resumen
 
             var tipodeCuota = 'Quincenal';
             if (rowDataSolicitud.fiIDTipoPrestamo == '101') {
@@ -511,7 +514,7 @@ function cargarInformacionSolicitud() {
             else if (rowDataSolicitud.fiIDTipoPrestamo == '201') {
 
                 $('#lblValorVehiculo,#lblMontoValorVehiculo').css('display', '');
-                $('#lblMontoValorVehiculo').text(addComasFormatoNumerico(rowDataSolicitud.fnValorGarantia));
+                $('#lblMontoValorVehiculo').text(addFormatoNumerico(rowDataSolicitud.fnValorGarantia));
                 prestamoMoto(rowDataSolicitud.fnPrima, rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fiPlazoPmoSeleccionado);
 
                 $('#divPrimaManual').css('display', '');
@@ -520,51 +523,52 @@ function cargarInformacionSolicitud() {
             else if (rowDataSolicitud.fiIDTipoPrestamo == '202') {
                 tipodeCuota = 'Mensual';
                 $('#lblValorVehiculo,#lblMontoValorVehiculo').css('display', '');
-                $('#lblMontoValorVehiculo').text(addComasFormatoNumerico(rowDataSolicitud.fnValorGarantia));
+                $('#lblMontoValorVehiculo').text(addFormatoNumerico(rowDataSolicitud.fnValorGarantia));
                 prestamoAuto(rowDataSolicitud.fnPrima, rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fiPlazoPmoSeleccionado)
 
                 $('#divPrimaManual').css('display', '');
                 $('#txtMontoPrimaManual').prop('disabled', false);
             }
-            $('#lblMontoPrima').text(addComasFormatoNumerico(rowDataSolicitud.fnPrima));
+            $('#lblMontoPrima').text(addFormatoNumerico(rowDataSolicitud.fnPrima));
             $('#lblEdadCliente').text(rowDataSolicitud.fiEdadCliente + ' años');
-            $('#lblResumenEdad').text(rowDataSolicitud.fiEdadCliente + ' años'); // ficha de resumen
+            $('#lblResumenEdad').text(rowDataSolicitud.fiEdadCliente + ' años'); // Ficha de resumen
 
-            //validar si ya se definio un monto a financiar
+            /* Validar si ya se definio un monto a financiar */
             if (rowDataSolicitud.fiMontoFinalFinanciar != 0) {
                 gMontoFinal = rowDataSolicitud.fiMontoFinalFinanciar;
-                $('#lblResumenMontoFinalFinanciar').text(rowDataSolicitud.fiMontoFinalFinanciar); // ficha de resumen
+                $('#lblResumenMontoFinalFinanciar').text(rowDataSolicitud.fiMontoFinalFinanciar); // Ficha de resumen
             } else {
                 gMontoFinal = rowDataSolicitud.fdValorPmoSugeridoSeleccionado;
             }
             if (rowDataSolicitud.fiPlazoFinalAprobado != 0) {
                 gPlazoFinal = rowDataSolicitud.fiPlazoFinalAprobado;
                 rowDataSolicitud.fiIDTipoPrestamo
-                $('#lblResumenCuotaFinalFinanciarTitulo').text('Cuotas ' + tipodeCuota); // ficha de resumen
-                $('#lblResumenCuotaFinalFinanciar').text(rowDataSolicitud.fiPlazoFinalAprobado); // ficha de resumen
+                $('#lblResumenCuotaFinalFinanciarTitulo').text('Cuotas ' + tipodeCuota); // Ficha de resumen
+                $('#lblResumenCuotaFinalFinanciar').text(rowDataSolicitud.fiPlazoFinalAprobado); // Ficha de resumen
             } else {
                 gPlazoFinal = rowDataSolicitud.fiPlazoPmoSeleccionado;
             }
-            //informacion del analisis
+
+            /* Informacion del analisis */
             if (rowDataSolicitud.fcTipoEmpresa != '') {
                 $("#tipoEmpresa").prop('disabled', true);
                 $("#tipoEmpresa").val(rowDataSolicitud.fcTipoEmpresa);
-                $("#lblResumenTipoEmpresa").text(rowDataSolicitud.fcTipoEmpresa); // ficha de resumen
+                $("#lblResumenTipoEmpresa").text(rowDataSolicitud.fcTipoEmpresa); // Ficha de resumen
             }
             if (rowDataSolicitud.fcTipoPerfil != '') {
                 $("#tipoPerfil").prop('disabled', true);
                 $("#tipoPerfil").val(rowDataSolicitud.fcTipoPerfil);
-                $("#lblResumenTipoPerfil").text(rowDataSolicitud.fcTipoPerfil); // ficha de resumen
+                $("#lblResumenTipoPerfil").text(rowDataSolicitud.fcTipoPerfil); // Ficha de resumen
             }
             if (rowDataSolicitud.fcTipoEmpleado != '') {
                 $("#tipoEmpleo").prop('disabled', true);
                 $("#tipoEmpleo").val(rowDataSolicitud.fcTipoEmpleado);
-                $("#lblResumenTipoEmpleo").text(rowDataSolicitud.fcTipoEmpleado); // ficha de resumen
+                $("#lblResumenTipoEmpleo").text(rowDataSolicitud.fcTipoEmpleado); // Ficha de resumen
             }
             if (rowDataSolicitud.fcBuroActual != '') {
                 $("#buroActual").prop('disabled', true);
                 $("#buroActual").val(rowDataSolicitud.fcBuroActual);
-                $("#lblResumenBuroActual").text(rowDataSolicitud.fcBuroActual); // ficha de resumen
+                $("#lblResumenBuroActual").text(rowDataSolicitud.fcBuroActual); // Ficha de resumen
             }
             if (rowDataSolicitud.fiMontoFinalSugerido != 0) {
                 $("#montoFinalAprobado").prop('disabled', true);
@@ -579,32 +583,33 @@ function cargarInformacionSolicitud() {
                 $("#plazoFinalAprobado").val(rowDataSolicitud.fiPlazoFinalAprobado);
             }
 
-            //si se modificaron los ingresos del cliente debido a incongruencia con los comprobantes de ingreso mostrar recalculo con dicho valor
+            /* Si se modificaron los ingresos del cliente debido a incongruencia con los comprobantes de ingreso mostrar recalculo con dicho valor */
             if (rowDataSolicitud.fnSueldoBaseReal != 0) {
 
                 var bonosComisiones = rowDataSolicitud.fnBonosComisionesReal != 0 ? rowDataSolicitud.fnBonosComisionesReal : 0;
                 var totalIngresosReales = bonosComisiones + rowDataSolicitud.fnSueldoBaseReal;
-                $("#lblIngresosReales").text(addComasFormatoNumerico(totalIngresosReales));
-                $('#lblObligacionesReales').text(addComasFormatoNumerico(rowDataSolicitud.fdObligacionesPrecalificado));
-                $('#lblDisponibleReal').text(addComasFormatoNumerico(totalIngresosReales - rowDataSolicitud.fdObligacionesPrecalificado));
+                $("#lblIngresosReales").text(addFormatoNumerico(totalIngresosReales));
+                $('#lblObligacionesReales').text(addFormatoNumerico(rowDataSolicitud.fdObligacionesPrecalificado));
+                $('#lblDisponibleReal').text(addFormatoNumerico(totalIngresosReales - rowDataSolicitud.fdObligacionesPrecalificado));
                 var capacidadPagoReal = calcularCapacidadPago(rowDataSolicitud.fiIDTipoPrestamo, rowDataSolicitud.fdObligacionesPrecalificado, rowDataSolicitud.fnSueldoBaseReal + bonosComisiones);
-                $('#lblCapacidadPagoMensualReal').text(addComasFormatoNumerico(capacidadPagoReal));
-                $('#lblCapacidadPagoQuincenalReal').text(addComasFormatoNumerico(capacidadPagoReal / 2));
+                $('#lblCapacidadPagoMensualReal').text(addFormatoNumerico(capacidadPagoReal));
+                $('#lblCapacidadPagoQuincenalReal').text(addFormatoNumerico(capacidadPagoReal / 2));
                 $("#divPmoSugeridoReal,#divRecalculoReal").css('display', '');
             }
-            //si ya se determinó un monto a financiar, mostrarlo
+            /* Si ya se determinó un monto a financiar, mostrarlo */
             if (rowDataSolicitud.fiMontoFinalFinanciar != 0) {
 
-                //mostrar div del préstamo que se esocgió
-                $("#lblMontoPrestamoEscogido").text(addComasFormatoNumerico(rowDataSolicitud.fiMontoFinalFinanciar));
+                /* Mostrar div del préstamo que se escogió */
+                $("#lblMontoPrestamoEscogido").text(addFormatoNumerico(rowDataSolicitud.fiMontoFinalFinanciar));
                 $("#lblPlazoEscogido").text(rowDataSolicitud.fiPlazoFinalAprobado);
                 $("#divPrestamoElegido").css('display', '');
             }
-            //si se modificaron los ingresos del cliente y no se ha definido una resolucion para la solicitud, mostrar los PMO sugeridos
+
+            /* Si se modificaron los ingresos del cliente y no se ha definido una resolucion para la solicitud, mostrar los PMO sugeridos */
             if (rowDataSolicitud.fiEstadoSolicitud != 4 && rowDataSolicitud.fiEstadoSolicitud != 5 && rowDataSolicitud.fiEstadoSolicitud != 7 && rowDataSolicitud.fnSueldoBaseReal != 0) {
                 cargarPrestamosSugeridos(rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fnPrima);
             }
-            //validar si ya se puede tomar una resolucion
+            /* Validar si ya se puede tomar una resolucion */
             rowDataSolicitud.ftAnalisisTiempoValidacionReferenciasPersonales == ProcesoPendiente ? habilitarResolucion = false : '';
             rowDataSolicitud.ftAnalisisTiempoValidarDocumentos == ProcesoPendiente ? habilitarResolucion = false : '';
             rowDataSolicitud.ftAnalisisTiempoValidarInformacionLaboral == ProcesoPendiente ? habilitarResolucion = false : '';
@@ -640,18 +645,17 @@ function cargarInformacionSolicitud() {
                 $("#actualizarIngresosCliente").css('display', '');
             }
 
-            // FICHA DE RESUMEN
-            $("#lblResumenVendedor").text(rowDataSolicitud.fcNombreCortoVendedor); // ficha de resumen
-            $("#lblResumenAnalista").text(rowDataSolicitud.fcNombreUsuarioModifica); // ficha de resumen
-
+            /* Ficha de resumen*/
+            $("#lblResumenVendedor").text(rowDataSolicitud.fcNombreCortoVendedor); // Ficha de resumen
+            $("#lblResumenAnalista").text(rowDataSolicitud.fcNombreUsuarioModifica); // Ficha de resumen
         }
     });
 }
 
 
-/******** Validaciones de analisis ********/
+/* Validaciones de analisis */
 $("#btnValidoInfoPersonalModal").click(function () {
-    //verificar si la informacion personal ya fue validada antes
+    /* Verificar si la informacion personal ya fue validada antes */
     if (objSolicitud.ftAnalisisTiempoValidarInformacionPersonal == '/Date(-2208967200000)/') {
         $("#modalFinalizarValidarPersonal").modal();
     }
@@ -663,11 +667,10 @@ $("#btnValidoInfoPersonalConfirmar").click(function () {
 
         var observacion = $("#comentariosInfoPersonal").val();
         var validacion = 'InformacionPersonal';
-        var qString = "?" + window.location.href.split("?")[1];
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis" + qString,
-            data: JSON.stringify({ validacion: validacion, observacion: observacion }),
+            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
+            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('No se pudo cargar la información, contacte al administrador');
@@ -688,7 +691,7 @@ $("#btnValidoInfoPersonalConfirmar").click(function () {
 });
 
 $("#btnValidoInfoLaboralModal").click(function () {
-    //verificar si la informacion laboral ya fue validada antes
+    /* Verificar si la informacion laboral ya fue validada antes */
     if (objSolicitud.ftAnalisisTiempoValidarInformacionLaboral == '/Date(-2208967200000)/') {
         $("#modalFinalizarValidarLaboral").modal();
     }
@@ -700,11 +703,10 @@ $("#btnValidoInfoLaboralConfirmar").click(function () {
 
         var observacion = $("#comentariosInfoLaboral").val();
         var validacion = 'InformacionLaboral';
-        var qString = "?" + window.location.href.split("?")[1];
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis" + qString,
-            data: JSON.stringify({ validacion: validacion, observacion: observacion }),
+            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
+            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('No se pudo cargar la información, contacte al administrador');
@@ -737,11 +739,11 @@ $("#btnValidoReferenciasConfirmar").click(function () {
 
         var observacion = $("#comentarioReferenciasPersonales").val();
         var validacion = 'Referencias';
-        var qString = "?" + window.location.href.split("?")[1];
+
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis" + qString,
-            data: JSON.stringify({ validacion: validacion, observacion: observacion }),
+            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
+            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('No se pudo cargar la información, contacte al administrador');
@@ -771,11 +773,11 @@ $("#btnValidoDocumentacionConfirmar").click(function () {
 
         var observacion = $("#comentariosDocumentacion").val();
         var validacion = 'Documentacion';
-        var qString = "?" + window.location.href.split("?")[1];
+
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis" + qString,
-            data: JSON.stringify({ validacion: validacion, observacion: observacion }),
+            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
+            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('No se pudo cargar la información, contacte al administrador');
@@ -831,11 +833,11 @@ $("#btnValidarTipoDocConfirmar").click(function () {
         default:
             MensajeError('Error al validar tipo de documentación');
     }
-    var qString = "?" + window.location.href.split("?")[1];
+
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis" + qString,
-        data: JSON.stringify({ validacion: validacion, observacion: '' }),
+        url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
+        data: JSON.stringify({ validacion: validacion, observacion: '', dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo realizar la validacion, contacte al administrador');
@@ -880,7 +882,7 @@ $("#btnValidarTipoDocConfirmar").click(function () {
     });
 });
 
-/******** Actualizar ingresos del cliente ********/
+/* Actualizar ingresos del cliente */
 $("#actualizarIngresosCliente").click(function () {
     $("#txtIngresosReales,#txtBonosComisiones").val('');
     $("#modalActualizarIngresos").modal();
@@ -895,27 +897,28 @@ $("#formActualizarIngresos").submit(function (e) {
         var bonosComisionesReal = $("#txtBonosComisiones").val().replace(/,/g, '');
         var obligaciones = objSolicitud.fdObligacionesPrecalificado;
         var codigoProducto = objSolicitud.fiIDTipoPrestamo;
-        var qString = "?" + window.location.href.split("?")[1];
+
         $.ajax({
             type: "POST",
-            url: 'SolicitudesCredito_Analisis.aspx/ActualizarIngresosCliente' + qString,
-            data: JSON.stringify({ sueldoBaseReal: sueldoBaseReal, bonosComisionesReal: bonosComisionesReal }),
+            url: 'SolicitudesCredito_Analisis.aspx/ActualizarIngresosCliente',
+            data: JSON.stringify({ sueldoBaseReal: sueldoBaseReal, bonosComisionesReal: bonosComisionesReal, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('Error al actualizar ingresos');
             },
             success: function (data) {
                 if (data.d == true) {
+
                     $('#lblIngresosMensualesCliente').text('');
                     var ingresos = parseFloat(sueldoBaseReal) + parseFloat(bonosComisionesReal);
-                    $('#lblIngresosMensualesCliente').text(addComasFormatoNumerico(ingresos));
+                    $('#lblIngresosMensualesCliente').text(addFormatoNumerico(ingresos));
                     var totalIngresosReales = ingresos;
-                    $("#lblIngresosReales").text(addComasFormatoNumerico(totalIngresosReales));
-                    $('#lblObligacionesReales').text(addComasFormatoNumerico(obligaciones));
-                    $('#lblDisponibleReal').text(addComasFormatoNumerico(totalIngresosReales - obligaciones));
+                    $("#lblIngresosReales").text(addFormatoNumerico(totalIngresosReales));
+                    $('#lblObligacionesReales').text(addFormatoNumerico(obligaciones));
+                    $('#lblDisponibleReal').text(addFormatoNumerico(totalIngresosReales - obligaciones));
                     var capacidadPagoReal = calcularCapacidadPago(codigoProducto, obligaciones, totalIngresosReales);
-                    $('#lblCapacidadPagoMensualReal').text(addComasFormatoNumerico(capacidadPagoReal));
-                    $('#lblCapacidadPagoQuincenalReal').text(addComasFormatoNumerico(capacidadPagoReal / 2));
+                    $('#lblCapacidadPagoMensualReal').text(addFormatoNumerico(capacidadPagoReal));
+                    $('#lblCapacidadPagoQuincenalReal').text(addFormatoNumerico(capacidadPagoReal / 2));
                     $("#divRecalculoReal").css('display', '');
                     MensajeExito('Ingresos actualizados correctamente');
                     cargarPrestamosSugeridos(objSolicitud.fnValorGarantia, objSolicitud.fnPrima);
@@ -930,7 +933,7 @@ $("#formActualizarIngresos").submit(function (e) {
 });
 
 
-/******** cuando la nueva capacidad de pago es insuficiente ********/
+/* Cuando la nueva capacidad de pago es insuficiente */
 $("#btnRechazarIncapPagoConfirmar").click(function () {
 
     var objBitacora = {
@@ -939,18 +942,19 @@ $("#btnRechazarIncapPagoConfirmar").click(function () {
     var solicitud = {
         fiEstadoSolicitud: 4
     };
-    var qString = "?" + window.location.href.split("?")[1];
+
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion" + qString,
-        data: JSON.stringify({ objBitacora: objBitacora, objSolicitud: solicitud }),
+        url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion",
+        data: JSON.stringify({ objBitacora: objBitacora, objSolicitud: solicitud, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Ocurrió un error al determinar resolucion de la solicitud, contacte al administrador');
         },
         success: function (data) {
             if (data.d != 0) {
-                //informacion del analisis
+
+                /* Informacion del analisis */
                 $("#tipoEmpresa").prop('disabled', true);
                 $("#tipoEmpresa").val('');
                 $("#tipoPerfil").prop('disabled', true);
@@ -985,7 +989,8 @@ $("#btnDigitarMontoManualmente,#btnDigitarValoresManualmente").click(function ()
 
 // -- DEBUGGEANDO ESTE
 $('#txtValorGlobalManual,#txtValorPrimaManual,#txtValorPlazoManual').blur(function () {
-    /* CALCULAR CUOTA */
+
+    /* Calcular Cuota y valor a Financiar */
     var valorGlobal = $("#txtValorGlobalManual").val().replace(/,/g, '') == '' ? 0 : $('#txtValorGlobalManual').val().replace(/,/g, '');
     valorGlobal = parseFloat(valorGlobal);
 
@@ -997,15 +1002,14 @@ $('#txtValorGlobalManual,#txtValorPrimaManual,#txtValorPlazoManual').blur(functi
 
     var montoFinanciar = valorGlobal - valorPrima;
 
-
     if (valorGlobal > 0 && valorPrima >= 0 && valorGlobal > valorPrima && cantidadPlazos > 0 && montoFinanciar > 0) {
 
         $('#divCalculandoCuotaManual').css('display', '');
-        var qString = "?" + window.location.href.split("?")[1];
+
         $.ajax({
             type: "POST",
-            url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo' + qString,
-            data: JSON.stringify({ ValorPrestamo: valorGlobal, ValorPrima: valorPrima, CantidadPlazos: cantidadPlazos }),
+            url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo',
+            data: JSON.stringify({ ValorPrestamo: valorGlobal, ValorPrima: valorPrima, CantidadPlazos: cantidadPlazos, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('Error al calcular cuota');
@@ -1033,7 +1037,7 @@ $('#txtValorGlobalManual,#txtValorPrimaManual,#txtValorPlazoManual').blur(functi
     }
 });
 
-// DEBUGUEAR ESTE
+/* DEBUGUEAR ESTE */
 var montoFinanciarCalculado = 0;
 $("#btnActualizarMontoManualmente").click(function () {
     var valorGlobal = $("#txtValorGlobalManual").val().replace(/,/g, '') == '' ? 0 : $('#txtValorGlobalManual').val().replace(/,/g, '');
@@ -1047,18 +1051,17 @@ $("#btnActualizarMontoManualmente").click(function () {
 
     if (valorGlobal > 0 && valorPrima >= 0 && valorGlobal > valorPrima && cantidadPlazos > 0 && montoFinanciarCalculado > 0) {
 
-        var qString = "?" + window.location.href.split("?")[1];
         $.ajax({
             type: "POST",
-            url: 'SolicitudesCredito_Analisis.aspx/ActualizarPlazoMontoFinanciar' + qString,
-            data: JSON.stringify({ ValorGlobal: valorGlobal, ValorPrima: valorPrima, CantidadPlazos: cantidadPlazos }),
+            url: 'SolicitudesCredito_Analisis.aspx/ActualizarPlazoMontoFinanciar',
+            data: JSON.stringify({ ValorGlobal: valorGlobal, ValorPrima: valorPrima, CantidadPlazos: cantidadPlazos, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('Error al actualizar valores del préstamo');
             },
             success: function (data) {
                 if (data.d == true) {
-                    $("#lblMontoPrestamoEscogido").text(addComasFormatoNumerico(montoFinanciarCalculado));
+                    $("#lblMontoPrestamoEscogido").text(addFormatoNumerico(montoFinanciarCalculado));
                     $("#lblPlazoEscogido").text(cantidadPlazos);
                     gMontoFinal = montoFinanciarCalculado;
                     gPlazoFinal = cantidadPlazos;
@@ -1079,7 +1082,7 @@ $("#btnActualizarMontoManualmente").click(function () {
     }
 });
 
-/******** Actualizar el monto y plazo a Financiar de la lista de prestamos sugeridos ********/
+/* Actualizar el monto y plazo a Financiar de la lista de prestamos sugeridos */
 // DEBUGGEAR ESTE
 var prestamoSeleccionado = [];
 $(document).on('click', 'button#btnSeleccionarPMO', function () {
@@ -1097,17 +1100,16 @@ $("#btnConfirmarPrestamoAprobado").click(function () {
     var pmo = prestamoSeleccionado;
     var valorGlobal = pmo.fnMontoOfertado;
     var cantidadPlazos = pmo.fiPlazo;
-    var qString = "?" + window.location.href.split("?")[1];
+
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/ActualizarPlazoMontoFinanciar' + qString,
-        data: JSON.stringify({ ValorGlobal: VALORGARANTIA_CARGADA_EN_PRESTAMOSSUGERIDOS, ValorPrima: VALORPRIMA_CARGADA_EN_PRESTAMOSSUGERIDOS, CantidadPlazos: cantidadPlazos }),
+        url: 'SolicitudesCredito_Analisis.aspx/ActualizarPlazoMontoFinanciar',
+        data: JSON.stringify({ ValorGlobal: VALORGARANTIA_CARGADA_EN_PRESTAMOSSUGERIDOS, ValorPrima: VALORPRIMA_CARGADA_EN_PRESTAMOSSUGERIDOS, CantidadPlazos: cantidadPlazos, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al actualizar ingresos');
         },
         success: function (data) {
-            debugger;
             if (data.d == true) {
                 $("#lblMontoPrestamoEscogido").text(valorGlobal);
                 $("#lblPlazoEscogido").text(cantidadPlazos);
@@ -1122,18 +1124,18 @@ $("#btnConfirmarPrestamoAprobado").click(function () {
     });
 });
 
-/******** Condicionar solicitud ********/
+/* Condicionar solicitud */
 $("#btnCondicionarSolicitud").click(function () {
 
     var ddlCondiciones = $("#ddlCondiciones");
-    //verificar si la solicitud ya fue condicionada antes y todavia no ha sido actualizada por el agente de ventas
+    /* Verificar si la solicitud ya fue condicionada antes y todavia no ha sido actualizada por el agente de ventas */
     if (objSolicitud.fiEstadoSolicitud != 3) {
 
-        var qString = "?" + window.location.href.split("?")[1];
         listaCondicionamientos = [];
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/GetCondiciones" + qString,
+            url: "SolicitudesCredito_Analisis.aspx/GetCondiciones",
+            data: JSON.stringify({ dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('Error al cargar el lista de condiciones');
@@ -1204,11 +1206,10 @@ $(document).on('click', 'button#btnQuitarCondicion', function () {
 $("#btnCondicionarSolicitudConfirmar").click(function () {
 
     var otroComentario = $("#razonCondicion").val() != '' ? $("#razonCondicion").val() : '';
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/CondicionarSolicitud" + qString,
-        data: JSON.stringify({ SolicitudCondiciones: listaCondicionamientos, fcCondicionadoComentario: otroComentario }),
+        url: "SolicitudesCredito_Analisis.aspx/CondicionarSolicitud",
+        data: JSON.stringify({ SolicitudCondiciones: listaCondicionamientos, fcCondicionadoComentario: otroComentario, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la información, contacte al administrador');
@@ -1227,7 +1228,7 @@ $("#btnCondicionarSolicitudConfirmar").click(function () {
     });
 });
 
-// GUARDAR INFORMACION DE PERFIL
+/* Guardar Informacion del Perfil */
 $("#tipoEmpresa, #tipoPerfil, #tipoEmpleo, #buroActual").change(function () {
 
     var tipoEmpresa = $("#tipoEmpresa :selected").val();
@@ -1235,15 +1236,12 @@ $("#tipoEmpresa, #tipoPerfil, #tipoEmpleo, #buroActual").change(function () {
     var tipoEmpleo = $("#tipoEmpleo :selected").val();
     var buroActual = $("#buroActual :selected").val();
 
-    console.log('CAMBIO!!');
-
     if (tipoEmpresa != '' && tipoPerfil != '' && tipoEmpleo != '' && buroActual != '') {
 
-        var qString = "?" + window.location.href.split("?")[1];
         $.ajax({
             type: "POST",
             url: "SolicitudesCredito_Analisis.aspx/GuardarInformacionAnalisis" + qString,
-            data: JSON.stringify({ tipoEmpresa: tipoEmpresa, tipoPerfil: tipoPerfil, tipoEmpleo: tipoEmpleo, buroActual: buroActual }),
+            data: JSON.stringify({ tipoEmpresa: tipoEmpresa, tipoPerfil: tipoPerfil, tipoEmpleo: tipoEmpleo, buroActual: buroActual, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('No se pudo guardar la información de perfil, contacte al administrador');
@@ -1260,10 +1258,9 @@ $("#tipoEmpresa, #tipoPerfil, #tipoEmpleo, #buroActual").change(function () {
     }
 });
 
-
-/******** Enviar solicitud a campo ********/
+/* Enviar solicitud a campo */
 $("#btnEnviarCampo").click(function () {
-    //verificar si la solicitud ya fue enivada a campo antes
+    /* Verificar si la solicitud ya fue enivada a campo antes */
     if (objSolicitud.fiEstadoDeCampo == 0) {
         $("#modalEnviarCampo").modal();
     }
@@ -1274,11 +1271,10 @@ $("#btnEnviarCampoConfirmar").click(function () {
     if ($($("#comentarioAdicional")).parsley().isValid()) {
 
         var fcObservacionesDeCredito = $("#comentarioAdicional").val();
-        var qString = "?" + window.location.href.split("?")[1];
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/EnviarACampo" + qString,
-            data: JSON.stringify({ fcObservacionesDeCredito: fcObservacionesDeCredito }),
+            url: "SolicitudesCredito_Analisis.aspx/EnviarACampo",
+            data: JSON.stringify({ fcObservacionesDeCredito: fcObservacionesDeCredito, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('No se pudo cargar la información, contacte al administrador');
@@ -1298,7 +1294,7 @@ $("#btnEnviarCampoConfirmar").click(function () {
     } else { $($("#comentarioAdicional")).parsley().validate(); }
 });
 
-/******** Resolucion de la solicitud ********/
+/* Resolucion de la solicitud */
 var resolucion = false;
 $("#btnRechazar").click(function () {
     resolucion = false;
@@ -1317,11 +1313,11 @@ $("#btnConfirmarRechazar").click(function () {
         var solicitud = {
             fiEstadoSolicitud: 4
         };
-        var qString = "?" + window.location.href.split("?")[1];
+
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion" + qString,
-            data: JSON.stringify({ objBitacora: objBitacora, objSolicitud: solicitud }),
+            url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion",
+            data: JSON.stringify({ objBitacora: objBitacora, objSolicitud: solicitud, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('Ocurrió un error, contacte al administrador');
@@ -1329,7 +1325,7 @@ $("#btnConfirmarRechazar").click(function () {
             success: function (data) {
 
                 if (data.d != 0) {
-                    //informacion del analisis
+                    /* Informacion del analisis */
                     $("#tipoEmpresa").prop('disabled', true);
                     $("#tipoEmpresa").val('');
                     $("#tipoPerfil").prop('disabled', true);
@@ -1386,11 +1382,11 @@ $("#btnConfirmarAprobar").click(function () {
                     fiMontoFinalFinanciar: gMontoFinal,
                     fiPlazoFinalAprobado: gPlazoFinal
                 };
-                var qString = "?" + window.location.href.split("?")[1];
+
                 $.ajax({
                     type: "POST",
-                    url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion" + qString,
-                    data: JSON.stringify({ objBitacora: objBitacora, objSolicitud: solicitud }),
+                    url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion",
+                    data: JSON.stringify({ objBitacora: objBitacora, objSolicitud: solicitud, dataCrypt: window.location.href }),
                     contentType: 'application/json; charset=utf-8',
                     error: function (xhr, ajaxOptions, thrownError) {
                         MensajeError('Ocurrió un error, contacte al administrador');
@@ -1398,7 +1394,7 @@ $("#btnConfirmarAprobar").click(function () {
                     success: function (data) {
 
                         if (data.d != 0) {
-                            //informacion del analisis
+                            /* Informacion del analisis */
                             $("#tipoEmpresa").prop('disabled', true);
                             $("#tipoPerfil").prop('disabled', true);
                             $("#tipoEmpleo").prop('disabled', true);
@@ -1427,13 +1423,13 @@ $("#btnConfirmarAprobar").click(function () {
     else { $($("#comentarioAprobar")).parsley().validate(); }
 });
 
-/******** Cargar detalles del procesamiento de la solicitud en el modal ********/
+/* Cargar detalles del procesamiento de la solicitud en el modal */
 $('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/CargarEstadoSolicitud" + qString,
+        url: "SolicitudesCredito_Analisis.aspx/CargarEstadoSolicitud",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la información, contacte al administrador');
@@ -1444,7 +1440,8 @@ $('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
                 var habilitarResolucion = true;
                 var rowDataSolicitud = data.d;
                 var ProcesoPendiente = '/Date(-2208967200000)/';
-                //limpiar tabla de detalles del estado de la solicitud
+
+                /* Limpiar tabla de detalles del estado de la solicitud */
                 var tablaEstatusSolicitud = $('#tblDetalleEstado tbody');
                 tablaEstatusSolicitud.empty();
 
@@ -1543,7 +1540,8 @@ $('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
                 tablaEstatusSolicitud.append('<tr>' +
                     '<td colspan="4" class="text-center">Tiempo total transcurrido: <strong>' + timer[0] + ' horas con ' + timer[1] + ' minutos y ' + timer[2] + ' segundos </strong></td>' +
                     '</tr >');
-                //verificar si ya se tomó una resolución de la solicitud
+
+                /* Verificar si ya se tomó una resolución de la solicitud */
                 if (rowDataSolicitud.fiEstadoSolicitud == 7) {
                     $("#lblResolucion").text('Aprobado');
                     $("#lblResolucion").removeClass('text-warning');
@@ -1560,61 +1558,62 @@ $('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
                     $("#lblResolucion").text('En análisis');
                 }
                 var contadorComentariosDetalle = 0;
-                //razon reprogramado
+
+                /* Razon reprogramado */
                 if (rowDataSolicitud.fcReprogramadoComentario != '') {
                     $("#lblReprogramado").text(rowDataSolicitud.fcReprogramadoComentario);
                     $("#divReprogramado").css('display', '');
                     contadorComentariosDetalle += 1;
                 }
-                //razon condicionado
+                /* Razon condicionado */
                 if (rowDataSolicitud.fcCondicionadoComentario != '') {
                     $("#lblCondicionado").text(rowDataSolicitud.fcCondicionadoComentario);
                     $("#divCondicionado").css('display', '');
                     contadorComentariosDetalle += 1;
                 }
-                //observaciones documentacion
+                /* Observaciones documentacion */
                 if (rowDataSolicitud.fcComentarioValidacionDocumentacion != '') {
                     $("#lblDocumentacionComentario").text(rowDataSolicitud.fcComentarioValidacionDocumentacion);
                     $("#divDocumentacionComentario").css('display', '');
                     contadorComentariosDetalle += 1;
                 }
-                //observaciones info personal
+                /* Observaciones info personal */
                 if (rowDataSolicitud.fcComentarioValidacionInfoPersonal != '') {
                     $("#lblInfoPersonalComentario").text(rowDataSolicitud.fcComentarioValidacionInfoPersonal);
                     $("#divInfoPersonal").css('display', '');
                     contadorComentariosDetalle += 1;
                 }
-                //observaciones info laboral
+                /* Observaciones info laboral */
                 if (rowDataSolicitud.fcComentarioValidacionInfoLaboral != '') {
                     $("#lblInfoLaboralComentario").text(rowDataSolicitud.fcComentarioValidacionInfoLaboral);
                     $("#divInfoLaboral").css('display', '');
                     contadorComentariosDetalle += 1;
                 }
-                //observaciones referencias
+                /* Observaciones referencias */
                 if (rowDataSolicitud.fcComentarioValidacionReferenciasPersonales != '') {
                     $("#lblReferenciasComentario").text(rowDataSolicitud.fcComentarioValidacionReferenciasPersonales);
                     $("#divReferencias").css('display', '');
                     contadorComentariosDetalle += 1;
                 }
-                //comentario para campo depto de gestoria
+                /* Comentario para campo depto de gestoria */
                 if (rowDataSolicitud.fcObservacionesDeCredito != '') {
                     $("#lblCampoComentario").text(rowDataSolicitud.fcObservacionesDeCredito);
                     $("#divCampo").css('display', '');
                     contadorComentariosDetalle += 1;
                 }
-                //observaciones de gestoria
+                /* Observaciones de gestoria */
                 if (rowDataSolicitud.fcObservacionesDeGestoria != '') {
                     $("#lblGestoriaComentario").text(rowDataSolicitud.fcObservacionesDeGestoria);
                     $("#divGestoria").css('display', '');
                     contadorComentariosDetalle += 1;
                 }
-                //observaciones de gestoria
+                /* Observaciones de gestoria */
                 if (rowDataSolicitud.fcComentarioResolucion != '') {
                     $("#lblResolucionComentario").text(rowDataSolicitud.fcComentarioResolucion);
                     $("#divComentarioResolucion").css('display', '');
                     contadorComentariosDetalle += 1;
                 }
-                //validar si no hay detalles que mostrar
+                /* Validar si no hay detalles que mostrar */
                 if (contadorComentariosDetalle == 0) {
                     $("#divNoHayMasDetalles").css('display', '');
                 }
@@ -1622,7 +1621,8 @@ $('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
                     $("#divNoHayMasDetalles").css('display', 'none');
                 }
                 $("#modalEstadoSolicitud").modal();
-                //validar si ya se puede tomar una resolucion
+
+                /* Validar si ya se puede tomar una resolucion */
                 resolucionHabilitada = habilitarResolucion;
                 $("#btnRechazar").prop('disabled', false);
                 $("#btnRechazar").prop('title', 'Resolución final de la solicitud');
@@ -1646,15 +1646,18 @@ $('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
     });
 });
 
-/******** Actualizar comentario sobre una referencia personal radiofaro ********/
+/* Actualizar comentario sobre una referencia personal radiofaro */
 var comentarioActual = '';
 var IDReferencia = '';
 var btnReferenciaSeleccionada = '';
+
 $(document).on('click', 'button#btnComentarioReferencia', function () {
+
     btnReferenciaSeleccionada = $(this);
     comentarioActual = $(this).data('comment');
     IDReferencia = $(this).data('id');
     var nombreReferencia = $(this).data('nombreref');
+
     $("#txtObservacionesReferencia").val(comentarioActual);
     $("#lblNombreReferenciaModal").text(nombreReferencia);
 
@@ -1680,11 +1683,11 @@ $("#btnComentarioReferenciaConfirmar").click(function () {
 
         $("#frmObservacionReferencia").submit(function (e) { e.preventDefault(); });
         comentarioActual = $('#txtObservacionesReferencia').val();
-        var qString = "?" + window.location.href.split("?")[1];
+
         $.ajax({
             type: "POST",
-            url: 'SolicitudesCredito_Analisis.aspx/ComentarioReferenciaPersonal' + qString,
-            data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual }),
+            url: 'SolicitudesCredito_Analisis.aspx/ComentarioReferenciaPersonal',
+            data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('Error al actualizar estado de la referencia personal');
@@ -1707,11 +1710,11 @@ $("#btnComentarioReferenciaConfirmar").click(function () {
 $("#btnReferenciaSinComunicacion").click(function () {
 
     comentarioActual = 'Sin comunicacion';
-    var qString = "?" + window.location.href.split("?")[1];
+
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/ComentarioReferenciaPersonal' + qString,
-        data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual }),
+        url: 'SolicitudesCredito_Analisis.aspx/ComentarioReferenciaPersonal',
+        data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al actualizar estado de la referencia personal');
@@ -1736,11 +1739,10 @@ $("#btnEliminarReferencia").click(function () {
 
 $("#btnEliminarReferenciaConfirmar").click(function () {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/EliminarReferenciaPersonal' + qString,
-        data: JSON.stringify({ IDReferencia: IDReferencia }),
+        url: 'SolicitudesCredito_Analisis.aspx/EliminarReferenciaPersonal',
+        data: JSON.stringify({ IDReferencia: IDReferencia, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al eliminar referencia personal');
@@ -1756,18 +1758,17 @@ $("#btnEliminarReferenciaConfirmar").click(function () {
     });
 });
 
-/******** Visualizar informacion de aval del cliente ********/
+/* Visualizar informacion de aval del cliente */
 var avalID = 0;
 $(document).on('click', 'button#btnDetalleAvalModal', function () {
 
     var IDAval = $(this).data('id');
     avalID = $(this).data('id');
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/DetallesAval' + qString,
-        data: JSON.stringify({ IDAval: IDAval }),
+        url: 'SolicitudesCredito_Analisis.aspx/DetallesAval',
+        data: JSON.stringify({ IDAval: IDAval, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al cargar detalles del aval');
@@ -1794,7 +1795,7 @@ $(document).on('click', 'button#btnDetalleAvalModal', function () {
                 var fechaIngresoAval = FechaFormato(info.fcFechaIngreso);
                 $("#txtFechaIngresoAval").val(fechaIngresoAval.split(' ')[0]);
                 $("#txtPuestoAsignadoAval").val(info.fcPuestoAsignado);
-                $("#txtIngresosMensualesAval").val(addComasFormatoNumerico(info.fiIngresosMensuales));
+                $("#txtIngresosMensualesAval").val(addFormatoNumerico(info.fiIngresosMensuales));
                 $("#txtTelEmpresaAval").val(info.fdTelefonoEmpresa);
                 $("#txtExtensionRRHHAval").val(info.fcExtensionRecursosHumanos);
                 $("#txtExtensionAval").val(info.fcExtensionAval);
@@ -1809,11 +1810,10 @@ $(document).on('click', 'button#btnDetalleAvalModal', function () {
 $("#btnMasDetallesAval").click(function () {
 
     if (avalID != 0) {
-        var qString = "?" + window.location.href.split("?")[1];
         $.ajax({
             type: "POST",
-            url: 'SolicitudesCredito_Analisis.aspx/EncriptarParametroDetallesAval' + qString,
-            data: JSON.stringify({ parametro: avalID }),
+            url: 'SolicitudesCredito_Analisis.aspx/EncriptarParametroDetallesAval',
+            data: JSON.stringify({ parametro: avalID, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('Error al redireccionar a pantalla de detalles del aval');
@@ -1830,14 +1830,14 @@ $("#btnMasDetallesAval").click(function () {
     else { MensajeError('Error al cargar detalles del aval'); }
 });
 
-/******** Cargar buro externo ********/
+/* Cargar buro externo */
 $("#btnHistorialExterno").click(function () {
 
     MensajeInformacion('Cargando buro externo');
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/ObtenerUrlEncriptado' + qString,
+        url: 'SolicitudesCredito_Analisis.aspx/ObtenerUrlEncriptado',
+        data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al cargar buro externo');
@@ -1852,14 +1852,13 @@ $("#btnHistorialExterno").click(function () {
     });
 });
 
-/******** calculos de los prestamos ********/
+/* Calculos de los prestamos */
 function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo' + qString,
-        data: JSON.stringify({ ValorPrestamo: prestamoAprobado, ValorPrima: '0', CantidadPlazos: plazoQuincenal }),
+        url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo',
+        data: JSON.stringify({ ValorPrestamo: prestamoAprobado, ValorPrima: '0', CantidadPlazos: plazoQuincenal, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al realizar calculo del préstamo');
@@ -1867,14 +1866,17 @@ function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
             gPlazoFinal = 0;
         },
         success: function (data) {
+
             var objCalculo = data.d;
             if (objCalculo != null) {
-                /* variables globales */
+
+                /* Variables globales */
                 gMontoFinal = objCalculo.ValoraFinanciar;
                 gPlazoFinal = plazoQuincenal;
-                $("#lblMontoFinanciarEfectivo").text(addComasFormatoNumerico(objCalculo.ValoraFinanciar));
-                $("#lblMontoCuotaEfectivo").text(addComasFormatoNumerico(objCalculo.CuotaQuincenal));
+                $("#lblMontoFinanciarEfectivo").text(addFormatoNumerico(objCalculo.ValoraFinanciar));
+                $("#lblMontoCuotaEfectivo").text(addFormatoNumerico(objCalculo.CuotaQuincenal));
                 $("#lblTituloCuotaEfectivo").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota);
+
                 /* Mostrar div del calculo del prestamo efectivo */
                 $("#lblPrima").css('display', 'none');
                 $("#lblMontoPrima").css('display', 'none');
@@ -1882,10 +1884,10 @@ function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
                 $("#LogoPrestamo").css('display', '');
                 $("#divPrestamoEfectivo").css('display', '');
 
-                //$('#lblResumenValorGarantia').text(addComasFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // ficha de resumen
-                //$('#lblResumenValorPrima').text(addComasFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // ficha de resumen
-                $('#lblResumenValorFinanciar').text(addComasFormatoNumerico(objCalculo.ValoraFinanciar)); // ficha de resumen
-                $('#lblResumenCuota').text(addComasFormatoNumerico(objCalculo.CuotaQuincenal)); // ficha de resumen
+                //$('#lblResumenValorGarantia').text(addFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // Ficha de resumen
+                //$('#lblResumenValorPrima').text(addFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // Ficha de resumen
+                $('#lblResumenValorFinanciar').text(addFormatoNumerico(objCalculo.ValoraFinanciar)); // ficha de resumen
+                $('#lblResumenCuota').text(addFormatoNumerico(objCalculo.CuotaQuincenal)); // ficha de resumen
                 $("#lblResumenCuotaTitulo").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota); // ficha de resumen
             } else {
                 MensajeError('Error al realizar calculo del préstamo');
@@ -1898,11 +1900,10 @@ function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
 
 function prestamoMoto(ValorPrima, valorDeLaMoto, plazoQuincenal) {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo' + qString,
-        data: JSON.stringify({ ValorPrestamo: valorDeLaMoto, ValorPrima: ValorPrima, CantidadPlazos: plazoQuincenal }),
+        url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo',
+        data: JSON.stringify({ ValorPrestamo: valorDeLaMoto, ValorPrima: ValorPrima, CantidadPlazos: plazoQuincenal, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al realizar calculo del préstamo');
@@ -1913,23 +1914,25 @@ function prestamoMoto(ValorPrima, valorDeLaMoto, plazoQuincenal) {
 
             var objCalculo = data.d;
             if (objCalculo != null) {
+
                 /* variables globales */
                 gMontoFinal = objCalculo.ValoraFinanciar;
                 gPlazoFinal = plazoQuincenal;
-                $("#lblMontoFinanciarMoto").text(addComasFormatoNumerico(objCalculo.ValoraFinanciar));
+                $("#lblMontoFinanciarMoto").text(addFormatoNumerico(objCalculo.ValoraFinanciar));
                 $("#lblTituloCuotaMoto").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota);
-                $("#lblMontoCuotaMoto").text(addComasFormatoNumerico(objCalculo.CuotaQuincenal));
+                $("#lblMontoCuotaMoto").text(addFormatoNumerico(objCalculo.CuotaQuincenal));
+
                 /* Mostrar div del calculo del prestamo moto */
                 $("#divCargando,#divCargandoAnalisis").css('display', 'none');
                 $("#LogoPrestamo").css('display', '');
                 $("#divPrestamoMoto").css('display', '');
 
                 $("#lblResumenValorGarantiaTitulo,#lblResumenValorGarantia, #lblResumenValorPrimaTitulo,#lblResumenValorPrima").css('display', '');
-                $('#lblResumenValorGarantia').text(addComasFormatoNumerico(valorDeLaMoto)); // ficha de resumen
-                $('#lblResumenValorPrima').text(addComasFormatoNumerico(ValorPrima)); // ficha de resumen
-                $('#lblResumenValorFinanciar').text(addComasFormatoNumerico(objCalculo.ValoraFinanciar)); // ficha de resumen
-                $('#lblResumenCuota').text(addComasFormatoNumerico(objCalculo.CuotaQuincenal)); // ficha de resumen
-                $("#lblResumenCuotaTitulo").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota); // ficha de resumen
+                $('#lblResumenValorGarantia').text(addFormatoNumerico(valorDeLaMoto)); // Ficha de resumen
+                $('#lblResumenValorPrima').text(addFormatoNumerico(ValorPrima)); // Ficha de resumen
+                $('#lblResumenValorFinanciar').text(addFormatoNumerico(objCalculo.ValoraFinanciar)); // Ficha de resumen
+                $('#lblResumenCuota').text(addFormatoNumerico(objCalculo.CuotaQuincenal)); // Ficha de resumen
+                $("#lblResumenCuotaTitulo").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota); //Ficha de resumen
             } else {
                 MensajeError('Error al realizar calculo del préstamo');
                 gMontoFinal = 0;
@@ -1941,11 +1944,10 @@ function prestamoMoto(ValorPrima, valorDeLaMoto, plazoQuincenal) {
 
 function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo' + qString,
-        data: JSON.stringify({ ValorPrestamo: valorDelAuto, ValorPrima: ValorPrima, CantidadPlazos: plazoMensual }),
+        url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo',
+        data: JSON.stringify({ ValorPrestamo: valorDelAuto, ValorPrima: ValorPrima, CantidadPlazos: plazoMensual, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al realizar calculo del préstamo');
@@ -1959,8 +1961,8 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
                 /* variables globales */
                 gMontoFinal = objCalculo.ValoraFinanciar;
                 gPlazoFinal = plazoMensual;
-                $("#lblMontoFinanciarAuto").text(addComasFormatoNumerico(objCalculo.ValoraFinanciar));
-                $("#lblMontoCuotaTotalAuto").text(addComasFormatoNumerico(objCalculo.CuotaMensualNeta));
+                $("#lblMontoFinanciarAuto").text(addFormatoNumerico(objCalculo.ValoraFinanciar));
+                $("#lblMontoCuotaTotalAuto").text(addFormatoNumerico(objCalculo.CuotaMensualNeta));
                 $("#lblTituloCuotaAuto").text(plazoMensual + ' Cuotas ' + objCalculo.TipoCuota);
                 /* Mostrar div del calculo del prestamo auto */
                 $("#divCargando,#divCargandoAnalisis").css('display', 'none');
@@ -1968,10 +1970,10 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
                 $("#divPrestamoAuto").css('display', '');
 
                 $("#lblResumenValorGarantiaTitulo,#lblResumenValorGarantia, #lblResumenValorPrimaTitulo,#lblResumenValorPrima").css('display', '');
-                $('#lblResumenValorGarantia').text(addComasFormatoNumerico(valorDelAuto)); // ficha de resumen
-                $('#lblResumenValorPrima').text(addComasFormatoNumerico(ValorPrima)); // ficha de resumen
-                $('#lblResumenValorFinanciar').text(addComasFormatoNumerico(objCalculo.ValoraFinanciar)); // ficha de resumen
-                $('#lblResumenCuota').text(addComasFormatoNumerico(objCalculo.CuotaMensualNeta)); // ficha de resumen
+                $('#lblResumenValorGarantia').text(addFormatoNumerico(valorDelAuto)); // ficha de resumen
+                $('#lblResumenValorPrima').text(addFormatoNumerico(ValorPrima)); // ficha de resumen
+                $('#lblResumenValorFinanciar').text(addFormatoNumerico(objCalculo.ValoraFinanciar)); // ficha de resumen
+                $('#lblResumenCuota').text(addFormatoNumerico(objCalculo.CuotaMensualNeta)); // ficha de resumen
                 $("#lblResumenCuotaTitulo").text(plazoMensual + ' Cuotas ' + objCalculo.TipoCuota); // ficha de resumen
 
             } else {
@@ -1991,12 +1993,11 @@ function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
     var tablaPrestamos = $("#tblPMOSugeridosReales tbody");
     tablaPrestamos.empty();
     MensajeInformacion('Cargando préstamos sugeridos');
-    var qString = "?" + window.location.href.split("?")[1];
 
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/GetPrestamosSugeridos' + qString,
-        data: JSON.stringify({ ValorProducto: ValorProducto, ValorPrima: ValorPrima }),
+        url: 'SolicitudesCredito_Analisis.aspx/GetPrestamosSugeridos',
+        data: JSON.stringify({ ValorProducto: ValorProducto, ValorPrima: ValorPrima, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al cargar préstamos sugeridos');
@@ -2035,13 +2036,13 @@ function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
     });
 }
 
-/******** Cargar nuevo estado de la solicitud despues de realizarse algun proceso ********/
+/* Cargar nuevo estado de la solicitud despues de realizarse algun proceso */
 function actualizarEstadoSolicitud() {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/CargarEstadoSolicitud" + qString,
+        url: "SolicitudesCredito_Analisis.aspx/CargarEstadoSolicitud",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la información, contacte al administrador');
@@ -2172,7 +2173,8 @@ function actualizarEstadoSolicitud() {
                     '<td class="text-center">' + statusPasoFinal + '</td>' +
                     '<td class="text-center">' + resolucionFinal + '</td>' +
                     '</tr>');
-                //calcular tiempos
+
+                /* Calcular tiempos */
                 //var ingresoInicio = rowDataSolicitud.fdEnIngresoInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnIngresoInicio) : '';
                 //var ingresoFin = rowDataSolicitud.fdEnIngresoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnIngresoFin) : '';
                 //var tiempoIngreso = ingresoInicio != '' ? ingresoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnIngresoInicio, rowDataSolicitud.fdEnIngresoFin) : '' : '';
@@ -2212,7 +2214,7 @@ function actualizarEstadoSolicitud() {
                 // '<td class="text-center">' + timer + '</td>' +
                 // '</tr>');
 
-                //validar si ya se puede tomar una resolucion
+                /* Validar si ya se puede tomar una resolucion */
                 if (rowDataSolicitud.ftAnalisisTiempoValidacionReferenciasPersonales != ProcesoPendiente) {
                     $("#btnEliminarReferenciaConfirmar, #btnValidoReferenciasModal, #btnValidoReferenciasConfirmar,#btnEliminarReferencia,#btnReferenciaSinComunicacion,#btnComentarioReferenciaConfirmar").prop('disabled', true).prop('title', 'Las referencias personales ya fueron validadas').removeClass('btn-warning').addClass('btn-success');
                 }
@@ -2250,7 +2252,7 @@ function actualizarEstadoSolicitud() {
     });
 }
 
-/************************ Funciones varias ************************/
+/* Funciones varias */
 function MensajeInformacion(mensaje) {
     iziToast.info({
         title: 'Info',
@@ -2277,22 +2279,32 @@ function diferenciasEntreDosFechas(fechaInicio, fechaFin) {
     var inicio = new Date(FechaFormatoGuiones(fechaInicio));
     var fin = new Date(FechaFormatoGuiones(fechaFin));
     var tiempoResta = (fin.getTime() - inicio.getTime()) / 1000;
-    //calcular dias
+    /* Calcular dias */
     var dias = Math.floor(tiempoResta / 86400);
     //tiempoResta = tiempoResta >= 86400 ? dias * 86400 : tiempoResta;
-    //calcular horas
+
+    /* Calcular horas */
     var horas = Math.floor(tiempoResta / 3600) % 24;
     //tiempoResta = tiempoResta >= 3600 ? horas * 3600 : tiempoResta;
-    //calcular minutos
+
+    /* Calcular minutos */
     var minutos = Math.floor(tiempoResta / 60) % 60;
     //tiempoResta = tiempoResta >= 3600 ? minutos * 3600 : tiempoResta;
-    //calcular segundos
+
+    /* Calcular segundos */
     var segundos = tiempoResta % 60;
     var diferencia = pad2(dias) + ':' + pad2(horas) + ':' + pad2(minutos) + ':' + pad2(segundos);
     return diferencia;
+
+    //var now = moment(fechaInicio);
+    //var then = moment(fechaFin);
+
+    //var ms = moment(now, "DD/MM/YYYY HH:mm:ss").diff(moment(then, "DD/MM/YYYY HH:mm:ss"));
+    //var d = moment.duration(ms);
+    //var s = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
 }
 
-function addComasFormatoNumerico(nStr) {
+function addFormatoNumerico(nStr) {
     nStr += '';
     x = nStr.split('.');
     x1 = x[0];

@@ -5,19 +5,20 @@ cargarInformacionSolicitud();
 
 function cargarInformacionSolicitud() {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Detalles.aspx/CargarInformacionSolicitud" + qString,
+        url: "SolicitudesCredito_Detalles.aspx/CargarInformacionSolicitud",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudo carga la información, contacte al administrador');//mostrar mensaje de error
+            MensajeError('No se pudo carga la información, contacte al administrador');
         },
         success: function (data) {
 
-            var rowDataCliente = data.d.cliente;//variable de informacion del cliente
-            var rowDataSolicitud = data.d.solicitud;//variable de informacion de la solicitud
-            var rowDataDocumentos = data.d.documentos;//variable de documentacion de la solicitud
+            var rowDataCliente = data.d.cliente;// Variable de informacion del cliente
+            var rowDataSolicitud = data.d.solicitud;// Variable de informacion de la solicitud
+            var rowDataDocumentos = data.d.documentos;// Variable de documentacion de la solicitud
+
             $("#btnHistorialExterno,#btnHistorialInterno").prop('disabled', false);
             var ProcesoPendiente = '/Date(-2208967200000)/';
             var IconoExito = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
@@ -155,7 +156,8 @@ function cargarInformacionSolicitud() {
 
             /* Informacion principal de la solicitud */
             $('#lblNoSolicitud').text(rowDataSolicitud.fiIDSolicitud);
-            $('#lblNoCliente').text(rowDataSolicitud.fiIDCliente);
+            //$('#lblNoCliente').text(rowDataSolicitud.fiIDCliente);
+            $('#lblNombreGestor').text(rowDataSolicitud.NombreGestor);
             var nombreCompletoCliente = rowDataCliente.clientesMaster.fcPrimerNombreCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoNombreCliente + ' ' + rowDataCliente.clientesMaster.fcPrimerApellidoCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoApellidoCliente;
             $('#lblNombreCliente').text(nombreCompletoCliente);
             $("#spanNombreCliente").text(nombreCompletoCliente);
@@ -176,7 +178,6 @@ function cargarInformacionSolicitud() {
             $('#lblFechaNacimientoCliente').text(fechaNacimientoCliente.split(' ')[0]);
             $('#lblCorreoCliente').text(infoPersonal.fcCorreoElectronicoCliente);
             $('#lblProfesionCliente').text(infoPersonal.fcProfesionOficioCliente);
-            console.log(infoPersonal.fcSexoCliente);
             $('#lblSexoCliente').text(infoPersonal.fcSexoCliente == 'M' ? 'Masculino' : 'Femenino');
             $('#lblEstadoCivilCliente').text(infoPersonal.fcDescripcionEstadoCivil);
             $('#lblViviendaCliente').text(infoPersonal.fcDescripcionVivienda);
@@ -487,13 +488,13 @@ function cargarInformacionSolicitud() {
     });
 }
 
-/******** Cargar detalles del procesamiento de la solicitud en el modal ********/
+/* Cargar detalles del procesamiento de la solicitud en el modal */
 $('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Detalles.aspx/CargarEstadoSolicitud" + qString,
+        url: "SolicitudesCredito_Detalles.aspx/CargarEstadoSolicitud",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la información, contacte al administrador');
@@ -690,10 +691,11 @@ $("#btnValidoDocumentacionModal").click(function () {
 $("#btnHistorialExterno").click(function () {
 
     MensajeInformacion('Cargando buro externo');
-    var qString = "?" + window.location.href.split("?")[1];
+
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/ObtenerUrlEncriptado' + qString,
+        url: 'SolicitudesCredito_Detalles.aspx/ObtenerUrlEncriptado',
+        data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al cargar buro externo');
@@ -708,14 +710,13 @@ $("#btnHistorialExterno").click(function () {
     });
 });
 
-/******** calculos de los prestamos ********/
+/* calculos de los prestamos */
 function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo' + qString,
-        data: JSON.stringify({ MontoFinanciar: prestamoAprobado, PlazoFinanciar: plazoQuincenal, ValorPrima: '0' }),
+        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo',
+        data: JSON.stringify({ MontoFinanciar: prestamoAprobado, PlazoFinanciar: plazoQuincenal, ValorPrima: '0', dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al realizar calculo del préstamo');
@@ -740,11 +741,10 @@ function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
 
 function prestamoMoto(ValorPrima, valorDeLaMoto, plazoQuincenal) {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo' + qString,
-        data: JSON.stringify({ MontoFinanciar: valorDeLaMoto, PlazoFinanciar: plazoQuincenal, ValorPrima: ValorPrima }),
+        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo',
+        data: JSON.stringify({ MontoFinanciar: valorDeLaMoto, PlazoFinanciar: plazoQuincenal, ValorPrima: ValorPrima, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al realizar calculo del préstamo');
@@ -756,6 +756,7 @@ function prestamoMoto(ValorPrima, valorDeLaMoto, plazoQuincenal) {
                 $("#lblMontoFinanciarMoto").text(addComasFormatoNumerico(objCalculo.ValoraFinanciar));
                 $("#lblTituloCuotaMoto").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota);
                 $("#lblMontoCuotaMoto").text(addComasFormatoNumerico(objCalculo.CuotaQuincenal));
+
                 /* Mostrar div del calculo del prestamo moto */
                 $("#divCargando,#divCargandoAnalisis").css('display', 'none');
                 $("#LogoPrestamo").css('display', '');
@@ -768,10 +769,9 @@ function prestamoMoto(ValorPrima, valorDeLaMoto, plazoQuincenal) {
 
 function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
 
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo' + qString,
+        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo',
         data: JSON.stringify({ MontoFinanciar: valorDelAuto, PlazoFinanciar: plazoMensual, ValorPrima: ValorPrima }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
@@ -801,7 +801,7 @@ function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_Detalles.aspx/GetPrestamosSugeridos',
-        data: JSON.stringify({ ValorProducto: ValorProducto, ValorPrima: ValorPrima }),
+        data: JSON.stringify({ ValorProducto: ValorProducto, ValorPrima: ValorPrima, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al cargar préstamos sugeridos');
@@ -853,19 +853,29 @@ function diferenciasEntreDosFechas(fechaInicio, fechaFin) {
     var inicio = new Date(FechaFormatoGuiones(fechaInicio));
     var fin = new Date(FechaFormatoGuiones(fechaFin));
     var tiempoResta = (fin.getTime() - inicio.getTime()) / 1000;
-    //calcular dias
+    /* Calcular dias */
     var dias = Math.floor(tiempoResta / 86400);
     //tiempoResta = tiempoResta >= 86400 ? dias * 86400 : tiempoResta;
-    //calcular horas
+
+    /* Calcular horas */
     var horas = Math.floor(tiempoResta / 3600) % 24;
     //tiempoResta = tiempoResta >= 3600 ? horas * 3600 : tiempoResta;
-    //calcular minutos
+
+    /* Calcular minutos */
     var minutos = Math.floor(tiempoResta / 60) % 60;
     //tiempoResta = tiempoResta >= 3600 ? minutos * 3600 : tiempoResta;
-    //calcular segundos
+
+    /* Calcular segundos */
     var segundos = tiempoResta % 60;
     var diferencia = pad2(dias) + ':' + pad2(horas) + ':' + pad2(minutos) + ':' + pad2(segundos);
     return diferencia;
+
+    //var now = moment(fechaInicio);
+    //var then = moment(fechaFin);
+
+    //var ms = moment(now, "DD/MM/YYYY HH:mm:ss").diff(moment(then, "DD/MM/YYYY HH:mm:ss"));
+    //var d = moment.duration(ms);
+    //var s = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
 }
 
 function addComasFormatoNumerico(nStr) {
