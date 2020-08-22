@@ -349,9 +349,9 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            int pcIDSesion = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID"));
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
@@ -408,8 +408,8 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                 try
                 {
                     Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-                    int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-                    int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+                    string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                     long MensajeError = 0;
@@ -469,9 +469,9 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         {
             DSCore.DataCrypt DSC = new DSCore.DataCrypt();
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            int pcIDSesion = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID"));
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             long MensajeError = 0;
 
@@ -481,7 +481,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
-                string lcSQLInstruccion = "exec sp_CANEX_Solicitud_CambiarEstado '" + pcIDSesion + "', '" + pcIDApp + "','" + pcIDUsuario + "', '" + IDSOL + "', '" + IDPais + "', '" + IDSocio + "', '" + IDAgencia + "', '" + Resolucion + "'";
+                string lcSQLInstruccion = "exec sp_CANEX_SolicitudResolucion " + pcIDSesion + ", " + pcIDApp + "," + pcIDUsuario + ", " + IDSOL + ", " + IDPais + ", " + IDSocio + ", " + IDAgencia + ", " + Resolucion + ", 0 ,'" + Comentario.Trim() +"' ";
 
                 using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
                 {
@@ -506,7 +506,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static ResponseEntitie ImportarSolicitud(int IDPais, int IDSocio, int IDAgencia, string dataCrypt)
+    public static ResponseEntitie ImportarSolicitud(int IDPais, int IDSocio, int IDAgencia, string Comentario, string dataCrypt)
     {
         DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         ResponseEntitie resultadoProceso = new ResponseEntitie();
@@ -515,10 +515,10 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            int pcIDSesion = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID"));
-            int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
-            int pcIDApp = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp"));
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
             bool ResultadoSp = false;
             string fcMensajeResultado = string.Empty;
@@ -528,8 +528,8 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                sqlConexion.Open();
-                string lcSQLInstruccion = "exec sp_CANEX_Solicitud_ImportarSolicitud " + pcIDSesion + ", " + pcIDApp + "," + pcIDUsuario + ", " + IDSOL + ", " + IDPais + ", " + IDSocio + ", " + IDAgencia;
+                sqlConexion.Open();                
+                string lcSQLInstruccion = "exec sp_CANEX_Solicitud_ImportarSolicitud " + pcIDSesion + ", " + pcIDApp + "," + pcIDUsuario + ", " + IDSOL + ", " + IDPais + ", " + IDSocio + ", " + IDAgencia + ", '" + Comentario.Trim() + "' ";
 
                 using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
                 {
@@ -712,7 +712,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     {
         DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-        int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+        string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
         string pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
         string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp").ToString();
 

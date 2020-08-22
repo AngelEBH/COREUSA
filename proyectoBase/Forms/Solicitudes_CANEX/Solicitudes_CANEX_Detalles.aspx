@@ -73,13 +73,13 @@
                         <asp:Label ID="spanIdentidadCliente" CssClass="col-form-label-lg EliminarEspacios mt-1" runat="server"></asp:Label>
                     </div>
                     <!-- Información de la solicitud -->
-                    <div class="col-md-2 form-inline seccion-header border-bottom-0">
+                    <%--<div class="col-md-2 form-inline seccion-header border-bottom-0">
                         No. Solicitud:&nbsp;
                         <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         No. Cliente:&nbsp;
-                        <asp:Label ID="lblNoCliente" CssClass="col-form-label" runat="server"></asp:Label>
+                        <asp:Label ID="" CssClass="col-form-label" runat="server"></asp:Label>
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         Tipo Solicitud:&nbsp;
@@ -95,8 +95,38 @@
                     </div>
                     <div class="col-md-2 form-inline seccion-header border-bottom-0">
                         Estado:&nbsp;
-                        <asp:Label ID="lblEstadoSolicitud" runat="server"></asp:Label>
-                    </div>
+                        
+                    </div>--%>
+                    <table class="table table-condensed m-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="text-center">No. Solicitud:</th>
+                            <th class="text-center">
+                                <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                            </th>
+                            <th class="text-center">No. Cliente:</th>
+                            <th class="text-center">
+                                <asp:Label ID="lblNoCliente" CssClass="col-form-label" runat="server"></asp:Label>
+                            </th>
+                            <th class="text-center">Tipo Solicitud:</th>
+                            <th class="text-center">
+                                <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                            </th>
+                            <th class="text-center">Agente de Ventas:</th>
+                            <th class="text-center">
+                                <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
+                            </th>
+                            <th class="text-center">Agencia:</th>
+                            <th class="text-center">
+                                <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
+                            </th>
+                            <th class="text-center">Estado:</th>
+                            <th class="text-center">
+                                <asp:Label ID="lblEstadoSolicitud" runat="server"></asp:Label>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
                 </div>
             </div>
             <div class="card-body">
@@ -359,7 +389,7 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                        <%--<div class="form-group row" id="divAval">
+                                            <%--<div class="form-group row" id="divAval">
                                                 <h4>Aval</h4>
                                                 <div class="table-responsive">
                                                     <table runat="server" class="table table-condensed" id="tblAvales">
@@ -591,6 +621,12 @@
                     <div class="modal-body">
                         ¿Está seguro de que desea <strong>RECHAZAR</strong> esta solicitud?<br />
                         <br />
+                        <div class="form-group">
+                            <label class="col-form-label">Observaciones</label>
+                            <div>
+                                <textarea id="ComentarioRechazar" required="required" class="form-control" data-parsley-maxlength="255" rows="2"></textarea>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button id="btnRechazarConfirmar" class="btn btn-danger waves-effect waves-light mr-1">
@@ -612,8 +648,14 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        ¿Está seguro de que desea <strong>ACEPTAR</strong> esta solicitud (Se importará a la bandeja de solicitudes)?<br />
+                        ¿Está seguro de que desea <strong>ACEPTAR</strong> esta solicitud ?<br /> *Se importará a la bandeja de solicitudes*<br />
                         <br />
+                        <div class="form-group">
+                            <label class="col-form-label">Observaciones</label>
+                            <div>
+                                <textarea id="ComentarioAceptar" required="required" class="form-control" data-parsley-maxlength="255" rows="2"></textarea>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button id="btnAceptarSolicitudConfirmar" class="btn btn-primary waves-effect waves-light mr-1">
@@ -643,6 +685,6 @@
             IDSolicitudImportada = <%=this.IDSolicitudPrestadito%>;
         });
     </script>
-    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=1.1"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=202008211756"></script>
 </body>
 </html>

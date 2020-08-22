@@ -208,46 +208,56 @@ $("#btnCondicionarSolicitudConfirmar").click(function () {
 
 $("#btnRechazarConfirmar").click(function () {
 
-    $.ajax({
-        type: "POST",
-        url: "Solicitudes_CANEX_Detalles.aspx/RechazarSolicitud",
-        data: JSON.stringify({ IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia, Comentario: '', dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al actualizar estado de la solicitud, contacte al administrador');
-        },
-        success: function (data) {
-            if (data.d != 0) {
-                $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('disabled', true);
-                $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('title', 'La solicitud ya fue rechazada');
-                $("#modalResolucionRechazar").modal('hide');
-                MensajeExito('¡Solicitud rechazada correctamente!');
+    if ($($("#ComentarioRechazar")).parsley().isValid()) {
+        $.ajax({
+            type: "POST",
+            url: "Solicitudes_CANEX_Detalles.aspx/RechazarSolicitud",
+            data: JSON.stringify({ IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia, Comentario: $("#ComentarioRechazar").val(), dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('Error al actualizar estado de la solicitud, contacte al administrador');
+            },
+            success: function (data) {
+                if (data.d != 0) {
+                    $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('disabled', true);
+                    $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('title', 'La solicitud ya fue rechazada');
+                    $("#modalResolucionRechazar").modal('hide');
+                    MensajeExito('¡Solicitud rechazada correctamente!');
+                }
+                else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
             }
-            else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
-        }
-    });
+        });
+    }
+    else {
+        $($("#ComentarioRechazar")).parsley().validate();
+    }
 });
 
 $("#btnAceptarSolicitudConfirmar").click(function () {
 
-    $.ajax({
-        type: "POST",
-        url: "Solicitudes_CANEX_Detalles.aspx/ImportarSolicitud",
-        data: JSON.stringify({ IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia, dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al actualizar estado de la solicitud, contacte al administrador');
-        },
-        success: function (data) {
-            if (data.d != 0) {
-                $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('disabled', true);
-                $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('title', 'La solicitud ya fue rechazada');
-                $("#modalResolucionAprobar").modal('hide');
-                MensajeExito('¡Solicitud exportada a bandeja de crédito correctamente!');
+    if ($($("#ComentarioAceptar")).parsley().isValid()) {
+        $.ajax({
+            type: "POST",
+            url: "Solicitudes_CANEX_Detalles.aspx/ImportarSolicitud",
+            data: JSON.stringify({ IDPais: IDPais, IDSocio: IDSocio, IDAgencia: IDAgencia, Comentario: $("#ComentarioAceptar").val(),dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('Error al actualizar estado de la solicitud, contacte al administrador');
+            },
+            success: function (data) {
+                if (data.d != 0) {
+                    $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('disabled', true);
+                    $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('title', 'La solicitud ya fue rechazada');
+                    $("#modalResolucionAprobar").modal('hide');
+                    MensajeExito('¡Solicitud exportada a bandeja de crédito correctamente!');
+                }
+                else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
             }
-            else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
-        }
-    });
+        });
+    }
+    else {
+        $($("#ComentarioAceptar")).parsley().validate();
+    }
 });
 
 function MensajeInformacion(mensaje) {
