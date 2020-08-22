@@ -1240,7 +1240,7 @@ $("#tipoEmpresa, #tipoPerfil, #tipoEmpleo, #buroActual").change(function () {
 
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/GuardarInformacionAnalisis" + qString,
+            url: "SolicitudesCredito_Analisis.aspx/GuardarInformacionAnalisis",
             data: JSON.stringify({ tipoEmpresa: tipoEmpresa, tipoPerfil: tipoPerfil, tipoEmpleo: tipoEmpleo, buroActual: buroActual, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {

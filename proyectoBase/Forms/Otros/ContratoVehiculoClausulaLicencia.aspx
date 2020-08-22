@@ -5,16 +5,18 @@
 <head runat="server">
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <style type="text/css">
-        html * {
-            font-family: "DejaVu Sans", "Arial", sans-serif !important;
+        html {
+            /*margin: 0px 50px 50px 50px !important;*/
         }
 
         p {
             font-size: 15.5px !important;
             text-align: justify !important;
             text-justify: inter-word !important;
+            
         }
 
         label {
@@ -36,9 +38,20 @@
             padding-bottom: 6px !important;
         }
 
-        @page {
-            size: auto;
-            margin: 50px;
+        @media print {
+            .page-break {
+                page-break-inside: avoid;
+                /*margin: 0px 0px 0px 0px !important;*/
+            }
+
+            html, body {
+                height: 99%;
+                margin-top: 0px !important;
+                padding-top: 0px !important;
+            }
+        }
+        @page{
+            /*margin-top: 20px !important;*/
         }
     </style>
     <link rel="stylesheet" type="text/css" href="/CSS/Imprimir.css" />
@@ -146,12 +159,11 @@
                                 </tr>
                                 <%--<tr>
                                     <td colspan="3" class="text-right">CUOTA TOTAL</td>
-                                    <td class="text-right">Lps 1397.04
-                                    </td>
+                                    <td class="text-right">Lps 1397.04</td>
                                 </tr>--%>
                             </tbody>
                         </table>
-                        <p>
+                        <p class="page-break">
                             <b>C) EL PLAZO DEL FINANCIAMENTO:</b> El plazo de este préstamo es de 48 cuotas (quincenales) dividido así: 47 cuotas de 1,283.30 y una (1) cuota
                             de 1,283.14 (L. 67.057.92) mas la cuota del seguro de daños y el servicio de GPS correspondientes, en caso de que lo hubiere, los cuales se detallan en el cuadro anterior
                             y en el plan de pago, debiendo hacer efectivo el pago de la primera cuota el 30 de septiembre de 2019 y así sucesivamente de forma <u>quincenal</u>
@@ -173,6 +185,8 @@
                             <b>- G) OTROS GASTOS:</b> Los gastos que se incurra por mantenimiento, reparación
                             y todas las relacionadas para conservación del vehículo en perfecto estado, deberá ser pagadas por el <b>CLIENTE</b>, así como también los gastos que se
                             ocasione en la recuperación del vehículo en caso de mora.
+                        </p>
+                        <p class="page-break">
                             <b>- TERCERO: AUTORIZACIONES ESPECIALES: EL CLIENTE</b> por este acto, en tanto no haya cumplido con el pago total de su obligación, autoriza a <b>PRESTADITO</b> expresamente y sin ser necesario la notificación previa para:
                             <b>A)</b> Vender, Ceder o de cualquier otra forma traspasar, o celebrar contratos de participación, de descuentos con relación al crédito y derechos consignados
                             en este documento o títulos valores relacionados a este mismo;
@@ -225,7 +239,10 @@
                             es entendido que caduca su derecho para reclamar y se declara vencido. Cuando sea reclamos por cuestiones de garantía deberá presentarlas al distribuidor autorizado y en caso de ser bienes usados
                             no podrá presentar reclamos después de 30 dias de realizada la compra, es entendido que <b>PRESTADITO</b> no está obligado a resolver cuestiones de garantía puesto que solo es quien financia la compra.
                             <b>- OCTAVO: DEL VENCIMIENTO ANTICIPADO DEL PLAZO DE PAGO.-</b> Además de los casos establecidos por la ley, <b>PRESTADITO</b> podrá dar por vencido el plazo establecido para el pago del préstamo concedido
-                            en este contrato, y en consecuencia exigir el pago inmediato del saldo del capital, intereses, comisiones, recargos y gastos, ya sea por la vía judicial o extra judicial, por cualquiera de los siguientes eventos:
+                            en este contrato, y en consecuencia
+                        </p>
+                        <p class="page-break">
+                            exigir el pago inmediato del saldo del capital, intereses, comisiones, recargos y gastos, ya sea por la vía judicial o extra judicial, por cualquiera de los siguientes eventos:
                             <b>a)</b> Por falta de pago de dos o más de las cuotas pactadas, de los intereses, o de cualquier otro cargo pendiente a favor de <b>PRESTADITO; b)</b> Por el conocimiento de la ejecución judicial
                             iniciada por terceros, o por el mismo <b>PRESTADITO</b>, en contra de <b>EL CLIENTE</b>, originada por otros créditos; <b>c)</b> Por no destinar el presente préstamo para el fin o fines para los cuales ha sido
                             concedido; <b>d)</b> Por la declaración del estado de suspensión de pagos, de quiebra o de concurso de <b>EL CLIENTE</b>, así como por su inhabilitación para el ejercicio del comercio, o por el ejercicio de acción
@@ -260,9 +277,8 @@
                             <b>- DÉCIMO TERCERA: COMPROBACION DE HABER RECIBIDO INSTRUCCIÓN Y ORIENTACION DEL PRODUCTO Y ENTREGA DE COPIA DEL CONVENIO Y PLAN DE PAGO.- EL CLIENTE</b> por este acto acepta que previo a la celebración de este contrato,
                             ha recibido toda la orientación y explicación necesaria sobre las condiciones del convenio, las consecuencias legales y judiciales de su incumplimiento, así como que ha recibido una copia íntegra de este documento
                             y del plan de pagos respectivo.- Finalmente las partes declaramos que es cierto todo lo anteriormente expresado, y que por ser ello lo convenido, aceptamos libre y voluntariamente, todas estipulaciones, condiciones
-                            y cláusulas contenidas en el presente contrato de préstamo. En fe de lo cual firmamos en la Ciudad de <b>SAN PEDRO SULA, a los 20 días del mes de septiembre del año 2020. 
-                                <br />
-                                Última línea.</b>
+                            y cláusulas contenidas en el presente contrato de préstamo. En fe de lo cual firmamos en la Ciudad de
+                            <b>SAN PEDRO SULA, a los 20 días del mes de septiembre del año 2020.</b>
                             <br />
                             <br />
                             <br />
@@ -270,7 +286,6 @@
                             <br />
                         </p>
                     </div>
-
                 </div>
                 <div class="form-group row justify-content-center">
                     <table>
