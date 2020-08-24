@@ -64,7 +64,7 @@ public partial class Clientes_BandejaPrecalificados : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            lblTituloVentana.Text = "Bandeja de clientes precalificados";
+            //lblTituloVentana.Text = "Bandeja de clientes precalificados";
             CargarLista("0");
             Botones("0");
             //gvPrecalificado.Columns[7].Visible = false;
@@ -109,19 +109,19 @@ public partial class Clientes_BandejaPrecalificados : System.Web.UI.Page
         switch (ce.CommandArgument)
         {
             case "0":
-                lblTituloVentana.Text = "Bandeja de clientes precalificados";
+                //lblTituloVentana.Text = "Bandeja de clientes precalificados";
                 //gvPrecalificado.Columns[7].Visible = false;
                 break;
             case "1":
-                lblTituloVentana.Text = "Clientes pre-aprobados";
+                //lblTituloVentana.Text = "Clientes pre-aprobados";
                 //gvPrecalificado.Columns[7].Visible = false;
                 break;
             case "2":
-                lblTituloVentana.Text = "Clientes rechazados";
+                //lblTituloVentana.Text = "Clientes rechazados";
                 //gvPrecalificado.Columns[7].Visible = false;
                 break;
             case "3":
-                lblTituloVentana.Text = "Clientes en analisis";
+                //lblTituloVentana.Text = "Clientes en analisis";
                 //gvPrecalificado.Columns[7].Visible = false;
                 break;
         }
@@ -202,7 +202,7 @@ public partial class Clientes_BandejaPrecalificados : System.Web.UI.Page
             MensajeError("", false);
         }
 
-        lblTituloVentana.Text = lblTituloVentana.Text + " (" + string.Format("{0:#,###0}", Convert.ToDecimal(gvPrecalificado.Rows.Count.ToString())) + " clientes)";
+        //lblTituloVentana.Text = lblTituloVentana.Text + " (" + string.Format("{0:#,###0}", Convert.ToDecimal(gvPrecalificado.Rows.Count.ToString())) + " clientes)";
         CargarScripts();
     }
 

@@ -122,7 +122,7 @@
 
                             <div class="form-group">
                                 <label class="col-form-label">Consulta</label>
-                                <textarea id="txtInfoPrimerConsulta" runat="server" ReadOnly="true" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
+                                <textarea id="txtInfoPrimerConsulta" runat="server" readonly="true" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -336,8 +336,10 @@
                     </div>
                 </div>
 
-                <div class="form-group row" runat="server" id="PanelMensajeErrores">
-                    <asp:Label CssClass="col-sm-2 col-form-label text-danger" ID="lblMensaje" runat="server">Resultado sujeto a que la informacion ingresada sea real.</asp:Label>
+                <div class="form-group">
+                    <div class="alert alert-danger mb-0" runat="server" id="PanelMensajeErrores">
+                        <asp:Label CssClass="col-form-label text-danger" ID="lblMensaje" runat="server">Resultado sujeto a que la informacion ingresada sea real.</asp:Label>
+                    </div>
                 </div>
             </div>
         </div>

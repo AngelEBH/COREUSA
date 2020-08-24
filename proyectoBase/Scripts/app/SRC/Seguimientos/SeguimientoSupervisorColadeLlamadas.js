@@ -33,9 +33,10 @@ $(document).ready(function () {
         "pageLength": 10,
         "aaSorting": [],
         "processing": true,
-        "dom": "<'row'<'col-sm-6'><'col-sm-6'T>>" +
+        "dom": "<'row'<'col-sm-6'B><'col-sm-6'T>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+        buttons: ['copy', 'excel', 'pdf', 'colvis'],
         "ajax": {
             type: "POST",
             url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarRegistros",
@@ -78,6 +79,9 @@ $(document).ready(function () {
             { targets: 'no-sort', orderable: false }
         ]
     });
+
+    dtClientes.buttons().container()
+        .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
 
     $("input[type=radio][name=filtros]").change(function () {
         var filtro = this.value;

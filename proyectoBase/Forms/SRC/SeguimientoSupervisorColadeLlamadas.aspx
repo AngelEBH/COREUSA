@@ -13,6 +13,8 @@
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
+
     <%--<link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />--%>
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
@@ -106,15 +108,36 @@
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <!-- DATATABLES -->
+    <%--<script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
+    <script src="/Scripts/plugins/datatables/pdfmake.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.print.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.colVis.min.js"></script>--%>
+
+    <!-- Required datatable js -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Buttons examples -->
     <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
     <script src="/Scripts/plugins/datatables/buttons.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
+    <script src="/Scripts/plugins/datatables/pdfmake.min.js"></script>
+    <script src="/Scripts/plugins/datatables/vfs_fonts.js"></script>
     <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.print.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.colVis.min.js"></script>
+    <!-- Responsive examples -->
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
+
+
+
+
+
     <script src="/Scripts/plugins/moment/moment.js"></script>
-    <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>    
+    <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <%--<script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>--%>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>

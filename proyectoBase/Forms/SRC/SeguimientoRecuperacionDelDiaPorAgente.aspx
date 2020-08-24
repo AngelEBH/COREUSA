@@ -13,7 +13,6 @@
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
-    <%--<link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />--%>
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
@@ -82,7 +81,6 @@
     <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
     <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
-    <%--<script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>--%>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/app/SRC/Seguimientos/SeguimientoRecuperacionDelDiaPorAgente.js?v=1.1"></script>
 </body>

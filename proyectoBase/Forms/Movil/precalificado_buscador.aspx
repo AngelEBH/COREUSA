@@ -170,12 +170,14 @@
                                         </div>
                                     </div>
                                 </div>
-                        </div>
+                            </div>
 
                         </div>
 
-                        <div class="form-group row" runat="server" id="PanelMensajeErrores">
-                            <asp:Label CssClass="col-sm-2 col-form-label text-danger" ID="lblMensaje" runat="server"></asp:Label>
+                        <div class="form-group">
+                            <div class="alert alert-danger mb-0" runat="server" id="PanelMensajeErrores">
+                                <asp:Label CssClass="col-form-label text-danger" ID="lblMensaje" runat="server" Text="Paso 2 - Error de lectura porque no hay informacion"></asp:Label>
+                            </div>
                         </div>
 
                     </ContentTemplate>
