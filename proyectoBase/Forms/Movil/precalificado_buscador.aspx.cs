@@ -110,7 +110,7 @@ public partial class Creditos_precalificado : System.Web.UI.Page
         }
 
         /* Validamos si el ingreso es numerico */
-        txtIngresos.Text = txtIngresos.Text.Replace(",","");
+        txtIngresos.Text = txtIngresos.Text.Replace(",", "");
         liEsNumerico = float.TryParse(txtIngresos.Text.Trim(), out liValidarDecimal);
         if (!liEsNumerico)
         {
@@ -247,7 +247,8 @@ public partial class Creditos_precalificado : System.Web.UI.Page
                         }
                     }
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 ex.Message.ToString();
                 lblMensaje.Text = "Ocurrió un error, contacte al administrador.";

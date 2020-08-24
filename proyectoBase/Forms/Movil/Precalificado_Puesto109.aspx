@@ -64,12 +64,12 @@
                     </div>
                 </div>
 
-                <div class="form-group row mt-0" runat="server" id="divResolucionCreditos" visible="true">
+                <div class="form-group row mt-0" runat="server" id="divResolucionCreditos" visible="false">
                     <div class="col-sm-2 text-center">
                         <label class="col-form-label font-14 font-weight-bold pb-0">Resolución de créditos</label>
                     </div>
                     <div class="col-sm-2">
-                        <asp:Label ID="lblResolucionCreditos" runat="server" CssClass="col-form-label font-12" Text="se deciidio mandar a comer mierda a este man" />
+                        <asp:Label ID="lblResolucionCreditos" runat="server" CssClass="col-form-label font-12" Text="" />
                     </div>
                 </div>
 
@@ -122,7 +122,7 @@
 
                             <div class="form-group">
                                 <label class="col-form-label">Consulta</label>
-                                <asp:TextBox ID="txtInfoPrimerConsulta" CssClass="form-control form-control-sm col-form-label" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                <textarea id="txtInfoPrimerConsulta" runat="server" ReadOnly="true" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -285,7 +285,7 @@
                             <div class="form-group">
                                 <label class="col-form-label text-center">Endeudamiento</label>
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 25%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" runat="server" id="PorcentajeEndeudamiento">25</div>
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" runat="server" id="PorcentajeEndeudamiento">0%</div>
                                 </div>
                             </div>
 

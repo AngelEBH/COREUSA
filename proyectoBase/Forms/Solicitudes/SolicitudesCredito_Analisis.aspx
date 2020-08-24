@@ -1387,7 +1387,7 @@
                         </strong>?<br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
-                            <textarea id="txtObservacionesReferencia" required="required" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="informacionLaboral"></textarea>
+                            <textarea id="txtObservacionesReferencia" runat="server" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="informacionLaboral"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

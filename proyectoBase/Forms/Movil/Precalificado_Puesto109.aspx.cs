@@ -118,9 +118,9 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
                             }
 
                             if (lcEsPrimerConsultor == "0")
-                                txtInfoPrimerConsulta.Text = "Este cliente ya fue consultado por " + sqlResultado["fcOficialAgencia"].ToString().Trim() + " en agencia " + sqlResultado["fcCentrodeCosto"].ToString().Trim() + " - " + sqlResultado["fcNombreAgencia"].ToString().Trim();
+                                txtInfoPrimerConsulta.InnerText = "Este cliente ya fue consultado por " + sqlResultado["fcOficialAgencia"].ToString().Trim() + " en agencia " + sqlResultado["fcCentrodeCosto"].ToString().Trim() + " - " + sqlResultado["fcNombreAgencia"].ToString().Trim();
                             else
-                                txtInfoPrimerConsulta.Text = "Eres el primero en consultar este cliente. Consultado el " + sqlResultado["fdFechaPrimerConsulta"].ToString().Trim();
+                                txtInfoPrimerConsulta.InnerText = "Eres el primero en consultar este cliente. Consultado el " + sqlResultado["fdFechaPrimerConsulta"].ToString().Trim();
 
                             if (lcObligaciones == "0.00")
                                 lcTipoCliente = "0";
