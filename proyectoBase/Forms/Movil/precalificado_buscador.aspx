@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Creditos_precalificado" CodeBehind="precalificado_buscador.aspx.cs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Creditos_precalificado" CodeFile="precalificado_buscador.aspx.cs" %>
 
 <!DOCTYPE html>
 
@@ -48,113 +48,130 @@
 
                         <div runat="server" id="divParametros" visible="true">
 
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">No. Identidad</label>
-                                <div class="col-sm-2">
-                                    <asp:TextBox ID="txtIdentidad" CssClass="form-control form-control-sm col-form-label MascaraIdentidad" required="required" runat="server"></asp:TextBox>
-                                </div>
+                            <div class="form-group">
+                                <label class="col-form-label">No. Identidad</label>
+                                <asp:TextBox ID="txtIdentidad" type="tel" CssClass="form-control form-control-sm col-form-label MascaraIdentidad" required="required" runat="server"></asp:TextBox>
+                            </div>
 
-                                <label class="col-sm-2 col-form-label" runat="server" visible="false">Nombre del cliente</label>
-                                <div class="col-sm-2" runat="server" visible="false">
-                                    <asp:TextBox ID="txtNombreCliente" CssClass="form-control form-control-sm col-form-label" Visible="false" required="required" runat="server"></asp:TextBox>
-                                </div>
-                                <label class="col-sm-2 col-form-label">Telefono movil</label>
-                                <div class="col-sm-2">
-                                    <asp:TextBox ID="txtTelefono" CssClass="form-control form-control-sm col-form-label MascaraTelefono" required="required" runat="server"></asp:TextBox>
-                                </div>
+                            <div class="form-group">
+                                <label class="col-form-label" runat="server" visible="false">Nombre del cliente</label>
+                                <asp:TextBox ID="txtNombreCliente" CssClass="form-control form-control-sm col-form-label" Visible="false" required="required" runat="server"></asp:TextBox>
+                            </div>
 
-                                <label class="col-sm-2 col-form-label">Ingreso mensual</label>
-                                <div class="col-sm-2">
-                                    <asp:TextBox ID="txtIngresos" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server"></asp:TextBox>
+                            <div class="form-group form-row">
+                                <div class="col">
+                                    <label class="col-form-label">Telefono movil</label>
+                                    <asp:TextBox ID="txtTelefono" type="tel" CssClass="form-control form-control-sm col-form-label MascaraTelefono" required="required" runat="server"></asp:TextBox>
                                 </div>
-
-                                <label class="col-sm-2 col-form-label">Ciudad residencia</label>
-                                <div class="col-sm-2">
-                                    <asp:DropDownList ID="ddlCiudadResidencia" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
-                                </div>
-
-                                <label class="col-sm-2 col-form-label">Producto solicitado</label>
-                                <div class="col-sm-2">
-                                    <asp:DropDownList ID="ddlProducto" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
-                                </div>
-
-                                <label class="col-sm-2 col-form-label">Origen de ingresos</label>
-                                <div class="col-sm-2">
-                                    <asp:DropDownList ID="ddlOrigenIngreso" runat="server" CssClass="form-control form-control-sm col-form-label" OnSelectedIndexChanged="ddlOrigenIngreso_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
+                                <div class="col">
+                                    <label class="col-form-label">Ingreso mensual</label>
+                                    <asp:TextBox ID="txtIngresos" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server"></asp:TextBox>
                                 </div>
                             </div>
 
-                            <div class="form-group row" runat="server" id="divPanelAsalariado" visible="false">
-                                <label class="col-sm-2 col-form-label">¿Trabaja en sector maquila o CallCenter?</label>
-                                <div class="col-sm-2">
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbMaquilaoCallCenterSI" runat="server" GroupName="vgMaquilaoCallCenter" />
-                                        <label class="form-check-label">Si</label>
+                            <div class="form-group">
+                                <label class="col-form-label">Ciudad residencia</label>
+                                <asp:DropDownList ID="ddlCiudadResidencia" runat="server" CssClass="form-control form-control-sm col-form-label" required="required"></asp:DropDownList>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-form-label">Producto solicitado</label>
+                                <asp:DropDownList ID="ddlProducto" runat="server" CssClass="form-control form-control-sm col-form-label" required="required"></asp:DropDownList>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-form-label">Origen de ingresos</label>
+                                <asp:DropDownList ID="ddlOrigenIngreso" runat="server" required="required" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
+                            </div>
+
+                            <div runat="server" id="divPanelAsalariado" visible="false">
+
+                                <div class="form-group">
+                                    <label class="col-form-label">¿Trabaja en sector maquila o CallCenter?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbMaquilaoCallCenterSI" runat="server" GroupName="vgMaquilaoCallCenter" />
+                                            <label class="form-check-label">Si</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbMaquilaoCallCenterNO" runat="server" GroupName="vgMaquilaoCallCenter" />
+                                            <label class="form-check-label">No</label>
+                                        </div>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbMaquilaoCallCenterNO" runat="server" GroupName="vgMaquilaoCallCenter" />
-                                        <label class="form-check-label">No</label>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-form-label">¿Tiene casa propia (a su nombre, mamá, papá, esposo (a))?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbCasaPropiaSI" runat="server" GroupName="vgCasaPropia" />
+                                            <label class="form-check-label">Si</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbCasaPropiaNO" runat="server" GroupName="vgCasaPropia" />
+                                            <label class="form-check-label">No</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <label class="col-sm-2 col-form-label">¿Tiene casa propia (a su nombre, mamá, papá, esposo (a))?</label>
-                                <div class="col-sm-2">
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbCasaPropiaSI" runat="server" GroupName="vgCasaPropia" />
-                                        <label class="form-check-label">Si</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbCasaPropiaNO" runat="server" GroupName="vgCasaPropia" />
-                                        <label class="form-check-label">No</label>
-                                    </div>
-                                </div>
-                                <label class="col-sm-2 col-form-label">¿Trabaja como guardia de seguridad?</label>
-                                <div class="col-sm-2">
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbGuardiaSI" runat="server" GroupName="vgGuardia" />
-                                        <label class="form-check-label">Si</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbGuardiaNO" runat="server" GroupName="vgGuardia" />
-                                        <label class="form-check-label">No</label>
+                                <div class="form-group">
+                                    <label class="col-form-label">¿Trabaja como guardia de seguridad?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbGuardiaSI" runat="server" GroupName="vgGuardia" />
+                                            <label class="form-check-label">Si</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbGuardiaNO" runat="server" GroupName="vgGuardia" />
+                                            <label class="form-check-label">No</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group row" runat="server" id="divPanelComerciante" visible="false">
-                                <label class="col-sm-2 col-form-label">¿Antigüedad del negocio es >=12 Meses?</label>
-                                <div class="col-sm-2">
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbAntiguedaddeNegocioSI" runat="server" GroupName="vgAntiguedadNegocio" />
-                                        <label class="form-check-label">Si</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbAntiguedaddeNegocioNO" runat="server" GroupName="vgAntiguedadNegocio" />
-                                        <label class="form-check-label">No</label>
-                                    </div>
-                                </div>
-                                <label class="col-sm-2 col-form-label">¿Cuenta con permiso de operacion vigente?</label>
-                                <div class="col-sm-2">
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbPermisoOperacionSI" runat="server" GroupName="vgPermisodeOperacion" />
-                                        <label class="form-check-label">Si</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbPermisoOperacionNO" runat="server" GroupName="vgPermisodeOperacion" />
-                                        <label class="form-check-label">No</label>
+
+                            <div runat="server" id="divPanelComerciante" visible="false">
+                                <div class="form-group">
+                                    <label class="col-form-label">¿Antigüedad del negocio es >=12 Meses?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbAntiguedaddeNegocioSI" runat="server" GroupName="vgAntiguedadNegocio" />
+                                            <label class="form-check-label">Si</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbAntiguedaddeNegocioNO" runat="server" GroupName="vgAntiguedadNegocio" />
+                                            <label class="form-check-label">No</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <label class="col-sm-2 col-form-label">¿Tiene casa propia (a su nombre, mamá, papá, esposo (a))?</label>
-                                <div class="col-sm-2">
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbCasaComercianteSI" runat="server" GroupName="vgCasaComerciante" />
-                                        <label class="form-check-label">Si</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbCasaComercianteNO" runat="server" GroupName="vgCasaComerciante" />
-                                        <label class="form-check-label">No</label>
+                                <div class="form-group">
+                                    <label class="col-form-label">¿Cuenta con permiso de operacion vigente?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbPermisoOperacionSI" runat="server" GroupName="vgPermisodeOperacion" />
+                                            <label class="form-check-label">Si</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbPermisoOperacionNO" runat="server" GroupName="vgPermisodeOperacion" />
+                                            <label class="form-check-label">No</label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">¿Tiene casa propia (a su nombre, mamá, papá, esposo (a))?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbCasaComercianteSI" runat="server" GroupName="vgCasaComerciante" />
+                                            <label class="form-check-label">Si</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <asp:RadioButton CssClass="form-check-input" ID="rbCasaComercianteNO" runat="server" GroupName="vgCasaComerciante" />
+                                            <label class="form-check-label">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
                         </div>
 
                         <div class="form-group row" runat="server" id="PanelMensajeErrores">
@@ -165,19 +182,9 @@
                 </asp:UpdatePanel>
                 <asp:UpdateProgress ID="prgLoadingStatus" runat="server" AssociatedUpdatePanelID="upMultiView">
                     <ProgressTemplate>
-                        <asp:Panel runat="server" Visible="true" BackColor="Transparent" BackImageUrl="/Imagenes/fondoTransparencia.png" Style="left: 0px; top: 0px; position: absolute; height: 100%; width: 100%;">
-                            <div style="align-content: center; vertical-align: central; text-align: center; height: 100%; width: 100%;">
-                                <table style="width: 100%; height: 100%;">
-                                    <tr>
-                                        <td>
-                                            <div class="spinner-border" role="status" id="divCargandoAnalisis">
-                                                <span class="sr-only">Cargando</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </asp:Panel>
+                        <div class="spinner-border" role="status" id="divCargandoAnalisis">
+                            <span class="sr-only">Cargando</span>
+                        </div>
                     </ProgressTemplate>
                 </asp:UpdateProgress>
 
@@ -208,7 +215,7 @@
                 min: 0.0,
             });
             $(".MascaraIdentidad").inputmask("9999999999999");
-            $("#MascaraTelefono").inputmask("99999999");
+            $(".MascaraTelefono").inputmask("99999999");
         });
     </script>
 </body>

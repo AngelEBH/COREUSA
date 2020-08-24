@@ -38,30 +38,24 @@
             <div class="card-header">
                 <h6 class="card-title text-center">Cotizador de Prestadito Automovil</h6>
             </div>
-            <div class="card-body">
-                <div class="form-group row" runat="server" id="divNuevoCalculo" visible="false">
-                    <div class="button-items col-sm-2">
-                        <asp:Button ID="btnNuevoCalculo" Text="Nuevo cálculo" CssClass="btn btn-primary btn-lg btn-block waves-effect waves-light m-0" runat="server" OnClick="btnNuevoCalculo_Click" />
-                    </div>
-                </div>
-                <div runat="server" id="divParametros" visible="true">
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Valor del automovil</label>
-                        <div class="col-sm-2">
-                            <asp:TextBox ID="txtValorVehiculo" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server"></asp:TextBox>
+            <div class="card-body pt-0">
+                <div runat="server" style="padding-top: 1.25rem;" id="divParametros" visible="true">
+                    <div class="form-group form-row">
+                        <div class="col">
+                            <label class="col-form-label">Valor del automovil</label>
+                            <asp:TextBox ID="txtValorVehiculo" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server"></asp:TextBox>
                         </div>
+                        <div class="col">
+                            <label class="col-form-label">Valor de la Prima</label>
+                            <asp:TextBox ID="txtValorPrima" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server"></asp:TextBox>
+                        </div>
+                    </div>
 
-                        <label class="col-sm-2 col-form-label">Valor de la Prima</label>
-                        <div class="col-sm-2">
-                            <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server"></asp:TextBox>
-                        </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Plazos disponibles</label>
+                        <asp:DropDownList ID="ddlPlazos" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Plazos disponibles</label>
-                        <div class="col-sm-2">
-                            <asp:DropDownList ID="ddlPlazos" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
-                        </div>
-                    </div>
+
                     <div class="form-group row">
                         <div class="button-items col-sm-2">
                             <asp:Button ID="btnCalcular" Text="Calcular" CssClass="btn btn-primary btn-lg btn-block waves-effect waves-light" runat="server" OnClick="btnCalcular_Click" />
@@ -94,111 +88,115 @@
                 </ul>
                 <!-- Tab panes -->
                 <div class="tab-content" runat="server" id="tabContent" visible="false">
-                    <div class="tab-pane p-3 active" id="tasa19" role="tabpanel">
+                    <div class="tab-pane active" id="tasa19" role="tabpanel">
                         <div class="form-group row" runat="server" id="PanelCreditos" visible="false">
 
+                            <label class="col-sm-2 col-form-label">Tasa al 19% con score mayor o igual a 800</label>
                             <label class="col-sm-2 col-form-label">Valor del prestamo</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtValorPrestamo1" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtValorPrestamo1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota del prestamo</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtCuotaPrestamo1" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtCuotaPrestamo1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota del seguro</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtValorSeguro1" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtValorSeguro1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota Servicio GPS</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtServicioGPS1" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtServicioGPS1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota total mensual</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtCuotaTotal1" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtCuotaTotal1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Gastos de Cierre(Pago en efectivo)</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtGastosdeCierre1" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                <small>Tasa al 19% con score mayor o igual a 800</small>
+                                <asp:TextBox ID="txtGastosdeCierre1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>                                
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane p-3" id="tasa26" role="tabpanel">
+                    <div class="tab-pane" id="tasa26" role="tabpanel">
                         <div class="form-group row" runat="server" id="PanelCreditosDos" visible="false">
 
+                            <label class="col-sm-2 col-form-label">Tasa al 26% con score entre 700 y 799</label>
                             <label class="col-sm-2 col-form-label">Valor del prestamo</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtValorPrestamo2" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtValorPrestamo2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota del prestamo</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtCuotaPrestamo2" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtCuotaPrestamo2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota del seguro</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtValorSeguro2" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtValorSeguro2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota Servicio GPS</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtServicioGPS2" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtServicioGPS2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota total mensual</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtCuotaTotal2" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtCuotaTotal2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Gastos de Cierre(Pago en efectivo)</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtGastosdeCierre2" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                <small>Tasa al 26% con score entre 700 y 799</small>
+                                <asp:TextBox ID="txtGastosdeCierre2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>                                
                             </div>
-
                         </div>
                     </div>
-                    <div class="tab-pane p-3" id="tasa32" role="tabpanel">
+                    <div class="tab-pane" id="tasa32" role="tabpanel">
                         <div class="form-group row" runat="server" id="PanelCreditosTres" visible="false">
 
+                            <label class="col-sm-2 col-form-label">Tasa al 32% con score entre 600 y 699</label>
                             <label class="col-sm-2 col-form-label">Valor del prestamo</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtValorPrestamo3" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtValorPrestamo3" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota del prestamo</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtCuotaPrestamo3" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtCuotaPrestamo3" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota del seguro</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtValorSeguro3" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtValorSeguro3" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota Servicio GPS</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtServicioGPS3" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtServicioGPS3" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Cuota total mensual</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtCuotaTotal3" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtCuotaTotal3" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Gastos de Cierre(Pago en efectivo)</label>
                             <div class="col-sm-2">
-                                <asp:TextBox ID="txtGastosdeCierre3" CssClass="form-control form-control-sm col-form-label FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                <small>Tasa al 32% con score entre 600 y 699</small>
+                                <asp:TextBox ID="txtGastosdeCierre3" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>                                
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="form-group row" runat="server" id="divNuevoCalculo" visible="false">
+                    <div class="button-items col-sm-2">
+                        <asp:Button ID="btnNuevoCalculo" Text="Nuevo cálculo" CssClass="btn btn-primary btn-lg btn-block waves-effect waves-light m-0" runat="server" OnClick="btnNuevoCalculo_Click" />
                     </div>
                 </div>
                 <div class="form-group row" runat="server" id="PanelMensajeErrores">

@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Configuration;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
+using System.Data.Sql;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
 using System.Text;
 using System.Net;
+using System.IO;
 
 public partial class Clientes_ProcesarPrecalificado : System.Web.UI.Page
 {
@@ -31,30 +37,34 @@ public partial class Clientes_ProcesarPrecalificado : System.Web.UI.Page
         HyperLink hlLink = new HyperLink();
         LinkButton btnLink = new LinkButton();
 
+        if (!IsPostBack)
+        {
 
-        lcURL = Request.Url.ToString();
-        liParamStart = lcURL.IndexOf("?");
+            lcURL = Request.Url.ToString();
+            liParamStart = lcURL.IndexOf("?");
 
-        if (liParamStart > 0)
-        {
-            lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
+            if (liParamStart > 0)
+            {
+                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
+            }
+            else
+            {
+                lcParametros = String.Empty;
+            }
+            if (lcParametros != String.Empty)
+            {
+                pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                //lcEncriptado = Request.Params["x"].ToString();
+                lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
+                pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            }
+            /* FIN de captura de parametros y desencriptado de cadena */
         }
-        else
-        {
-            lcParametros = String.Empty;
-        }
-        if (lcParametros != String.Empty)
-        {
-            pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-            //lcEncriptado = Request.Params["x"].ToString();
-            lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-            lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-            pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
-            pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-        }
-        /* FIN de captura de parametros y desencriptado de cadena */
     }
+
 
     protected void Page_LoadComplete(object sender, EventArgs e)
     {

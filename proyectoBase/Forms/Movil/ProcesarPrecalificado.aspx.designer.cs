@@ -9,9 +9,8 @@
 
 
 
-public partial class Clientes_ProcesarPrecalificado
-{
-
+public partial class Clientes_ProcesarPrecalificado {
+    
     /// <summary>
     /// Control form1.
     /// </summary>

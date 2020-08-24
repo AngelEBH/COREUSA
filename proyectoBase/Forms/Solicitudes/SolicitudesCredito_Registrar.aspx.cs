@@ -157,7 +157,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@pcIdentidad", objPrecalificado.identidad);
                     cmd.Parameters.AddWithValue("@piConObligaciones", objPrecalificado.obligaciones == 0 ? "0" : "1");
                     cmd.Parameters.AddWithValue("@pnIngresosBrutos", objPrecalificado.ingresos);
-                    cmd.Parameters.AddWithValue("@pnIngresosDisponibles", objPrecalificado.disponible);
+                    cmd.Parameters.AddWithValue("@pnIngresosDisponible", objPrecalificado.disponible);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {

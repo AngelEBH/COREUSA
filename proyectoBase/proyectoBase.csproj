@@ -767,6 +767,8 @@
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
     <Content Include="Forms\Movil\CotizadorCarros.aspx" />
     <Content Include="Forms\Movil\precalificado_buscador.aspx" />
+    <Content Include="Forms\Movil\Precalificado_Puesto109.aspx" />
+    <Content Include="Forms\Movil\ProcesarPrecalificado.aspx" />
     <Content Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx" />
     <Content Include="Forms\Otros\CompromisoLegal.aspx" />
     <Content Include="Forms\Otros\ContratoVehiculoClausulaLicencia.aspx" />
@@ -1392,6 +1394,20 @@
     <Compile Include="Forms\Movil\precalificado_buscador.aspx.designer.cs">
       <DependentUpon>precalificado_buscador.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Movil\Precalificado_Puesto109.aspx.cs">
+      <DependentUpon>Precalificado_Puesto109.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Movil\Precalificado_Puesto109.aspx.designer.cs">
+      <DependentUpon>Precalificado_Puesto109.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Movil\ProcesarPrecalificado.aspx.cs">
+      <DependentUpon>ProcesarPrecalificado.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Movil\ProcesarPrecalificado.aspx.designer.cs">
+      <DependentUpon>ProcesarPrecalificado.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx.cs">
       <DependentUpon>OperacionesRecuperaciondelDia.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1631,7 +1647,6 @@
     <Folder Include="Content\icons\ionicons\png\512\" />
     <Folder Include="Content\images\small\" />
     <Folder Include="Content\images\users\" />
-    <Folder Include="Forms\Precalificado\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\.editorconfig">
