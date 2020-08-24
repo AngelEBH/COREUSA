@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles del seguimiento</title>
     <!-- BOOTSTRAP -->
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
@@ -51,6 +51,10 @@
                             <button id="btnValidoDocumentacionModal" data-toggle="modal" data-target="#modalDocumentos" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
                                 <small>Ver docs</small>
                             </button>
+
+                            <button id="btnDetallesResolucion" runat="server" visible="false" data-toggle="modal" data-target="#modalEstado" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
+                                <small>Detalles del estado</small>
+                            </button>
                         </div>
                     </div>
 
@@ -63,31 +67,32 @@
                         <label class="col-form-label-lg EliminarEspacios mt-1">Identidad:&nbsp;</label>
                         <asp:Label ID="spanIdentidadCliente" CssClass="col-form-label-lg EliminarEspacios mt-1" runat="server"></asp:Label>
                     </div>
+
                     <!-- Información de la solicitud -->
-                    <div class="col-md-2 form-inline seccion-header border-bottom-0">
-                        No. Solicitud:&nbsp;
-                        <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
-                    </div>
-                    <div class="col-md-2 form-inline seccion-header border-bottom-0">
-                        No. Cliente:&nbsp;
-                        <asp:Label ID="lblNoCliente" CssClass="col-form-label" runat="server"></asp:Label>
-                    </div>
-                    <div class="col-md-2 form-inline seccion-header border-bottom-0">
-                        Tipo Solicitud:&nbsp;
-                        <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
-                    </div>
-                    <div class="col-md-2 form-inline seccion-header border-bottom-0">
-                        Agente Ventas:&nbsp;
-                        <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
-                    </div>
-                    <div class="col-md-2 form-inline seccion-header border-bottom-0">
-                        Agencia:&nbsp;
-                        <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
-                    </div>
-                    <div class="col-md-2 form-inline seccion-header border-bottom-0">
-                        Estado:&nbsp;
-                        <asp:Label ID="lblEstadoSolicitud" runat="server"></asp:Label>
-                    </div>
+                    <table class="table table-condensed mt-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center">No. Solicitud:
+                                <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                                </th>
+                                <th class="text-center">No. Cliente:
+                                <asp:Label ID="lblNoCliente" CssClass="col-form-label" runat="server"></asp:Label>
+                                </th>
+                                <th class="text-center">Tipo Solicitud:
+                                <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                                </th>
+                                <th class="text-center">Agente de Ventas:
+                                <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
+                                </th>
+                                <th class="text-center">Agencia:
+                                <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
+                                </th>
+                                <th class="text-center">Estado:
+                                <asp:Label ID="lblEstadoSolicitud" CssClass="" runat="server"></asp:Label>
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
             <div class="card-body">
@@ -352,7 +357,7 @@
                                                 </table>
                                             </div>
                                         </div>
-                                    <%--<div class="form-group row" id="divAval">
+                                        <%--<div class="form-group row" id="divAval">
                                             <h4>Aval</h4>
                                             <div class="table-responsive">
                                                 <table runat="server" class="table table-condensed" id="tblAvales">
@@ -451,7 +456,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalDocumentosLabel">Documentación</h5>
+                        <h6 class="modal-title mt-0" id="modalDocumentosLabel">Documentación</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
@@ -494,7 +499,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalListaCondicionesLabel">Condiciones de la solicitud</h5>
+                        <h6 class="modal-title mt-0" id="modalListaCondicionesLabel">Condiciones de la solicitud</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
@@ -511,6 +516,33 @@
                             <tbody>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalEstado" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDocumentosLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalEstadoLabel">Detalles del estado de la solicitud</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="text-center">
+                                <asp:Label ID="lblEstadoModal" CssClass="col-form-label font-16 font-weight-bold" runat="server">Rechazada</asp:Label>
+                            </div>
+                            <div class="mt-1">
+                                Detalles:
+                                <asp:Label ID="lblDetalleEstado" runat="server" CssClass="col-form-label font-12" Text="PROBANDO PROBANDO DETALLES" />
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">

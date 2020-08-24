@@ -36,7 +36,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                 string lcParametros = "";
                 string lcParametroDesencriptado = "";
                 Uri lURLDesencriptado = null;
-                int IDSOL = 0;
+                int idSolicitud = 0;
                 lcURL = Request.Url.ToString();
                 liParamStart = lcURL.IndexOf("?");
 
@@ -50,7 +50,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                    IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+                    idSolicitud = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcSesionID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
@@ -66,7 +66,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Detalle", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -209,7 +209,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Referencias", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -230,9 +230,9 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             }
                         }
                         /* Informacion del precalificado */
-                        using (SqlCommand sqlComando = new SqlCommand("EXEC CoreAnalitico.dbo.sp_info_ConsultaEjecutivos @piIDApp, @piIDUsuario, @pcIdentidad", sqlConexion))
+                        using (SqlCommand sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
                         {
-                            sqlComando.CommandType = CommandType.Text;
+                            sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcIdentidad", IdentidadCLTE);
@@ -264,13 +264,13 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             }
                         }
                         /* Verficar si la solicitud tiene condicionamientos pendientes */
-                        using (SqlCommand sqlComando = new SqlCommand("EXEC sp_CANEX_Solicitud_Condiciones @piIDSesion, @piIDApp, @piIDUsuario, @piIDSolicitud", sqlConexion))
+                        using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Condiciones", sqlConexion))
                         {
-                            sqlComando.CommandType = CommandType.Text;
+                            sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                             using (SqlDataReader reader = sqlComando.ExecuteReader())
                             {
                                 if (reader.HasRows)
@@ -327,10 +327,18 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
-                string lcSQLInstruccion = "exec CoreFinanciero.dbo.sp_CANEX_Solicitud_CambiarEstado '" + pcSesionID + "', '" + pcIDApp + "','" + pcIDUsuario + "', '" + IDSolicitud + "', '" + IDPais + "', '" + IDSocio + "', '" + IDAgencia + "', '" + EstadoEnRevision + "'";
+                string lcSQLInstruccion = "CoreFinanciero.dbo.sp_CANEX_Solicitud_CambiarEstado";
                 using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.Text;
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDPais", IDPais);
+                    sqlComando.Parameters.AddWithValue("@piIDSocio", IDSocio);
+                    sqlComando.Parameters.AddWithValue("@piIDAgencia", IDAgencia);
+                    sqlComando.Parameters.AddWithValue("@IDEstadoNuevo", EstadoEnRevision);
                     sqlComando.ExecuteReader();
                 }
             }
@@ -349,7 +357,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
@@ -360,7 +368,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                 using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -378,7 +386,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             {
                                 fiIDSolicitudDocs = (short)reader["fiIDImagen"],
                                 fcNombreArchivo = (string)reader["fcNombreImagen"],
-                                URLArchivo = "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + IDSOL + "/" + fcNombreImagen,
+                                URLArchivo = "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen,
                                 fiTipoDocumento = (short)reader["fiIDImagen"]
                             });
                         }
@@ -408,7 +416,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                 try
                 {
                     Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-                    string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
                     string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
@@ -422,7 +430,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             sqlComandoList.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComandoList.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComandoList.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                            sqlComandoList.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                            sqlComandoList.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                             sqlComandoList.Parameters.AddWithValue("@piIDPais", IDPais);
                             sqlComandoList.Parameters.AddWithValue("@piIDSocio", IDSocio);
                             sqlComandoList.Parameters.AddWithValue("@piIDAgencia", IDAgencia);
@@ -469,7 +477,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         {
             DSCore.DataCrypt DSC = new DSCore.DataCrypt();
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
@@ -481,11 +489,21 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
-                string lcSQLInstruccion = "exec sp_CANEX_SolicitudResolucion " + pcIDSesion + ", " + pcIDApp + "," + pcIDUsuario + ", " + IDSOL + ", " + IDPais + ", " + IDSocio + ", " + IDAgencia + ", " + Resolucion + ", 0 ,'" + Comentario.Trim() +"' ";
 
-                using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
+                using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_SolicitudResolucion", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.Text;
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDPais", IDPais);
+                    sqlComando.Parameters.AddWithValue("@piIDSocio", IDSocio);
+                    sqlComando.Parameters.AddWithValue("@piIDAgencia", IDAgencia);
+                    sqlComando.Parameters.AddWithValue("@IDEstadoNuevo", Resolucion);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitudPrestadito", "0");
+                    sqlComando.Parameters.AddWithValue("@pcComentario", Comentario.Trim());
+
                     using (SqlDataReader reader = sqlComando.ExecuteReader())
                     {
                         while (reader.Read())
@@ -515,7 +533,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
@@ -528,12 +546,20 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                sqlConexion.Open();                
-                string lcSQLInstruccion = "exec sp_CANEX_Solicitud_ImportarSolicitud " + pcIDSesion + ", " + pcIDApp + "," + pcIDUsuario + ", " + IDSOL + ", " + IDPais + ", " + IDSocio + ", " + IDAgencia + ", '" + Comentario.Trim() + "' ";
+                sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
+                using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_ImportarSolicitud", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.Text;
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitudCANEX", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDPais", IDPais);
+                    sqlComando.Parameters.AddWithValue("@piIDSocio", IDSocio);
+                    sqlComando.Parameters.AddWithValue("@piIDAgencia", IDAgencia);
+                    sqlComando.Parameters.AddWithValue("@pcComentario", Comentario.Trim());
+
                     using (SqlDataReader reader = sqlComando.ExecuteReader())
                     {
 
@@ -553,7 +579,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                        sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                         sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -573,7 +599,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                 {
                                     fiIDSolicitudDocs = (short)reader["fiIDImagen"],
                                     NombreAntiguo = (string)reader["fcNombreImagen"],
-                                    URLAntiguoArchivo = "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + IDSOL + "/" + fcNombreImagen,
+                                    URLAntiguoArchivo = "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen,
                                     fiTipoDocumento = (short)reader["fiIDImagen"]
                                 });
                             }
