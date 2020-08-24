@@ -40,6 +40,15 @@ public partial class Solicitudes_CANEX_Detalles
     protected global::System.Web.UI.WebControls.Label lblTipoPrestamo;
 
     /// <summary>
+    /// Control btnDetallesResolucion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnDetallesResolucion;
+
+    /// <summary>
     /// Control btnHistorialExterno.
     /// </summary>
     /// <remarks>
@@ -686,4 +695,31 @@ public partial class Solicitudes_CANEX_Detalles
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTable tblListaSolicitudCondiciones;
+
+    /// <summary>
+    /// Control lblEstadoSolicitudModal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblEstadoSolicitudModal;
+
+    /// <summary>
+    /// Control lblNombreAnalista.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombreAnalista;
+
+    /// <summary>
+    /// Control lblDetalleEstado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea lblDetalleEstado;
 }

@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles del seguimiento</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
@@ -47,14 +47,12 @@
                             <button id="btnListaCondiciones" class="btn btn-sm btn-success validador" runat="server" visible="false" data-toggle="modal" data-target="#modalListaCondiciones" type="button">
                                 Lista de condiciones
                             </button>
-
+                            <button id="btnDetallesResolucion" runat="server" visible="false" data-toggle="modal" data-target="#modalEstado" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
+                                Detalles del estado
+                            </button>
                             <button id="btnValidoDocumentacionModal" data-toggle="modal" data-target="#modalDocumentos" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
                                 <small>Ver docs</small>
-                            </button>
-
-                            <button id="btnDetallesResolucion" runat="server" visible="false" data-toggle="modal" data-target="#modalEstado" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
-                                <small>Detalles del estado</small>
-                            </button>
+                            </button>                            
                         </div>
                     </div>
 
@@ -536,11 +534,19 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <div class="text-center">
-                                <asp:Label ID="lblEstadoModal" CssClass="col-form-label font-16 font-weight-bold" runat="server">Rechazada</asp:Label>
+                                <asp:Label ID="lblEstadoSolicitudModal" runat="server"></asp:Label>
+                            </div>
+
+                            <div class="mt-1">
+                                <label class="col-form-label">
+                                    Analista:
+                                </label>
+                                <asp:Label ID="lblNombreAnalista" runat="server" CssClass="col-form-label font-weight-bold" />
                             </div>
                             <div class="mt-1">
-                                Detalles:
-                                <asp:Label ID="lblDetalleEstado" runat="server" CssClass="col-form-label font-12" Text="PROBANDO PROBANDO DETALLES" />
+                                <label class="col-form-label">Detalles</label>
+                                
+                                <textarea id="lblDetalleEstado" runat="server" ReadOnly="true" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -571,6 +577,6 @@
             IDEstado = <%=this.IDEstadoSolicitud%>;
         });
     </script>
-    <script src="/Scripts/app/Solicitudes_CANEX/SolicitudesCANEX_SeguimientoDetalles.js?v=1.1"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/SolicitudesCANEX_SeguimientoDetalles.js?v=202008241047"></script>
 </body>
 </html>

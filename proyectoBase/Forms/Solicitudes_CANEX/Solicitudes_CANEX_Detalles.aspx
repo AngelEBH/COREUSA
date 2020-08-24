@@ -45,7 +45,7 @@
                     <div class="col-md-6 form-inline justify-content-end pr-0">
                         <div class="button-items">
                             <button id="btnDetallesResolucion" runat="server" visible="false" data-toggle="modal" data-target="#modalEstado" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
-                                <small>Detalles del estado</small>
+                                Detalles del estado
                             </button>
                             <button runat="server" id="btnHistorialExterno" class="btn btn-sm btn-success waves-effect waves-light" type="button">
                                 Buro externo
@@ -53,7 +53,7 @@
                             <button runat="server" id="btnValidoDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-success btn-sm waves-effect waves-light">
                                 <small>Ver docs</small>
                             </button>
-                            <button runat="server" id="btnCondicionarSolicitud" class="btn btn-sm btn-warning validador" runat="server" data-toggle="modal" data-target="#modalCondicionarSolicitud" type="button">
+                            <button runat="server" id="btnCondicionarSolicitud" class="btn btn-sm btn-warning validador" data-toggle="modal" data-target="#modalCondicionarSolicitud" type="button">
                                 Condicionar
                             </button>
                             <button runat="server" id="btnRechazar" class="btn btn-sm btn-danger waves-effect waves-light validador" data-toggle="modal" data-target="#modalResolucionRechazar" type="button">
@@ -651,11 +651,19 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <div class="text-center">
-                                <asp:Label ID="lblEstadoModal" CssClass="col-form-label font-16 font-weight-bold" runat="server">Rechazada</asp:Label>
+                                <asp:Label ID="lblEstadoSolicitudModal" runat="server"></asp:Label>
+                            </div>
+
+                            <div class="mt-1">
+                                <label class="col-form-label">
+                                    Analista:
+                                </label>
+                                <asp:Label ID="lblNombreAnalista" runat="server" CssClass="col-form-label font-weight-bold" />
                             </div>
                             <div class="mt-1">
-                                Detalles:
-                                <asp:Label ID="lblDetalleEstado" runat="server" CssClass="col-form-label font-12" Text="PROBANDO PROBANDO DETALLES" />
+                                <label class="col-form-label">Detalles</label>
+                                
+                                <textarea id="lblDetalleEstado" runat="server" ReadOnly="true" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -685,6 +693,6 @@
             IDSolicitudImportada = <%=this.IDSolicitudPrestadito%>;
         });
     </script>
-    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=202008211756"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=202008241047"></script>
 </body>
 </html>

@@ -31,12 +31,13 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             DSCore.DataCrypt DSC = new DSCore.DataCrypt();
             try
             {
+                int idSolicitud = 0;
                 string lcURL = "";
                 int liParamStart = 0;
                 string lcParametros = "";
                 string lcParametroDesencriptado = "";
-                Uri lURLDesencriptado = null;
-                int idSolicitud = 0;
+                Uri lURLDesencriptado = null;                
+                
                 lcURL = Request.Url.ToString();
                 liParamStart = lcURL.IndexOf("?");
 
@@ -101,6 +102,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     lblAgenteDeVentas.Text = reader["fcNombreUsuario"].ToString();
                                     lblAgencia.Text = reader["fcNombreAgencia"].ToString();
                                     lblEstadoSolicitud.Text = reader["fcEstadoSolicitud"].ToString();
+                                    lblEstadoSolicitudModal.Text = reader["fcEstadoSolicitud"].ToString();
                                     lblRtnCliente.Text = reader["fcRTN"].ToString();
                                     lblNumeroTelefono.NavigateUrl = "tel:" + reader["fcTelefonoPrimario"].ToString();
                                     lblNumeroTelefono.Text = reader["fcTelefonoPrimario"].ToString();
@@ -171,36 +173,58 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     int EstadoRechazada = 5;
                                     int EstadoAprobada = 4;
                                     int EstadoEnRevision = 3;
-                                    string Title = string.Empty;
+                                    string title = string.Empty;
+                                    string colorClass = string.Empty;
 
                                     if (EstadoSolicitud == EstadoAprobada || EstadoSolicitud == EstadoRechazada)
                                     {
                                         string Desicion = EstadoSolicitud == EstadoAprobada ? "Aprobada" : "Rechazada";
-                                        Title = "La solicitud ya fue " + Desicion;
+                                        title = "La solicitud ya fue " + Desicion;
+                                        colorClass = EstadoSolicitud == EstadoAprobada ? "text-success" : "text-danger";
 
                                         btnAceptarSolicitud.Disabled = true;
                                         btnRechazar.Disabled = true;
                                         btnCondicionarSolicitud.Disabled = true;
+
                                     }
                                     else if (IDSolicitudPrestadito != 0)
                                     {
-                                        Title = "La solicitud ya fue importada";
+                                        title = "La solicitud ya fue importada";
                                         btnAceptarSolicitud.Disabled = true;
                                         btnRechazar.Disabled = true;
                                         btnCondicionarSolicitud.Disabled = true;
+                                        colorClass = "text-success";
                                     }
                                     else if (EstadoSolicitud == EstadoEnRevision && IDSolicitudPrestadito == 0)
                                     {
                                         btnAceptarSolicitud.Disabled = false;
+                                        colorClass = "text-warning";
                                     }
                                     else if (EstadoSolicitud != EstadoRechazada && EstadoSolicitud != EstadoAprobada && IDSolicitudPrestadito == 0)
                                     {
-                                        btnRechazar.Disabled = true;
+                                        btnRechazar.Disabled = false;
+                                        colorClass = "text-warning";
                                     }
 
-                                    btnAceptarSolicitud.Attributes.Add("title", Title);
-                                    btnRechazar.Attributes.Add("title", Title);
-                                    btnCondicionarSolicitud.Attributes.Add("title", Title);
+                                    btnAceptarSolicitud.Attributes.Add("title", title);
+                                    btnRechazar.Attributes.Add("title", title);
+                                    btnCondicionarSolicitud.Attributes.Add("title", title);
+
+                                    string claseCss = "col-form-label font-16 font-weight-bold " + colorClass;
+                                    lblEstadoSolicitud.Attributes.Add("class",colorClass);
+                                    lblEstadoSolicitudModal.Attributes.Add("class", claseCss);
+
+                                    /* Comentarios acerca de la resolucion de la solicitud */
+                                    string nombreAnalistaResolucion = reader["fcNombreAnalistaResolucion"].ToString();
+                                    string comentarioResolucion = reader["fcComentarioResulucion"].ToString();
+
+                                    if (!string.IsNullOrEmpty(comentarioResolucion))
+                                    {
+                                        btnDetallesResolucion.Visible = true;
+                                        lblNombreAnalista.Text = nombreAnalistaResolucion;
+                                        lblDetalleEstado.InnerText = comentarioResolucion;
+                                    }
+
                                 }
                             }
                         }

@@ -18,6 +18,7 @@ public partial class SolicitudesCANEX_SeguimientoDetalles : System.Web.UI.Page
     public short IDSocio = 0;
     public short IDAgencia = 0;
     public decimal IDEstadoSolicitud = 0;
+    public int IDSolicitudPrestadito = 0;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -76,6 +77,7 @@ public partial class SolicitudesCANEX_SeguimientoDetalles : System.Web.UI.Page
                                     IDPais = (short)reader["fiIDPais"];
                                     IDSocio = (short)reader["fiIDSocio"];
                                     IDAgencia = (short)reader["fiIDAgencia"];
+                                    IDSolicitudPrestadito = (int)reader["fiIDSolicitudPrestadito"];
                                     string NombreLogo = IDPRODUCTO == 101 ? "iconoRecibirDinero48.png" : IDPRODUCTO == 201 ? "iconoMoto48.png" : IDPRODUCTO == 202 ? "iconoAuto48.png" : IDPRODUCTO == 301 ? "iconoConsumo48.png" : "iconoConsumo48.png";
                                     IdentidadCLTE = reader["fcIdentidad"].ToString();
                                     int IDSolicitud = (int)reader["fiIDSolicitudCANEX"];
@@ -92,6 +94,7 @@ public partial class SolicitudesCANEX_SeguimientoDetalles : System.Web.UI.Page
                                     lblAgenteDeVentas.Text = reader["fcNombreUsuario"].ToString();
                                     lblAgencia.Text = reader["fcNombreAgencia"].ToString();
                                     lblEstadoSolicitud.Text = reader["fcEstadoSolicitud"].ToString();
+                                    lblEstadoSolicitudModal.Text = reader["fcEstadoSolicitud"].ToString();
                                     lblRtnCliente.Text = reader["fcRTN"].ToString();
                                     lblNumeroTelefono.NavigateUrl = "tel:" + reader["fcTelefonoPrimario"].ToString();
                                     lblNumeroTelefono.Text = reader["fcTelefonoPrimario"].ToString();
@@ -157,6 +160,46 @@ public partial class SolicitudesCANEX_SeguimientoDetalles : System.Web.UI.Page
                                     lblPlazoTitulo.Text = "Plazo " + reader["fcTipodeCuota"].ToString();
                                     lblPlazo.Text = reader["fcPlazo"].ToString();
                                     lblMontoFinanciar.Text = ((decimal)reader["fnValorPrestamo"]).ToString("N");
+
+
+                                    /* Habilitar/Inhabilitar botones de acciones */
+                                    int EstadoRechazada = 5;
+                                    int EstadoAprobada = 4;
+                                    int EstadoEnRevision = 3;
+                                    string colorClass = string.Empty;
+
+                                    if (EstadoSolicitud == EstadoAprobada || EstadoSolicitud == EstadoRechazada)
+                                    {
+                                        colorClass = EstadoSolicitud == EstadoAprobada ? "text-success" : "text-danger";
+
+                                    }
+                                    else if (IDSolicitudPrestadito != 0)
+                                    {
+                                        colorClass = "text-success";
+                                    }
+                                    else if (EstadoSolicitud == EstadoEnRevision && IDSolicitudPrestadito == 0)
+                                    {
+                                        colorClass = "text-warning";
+                                    }
+                                    else if (EstadoSolicitud != EstadoRechazada && EstadoSolicitud != EstadoAprobada && IDSolicitudPrestadito == 0)
+                                    {
+                                        colorClass = "text-warning";
+                                    }
+
+                                    string claseCss = "col-form-label font-16 font-weight-bold " + colorClass;
+                                    lblEstadoSolicitud.Attributes.Add("class", colorClass);
+                                    lblEstadoSolicitudModal.Attributes.Add("class", claseCss);
+
+                                    /* Comentarios acerca de la resolucion de la solicitud */
+                                    string nombreAnalistaResolucion = reader["fcNombreAnalistaResolucion"].ToString();
+                                    string comentarioResolucion = reader["fcComentarioResulucion"].ToString();
+
+                                    if (!string.IsNullOrEmpty(comentarioResolucion))
+                                    {
+                                        btnDetallesResolucion.Visible = true;
+                                        lblNombreAnalista.Text = nombreAnalistaResolucion;
+                                        lblDetalleEstado.InnerText = comentarioResolucion;
+                                    }
                                 }
                             }
                         }
