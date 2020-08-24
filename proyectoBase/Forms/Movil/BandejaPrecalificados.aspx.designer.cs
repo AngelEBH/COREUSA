@@ -40,51 +40,6 @@ public partial class Clientes_BandejaPrecalificados
     protected global::System.Web.UI.UpdatePanel upLista;
 
     /// <summary>
-    /// Control PanelOpciones.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Panel PanelOpciones;
-
-    /// <summary>
-    /// Control btnTodos.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button btnTodos;
-
-    /// <summary>
-    /// Control btnAprobados.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button btnAprobados;
-
-    /// <summary>
-    /// Control btnAnalisis.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button btnAnalisis;
-
-    /// <summary>
-    /// Control btnRechazados.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button btnRechazados;
-
-    /// <summary>
     /// Control gvPrecalificado.
     /// </summary>
     /// <remarks>

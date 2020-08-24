@@ -37,37 +37,8 @@
         <div class="card">
             <div class="card-body">
 
-                <%--<div class="row mb-2">
-                    <div class="col-3 themed-grid-col">
-                        <input id="todos" type="radio" name="filtros" value="0" />
-                        <li class="mdi mdi-account-group mdi-24px text-success p-0"></li>
-                    </div>
-                    <div class="col-3 themed-grid-col">
-
-                        <input id="preAprobados" type="radio" name="filtros" value="preAprobados" />
-                        <li class="mdi mdi-account-multiple-check mdi-24px text-success p-0"></li>
-
-                    </div>
-                    <div class="col-3 themed-grid-col">
-                        <input id="analisis" type="radio" name="filtros" value="analisis" />
-                        <li class="mdi mdi-account-alert mdi-24px text-warning p-0"></li>
-                    </div>
-
-                    <div class="col-3 themed-grid-col">
-                        <input id="rechazados" type="radio" name="filtros" value="rechazados" />
-                            <li class="mdi mdi-account-remove mdi-24px text-danger p-0"></li>
-                    </div>
-                </div>--%>
-
-                <div class="btn-group btn-block" role="group" aria-label="Default button group">
-                    <button type="button" class="btn btn-sm btn-secondary">Todos</button>
-                    <button type="button" class="btn btn-sm btn-success">Pre-Aprobados</button>
-                    <button type="button" class="btn btn-sm btn-warning">Analisis</button>
-                    <button type="button" class="btn btn-sm btn-danger">Rechazados</button>
-                </div>
-
                 <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
-                    <label class="btn btn-sm btn-secondary active opcion">
+                    <label class="btn btn-sm btn-info active opcion">
                         <input id="todos" type="radio" name="filtros" value="0" />
                         Todos
                     </label>
@@ -85,7 +56,7 @@
                     </label>
                 </div>
 
-                <table id="datatable-recuperacion" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                <table id="datatable-precalificados" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                     <thead>
                         <tr>
                             <th>Cliente</th>
@@ -110,14 +81,6 @@
             <ContentTemplate>
 
                 <div class="DivPanelListas" style="width: 1112px; height: calc(100vh - 5px);">
-                    <div>
-                        <asp:Panel ID="PanelOpciones" runat="server" CssClass="FormatoPanelViewNOAB" Height="32px" Style="margin-left: 5px; margin-top: 5px; background-color: gray; width: fit-content;">
-                            <asp:Button ID="btnTodos" runat="server" CssClass="FormatoBotonesIconoFiltros40" Style="background-image: url('/Imagenes/iconoPersonas24.png'); border-bottom-left-radius: 2px; border-top-left-radius: 2px;" Text="Todos" OnClick="btnFiltros_Click" CommandName="0" CommandArgument="0" />
-                            <asp:Button ID="btnAprobados" runat="server" CssClass="FormatoBotonesIconoFiltros40" Style="background-image: url('/Imagenes/iconoOk24.png');" Text="Pre-aprobados" OnClick="btnFiltros_Click" CommandName="1" CommandArgument="1" />
-                            <asp:Button ID="btnAnalisis" runat="server" CssClass="FormatoBotonesIconoFiltros40" Style="background-image: url('/Imagenes/iconoAlerta24.png');" Text="En analisis" OnClick="btnFiltros_Click" CommandName="3" CommandArgument="3" />
-                            <asp:Button ID="btnRechazados" runat="server" CssClass="FormatoBotonesIconoFiltros40" Style="background-image: url('/Imagenes/iconoDetener24.png'); border-bottom-right-radius: 2px; border-top-right-radius: 2px;" Text="Rechazados" OnClick="btnFiltros_Click" CommandName="2" CommandArgument="2" />
-                        </asp:Panel>
-                    </div>
 
                     <div class="FormatoPanelSubNOAB" style="width: 1100px; margin: 5px;">
                         <div class="DivTituloGrid">

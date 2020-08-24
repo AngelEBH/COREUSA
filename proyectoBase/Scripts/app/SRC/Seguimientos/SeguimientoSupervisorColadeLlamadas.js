@@ -27,6 +27,14 @@ $(document).ready(function () {
                 "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
                 "sSortDescending": ": Activar para ordenar la columna de manera descendente"
             },
+            "buttons": {
+                copyTitle: 'Copiar al portapapeles',
+                copySuccess: {
+                    1: "Copiada una fila al portapapeles",
+                    _: "Copiadas %d filas al portapapeles"
+                }
+
+            },
             "decimal": ".",
             "thousands": ","
         },
@@ -36,7 +44,25 @@ $(document).ready(function () {
         "dom": "<'row'<'col-sm-6'B><'col-sm-6'T>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-        buttons: ['copy', 'excel', 'pdf', 'colvis'],
+        buttons: [
+            {
+                extend: 'copy',
+                text: 'Copiar'
+            },
+            {
+                extend: 'excelHtml5',
+                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+            },
+            {
+                extend: 'pdf',
+                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+            },
+            {
+                extend: 'colvis',
+                text: 'Ocultar columnas',
+                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+            }
+        ],
         "ajax": {
             type: "POST",
             url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarRegistros",

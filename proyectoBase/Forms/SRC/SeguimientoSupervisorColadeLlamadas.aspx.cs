@@ -66,7 +66,7 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
             /* Desencriptar parametros */
             DSCore.DataCrypt DSC = new DSCore.DataCrypt();
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 

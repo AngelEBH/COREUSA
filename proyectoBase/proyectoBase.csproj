@@ -760,7 +760,6 @@
     <Content Include="CSS\ImprimirTickets.css" />
     <Content Include="favicon.ico" />
     <Content Include="Forms\Aval\Aval_Actualizar.aspx" />
-    <Content Include="Forms\Aval\Aval_CondicionamientoRegistrarAval.aspx" />
     <Content Include="Forms\Aval\Aval_Detalles.aspx" />
     <Content Include="Forms\Aval\Aval_Precalificar.aspx" />
     <Content Include="Forms\Aval\Aval_Registrar.aspx" />
@@ -1076,6 +1075,12 @@
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoRecuperacionDelDiaPorSupervisor.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoSupervisorColadeLlamadas.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoSupervisorPromesasdePago.js" />
+    <Content Include="Scripts\app\uploader\js\custom.js" />
+    <Content Include="Scripts\app\uploader\js\jquery.fileuploader.min.js" />
+    <Content Include="Scripts\app\uploader\SolicitudesCredito_ActualizarSolicitud\custom.js" />
+    <Content Include="Scripts\app\uploader\SolicitudesCredito_ActualizarSolicitud\jquery.fileuploader.min.js" />
+    <Content Include="Scripts\app\uploader\SolicitudesCredito_RegistrarAval\custom.js" />
+    <Content Include="Scripts\app\uploader\SolicitudesCredito_RegistrarAval\jquery.fileuploader.min.js" />
     <Content Include="Scripts\js\app.js" />
     <Content Include="Scripts\js\bootstrap.bundle.min.js" />
     <Content Include="Scripts\js\jquery.min.js" />
@@ -1345,13 +1350,6 @@
     </Compile>
     <Compile Include="Forms\Aval\Aval_Actualizar.aspx.designer.cs">
       <DependentUpon>Aval_Actualizar.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Aval\Aval_CondicionamientoRegistrarAval.aspx.cs">
-      <DependentUpon>Aval_CondicionamientoRegistrarAval.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Aval\Aval_CondicionamientoRegistrarAval.aspx.designer.cs">
-      <DependentUpon>Aval_CondicionamientoRegistrarAval.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Aval\Aval_Detalles.aspx.cs">
       <DependentUpon>Aval_Detalles.aspx</DependentUpon>
