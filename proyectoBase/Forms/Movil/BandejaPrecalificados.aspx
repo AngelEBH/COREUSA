@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Clientes_BandejaPrecalificados" CodeBehind="BandejaPrecalificados.aspx.cs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Clientes_BandejaPrecalificados" CodeFile="BandejaPrecalificados.aspx.cs" %>
 
 <!DOCTYPE html>
 
@@ -8,26 +8,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title></title>
-    <!-- BOOTSTRAP -->
+    <!-- Bootstrap -->
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/style.css" rel="stylesheet" />
 
-    <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
+    <!-- Archivos necesarios -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
-    <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
         .opcion {
             cursor: pointer;
         }
 
-        #datatable-recuperacion tbody tr {
+        #datatable-precalificados tbody tr {
             cursor: pointer;
         }
 
-        #datatable-recuperacion tbody td {
+        #datatable-precalificados tbody td {
             outline: none;
         }
     </style>
@@ -37,114 +37,67 @@
         <div class="card">
             <div class="card-body">
 
-                <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
-                    <label class="btn btn-sm btn-info active opcion">
-                        <input id="todos" type="radio" name="filtros" value="0" />
-                        Todos
-                    </label>
-                    <label class="btn btn-sm btn-success opcion">
-                        <input id="preAprobados" type="radio" name="filtros" value="preAprobados" />
-                        Pre-Aprobados
-                    </label>
-                    <label class="btn btn-sm btn-warning opcion">
-                        <input id="analisis" type="radio" name="filtros" value="analisis" />
-                        Analisis
-                    </label>
-                    <label class="btn btn-sm btn-danger opcion">
-                        <input id="rechazados" type="radio" name="filtros" value="rechazados" />
-                        Rechazados
-                    </label>
-                </div>
-
-                <table id="datatable-precalificados" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Identidad</th>
-                            <th>Ingresos</th>
-                            <th>Telefono</th>
-                            <th>Producto</th>
-                            <th>Consultado</th>
-                            <th>Oficial</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                    <tfoot></tfoot>
-                </table>
-            </div>
-        </div>
-
-
-        <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-        <asp:UpdatePanel runat="server" ID="upLista">
-            <ContentTemplate>
-
-                <div class="DivPanelListas" style="width: 1112px; height: calc(100vh - 5px);">
-
-                    <div class="FormatoPanelSubNOAB" style="width: 1100px; margin: 5px;">
-                        <div class="DivTituloGrid">
-                            <table class="TableFormatoTituloGrid">
-                                <tr>
-                                    <td style="width: 10px;">&nbsp</td>
-                                    <td style="width: 100px;">Oficial</td>
-                                    <td style="width: 230px;">Nombre/Identidad</td>
-                                    <td style="width: 200px;">Ingresos/Telefono</td>
-                                    <td style="width: 150px;">Producto/Consultado</td>
-                                    <td>Detalle</td>
-                                    <td style="width: 70px;">Acciones</td>
-                                    <td style="width: 20px;">&nbsp</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="DivPanelGridScrollFull" style="width: 100%; height: calc(100vh - 119px);">
-                            <asp:GridView ID="gvPrecalificado" runat="server" CssClass="GridViewFormatoGeneral" HeaderStyle-CssClass="GridViewCabecera" RowStyle-CssClass="GridViewFilasNeutral" RowStyle-Height="46px" AutoGenerateColumns="False" ShowHeader="False" Style="vertical-align: middle;" OnRowCommand="gvPrecalificado_RowCommand" DataKeyNames="fcIdentidad">
-                                <Columns>
-                                    <asp:ImageField DataImageUrlField="fcImagen" ItemStyle-Width="24px" ItemStyle-HorizontalAlign="Left" ItemStyle-VerticalAlign="Middle" />
-                                    <asp:BoundField DataField="fcIdentidad" ItemStyle-Width="100px" HtmlEncode="False" />
-                                    <asp:BoundField DataField="fcColumna1" ItemStyle-Width="100px" HtmlEncode="False" />
-                                    <asp:BoundField DataField="fcColumna2" ItemStyle-Width="230px" HtmlEncode="False" />
-                                    <asp:BoundField DataField="fcColumna3" ItemStyle-Width="150px" HtmlEncode="False" />
-                                    <asp:BoundField DataField="fcColumna4" ItemStyle-Width="230px" HtmlEncode="False" />
-                                    <asp:BoundField DataField="fcColumna5" HtmlEncode="False" />
-                                    <asp:ButtonField ButtonType="Image" ImageUrl="/Imagenes/iconoSolicitudesLista30.png" ItemStyle-Width="35px" CommandName="Ver" Text="Ver detalle del precalificado" ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle" />
-                                </Columns>
-                                <HeaderStyle CssClass="GridViewCabecera" />
-                                <RowStyle CssClass="GridViewFilasBitacoras" />
-                            </asp:GridView>
-                        </div>
+                <div class="dropdown mb-1">
+                    <button class="btn btn-primary btn-block dropdown-toggle text-left" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Filtrar
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item active" href="#">Todos</a>
+                        <a class="dropdown-item" href="#">Pre-Aprobados</a>
+                        <a class="dropdown-item" href="#">Analisis</a>
+                        <a class="dropdown-item" href="#">Rechazados</a>
                     </div>
                 </div>
-                <asp:Label CssClass="Formatolbl" ID="lblMensaje" runat="server" Style="left: 5px; color: red;"></asp:Label>
-                <asp:Panel ID="PanelErrores" runat="server" CssClass="FormatoPanelContenedorBordes" Height="50px" Width="200px" Visible="false" Style="left: calc(100vw - 300px); position: absolute; top: 10px; background-color: darkred; border-color: red;">
-                    <asp:Label CssClass="Formatolbl" ID="lblMensajeError" runat="server" Style="color: white; margin: 5px;"></asp:Label>
-                </asp:Panel>
 
-                <input type="text" id="txtBuscador" name="txtBuscador" class="Formatotxt" maxlength="50" style="top: 51px; width: 150px; left: 780px;" />
-                <input type="text" id="txtRegistros" name="txtRegistros" class="Formatotxt" maxlength="20" style="top: 52px; width: 120px; left: 945px; border: hidden; background-color: transparent;" disabled="disabled" />
+                <div class="form-group">
+                    <input id="txtDatatableFilter" class="form-control form-control-sm" type="text" placeholder="Buscar" aria-label="Buscar" />
+                </div>
 
-            </ContentTemplate>
-        </asp:UpdatePanel>
-        <asp:UpdateProgress ID="prgLoadingStatus" runat="server" AssociatedUpdatePanelID="upLista">
-            <ProgressTemplate>
-                <asp:Panel ID="PanelCargando" runat="server" CssClass="FormatoPanelView" Height="40px" Width="64px" Style="left: 1030px; top: 42px; background-color: transparent;">
-                    <asp:Image ID="imgCargando" runat="server" ImageUrl="/Imagenes/gifCargandoHorizontal30x60.gif" Style="position: absolute; left: 0px; top: 0px;" />
-                </asp:Panel>
-            </ProgressTemplate>
-        </asp:UpdateProgress>
+                <div class="form-group">
+                    <table id="datatable-precalificados" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Identidad</th>
+                                <th>Ingresos</th>
+                                <th>Telefono</th>
+                                <th>Producto</th>
+                                <th>Consultado</th>
+                                <th>Oficial</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
     </form>
 
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <!-- DATATABLES -->
+    <!-- datatable js -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Buttons -->
     <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
     <script src="/Scripts/plugins/datatables/buttons.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
+    <script src="/Scripts/plugins/datatables/pdfmake.min.js"></script>
+    <script src="/Scripts/plugins/datatables/vfs_fonts.js"></script>
     <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.print.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.colVis.min.js"></script>
+    <!-- Responsive -->
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
-    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
+    <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
+
+    <script src="/Scripts/plugins/moment/moment.js"></script>
+    <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
+    <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
+    <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="/Scripts/app/CoreMovil/Clientes_BandejaPrecalificados.js"></script>
 </body>
 </html>
 

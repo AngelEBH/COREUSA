@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Configuration;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
@@ -42,30 +40,8 @@ public partial class Clientes_BandejaPrecalificados : System.Web.UI.Page
         /* FIN de captura de parametros y desencriptado de cadena */
     }
 
-    protected void gvPrecalificado_RowCommand(object sender, GridViewCommandEventArgs e)
-    {
-        int index = Convert.ToInt32(e.CommandArgument);
-        DataKey dkLlaveIdentidadCliente = gvPrecalificado.DataKeys[index];
-        try
-        {
-            string lcScript = "";
-
-            switch (e.CommandName)
-            {
-                case "Ver":
-                    lcScript = "window.open('Precalificado_Analista.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + dkLlaveIdentidadCliente.Value.ToString().Trim() + "&IDApp=108") + "','_Clientes_Contenido')";
-                    break;
-            }
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "newpage", lcScript, true);
-        }
-        catch (Exception ex)
-        {
-            lblMensaje.Text = ex.Message;
-        }
-    }
-
     [WebMethod]
-    public static List<Clientes_BandejaPrecalificadosViewModel> CargarLista(string pcEstado, string dataCrypt)
+    public static List<Clientes_BandejaPrecalificadosViewModel> CargarLista(string dataCrypt, string pcEstado)
     {
         List<Clientes_BandejaPrecalificadosViewModel> listaRegistros = new List<Clientes_BandejaPrecalificadosViewModel>();
 
@@ -95,12 +71,14 @@ public partial class Clientes_BandejaPrecalificados : System.Web.UI.Page
                             {
                                 Oficial = (string)sqlResultado["fcNombreCorto"],
                                 Identidad = (string)sqlResultado["fcIdentidad"],
-                                Nombre = (string)sqlResultado["fcNombre"],
+                                NombreCliente = (string)sqlResultado["fcNombre"],
                                 Telefono = (string)sqlResultado["fcTelefono"],
                                 Ingresos = (decimal)sqlResultado["fnIngresos"],
-                                FechaConsultado = (DateTime)sqlResultado["fdFechaUltimaActualizacionEquifax"],
+                                Moneda = "L",
+                                FechaConsultado = (DateTime)sqlResultado["fdFechaPrimerConsulta"],
                                 Datelle = (string)sqlResultado["fcMensaje"],
                                 Imagen = (string)sqlResultado["fcImagen"],
+                                Producto = (string)sqlResultado["fcProducto"]
                             });
                         }
                     }
@@ -113,6 +91,31 @@ public partial class Clientes_BandejaPrecalificados : System.Web.UI.Page
         } // using connection
 
         return listaRegistros;
+    }
+
+    [WebMethod]
+    public static string EncriptarParametros(string Identidad, string dataCrypt)
+    {
+        string resultado;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+
+            string lcParametros = "usr=" + pcIDUsuario.Trim() +
+            "&IDApp=" + pcIDApp.Trim() +
+            "&SID=" + pcIDSesion.Trim() +
+            "&ID=" + Identidad.Trim();
+            resultado = DSC.Encriptar(lcParametros);
+        }
+        catch
+        {
+            resultado = "-1";
+        }
+        return resultado;
     }
 
     public static Uri DesencriptarURL(string URL)
@@ -148,9 +151,10 @@ public partial class Clientes_BandejaPrecalificados : System.Web.UI.Page
 public class Clientes_BandejaPrecalificadosViewModel
 {
     public string Oficial { get; set; }
-    public string Nombre { get; set; }
+    public string NombreCliente { get; set; }
     public string Identidad { get; set; }
-    public decimal Ingresos{ get; set; }
+    public decimal Ingresos { get; set; }
+    public string Moneda { get; set; }
     public string Telefono { get; set; }
     public string Producto { get; set; }
     public DateTime FechaConsultado { get; set; }
@@ -158,5 +162,4 @@ public class Clientes_BandejaPrecalificadosViewModel
     public string Imagen { get; set; }
     public int IDEstado { get; set; }
     public string Estado { get; set; }
-    public int ContadorErrores { get; set; }
 }

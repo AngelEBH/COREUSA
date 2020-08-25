@@ -764,6 +764,7 @@
     <Content Include="Forms\Aval\Aval_Precalificar.aspx" />
     <Content Include="Forms\Aval\Aval_Registrar.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
+    <Content Include="Forms\Movil\BandejaMisSolicitudes.aspx" />
     <Content Include="Forms\Movil\BandejaPrecalificados.aspx" />
     <Content Include="Forms\Movil\CotizadorCarros.aspx" />
     <Content Include="Forms\Movil\precalificado_buscador.aspx" />
@@ -1051,6 +1052,8 @@
     <Content Include="Scripts\app\Aval\Aval_Actualizar.js" />
     <Content Include="Scripts\app\Aval\Aval_Detalles.js" />
     <Content Include="Scripts\app\Aval\Aval_Registrar.js" />
+    <Content Include="Scripts\app\CoreMovil\BandejaMisSolicitudes.js" />
+    <Content Include="Scripts\app\CoreMovil\Clientes_BandejaPrecalificados.js" />
     <Content Include="Scripts\app\Scripts_Cobros\Scripts_Cobros.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ActualizarAval.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ActualizarSolicitud.js" />
@@ -1378,6 +1381,13 @@
     </Compile>
     <Compile Include="Forms\Clientes\Precalificado_Resolucion.aspx.designer.cs">
       <DependentUpon>Precalificado_Resolucion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Movil\BandejaMisSolicitudes.aspx.cs">
+      <DependentUpon>BandejaMisSolicitudes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Movil\BandejaMisSolicitudes.aspx.designer.cs">
+      <DependentUpon>BandejaMisSolicitudes.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Movil\BandejaPrecalificados.aspx.cs">
       <DependentUpon>BandejaPrecalificados.aspx</DependentUpon>
