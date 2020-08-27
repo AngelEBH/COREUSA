@@ -5,7 +5,7 @@
 <head runat="server">
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style type="text/css">
         html * {
@@ -27,7 +27,11 @@
 
         @font-face {
             font-family: "DejaVu Sans";
-            src: url("/CSS/Content/fonts/DejaVu/DejaVuSans.ttf") format("truetype");
+            src: url("/Content/fonts/DejaVu/DejaVuSans.ttf") format("truetype");
+        }
+
+        @page {
+            font-family: "DejaVu Sans", "Arial", sans-serif !important;
         }
     </style>
 </head>
@@ -172,7 +176,7 @@
                     confirmButtonText: "OK"
                 }
             ).then(function () {
-                window.close();
+                //window.close();
             });
         };
 

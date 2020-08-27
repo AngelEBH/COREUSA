@@ -787,6 +787,7 @@
     <Content Include="Forms\Solicitudes_CANEX\Solicitudes_CANEX.aspx" />
     <Content Include="Forms\Solicitudes_CANEX\Solicitudes_CANEX_Detalles.aspx" />
     <Content Include="Forms\SRC\ConvenioReadecuacion.aspx" />
+    <Content Include="Forms\SRC\SeguimientoBitacoras.aspx" />
     <Content Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx" />
     <Content Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorAgente.aspx" />
     <Content Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorSupervisor.aspx" />
@@ -1072,6 +1073,7 @@
     <Content Include="Scripts\app\Solicitudes_CANEX\SolicitudesCANEX_SeguimientoDetalles.js" />
     <Content Include="Scripts\app\Solicitudes_CANEX\Solicitudes_CANEX.js" />
     <Content Include="Scripts\app\Solicitudes_CANEX\Solicitudes_CANEX_Detalles.js" />
+    <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoBitacoras.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoColadeLlamadas.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoJefePromesasdePago.js" />
     <Content Include="Scripts\app\SRC\Seguimientos\SeguimientoRecuperacionDelDiaPorAgente.js" />
@@ -1542,6 +1544,13 @@
     </Compile>
     <Compile Include="Forms\SRC\ConvenioReadecuacion.aspx.designer.cs">
       <DependentUpon>ConvenioReadecuacion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoBitacoras.aspx.cs">
+      <DependentUpon>SeguimientoBitacoras.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SRC\SeguimientoBitacoras.aspx.designer.cs">
+      <DependentUpon>SeguimientoBitacoras.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx.cs">
       <DependentUpon>SeguimientoJefePromesasdePago.aspx</DependentUpon>

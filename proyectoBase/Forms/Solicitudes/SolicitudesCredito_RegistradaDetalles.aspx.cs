@@ -709,7 +709,7 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                                 IDProducto = (int)reader["fiIDProducto"],
                                 ProductoDescripcion = reader["fcProducto"].ToString(),
                                 fnMontoOfertado = decimal.Parse(reader["fnMontoOfertado"].ToString()),
-                                fiPlazo = int.Parse(reader["fiPlazo"].ToString()),
+                                fiPlazo = int.Parse(reader["fiIDPlazo"].ToString()),
                                 fnCuotaQuincenal = decimal.Parse(reader["fnCuotaQuincenal"].ToString()),
                                 TipoCuota = (string)reader["fcTipodeCuota"]
                             });
