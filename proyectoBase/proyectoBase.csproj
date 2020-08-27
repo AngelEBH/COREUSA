@@ -779,6 +779,7 @@
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ClientesPrecalificados.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Detalles.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Ingresadas.aspx" />
+    <Content Include="Forms\Solicitudes\SolicitudesCredito_ListaMantenimiento.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Precalificar.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_RegistradaDetalles.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Registrar.aspx" />
@@ -1056,6 +1057,7 @@
     <Content Include="Scripts\app\CoreMovil\BandejaMisSolicitudes.js" />
     <Content Include="Scripts\app\CoreMovil\Clientes_BandejaPrecalificados.js" />
     <Content Include="Scripts\app\Scripts_Cobros\Scripts_Cobros.js" />
+    <Content Include="Scripts\app\SolicitudesCredito\SolicitudesCredito_ListaMantenimiento.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ActualizarAval.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ActualizarSolicitud.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Analisis.js" />
@@ -1488,6 +1490,13 @@
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Ingresadas.aspx.designer.cs">
       <DependentUpon>SolicitudesCredito_Ingresadas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListaMantenimiento.aspx.cs">
+      <DependentUpon>SolicitudesCredito_ListaMantenimiento.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListaMantenimiento.aspx.designer.cs">
+      <DependentUpon>SolicitudesCredito_ListaMantenimiento.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Precalificar.aspx.cs">
       <DependentUpon>SolicitudesCredito_Precalificar.aspx</DependentUpon>

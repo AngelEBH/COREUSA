@@ -95,7 +95,7 @@ $(document).ready(function () {
                     if (row["fdCondicionadoInicio"] != '/Date(-62135575200000)/' && row["fdCondificionadoFin"] == '/Date(-62135575200000)/') {
                         estadoMasRelevante = '<button id="btnActualizar" data-id="' + row["fiIDSolicitud"] + '" class="btn btn-sm btn-block btn-warning mb-0">Condicionada</button>';
                     }
-                    if (row["fiEstadoSolicitud == 4"] || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7) {
+                    if (row["fiEstadoSolicitud" == 4] || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7) {
                         estadoMasRelevante = row["fiEstadoSolicitud"] == 7 ? '<label class="btn btn-sm btn-block btn-success mb-0">Aprobada</label>' : '<label class="btn btn-sm btn-block btn-danger mb-0">Rechazada</label>';
                     }
 
