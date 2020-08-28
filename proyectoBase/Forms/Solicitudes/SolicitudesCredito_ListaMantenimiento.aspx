@@ -107,6 +107,6 @@
 
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/SolicitudesCredito/SolicitudesCredito_ListaMantenimiento.js"></script>
+    <script src="/Scripts/app/solicitudesCredito/SolicitudesCredito_ListaMantenimiento.js"></script>
 </body>
 </html>

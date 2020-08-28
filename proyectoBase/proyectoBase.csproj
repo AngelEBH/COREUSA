@@ -105,7 +105,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\animate.css" />
     <Content Include="Content\css\bandejaSolicitudes.css" />
+    <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\Estilos.css" />
     <Content Include="Content\css\font\familyRoboto.css" />
@@ -889,6 +891,30 @@
     <Content Include="Content\icons\typicons\typicons.scss" />
     <Content Include="Content\icons\typicons\typicons.ttf" />
     <Content Include="Content\icons\typicons\typicons.woff" />
+    <Content Include="Imagenes\gifCargandoHorizontal30x60.gif" />
+    <Content Include="Imagenes\iconoAcuerdo24.png" />
+    <Content Include="Imagenes\iconoBandejadeSolicitudes16.png" />
+    <Content Include="Imagenes\iconoCalLCenterCobros16.png" />
+    <Content Include="Imagenes\iconoCambiodeProducto40.png" />
+    <Content Include="Imagenes\iconoCargarListas16.png" />
+    <Content Include="Imagenes\iconoCelular40.png" />
+    <Content Include="Imagenes\iconoClienteNoOK16.png" />
+    <Content Include="Imagenes\iconoEditarPrecalificado16.png" />
+    <Content Include="Imagenes\iconoFicoLink24.png" />
+    <Content Include="Imagenes\iconoIngresos40.png" />
+    <Content Include="Imagenes\iconoListaNegra16.png" />
+    <Content Include="Imagenes\iconoListaNegra40.png" />
+    <Content Include="Imagenes\iconoMoverCliente40.png" />
+    <Content Include="Imagenes\iconoPersonas16.png" />
+    <Content Include="Imagenes\iconoPersonas24.png" />
+    <Content Include="Imagenes\iconoSolicitudAgregar16.png" />
+    <Content Include="Imagenes\iconoSolicitudAgregar24.png" />
+    <Content Include="Imagenes\iconoSolicitudAgregar30.png" />
+    <Content Include="Imagenes\iconoSolicitudAgregar40.png" />
+    <Content Include="Imagenes\iconoSolicitudesLista16.png" />
+    <Content Include="Imagenes\iconoSolicitudesLista24.png" />
+    <Content Include="Imagenes\iconoSolicitudesLista30.png" />
+    <Content Include="Imagenes\iconsWhatsApp24.png" />
     <Content Include="Imagenes\PulgarAbajoIcon.png" />
     <Content Include="Imagenes\PulgarArribaIcon.png" />
     <Content Include="Imagenes\Thumbs.db" />
@@ -1058,7 +1084,8 @@
     <Content Include="Scripts\app\CoreMovil\BandejaMisSolicitudes.js" />
     <Content Include="Scripts\app\CoreMovil\Clientes_BandejaPrecalificados.js" />
     <Content Include="Scripts\app\Scripts_Cobros\Scripts_Cobros.js" />
-    <Content Include="Scripts\app\SolicitudesCredito\SolicitudesCredito_ListaMantenimiento.js" />
+    <Content Include="Scripts\app\solicitudesCredito\SolicitudesCredito_ListaMantenimiento.js" />
+    <Content Include="Scripts\app\solicitudesCredito\SolicitudesCredito_Mantenimiento.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ActualizarAval.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ActualizarSolicitud.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Analisis.js" />
@@ -1091,9 +1118,15 @@
     <Content Include="Scripts\app\uploader\SolicitudesCredito_RegistrarAval\jquery.fileuploader.min.js" />
     <Content Include="Scripts\js\app.js" />
     <Content Include="Scripts\js\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\js\bootstrap.js" />
+    <Content Include="Scripts\js\bootstrap.min.js" />
+    <Content Include="Scripts\js\inspinia.js" />
+    <Content Include="Scripts\js\jquery-2.1.1.js" />
+    <Content Include="Scripts\js\jquery-3.1.1.min.js" />
     <Content Include="Scripts\js\jquery.min.js" />
     <Content Include="Scripts\js\jquery.slimscroll.js" />
     <Content Include="Scripts\js\metisMenu.min.js" />
+    <Content Include="Scripts\js\popper.min.js" />
     <Content Include="Scripts\js\waves.min.js" />
     <Content Include="Scripts\plugins\bootstrap-session-timeout\bootstrap-session-timeout.js" />
     <Content Include="Scripts\plugins\bootstrap-session-timeout\bootstrap-session-timeout.min.js" />
@@ -1694,6 +1727,8 @@
     <Content Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </Content>
+    <Content Include="Content\css\bootstrap.css.map" />
+    <Content Include="Content\css\bootstrap.min.css.map" />
     <None Include="packages.config" />
     <Content Include="Scripts\plugins\datatables\json\scroller-demo.json" />
     <Content Include="Scripts\plugins\dropzone\dist\readme.md" />
@@ -1702,6 +1737,8 @@
     <Content Include="Scripts\plugins\summernote\font\summernote.eot" />
     <Content Include="Scripts\plugins\summernote\font\summernote.ttf" />
     <Content Include="Scripts\plugins\summernote\font\summernote.woff" />
+    <Content Include="Scripts\js\bootstrap.js.map" />
+    <Content Include="Scripts\js\bootstrap.min.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

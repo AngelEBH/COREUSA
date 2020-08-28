@@ -328,7 +328,7 @@
                         </div>
                         <label class="col-sm-3 col-form-label">Fecha de ingreso</label>
                         <div class="col-sm-3">
-                            <input id="fechaIngreso" name="fechaIngreso" class="form-control datepicker" type="date" required="required" data-parsley-group="informacionLaboral" />
+                            <input id="fechaIngreso" name="fechaIngreso" class="form-control datepicker" type="text" required="required" data-parsley-group="informacionLaboral" />
                         </div>
                     </div>
                     <div class="form-group row">
