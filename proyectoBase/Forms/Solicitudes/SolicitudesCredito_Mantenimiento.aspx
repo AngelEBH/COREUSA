@@ -68,6 +68,11 @@
 
                     <!-- PESTAÑANA PRINCIPAL DE INFORMACION DE LA SOLICITUD  -->
                     <div class="tab-pane active mb-1" id="tabInformacionSolicitud" role="tabpanel">
+
+
+
+
+
                     </div>
 
                     <!-- PESTAÑA PRINCIPAL DE INFORMACION DEL CLIENTE-->
