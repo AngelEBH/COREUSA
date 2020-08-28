@@ -123,7 +123,7 @@
                             <button id="btnHistorialExterno" disabled="disabled" type="button" class="btn btn-sm btn-success btn-block waves-effect waves-light m-0" style="border-radius: 0;">
                                 Buro externo
                             </button>
-                            <button id="btnCondicionarSolicitud" type="button" class="btn btn-sm btn-warning btn-block validador m-0" style="border-radius: 0;">
+                            <button id="btnCondicionarSolicitud" type="button" class="btn btn-sm btn-warning btn-block m-0" style="border-radius: 0;">
                                 Condicionar
                             </button>
                         </div>
@@ -143,24 +143,19 @@
                 <table class="table table-condensed m-0">
                     <thead class="thead-light">
                         <tr>
-                            <th class="text-center">No. Solicitud:</th>
-                            <th class="text-center">
+                            <th class="text-center">No. Solicitud:
                                 <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
                             </th>
-                            <th class="text-center">Tipo Solicitud:</th>
-                            <th class="text-center">
+                            <th class="text-center">Tipo Solicitud:
                                 <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
                             </th>
-                            <th class="text-center">Agente de Ventas:</th>
-                            <th class="text-center">
+                            <th class="text-center">Agente de Ventas:
                                 <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
                             </th>
-                            <th class="text-center">Agencia:</th>
-                            <th class="text-center">
+                            <th class="text-center">Agencia:
                                 <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
                             </th>
-                            <th class="text-center">Gestor:</th>
-                            <th class="text-center">
+                            <th class="text-center">Gestor:
                                 <asp:Label ID="lblNombreGestor" CssClass="col-form-label" runat="server"></asp:Label>
                             </th>
                         </tr>
@@ -387,7 +382,7 @@
                                                 <label class="col-sm-6">Ingresos mensuales</label>
                                                 <div class="col-sm-6">
                                                     <asp:Label ID="lblIngresosMensualesCliente" runat="server"></asp:Label>
-                                                    <asp:HyperLink ID="actualizarIngresosCliente" CssClass="mdi mdi-pencil mdi-18px text-info" title="Editar" NavigateUrl="#" runat="server" role="button"></asp:HyperLink>
+                                                    <asp:Label ID="actualizarIngresosCliente" CssClass="mdi mdi-pencil mdi-18px text-info" title="Editar" NavigateUrl="#" runat="server" role="button"></asp:Label>
                                                     <li id="pencilOff" class="mdi mdi-pencil-off mdi-18px" style="display: none"></li>
                                                 </div>
 
@@ -1387,7 +1382,7 @@
                         </strong>?<br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
-                            <textarea id="txtObservacionesReferencia" runat="server" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="informacionLaboral"></textarea>
+                            <textarea id="txtObservacionesReferencia" required="required" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="informacionLaboral"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -1729,7 +1724,7 @@
     <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
     <script src="/Scripts/plugins/kendo/PrintHtmlToPDF.js"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Analisis.js?v=202008211137"></script>
+    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Analisis.js?v=202008270956"></script>
     <script type="x/kendo-template" id="page-template">
         <div class="page-template">
             <div class="header">

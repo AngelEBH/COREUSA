@@ -526,7 +526,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-12">
-                                            <input id="txtComentarioAdicional" required="required" type="text" class="form-control form-control-sm" placeholder="comentario adicional" data-parsley-maxlength="128" />
+                                            <input id="txtComentarioAdicional" required="required" type="text" class="form-control form-control-sm" placeholder="comentario adicional" data-parsley-maxlength="255" />
                                         </div>
                                     </div>
                                 </form>
@@ -662,8 +662,8 @@
                             </div>
                             <div class="mt-1">
                                 <label class="col-form-label">Detalles</label>
-                                
-                                <textarea id="lblDetalleEstado" runat="server" ReadOnly="true" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
+
+                                <textarea id="lblDetalleEstado" runat="server" readonly="true" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
                             </div>
                         </div>
                     </div>

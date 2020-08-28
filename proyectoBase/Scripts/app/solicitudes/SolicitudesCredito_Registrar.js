@@ -466,7 +466,7 @@ function LlenarListas() {
             var divEstadoCivil = $("#divEstadoCivil");
             $.each(data.d.EstadosCiviles, function (i, iter) {
                 divEstadoCivil.append("<div class='form-check form-check-inline'>" +
-                    "<input data-info='" + iter.fbRequiereInformacionConyugal + "' class='form-check-input' type='radio' name ='estadoCivil' value='" + iter.fiIDEstadoCivil + "'>" +
+                    "<input data-info='" + iter.fbRequiereInformacionConyugal + "' class='form-check-input' required='required' type='radio' name ='estadoCivil' value='" + iter.fiIDEstadoCivil + "'>" +
                     "<label class='form-check-label'>" + iter.fcDescripcionEstadoCivil + "</label>" +
                     "</div>");
             });

@@ -184,7 +184,7 @@ function cargarInformacionSolicitud() {
 
             /* Verificar si la solicitud está condicionada */
             if ((rowDataSolicitud.fiEstadoSolicitud == 3)) {
-                $("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('disabled', true).prop('title', 'La solicitud ya está condicionada, esperando actualización de agente de ventas').removeClass('btn-warning').addClass('btn-success');
+                $("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('title', 'La solicitud ya está condicionada, esperando actualización de agente de ventas');
             }
             else if (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7) {
                 var decision = rowDataSolicitud.fiEstadoSolicitud == 7 ? 'aprobada' : 'rechazada';
@@ -1128,31 +1128,28 @@ $("#btnConfirmarPrestamoAprobado").click(function () {
 $("#btnCondicionarSolicitud").click(function () {
 
     var ddlCondiciones = $("#ddlCondiciones");
-    /* Verificar si la solicitud ya fue condicionada antes y todavia no ha sido actualizada por el agente de ventas */
-    if (objSolicitud.fiEstadoSolicitud != 3) {
 
-        listaCondicionamientos = [];
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/GetCondiciones",
-            data: JSON.stringify({ dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Error al cargar el lista de condiciones');
-                $("#modalCondicionarSolicitud").modal();
-            },
-            success: function (data) {
-                var listaCondiciones = data.d;
-                $("#tblCondiciones tbody").empty();
-                $("#txtComentarioAdicional").val('');
-                ddlCondiciones.empty();
-                for (var i = 0; i < listaCondiciones.length; i++) {
-                    ddlCondiciones.append('<option value="' + listaCondiciones[i].fiIDCondicion + '">' + listaCondiciones[i].fcCondicion + ' | ' + listaCondiciones[i].fcDescripcionCondicion + '</option>');
-                }
-                $("#modalCondicionarSolicitud").modal();
+    listaCondicionamientos = [];
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Analisis.aspx/GetCondiciones",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al cargar el lista de condiciones');
+            $("#modalCondicionarSolicitud").modal();
+        },
+        success: function (data) {
+            var listaCondiciones = data.d;
+            $("#tblCondiciones tbody").empty();
+            $("#txtComentarioAdicional").val('');
+            ddlCondiciones.empty();
+            for (var i = 0; i < listaCondiciones.length; i++) {
+                ddlCondiciones.append('<option value="' + listaCondiciones[i].fiIDCondicion + '">' + listaCondiciones[i].fcCondicion + ' | ' + listaCondiciones[i].fcDescripcionCondicion + '</option>');
             }
-        });
-    }
+            $("#modalCondicionarSolicitud").modal();
+        }
+    });
 });
 
 var contadorCondiciones = 0;
@@ -1217,8 +1214,7 @@ $("#btnCondicionarSolicitudConfirmar").click(function () {
         success: function (data) {
             if (data.d == true) {
                 $("#modalCondicionarSolicitud").modal('hide');
-                $("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('disabled', true);
-                $("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").removeClass('btn-warning').addClass('btn-success');
+                //$("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('disabled', true);
                 $("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('title', 'La solicitud ya está condicionada, esperando actualización de agente de ventas');
                 MensajeExito('Estado de la solicitud actualizado');
                 actualizarEstadoSolicitud();

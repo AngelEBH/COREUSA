@@ -1169,7 +1169,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             listaCotizadorProductos.Add(new cotizadorProductosViewModel()
                             {
                                 IDCotizacion = IDContador,
-                                IDProducto = (int)reader["fiIDProducto"],
+                                IDProducto = (short)reader["fiIDProducto"],
                                 ProductoDescripcion = reader["fcProducto"].ToString(),
                                 fnMontoOfertado = decimal.Parse(reader["fnMontoOfertado"].ToString()),
                                 fiPlazo = int.Parse(reader["fiIDPlazo"].ToString()),

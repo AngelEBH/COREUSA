@@ -59,6 +59,7 @@ $(document).ready(function () {
             { "data": "DescripcionTipoPrestamo" },
             {
                 "data": "DescripcionEstado",
+                "className": "text-center",
                 "render": function (data, type, row) {
 
                     if (row["IDEstado"] == 1) {
@@ -77,16 +78,20 @@ $(document).ready(function () {
                         classEstado = row["IDEstado"] == 7 ? 'success' : 'danger';
                     }
 
-                    return '<label class="btn btn-sm btn-block m-0 btn-' + classEstado + '">' + row["DescripcionEstado"] + '</label>';
+                    return '<label class="btn btn-sm btn-block btn-' + classEstado + ' m-0">' + row["DescripcionEstado"] + '</label>';
                 }
             },
             {
                 "data": "IDSolicitud",
+                "className": "text-center",
                 "render": function (value) {
-                    return '<button id="btnMantenimiento" data-id="' + value + '" class="btn btn-sm btn-block btn-info mb-0">Mantenimiento</button>';
+                    return '<button id="btnMantenimiento" data-id="' + value + '" class="btn btn-sm btn-info mb-0"><li class="mdi mdi-pencil"></li></button>';
                 }
             }
-        ]
+        ],
+        columnDefs: [
+            { "width": "1%", "targets": [5,6] }
+        ]        
     });
 
     /* busqueda por numero de solicitud */
