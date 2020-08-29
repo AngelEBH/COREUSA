@@ -109,26 +109,131 @@ $(document).ready(function () {
     dtClientes.buttons().container()
         .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
 
+
+    dtResumen = $('#datatable-resumenAgentes').DataTable({
+        "responsive": true,
+        "language": {
+            "sProcessing": "Cargando información...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando información...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            },
+            "buttons": {
+                copyTitle: 'Copiar al portapapeles',
+                copySuccess: {
+                    1: "Copiada una fila al portapapeles",
+                    _: "Copiadas %d filas al portapapeles"
+                }
+
+            },
+            "decimal": ".",
+            "thousands": ","
+        },
+        "pageLength": 10,
+        "aaSorting": [],
+        "processing": true,
+        "dom": "<'row'<'col-sm-6'B><'col-sm-6'T>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+        buttons: [
+            {
+                extend: 'copy',
+                text: 'Copiar'
+            },
+            {
+                extend: 'excelHtml5',
+                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+            },
+            {
+                extend: 'pdf',
+                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+            },
+            {
+                extend: 'colvis',
+                text: 'Ocultar columnas',
+                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+            }
+        ],
+        "ajax": {
+            type: "POST",
+            url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarResumen",
+            contentType: 'application/json; charset=utf-8',
+            data: function (dtParms) {
+                return JSON.stringify({ dataCrypt: window.location.href });
+            },
+            "dataSrc": function (json) {
+                var return_data = json.d;
+                return return_data;
+            }
+        },
+        "columns": [
+            { "data": "NombreAgente" },
+            { "data": "LlamadasPorHacer", className: "text-center" },
+            { "data": "LlamadasHechas", className: "text-center" },
+        ],
+        columnDefs: [
+            { targets: 'no-sort', orderable: false }
+        ]
+    });
+
+    dtResumen.buttons().container()
+        .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+
+
+
     $("input[type=radio][name=filtros]").change(function () {
         var filtro = this.value;
         switch (filtro) {
             case "hoy":
+                $("#tblClientes").css('display', '');
+                $("#tblResumen").css('display', 'none');
                 $(".RangoFechas").css('display', 'none');
                 FiltroActual = "hoy";
                 Actividad = 1;
                 FiltrarInformacion();
                 break;
             case "porHacer":
+                $("#tblClientes").css('display', '');
+                $("#tblResumen").css('display', 'none');
                 $(".RangoFechas").css('display', 'none');
                 FiltroActual = "porHacer";
                 Actividad = 2;
                 FiltrarInformacion();
                 break;
             case "anteriores":
+                $("#tblClientes").css('display', '');
+                $("#tblResumen").css('display', 'none');
+
                 $(".RangoFechas").css('display', '');
                 Actividad = 3;
                 FiltroActual = "anteriores";
                 FiltrarInformacion();
+
+                break;
+
+
+            case "resumenAgentes":
+                $(".RangoFechas").css('display', '');
+                $("#tblClientes").css('display', 'none');
+                $("#tblResumen").css('display', '');
+                dtResumen.ajax.reload(null, false);
                 break;
         }
     });

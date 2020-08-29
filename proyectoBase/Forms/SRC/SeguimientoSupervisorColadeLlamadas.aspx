@@ -50,6 +50,10 @@
             <div class="card-body">
                 <div class="table-responsive p-0">
                     <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
+                        <label class="btn btn-secondary active opcion">
+                            <input id="resumenAgentes" type="radio" name="filtros" value="resumenAgentes" />
+                            Resumen de agentes
+                        </label>
                         <label class="btn btn-success active opcion">
                             <input id="recepcion" type="radio" name="filtros" value="hoy" />
                             Llamadas de Hoy
@@ -85,23 +89,45 @@
                         </div>
                     </div>
                 </div>
-                <table id="datatable-clientes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
-                    <thead>
-                        <tr>
-                            <th>Agente</th>
-                            <th>ID Cliente</th>
-                            <th>Nombre</th>
-                            <th>Teléfono</th>
-                            <th>Comentario 1</th>
-                            <th>Comentario 2</th>
-                            <th>Inicio Llamada</th>
-                            <th>Fin Llamada</th>
-                            <th>Duración</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                    <tfoot></tfoot>
-                </table>
+                <div class="row" id="tblClientes">
+                    <div class="col-12">
+                        <table id="datatable-clientes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                            <thead>
+                                <tr>
+                                    <th>Agente</th>
+                                    <th>ID Cliente</th>
+                                    <th>Nombre</th>
+                                    <th>Teléfono</th>
+                                    <th>Comentario 1</th>
+                                    <th>Comentario 2</th>
+                                    <th>Inicio Llamada</th>
+                                    <th>Fin Llamada</th>
+                                    <th>Duración</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot></tfoot>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="row" id="tblResumen" style="display:none;">
+                    <div class="col-12">
+                        <table id="datatable-resumenAgentes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%;" role="grid">
+                            <thead>
+                                <tr>
+                                    <th>Agente</th>
+                                    <th>Llamadas por hacer</th>
+                                    <th>Llamadas hechas</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot></tfoot>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </form>

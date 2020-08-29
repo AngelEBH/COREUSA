@@ -112,6 +112,53 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
         return ListadoRegistros;
     }
 
+    [WebMethod]
+    public static List<ResumenAgentesViewModel> CargarResumen(string dataCrypt)
+    {
+        List<ResumenAgentesViewModel> ListadoRegistros = new List<ResumenAgentesViewModel>();
+
+        try
+        {
+            /* Desencriptar parametros */
+            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_ColaPorAgente_ResumenLlamadas", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ListadoRegistros.Add(new ResumenAgentesViewModel()
+                            {
+                                NombreAgente = (string)reader["fcAgente"],
+                                LlamadasPorHacer = (int)reader["fiClientesPorLlamar"],
+                                LlamadasHechas = (int)reader["fiClientesHechas"],
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return ListadoRegistros;
+    }
+
     public static Uri DesencriptarURL(string URL)
     {
         Uri lURLDesencriptado = null;
@@ -162,4 +209,12 @@ public class SeguimientoSupervisorColadeLlamadasViewModel
     public DateTime InicioLlamada { get; set; }
     public DateTime FinLlamada { get; set; }
     public int SegundosDuracionLlamada { get; set; }
+}
+
+
+public class ResumenAgentesViewModel
+{
+    public string NombreAgente { get; set; }
+    public int LlamadasPorHacer { get; set; }
+    public int LlamadasHechas { get; set; }
 }
