@@ -791,6 +791,7 @@
     <Content Include="Forms\Solicitudes_CANEX\Solicitudes_CANEX.aspx" />
     <Content Include="Forms\Solicitudes_CANEX\Solicitudes_CANEX_Detalles.aspx" />
     <Content Include="Forms\SRC\ConvenioReadecuacion.aspx" />
+    <Content Include="Forms\SRC\GestionCobranzaClientesOpcionesFinanciamiento.aspx" />
     <Content Include="Forms\SRC\SeguimientoBitacoras.aspx" />
     <Content Include="Forms\SRC\SeguimientoJefePromesasdePago.aspx" />
     <Content Include="Forms\SRC\SeguimientoRecuperacionDelDiaPorAgente.aspx" />
@@ -1594,6 +1595,13 @@
     </Compile>
     <Compile Include="Forms\SRC\ConvenioReadecuacion.aspx.designer.cs">
       <DependentUpon>ConvenioReadecuacion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SRC\GestionCobranzaClientesOpcionesFinanciamiento.aspx.cs">
+      <DependentUpon>GestionCobranzaClientesOpcionesFinanciamiento.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SRC\GestionCobranzaClientesOpcionesFinanciamiento.aspx.designer.cs">
+      <DependentUpon>GestionCobranzaClientesOpcionesFinanciamiento.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\SRC\SeguimientoBitacoras.aspx.cs">
       <DependentUpon>SeguimientoBitacoras.aspx</DependentUpon>
