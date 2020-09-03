@@ -136,6 +136,8 @@ var angle = 0;
 					$(window).off("click", close_handler);
 				}
 
+				angle = 0;
+
 				return false;
 			};
 			//cerrar imagen al darle doble click
