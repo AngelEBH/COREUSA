@@ -8,14 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Analisis de solicitud de crédito</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/imgBox/style.css" rel="stylesheet" />
     <style>
         .tr-exito {
             color: #00a803;
@@ -1718,13 +1719,14 @@
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/plugins/magnific-popup/jquery.magnific-popup.min.js"></script>
-    <script src="/Scripts/plugins/imgBox/jquery.imgbox.js"></script>
+    <script src="/Scripts/plugins/imgBox/jquery-rotate.min.js"></script>
+    <script src="/Scripts/plugins/imgBox/jquery.imgbox.js?v=20200903152956"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/kendo/jszip.min.js"></script>
     <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
     <script src="/Scripts/plugins/kendo/PrintHtmlToPDF.js"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Analisis.js?v=202008270956"></script>
+    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Analisis.js?v=20200903152956"></script>
     <script type="x/kendo-template" id="page-template">
         <div class="page-template">
             <div class="header">

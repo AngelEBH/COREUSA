@@ -45,7 +45,7 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
                     ddlAgentesActivos.DataBind();
                     dtAgentes.Dispose();
                     AdapterDDLCondiciones.Dispose();
-                    ddlAgentesActivos.Items.Insert(0, new ListItem("Seleccionar Agente", "0"));
+                    ddlAgentesActivos.Items.Insert(0, new ListItem("Todos los agentes", "0"));
                     ddlAgentesActivos.SelectedIndex = 0;
                 }
             }
@@ -58,7 +58,7 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
     {
         List<SeguimientoSupervisorColadeLlamadasViewModel> ListadoRegistros = new List<SeguimientoSupervisorColadeLlamadasViewModel>();
 
-        if (IDAgente == 0)
+        if (IDActividad == 0)
             return ListadoRegistros;
 
         try

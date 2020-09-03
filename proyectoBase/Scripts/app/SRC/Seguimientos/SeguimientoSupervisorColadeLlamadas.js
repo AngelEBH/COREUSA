@@ -1,43 +1,48 @@
-﻿var FiltroActual = "";
+﻿var EsPrimeraCarga = true;
+var FiltroActual = "";
 var Actividad = 1;
+var lenguaje = {
+    "sProcessing": "Cargando información...",
+    "sLengthMenu": "Mostrar _MENU_ registros",
+    "sZeroRecords": "No se encontraron resultados",
+    "sEmptyTable": "Ningún dato disponible en esta tabla",
+    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+    "sInfoPostFix": "",
+    "sSearch": "Buscar:",
+    "sUrl": "",
+    "sInfoThousands": ",",
+    "sLoadingRecords": "Cargando información...",
+    "oPaginate": {
+        "sFirst": "Primero",
+        "sLast": "Último",
+        "sNext": "Siguiente",
+        "sPrevious": "Anterior"
+    },
+    "oAria": {
+        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    },
+    "buttons": {
+        copyTitle: 'Copiar al portapapeles',
+        copySuccess: {
+            1: "Copiada una fila al portapapeles",
+            _: "Copiadas %d filas al portapapeles"
+        }
+
+    },
+    "decimal": ".",
+    "thousands": ","
+};
 
 $(document).ready(function () {
+
+    /* Al cargar la pagina por primera vez no es necesario que se carguen los registros de la tabla por actividades */
+    //if (!EsPrimeraCarga) {
     dtClientes = $('#datatable-clientes').DataTable({
         "responsive": true,
-        "language": {
-            "sProcessing": "Cargando información...",
-            "sLengthMenu": "Mostrar _MENU_ registros",
-            "sZeroRecords": "No se encontraron resultados",
-            "sEmptyTable": "Ningún dato disponible en esta tabla",
-            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix": "",
-            "sSearch": "Buscar:",
-            "sUrl": "",
-            "sInfoThousands": ",",
-            "sLoadingRecords": "Cargando información...",
-            "oPaginate": {
-                "sFirst": "Primero",
-                "sLast": "Último",
-                "sNext": "Siguiente",
-                "sPrevious": "Anterior"
-            },
-            "oAria": {
-                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-            },
-            "buttons": {
-                copyTitle: 'Copiar al portapapeles',
-                copySuccess: {
-                    1: "Copiada una fila al portapapeles",
-                    _: "Copiadas %d filas al portapapeles"
-                }
-
-            },
-            "decimal": ".",
-            "thousands": ","
-        },
+        "language": lenguaje,
         "pageLength": 10,
         "aaSorting": [],
         "processing": true,
@@ -109,49 +114,18 @@ $(document).ready(function () {
     dtClientes.buttons().container()
         .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
 
+    //} if !EsPrimeraCarga
+
 
     dtResumen = $('#datatable-resumenAgentes').DataTable({
         "responsive": true,
-        "language": {
-            "sProcessing": "Cargando información...",
-            "sLengthMenu": "Mostrar _MENU_ registros",
-            "sZeroRecords": "No se encontraron resultados",
-            "sEmptyTable": "Ningún dato disponible en esta tabla",
-            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix": "",
-            "sSearch": "Buscar:",
-            "sUrl": "",
-            "sInfoThousands": ",",
-            "sLoadingRecords": "Cargando información...",
-            "oPaginate": {
-                "sFirst": "Primero",
-                "sLast": "Último",
-                "sNext": "Siguiente",
-                "sPrevious": "Anterior"
-            },
-            "oAria": {
-                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-            },
-            "buttons": {
-                copyTitle: 'Copiar al portapapeles',
-                copySuccess: {
-                    1: "Copiada una fila al portapapeles",
-                    _: "Copiadas %d filas al portapapeles"
-                }
-
-            },
-            "decimal": ".",
-            "thousands": ","
-        },
+        "language": lenguaje,
         "pageLength": 10,
         "aaSorting": [],
         "processing": true,
         "dom": "<'row'<'col-sm-6'B><'col-sm-6'T>>" +
             "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+            "<'row'<'col-sm-6'><'col-sm-6'p>>",
         buttons: [
             {
                 extend: 'copy',
@@ -202,7 +176,7 @@ $(document).ready(function () {
         var filtro = this.value;
         switch (filtro) {
             case "hoy":
-                $("#tblClientes").css('display', '');
+                $("#tblClientes,#divFiltros").css('display', '');
                 $("#tblResumen").css('display', 'none');
                 $(".RangoFechas").css('display', 'none');
                 FiltroActual = "hoy";
@@ -210,7 +184,7 @@ $(document).ready(function () {
                 FiltrarInformacion();
                 break;
             case "porHacer":
-                $("#tblClientes").css('display', '');
+                $("#tblClientes,#divFiltros").css('display', '');
                 $("#tblResumen").css('display', 'none');
                 $(".RangoFechas").css('display', 'none');
                 FiltroActual = "porHacer";
@@ -218,7 +192,7 @@ $(document).ready(function () {
                 FiltrarInformacion();
                 break;
             case "anteriores":
-                $("#tblClientes").css('display', '');
+                $("#tblClientes,#divFiltros").css('display', '');
                 $("#tblResumen").css('display', 'none');
 
                 $(".RangoFechas").css('display', '');
@@ -231,7 +205,7 @@ $(document).ready(function () {
 
             case "resumenAgentes":
                 $(".RangoFechas").css('display', '');
-                $("#tblClientes").css('display', 'none');
+                $("#tblClientes,#divFiltros").css('display', 'none');
                 $("#tblResumen").css('display', '');
                 dtResumen.ajax.reload(null, false);
                 break;
@@ -277,18 +251,18 @@ $(document).ready(function () {
 });
 
 $("#ddlAgentesActivos").change(function () {
-    if ($("#ddlAgentesActivos :selected").val() != '0') {
-        FiltrarInformacion();
-    }
+
+    FiltrarInformacion();
+
 });
 
 function FiltrarInformacion() {
 
-    if ($("#ddlAgentesActivos :selected").val() != '0') {
+    if (Actividad != 0) {
         dtClientes.ajax.reload(null, false);
     }
     else {
-        MensajeAdvertencia('Seleccione un agente');
+        MensajeAdvertencia('Seleccione una actividad');
     }
 }
 

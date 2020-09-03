@@ -70,7 +70,7 @@
                 </div>
                 <br />
 
-                <div class="form-inline justify-content-center">
+                <div class="form-inline justify-content-center" id="divFiltros" style="display: none;">
                     <div class="form-group mb-2">
                         <label class="form-control-plaintext">Filtrar por Agente</label>
                     </div>
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" id="tblClientes">
+                <div class="row" id="tblClientes" style="display: none;">
                     <div class="col-12">
                         <table id="datatable-clientes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
@@ -112,7 +112,7 @@
                 </div>
 
 
-                <div class="row" id="tblResumen" style="display:none;">
+                <div class="row" id="tblResumen">
                     <div class="col-12">
                         <table id="datatable-resumenAgentes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%;" role="grid">
                             <thead>
@@ -155,6 +155,6 @@
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoSupervisorColadeLlamadas.js?v=1.1"></script>
+    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoSupervisorColadeLlamadas.js?v=20200903090725"></script>
 </body>
 </html>

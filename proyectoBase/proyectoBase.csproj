@@ -1201,6 +1201,7 @@
     <Content Include="Scripts\plugins\iCheck\custom.css" />
     <Content Include="Scripts\plugins\iCheck\green%402x.png" />
     <Content Include="Scripts\plugins\iCheck\green.png" />
+    <Content Include="Scripts\plugins\imgBox\jquery-rotate.min.js" />
     <Content Include="Scripts\plugins\imgBox\jquery.imgbox.js" />
     <Content Include="Scripts\plugins\imgBox\style.css" />
     <Content Include="Scripts\plugins\iziToast\css\iziToast.css" />

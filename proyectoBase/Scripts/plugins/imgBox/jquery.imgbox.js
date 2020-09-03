@@ -1,4 +1,5 @@
 /* FUNCIONES PARA VISUALIZAR DOCUMENTACION */
+var angle = 0;
 
 !function ($) {
 
@@ -25,9 +26,7 @@
 
 		$(this).click(function(){
 
-			var src = $(this).attr("src");
-
-			var viewbtn = $('<a target="_blank" class="check-original-image" href="' + src + '">Abrir en una pestaña aparte</a>');
+			var src = $(this).attr("src");			
 
 			var mask = $('<div data-pop-layer="1" style=""></div>').css({
 				position: "fixed",
@@ -50,22 +49,35 @@
 				display: "none"
 			});			
 
+			function rotar() {
+				angle += 90;
+				$(image).rotate(angle);
+            }
+
+			var rotatebtn = $('<button class="check-original-image btn btn-hover"><i class="mdi mdi-rotate-right"></i></button>').on('click', function () {				
+				rotar();
+			});
+
+			var closebtn = $('<button class="close-original-image" href="javascript:void(0);"><i class="mdi mdi mdi-close-circle-outline"></i></button>');
+
+
 			var width = $(image).prop("width");
 			var height = $(image).prop("height");
 
 			var scale = width / height;
 
-			$('html').append(image).css({
+			//$('html').append(closebtn).append(image).append(rotatebtn).append(mask).css({
+			//	overflow: 'hidden'
+			//});
+
+
+			$('html').append(image).append(rotatebtn).append(mask).css({
 				overflow: 'hidden'
 			});
 
-			//$("body").append(viewbtn).append(mask).append(image).css({
-			//	overflow: "hidden"
-			//});
-
 			$(image).fadeIn("fast");
 
-			$(viewbtn).click(function(){
+			$(rotatebtn).click(function(){
 				event.stopPropagation();
 			});
 
@@ -90,8 +102,9 @@
 
 				$(image).css({
 					left: ($(window).width() - w) / 2 + "px",
-					top: ($(window).height() - h) / 2 + "px",
+					top: ($(window).height() - h) / 2 + "px"
 				});
+
 			};
 
 			var close_handler = function(){
@@ -113,7 +126,7 @@
 				//	//'overflow-x':'hidden'
 				//});
 
-				$(viewbtn).remove();
+				$(rotatebtn).remove();
 				$(closebtn).remove();
 				$(mask).remove();
 
@@ -149,18 +162,16 @@
 				}
 
 				$(image).css({
-					transform: "scale("+scale+")"
+					transform: "scale(" + scale + ")" + " " + "rotate(" + angle + "deg)"
 				}).data("scale", scale);
+
+				//$(image).rotate(angle);
 
 				return false;
 			};
 
 			// Arrastrar la imagen
-			if(options.drag == true){
-
-				var closebtn = $('<a class="close-original-image material-icons" href="javascript:void(0);"></a>');
-
-				$("body").append(closebtn);
+			if(options.drag == true){				
 
 				// Estilo del ratón
 				$(image).css({
