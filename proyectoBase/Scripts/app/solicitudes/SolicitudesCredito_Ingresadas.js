@@ -1,5 +1,6 @@
 ﻿var FiltroActual = "";
 var idSolicitud = 0;
+var identidadCliente = "";
 estadoMasRelevante = '';
 
 $(document).ready(function () {
@@ -176,6 +177,7 @@ $(document).ready(function () {
         var row = dtBandeja.row(this).data();
 
         idSolicitud = row.fiIDSolicitud;
+        identidadCliente = row.fcIdentidadCliente;
         $("#lblCliente").text(row.fcPrimerNombreCliente + ' ' + row.fcSegundoNombreCliente + ' ' + row.fcPrimerApellidoCliente + ' ' + row.fcSegundoApellidoCliente + ' ');
         $("#lblIdentidadCliente").text(row.fcIdentidadCliente);
         $("#modalAbrirSolicitud").modal();
@@ -214,7 +216,7 @@ $(document).on('click', 'button#btnDetalles', function () {
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Ingresadas.aspx/EncriptarParametros",
-        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: idSolicitud }),
+        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: idSolicitud, Identidad: identidadCliente }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la solicitud, contacte al administrador');

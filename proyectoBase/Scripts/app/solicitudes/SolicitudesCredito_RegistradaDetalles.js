@@ -583,7 +583,7 @@ $("#btnHistorialExterno").click(function () {
     var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/ObtenerUrlEncriptado' + qString,
+        url: 'SolicitudesCredito_RegistradaDetalles.aspx/ObtenerUrlEncriptado' + qString,
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
 
@@ -605,7 +605,7 @@ function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
     var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo' + qString,
+        url: 'SolicitudesCredito_RegistradaDetalles.aspx/CalculoPrestamo' + qString,
         data: JSON.stringify({ MontoFinanciar: prestamoAprobado, PlazoFinanciar: plazoQuincenal, ValorPrima: '0' }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
@@ -634,7 +634,7 @@ function prestamoMoto(ValorPrima, valorDeLaMoto, plazoQuincenal) {
     var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo' + qString,
+        url: 'SolicitudesCredito_RegistradaDetalles.aspx/CalculoPrestamo' + qString,
         data: JSON.stringify({ MontoFinanciar: valorDeLaMoto, PlazoFinanciar: plazoQuincenal, ValorPrima: ValorPrima }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
@@ -662,7 +662,7 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
     var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo' + qString,
+        url: 'SolicitudesCredito_RegistradaDetalles.aspx/CalculoPrestamo' + qString,
         data: JSON.stringify({ MontoFinanciar: valorDelAuto, PlazoFinanciar: plazoMensual, ValorPrima: ValorPrima }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
@@ -690,9 +690,11 @@ function cargarPrestamosSugeridos(identidad, ingresos, obligaciones, codigoProdu
     $("#cargandoPrestamosSugeridosReales").css('display', '');
 
     MensajeInformacion('Cargando préstamos sugeridos');
+
+    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_RegistradaDetalles.aspx/GetPrestamosSugeridos',
+        url: 'SolicitudesCredito_RegistradaDetalles.aspx/GetPrestamosSugeridos' + qString,
         data: JSON.stringify({ identidad: identidad, ingresos: ingresos, obligaciones: obligaciones, codigoProducto: codigoProducto }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {

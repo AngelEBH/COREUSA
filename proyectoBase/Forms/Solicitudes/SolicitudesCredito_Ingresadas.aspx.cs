@@ -41,7 +41,7 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string EncriptarParametros(int IDSOL, string dataCrypt)
+    public static string EncriptarParametros(int IDSOL, string dataCrypt, string Identidad)
     {
         DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         string resultado;
@@ -55,6 +55,7 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
             string lcParametros = "usr=" + pcIDUsuario +
             "&IDApp=" + pcIDApp +
             "&SID=" + pcIDSesion +
+            "&pcID=" + Identidad +
             "&IDSOL=" + IDSOL;
             resultado = DSC.Encriptar(lcParametros);
         }
