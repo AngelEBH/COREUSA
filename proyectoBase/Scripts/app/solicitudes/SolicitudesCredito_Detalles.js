@@ -677,11 +677,11 @@ $('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
     });
 });
 
-$(document).on('click', 'button#btnComentarioReferencia', function () {
-    $("#txtObservacionesReferencia").val($(this).data('comment')).prop('disabled', true);
-    $("#lblNombreReferenciaModal").text($(this).data('nombreref'));
-    $("#modalComentarioReferencia").modal();
-});
+//$(document).on('click', 'button#btnComentarioReferencia', function () {
+//    $("#txtObservacionesReferencia").val($(this).data('comment'));
+//    $("#lblNombreReferenciaModal").text($(this).data('nombreref'));
+//    $("#modalComentarioReferencia").modal();
+//});
 
 /* abrir modal de documentacion */
 $("#btnValidoDocumentacionModal").click(function () {
@@ -772,7 +772,7 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo',
-        data: JSON.stringify({ MontoFinanciar: valorDelAuto, PlazoFinanciar: plazoMensual, ValorPrima: ValorPrima }),
+        data: JSON.stringify({ MontoFinanciar: valorDelAuto, PlazoFinanciar: plazoMensual, ValorPrima: ValorPrima, dataCrypt: window.location.href}),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al realizar calculo del préstamo');
@@ -833,6 +833,92 @@ function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
         }
     });
 }
+
+/* Actualizar comentario sobre una referencia personal radiofaro */
+var comentarioActual = '';
+var IDReferencia = '';
+var btnReferenciaSeleccionada = '';
+
+$(document).on('click', 'button#btnComentarioReferencia', function () {
+
+    btnReferenciaSeleccionada = $(this);
+    comentarioActual = $(this).data('comment');
+    IDReferencia = $(this).data('id');
+    var nombreReferencia = $(this).data('nombreref');
+
+    $("#txtObservacionesReferencia").val(comentarioActual);
+    $("#lblNombreReferenciaModal").text(nombreReferencia);
+
+    if (comentarioActual != '' && comentarioActual != 'Sin comunicacion') {
+        $("#txtObservacionesReferencia").prop('disabled', true);
+        $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', true).removeClass('btn-primary').addClass('btn-secondary');
+    }
+    else if (comentarioActual == 'Sin comunicacion') {
+        $("#txtObservacionesReferencia").prop('disabled', false);
+        $("#btnReferenciaSinComunicacion").prop('disabled', true);
+        $("#btnComentarioReferenciaConfirmar").prop('disabled', false).removeClass('btn-secondary').addClass('btn-primary');
+    }
+    else {
+        $("#txtObservacionesReferencia").prop('disabled', false);
+        $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', false);
+    }
+    $("#modalComentarioReferencia").modal();
+});
+
+$("#btnComentarioReferenciaConfirmar").click(function () {
+
+    if ($($("#frmObservacionReferencia")).parsley().isValid()) {
+
+        $("#frmObservacionReferencia").submit(function (e) { e.preventDefault(); });
+        comentarioActual = $('#txtObservacionesReferencia').val();
+
+        $.ajax({
+            type: "POST",
+            url: 'SolicitudesCredito_Detalles.aspx/ComentarioReferenciaPersonal',
+            data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('Error al actualizar estado de la referencia personal');
+            },
+            success: function (data) {
+                if (data.d == true) {
+                    $("#modalComentarioReferencia").modal('hide');
+                    MensajeExito('Observaciones de la referencia personal actualizadas correctamente');
+                    btnReferenciaSeleccionada.data('comment', comentarioActual);
+                    btnReferenciaSeleccionada.closest('tr').removeClass('text-danger').addClass('tr-exito');
+                    btnReferenciaSeleccionada.removeClass('mdi mdi-comment').removeClass('mdi mdi-call-missed text-danger').addClass('mdi mdi-check-circle-outline tr-exito');
+                }
+                else { MensajeError('Error al actualizar observaciones de la referencia personal'); }
+            }
+        });
+    }
+    else { $($("#frmObservacionReferencia")).parsley().validate(); }
+});
+
+$("#btnReferenciaSinComunicacion").click(function () {
+
+    comentarioActual = 'Sin comunicacion';
+
+    $.ajax({
+        type: "POST",
+        url: 'SolicitudesCredito_Detalles.aspx/ComentarioReferenciaPersonal',
+        data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al actualizar estado de la referencia personal');
+        },
+        success: function (data) {
+            if (data.d == true) {
+                $("#modalComentarioReferencia").modal('hide');
+                MensajeExito('Estado de la referencia personal actualizado correctamente');
+                btnReferenciaSeleccionada.data('comment', comentarioActual);
+                btnReferenciaSeleccionada.removeClass('mdi mdi-check-circle-outline tr-exito').removeClass('mdi mdi-comment').addClass('mdi mdi-call-missed text-danger');
+                btnReferenciaSeleccionada.closest('tr').addClass('text-danger');
+            }
+            else { MensajeError('Error al actualizar estado de la referencia personal'); }
+        }
+    });
+});
 
 function MensajeError(mensaje) {
     iziToast.error({

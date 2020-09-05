@@ -16,6 +16,7 @@
     <link href="/Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/imgBox/style.css" rel="stylesheet" />
     <style>
         .card-header {
             background-color: #ffffff;
@@ -820,30 +821,40 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
 
-    <div id="modalComentarioReferencia" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalComentarioReferenciaLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <!-- modal agregar comentario sobre una referencia personal -->
+    <div id="modalComentarioReferencia" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalComentarioReferenciaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title mt-0" id="modalComentarioReferenciaLabel">Observaciones de referencia personal</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
-                <div class="modal-body">                    
-                    <strong>
-                        <label id="lblNombreReferenciaModal"></label>
-                    </strong>?
-                    <br />
-                    <div class="form-group">
-                        <label class="col-form-label">Observaciones</label>
-                        <textarea id="txtObservacionesReferencia" required="required" class="form-control" maxlength="225" rows="2" data-parsley-group="informacionLaboral"></textarea>
+                <form action="#" id="frmObservacionReferencia">
+                    <div class="modal-body">
+                        Observaciones de la referencia personal
+                        <strong>
+                            <label id="lblNombreReferenciaModal"></label>
+                        </strong><br />
+
+                        <div class="form-group">
+                            <label class="col-form-label">Observaciones</label>
+                            <textarea id="txtObservacionesReferencia" runat="server" required="required" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="informacionLaboral"></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                        Cerrar
-                    </button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnReferenciaSinComunicacion" runat="server" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                            Sin comunicación
+                        </button>
+                        <button type="button" id="btnComentarioReferenciaConfirmar" runat="server" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -903,9 +914,10 @@
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
-    <script src="/Scripts/plugins/imgBox/jquery.imgbox.js"></script>
+    <script src="/Scripts/plugins/imgBox/jquery-rotate.min.js"></script>
+    <script src="/Scripts/plugins/imgBox/jquery.imgbox.js?v=20200903152956"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Detalles.js?v=202008211137"></script>
+    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Detalles.js?v=20202051514848"></script>
 </body>
 </html>

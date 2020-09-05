@@ -9,8 +9,9 @@
 
 
 
-public partial class SolicitudesCredito_Detalles {
-    
+public partial class SolicitudesCredito_Detalles
+{
+
     /// <summary>
     /// Control LogoPrestamo.
     /// </summary>
@@ -19,7 +20,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Image LogoPrestamo;
-    
+
     /// <summary>
     /// Control lblTipoPrestamo.
     /// </summary>
@@ -28,7 +29,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblTipoPrestamo;
-    
+
     /// <summary>
     /// Control spanNombreCliente.
     /// </summary>
@@ -37,7 +38,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label spanNombreCliente;
-    
+
     /// <summary>
     /// Control spanIdentidadCliente.
     /// </summary>
@@ -46,7 +47,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label spanIdentidadCliente;
-    
+
     /// <summary>
     /// Control lblNoSolicitud.
     /// </summary>
@@ -55,16 +56,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblNoSolicitud;
-    
-    /// <summary>
-    /// Control lblNoCliente.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblNoCliente;
-    
+
     /// <summary>
     /// Control lblTipoSolicitud.
     /// </summary>
@@ -73,7 +65,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblTipoSolicitud;
-    
+
     /// <summary>
     /// Control lblAgenteDeVentas.
     /// </summary>
@@ -82,7 +74,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblAgenteDeVentas;
-    
+
     /// <summary>
     /// Control lblAgencia.
     /// </summary>
@@ -91,7 +83,16 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblAgencia;
-    
+
+    /// <summary>
+    /// Control lblNombreGestor.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombreGestor;
+
     /// <summary>
     /// Control lblRtnCliente.
     /// </summary>
@@ -100,7 +101,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblRtnCliente;
-    
+
     /// <summary>
     /// Control lblNumeroTelefono.
     /// </summary>
@@ -109,7 +110,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.HyperLink lblNumeroTelefono;
-    
+
     /// <summary>
     /// Control lblNacionalidad.
     /// </summary>
@@ -118,7 +119,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblNacionalidad;
-    
+
     /// <summary>
     /// Control lblFechaNacimientoCliente.
     /// </summary>
@@ -127,7 +128,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblFechaNacimientoCliente;
-    
+
     /// <summary>
     /// Control lblEdadCliente.
     /// </summary>
@@ -136,7 +137,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblEdadCliente;
-    
+
     /// <summary>
     /// Control lblCorreoCliente.
     /// </summary>
@@ -145,7 +146,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.HyperLink lblCorreoCliente;
-    
+
     /// <summary>
     /// Control lblProfesionCliente.
     /// </summary>
@@ -154,7 +155,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblProfesionCliente;
-    
+
     /// <summary>
     /// Control lblSexoCliente.
     /// </summary>
@@ -163,7 +164,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblSexoCliente;
-    
+
     /// <summary>
     /// Control lblEstadoCivilCliente.
     /// </summary>
@@ -172,7 +173,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblEstadoCivilCliente;
-    
+
     /// <summary>
     /// Control lblViviendaCliente.
     /// </summary>
@@ -181,7 +182,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblViviendaCliente;
-    
+
     /// <summary>
     /// Control lblTiempoResidirCliente.
     /// </summary>
@@ -190,7 +191,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblTiempoResidirCliente;
-    
+
     /// <summary>
     /// Control lblDeptoCliente.
     /// </summary>
@@ -199,7 +200,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblDeptoCliente;
-    
+
     /// <summary>
     /// Control lblMunicipioCliente.
     /// </summary>
@@ -208,7 +209,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMunicipioCliente;
-    
+
     /// <summary>
     /// Control lblCiudadCliente.
     /// </summary>
@@ -217,7 +218,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblCiudadCliente;
-    
+
     /// <summary>
     /// Control lblBarrioColoniaCliente.
     /// </summary>
@@ -226,7 +227,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblBarrioColoniaCliente;
-    
+
     /// <summary>
     /// Control lblDireccionDetalladaCliente.
     /// </summary>
@@ -235,7 +236,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblDireccionDetalladaCliente;
-    
+
     /// <summary>
     /// Control lblReferenciaDomicilioCliente.
     /// </summary>
@@ -244,7 +245,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblReferenciaDomicilioCliente;
-    
+
     /// <summary>
     /// Control lblNombreConyugue.
     /// </summary>
@@ -253,7 +254,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblNombreConyugue;
-    
+
     /// <summary>
     /// Control lblIdentidadConyuge.
     /// </summary>
@@ -262,7 +263,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblIdentidadConyuge;
-    
+
     /// <summary>
     /// Control lblFechaNacimientoConygue.
     /// </summary>
@@ -271,7 +272,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblFechaNacimientoConygue;
-    
+
     /// <summary>
     /// Control lblTelefonoConyugue.
     /// </summary>
@@ -280,7 +281,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.HyperLink lblTelefonoConyugue;
-    
+
     /// <summary>
     /// Control lblLugarTrabajoConyugue.
     /// </summary>
@@ -289,7 +290,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblLugarTrabajoConyugue;
-    
+
     /// <summary>
     /// Control lblTelefonoTrabajoConyugue.
     /// </summary>
@@ -298,7 +299,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblTelefonoTrabajoConyugue;
-    
+
     /// <summary>
     /// Control lblIngresosConyugue.
     /// </summary>
@@ -307,7 +308,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblIngresosConyugue;
-    
+
     /// <summary>
     /// Control lblNombreTrabajoCliente.
     /// </summary>
@@ -316,7 +317,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblNombreTrabajoCliente;
-    
+
     /// <summary>
     /// Control lblIngresosMensualesCliente.
     /// </summary>
@@ -325,7 +326,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblIngresosMensualesCliente;
-    
+
     /// <summary>
     /// Control lblPuestoAsignadoCliente.
     /// </summary>
@@ -334,7 +335,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblPuestoAsignadoCliente;
-    
+
     /// <summary>
     /// Control lblFechaIngresoCliente.
     /// </summary>
@@ -343,7 +344,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblFechaIngresoCliente;
-    
+
     /// <summary>
     /// Control lblArraigoLaboral.
     /// </summary>
@@ -352,7 +353,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblArraigoLaboral;
-    
+
     /// <summary>
     /// Control lblTelefonoEmpresaCliente.
     /// </summary>
@@ -361,7 +362,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblTelefonoEmpresaCliente;
-    
+
     /// <summary>
     /// Control lblExtensionRecursosHumanos.
     /// </summary>
@@ -370,7 +371,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblExtensionRecursosHumanos;
-    
+
     /// <summary>
     /// Control lblExtensionCliente.
     /// </summary>
@@ -379,7 +380,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblExtensionCliente;
-    
+
     /// <summary>
     /// Control lblDeptoEmpresa.
     /// </summary>
@@ -388,7 +389,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblDeptoEmpresa;
-    
+
     /// <summary>
     /// Control lblMunicipioEmpresa.
     /// </summary>
@@ -397,7 +398,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMunicipioEmpresa;
-    
+
     /// <summary>
     /// Control lblCiudadEmpresa.
     /// </summary>
@@ -406,7 +407,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblCiudadEmpresa;
-    
+
     /// <summary>
     /// Control lblBarrioColoniaEmpresa.
     /// </summary>
@@ -415,7 +416,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblBarrioColoniaEmpresa;
-    
+
     /// <summary>
     /// Control lblDireccionDetalladaEmpresa.
     /// </summary>
@@ -424,7 +425,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblDireccionDetalladaEmpresa;
-    
+
     /// <summary>
     /// Control lblReferenciaUbicacionEmpresa.
     /// </summary>
@@ -433,7 +434,25 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblReferenciaUbicacionEmpresa;
-    
+
+    /// <summary>
+    /// Control lblDescripcionOtrosIngresos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblDescripcionOtrosIngresos;
+
+    /// <summary>
+    /// Control lblValorOtrosIngresos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblValorOtrosIngresos;
+
     /// <summary>
     /// Control lblIngresosPrecalificado.
     /// </summary>
@@ -442,7 +461,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblIngresosPrecalificado;
-    
+
     /// <summary>
     /// Control lblObligacionesPrecalificado.
     /// </summary>
@@ -451,7 +470,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblObligacionesPrecalificado;
-    
+
     /// <summary>
     /// Control lblDisponiblePrecalificado.
     /// </summary>
@@ -460,7 +479,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblDisponiblePrecalificado;
-    
+
     /// <summary>
     /// Control lblCapacidadPagoMensual.
     /// </summary>
@@ -469,7 +488,16 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblCapacidadPagoMensual;
-    
+
+    /// <summary>
+    /// Control lblCapacidadPagoQuincenal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblCapacidadPagoQuincenal;
+
     /// <summary>
     /// Control lblValorPmoSugeridoSeleccionado.
     /// </summary>
@@ -478,7 +506,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblValorPmoSugeridoSeleccionado;
-    
+
     /// <summary>
     /// Control lblMontoValorVehiculo.
     /// </summary>
@@ -487,7 +515,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMontoValorVehiculo;
-    
+
     /// <summary>
     /// Control lblMontoPrima.
     /// </summary>
@@ -496,7 +524,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMontoPrima;
-    
+
     /// <summary>
     /// Control lblMontoFinanciarEfectivo.
     /// </summary>
@@ -505,7 +533,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMontoFinanciarEfectivo;
-    
+
     /// <summary>
     /// Control lblMontoCuotaEfectivo.
     /// </summary>
@@ -514,7 +542,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMontoCuotaEfectivo;
-    
+
     /// <summary>
     /// Control lblMontoFinanciarMoto.
     /// </summary>
@@ -523,7 +551,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMontoFinanciarMoto;
-    
+
     /// <summary>
     /// Control lblMontoCuotaMoto.
     /// </summary>
@@ -532,7 +560,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMontoCuotaMoto;
-    
+
     /// <summary>
     /// Control lblMontoFinanciarAuto.
     /// </summary>
@@ -541,7 +569,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMontoFinanciarAuto;
-    
+
     /// <summary>
     /// Control lblMontoCuotaTotalAuto.
     /// </summary>
@@ -550,7 +578,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMontoCuotaTotalAuto;
-    
+
     /// <summary>
     /// Control lblIngresosReales.
     /// </summary>
@@ -559,7 +587,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblIngresosReales;
-    
+
     /// <summary>
     /// Control lblObligacionesReales.
     /// </summary>
@@ -568,7 +596,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblObligacionesReales;
-    
+
     /// <summary>
     /// Control lblDisponibleReal.
     /// </summary>
@@ -577,7 +605,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblDisponibleReal;
-    
+
     /// <summary>
     /// Control lblCapacidadPagoMensualReal.
     /// </summary>
@@ -586,7 +614,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblCapacidadPagoMensualReal;
-    
+
     /// <summary>
     /// Control lblCapacidadPagoQuincenalReal.
     /// </summary>
@@ -595,7 +623,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblCapacidadPagoQuincenalReal;
-    
+
     /// <summary>
     /// Control lblMontoPrestamoEscogido.
     /// </summary>
@@ -604,7 +632,7 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMontoPrestamoEscogido;
-    
+
     /// <summary>
     /// Control lblPlazoEscogido.
     /// </summary>
@@ -613,4 +641,103 @@ public partial class SolicitudesCredito_Detalles {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblPlazoEscogido;
+
+    /// <summary>
+    /// Control lblGestorValidadorDomicilio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblGestorValidadorDomicilio;
+
+    /// <summary>
+    /// Control lblResolucionDomicilio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblResolucionDomicilio;
+
+    /// <summary>
+    /// Control lblFechaValidacionDomicilio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblFechaValidacionDomicilio;
+
+    /// <summary>
+    /// Control lblObservacionesCampoDomicilio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblObservacionesCampoDomicilio;
+
+    /// <summary>
+    /// Control lblGestorValidadorTrabajo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblGestorValidadorTrabajo;
+
+    /// <summary>
+    /// Control lblResolucionTrabajo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblResolucionTrabajo;
+
+    /// <summary>
+    /// Control lblFechaValidacionTrabajo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblFechaValidacionTrabajo;
+
+    /// <summary>
+    /// Control lblObservacionesCampoTrabajo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblObservacionesCampoTrabajo;
+
+    /// <summary>
+    /// Control txtObservacionesReferencia.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesReferencia;
+
+    /// <summary>
+    /// Control btnReferenciaSinComunicacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnReferenciaSinComunicacion;
+
+    /// <summary>
+    /// Control btnComentarioReferenciaConfirmar.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnComentarioReferenciaConfirmar;
 }

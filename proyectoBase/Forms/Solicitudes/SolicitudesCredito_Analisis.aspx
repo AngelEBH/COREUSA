@@ -1377,10 +1377,10 @@
                 </div>
                 <form action="#" id="frmObservacionReferencia">
                     <div class="modal-body">
-                        ¿Está seguro de actualizar las observaciones de la referencia personal
+                        Actualizar las observaciones de la referencia personal
                         <strong>
                             <label id="lblNombreReferenciaModal"></label>
-                        </strong>?<br />
+                        </strong><br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
                             <textarea id="txtObservacionesReferencia" required="required" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="informacionLaboral"></textarea>
