@@ -134,7 +134,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     else
                                     {
                                         lblNombreConyugue.Text = NombreCompletoConyugue.Replace(" ", " ");
-                                        DateTime FechaNacimientoConyugue = (DateTime)reader["fdNacimientoCliente"];
+                                        DateTime FechaNacimientoConyugue = (DateTime)reader["fdFechaNacimientoConyugue"];
                                         lblFechaNacimientoConygue.Text = FechaNacimientoConyugue.ToString("MM/dd/yyyy");
                                         lblTelefonoConyugue.NavigateUrl = "tel:" + reader["fcTelefonoConyugue"].ToString();
                                         lblTelefonoConyugue.Text = reader["fcTelefonoConyugue"].ToString();
