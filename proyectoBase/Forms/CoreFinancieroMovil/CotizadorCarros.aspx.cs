@@ -162,10 +162,12 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
             txtCuotaTotal1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensual"].ToString()));
             txtCuotaTotalGC1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensualConGastosdeCierre"].ToString()));
             txtGastosdeCierre1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnGastosdeCierre"].ToString()));
-            lblEtiqueta1.Text = "Tasa al " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnPorcentajeTasadeInteresAnual"].ToString())) + "%";
+            lblEtiqueta1.Text = "Tasa al " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnPorcentajeTasadeInteresAnual"].ToString())) + "%";            
 
             sqlConexion.Close();
             sqlConexion.Dispose();
+
+            lblMensaje.Visible = false;
         }
         catch (Exception ex)
         {
@@ -226,7 +228,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            PanelMensajeErrores.Visible = true;
+            lblMensaje.Visible = true;
             lblMensaje.Text = ex.Message;
         }
     }

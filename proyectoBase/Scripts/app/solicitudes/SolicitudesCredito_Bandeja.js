@@ -197,7 +197,7 @@ $(document).ready(function () {
             }
         ],
         columnDefs: [
-            { targets: 'no-sort', orderable: false },
+            { targets: [6,7,8,9,10,11,12], orderable: false },
             { "width": "1%", "targets": 0 }
         ]
     });
@@ -339,6 +339,8 @@ $(document).ready(function () {
             $("#modalAbrirSolicitud").modal({ backdrop: !1 });
         }
     });
+
+    FiltrarSolicitudesMesActual();
 });
 
 
@@ -383,4 +385,13 @@ function MensajeError(mensaje) {
         title: 'Error',
         message: mensaje
     });
+}
+
+function FiltrarSolicitudesMesActual() {
+
+    var mesActual = moment().format("MM");
+
+    dtBandeja.columns(5)
+        .search('/' + mesActual + '/')
+        .draw();
 }

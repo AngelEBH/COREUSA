@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Bandeja de solicitudes</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -140,19 +140,19 @@
                 <table id="datatable-bandeja" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                     <thead>
                         <tr>
-                            <th>Solicitud</th>
+                            <th>No</th>
                             <th>Agencia</th>
                             <th>Prod.</th>
                             <th>Identidad</th>
                             <th>Nombre cliente</th>
                             <th>Fecha de ingreso</th>
-                            <th>En ingreso</th>
-                            <th>En recepción</th>
-                            <th>En analisis</th>
-                            <th>En Campo</th>
+                            <th>Ingreso</th>
+                            <th>Recepción</th>
+                            <th>Analisis</th>
+                            <th>Campo</th>
                             <th>Condicio.</th>
                             <th>Reprog.</th>
-                            <th>Validación</th>
+                            <th>Valid.</th>
                             <th>Resolución</th>
                         </tr>
                     </thead>
@@ -187,8 +187,8 @@
             </div>
         </div>
     </div>
-    <script src="/Scripts/js/jquery-3.1.1.min.JS"></script>
-    <script src="/Scripts/js/bootstrap.js"></script>
+    <script src="/Scripts/js/jquery.min.js"></script>
+    <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
@@ -203,6 +203,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=1"></script>
+    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=20200916100295"></script>
 </body>
 </html>
