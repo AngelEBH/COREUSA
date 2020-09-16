@@ -44,15 +44,12 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
             lcEncriptado = lcEncriptado.Replace("%", "");
             lcEncriptado = lcEncriptado.Replace("%", "");
             lcEncriptado = lcEncriptado.Replace("%", "");
-            lcEncriptado = lcEncriptado.Replace("%", "");
+            lcEncriptado = lcEncriptado.Replace("3d", "=");
             lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
             lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
         }
-
-        pcIDUsuario = "1";
-        pcIDApp = "1";
     }
 
     protected void btnCalcular_Click(object sender, EventArgs e)
