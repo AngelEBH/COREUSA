@@ -766,9 +766,9 @@
     <Content Include="Forms\Aval\Aval_Precalificar.aspx" />
     <Content Include="Forms\Aval\Aval_Registrar.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
+    <Content Include="Forms\CoreFinancieroMovil\CotizadorCarros.aspx" />
     <Content Include="Forms\Movil\BandejaMisSolicitudes.aspx" />
     <Content Include="Forms\Movil\BandejaPrecalificados.aspx" />
-    <Content Include="Forms\Movil\CotizadorCarros.aspx" />
     <Content Include="Forms\Movil\precalificado_buscador.aspx" />
     <Content Include="Forms\Movil\Precalificado_Puesto109.aspx" />
     <Content Include="Forms\Movil\ProcesarPrecalificado.aspx" />
@@ -1422,6 +1422,13 @@
     <Compile Include="Forms\Clientes\Precalificado_Resolucion.aspx.designer.cs">
       <DependentUpon>Precalificado_Resolucion.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\CoreFinancieroMovil\CotizadorCarros.aspx.cs">
+      <DependentUpon>CotizadorCarros.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\CoreFinancieroMovil\CotizadorCarros.aspx.designer.cs">
+      <DependentUpon>CotizadorCarros.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Movil\BandejaMisSolicitudes.aspx.cs">
       <DependentUpon>BandejaMisSolicitudes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1435,13 +1442,6 @@
     </Compile>
     <Compile Include="Forms\Movil\BandejaPrecalificados.aspx.designer.cs">
       <DependentUpon>BandejaPrecalificados.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Movil\CotizadorCarros.aspx.cs">
-      <DependentUpon>CotizadorCarros.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Movil\CotizadorCarros.aspx.designer.cs">
-      <DependentUpon>CotizadorCarros.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Movil\precalificado_buscador.aspx.cs">
       <DependentUpon>precalificado_buscador.aspx</DependentUpon>
