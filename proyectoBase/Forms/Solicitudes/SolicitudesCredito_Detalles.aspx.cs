@@ -92,8 +92,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                             solicitudes = new BandejaSolicitudesViewModel()
                             {
                                 fiIDAnalista = (int)reader["fiIDAnalista"],
-                                fcNombreCortoAnalista = (string)reader["fcNombreCortoAnalista"],
-                                fiEstadoSolicitud = (byte)reader["fiEstadoSolicitud"]
+                                fcNombreCortoAnalista = (string)reader["fcNombreCortoAnalista"]
                             };
                             idProducto = (int)reader["fiIDTipoProducto"];
                             lblArraigoLaboral.Text = (string)reader["fcClienteArraigoLaboral"].ToString();
@@ -109,22 +108,6 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                 resultado = true;
             else
                 resultado = false;
-
-
-            // CODIGO MOMENTANEO!!!! PARA HABILITAR OPCIÓN A USUARIO DAVID LANDAVERDE A ACTUALIZAR INFORMACION DE REFERENCIAS
-            if(pcIDUsuario == "89" && solicitudes.fiEstadoSolicitud != 4 && solicitudes.fiEstadoSolicitud != 5 && solicitudes.fiEstadoSolicitud != 7)
-            {
-                btnReferenciaSinComunicacion.Visible = true;
-                btnComentarioReferenciaConfirmar.Visible = true;
-            }
-            else
-            {
-                btnReferenciaSinComunicacion.Visible = false;
-                btnComentarioReferenciaConfirmar.Visible = false;
-                txtObservacionesReferencia.Disabled = true;
-            }
-
-            
         }
         catch (Exception ex)
         {
@@ -757,51 +740,6 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             ex.Message.ToString();
         }
         return objCalculo;
-    }
-
-    [WebMethod]
-    public static bool ComentarioReferenciaPersonal(int IDReferencia, string comentario, string dataCrypt)
-    {
-        bool resultadoProceso = false;
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
-
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-                using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Comentario", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDReferencia", IDReferencia);
-                    sqlComando.Parameters.AddWithValue("@fcComentarioDeptoCredito", comentario);
-                    sqlComando.Parameters.AddWithValue("@fiAnalistaComentario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
-                    sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
-
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
-                                resultadoProceso = true;
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return resultadoProceso;
     }
 
     public static Uri DesencriptarURL(string URL)
