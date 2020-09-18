@@ -58,15 +58,6 @@ public partial class SolicitudesCredito_Analisis
     protected global::System.Web.UI.WebControls.Label lblNoSolicitud;
 
     /// <summary>
-    /// Control lblNoCliente.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblNoCliente;
-
-    /// <summary>
     /// Control lblTipoSolicitud.
     /// </summary>
     /// <remarks>
@@ -92,6 +83,15 @@ public partial class SolicitudesCredito_Analisis
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblAgencia;
+
+    /// <summary>
+    /// Control lblNombreGestor.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombreGestor;
 
     /// <summary>
     /// Control lblRtnCliente.
@@ -334,7 +334,7 @@ public partial class SolicitudesCredito_Analisis
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.HyperLink actualizarIngresosCliente;
+    protected global::System.Web.UI.WebControls.Label actualizarIngresosCliente;
 
     /// <summary>
     /// Control lblPuestoAsignadoCliente.
@@ -571,24 +571,6 @@ public partial class SolicitudesCredito_Analisis
     protected global::System.Web.UI.WebControls.Label lblMontoCuotaTotalAuto;
 
     /// <summary>
-    /// Control lblMontoPrestamoEscogido.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoPrestamoEscogido;
-
-    /// <summary>
-    /// Control lblPlazoEscogido.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblPlazoEscogido;
-
-    /// <summary>
     /// Control lblIngresosReales.
     /// </summary>
     /// <remarks>
@@ -632,6 +614,24 @@ public partial class SolicitudesCredito_Analisis
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblCapacidadPagoQuincenalReal;
+
+    /// <summary>
+    /// Control lblMontoPrestamoEscogido.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoPrestamoEscogido;
+
+    /// <summary>
+    /// Control lblPlazoEscogido.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblPlazoEscogido;
 
     /// <summary>
     /// Control lblGestorValidadorDomicilio.
@@ -704,6 +704,24 @@ public partial class SolicitudesCredito_Analisis
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblObservacionesCampoTrabajo;
+
+    /// <summary>
+    /// Control pestanaListaSolicitudCondiciones.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl pestanaListaSolicitudCondiciones;
+
+    /// <summary>
+    /// Control tblListaSolicitudCondiciones.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTable tblListaSolicitudCondiciones;
 
     /// <summary>
     /// Control lblResumenCliente.

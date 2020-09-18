@@ -383,7 +383,7 @@
                                                 <label class="col-sm-6">Ingresos mensuales</label>
                                                 <div class="col-sm-6">
                                                     <asp:Label ID="lblIngresosMensualesCliente" runat="server"></asp:Label>
-                                                    <asp:Label ID="actualizarIngresosCliente" CssClass="mdi mdi-pencil mdi-18px text-info" title="Editar" NavigateUrl="#" runat="server" role="button"></asp:Label>
+                                                    <asp:Label ID="actualizarIngresosCliente" CssClass="mdi mdi-pencil mdi-18px text-info" Style="cursor: pointer;" title="Editar" NavigateUrl="#" runat="server" role="button"></asp:Label>
                                                     <li id="pencilOff" class="mdi mdi-pencil-off mdi-18px" style="display: none"></li>
                                                 </div>
 
@@ -1003,56 +1003,81 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
-                    ¿Está seguro de que desea condicionar la solicitud?<br />
-                    <br />
-                    <form id="frmAddCondicion">
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <select id="ddlCondiciones" required="required" class="form-control form-control-sm">
-                                </select>
+
+                    <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#pestanaAgregarCondiciones" role="tab">
+                                <span class="d-none d-sm-block">Agregar Nuevas Condiciones</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones" style="display: none;">
+                            <a class="nav-link" data-toggle="tab" href="#listaCondiciones" role="tab">
+                                <span class="d-none d-sm-block">Condiciones de la solictud</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane active p-3" id="pestanaAgregarCondiciones" role="tabpanel">
+                            <br />
+                            <form id="frmAddCondicion">
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <select id="ddlCondiciones" required="required" class="form-control form-control-sm">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <input id="txtComentarioAdicional" required="required" type="text" class="form-control form-control-sm" placeholder="comentario adicional" data-parsley-maxlength="128" />
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="form-group row">
+                                <div class="col-sm-9"></div>
+                                <div class="col-sm-3">
+                                    <button type="button" id="btnAgregarCondicion" class="btn btn-block btn-primary validador">Agregar</button>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <table id="tblCondiciones" class="table table-condensed table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Condicion</th>
+                                                <th>Comentario adicional</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Otros</label>
+                                <div>
+                                    <input id="razonCondicion" required="required" class="form-control" type="text" value="" data-parsley-maxlength="128" />
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <input id="txtComentarioAdicional" required="required" type="text" class="form-control form-control-sm" placeholder="comentario adicional" data-parsley-maxlength="128" />
-                            </div>
-                        </div>
-                    </form>
-                    <div class="form-group row">
-                        <div class="col-sm-9"></div>
-                        <div class="col-sm-3">
-                            <button id="btnAgregarCondicion" class="btn btn-block btn-primary validador">Agregar</button>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <table id="tblCondiciones" class="table table-condensed table-striped">
+                        <div class="tab-pane p-3" id="listaCondiciones" role="tabpanel">
+                            <table id="tblListaSolicitudCondiciones" runat="server" class="table table-condensed table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Condicion</th>
-                                        <th>Comentario adicional</th>
-                                        <th></th>
+                                        <th>Tipo Condición</th>
+                                        <th>Descripción</th>
+                                        <th>Comentario Adicional</th>
+                                        <th>Estado</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Documentacion</td>
-                                        <td>Adjuntar segunda identidad</td>
-                                        <td>La que se adjuntó estaba borrosa</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-danger">Quitar</button>
-                                        </td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>Otros</label>
-                        <div>
-                            <input id="razonCondicion" required="required" class="form-control" type="text" value="" data-parsley-maxlength="128" />
-                        </div>
-                    </div>
+                    <!-- termina tab -->
                 </div>
                 <div class="modal-footer">
                     <button id="btnCondicionarSolicitudConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
@@ -1377,10 +1402,10 @@
                 </div>
                 <form action="#" id="frmObservacionReferencia">
                     <div class="modal-body">
-                        Actualizar las observaciones de la referencia personal
+                        ¿Está seguro de actualizar las observaciones de la referencia personal
                         <strong>
                             <label id="lblNombreReferenciaModal"></label>
-                        </strong><br />
+                        </strong>?<br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
                             <textarea id="txtObservacionesReferencia" required="required" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="informacionLaboral"></textarea>
@@ -1720,7 +1745,7 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/plugins/magnific-popup/jquery.magnific-popup.min.js"></script>
     <script src="/Scripts/plugins/imgBox/jquery-rotate.min.js"></script>
-    <script src="/Scripts/plugins/imgBox/jquery.imgbox.js?v=20200903152956"></script>
+    <script src="/Scripts/plugins/imgBox/jquery.imgbox.js?v=2020090305458555"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/kendo/jszip.min.js"></script>
     <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>

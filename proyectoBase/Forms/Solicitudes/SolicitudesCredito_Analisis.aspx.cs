@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web;
 using System.Web.Services;
+using System.Web.UI.HtmlControls;
 
 public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 {
@@ -13,6 +14,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     private string pcIDUsuario = "";
     private string pcIDApp = "";
     private string pcIDSesion = "";
+    private int IdSolicitud = 0;
+    DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -33,12 +36,13 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                 string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+                IdSolicitud = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                 //pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                 pcIDSesion = "1";
-                bool AccesoAlAnalisis = ValidarAnalista(IDSOL);
+
+                bool AccesoAlAnalisis = ValidarAnalista(IdSolicitud);
 
                 //if (AccesoAlAnalisis == false) {
                 //string lcScript = "window.open('SolicitudesCredito_Bandeja.aspx?" + pcEncriptado + "','_self')";
@@ -61,8 +65,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     public bool ValidarAnalista(int IDSolicitud)
     {
         bool resultado = true;
-        int IDPRODUCTO = 0;
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        int IDPRODUCTO = 0;        
         BandejaSolicitudesViewModel solicitudes = new BandejaSolicitudesViewModel();
         try
         {
@@ -148,6 +151,39 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 }
                 else
                     resultado = false;
+
+                /* Verficar si la solicitud tiene condicionamientos pendientes */
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_SolicitudCondiciones_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IdSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            pestanaListaSolicitudCondiciones.Style.Add("display", "");
+
+                            HtmlTableRow tRowSolicitudCondiciones = null;
+                            string EstadoCondicion = String.Empty;
+                            int contadorCondiciones = 1;
+                            while (reader.Read())
+                            {
+                                EstadoCondicion = (bool)reader["fbEstadoCondicion"] != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-danger mb-0'>Pendiente</label>";
+                                tRowSolicitudCondiciones = new HtmlTableRow();
+                                tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = reader["fcCondicion"].ToString() });
+                                tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = reader["fcDescripcionCondicion"].ToString() });
+                                tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = reader["fcComentarioAdicional"].ToString() });
+                                tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerHtml = EstadoCondicion });
+                                tblListaSolicitudCondiciones.Rows.Add(tRowSolicitudCondiciones);
+                                contadorCondiciones++;
+                            }
+                        }
+                    }
+                }
+
             }
         }
         catch (Exception ex)
