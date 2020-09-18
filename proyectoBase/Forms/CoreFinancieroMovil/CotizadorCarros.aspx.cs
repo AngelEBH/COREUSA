@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Configuration;
 using System.Web;
-using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
+using System.Web.UI;
 
 public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 {
@@ -11,25 +11,14 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
     private string pcIDApp = "";
     private string pcID = "";
     private DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-    private String lcSQLInstruccion = "";
-    private String sqlConnectionString = "";
 
     protected void Page_Load(object sender, EventArgs e)
     {
         /* INICIO de captura de parametros y desencriptado de cadena */
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        string lcURL = "";
-        int liParamStart = 0;
-        string lcParametros = "";
-        string lcEncriptado = "";
-        string lcParametroDesencriptado = "";
-        Uri lURLDesencriptado = null;
-        HyperLink hlLink = new HyperLink();
-        LinkButton btnLink = new LinkButton();
+        string lcURL = Request.Url.ToString();
+        int liParamStart = lcURL.IndexOf("?");
 
-        lcURL = Request.Url.ToString();
-        liParamStart = lcURL.IndexOf("?");
-
+        string lcParametros;
         if (liParamStart > 0)
         {
             lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
@@ -38,15 +27,14 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         {
             lcParametros = String.Empty;
         }
+
         if (lcParametros != String.Empty)
         {
-            lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-            lcEncriptado = lcEncriptado.Replace("%", "");
-            lcEncriptado = lcEncriptado.Replace("%", "");
+            string lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
             lcEncriptado = lcEncriptado.Replace("%", "");
             lcEncriptado = lcEncriptado.Replace("3d", "=");
-            lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-            lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+            string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+            Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
         }
@@ -83,7 +71,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
         if (!lbEsNumerico)
         {
-            lblMensaje.Text = "Ingrese valoes numericos.";
+            lblMensaje.Text = "Ingrese valores numéricos.";
             return;
         }
 
@@ -126,58 +114,52 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
             lblMensaje.Text = "Seleccione si es financiamiento o empeño.";
             return;
         }
-
-        PanelCreditos1.Visible = true;
-
-
-        SqlConnection sqlConexion = null;
-        SqlDataReader sqlResultado = null;
-        SqlCommand sqlComando = null;
-
         try
         {
-            PanelCreditos1.Visible = true;
-            divParametros.Visible = false;
-            divNuevoCalculo.Visible = true;
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                string lcMontoVehiculo = txtMonto.Text;
 
-            sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            sqlConexion.Open();
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredCotizadorProductos_ConScore", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDProducto", lcProducto);
+                    sqlComando.Parameters.AddWithValue("@pnMontoaPrestamo", lcMontoVehiculo.Trim().Replace(",", ""));
+                    sqlComando.Parameters.AddWithValue("@liPlazo", ddlPlazos.Text.Substring(0, 3).Trim());
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", txtValorPrima.Text);
+                    sqlComando.Parameters.AddWithValue("@piScorePromedio", txtScorePromedio.Text.Trim());
+                    sqlComando.CommandTimeout = 120;
 
-            string lcParametrosSP = "";
-            string lcMontoVehiculo = txtMonto.Text;
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        sqlResultado.Read();
 
-            lcParametrosSP = pcIDApp + "," + pcIDUsuario + "," + lcProducto + "," + lcMontoVehiculo.Trim().Replace(",", "") + "," + ddlPlazos.Text.Substring(0, 3).Trim() + "," + txtValorPrima.Text + "," + txtScorePromedio.Text.Trim();
-            lcSQLInstruccion = "exec CoreFinanciero.dbo.sp_CredCotizadorProductos_ConScore " + lcParametrosSP;
-            sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion);
-            sqlComando.CommandType = CommandType.Text;
-            sqlComando.CommandTimeout = 120;
-            sqlResultado = sqlComando.ExecuteReader();
-            sqlResultado.Read();
+                        txtValorPrestamo1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnValoraFinanciar"].ToString()));
+                        txtCuotaPrestamo1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensualNeta"].ToString()));
+                        txtValorSeguro1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()));
+                        txtServicioGPS1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaServicioGPS"].ToString()));
+                        txtCuotaTotal1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensual"].ToString()));
+                        txtCuotaTotalGC1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensualConGastosdeCierre"].ToString()));
+                        txtGastosdeCierre1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnGastosdeCierre"].ToString()));
+                        lblEtiqueta1.Text = "Tasa al " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnPorcentajeTasadeInteresAnual"].ToString())) + "%";
+                    }
+                }
+                lblMensaje.Visible = false;
 
-            txtValorPrestamo1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnValoraFinanciar"].ToString()));
-            txtCuotaPrestamo1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensualNeta"].ToString()));
-            txtValorSeguro1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()));
-            txtServicioGPS1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaServicioGPS"].ToString()));
-            txtCuotaTotal1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensual"].ToString()));
-            txtCuotaTotalGC1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensualConGastosdeCierre"].ToString()));
-            txtGastosdeCierre1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnGastosdeCierre"].ToString()));
-            lblEtiqueta1.Text = "Tasa al " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnPorcentajeTasadeInteresAnual"].ToString())) + "%";            
-
-            sqlConexion.Close();
-            sqlConexion.Dispose();
-
-            lblMensaje.Visible = false;
+                PanelCreditos1.Visible = true;
+                divParametros.Visible = false;
+                divNuevoCalculo.Visible = true;
+                
+                CargarScripts();
+            }            
         }
         catch (Exception ex)
         {
             lblMensaje.Text = ex.Message;
             return;
-        }
-        finally
-        {
-            if (sqlConexion.State == ConnectionState.Open)
-                sqlConexion.Close();
         }
     }
 
@@ -186,12 +168,16 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         divPrima.Visible = !rbEmpeno.Checked;
         txtValorPrima.Visible = !rbEmpeno.Checked;
         lblPorcenajedePrima.Visible = !rbEmpeno.Checked;
+
+        divMontoFinanciarVehiculo.Visible = rbEmpeno.Checked;
+        txtMonto.Enabled = rbEmpeno.Checked;
+
         ddlPlazos.Items.Clear();
         ddlPlazos.Items.Add("12 Meses");
         ddlPlazos.Items.Add("18 Meses");
         ddlPlazos.Items.Add("24 Meses");
         ddlPlazos.Items.Add("30 Meses");
-        txtMonto.Enabled = true;
+        CargarScripts();
 
     }
 
@@ -200,6 +186,9 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         divPrima.Visible = !rbEmpeno.Checked;
         txtValorPrima.Visible = !rbEmpeno.Checked;
         lblPorcenajedePrima.Visible = !rbEmpeno.Checked;
+        divMontoFinanciarVehiculo.Visible = rbEmpeno.Checked;
+        txtMonto.Enabled = rbEmpeno.Checked;
+
         ddlPlazos.Items.Clear();
         ddlPlazos.Items.Add("12 Meses");
         ddlPlazos.Items.Add("18 Meses");
@@ -207,7 +196,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         ddlPlazos.Items.Add("36 Meses");
         ddlPlazos.Items.Add("48 Meses");
         ddlPlazos.Items.Add("60 Meses");
-        txtMonto.Enabled = false;
+        CargarScripts();
     }
 
     protected void btnNuevoCalculo_Click(object sender, EventArgs e)
@@ -225,11 +214,42 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
             PanelCreditos1.Visible = false;
             divNuevoCalculo.Visible = false;
             divParametros.Visible = true;
+            CargarScripts();
         }
         catch (Exception ex)
         {
             lblMensaje.Visible = true;
             lblMensaje.Text = ex.Message;
         }
+    }
+
+    private void CargarScripts()
+    {
+        string scriptMascarasDeEntrada = 
+        "<script>$('.MascaraCantidad').inputmask('decimal', { " +
+        "alias: 'numeric', " +
+                "groupSeparator: ',', " +
+                "digits: 2, " +
+                "integerDigits: 11, " +
+                "digitsOptional: false, " +
+                "placeholder: '0', " +
+                "radixPoint: '.', " +
+                "autoGroup: true, " +
+                "min: 0.0, " +
+            "}); " +
+            "$('.MascaraNumerica').inputmask('decimal', { " +
+        "alias: 'numeric', " +
+                "groupSeparator: ',', " +
+                "digits: 0, " +
+                "integerDigits: 3," +
+                "digitsOptional: false, " +
+                "placeholder: '0', " +
+                "radixPoint: '.', " +
+                "autoGroup: true, " +
+                "min: 0.0, " +
+            "}); " +
+        "$('.identidad').inputmask('9999999999999'); </script>";
+
+        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "none", scriptMascarasDeEntrada, false);
     }
 }

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Precalificado_Puesto109.aspx.cs" Inherits="Clientes_Precalificado_Puesto109" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Precalificado_Puesto109.aspx.cs" Inherits="Clientes_Precalificado_Puesto109" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -45,15 +45,16 @@
         .display-block {
             display: block !important;
         }
+
+        .text-xs {
+            font-size: .7rem !important;
+        }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title text-center">Precalificado de clientes</h6>
-            </div>
-            <div class="card-body">
+        <div class="card m-0">
+            <div class="card-body pb-0">
                 <div class="form-group row">
                     <div class="col-sm-2 text-center">
                         <asp:Label ID="lblRespuesta" ForeColor="Green" runat="server" CssClass="col-form-label font-16 font-weight-bold" Text="Pre-aprobado" />
@@ -75,7 +76,7 @@
 
                 <ul class="nav nav-pills justify-content-center display-block" role="tablist" runat="server" id="navTabs">
                     <li class="nav-item dropdown">
-                        <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Resultados</a>
+                        <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Ver resultados</a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item active" data-toggle="tab" href="#datosGenerales" role="tab" aria-selected="false">Datos generales</a>
                             <a class="dropdown-item" data-toggle="tab" href="#indicadoresPerfil" role="tab" aria-selected="false">Indicadores de perfil</a>
@@ -89,7 +90,6 @@
                 <div class="tab-content" runat="server" id="tabContent">
                     <!-- Datos generales -->
                     <div class="tab-pane active" id="datosGenerales" role="tabpanel">
-
                         <div runat="server" id="PanelCreditos">
                             <label class="col-sm-2 col-form-label text-center mt-1">Datos generales</label>
 
@@ -97,7 +97,6 @@
                                 <label class="col-form-label">Cliente</label>
                                 <asp:TextBox ID="txtNombreCompleto" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-
                             <div class="form-group form-row">
                                 <div class="col">
                                     <label class="col-form-label">Identidad</label>
@@ -108,7 +107,6 @@
                                     <asp:TextBox ID="txtTelefonoRegistrado" CssClass="form-control form-control-sm col-form-label" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                                 </div>
                             </div>
-
                             <div class="form-group form-row">
                                 <div class="col">
                                     <label class="col-form-label">Ingresos</label>
@@ -119,10 +117,9 @@
                                     <asp:TextBox ID="txtAntiguedadActiva" CssClass="form-control form-control-sm col-form-label" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label class="col-form-label">Consulta</label>
-                                <textarea id="txtInfoPrimerConsulta" runat="server" readonly="true" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
+                                <textarea id="txtInfoPrimerConsulta" runat="server" readonly="readonly" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -133,93 +130,93 @@
 
                             <label class="col-sm-2 col-form-label text-center mt-1">Indicadores de perfil</label>
 
-                            <div class="form-row">
+                            <div class="form-row border-bottom">
                                 <div class="col">
                                     <label class="col-form-label">SAF5</label>
                                 </div>
                                 <div class="col">
-                                    <asp:Image ID="imgSAF" CssClass="ImgIcono24NOAB" runat="server" Visible="false" ImageUrl="/Imagenes/inconoOK.png" />
+                                    <asp:Image ID="imgSAF" CssClass="pt-1" runat="server" Visible="false" ImageUrl="/Imagenes/inconoOK.png" />
                                 </div>
                             </div>
 
-                            <div class="form-row">
+                            <div class="form-row border-bottom">
                                 <div class="col">
                                     <label class="col-form-label">IHSS</label>
                                 </div>
                                 <div class="col">
-                                    <asp:Image ID="imgIHSS" CssClass="ImgIcono24NOAB" runat="server" Visible="false" ImageUrl="/Imagenes/inconoOK.png" />
+                                    <asp:Image ID="imgIHSS" CssClass="pt-1" runat="server" Visible="false" ImageUrl="/Imagenes/inconoOK.png" />
                                 </div>
                             </div>
 
-                            <div class="form-row">
+                            <div class="form-row border-bottom">
                                 <div class="col">
                                     <label class="col-form-label">RNP</label>
                                 </div>
                                 <div class="col">
-                                    <asp:Image ID="imgRNP" CssClass="ImgIcono24NOAB" runat="server" Visible="false" ImageUrl="/Imagenes/inconoOK.png" />
+                                    <asp:Image ID="imgRNP" CssClass="pt-1" runat="server" Visible="false" ImageUrl="/Imagenes/inconoOK.png" />
                                 </div>
                             </div>
 
-                            <div class="form-row">
+                            <div class="form-row border-bottom">
                                 <div class="col">
                                     <label class="col-form-label">CallCenter</label>
                                 </div>
                                 <div class="col">
-                                    <asp:Image ID="imgCallCenter" CssClass="ImgIcono24NOAB" runat="server" Visible="false" ImageUrl="/Imagenes/inconoOK.png" />
+                                    <asp:Image ID="imgCallCenter" CssClass="pt-1" runat="server" Visible="false" ImageUrl="/Imagenes/inconoOK.png" />
                                 </div>
                             </div>
 
-                            <div class="form-row">
+                            <div class="form-row border-bottom">
                                 <div class="col">
                                     <label class="col-form-label">Mora Mayor</label>
                                 </div>
                                 <div class="col">
-                                    <asp:Image ID="imgMoraMayor" CssClass="ImgIcono24NOAB" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
+                                    <asp:Image ID="imgMoraMayor" CssClass="pt-1" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
                                 </div>
                             </div>
 
-                            <div class="form-row">
+                            <div class="form-row border-bottom">
                                 <div class="col">
                                     <label class="col-form-label">Sobregiro</label>
                                 </div>
                                 <div class="col">
-                                    <asp:Image ID="imgSobregiro" CssClass="ImgIcono24NOAB" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
+                                    <asp:Image ID="imgSobregiro" CssClass="pt-1" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
                                 </div>
                             </div>
 
-                            <div class="form-row">
+                            <div class="form-row border-bottom">
                                 <div class="col">
                                     <label class="col-form-label">Score Bajo</label>
                                 </div>
                                 <div class="col">
-                                    <asp:Image ID="imgScoreMenor" CssClass="ImgIcono24NOAB" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
+                                    <asp:Image ID="imgScoreMenor" CssClass="pt-1" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
                                 </div>
                             </div>
 
-                            <div class="form-row">
+                            <div class="form-row border-bottom">
                                 <div class="col">
                                     <label class="col-form-label">Saldo Castig.</label>
                                 </div>
                                 <div class="col">
-                                    <asp:Image ID="imgCastigado" CssClass="ImgIcono24NOAB" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
+                                    <asp:Image ID="imgCastigado" CssClass="pt-1" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
                                 </div>
                             </div>
 
-                            <div class="form-row">
+                            <div class="form-row border-bottom">
                                 <div class="col">
                                     <label class="col-form-label">Incob. Irrec.</label>
                                 </div>
                                 <div class="col">
-                                    <asp:Image ID="imgIncobrable" CssClass="ImgIcono24NOAB" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
+                                    <asp:Image ID="imgIncobrable" CssClass="pt-1" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
                                 </div>
                             </div>
 
-                            <div class="form-row">
+                            <div class="form-row border-bottom">
                                 <div class="col">
                                     <label class="col-form-label">Jurid.Legal</label>
                                 </div>
                                 <div class="col">
-                                    <asp:Image ID="imgJuridico" CssClass="ImgIcono24NOAB" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
+                                    <asp:Image ID="imgJuridico" CssClass="pt-1" runat="server" Visible="false" ImageUrl="/Imagenes/iconoDetener24.png" />
                                 </div>
                             </div>
                         </div>
@@ -234,10 +231,10 @@
                                 <asp:GridView ID="gvOferta" runat="server" CssClass="table table-sm m-0 table-striped table-bordered" border="0"
                                     AutoGenerateColumns="False" ShowHeader="true">
                                     <Columns>
-                                        <asp:BoundField DataField="fcProducto" HeaderText="Producto" ReadOnly="True" />
-                                        <asp:BoundField DataField="fnMontoOfertado" HeaderText="Monto ofertado" ItemStyle-CssClass="text-right" DataFormatString="{0:#,###0.00}" ReadOnly="True" />
-                                        <asp:BoundField DataField="fiPlazo" HeaderText="Plazo" ItemStyle-CssClass="text-center" ReadOnly="True" />
-                                        <asp:BoundField DataField="fnCuotaQuincenal" HeaderText="Cuota quincenal" ItemStyle-CssClass="text-right" DataFormatString="{0:#,###0.00}" ReadOnly="True" />
+                                        <asp:BoundField DataField="fcProducto" HeaderText="Producto" HeaderStyle-CssClass="text-center" ReadOnly="True" />
+                                        <asp:BoundField DataField="fnMontoOfertado" HeaderText="Monto ofertado" HeaderStyle-CssClass="text-center" ItemStyle-CssClass="text-right" DataFormatString="{0:#,###0.00}" ReadOnly="True" />
+                                        <asp:BoundField DataField="fiPlazo" HeaderText="Plazo" HeaderStyle-CssClass="text-center" ItemStyle-CssClass="text-center" ReadOnly="True" />
+                                        <asp:BoundField DataField="fnCuotaQuincenal" HeaderText="Cuota quincenal" HeaderStyle-CssClass="text-center" ItemStyle-CssClass="text-right" DataFormatString="{0:#,###0.00}" ReadOnly="True" />
                                     </Columns>
                                 </asp:GridView>
                             </div>
@@ -258,7 +255,6 @@
 
                     <!-- Grid de historial de consultas hechas al cliente-->
                     <div class="tab-pane" id="tabHistorialdeConsultas" role="tabpanel" runat="server">
-
                         <div class="form-group">
                             <label class="col-sm-2 col-form-label text-center mt-1">Historial de consultas</label>
 
@@ -266,9 +262,9 @@
                                 <asp:GridView ID="gvBitacoraConsultas" runat="server" CssClass="table table-sm m-0 table-striped table-bordered" border="0"
                                     AutoGenerateColumns="False" ShowHeader="true">
                                     <Columns>
-                                        <asp:BoundField HeaderText="Agencia" DataField="fcAgencia" ReadOnly="True" />
-                                        <asp:BoundField HeaderText="Fecha de Consulta" DataField="fdFechaConsulta" />
-                                        <asp:BoundField HeaderText="Oficial de Negocio" DataField="fcOficial" />
+                                        <asp:BoundField HeaderText="Agencia" HeaderStyle-CssClass="text-center" DataField="fcAgencia" ReadOnly="True" />
+                                        <asp:BoundField HeaderText="Fecha de Consulta" HeaderStyle-CssClass="text-center" DataField="fdFechaConsulta" />
+                                        <asp:BoundField HeaderText="Oficial de Negocio" HeaderStyle-CssClass="text-center" DataField="fcOficial" />
                                     </Columns>
                                 </asp:GridView>
                             </div>
@@ -282,14 +278,13 @@
 
                             <br />
 
-                            <div class="form-group">
+                            <div class="form-group mb-0">
                                 <label class="col-form-label text-center">Endeudamiento</label>
                                 <div class="progress">
                                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" runat="server" id="PorcentajeEndeudamiento">0%</div>
                                 </div>
                             </div>
-
-                            <div class="form-group">
+                            <div class="form-group mb-0">
                                 <label class="col-form-label">Score promedio:</label>
                                 <asp:Label ID="lblScorePromedio" runat="server" CssClass="col-form-label font-weight-bold" />
                             </div>
@@ -306,7 +301,6 @@
                                     <asp:TextBox ID="txtTarjetas" CssClass="form-control form-control-sm col-form-label text-right MascaraCantidad" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                                 </div>
                             </div>
-
                             <div class="form-group form-row">
                                 <div class="col">
                                     <label class="col-form-label">Comercio</label>
@@ -322,25 +316,26 @@
 
                             <asp:GridView ID="gvIHSS" runat="server" CssClass="table display compact nowrap table-condensed table-striped" AutoGenerateColumns="False" GridLines="None" ShowHeader="true">
                                 <Columns>
-                                    <asp:BoundField DataField="fcYear" HeaderText="Año" />
-                                    <asp:BoundField DataField="fcEmpresa" HeaderText="Empresa" />
+                                    <asp:BoundField DataField="fcYear" HeaderText="Año" HeaderStyle-CssClass="text-center" />
+                                    <asp:BoundField DataField="fcEmpresa" HeaderText="Empresa" HeaderStyle-CssClass="text-center" />
                                 </Columns>
                             </asp:GridView>
                         </div>
                     </div>
                 </div>
-
-                <div class="form-group row">
-                    <div class="button-items col-sm-2">
-                        <asp:Button ID="btnIngresarSolicitud" runat="server" CssClass="btn btn-info btn-lg btn-block waves-effect waves-light" Text="Ingresar solicitud" OnClick="btnIngresarSolicitud_Click" Visible="false" />
-                    </div>
-                </div>
-
                 <div class="form-group">
                     <div class="alert alert-danger mb-0" runat="server" id="PanelMensajeErrores">
                         <asp:Label CssClass="col-form-label text-danger" ID="lblMensaje" runat="server">Resultado sujeto a que la informacion ingresada sea real.</asp:Label>
                     </div>
                 </div>
+                <div class="form-group row justify-content-center">
+                    <div class="col" runat="server" id="divIngresarSolicitud" visible="false">
+                        <asp:Button ID="btnIngresarSolicitud" runat="server" CssClass="btn btn-info btn-lg btn-block waves-effect waves-light text-xs" Text="Ingresar solicitud" OnClick="btnIngresarSolicitud_Click" />
+                    </div>
+                    <div class="col">
+                        <asp:Button ID="btnNuevaConsulta" runat="server" CssClass="btn btn-info btn-lg btn-block waves-effect waves-light text-xs" Text="Nueva consulta" OnClick="btnIngresarSolicitud_Click" />
+                    </div>
+                </div>                
             </div>
         </div>
     </form>

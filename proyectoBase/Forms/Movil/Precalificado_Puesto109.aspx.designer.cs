@@ -400,15 +400,6 @@ public partial class Clientes_Precalificado_Puesto109
     protected global::System.Web.UI.WebControls.GridView gvIHSS;
 
     /// <summary>
-    /// Control btnIngresarSolicitud.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button btnIngresarSolicitud;
-
-    /// <summary>
     /// Control PanelMensajeErrores.
     /// </summary>
     /// <remarks>
@@ -425,4 +416,31 @@ public partial class Clientes_Precalificado_Puesto109
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMensaje;
+
+    /// <summary>
+    /// Control divIngresarSolicitud.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divIngresarSolicitud;
+
+    /// <summary>
+    /// Control btnIngresarSolicitud.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button btnIngresarSolicitud;
+
+    /// <summary>
+    /// Control btnNuevaConsulta.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button btnNuevaConsulta;
 }

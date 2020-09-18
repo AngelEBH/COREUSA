@@ -5,7 +5,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
-
+using System.Net;
+using System.Text;
 
 public partial class Creditos_precalificado : System.Web.UI.Page
 {
@@ -18,12 +19,12 @@ public partial class Creditos_precalificado : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         /* INICIO de captura de parametros y desencriptado de cadena */
-        string lcURL = "";
-        int liParamStart = 0;
-        string lcParametros = "";
-        string lcEncriptado = "";
-        string lcParametroDesencriptado = "";
-        Uri lURLDesencriptado = null;
+        string lcURL;
+        int liParamStart;
+        string lcParametros;
+        string lcEncriptado;
+        string lcParametroDesencriptado;
+        Uri lURLDesencriptado;
 
         lcURL = Request.Url.ToString();
         liParamStart = lcURL.IndexOf("?");
@@ -44,15 +45,10 @@ public partial class Creditos_precalificado : System.Web.UI.Page
             lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "1";
             pcIdentidad = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
         }
         /* FIN de captura de parametros y desencriptado de cadena */
-
-        if (String.IsNullOrEmpty(pcIDSesion))
-        {
-            pcIDSesion = "1";
-        }
 
         if (ddlCiudadResidencia.Items.Count == 0)
         {
@@ -63,20 +59,20 @@ public partial class Creditos_precalificado : System.Web.UI.Page
             ddlOrigenIngreso.Items.Add("Comerciante");
         }
 
-        if (!String.IsNullOrEmpty(pcIdentidad))
+        if (!string.IsNullOrEmpty(pcIdentidad))
         {
             txtNombreCliente.Visible = true;
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_ConsultaRNP", sqlConexion))
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_ConsultaRNP", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@fcNumeroIdentidad", pcIdentidad);
 
-                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         if (sqlResultado.Read())
                         {
@@ -91,21 +87,19 @@ public partial class Creditos_precalificado : System.Web.UI.Page
 
     protected void btnConsultarCliente_Click(object sender, EventArgs e)
     {
-
-        Funciones.FuncionesComunes fnFunciones = new Funciones.FuncionesComunes();
-        int liValidarNumero = 0;
-        float liValidarDecimal = 0;
-        bool liEsNumerico = false;
+        int liValidarNumero;
+        float liValidarDecimal;
+        bool liEsNumerico;
 
         if (string.IsNullOrEmpty(ddlCiudadResidencia.SelectedValue))
         {
-            lblMensaje.Text = "Seleccione una ciudad.";
+            MostrarMensaje("Seleccione una ciudad.");
             return;
         }
 
         if (string.IsNullOrEmpty(ddlOrigenIngreso.SelectedValue))
         {
-            lblMensaje.Text = "Seleccione un tipo de origen de ingresos.";
+            MostrarMensaje("Seleccione un tipo de origen de ingresos.");
             return;
         }
 
@@ -114,7 +108,7 @@ public partial class Creditos_precalificado : System.Web.UI.Page
         liEsNumerico = float.TryParse(txtIngresos.Text.Trim(), out liValidarDecimal);
         if (!liEsNumerico)
         {
-            lblMensaje.Text = "Los ingresos deben ser numerico valido.";
+            MostrarMensaje("Los ingresos deben ser numerico valido.");
             return;
         }
 
@@ -122,7 +116,7 @@ public partial class Creditos_precalificado : System.Web.UI.Page
         liEsNumerico = int.TryParse(txtIdentidad.Text.Trim(), out liValidarNumero);
         if (string.IsNullOrEmpty(txtIdentidad.Text) || txtIdentidad.Text.ToString().Length != 13 || liEsNumerico)
         {
-            lblMensaje.Text = "Ingrese una identidad valida.";
+            MostrarMensaje("Ingrese una identidad valida.");
             return;
         }
 
@@ -130,7 +124,7 @@ public partial class Creditos_precalificado : System.Web.UI.Page
         liEsNumerico = float.TryParse(txtIngresos.Text.Trim(), out liValidarDecimal);
         if (!liEsNumerico)
         {
-            lblMensaje.Text = "Los ingresos deben ser numerico valido.";
+            MostrarMensaje("Los ingresos deben ser numerico valido.");
             return;
         }
 
@@ -140,55 +134,53 @@ public partial class Creditos_precalificado : System.Web.UI.Page
 
         if (!liEsNumerico)
         {
-            lblMensaje.Text = "Ingrese un numero de telefono valido. 1";
+            MostrarMensaje("Ingrese un numero de telefono valido. 1");
             return;
         }
 
         if (string.IsNullOrEmpty(txtTelefono.Text))
         {
-            lblMensaje.Text = "Ingrese un numero de telefono valido. 2";
+            MostrarMensaje("Ingrese un numero de telefono valido. 2");
             return;
         }
 
         if (txtTelefono.Text.ToString().Trim().Length != 8)
         {
-            lblMensaje.Text = "Ingrese un numero de telefono valido. 3";
+            MostrarMensaje("Ingrese un numero de telefono valido. 3");
             return;
         }
 
         /* Iniciamos todos los procesos de busqueda de datos */
         btnConsultarCliente.Enabled = false;
-        btnConsultarCliente.ForeColor = System.Drawing.Color.Gray;
-        btnConsultarCliente.BackColor = System.Drawing.Color.LightGray;
 
         /*****************************************************************************/
         /* Verificamos primero si el cliente ya fue consultado recientemente o no */
-        string lcParametroEncriptado = "";
-        string lcParametros = "";
-        string lcScript = "";
+        string lcParametroEncriptado;
+        string lcParametros;
+        string lcScript;
         string lcIngresosPlanos = txtIngresos.Text.Replace(",", "");
 
         /* Realizamos la busqueda del cliente para ver si existe */
-        using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+        using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
         {
             try
             {
                 string lcIDProducto = "";
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CatalogoObtenerID", sqlConexion))
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CatalogoObtenerID", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@pcProducto", ddlProducto.SelectedItem.Text);
 
-                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         sqlResultado.Read();
                         lcIDProducto = sqlResultado["fiIDProducto"].ToString();
                     }
                 }
 
-                using (SqlCommand sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ClienteActualizado", sqlConexion))
+                using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ClienteActualizado", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
@@ -202,14 +194,14 @@ public partial class Creditos_precalificado : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@pcTipoOcupacion", ddlOrigenIngreso.SelectedValue.ToString().Trim());
                     sqlComando.CommandTimeout = 120;
 
-                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         sqlResultado.Read();
                         if (sqlResultado["fiExiste"].ToString() != "0")
                         {
 
                             string lcPaginaWeb;
-                            Funciones.FuncionesComunes lfPaginasWeb = new Funciones.FuncionesComunes();
+                            var lfPaginasWeb = new Funciones.FuncionesComunes();
                             lcPaginaWeb = lfPaginasWeb.UsrPaginaWeb(pcIDApp, pcIDUsuario, "3");
 
                             lcParametros = "usr=" + pcIDUsuario.Trim() +
@@ -217,6 +209,7 @@ public partial class Creditos_precalificado : System.Web.UI.Page
 
                             lcParametroEncriptado = DSC.Encriptar(lcParametros);
                             lcScript = "window.open('" + lcPaginaWeb + "?" + lcParametroEncriptado + "','_self')";
+                            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "_self", lcScript, true);
                         }
                         else
                         {
@@ -243,34 +236,34 @@ public partial class Creditos_precalificado : System.Web.UI.Page
                             "&POV=" + lcPermisodeOperacionVigente.Trim();
 
                             lcParametroEncriptado = DSC.Encriptar(lcParametros);
-                            lcScript = "window.open('ProcesarPrecalificado.aspx?" + lcParametroEncriptado + "','_self')";
+                            //lcScript = "window.open('ProcesarPrecalificado.aspx?" + lcParametroEncriptado + "','_self')";
+
+                            CargarScripts();
+                            ProcesarPrecalificado(txtIdentidad.Text.Trim(), lcParametroEncriptado);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                ex.Message.ToString();
-                lblMensaje.Text = "Ocurrió un error, contacte al administrador.";
-                //lblMensaje.Text = ex.Message.ToString();
+                MostrarMensaje("Ocurrió un error, contacte al administrador.");
             }
         }
-        Response.Write(lcScript);
-        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "newpage", lcScript, true);
+        btnConsultarCliente.Enabled = true;
     }
 
     private void LlenarListas()
     {
-        using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+        using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
         {
             try
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CatalogoClientes", sqlConexion))
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CatalogoClientes", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         while (sqlResultado.Read())
                         {
@@ -281,10 +274,10 @@ public partial class Creditos_precalificado : System.Web.UI.Page
                     ddlCiudadResidencia.SelectedIndex = 0;
                 }
 
-                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CatalogoProductos", sqlConexion))
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CatalogoProductos", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         ddlProducto.DataSource = sqlResultado;
                         ddlProducto.DataTextField = "fcProducto";
@@ -295,7 +288,7 @@ public partial class Creditos_precalificado : System.Web.UI.Page
             }
             catch (Exception ex)
             {
-                lblMensaje.Text = ex.Message;
+                MostrarMensaje(ex.Message);
             }
         }
     }
@@ -332,6 +325,99 @@ public partial class Creditos_precalificado : System.Web.UI.Page
         else
         {
             return "0";
+        }
+    }
+
+    private void MostrarMensaje(string mensaje)
+    {
+        lblMensaje.Text = mensaje;
+        PanelMensajeErrores.Visible = true;
+    }
+
+    private void CargarScripts()
+    {
+        string scriptMascarasDeEntrada =
+        "<script>$('.MascaraCantidad').inputmask('decimal', { " +
+        "alias: 'numeric', " +
+                "groupSeparator: ',', " +
+                "digits: 2, " +
+                "integerDigits: 11, " +
+                "digitsOptional: false, " +
+                "placeholder: '0', " +
+                "radixPoint: '.', " +
+                "autoGroup: true, " +
+                "min: 0.0, " +
+            "}); " +
+            "$('.MascaraNumerica').inputmask('decimal', { " +
+        "alias: 'numeric', " +
+                "groupSeparator: ',', " +
+                "digits: 0, " +
+                "integerDigits: 3," +
+                "digitsOptional: false, " +
+                "placeholder: '0', " +
+                "radixPoint: '.', " +
+                "autoGroup: true, " +
+                "min: 0.0, " +
+            "}); " +
+        "$('.identidad').inputmask('9999999999999'); </script>";
+
+        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "none", scriptMascarasDeEntrada, false);
+    }
+
+
+    protected void ProcesarPrecalificado(string identidad, string parametrosEncriptados)
+    {
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_ConsultaSAF2", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fcNumeroIdentidad", identidad);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        sqlResultado.Read();
+
+                        if (sqlResultado.HasRows)
+                        {
+                            string lcScript = "window.open('Precalificado_ClienteInterno.aspx?" + parametrosEncriptados + "','_self')";
+                            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "_self", lcScript, true);
+                        }
+                        else
+                        {
+                            string lcURLCoreFinanciero = "http://172.20.3.150/WSOrion/WSProcesarCliente.aspx?" + parametrosEncriptados;
+                            HttpWebRequest request = WebRequest.Create(lcURLCoreFinanciero) as HttpWebRequest;
+                            request.Accept = "text/xml";
+                            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                            WebHeaderCollection header = response.Headers;
+                            var encoding = ASCIIEncoding.ASCII;
+
+                            using (var reader = new System.IO.StreamReader(response.GetResponseStream(), encoding))
+                            {
+                                string responseText = reader.ReadToEnd();
+                            }
+
+                            string lcPaginaWeb;
+
+                            Funciones.FuncionesComunes lfPaginasWeb = new Funciones.FuncionesComunes();
+
+                            lcPaginaWeb = lfPaginasWeb.UsrPaginaWeb(pcIDApp, pcIDUsuario, "3");
+
+                            string lcScript = "window.open('" + lcPaginaWeb + "?" + parametrosEncriptados + "','_self')";
+                            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "_self", lcScript, true);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            MostrarMensaje("Se ha encontrado el siguiente error: " + ex.Message);
         }
     }
 }

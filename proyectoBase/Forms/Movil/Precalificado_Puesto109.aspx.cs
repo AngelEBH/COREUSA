@@ -50,14 +50,6 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
             if (lcParametros != String.Empty)
             {
                 lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                //lcEncriptado = Request.Params["x"].ToString();
-                lcEncriptado = lcEncriptado.Replace("%","");
-                lcEncriptado = lcEncriptado.Replace("%", "");
-                lcEncriptado = lcEncriptado.Replace("%", "");
-                lcEncriptado = lcEncriptado.Replace("%", "");
-                lcEncriptado = lcEncriptado.Replace("%", "");
-                lcEncriptado = lcEncriptado.Replace("%", "");
-                lcEncriptado = lcEncriptado.Replace("%", "");
                 lcEncriptado = lcEncriptado.Replace("%", "");
                 lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
@@ -74,7 +66,7 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
                     sqlConexion.Open();
                     pcPasoenCurso = "Paso 1";
 
-                    using (SqlCommand sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
+                    using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -82,18 +74,17 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
                         sqlComando.CommandTimeout = 120;
 
-                        using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                        using (var sqlResultado = sqlComando.ExecuteReader())
                         {
                             sqlResultado.Read();
                             if (!sqlResultado.HasRows)
                             {
-                                //divEstadoCliente.Visible = true;
                                 tabOferta.Visible = false;
                                 ddlOferta.Visible = false;
                                 ClienteCC.Visible = false;
                                 ddlClienteCC.Visible = false;
                                 lblRespuesta.Text = "--Sin Informacion--";
-                                lblDetalleRespuesta.Text = "No se encuentra informcion alguna de la identidad proporcionada.";
+                                lblDetalleRespuesta.Text = "No se encuentra informción alguna de la identidad proporcionada.";
                             }
                             pcPasoenCurso = "Paso 2";
 
@@ -127,7 +118,6 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
 
                             if (sqlResultado["fiEstadoActualPrecalificado"].ToString() == "2")
                             {
-                                //imgTriste.Visible = true;
                                 lblRespuesta.Text = "-- No Aplica --";
                                 lblRespuesta.ForeColor = System.Drawing.Color.Red;
                                 lblDetalleRespuesta.ForeColor = System.Drawing.Color.Red;
@@ -141,7 +131,6 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
 
                             if (sqlResultado["fiEstadoActualPrecalificado"].ToString() == "3")
                             {
-                                //imgAnalisis.Visible = true;
                                 lblRespuesta.Text = "-- Sujeto a Analisis --";
                                 lblRespuesta.ForeColor = System.Drawing.Color.Goldenrod;
                                 lblDetalleRespuesta.ForeColor = System.Drawing.Color.Goldenrod;
@@ -151,7 +140,7 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
 
                             if (sqlResultado["fiEstadoActualPrecalificado"].ToString() == "1" && lcEsPrimerConsultor == "1")
                             {
-                                btnIngresarSolicitud.Visible = true;
+                                divIngresarSolicitud.Visible = true;
                             }
 
                             pcPasoenCurso = "Paso 3";
@@ -178,8 +167,7 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
                                 ddlClienteCC.Visible = true;
                                 tabOferta.Visible = false;
                                 ddlOferta.Visible = false;
-                                //divEstadoCliente.Visible = false;
-                                lblMensajeCallCenter.Text = "Cliente esta asignado a la base de CallCenter";
+                                lblMensajeCallCenter.Text = "Cliente está asignado a la base de CallCenter";
                                 lblMensajeCallCenterAgenteAsignado.Text = "Agente asginado: " + sqlResultado["fcAgenteCallCenter"].ToString().Trim() + ".";
                             }
 
@@ -222,7 +210,7 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
 
                     CargarAntiguedadActiva(sqlConexion);
 
-                    using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CotizadorProductos", sqlConexion))
+                    using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CotizadorProductos", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -232,7 +220,7 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@pnIngresosBrutos", pcIDIngresos.Trim());
                         sqlComando.Parameters.AddWithValue("@pnIngresosDisponible", lcCapacidadDisponible.Trim());
 
-                        using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                        using (var sqlResultado = sqlComando.ExecuteReader())
                         {
                             gvOferta.DataSource = sqlResultado;
                             gvOferta.DataBind();
@@ -241,13 +229,13 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
 
                     /*********************************************************************/
                     /* Inicia bloque de compatibilidad de datos de analistas de credito */
-                    using (SqlCommand sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaAnalistas", sqlConexion))
+                    using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaAnalistas", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
-                        using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                        using (var sqlResultado = sqlComando.ExecuteReader())
                         {
                             sqlResultado.Read();
 
@@ -287,12 +275,13 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
 
     private void CargarAntiguedadActiva(SqlConnection pSqlConnection)
     {
-        using (SqlCommand sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_UltimoCreditoActivo", pSqlConnection))
+        using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_UltimoCreditoActivo", pSqlConnection))
         {
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
             sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
-            using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+
+            using (var sqlResultado = sqlComando.ExecuteReader())
             {
                 if (sqlResultado.Read())
                 {
@@ -322,32 +311,28 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
             classColor = "bg-danger";
 
         PorcentajeEndeudamiento.Attributes.Add("text", pcEndeudamiento + "%");
-        PorcentajeEndeudamiento.Attributes.Add("class", "progress-bar progress-bar-striped progress-bar-animated " +classColor);
+        PorcentajeEndeudamiento.Attributes.Add("class", "progress-bar progress-bar-striped progress-bar-animated " + classColor);
     }
 
     private void CargarIHSS(SqlConnection pSqlConnection)
     {
-        string lcSQLInstruccion = "exec  " + pcIDUsuario + ",'" + pcID + "'";
-        using (SqlCommand sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_Info_TrabajosIHSS", pSqlConnection))
+        using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_Info_TrabajosIHSS", pSqlConnection))
         {
             sqlComando.CommandType = CommandType.StoredProcedure;
             sqlComando.Parameters.AddWithValue("@piIDUSuario", pcIDUsuario);
             sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
 
-            using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+            using (var sqlResultado = sqlComando.ExecuteReader())
             {
                 gvIHSS.DataSource = sqlResultado;
                 gvIHSS.DataBind();
-                //if (gvIHSS.Rows.Count == 0)
-                //PanelDetalleIHSS.BackColor = System.Drawing.Color.WhiteSmoke;
             }
         }
     }
 
     protected void btnIngresarSolicitud_Click(object sender, EventArgs e)
     {
-        string lcParametroEncriptar = "";
-        lcParametroEncriptar = "SID=" + pcIDSesion + "&IDApp=" + pcIDApp + "&usr=" + pcIDUsuario + "&ID=" + txtIdentidad.Text.Trim();
+        string lcParametroEncriptar = "SID=" + pcIDSesion + "&IDApp=" + pcIDApp + "&usr=" + pcIDUsuario + "&ID=" + txtIdentidad.Text.Trim();
         string lcScript = "window.open('../Solicitudes/Forms/Solicitudes/SolicitudesCredito_Registrar.aspx?" + DSC.Encriptar(lcParametroEncriptar) + "','_Clientes_Contenido')";
         Response.Write("<script>");
         Response.Write(lcScript);
