@@ -892,6 +892,7 @@
     <Content Include="Content\icons\typicons\typicons.scss" />
     <Content Include="Content\icons\typicons\typicons.ttf" />
     <Content Include="Content\icons\typicons\typicons.woff" />
+    <Content Include="Imagenes\Cotizador\image3.png" />
     <Content Include="Imagenes\export_pdf_48px.png" />
     <Content Include="Imagenes\export_pdf_80px.png" />
     <Content Include="Imagenes\gifCargandoHorizontal30x60.gif" />

@@ -6,6 +6,7 @@
             margin: { top: "1.5cm", bottom: "1cm", right:"0.5cm", left:"0.5cm" },
             scale: 0.5,
             height: 500,
+            fontSize: 18,
             template: $("#page-template").html()
         })
         .then(function (group) {

@@ -14,29 +14,37 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        /* INICIO de captura de parametros y desencriptado de cadena */
-        string lcURL = Request.Url.ToString();
-        int liParamStart = lcURL.IndexOf("?");
+        try
+        {
+            /* INICIO de captura de parametros y desencriptado de cadena */
+            string lcURL = Request.Url.ToString();
+            int liParamStart = lcURL.IndexOf("?");
 
-        string lcParametros;
-        if (liParamStart > 0)
-        {
-            lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-        }
-        else
-        {
-            lcParametros = String.Empty;
-        }
+            string lcParametros;
+            if (liParamStart > 0)
+            {
+                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
+            }
+            else
+            {
+                lcParametros = String.Empty;
+            }
 
-        if (lcParametros != String.Empty)
+            if (lcParametros != String.Empty)
+            {
+                string lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                lcEncriptado = lcEncriptado.Replace("%", "");
+                lcEncriptado = lcEncriptado.Replace("3d", "=");
+                string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+                Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            }
+        }
+        catch (Exception ex)
         {
-            string lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-            lcEncriptado = lcEncriptado.Replace("%", "");
-            lcEncriptado = lcEncriptado.Replace("3d", "=");
-            string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-            Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-            pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            lblMensaje.Visible = true;
+            lblMensaje.Text = ex.Message;
         }
     }
 
@@ -48,7 +56,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         bool lbEsNumerico = false;
         decimal liNumero = 0;
         string lcProducto = "202";
-        
+
         if (String.IsNullOrEmpty(txtScorePromedio.Text))
         {
             txtScorePromedio.Text = "0";
@@ -171,6 +179,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         }
         catch (Exception ex)
         {
+            lblMensaje.Visible = true;
             lblMensaje.Text = ex.Message;
             return;
         }
@@ -178,38 +187,54 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
     protected void rbEmpeno_CheckedChanged(object sender, EventArgs e)
     {
-        divPrima.Visible = !rbEmpeno.Checked;
-        txtValorPrima.Visible = !rbEmpeno.Checked;
-        lblPorcenajedePrima.Visible = !rbEmpeno.Checked;
+        try
+        {
+            divPrima.Visible = !rbEmpeno.Checked;
+            txtValorPrima.Visible = !rbEmpeno.Checked;
+            lblPorcenajedePrima.Visible = !rbEmpeno.Checked;
 
-        divMontoFinanciarVehiculo.Visible = rbEmpeno.Checked;
-        txtMonto.Enabled = rbEmpeno.Checked;
+            divMontoFinanciarVehiculo.Visible = rbEmpeno.Checked;
+            txtMonto.Enabled = rbEmpeno.Checked;
 
-        ddlPlazos.Items.Clear();
-        ddlPlazos.Items.Add("12 Meses");
-        ddlPlazos.Items.Add("18 Meses");
-        ddlPlazos.Items.Add("24 Meses");
-        ddlPlazos.Items.Add("30 Meses");
-        CargarScripts();
+            ddlPlazos.Items.Clear();
+            ddlPlazos.Items.Add("12 Meses");
+            ddlPlazos.Items.Add("18 Meses");
+            ddlPlazos.Items.Add("24 Meses");
+            ddlPlazos.Items.Add("30 Meses");
+            CargarScripts();
+        }
+        catch (Exception ex)
+        {
+            lblMensaje.Visible = true;
+            lblMensaje.Text = ex.Message;
+        }
 
     }
 
     protected void rbFinanciamiento_CheckedChanged(object sender, EventArgs e)
     {
-        divPrima.Visible = !rbEmpeno.Checked;
-        txtValorPrima.Visible = !rbEmpeno.Checked;
-        lblPorcenajedePrima.Visible = !rbEmpeno.Checked;
-        divMontoFinanciarVehiculo.Visible = rbEmpeno.Checked;
-        txtMonto.Enabled = rbEmpeno.Checked;
+        try
+        {
+            divPrima.Visible = !rbEmpeno.Checked;
+            txtValorPrima.Visible = !rbEmpeno.Checked;
+            lblPorcenajedePrima.Visible = !rbEmpeno.Checked;
+            divMontoFinanciarVehiculo.Visible = rbEmpeno.Checked;
+            txtMonto.Enabled = rbEmpeno.Checked;
 
-        ddlPlazos.Items.Clear();
-        ddlPlazos.Items.Add("12 Meses");
-        ddlPlazos.Items.Add("18 Meses");
-        ddlPlazos.Items.Add("24 Meses");
-        ddlPlazos.Items.Add("36 Meses");
-        ddlPlazos.Items.Add("48 Meses");
-        ddlPlazos.Items.Add("60 Meses");
-        CargarScripts();
+            ddlPlazos.Items.Clear();
+            ddlPlazos.Items.Add("12 Meses");
+            ddlPlazos.Items.Add("18 Meses");
+            ddlPlazos.Items.Add("24 Meses");
+            ddlPlazos.Items.Add("36 Meses");
+            ddlPlazos.Items.Add("48 Meses");
+            ddlPlazos.Items.Add("60 Meses");
+            CargarScripts();
+        }
+        catch (Exception ex)
+        {
+            lblMensaje.Visible = true;
+            lblMensaje.Text = ex.Message;
+        }
     }
 
     protected void btnNuevoCalculo_Click(object sender, EventArgs e)
@@ -239,31 +264,39 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
     private void CargarScripts()
     {
-        string scriptMascarasDeEntrada =
-        "<script>$('.MascaraCantidad').inputmask('decimal', { " +
-        "alias: 'numeric', " +
-                "groupSeparator: ',', " +
-                "digits: 2, " +
-                "integerDigits: 11, " +
-                "digitsOptional: false, " +
-                "placeholder: '0', " +
-                "radixPoint: '.', " +
-                "autoGroup: true, " +
-                "min: 0.0, " +
-            "}); " +
-            "$('.MascaraNumerica').inputmask('decimal', { " +
-        "alias: 'numeric', " +
-                "groupSeparator: ',', " +
-                "digits: 0, " +
-                "integerDigits: 3," +
-                "digitsOptional: false, " +
-                "placeholder: '0', " +
-                "radixPoint: '.', " +
-                "autoGroup: true, " +
-                "min: 0.0, " +
-            "}); " +
-        "$('.identidad').inputmask('9999999999999'); </script>";
+        try
+        {
+            string scriptMascarasDeEntrada =
+            "<script>$('.MascaraCantidad').inputmask('decimal', { " +
+            "alias: 'numeric', " +
+                    "groupSeparator: ',', " +
+                    "digits: 2, " +
+                    "integerDigits: 11, " +
+                    "digitsOptional: false, " +
+                    "placeholder: '0', " +
+                    "radixPoint: '.', " +
+                    "autoGroup: true, " +
+                    "min: 0.0, " +
+                "}); " +
+                "$('.MascaraNumerica').inputmask('decimal', { " +
+            "alias: 'numeric', " +
+                    "groupSeparator: ',', " +
+                    "digits: 0, " +
+                    "integerDigits: 3," +
+                    "digitsOptional: false, " +
+                    "placeholder: '0', " +
+                    "radixPoint: '.', " +
+                    "autoGroup: true, " +
+                    "min: 0.0, " +
+                "}); " +
+            "$('.identidad').inputmask('9999999999999'); </script>";
 
-        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "none", scriptMascarasDeEntrada, false);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "none", scriptMascarasDeEntrada, false);
+        }
+        catch (Exception ex)
+        {
+            lblMensaje.Visible = true;
+            lblMensaje.Text = ex.Message;
+        }
     }
 }

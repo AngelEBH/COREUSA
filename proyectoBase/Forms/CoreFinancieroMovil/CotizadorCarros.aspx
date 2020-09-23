@@ -75,7 +75,7 @@
         }
 
         .page-template {
-            font-family: "DejaVu Sans", "Arial", sans-serif;
+            font-family: "DejaVu Sans";
             position: absolute;
             width: 100%;
             height: 100%;
@@ -91,28 +91,20 @@
                 right: 30px;
                 border-bottom: 1px solid #888;
                 color: #888;
-                margin-bottom: 50px;
+                /*margin-bottom: 50px;*/
                 text-align: center;
             }
 
             .page-template .footer {
                 position: absolute;
-                bottom: 30px;
+                bottom: 10px;
                 left: 30px;
                 right: 30px;
                 border-top: 1px solid #888;
-                text-align: center;
+                text-align: left;
                 color: #888;
-            }
-
-            .page-template .watermark {
-                font-weight: bold;
-                font-size: 400%;
-                text-align: center;
-                margin-top: 30%;
-                color: #aaaaaa;
-                opacity: 0.1;
-                transform: rotate(-35deg) scale(1.7, 1.5);
+                background-color: transparent;
+                font-size: 18px;
             }
 
         @font-face {
@@ -164,15 +156,14 @@
                                 <label class="col-form-label">Plazos disponibles</label>
                                 <asp:DropDownList ID="ddlPlazos" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
                             </div>
-                            <div class="form-group row">
-                                <div class="button-items col-sm-2">
+                            <div class="form-group row mb-0">
+                                <div class="button-items col-sm-12">
                                     <asp:Button ID="btnCalcular" Text="Calcular" CssClass="btn btn-primary btn-lg btn-block waves-effect waves-light" runat="server" OnClick="btnCalcular_Click" />
                                 </div>
                             </div>
                         </div>
+
                         <br />
-
-
                         <!-- Resultados de la cotización -->
                         <div runat="server" id="PanelCreditos1" visible="false">
                             <!-- Nav tabs -->
@@ -236,7 +227,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- Gastos de cierre financiados -->
                                 <div class="tab-pane" id="GastosDeCierreFinanciados" role="tabpanel">
                                     <div class="form-group row">
@@ -279,14 +269,15 @@
                                 </div>
                             </div>
                         </div>
-
+                        <!-- Nueva cotización -->
                         <div class="form-group row m-0" runat="server" id="divNuevoCalculo" visible="false">
-                            <div class="button-items col-sm-2 p-0">
+                            <div class="button-items col-sm-12 p-0">
                                 <asp:Button ID="btnNuevoCalculo" Text="Nuevo cálculo" CssClass="btn btn-primary btn-lg btn-block waves-effect waves-light m-0" runat="server" OnClick="btnNuevoCalculo_Click" />
                             </div>
                         </div>
+                        <!-- Label para mensajes y advertencias -->
                         <div class="form-group row m-0" runat="server" id="PanelMensajeErrores">
-                            <asp:Label CssClass="col-sm-2 col-form-label text-danger" ID="lblMensaje" runat="server"></asp:Label>
+                            <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" runat="server"></asp:Label>
                         </div>
                     </div>
                 </div>
@@ -300,42 +291,159 @@
             </ProgressTemplate>
         </asp:UpdateProgress>
 
-        <div class="card m-0" runat="server" visible="true" id="divCotizacionPDF">
-            <div class="card-body pt-0">
-                <div class="row">
-                    <div class="col-12 text-center">
-                        <img src="/Imagenes/LogoPrestaditoGrande.png" />
-                    </div>
-                    <div class="col-12 text-center">
-                        <h1 class="font-weight-bold"><u>COTIZACION</u></h1>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group row mb-0">
-                            <label class="col-6 text-right">CLIENTE:</label>
-                            <asp:Label ID="lblCliente" CssClass="col-6 p-0" Text="CLIENTE FINAL" runat="server"></asp:Label>
+        <!-- PDF COTIZACIÓN-->
+        <div>
+            <div class="card m-0 divCotizacionPDF" runat="server" visible="true" id="divCotizacionPDF" style="font-size: 18px !important;">
+                <div class="card-body pt-0">
+                    <div class="row">
+
+                        <div class="col-12 text-center">
+                            <img src="/Imagenes/LogoPrestaditoGrande.png" />
+                            <h1>COTIZACIÓN</h1>
+                            <hr />
                         </div>
-                        <div class="form-group row mb-0">
-                            <label class="col-6 text-right">FECHA:</label>
-                            <asp:Label ID="lblFechaCotizacion" CssClass="col-6 p-0" Text="23/09/2020" runat="server"></asp:Label>
+
+                        <div class="col-6">
+                            <div class="form-group row mb-0">
+                                <label class="col-3">CLIENTE:</label>
+                                <asp:Label ID="lblCliente" CssClass="col-9 p-0 font-weight-bold" Text="CLIENTE FINAL" runat="server"></asp:Label>
+                            </div>
+                            <div class="form-group row mb-0">
+                                <label class="col-3">FECHA:</label>
+                                <asp:Label ID="lblFechaCotizacion" CssClass="col-9 p-0 font-weight-bold" Text="23/09/2020" runat="server"></asp:Label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group row mb-0 justify-content-end">
-                            <label class="col-6 text-right">VENDEDOR:</label>
-                            <asp:Label ID="lblVendedor" CssClass="col-6 p-0" Text="Willian Diaz" runat="server"></asp:Label>
+                        <div class="col-6">
+                            <div class="form-group row mb-0 justify-content-end">
+                                <label class="col-3">VENDEDOR:</label>
+                                <asp:Label ID="lblVendedor" CssClass="col-6 p-0 font-weight-bold" Text="Willian Diaz" runat="server"></asp:Label>
+                            </div>
+                            <div class="form-group row mb-0 justify-content-end">
+                                <label class="col-3">TELÉFONO:</label>
+                                <asp:Label ID="lblTelefonoVendedor" CssClass="col-6 p-0 font-weight-bold" Text="9611-6376" runat="server"></asp:Label>
+                            </div>
+                            <div class="form-group row mb-0 justify-content-end">
+                                <label class="col-3">CORREO:</label>
+                                <asp:Label ID="lblCorreoVendedor" CssClass="col-6 p-0 font-weight-bold" Text="willian.diaz@miprestadito.com" runat="server"></asp:Label>
+                            </div>
                         </div>
-                        <div class="form-group row mb-0 justify-content-end">
-                            <label class="col-6 text-right">TELÉFONO:</label>
-                            <asp:Label ID="lblTelefonoVendedor" CssClass="col-6 p-0" Text="9611-6376" runat="server"></asp:Label>
+
+                        <div class="col-6 mt-4">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td class="p-1">Valor del vehiculo</td>
+                                        <td class="p-1"><span id="lblValorVehiculo">L 250,000.00</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">Prima</td>
+                                        <td class="p-1"><span id="lblPrima">L 50,000.00</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">Monto a Financiar</td>
+                                        <td class="p-1"><span id="lblMontoAFinanciar">L 202,500.00</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">Score</td>
+                                        <td class="p-1"><span id="lblScore">670</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">Tasa mensual</td>
+                                        <td class="p-1"><span id="lblTasaMensual">1.91%</span></td>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
-                        <div class="form-group row mb-0 justify-content-end">
-                            <label class="col-6 text-right">CORREO:</label>
-                            <asp:Label ID="lblCorreoVendedor" CssClass="col-6 p-0" Text="willian.diaz@miprestadito.com" runat="server"></asp:Label>
+                        <div class="col-6 mt-4">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td class="p-1" colspan="2">Plazo</td>
+                                        <td class="p-1"><span id="lblPlazo">48</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1" colspan="2">Cuota del préstamo</td>
+                                        <td class="p-1"><span id="lblCuotaPrestamo">L 6,623.31</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">GPS</td>
+                                        <td class="p-1"><span id="lblGPS">SÍ</span></td>
+                                        <td class="p-1"><span id="lblValorGPS">L 197.50</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">SEGURO</td>
+                                        <td class="p-1"><span id="lblSeguro">SÍ</span></td>
+                                        <td class="p-1"><span id="lblValorSeguro">L 694.78</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">GASTOS DE CIERRE</td>
+                                        <td class="p-1"><span id="lblGastosDeCierre">SÍ</span></td>
+                                        <td class="p-1"><span id="lblMontoGastosDeCierre">L 4,000.00</span></td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                        <div class="col-12 mt-2 text-center p-0">
+                            <img src="/Imagenes/Cotizador/image3.png" class="img-fluid" /><br />
+                            <label class="mt-1">Cotización valida únicamente por 5 días y está sujeta a cambios sin previo aviso por parte de Prestadito.</label>
+                        </div>
+
+                        <div class="col-6 mt-4">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="p-1">REQUISITOS PARA FINANCIAMIENTO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="p-1">COPIA DE CÉDULA</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">COMPROBAR INGRESOS</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">RECIBO PÚBLICO</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">CROQUIS DE VIVIENDA</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-6 mt-4">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="p-1">REQUISITOS PARA EMPEÑO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="p-1">COPIA DE CÉDULA</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">RECIBO PÚBLICO</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">CROQUIS DE VIVIENDA</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">RTN</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-12 mt-2 text-center p-0">
+                            <label class="mt-1">Para más información llama al 2540-1050</label>
+                            <h3 class="font-weight-bold">¡Porque no importa la ocasion, PRESTADITO ES LA SOLUCION!</h3>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </form>
 
     <!-- jQuery -->
@@ -372,16 +480,17 @@
             $(".identidad").inputmask("9999999999999");
         });
     </script>
-    <%--<script type="x/kendo-template" id="page-template">
-        <div class="page-template">
-            <div class="header">
-                <img src="/Imagenes/LogoPrestaditoMediano.png" style="width:150px; float:left;" />
-                <h3 id="titleTemplate">Cotización de vehículo</h3>
-            </div>
+
+    <script type="x/kendo-template" id="page-template">
+        <div class="page-template">            
             <div class="footer">
-                Pagina #: pageNum # de #: totalPages #
+                <div class="row">
+                    <div class="col-12 text-left">
+                        Impreso por usuario: <label class="font-weight-bold">Willian Díaz</label>
+                    </div>
+                </div>
             </div>
         </div>
-    </script>--%>
+    </script>
 </body>
 </html>
