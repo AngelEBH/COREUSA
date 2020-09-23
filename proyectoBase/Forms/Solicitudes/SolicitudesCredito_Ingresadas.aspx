@@ -137,6 +137,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Ingresadas.js"></script>
+    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Ingresadas.js?V=202009221153"></script>
 </body>
 </html>

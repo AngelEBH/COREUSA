@@ -9,9 +9,17 @@
 
 
 
-public partial class SolicitudesCredito_Registrar
-{
-
+public partial class SolicitudesCredito_Registrar {
+    
+    /// <summary>
+    /// Control lblAlerta.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblAlerta;
+    
     /// <summary>
     /// Control frmSolicitud.
     /// </summary>
@@ -20,7 +28,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlForm frmSolicitud;
-
+    
     /// <summary>
     /// Control tipoSolicitud.
     /// </summary>
@@ -29,7 +37,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox tipoSolicitud;
-
+    
     /// <summary>
     /// Control tipoPrestamo.
     /// </summary>
@@ -38,7 +46,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox tipoPrestamo;
-
+    
     /// <summary>
     /// Control primerNombreCliente.
     /// </summary>
@@ -47,7 +55,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox primerNombreCliente;
-
+    
     /// <summary>
     /// Control SegundoNombreCliente.
     /// </summary>
@@ -56,7 +64,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox SegundoNombreCliente;
-
+    
     /// <summary>
     /// Control primerApellidoCliente.
     /// </summary>
@@ -65,7 +73,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox primerApellidoCliente;
-
+    
     /// <summary>
     /// Control segundoApellidoCliente.
     /// </summary>
@@ -74,7 +82,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox segundoApellidoCliente;
-
+    
     /// <summary>
     /// Control identidadCliente.
     /// </summary>
@@ -83,7 +91,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox identidadCliente;
-
+    
     /// <summary>
     /// Control rtnCliente.
     /// </summary>
@@ -92,7 +100,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox rtnCliente;
-
+    
     /// <summary>
     /// Control ingresosPrecalificado.
     /// </summary>
@@ -101,7 +109,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox ingresosPrecalificado;
-
+    
     /// <summary>
     /// Control numeroTelefono.
     /// </summary>
@@ -110,7 +118,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox numeroTelefono;
-
+    
     /// <summary>
     /// Control telefonoMovil.
     /// </summary>

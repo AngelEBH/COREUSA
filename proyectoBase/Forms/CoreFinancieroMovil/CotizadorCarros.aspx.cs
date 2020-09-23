@@ -48,6 +48,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         bool lbEsNumerico = false;
         decimal liNumero = 0;
         string lcProducto = "202";
+        
         if (String.IsNullOrEmpty(txtScorePromedio.Text))
         {
             txtScorePromedio.Text = "0";
@@ -79,7 +80,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
         if (!lbEsNumerico)
         {
-            lblMensaje.Text = "Ingrese valoes numericos.";
+            lblMensaje.Text = "Ingrese valores numéricos.";
             return;
         }
 
@@ -135,16 +136,28 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
+                        // Gastos de cierre efectivo
                         sqlResultado.Read();
 
+                        lblEtiqueta1.Text = "Tasa al " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnPorcentajeTasadeInteresAnual"].ToString())) + "%";
                         txtValorPrestamo1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnValoraFinanciar"].ToString()));
                         txtCuotaPrestamo1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensualNeta"].ToString()));
                         txtValorSeguro1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()));
                         txtServicioGPS1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaServicioGPS"].ToString()));
                         txtCuotaTotal1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensual"].ToString()));
-                        txtCuotaTotalGC1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensualConGastosdeCierre"].ToString()));
-                        txtGastosdeCierre1.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnGastosdeCierre"].ToString()));
-                        lblEtiqueta1.Text = "Tasa al " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnPorcentajeTasadeInteresAnual"].ToString())) + "%";
+                        txtGastosdeCierreEfectivo.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnGastosdeCierre"].ToString()));
+
+                        // Gastos de cierre financiados                        
+                        sqlResultado.Read();
+
+                        lblEtiqueta2.Text = "Tasa al " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnPorcentajeTasadeInteresAnual"].ToString())) + "%";
+                        txtValorPrestamo2.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnValoraFinanciar"].ToString()));
+                        txtCuotaPrestamo2.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensualNeta"].ToString()));
+                        txtValorSeguro2.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()));
+                        txtServicioGPS2.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaServicioGPS"].ToString()));
+                        txtCuotaTotal2.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensual"].ToString()));
+                        txtCuotaTotalGastosDeCierreFinanciados.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnCuotaMensualConGastosdeCierre"].ToString()));
+
                     }
                 }
                 lblMensaje.Visible = false;
@@ -152,9 +165,9 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
                 PanelCreditos1.Visible = true;
                 divParametros.Visible = false;
                 divNuevoCalculo.Visible = true;
-                
+
                 CargarScripts();
-            }            
+            }
         }
         catch (Exception ex)
         {
@@ -205,6 +218,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         {
             txtValorVehiculo.Text = string.Empty;
             txtValorPrima.Text = string.Empty;
+            lblPorcenajedePrima.Visible = false;
             txtMonto.Text = string.Empty;
             txtScorePromedio.Text = string.Empty;
             rbEmpeno.Checked = false;
@@ -225,7 +239,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
     private void CargarScripts()
     {
-        string scriptMascarasDeEntrada = 
+        string scriptMascarasDeEntrada =
         "<script>$('.MascaraCantidad').inputmask('decimal', { " +
         "alias: 'numeric', " +
                 "groupSeparator: ',', " +

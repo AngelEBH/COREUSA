@@ -193,7 +193,7 @@ $('#btnActualizar').click(function (e) {
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Ingresadas.aspx/EncriptarParametros",
-        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: idSolicitud }),
+        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: idSolicitud, Identidad: identidadCliente }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la solicitud, contacte al administrador');
