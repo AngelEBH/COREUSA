@@ -25,13 +25,20 @@
             font-weight: bold !important;
         }
 
+        div {
+            font-family: "DejaVu Sans", "Arial", sans-serif;
+            font-size: 12px;
+        }
+
         @font-face {
             font-family: "DejaVu Sans";
             src: url("/Content/fonts/DejaVu/DejaVuSans.ttf") format("truetype");
         }
 
-        @page {
-            font-family: "DejaVu Sans", "Arial", sans-serif !important;
+        @font-face {
+            font-family: "DejaVu Sans";
+            font-weight: bold;
+            src: url("/Content/fonts/DejaVu/DejaVuSans-Bold.ttf") format("truetype");
         }
     </style>
 </head>

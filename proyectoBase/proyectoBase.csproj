@@ -51,6 +51,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -1202,6 +1203,7 @@
     <Content Include="Scripts\plugins\gmaps\lib\gmaps.streetview.js" />
     <Content Include="Scripts\plugins\gmaps\lib\gmaps.styles.js" />
     <Content Include="Scripts\plugins\gmaps\lib\gmaps.utils.js" />
+    <Content Include="Scripts\plugins\html2pdf\html2pdf.bundle.js" />
     <Content Include="Scripts\plugins\iCheck\custom.css" />
     <Content Include="Scripts\plugins\iCheck\green%402x.png" />
     <Content Include="Scripts\plugins\iCheck\green.png" />
@@ -1749,6 +1751,7 @@
     </Content>
     <Content Include="Content\css\bootstrap.css.map" />
     <Content Include="Content\css\bootstrap.min.css.map" />
+    <Content Include="Content\fonts\DejaVu\DejaVuSans-Bold.ttf" />
     <None Include="packages.config" />
     <Content Include="Scripts\plugins\datatables\json\scroller-demo.json" />
     <Content Include="Scripts\plugins\dropzone\dist\readme.md" />

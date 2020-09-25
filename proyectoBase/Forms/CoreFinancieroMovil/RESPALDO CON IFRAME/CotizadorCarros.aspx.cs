@@ -4,6 +4,7 @@ using System.Web;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
+using System.IO;
 
 public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 {
@@ -323,7 +324,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         decimal gastosCierreEfectivo = Convert.ToDecimal(txtGastosdeCierreEfectivo.Text.Replace(",", "").Replace("L", "").Trim());
         string cliente = "CLIENTE FINAL";
 
-        MandarAImprimirCotizacion(valorVehiculo, prima, montoFinanciar, score, tasa, plazo, cuotaPrestamo, servicioGPS, valorSeguro, gastosCierreEfectivo, cliente);
+        GuardarCotizacionPDF(valorVehiculo, prima, montoFinanciar, score, tasa, plazo, cuotaPrestamo, servicioGPS, valorSeguro, gastosCierreEfectivo, cliente);
     }
 
     /* Cotización con gastos de cierre financiados */
@@ -343,15 +344,58 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         decimal gastosCierre = 0;
         string cliente = "CLIENTE FINAL";
 
-        MandarAImprimirCotizacion(valorVehiculo, prima, montoFinanciar, score, tasa, plazo, cuotaPrestamo, servicioGPS, valorSeguro, gastosCierre, cliente);
+        GuardarCotizacionPDF(valorVehiculo, prima, montoFinanciar, score, tasa, plazo, cuotaPrestamo, servicioGPS, valorSeguro, gastosCierre, cliente);
     }
 
-    protected void MandarAImprimirCotizacion(decimal valorVehiculo, decimal prima, decimal montoFinanciar, int score, decimal tasaMensual, string plazo, decimal cuotaPrestamo, decimal valorGPS, decimal valorSeguro, decimal gastosDeCierre, string cliente = "CLIENTE FINAL")
+    protected void GuardarCotizacionPDF(decimal valorVehiculo, decimal prima, decimal montoFinanciar, int score, decimal tasaMensual, string plazo, decimal cuotaPrestamo, decimal valorGPS, decimal valorSeguro, decimal gastosDeCierre, string cliente = "CLIENTE FINAL")
     {
         try
         {
-            ExportarPDF(NombreVendedor, TelefonoVendedor, CorreoVendedor, valorVehiculo, prima, montoFinanciar, score, tasaMensual, plazo, cuotaPrestamo, valorGPS, valorSeguro, gastosDeCierre, NombreVendedor, cliente);
-            CargarScripts();
+            string parametros = "ValorVehiculo=" + valorVehiculo + "&" +
+            "Prima=" + prima + "&" +
+            "MontoFinanciar=" + montoFinanciar + "&" +
+            "Score=" + score + "&" +
+            "TasaMensual=" + tasaMensual + "&" +
+            "Plazo=" + plazo + "&" +
+            "CuotaPrestamo=" + cuotaPrestamo + "&" +
+            "ValorGPS=" + valorGPS + "&" +
+            "ValorSeguro=" + valorSeguro + "&" +
+            "GastosDeCierre=" + gastosDeCierre + "&" +
+            "Cliente=" + cliente + "&" +
+            "Vendedor=" + NombreVendedor + "&" +
+            "TelefonoVendedor=" + TelefonoVendedor + "&" +
+            "CorreoVendedor=" + CorreoVendedor + "&";
+
+
+            string htmlTemplate = string.Empty;
+            using (StreamReader reader = new StreamReader(Server.MapPath("~/Forms/CoreFinancieroMovil/TemplateCotizacion.html")))
+            {
+                htmlTemplate = reader.ReadToEnd();
+            }
+
+            htmlTemplate = htmlTemplate.Replace("{lblCliente}", cliente);
+            htmlTemplate = htmlTemplate.Replace("{lblFechaCotizacion}", DateTime.Now.ToString("MM/dd/yyyy"));
+            htmlTemplate = htmlTemplate.Replace("{lblVendedor}", NombreVendedor);
+            htmlTemplate = htmlTemplate.Replace("{lblTelefonoVendedor}", TelefonoVendedor);
+            htmlTemplate = htmlTemplate.Replace("{lblCorreoVendedor}", CorreoVendedor);
+            htmlTemplate = htmlTemplate.Replace("{lblValorVehiculo}", valorVehiculo.ToString());
+            htmlTemplate = htmlTemplate.Replace("{lblPrima}", prima.ToString());
+            htmlTemplate = htmlTemplate.Replace("{lblMontoAFinanciar}", montoFinanciar.ToString());
+            htmlTemplate = htmlTemplate.Replace("{lblScore}", score.ToString());
+
+
+            htmlTemplate = htmlTemplate.Replace("{lblTasaMensual}", tasaMensual.ToString());
+            htmlTemplate = htmlTemplate.Replace("{lblPlazo}", plazo);
+            htmlTemplate = htmlTemplate.Replace("{lblCuotaPrestamo}", cliente);
+            //htmlTemplate = htmlTemplate.Replace("{lblGPS}", cliente);
+            //htmlTemplate = htmlTemplate.Replace("{lblValorGPS}", cliente);
+            //htmlTemplate = htmlTemplate.Replace("{lblSeguro}", cliente);
+            //htmlTemplate = htmlTemplate.Replace("{lblValorSeguro}", cliente);
+            //htmlTemplate = htmlTemplate.Replace("{lblGastosDeCierre}", cliente);
+            //htmlTemplate = htmlTemplate.Replace("{lblMontoGastosDeCierre}", cliente);
+            htmlTemplate = htmlTemplate.Replace("{lblUsuarioImprime}", NombreVendedor);
+
+            PdfSharpConvert(htmlTemplate);
         }
         catch (Exception ex)
         {
@@ -361,52 +405,16 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         }
     }
 
-    protected void ExportarPDF(string vendedor, string telefonoVendedor, string correoVendedor, decimal valorVehiculo, decimal prima, decimal montoFinanciar, int score, decimal tasaMensual, string plazo, decimal cuotaPrestamo, decimal valorGPS, decimal valorSeguro, decimal gastosDeCierre, string usuarioImprime, string cliente = "CLIENTE FINAL")
+
+    public void PdfSharpConvert(String html)
     {
-        try
+        using (MemoryStream ms = new MemoryStream())
         {
-            lblCliente.Text = cliente;
-            lblFechaCotizacion.Text = DateTime.Now.ToString("MM/dd/yyyy");
-            lblVendedor.Text = vendedor;
-            lblTelefonoVendedor.Text = telefonoVendedor;
-            lblCorreoVendedor.Text = correoVendedor;
 
-            lblValorVehiculo.Text = "L " + string.Format("{0:#,###0.00}", valorVehiculo);
-
-            lblPrima.Text = "L " + string.Format("{0:#,###0.00}", prima);
-
-            lblMontoAFinanciar.Text = "L " + string.Format("{0:#,###0.00}", montoFinanciar);
-
-            lblScore.Text = string.Format("{0:#,###0}", score);
-
-            lblTasaMensual.Text = string.Format("{0:#,###0.00}", tasaMensual) + "%";
-
-            lblPlazo.Text = plazo;
-            lblCuotaPrestamo.Text = "L " + string.Format("{0:#,###0.00}", cuotaPrestamo);
-
-            lblValorGPS.Text = "L " + string.Format("{0:#,###0.00}", valorGPS);
-            lblGPS.Text = RespuestaLogica(valorGPS);
-
-            lblValorSeguro.Text = "L " + string.Format("{0:#,###0.00}", valorSeguro);
-            lblSeguro.Text = RespuestaLogica(valorSeguro);
-
-            lblMontoGastosDeCierre.Text = "L " + string.Format("{0:#,###0.00}", gastosDeCierre);
-            lblGastosDeCierre.Text = RespuestaLogica(gastosDeCierre);
-
-            //lblUsuarioImprime.Text = "Impreso por "+ usuarioImprime;
-
-            string scriptImprimir = "ExportToPDF('Cotizacion_+" + DateTime.Now.ToString("yyyy_dd_M_HH_mm_ss") + "')";
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "_self", scriptImprimir, true);
+            string savePath = Server.MapPath("~/Forms/CoreFinancieroMovil/");
+            string nombre = "Cotizacion_" + DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss"); ;
+            var pdf = TheArtOfDev.HtmlRenderer.PdfSharp.PdfGenerator.GeneratePdf(html, PdfSharp.PageSize.A4);
+            pdf.Save(savePath + nombre + ".pdf");
         }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            return;
-        }
-    }
-
-    private string RespuestaLogica(decimal cantidad)
-    {
-        return cantidad > 0 ? "SI" : "NO";
     }
 }

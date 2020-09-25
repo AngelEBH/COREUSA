@@ -126,6 +126,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <br />
                         <!-- Resultados de la cotización -->
                         <div runat="server" id="PanelCreditos1" visible="false">
@@ -245,185 +246,8 @@
                     </div>
                 </div>
 
-                <!-- COTIZACIÓN PDF -->
-                <div id="divContenedor" style="margin-top: 999px; display: none;">
-                    <div class="card m-0 divCotizacionPDF" runat="server" visible="true" id="divCotizacionPDF" style="display: none;">
-                        <div class="card-body pt-0">
-                            <div class="row">
-                                <div class="col-12 text-center">
-                                    <img src="/Imagenes/LogoPrestaditoMediano.png" />
-                                    <h3>COTIZACIÓN</h3>
-                                    <hr />
-                                </div>
-                                <div class="col-5">
-                                    <div class="form-group row mb-0">
-                                        <label class="col-4 font-12">CLIENTE:</label>
-                                        <asp:Label ID="lblCliente" CssClass="col-8 p-0 font-weight-bold font-12" Text="" runat="server"></asp:Label>
-                                    </div>
-                                    <div class="form-group row mb-0">
-                                        <label class="col-4 font-12">FECHA:</label>
-                                        <asp:Label ID="lblFechaCotizacion" CssClass="col-8 p-0 font-weight-bold font-12" Text="" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="col-7">
-                                    <div class="form-group row mb-0 justify-content-end">
-                                        <label class="col-3 font-12">VENDEDOR:</label>
-                                        <asp:Label ID="lblVendedor" CssClass="col-6 p-0 font-weight-bold font-12" Text="" runat="server"></asp:Label>
-                                    </div>
-                                    <div class="form-group row mb-0 justify-content-end">
-                                        <label class="col-3 font-12">TELÉFONO:</label>
-                                        <asp:Label ID="lblTelefonoVendedor" CssClass="col-6 p-0 font-weight-bold font-12" Text="" runat="server"></asp:Label>
-                                    </div>
-                                    <div class="form-group row mb-0 justify-content-end">
-                                        <label class="col-3 font-12">CORREO:</label>
-                                        <asp:Label runat="server" ID="lblCorreoVendedor" CssClass="col-6 p-0 font-weight-bold font-12" Text=""></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="col-6 mt-4">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <td class="p-1">Valor del vehiculo</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblValorVehiculo">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">Prima</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblPrima">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">Monto a Financiar</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblMontoAFinanciar">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">Score</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblScore">0</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">Tasa mensual</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblTasaMensual">0.00%</asp:Label>
-                                                </td>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                                <div class="col-6 mt-4">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <td class="p-1" colspan="2">Plazo</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblPlazo"></asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1" colspan="2">Cuota del préstamo</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblCuotaPrestamo">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">GPS</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblGPS">NO</asp:Label></td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblValorGPS">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">SEGURO</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblSeguro">NO</asp:Label>
-                                                </td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblValorSeguro">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">GASTOS DE CIERRE</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblGastosDeCierre">NO</asp:Label>
-                                                </td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblMontoGastosDeCierre">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                                <div class="col-12 mt-2 text-center p-0">
-                                    <img src="/Imagenes/Cotizador/image3.png" class="img-fluid" /><br />
-                                    <label class="mt-1">Cotización valida únicamente por 5 días y está sujeta a cambios sin previo aviso por parte de Prestadito.</label>
-                                </div>
-                                <div class="col-6 mt-4">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="p-1">REQUISITOS PARA FINANCIAMIENTO</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="p-1">COPIA DE CÉDULA</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">COMPROBAR INGRESOS</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">RECIBO PÚBLICO</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">CROQUIS DE VIVIENDA</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="col-6 mt-4">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="p-1">REQUISITOS PARA FINANCIAMIENTO CON GARANTÍA</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="p-1">COPIA DE CÉDULA</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">RECIBO PÚBLICO</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">CROQUIS DE VIVIENDA</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">RTN</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="col-12 mt-2 text-center p-0">
-                                    <label class="mt-1">Para más información llama al 2540-1050</label>
-                                    <h5 class="font-weight-bold">¡Porque no importa la ocasión, PRESTADITO ES LA SOLUCIÓN!</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <!--<footer>
-                        <div class="row h-100">
-                            <div class="col-12 justify-content-end">
-                                <asp:Label runat="server" ID="lblUsuarioImprime" CssClass="font-weight-bold"></asp:Label>
-                            </div>
-                        </div>
-                    </footer>-->
-                    </div>
-                </div>
+                <div id="divIframeContainer"></div>
+
             </ContentTemplate>
         </asp:UpdatePanel>
         <asp:UpdateProgress ID="updateProgress" runat="server">
@@ -467,27 +291,12 @@
         });
     </script>
 
-    <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
     <script>
         // Exportar cotización a PDF
-        function ExportToPDF(fileName) {
+        function ExportToPDF(directorioPDF) {
 
-            const cotizacion = this.document.getElementById("divCotizacionPDF");
-            var opt = {
-                margin: 0.3, // 0 o array [top, left, bottom, right]
-                filename: fileName + '.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 1 },
-                jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' }
-            };
-
-            $("#divContenedor,#divCotizacionPDF").css('display', '');
-            $("body,html").css("overflow", "hidden");
-
-            html2pdf().from(cotizacion).set(opt).save().then(function () {
-                $("#divContenedor,#divCotizacionPDF").css('display', 'none');
-                $("body,html").css("overflow", "");
-            });
+            //var directorioPDF = "http://190.92.0.76/CoreMovil/Cotizadores/Cotizacion_24_9_2020_17_21_08.pdf"
+            $("#divIframeContainer").append('<iframe hidden="hidden" src=' + directorioPDF + '></iframe>');
         }
     </script>
 </body>

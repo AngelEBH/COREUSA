@@ -351,7 +351,6 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         try
         {
             ExportarPDF(NombreVendedor, TelefonoVendedor, CorreoVendedor, valorVehiculo, prima, montoFinanciar, score, tasaMensual, plazo, cuotaPrestamo, valorGPS, valorSeguro, gastosDeCierre, NombreVendedor, cliente);
-            CargarScripts();
         }
         catch (Exception ex)
         {
@@ -360,6 +359,9 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
             return;
         }
     }
+
+
+
 
     protected void ExportarPDF(string vendedor, string telefonoVendedor, string correoVendedor, decimal valorVehiculo, decimal prima, decimal montoFinanciar, int score, decimal tasaMensual, string plazo, decimal cuotaPrestamo, decimal valorGPS, decimal valorSeguro, decimal gastosDeCierre, string usuarioImprime, string cliente = "CLIENTE FINAL")
     {
@@ -385,17 +387,17 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
             lblCuotaPrestamo.Text = "L " + string.Format("{0:#,###0.00}", cuotaPrestamo);
 
             lblValorGPS.Text = "L " + string.Format("{0:#,###0.00}", valorGPS);
-            lblGPS.Text = RespuestaLogica(valorGPS);
+            lblGPS.Text = respuestaLogica(valorGPS);
 
             lblValorSeguro.Text = "L " + string.Format("{0:#,###0.00}", valorSeguro);
-            lblSeguro.Text = RespuestaLogica(valorSeguro);
+            lblSeguro.Text = respuestaLogica(valorSeguro);
 
             lblMontoGastosDeCierre.Text = "L " + string.Format("{0:#,###0.00}", gastosDeCierre);
-            lblGastosDeCierre.Text = RespuestaLogica(gastosDeCierre);
+            lblGastosDeCierre.Text = respuestaLogica(gastosDeCierre);
 
-            //lblUsuarioImprime.Text = "Impreso por "+ usuarioImprime;
+            lblUsuarioImprime.Text = usuarioImprime;
 
-            string scriptImprimir = "ExportToPDF('Cotizacion_+" + DateTime.Now.ToString("yyyy_dd_M_HH_mm_ss") + "')";
+            string scriptImprimir = "ExportToPDF('Cotizacion_+" + DateTime.Now.ToString() + "')";
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "_self", scriptImprimir, true);
         }
         catch (Exception ex)
@@ -405,7 +407,8 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         }
     }
 
-    private string RespuestaLogica(decimal cantidad)
+
+    private string respuestaLogica(decimal cantidad)
     {
         return cantidad > 0 ? "SI" : "NO";
     }
