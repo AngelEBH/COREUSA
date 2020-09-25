@@ -775,6 +775,7 @@
     <Content Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx" />
     <Content Include="Forms\Otros\CompromisoLegal.aspx" />
     <Content Include="Forms\Otros\ContratoVehiculoClausulaLicencia.aspx" />
+    <Content Include="Forms\CoreFinancieroMovil\ImprimirCotizacion.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Analisis.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Bandeja.aspx" />
@@ -1487,6 +1488,13 @@
     </Compile>
     <Compile Include="Forms\Otros\ContratoVehiculoClausulaLicencia.aspx.designer.cs">
       <DependentUpon>ContratoVehiculoClausulaLicencia.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CoreFinancieroMovil\ImprimirCotizacion.aspx.cs">
+      <DependentUpon>ImprimirCotizacion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\CoreFinancieroMovil\ImprimirCotizacion.aspx.designer.cs">
+      <DependentUpon>ImprimirCotizacion.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx.cs">
       <DependentUpon>SolicitudesCredito_ActualizarSolicitud.aspx</DependentUpon>

@@ -17,8 +17,8 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            string lcURL = Request.Url.ToString();
+            var DSC = new DSCore.DataCrypt();
+            var lcURL = Request.Url.ToString();
             int liParamStart = lcURL.IndexOf("?");
             string lcParametros;
 
@@ -30,7 +30,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             if (lcParametros != String.Empty)
             {
                 pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
@@ -44,21 +44,21 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
     [WebMethod]
     public static List<BandejaSolicitudesViewModel> CargarSolicitudes(int IDSOL, string dataCrypt)
     {
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        List<BandejaSolicitudesViewModel> solicitudes = new List<BandejaSolicitudesViewModel>();
+        var DSC = new DSCore.DataCrypt();
+        var solicitudes = new List<BandejaSolicitudesViewModel>();
         try
         {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             pcIDSesion = "1";
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
@@ -66,7 +66,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var reader = sqlComando.ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -131,14 +131,13 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
     public static string AbrirAnalisisSolicitud(int IDSOL, string Identidad, string dataCrypt)
     {
         string resultado = "-1";
-        BandejaSolicitudesViewModel solicitudes = new BandejaSolicitudesViewModel();
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        var DSC = new DSCore.DataCrypt();
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             /* Validar que solo el primer usuario en iniciar el analisis de la solicitud tenga acceso al analisis de la misma
             
@@ -199,13 +198,13 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
     public static string EncriptarParametros(int IDSOL, string Identidad, string dataCrypt)
     {
         string resultado;
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        var DSC = new DSCore.DataCrypt();
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             string lcParametros = "usr=" + pcIDUsuario +
             "&IDApp=" + pcIDApp +
@@ -231,7 +230,6 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            string lcURL = HttpContext.Current.Request.Url.ToString();
             if (ID == pcIDUsuario)
                 resultado = true;
         }
@@ -247,10 +245,10 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+            var DSC = new DSCore.DataCrypt();
             int liParamStart = 0;
             string lcParametros = "";
-            String pcEncriptado = "";
+            string pcEncriptado = "";
             liParamStart = URL.IndexOf("?");
             if (liParamStart > 0)
                 lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);

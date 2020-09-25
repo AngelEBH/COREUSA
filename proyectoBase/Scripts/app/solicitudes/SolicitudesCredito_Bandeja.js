@@ -9,10 +9,9 @@ var FiltroActual = "";
 $(document).ready(function () {
 
     dtBandeja = $('#datatable-bandeja').DataTable({
-        //"responsive": true,
         "pageLength": 15,
         "aaSorting": [],
-        "dom": "<'row'<'col-sm-6'><'col-sm-6'T>>" +
+        "dom": "<'row'<'col-sm-12'B>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
         "language": {
@@ -39,24 +38,15 @@ $(document).ready(function () {
                 "sSortDescending": ": Activar para ordenar la columna de manera descendente"
             },
             "decimal": ".",
-            "thousands": ","
+            "thousands": ",",
+            buttons: {
+                copyTitle: 'Copiado al portapapeles',
+                copySuccess: {
+                    _: '%d Lineas copiadas',
+                    1: '1 linea copiada'
+                }
+            }
         },
-        //initComplete: function () {
-        //    this.api().columns(0).every(function () {
-        //        var column = this;
-        //        var select = $('<select class="form-control form-control-sm"><option value="">Filtrar</option></select>')
-        //            .appendTo($(column.header()))
-        //            .on('change', function () {
-        //                var val = $.fn.dataTable.util.escapeRegex(
-        //                    $(this).val()
-        //                );
-        //                column.search(val ? '^' + val + '$' : '', true, false).draw();
-        //            });
-        //        column.data().unique().sort().each(function (d, j) {
-        //            select.append('<option value="' + d + '">' + d + '</option>')
-        //        });
-        //    });
-        //},
         "ajax": {
             type: "POST",
             url: "SolicitudesCredito_Bandeja.aspx/CargarSolicitudes",
@@ -107,7 +97,15 @@ $(document).ready(function () {
             {
                 "data": "fdEnAnalisisInicio", "className": "text-center",
                 "render": function (data, type, row) {
-                    return row["fdEnAnalisisInicio"] != ProcesoPendiente ? row["fdEnAnalisisFin"] != ProcesoPendiente ? IconoExito : IconoPendiente : '';
+
+                    var Resultado = '';
+                    Resultado = row["fdEnAnalisisInicio"] != ProcesoPendiente ? row["fdEnAnalisisFin"] != ProcesoPendiente ? IconoExito : IconoPendiente : '';
+
+                    if (row["fdEnAnalisisFin"] == ProcesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7) && row["fdEnAnalisisInicio"] != ProcesoPendiente) {
+                        Resultado = row["fiEstadoSolicitud"] == 7 ? IconoExito : IconoRojo;
+                    }
+
+                    return Resultado;
                 }
             },
             {
@@ -119,14 +117,15 @@ $(document).ready(function () {
                     if (row["fdEnvioARutaAnalista"] != ProcesoPendiente) {
 
                         Resultado = (row["fdEnCampoFin"] != ProcesoPendiente || row["fiEstadoDeCampo"] == 2) ? IconoExito : IconoPendiente;
-                    }                    
 
-                    if (row["fdEnCampoFin"] == ProcesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
-                        Resultado = row["fiEstadoSolicitud"] == 7 ? IconoExito : IconoRojo;
+                        if (row["fdEnCampoFin"] == ProcesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
+                            Resultado = row["fiEstadoSolicitud"] == 7 ? IconoExito : IconoRojo;
+                        }
+                        else if (row["fiEstadoSolicitud"] == 5) {
+                            Resultado = IconoRojo;
+                        }
                     }
-                    else if (row["fiEstadoSolicitud"] == 5) {
-                        Resultado = IconoRojo;
-                    }
+                    
                     return Resultado;
                 }
             },
@@ -139,7 +138,6 @@ $(document).ready(function () {
                     if (row["fdCondicionadoInicio"] != ProcesoPendiente) {
 
                         Resultado = row["fdCondificionadoFin"] != ProcesoPendiente ? IconoExito : IconoPendiente;
-
 
                         if (row["fdCondificionadoFin"] == ProcesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
                             Resultado = row["fiEstadoSolicitud"] == 7 ? IconoExito : IconoRojo;
@@ -194,6 +192,25 @@ $(document).ready(function () {
                     }
                     return resolucionFinal;
                 }
+            }
+        ],
+        buttons: [
+            {
+                extend: 'copy',
+                text: 'Copiar'
+            },
+            {
+                extend: 'excelHtml5',
+                title: 'Solicitudes_de_credito_' + moment(),
+                autoFilter: true,
+                messageTop: 'Solicitudes de crédito ' + moment().format('YYYY/MM/DD'),
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 13]
+                }
+            },
+            {
+                extend: 'colvis',
+                text: 'Ocultar columnas'
             }
         ],
         columnDefs: [

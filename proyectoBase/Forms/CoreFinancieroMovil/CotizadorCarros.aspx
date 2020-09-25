@@ -10,7 +10,6 @@
     <!-- BOOTSTRAP -->
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/style.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
     <style>
         html, body {
             background-color: #fff;
@@ -194,7 +193,7 @@
                                             <label class="col-form-label">Valor del prestamo (<span class="text-xs"><asp:Label CssClass="col-form-label p-0 font-weight-bold align-self-center" ID="lblEtiqueta1" runat="server" Text="" /></span>)</label>
                                         </div>
                                         <div class="col-2 justify-content-end">
-                                            <asp:Button ID="btnDescargarCotizacion" runat="server" OnClientClick="ExportHtmlToPdf('#divCotizacionPDF','Cotización_GC_Efectivo_202009181655','Cotización de vehiculo')" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
+                                            <asp:Button ID="btnDescargarCotizacion" runat="server" OnClick="btnDescargarCotizacion_Click" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
                                         </div>
                                         <div class="col-12">
                                             <asp:TextBox ID="txtValorPrestamo1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
@@ -234,7 +233,7 @@
                                             <label class="col-form-label">Valor del prestamo (<span class="text-xs"><asp:Label CssClass="col-form-label p-0 font-weight-bold align-self-center" ID="lblEtiqueta2" runat="server" Text="" /></span>)</label>
                                         </div>
                                         <div class="col-2">
-                                            <asp:Button ID="btnDescargarCotizacion2" runat="server" OnClientClick="ExportHtmlToPdf('#divCotizacionPDF','Cotización_GC_Financiados_202009181655','Cotización de vehiculo')" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
+                                            <asp:Button ID="btnDescargarCotizacion2" runat="server" OnClick="btnDescargarCotizacion2_Click" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
                                         </div>
                                         <div class="col-12">
                                             <asp:TextBox ID="txtValorPrestamo2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
@@ -290,169 +289,12 @@
                 </div>
             </ProgressTemplate>
         </asp:UpdateProgress>
-
-        <!-- PDF COTIZACIÓN-->
-        <div>
-            <div class="card m-0 divCotizacionPDF" runat="server" visible="true" id="divCotizacionPDF" style="font-size: 18px !important;">
-                <div class="card-body pt-0">
-                    <div class="row">
-
-                        <div class="col-12 text-center">
-                            <img src="/Imagenes/LogoPrestaditoGrande.png" />
-                            <h1>COTIZACIÓN</h1>
-                            <hr />
-                        </div>
-
-                        <div class="col-6">
-                            <div class="form-group row mb-0">
-                                <label class="col-3">CLIENTE:</label>
-                                <asp:Label ID="lblCliente" CssClass="col-9 p-0 font-weight-bold" Text="CLIENTE FINAL" runat="server"></asp:Label>
-                            </div>
-                            <div class="form-group row mb-0">
-                                <label class="col-3">FECHA:</label>
-                                <asp:Label ID="lblFechaCotizacion" CssClass="col-9 p-0 font-weight-bold" Text="23/09/2020" runat="server"></asp:Label>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group row mb-0 justify-content-end">
-                                <label class="col-3">VENDEDOR:</label>
-                                <asp:Label ID="lblVendedor" CssClass="col-6 p-0 font-weight-bold" Text="Willian Diaz" runat="server"></asp:Label>
-                            </div>
-                            <div class="form-group row mb-0 justify-content-end">
-                                <label class="col-3">TELÉFONO:</label>
-                                <asp:Label ID="lblTelefonoVendedor" CssClass="col-6 p-0 font-weight-bold" Text="9611-6376" runat="server"></asp:Label>
-                            </div>
-                            <div class="form-group row mb-0 justify-content-end">
-                                <label class="col-3">CORREO:</label>
-                                <asp:Label ID="lblCorreoVendedor" CssClass="col-6 p-0 font-weight-bold" Text="willian.diaz@miprestadito.com" runat="server"></asp:Label>
-                            </div>
-                        </div>
-
-                        <div class="col-6 mt-4">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <td class="p-1">Valor del vehiculo</td>
-                                        <td class="p-1"><span id="lblValorVehiculo">L 250,000.00</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">Prima</td>
-                                        <td class="p-1"><span id="lblPrima">L 50,000.00</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">Monto a Financiar</td>
-                                        <td class="p-1"><span id="lblMontoAFinanciar">L 202,500.00</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">Score</td>
-                                        <td class="p-1"><span id="lblScore">670</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">Tasa mensual</td>
-                                        <td class="p-1"><span id="lblTasaMensual">1.91%</span></td>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                        <div class="col-6 mt-4">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <td class="p-1" colspan="2">Plazo</td>
-                                        <td class="p-1"><span id="lblPlazo">48</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1" colspan="2">Cuota del préstamo</td>
-                                        <td class="p-1"><span id="lblCuotaPrestamo">L 6,623.31</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">GPS</td>
-                                        <td class="p-1"><span id="lblGPS">SÍ</span></td>
-                                        <td class="p-1"><span id="lblValorGPS">L 197.50</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">SEGURO</td>
-                                        <td class="p-1"><span id="lblSeguro">SÍ</span></td>
-                                        <td class="p-1"><span id="lblValorSeguro">L 694.78</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">GASTOS DE CIERRE</td>
-                                        <td class="p-1"><span id="lblGastosDeCierre">SÍ</span></td>
-                                        <td class="p-1"><span id="lblMontoGastosDeCierre">L 4,000.00</span></td>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-
-                        <div class="col-12 mt-2 text-center p-0">
-                            <img src="/Imagenes/Cotizador/image3.png" class="img-fluid" /><br />
-                            <label class="mt-1">Cotización valida únicamente por 5 días y está sujeta a cambios sin previo aviso por parte de Prestadito.</label>
-                        </div>
-
-                        <div class="col-6 mt-4">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="p-1">REQUISITOS PARA FINANCIAMIENTO</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="p-1">COPIA DE CÉDULA</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">COMPROBAR INGRESOS</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">RECIBO PÚBLICO</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">CROQUIS DE VIVIENDA</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-6 mt-4">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="p-1">REQUISITOS PARA EMPEÑO</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="p-1">COPIA DE CÉDULA</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">RECIBO PÚBLICO</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">CROQUIS DE VIVIENDA</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-1">RTN</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-12 mt-2 text-center p-0">
-                            <label class="mt-1">Para más información llama al 2540-1050</label>
-                            <h3 class="font-weight-bold">¡Porque no importa la ocasion, PRESTADITO ES LA SOLUCION!</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </form>
 
     <!-- jQuery -->
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
-    <script src="/Scripts/plugins/kendo/jszip.min.js"></script>
-    <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
-    <script src="/Scripts/plugins/kendo/PrintHtmlToPDF.js"></script>
     <script>
         $(function () {
             $(".MascaraCantidad").inputmask("decimal", {
@@ -470,7 +312,7 @@
                 alias: "numeric",
                 groupSeparator: ",",
                 digits: 0,
-                integerDigits: 3, // cantidad de digitos permitidos
+                integerDigits: 3,
                 digitsOptional: false,
                 placeholder: "0",
                 radixPoint: ".",
@@ -479,18 +321,6 @@
             });
             $(".identidad").inputmask("9999999999999");
         });
-    </script>
-
-    <script type="x/kendo-template" id="page-template">
-        <div class="page-template">            
-            <div class="footer">
-                <div class="row">
-                    <div class="col-12 text-left">
-                        Impreso por usuario: <label class="font-weight-bold">Willian Díaz</label>
-                    </div>
-                </div>
-            </div>
-        </div>
     </script>
 </body>
 </html>
