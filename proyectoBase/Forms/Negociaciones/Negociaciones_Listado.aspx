@@ -87,10 +87,11 @@
             <table id="datatable-bandeja" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                 <thead>
                     <tr>
+                        <th>Oficial</th>
                         <th>Cliente</th>
-                        <th>Nombre cliente</th>
+                        <th>Producto</th>
+                        <th>CC.</th>
                         <th>Fecha</th>
-                        <th>Tipo de prestamo</th>
                         <th>Detalles</th>
                         <th>Estado</th>
                     </tr>
