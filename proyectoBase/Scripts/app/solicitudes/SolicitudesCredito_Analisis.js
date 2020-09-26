@@ -1062,15 +1062,16 @@ $("#btnActualizarMontoManualmente").click(function () {
             success: function (data) {
                 if (data.d == true) {
                     $("#lblMontoPrestamoEscogido").text(addFormatoNumerico(montoFinanciarCalculado));
-                    $("#lblPlazoEscogido").text(cantidadPlazos);
-                    gMontoFinal = montoFinanciarCalculado;
-                    gPlazoFinal = cantidadPlazos;
+                    $("#lblPlazoEscogido").text(cantidadPlazos);                    
                     $("#divPrestamoElegido").css('display', '');
                     $("#modalMontoFinanciar,#ModalDigitarMontosManualmente").modal('hide');
                     MensajeExito('Monto a financiar actualizado correctamente');
 
                     VALORGARANTIA_CARGADA_EN_PRESTAMOSSUGERIDOS = valorGlobal;
                     VALORPRIMA_CARGADA_EN_PRESTAMOSSUGERIDOS = valorPrima;
+
+                    gMontoFinal = montoFinanciarCalculado;
+                    gPlazoFinal = cantidadPlazos;
                 }
                 else { MensajeError('Error al actualizar ingresos'); }
             }

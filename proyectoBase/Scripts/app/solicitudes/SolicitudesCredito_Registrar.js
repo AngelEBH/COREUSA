@@ -781,7 +781,7 @@ function cargarPrecalificado() {
 }
 
 function cargarPrestamosSugeridosPrima(valorProducto, valorPrima) {
-
+    debugger;
     var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
@@ -793,13 +793,21 @@ function cargarPrestamosSugeridosPrima(valorProducto, valorPrima) {
             MensajeError('No se pudo cargar los préstamos sugeridos, contacte al administrador');
         },
         success: function (data) {
+            debugger;
 
             var listaPrestamosSugeridos = data.d.cotizadorProductos;
+
+
+            var capacidadPago = calcularCapacidadPago(objPrecalificado.tipoProducto, objPrecalificado.obligaciones, objPrecalificado.ingresos);
+
+
             var DDLMontosSugeridos = $("#pmosSugeridos");
             DDLMontosSugeridos.empty();
             DDLMontosSugeridos.append("<option selected value='''>Seleccione una opción</option>");
-            DDLMontosSugeridos.append("<option value='" + listaPrestamosSugeridos[0].fnMontoOfertado + "' data-pmoplz='" + listaPrestamosSugeridos[0].fiPlazo + "'>" + 'Producto: ' + listaPrestamosSugeridos[0].ProductoDescripcion + ' | Monto ofertado: ' + listaPrestamosSugeridos[0].fnMontoOfertado + ' | Plazo ' + listaPrestamosSugeridos[0].TipoCuota + ': ' + listaPrestamosSugeridos[0].fiPlazo + ' | Cuota ' + listaPrestamosSugeridos[0].TipoCuota + ': ' + listaPrestamosSugeridos[0].fnCuotaQuincenal + "</option>");
-            var capacidadPago = calcularCapacidadPago(objPrecalificado.tipoProducto, objPrecalificado.obligaciones, objPrecalificado.ingresos);
+
+            if (capacidadPago >= listaPrestamosSugeridos[0].fnCuotaQuincenal) {
+                DDLMontosSugeridos.append("<option value='" + listaPrestamosSugeridos[0].fnMontoOfertado + "' data-pmoplz='" + listaPrestamosSugeridos[0].fiPlazo + "'>" + 'Producto: ' + listaPrestamosSugeridos[0].ProductoDescripcion + ' | Monto ofertado: ' + listaPrestamosSugeridos[0].fnMontoOfertado + ' | Plazo ' + listaPrestamosSugeridos[0].TipoCuota + ': ' + listaPrestamosSugeridos[0].fiPlazo + ' | Cuota ' + listaPrestamosSugeridos[0].TipoCuota + ': ' + listaPrestamosSugeridos[0].fnCuotaQuincenal + "</option>");
+            }
             for (var i = 1; i < listaPrestamosSugeridos.length; i++) {
                 if (capacidadPago >= listaPrestamosSugeridos[i].fnCuotaQuincenal) {
                     DDLMontosSugeridos.append("<option value='" + listaPrestamosSugeridos[i].fnMontoOfertado + "' data-pmoplz='" + listaPrestamosSugeridos[i].fiPlazo + "'>" + 'Producto: ' + listaPrestamosSugeridos[i].ProductoDescripcion + ' | Monto ofertado: ' + listaPrestamosSugeridos[i].fnMontoOfertado + ' | Plazo ' + listaPrestamosSugeridos[i].TipoCuota + ': ' + listaPrestamosSugeridos[i].fiPlazo + ' | Cuota ' + listaPrestamosSugeridos[i].TipoCuota + ': ' + listaPrestamosSugeridos[i].fnCuotaQuincenal + "</option>");

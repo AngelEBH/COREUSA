@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Negociaciones_Listado.aspx.cs" Inherits="proyectoBase.Forms.Negociaciones.Negociaciones_Listado" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Negociaciones_Listado.aspx.cs" Inherits="Negociaciones_Listado" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -102,28 +102,6 @@
         </div>
     </div>
 
-    <!--modal de confirmacion de actualizar una solicitud condicionada -->
-    <div id="modalActualizarSolicitud" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalActualizarSolicitudLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalActualizarSolicitudLabel">Actualizar solicitud de crédito</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-                    ¿Desea actualizar la información de esta solicitud?
-                </div>
-                <div class="modal-footer">
-                    <button id="btnActualizar" class="btn btn-primary waves-effect waves-light">
-                        Confirmar
-                    </button>
-                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                        Cancelar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
@@ -144,6 +122,7 @@
     <!-- Responsive -->
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
     <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
+
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>

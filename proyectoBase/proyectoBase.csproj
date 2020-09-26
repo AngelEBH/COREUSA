@@ -774,6 +774,7 @@
     <Content Include="Forms\Movil\Precalificado_Puesto109.aspx" />
     <Content Include="Forms\Movil\ProcesarPrecalificado.aspx" />
     <Content Include="Forms\Negociaciones\Negociaciones_Listado.aspx" />
+    <Content Include="Forms\Negociaciones\Negociaciones_Registrar.aspx" />
     <Content Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx" />
     <Content Include="Forms\Otros\CompromisoLegal.aspx" />
     <Content Include="Forms\Otros\ContratoVehiculoClausulaLicencia.aspx" />
@@ -1477,6 +1478,13 @@
     </Compile>
     <Compile Include="Forms\Negociaciones\Negociaciones_Listado.aspx.designer.cs">
       <DependentUpon>Negociaciones_Listado.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Negociaciones\Negociaciones_Registrar.aspx.cs">
+      <DependentUpon>Negociaciones_Registrar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Negociaciones\Negociaciones_Registrar.aspx.designer.cs">
+      <DependentUpon>Negociaciones_Registrar.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx.cs">
       <DependentUpon>OperacionesRecuperaciondelDia.aspx</DependentUpon>

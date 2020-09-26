@@ -333,7 +333,7 @@
                         <asp:Button ID="btnIngresarSolicitud" runat="server" CssClass="btn btn-info btn-lg btn-block waves-effect waves-light text-xs" Text="Ingresar solicitud" OnClick="btnIngresarSolicitud_Click" />
                     </div>
                     <div class="col">
-                        <asp:Button ID="btnNuevaConsulta" runat="server" CssClass="btn btn-info btn-lg btn-block waves-effect waves-light text-xs" Text="Nueva consulta" OnClick="btnIngresarSolicitud_Click" />
+                        <asp:Button ID="btnNuevaConsulta" runat="server" CssClass="btn btn-info btn-lg btn-block waves-effect waves-light text-xs" Text="Nueva consulta" OnClick="btnConsultarCliente_Click" />
                     </div>
                 </div>                
             </div>

@@ -7,11 +7,8 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace proyectoBase.Forms.Negociaciones
+
+
+public partial class Negociaciones_Listado
 {
-
-
-    public partial class Negociaciones_Listado
-    {
-    }
 }

@@ -267,7 +267,7 @@ public partial class Clientes_Precalificado_Puesto109 : System.Web.UI.Page
 
     protected void btnConsultarCliente_Click(object sender, EventArgs e)
     {
-        string lcScript = "window.open('precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_Clientes_Contenido')";
+        string lcScript = "window.open('precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')";
         Response.Write("<script>");
         Response.Write(lcScript);
         Response.Write("</script>");
