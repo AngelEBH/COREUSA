@@ -7,13 +7,11 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace proyectoBase.Forms.Negociaciones
-{
-
-
-    public partial class Negociaciones_Registrar
-    {
-
+namespace proyectoBase.Forms.Negociaciones {
+    
+    
+    public partial class Negociaciones_Registrar {
+        
         /// <summary>
         /// Control FrmGuardarNegociacion.
         /// </summary>
@@ -22,7 +20,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm FrmGuardarNegociacion;
-
+        
         /// <summary>
         /// Control smMultiview.
         /// </summary>
@@ -31,7 +29,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.ScriptManager smMultiview;
-
+        
         /// <summary>
         /// Control upMultiView.
         /// </summary>
@@ -40,7 +38,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel upMultiView;
-
+        
         /// <summary>
         /// Control divParametros.
         /// </summary>
@@ -49,7 +47,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divParametros;
-
+        
         /// <summary>
         /// Control txtNombreCliente.
         /// </summary>
@@ -58,7 +56,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNombreCliente;
-
+        
         /// <summary>
         /// Control txtTelefonoCliente.
         /// </summary>
@@ -67,7 +65,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtTelefonoCliente;
-
+        
         /// <summary>
         /// Control txtIdentidadCliente.
         /// </summary>
@@ -76,7 +74,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtIdentidadCliente;
-
+        
         /// <summary>
         /// Control txtFecha.
         /// </summary>
@@ -85,7 +83,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFecha;
-
+        
         /// <summary>
         /// Control txtValorVehiculo.
         /// </summary>
@@ -94,7 +92,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtValorVehiculo;
-
+        
         /// <summary>
         /// Control divPrima.
         /// </summary>
@@ -103,7 +101,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPrima;
-
+        
         /// <summary>
         /// Control lblPorcenajedePrima.
         /// </summary>
@@ -112,7 +110,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblPorcenajedePrima;
-
+        
         /// <summary>
         /// Control txtValorPrima.
         /// </summary>
@@ -121,16 +119,16 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtValorPrima;
-
+        
         /// <summary>
-        /// Control div1.
+        /// Control divMontoFinanciarVehiculo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div1;
-
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMontoFinanciarVehiculo;
+        
         /// <summary>
         /// Control txtMonto.
         /// </summary>
@@ -139,7 +137,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtMonto;
-
+        
         /// <summary>
         /// Control txtScorePromedio.
         /// </summary>
@@ -148,7 +146,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtScorePromedio;
-
+        
         /// <summary>
         /// Control rbFinanciamiento.
         /// </summary>
@@ -157,7 +155,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButton rbFinanciamiento;
-
+        
         /// <summary>
         /// Control rbEmpeno.
         /// </summary>
@@ -166,7 +164,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButton rbEmpeno;
-
+        
         /// <summary>
         /// Control ddlPlazos.
         /// </summary>
@@ -175,7 +173,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlPlazos;
-
+        
         /// <summary>
         /// Control ddlMarca.
         /// </summary>
@@ -184,7 +182,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlMarca;
-
+        
         /// <summary>
         /// Control div2.
         /// </summary>
@@ -193,7 +191,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl div2;
-
+        
         /// <summary>
         /// Control ddlModelo.
         /// </summary>
@@ -202,7 +200,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlModelo;
-
+        
         /// <summary>
         /// Control div3.
         /// </summary>
@@ -211,7 +209,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl div3;
-
+        
         /// <summary>
         /// Control txtAnio.
         /// </summary>
@@ -220,7 +218,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAnio;
-
+        
         /// <summary>
         /// Control txtMatricula.
         /// </summary>
@@ -229,7 +227,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtMatricula;
-
+        
         /// <summary>
         /// Control div4.
         /// </summary>
@@ -238,7 +236,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl div4;
-
+        
         /// <summary>
         /// Control txtColor.
         /// </summary>
@@ -247,7 +245,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtColor;
-
+        
         /// <summary>
         /// Control txtCilindraje.
         /// </summary>
@@ -256,7 +254,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCilindraje;
-
+        
         /// <summary>
         /// Control div5.
         /// </summary>
@@ -265,16 +263,34 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl div5;
-
+        
         /// <summary>
-        /// Control txtMijalle.
+        /// Control txtRecorrido.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMijalle;
-
+        protected global::System.Web.UI.WebControls.TextBox txtRecorrido;
+        
+        /// <summary>
+        /// Control div8.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div8;
+        
+        /// <summary>
+        /// Control ddlUnidadDeMedida.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUnidadDeMedida;
+        
         /// <summary>
         /// Control ddlOrigen.
         /// </summary>
@@ -283,7 +299,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlOrigen;
-
+        
         /// <summary>
         /// Control div6.
         /// </summary>
@@ -292,7 +308,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl div6;
-
+        
         /// <summary>
         /// Control txtVendedor.
         /// </summary>
@@ -301,7 +317,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtVendedor;
-
+        
         /// <summary>
         /// Control div7.
         /// </summary>
@@ -310,7 +326,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl div7;
-
+        
         /// <summary>
         /// Control ddlAutolote.
         /// </summary>
@@ -319,7 +335,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlAutolote;
-
+        
         /// <summary>
         /// Control btnGuardarNegociacion.
         /// </summary>
@@ -328,7 +344,7 @@ namespace proyectoBase.Forms.Negociaciones
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardarNegociacion;
-
+        
         /// <summary>
         /// Control updateProgress.
         /// </summary>

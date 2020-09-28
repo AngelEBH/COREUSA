@@ -58,7 +58,7 @@
                                     <asp:TextBox ID="txtValorPrima" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" Text="" runat="server"></asp:TextBox>
                                 </div>
 
-                                <div class="col-sm-4" id="div1" runat="server" visible="true">
+                                <div class="col-sm-4" id="divMontoFinanciarVehiculo" runat="server" visible="false">
                                     <label class="col-form-label">Valor del vehiculo a financiar</label>
                                     <asp:TextBox ID="txtMonto" Enabled="false" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server"></asp:TextBox>
                                 </div>
@@ -70,11 +70,11 @@
                             <div class="form-group">
                                 <div>
                                     <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbFinanciamiento" runat="server" GroupName="rbTipoFinanciamiento" AutoPostBack="true" />
+                                        <asp:RadioButton CssClass="form-check-input" ID="rbFinanciamiento" runat="server" GroupName="rbTipoFinanciamiento" OnCheckedChanged="rbFinanciamiento_CheckedChanged" AutoPostBack="true" />
                                         <label class="form-check-label">Financiamiento</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbEmpeno" runat="server" GroupName="rbTipoFinanciamiento" AutoPostBack="true" />
+                                        <asp:RadioButton CssClass="form-check-input" ID="rbEmpeno" runat="server" GroupName="rbTipoFinanciamiento" OnCheckedChanged="rbEmpeno_CheckedChanged" AutoPostBack="true" />
                                         <label class="form-check-label">Financiamiento con garantía</label>
                                     </div>
                                 </div>
@@ -89,11 +89,11 @@
                             <div class="form-group form-row">
                                 <div class="col">
                                     <label class="col-form-label">Marca</label>
-                                    <asp:DropDownList ID="ddlMarca" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlMarca" runat="server" CssClass="form-control form-control-sm col-form-label" OnSelectedIndexChanged="ddlMarca_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                 </div>
                                 <div class="col" id="div2" runat="server" visible="true">
                                     <label class="col-form-label">Modelo</label>
-                                    <asp:DropDownList ID="ddlModelo" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlModelo" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
                                 </div>
 
                                 <div class="col-sm-4" id="div3" runat="server" visible="true">
@@ -117,8 +117,12 @@
                                     <asp:TextBox ID="txtCilindraje" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" Text="" runat="server"></asp:TextBox>
                                 </div>
                                 <div class="col" id="div5" runat="server" visible="true">
-                                    <label class="col-form-label">Millaje</label>
-                                    <asp:TextBox ID="txtMijalle" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" Text="" runat="server"></asp:TextBox>
+                                    <label class="col-form-label">Recorrido</label>
+                                    <asp:TextBox ID="txtRecorrido" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" Text="" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col" id="div8" runat="server" visible="true">
+                                    <label class="col-form-label">Unidad de medida</label>
+                                    <asp:DropDownList ID="ddlUnidadDeMedida" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
                                 </div>
                             </div>
                             <div class="form-group form-row">
