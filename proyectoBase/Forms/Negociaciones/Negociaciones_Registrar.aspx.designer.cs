@@ -562,13 +562,13 @@ public partial class Negociaciones_Registrar
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divNuevoCalculo;
 
     /// <summary>
-    /// Control btnNuevaNegociacion.
+    /// Control btnNuevaCotizacion.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Button btnNuevaNegociacion;
+    protected global::System.Web.UI.WebControls.Button btnNuevaCotizacion;
 
     /// <summary>
     /// Control PanelMensajeErrores.

@@ -22,6 +22,12 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
     private const string uploadDir = @"C:\inetpub\wwwroot\Documentos\Negociaciones\Temp\";
     public static bool FinanciarGastosDeCierre = true;
 
+
+    // Propiedades de CotizadorCarros.cs
+    private static string NombreVendedor = "";
+    private static string TelefonoVendedor = "";
+    private static string CorreoVendedor = "";
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -59,7 +65,8 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
             }
             catch (Exception ex)
             {
-                ex.Message.ToString();
+                lblMensaje.Visible = true;
+                lblMensaje.Text = ex.Message;
             }
         }
 
@@ -180,50 +187,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
 
         lblPorcenajedePrima.Text = string.Format("{0:N2}", Convert.ToString(Math.Round((Convert.ToDouble(txtValorPrima.Text) * 100.00) / Convert.ToDouble(txtValorVehiculo.Text), 2))) + "%";
-
-
-        if (ddlAutolote.SelectedValue == "0")
-        {
-            lblMensaje.Text = "Seleccione un autolote.";
-            return;
-        }
-
-        if (ddlOrigen.SelectedValue == "0")
-        {
-            lblMensaje.Text = "Seleccione un origen.";
-            return;
-        }
-
-        if (ddlPlazos.SelectedValue == "")
-        {
-            lblMensaje.Text = "Seleccione un plazo.";
-            return;
-        }
-
-        if (ddlMarca.SelectedValue == "0")
-        {
-            lblMensaje.Text = "Seleccione una marca y modelo.";
-            return;
-        }
-
-        if (ddlModelo.SelectedValue == "0")
-        {
-            lblMensaje.Text = "Seleccione una modelo.";
-            return;
-        }
-
-        if (ddlUnidadDeMedida.SelectedValue == "0")
-        {
-            lblMensaje.Text = "Seleccione una unidad de medida para el valor recorrido.";
-            return;
-        }
-
-        if (DocumentoNegociacion.NombreAntiguo == "" || DocumentoNegociacion.NombreAntiguo == null)
-        {
-            lblMensaje.Text = "Adjunte una fotografía de la garantía.";
-            return;
-        }
-
+        
         if (rbFinanciamiento.Checked || rbEmpeno.Checked)
         {
             pcIDProducto = rbFinanciamiento.Checked ? "202" : "203";
@@ -309,6 +273,51 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
     {
         try
         {
+            /* Validar entradas */
+            if (ddlAutolote.SelectedValue == "0")
+            {
+                lblMensaje.Text = "Seleccione un autolote.";
+                return;
+            }
+
+            if (ddlOrigen.SelectedValue == "0")
+            {
+                lblMensaje.Text = "Seleccione un origen.";
+                return;
+            }
+
+            if (ddlPlazos.SelectedValue == "")
+            {
+                lblMensaje.Text = "Seleccione un plazo.";
+                return;
+            }
+
+            if (ddlMarca.SelectedValue == "0")
+            {
+                lblMensaje.Text = "Seleccione una marca y modelo.";
+                return;
+            }
+
+            if (ddlModelo.SelectedValue == "0")
+            {
+                lblMensaje.Text = "Seleccione una modelo.";
+                return;
+            }
+
+            if (ddlUnidadDeMedida.SelectedValue == "0")
+            {
+                lblMensaje.Text = "Seleccione una unidad de medida para el valor recorrido.";
+                return;
+            }
+
+            if (DocumentoNegociacion.NombreAntiguo == "" || DocumentoNegociacion.NombreAntiguo == null)
+            {
+                lblMensaje.Text = "Adjunte una fotografía de la garantía.";
+                return;
+            }
+
+
+
             /* Cambiarle el nombre al documento */
             DocumentoNegociacion.fcNombreArchivo = GenerarNombreDocumento();
             DocumentoNegociacion.URLArchivo = "/Documentos/Negociaciones/Negociacion_" + pcID + "/" + DocumentoNegociacion.fcNombreArchivo + ".png";
@@ -365,8 +374,8 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                             if (!idNegociacionGuardada.StartsWith("-1"))
                             {
                                 btnGuardarNegociacion.Visible = false;
-                                btnNuevaNegociacion.Visible = true;
-                                GuardarDocumentosNegociacion(idNegociacionGuardada, DocumentoNegociacion);
+                                btnNuevaCotizacion.Visible = true;
+                                GuardarDocumentosNegociacion(DocumentoNegociacion);
                                 DescargarPDF(idNegociacionGuardada);
                             }
                         }
@@ -504,7 +513,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
     }
 
     /* Guardar documentos de la negociacion en su respectivo directorio */
-    public static bool GuardarDocumentosNegociacion(string IDNegociacion, NegociacionesDocumentosViewModel DocumentoNegociacion)
+    public static bool GuardarDocumentosNegociacion(NegociacionesDocumentosViewModel DocumentoNegociacion)
     {
         bool result;
         try
@@ -662,7 +671,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
     }
 
-    protected void btnNuevaNegociacion_Click1(object sender, EventArgs e)
+    protected void btnNuevaCotizacion_Click(object sender, EventArgs e)
     {
 
     }

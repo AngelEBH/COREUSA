@@ -42,7 +42,6 @@
                             </div>
                         </div>
 
-
                         <!-- PARAMETROS DEL COTIZADOR -->
                         <div runat="server" style="padding-top: 1.25rem;" id="divParametros" visible="true">
                             <div class="form-group form-row">
@@ -271,14 +270,12 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Nueva cotización -->
                         <div class="form-group row m-0" runat="server" id="divNuevoCalculo" visible="false">
                             <div class="button-items col-sm-12 p-0">
-                                <asp:Button ID="btnNuevaNegociacion" Text="Nueva cotización" CssClass="btn btn-primary btn-lg btn-block waves-effect waves-light m-0" runat="server" OnClick="btnNuevaNegociacion_Click1" />
+                                <asp:Button ID="btnNuevaCotizacion" Text="Nueva cotización" CssClass="btn btn-primary btn-lg btn-block waves-effect waves-light m-0" runat="server" OnClick="btnNuevaCotizacion_Click" />
                             </div>
                         </div>
-
                         <!-- Label para mensajes y advertencias -->
                         <div class="form-group row m-0" runat="server" id="PanelMensajeErrores">
                             <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" runat="server"></asp:Label>
