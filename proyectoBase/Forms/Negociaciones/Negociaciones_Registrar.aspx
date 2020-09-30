@@ -88,21 +88,21 @@
                             <div class="form-group form-row">
                                 <div class="col">
                                     <label class="col-form-label">Valor del automovil</label>
-                                    <asp:TextBox ID="txtValorVehiculo" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" Text="" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="txtValorVehiculo" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" Text="" runat="server"></asp:TextBox>
                                 </div>
                                 <div class="col" id="divPrima" runat="server" visible="true">
                                     <label class="col-form-label">Valor de la Prima</label>
                                     <asp:Label CssClass="" ID="lblPorcenajedePrima" runat="server" Text="" Visible="false" />
-                                    <asp:TextBox ID="txtValorPrima" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" Text="" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="txtValorPrima" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" Text="" runat="server"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="form-group" runat="server" id="divMontoFinanciarVehiculo" visible="false">
                                 <label class="col-form-label">Valor del vehiculo a financiar</label>
-                                <asp:TextBox ID="txtMonto" Enabled="false" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtMonto" Enabled="false" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" runat="server"></asp:TextBox>
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label">Score Promedio</label>
-                                <asp:TextBox ID="txtScorePromedio" type="tel" CssClass="form-control form-control-sm col-form-label MascaraNumerica" required="required" Text="" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtScorePromedio" type="tel" CssClass="form-control form-control-sm col-form-label MascaraNumerica" Text="" runat="server"></asp:TextBox>
                             </div>
                             <div class="form-group">
                                 <div>
@@ -264,15 +264,15 @@
                                                 <!-- INFORMACION DEL CLIENTE -->
                                                 <div class="col-12">
                                                     <label class="col-form-label">Cliente</label>
-                                                    <asp:TextBox ID="txtNombreCliente" Enabled="false" CssClass="form-control form-control-sm col-form-label" required="required" Text="" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtNombreCliente" Enabled="false" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
                                                 </div>
                                                 <div class="col-6">
                                                     <label class="col-form-label">Identidad</label>
-                                                    <asp:TextBox ID="txtIdentidadCliente" Enabled="false" CssClass="form-control form-control-sm col-form-label" required="required" Text="" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtIdentidadCliente" Enabled="false" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
                                                 </div>
                                                 <div class="col-6">
                                                     <label class="col-form-label">Teléfono</label>
-                                                    <asp:TextBox ID="txtTelefonoCliente" type="tel" Enabled="false" CssClass="form-control form-control-sm col-form-label telefono" required="required" Text="" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtTelefonoCliente" type="tel" Enabled="false" CssClass="form-control form-control-sm col-form-label telefono" Text="" runat="server"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -291,27 +291,27 @@
 
                                                 <div class="col-sm-4" id="div3" runat="server" visible="true">
                                                     <label class="col-form-label">Año</label>
-                                                    <asp:TextBox ID="txtAnio" Enabled="true" type="tel" CssClass="form-control form-control-sm col-form-label MascaraAnio" required="required" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtAnio" Enabled="true" type="tel" CssClass="form-control form-control-sm col-form-label MascaraAnio" runat="server"></asp:TextBox>
                                                 </div>
                                             </div>
                                             <div class="form-group form-row">
                                                 <div class="col">
                                                     <label class="col-form-label">Matricula</label>
-                                                    <asp:TextBox ID="txtMatricula" type="tel" CssClass="form-control form-control-sm col-form-label" required="required" Text="" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtMatricula" type="tel" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
                                                 </div>
                                                 <div class="col" id="div4" runat="server" visible="true">
                                                     <label class="col-form-label">Color</label>
-                                                    <asp:TextBox ID="txtColor" type="tel" CssClass="form-control form-control-sm col-form-label" required="required" Text="" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtColor" type="tel" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
                                                 </div>
                                             </div>
                                             <div class="form-group form-row">
                                                 <div class="col">
                                                     <label class="col-form-label">Cilindraje</label>
-                                                    <asp:TextBox ID="txtCilindraje" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" Text="" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtCilindraje" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" Text="" runat="server"></asp:TextBox>
                                                 </div>
                                                 <div class="col" id="div5" runat="server" visible="true">
                                                     <label class="col-form-label">Recorrido</label>
-                                                    <asp:TextBox ID="txtRecorrido" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" Text="" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtRecorrido" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" Text="" runat="server"></asp:TextBox>
                                                 </div>
                                                 <div class="col" id="div8" runat="server" visible="true">
                                                     <label class="col-form-label">UM</label>
@@ -325,7 +325,7 @@
                                                 </div>
                                                 <div class="col" id="div6" runat="server" visible="true">
                                                     <label class="col-form-label">Vendedor</label>
-                                                    <asp:TextBox ID="txtVendedor" type="tel" CssClass="form-control form-control-sm col-form-label" required="required" Text="" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtVendedor" type="tel" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
                                                 </div>
                                                 <div class="col-sm-4" id="div7" runat="server" visible="true">
                                                     <label class="col-form-label">Autolote</label>
@@ -339,7 +339,7 @@
                                                 </div>
                                                 <div class="col-12">
                                                     <label class="col-form-label">Detalles</label>
-                                                    <textarea id="txtDetallesGarantia" runat="server" required="required" class="form-control" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2"></textarea>
+                                                    <textarea id="txtDetallesGarantia" runat="server" class="form-control" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2"></textarea>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -378,7 +378,7 @@
                                             <div class="form-group form-row">
                                                 <div class="col-12">
                                                     <label class="col-form-label">Identidad</label>
-                                                    <asp:TextBox ID="txtBuscarIdentidad" CssClass="form-control form-control-sm col-form-label" required="required" Text="" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtBuscarIdentidad" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>
