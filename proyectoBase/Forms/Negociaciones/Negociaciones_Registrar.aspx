@@ -373,7 +373,7 @@
                             </div>
                             <asp:UpdatePanel runat="server">
                                 <ContentTemplate>
-                                    <asp:Panel ID="PanelSolicitarIdentidad" runat="server" Visible="false">
+                                    <asp:Panel ID="PanelSolicitarIdentidad" runat="server" Visible="true">
                                         <div class="modal-body">
                                             <div class="form-group form-row">
                                                 <div class="col-12">
