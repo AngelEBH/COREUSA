@@ -27,8 +27,6 @@ var btnFinish = $('<button id="btnActualizarSolicitud" type="button"></button>')
                 if (data.d == "Solicitud actualizada correctamente") {
 
                     MensajeExito(data.d);
-
-                    localStorage.clear();
                     clienteID = 0;
                     window.location = "SolicitudesCredito_Ingresadas.aspx" + qString;
                 }
@@ -621,7 +619,8 @@ function ObtenerDetalles() {
                         $("#pestanaInfConyugal").css('display', 'none');
                         $(".infoConyugal").prop('disabled', true).prop('readonly', true);
                     }
-
+                    //?TY+5GZ6AGYKv916x7KwGLrXp/NxR5c+2Ep2TMiMqXqS44VIeCzbQp4/8qDTcXz5eAJeEdorJv+D1j+t83YBgZw==
+                    debugger;
                     if (mostrarReferencias == true) {
                         $('#smartwizard').smartWizard("stepState", [5], "show");
                         $("#pestanaReferencias").css('display', '');
@@ -685,6 +684,7 @@ $("#btnTerminarCondicionFinalizar").click(function () {
 
     var objSeccion = {};
 
+    debugger;
     switch (seccionFormulario) {
         case "Correccion Informacion de la Solicitud":
             objSeccion = {
@@ -774,7 +774,7 @@ $("#btnTerminarCondicionFinalizar").click(function () {
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_ActualizarSolicitud.aspx/ActualizarCondicionamiento' + qString,
-        data: JSON.stringify({ ID: idCondicion, seccionFormulario: seccionFormulario, objSeccion: objSeccion, clienteID : clienteID }),
+        data: JSON.stringify({ ID: idCondicion, seccionFormulario: seccionFormulario, objSeccion: objSeccion }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al finalizar condicionamiento');
@@ -1107,6 +1107,8 @@ function cargarInformacionCompletaDelCliente(informacionCliente) {
         },
         success: function (data) {
 
+            debugger;
+
             var ciudadesDelMunicipioEmpresa = data.d;
 
             var ciudadEmpresaClienteDdl = $("#ciudadEmpresa");
@@ -1130,6 +1132,8 @@ function cargarInformacionCompletaDelCliente(informacionCliente) {
             MensajeError('Error al cargar ciudades de este municipio');
         },
         success: function (data) {
+
+            debugger;
 
             var barriosDeLaCiudadEmpresa = data.d;
 
@@ -1228,7 +1232,7 @@ function cargarInformacionCompletaDelCliente(informacionCliente) {
         $("#spinnerCargando").css('display', 'none');
     }
 
-    //$("#btnNuevaReferencia").prop('disabled', true);
+    $("#btnNuevaReferencia").prop('disabled', true);
 
     $("#spinnerCargando").css('display', 'none');
 
