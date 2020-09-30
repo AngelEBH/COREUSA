@@ -773,6 +773,7 @@
     <Content Include="Forms\Movil\precalificado_buscador.aspx" />
     <Content Include="Forms\Movil\Precalificado_Puesto109.aspx" />
     <Content Include="Forms\Movil\ProcesarPrecalificado.aspx" />
+    <Content Include="Forms\Negociaciones\Negociaciones_Imprimir.aspx" />
     <Content Include="Forms\Negociaciones\Negociaciones_Listado.aspx" />
     <Content Include="Forms\Negociaciones\Negociaciones_Registrar.aspx" />
     <Content Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx" />
@@ -923,6 +924,8 @@
     <Content Include="Imagenes\iconoSolicitudesLista24.png" />
     <Content Include="Imagenes\iconoSolicitudesLista30.png" />
     <Content Include="Imagenes\iconsWhatsApp24.png" />
+    <Content Include="Imagenes\not-available-es.png" />
+    <Content Include="Imagenes\pruebaImagen.jpg" />
     <Content Include="Imagenes\PulgarAbajoIcon.png" />
     <Content Include="Imagenes\PulgarArribaIcon.png" />
     <Content Include="Imagenes\Thumbs.db" />
@@ -1471,6 +1474,13 @@
     </Compile>
     <Compile Include="Forms\Movil\ProcesarPrecalificado.aspx.designer.cs">
       <DependentUpon>ProcesarPrecalificado.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Negociaciones\Negociaciones_Imprimir.aspx.cs">
+      <DependentUpon>Negociaciones_Imprimir.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Negociaciones\Negociaciones_Imprimir.aspx.designer.cs">
+      <DependentUpon>Negociaciones_Imprimir.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Negociaciones\Negociaciones_Listado.aspx.cs">
       <DependentUpon>Negociaciones_Listado.aspx</DependentUpon>

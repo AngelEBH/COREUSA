@@ -20,7 +20,6 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
     public static NegociacionesDocumentosViewModel DocumentoNegociacion;
     private const string uploadDir = @"C:\inetpub\wwwroot\Documentos\Negociaciones\Temp\";
-    public static bool FinanciarGastosDeCierre = true;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -29,7 +28,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
             try
             {
                 /* Captura de parametros y desencriptado de cadena */
-                var lcURL = Request.Url.ToString();
+                string lcURL = Request.Url.ToString();
                 int liParamStart = lcURL.IndexOf("?");
 
                 string lcParametros;
@@ -44,10 +43,10 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
                 if (lcParametros != String.Empty)
                 {
-                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                    string lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcEncriptado = lcEncriptado.Replace("%2f", "/");
-                    var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                    string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+                    Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
@@ -76,25 +75,23 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                 { "extensions", new string[] { "jpg", "png"} },
                 });
 
-                /* No es necesario para este proceso pero el metodo de subida de archivos lo requiere */
                 Session["tipoDoc"] = 0;
 
                 switch (type)
                 {
                     case "upload":
 
-                        // Proceso de carga
+                        // upload process
                         var data = fileUploader.Upload();
 
-                        // Resultado
+                        // response
                         if (data["files"].Count == 1)
                             data["files"][0].Remove("file");
                         Response.Write(JsonConvert.SerializeObject(data));
 
-                        // Al subirse los archivos se guardan en este objeto de sesion
+
                         var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
 
-                        // Guardar los items del objeto de sesion en nuestra propiedad estatica llamada DocumentoNegociacion
                         list.ForEach(val =>
                         {
                             DocumentoNegociacion = new NegociacionesDocumentosViewModel()
@@ -257,13 +254,13 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                     {
                         sqlResultado.Read();
 
-                        // Informacion del vendedor
+                        // informacion del vendedor
                         string nombreVendedor = sqlResultado["fcNombreCorto"].ToString();
                         string telefonoVendedor = sqlResultado["fcTelefonoMovil"].ToString();
                         string correoVendedor = sqlResultado["fcBuzondeCorreo"].ToString();
 
                         // Gastos de cierre efectivo
-                        if (FinanciarGastosDeCierre == false)
+                        if (rbGastosDeCierreEfectivo.Checked)
                         {
                             txtMonto.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnValoraFinanciar"].ToString()));
 
@@ -280,7 +277,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                         sqlResultado.Read();
 
                         // Gastos de cierre financiados
-                        if (FinanciarGastosDeCierre == true)
+                        if (rbGastosDeCierreFinanciados.Checked)
                         {
                             txtMonto.Text = "L " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnValoraFinanciar"].ToString()));
 
@@ -366,7 +363,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                             {
                                 btnGuardarNegociacion.Visible = false;
                                 btnNuevaNegociacion.Visible = true;
-                                GuardarDocumentosNegociacion(idNegociacionGuardada, DocumentoNegociacion);
+                                GuardarSolicitudDocumentos(idNegociacionGuardada, DocumentoNegociacion);
                                 DescargarPDF(idNegociacionGuardada);
                             }
                         }
@@ -504,7 +501,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
     }
 
     /* Guardar documentos de la negociacion en su respectivo directorio */
-    public static bool GuardarDocumentosNegociacion(string IDNegociacion, NegociacionesDocumentosViewModel DocumentoNegociacion)
+    public static bool GuardarSolicitudDocumentos(string IDNegociacion, NegociacionesDocumentosViewModel DocumentoNegociacion)
     {
         bool result;
         try
@@ -655,16 +652,6 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         Response.Write("<script>");
         Response.Write(lcScript);
         Response.Write("</script>");
-    }
-
-    protected void btnCancelarNegociacion_Click(object sender, EventArgs e)
-    {
-
-    }
-
-    protected void btnNuevaNegociacion_Click1(object sender, EventArgs e)
-    {
-
     }
 }
 
