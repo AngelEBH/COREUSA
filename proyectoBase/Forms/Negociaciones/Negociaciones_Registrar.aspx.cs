@@ -58,9 +58,9 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                     lcEncriptado = lcEncriptado.Replace("%2f", "/");
                     var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID") ?? "";
 
                     if (!string.IsNullOrWhiteSpace(pcID))
@@ -947,7 +947,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                         if (!sqlResultado.HasRows)
                         {
                             PanelSolicitarIdentidad.Visible = true;
-                            string script = "$('#modalSolicitarIdentidad').modal('hide'); $('#modalGuardarNegociacion').modal();";
+                            string script = "$('#modalSolicitarIdentidad').modal('hide'); $('#modalClienteNoPrecalificado').modal();";
                             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "_self", script, true);
                         }
 
