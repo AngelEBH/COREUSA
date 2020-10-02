@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Negociaciones_Registrar.aspx.cs" Inherits="Negociaciones_Registrar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" EnableEventValidation="false" CodeBehind="Negociaciones_Registrar.aspx.cs" Inherits="Negociaciones_Registrar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -73,177 +73,196 @@
                 transform: rotate(0deg);
             }
         }
+
+        .modal {
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body class="EstiloBody-Listado-W1100px">
     <form runat="server" id="FrmGuardarNegociacion">
         <asp:ScriptManager runat="server" ID="smMultiview"></asp:ScriptManager>
+
+        <!-- UP PRINCIPAL -->
         <asp:UpdatePanel runat="server" ID="upMultiView" UpdateMode="Conditional" ChildrenAsTriggers="True">
             <ContentTemplate>
                 <div class="card m-0">
                     <div class="card-body pt-0">
+                        <asp:UpdatePanel runat="server" ID="upCotizador" UpdateMode="Always" ChildrenAsTriggers="True">
+                            <ContentTemplate>
 
-                        <!-- PARAMETROS DEL COTIZADOR -->
-                        <asp:Panel ID="divParametros" runat="server" Style="padding-top: 1.25rem;" Visible="true">
-                            <div class="form-group form-row">
-                                <div class="col">
-                                    <label class="col-form-label">Valor del automovil</label>
-                                    <asp:TextBox ID="txtValorVehiculo" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" Text="" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col" id="divPrima" runat="server" visible="true">
-                                    <label class="col-form-label">Valor de la Prima</label>
-                                    <asp:Label CssClass="" ID="lblPorcenajedePrima" runat="server" Text="" Visible="false" />
-                                    <asp:TextBox ID="txtValorPrima" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" Text="" runat="server"></asp:TextBox>
-                                </div>
-                            </div>
-                            <div class="form-group" runat="server" id="divMontoFinanciarVehiculo" visible="false">
-                                <label class="col-form-label">Valor del vehiculo a financiar</label>
-                                <asp:TextBox ID="txtMonto" Enabled="false" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-form-label">Score Promedio</label>
-                                <asp:TextBox ID="txtScorePromedio" type="tel" CssClass="form-control form-control-sm col-form-label MascaraNumerica" Text="" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="form-group">
-                                <div>
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbFinanciamiento" runat="server" GroupName="rbTipoFinanciamiento" OnCheckedChanged="rbFinanciamiento_CheckedChanged" AutoPostBack="true" />
-                                        <label class="form-check-label">Financiamiento</label>
+                                <!-- PARAMETROS DEL COTIZADOR -->
+                                <asp:Panel ID="divParametros" runat="server" Style="padding-top: 1.25rem;" Visible="true">
+                                    <div class="form-group form-row">
+                                        <div class="col">
+                                            <label class="col-form-label">Valor del automovil</label>
+                                            <asp:TextBox ID="txtValorVehiculo" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" Text="" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col" id="divPrima" runat="server" visible="true">
+                                            <label class="col-form-label">Valor de la Prima</label>
+                                            <asp:Label CssClass="" ID="lblPorcenajedePrima" runat="server" Text="" Visible="false" />
+                                            <asp:TextBox ID="txtValorPrima" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" Text="" runat="server"></asp:TextBox>
+                                        </div>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <asp:RadioButton CssClass="form-check-input" ID="rbEmpeno" runat="server" GroupName="rbTipoFinanciamiento" OnCheckedChanged="rbEmpeno_CheckedChanged" AutoPostBack="true" />
-                                        <label class="form-check-label">Financiamiento con garantía</label>
+                                    <div class="form-group" runat="server" id="divMontoFinanciarVehiculo" visible="false">
+                                        <label class="col-form-label">Valor del vehiculo a financiar</label>
+                                        <asp:TextBox ID="txtMonto" Enabled="false" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" runat="server"></asp:TextBox>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-form-label">Plazos disponibles</label>
-                                <asp:DropDownList ID="ddlPlazos" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
-                            </div>
-                            <div class="form-group row mb-0">
-                                <div class="button-items col-sm-12">
-                                    <asp:Button ID="btnCalcular" Text="Calcular" CssClass="btn btn-primary btn-lg btn-block waves-effect waves-light" runat="server" OnClick="btnCalcular_Click" />
-                                </div>
-                            </div>
-                        </asp:Panel>
-                        <br />
-                        <!-- RESULTADOS DEL COTIZADOR -->
-                        <asp:Panel ID="PanelCreditos1" runat="server" Visible="false">
-                            <!-- Nav tabs -->
-                            <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist" runat="server" id="navTabs">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#GastosDeCierreEfectivo" role="tab" aria-selected="false">
-                                        <span class="d-block d-sm-none">Gastos de cierre
+                                    <div class="form-group">
+                                        <label class="col-form-label">Score Promedio</label>
+                                        <asp:TextBox ID="txtScorePromedio" type="tel" CssClass="form-control form-control-sm col-form-label MascaraNumerica" Text="" runat="server"></asp:TextBox>
+                                    </div>
+                                    <div class="form-group">
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <asp:RadioButton CssClass="form-check-input" ID="rbFinanciamiento" runat="server" GroupName="rbTipoFinanciamiento" OnCheckedChanged="rbFinanciamiento_CheckedChanged" AutoPostBack="true" />
+                                                <label class="form-check-label">Financiamiento</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <asp:RadioButton CssClass="form-check-input" ID="rbEmpeno" runat="server" GroupName="rbTipoFinanciamiento" OnCheckedChanged="rbEmpeno_CheckedChanged" AutoPostBack="true" />
+                                                <label class="form-check-label">Financiamiento con garantía</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label">Plazos disponibles</label>
+                                        <asp:DropDownList ID="ddlPlazos" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
+                                    </div>
+                                    <div class="form-group row mb-0">
+                                        <div class="button-items col-sm-12">
+                                            <asp:Button ID="btnCalcular" Text="Calcular" CssClass="btn btn-primary btn-lg btn-block waves-effect waves-light" runat="server" OnClick="btnCalcular_Click" />
+                                        </div>
+                                    </div>
+                                </asp:Panel>
+                                <br />
+                                <!-- RESULTADOS DEL COTIZADOR -->
+                                <asp:Panel ID="PanelCreditos1" runat="server" Visible="false">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist" runat="server" id="navTabs">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-toggle="tab" href="#GastosDeCierreEfectivo" role="tab" aria-selected="false">
+                                                <span class="d-block d-sm-none">Gastos de cierre
                                             <br />
-                                            efectivo</span>
-                                        <span class="d-none d-sm-block"><small>Gastos de cierre efectivo</small></span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <asp:HyperLink ID="HyperLinkGastosDeCierreFinanciados" runat="server" class="nav-link" data-toggle="tab" href="#GastosDeCierreFinanciados" role="tab" aria-selected="false">
+                                                    efectivo</span>
+                                                <span class="d-none d-sm-block"><small>Gastos de cierre efectivo</small></span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <asp:HyperLink ID="HyperLinkGastosDeCierreFinanciados" runat="server" class="nav-link" data-toggle="tab" href="#GastosDeCierreFinanciados" role="tab" aria-selected="false">
                                         <span class="d-block d-sm-none">Gastos de cierre
                                             <br />
                                             financiados</span>
                                         <span class="d-none d-sm-block"><small>Gastos de cierre financiados</small></span>
-                                    </asp:HyperLink>
-                                </li>
-                            </ul>
-                            <!-- Tab panes -->
-                            <div class="tab-content" runat="server" id="tabContent" visible="true">
-                                <!-- Gastos de cierre en efectivo -->
-                                <div class="tab-pane active" id="GastosDeCierreEfectivo" role="tabpanel">
-                                    <div class="form-group row">
-                                        <div class="col-10 align-self-end">
-                                            <label class="col-form-label">Valor del prestamo (<span class="text-xs"><asp:Label CssClass="col-form-label p-0 font-weight-bold align-self-center" ID="lblEtiqueta1" runat="server" Text="" /></span>)</label>
+                                            </asp:HyperLink>
+                                        </li>
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content" runat="server" id="tabContent" visible="true">
+                                        <!-- Gastos de cierre en efectivo -->
+                                        <div class="tab-pane active" id="GastosDeCierreEfectivo" role="tabpanel">
+                                            <div class="form-group row">
+                                                <div class="col-10 align-self-end">
+                                                    <label class="col-form-label">Valor del prestamo (<span class="text-xs"><asp:Label CssClass="col-form-label p-0 font-weight-bold align-self-center" ID="lblEtiqueta1" runat="server" Text="" /></span>)</label>
+                                                </div>
+                                                <div class="col-2 justify-content-end">
+                                                    <asp:Button ID="btnDescargarCotizacion" runat="server" OnClick="btnDescargarCotizacion_Click" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <asp:TextBox ID="txtValorPrestamo1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="col-form-label">Cuota del PMO</label>
+                                                    <asp:TextBox ID="txtCuotaPrestamo1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-row">
+                                                <div class="col">
+                                                    <label class="col-form-label text-xs">Cuota del seguro</label>
+                                                    <asp:TextBox ID="txtValorSeguro1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col">
+                                                    <label class="col-form-label text-xs">Cuota servic. GPS</label>
+                                                    <asp:TextBox ID="txtServicioGPS1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-12 col-form-label">Cuota total mensual</label>
+                                                <div class="col-12">
+                                                    <asp:TextBox ID="txtCuotaTotal1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-12 col-form-label">Gastos de cierre <span class="text-xs">(Pago en efectivo)</span></label>
+                                                <div class="col-12">
+                                                    <asp:TextBox ID="txtGastosdeCierreEfectivo" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-2 justify-content-end">
-                                            <asp:Button ID="btnDescargarCotizacion" runat="server" OnClick="btnDescargarCotizacion_Click" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
-                                        </div>
-                                        <div class="col-12">
-                                            <asp:TextBox ID="txtValorPrestamo1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="col-form-label">Cuota del PMO</label>
-                                            <asp:TextBox ID="txtCuotaPrestamo1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        <!-- Gastos de cierre financiados -->
+                                        <div class="tab-pane" id="GastosDeCierreFinanciados" role="tabpanel">
+                                            <div class="form-group row">
+                                                <div class="col-10 align-self-end">
+                                                    <label class="col-form-label">Valor del prestamo (<span class="text-xs"><asp:Label CssClass="col-form-label p-0 font-weight-bold align-self-center" ID="lblEtiqueta2" runat="server" Text="" /></span>)</label>
+                                                </div>
+                                                <div class="col-2">
+                                                    <asp:Button ID="btnDescargarCotizacion2" runat="server" OnClick="btnDescargarCotizacion2_Click" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <asp:TextBox ID="txtValorPrestamo2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="col-form-label">Cuota del PMO</label>
+                                                    <asp:TextBox ID="txtCuotaPrestamo2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="form-group form-row">
+                                                <div class="col">
+                                                    <label class="col-form-label text-xs">Cuota del seguro</label>
+                                                    <asp:TextBox ID="txtValorSeguro2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col">
+                                                    <label class="col-form-label text-xs">Cuota servic. GPS</label>
+                                                    <asp:TextBox ID="txtServicioGPS2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-12 col-form-label">Cuota total mensual</label>
+                                                <div class="col-12">
+                                                    <asp:TextBox ID="txtCuotaTotal2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row" runat="server" visible="false">
+                                                <label class="col-12 col-form-label">Cuota total mensual <span class="text-xs">(Gastos de cierre)</span></label>
+                                                <div class="col-12">
+                                                    <asp:TextBox ID="txtCuotaTotalGastosDeCierreFinanciados" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="form-group form-row">
-                                        <div class="col">
-                                            <label class="col-form-label text-xs">Cuota del seguro</label>
-                                            <asp:TextBox ID="txtValorSeguro1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col">
-                                            <label class="col-form-label text-xs">Cuota servic. GPS</label>
-                                            <asp:TextBox ID="txtServicioGPS1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-12 col-form-label">Cuota total mensual</label>
-                                        <div class="col-12">
-                                            <asp:TextBox ID="txtCuotaTotal1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-12 col-form-label">Gastos de cierre <span class="text-xs">(Pago en efectivo)</span></label>
-                                        <div class="col-12">
-                                            <asp:TextBox ID="txtGastosdeCierreEfectivo" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Gastos de cierre financiados -->
-                                <div class="tab-pane" id="GastosDeCierreFinanciados" role="tabpanel">
-                                    <div class="form-group row">
-                                        <div class="col-10 align-self-end">
-                                            <label class="col-form-label">Valor del prestamo (<span class="text-xs"><asp:Label CssClass="col-form-label p-0 font-weight-bold align-self-center" ID="lblEtiqueta2" runat="server" Text="" /></span>)</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <asp:Button ID="btnDescargarCotizacion2" runat="server" OnClick="btnDescargarCotizacion2_Click" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
-                                        </div>
-                                        <div class="col-12">
-                                            <asp:TextBox ID="txtValorPrestamo2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="col-form-label">Cuota del PMO</label>
-                                            <asp:TextBox ID="txtCuotaPrestamo2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="form-group form-row">
-                                        <div class="col">
-                                            <label class="col-form-label text-xs">Cuota del seguro</label>
-                                            <asp:TextBox ID="txtValorSeguro2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col">
-                                            <label class="col-form-label text-xs">Cuota servic. GPS</label>
-                                            <asp:TextBox ID="txtServicioGPS2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-12 col-form-label">Cuota total mensual</label>
-                                        <div class="col-12">
-                                            <asp:TextBox ID="txtCuotaTotal2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row" runat="server" visible="false">
-                                        <label class="col-12 col-form-label">Cuota total mensual <span class="text-xs">(Gastos de cierre)</span></label>
-                                        <div class="col-12">
-                                            <asp:TextBox ID="txtCuotaTotalGastosDeCierreFinanciados" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Boton para Nueva cotización -->
-                            <div class="form-group row m-0" runat="server" id="divNuevoCalculo" visible="false">
-                                <div class="button-items col-sm-12 p-0 text-center">
-                                    <asp:Button ID="btnNuevaCotizacion" Text="Nueva cotización" CssClass="btn btn-primary waves-effect waves-light m-0" runat="server" OnClick="btnNuevaCotizacion_Click" />
+                                    <!-- Boton para Nueva cotización -->
+                                    <div class="form-group row m-0" runat="server" id="divNuevoCalculo" visible="false">
+                                        <div class="button-items col-sm-12 p-0 text-center">
+                                            <asp:Button ID="btnNuevaCotizacion" Text="Nueva cotización" CssClass="btn btn-primary waves-effect waves-light m-0" runat="server" OnClick="btnNuevaCotizacion_Click" />
 
-                                    <asp:Button ID="btnModalGuardarNegociacion" Text="Guardar negociación" CssClass="btn btn-primary waves-effect waves-light m-0" runat="server" OnClick="btnModalGuardarNegociacion_Click" />
+                                            <asp:Button ID="btnModalGuardarNegociacion" Text="Guardar negociación" CssClass="btn btn-primary waves-effect waves-light m-0" runat="server" OnClick="btnModalGuardarNegociacion_Click" />
+                                        </div>
+                                    </div>
+                                </asp:Panel>
+
+                                <!-- Label para mensajes y advertencias -->
+                                <div class="form-group row mr-0 ml-0 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="false">
+                                    <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server"></asp:Label>
                                 </div>
-                            </div>
-                            <!-- Label para mensajes y advertencias -->
-                            <div class="form-group row m-0" runat="server" id="PanelMensajeErrores">
-                                <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" runat="server"></asp:Label>
-                            </div>
-                        </asp:Panel>
+
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                        <asp:UpdateProgress ID="updateProgressCotizador" runat="server">
+                            <ProgressTemplate>
+                                <div class="loading">
+                                    <div class="loader"></div>
+                                </div>
+                            </ProgressTemplate>
+                        </asp:UpdateProgress>
                     </div>
                 </div>
 
@@ -256,7 +275,7 @@
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             </div>
                             <div class="modal-body">
-                                <asp:UpdatePanel runat="server">
+                                <asp:UpdatePanel runat="server" ID="upInformacionNegociacion" UpdateMode="Always" ChildrenAsTriggers="True">
                                     <ContentTemplate>
 
                                         <asp:Panel ID="divInformacionNegociacion" runat="server" Visible="false">
@@ -273,6 +292,18 @@
                                                 <div class="col-6">
                                                     <label class="col-form-label">Teléfono</label>
                                                     <asp:TextBox ID="txtTelefonoCliente" type="tel" Enabled="false" CssClass="form-control form-control-sm col-form-label telefono" Text="" runat="server"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div>
+                                                    <div class="form-check form-check-inline">
+                                                        <asp:RadioButton CssClass="form-check-input" ID="rbGastosDeCierreFinanciados" runat="server" GroupName="rbTipoGastosDeCierre" />
+                                                        <label class="form-check-label">Gastos de cierre Financiados</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <asp:RadioButton CssClass="form-check-input" ID="rbGastosDeCierreEfectivo" runat="server" GroupName="rbTipoGastosDeCierre" />
+                                                        <label class="form-check-label">Gastos de cierre Efectivo</label>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -342,26 +373,32 @@
                                                     <textarea id="txtDetallesGarantia" runat="server" class="form-control" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2"></textarea>
                                                 </div>
                                             </div>
+                                            <!-- Label para mensajes y advertencias de la negociacion -->
+                                            <div class="form-group row mr-0 ml-0 alert alert-danger" runat="server" id="PanelMensajeGuardarNegociacion" visible="false">
+                                                <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensajeGuardarNegociacion" runat="server" Text=""></asp:Label>
+                                            </div>
                                             <div class="modal-footer">
                                                 <asp:Button ID="btnGuardarNegociacion" Text="Confirmar" CssClass="btn btn-primary waves-effect waves-light" OnClick="btnGuardarNegociacion_Click" runat="server" />
 
                                                 <button type="button" data-dismiss="modal" class="btn btn-secondary waves-effect">
                                                     Cancelar
                                                 </button>
-
-                                                <!-- Label para mensajes y advertencias de la negociacion -->
-                                                <div class="form-group row m-0" runat="server" id="lblPanelMensajeGuardarNegociacion">
-                                                    <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensajeGuardarNegociacion" runat="server"></asp:Label>
-                                                </div>
                                             </div>
                                         </asp:Panel>
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
+                                <asp:UpdateProgress ID="updateProgressGuardarNegociacion" runat="server">
+                                    <ProgressTemplate>
+                                        <div class="loading">
+                                            <div class="loader"></div>
+                                        </div>
+                                    </ProgressTemplate>
+                                </asp:UpdateProgress>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                <!-- /.modal -->
 
                 <!-- Modal solicitar identidad del cliente en caso de que venga en la URL -->
                 <div id="modalSolicitarIdentidad" class="modal fade bs-example-modal-center" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
@@ -371,7 +408,7 @@
                                 <h5 class="modal-title mt-0">Buscar cliente</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             </div>
-                            <asp:UpdatePanel runat="server">
+                            <asp:UpdatePanel runat="server" ID="upBuscarPrecalificadoIdentidadCliente">
                                 <ContentTemplate>
                                     <asp:Panel ID="PanelSolicitarIdentidad" runat="server" Visible="true">
                                         <div class="modal-body">
@@ -392,12 +429,19 @@
                                     </asp:Panel>
                                 </ContentTemplate>
                             </asp:UpdatePanel>
+                            <asp:UpdateProgress ID="updateProgressBuscarCliente" runat="server">
+                                <ProgressTemplate>
+                                    <div class="loading">
+                                        <div class="loader"></div>
+                                    </div>
+                                </ProgressTemplate>
+                            </asp:UpdateProgress>
                         </div>
                     </div>
                 </div>
                 <!-- /.modal -->
 
-                <!-- Modal solicitar identidad del cliente en caso de que venga en la URL -->
+                <!-- Modal identidad del cliente ingresado no está precalificado -->
                 <div id="modalClienteNoPrecalificado" class="modal fade bs-example-modal-center" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -405,11 +449,21 @@
                                 <h5 class="modal-title mt-0">Cliente no precalificado</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             </div>
-                            <asp:UpdatePanel runat="server">
+                            <asp:UpdatePanel runat="server" ID="upClienteNoPrecalificado">
                                 <ContentTemplate>
                                     <asp:Panel ID="panelRedirigirAPrecalificado" runat="server" Visible="true">
                                         <div class="modal-body">
                                             <label class="col-form-label">Este cliente todavía no ha sido precalificado. Debe precalificarlo para continuar.</label>
+
+
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <asp:CheckBox ID="cbGuardarMontosCotizacion" runat="server" CssClass="form-check-input col-form-label" />
+                                                    <label class="form-check-label col-form-label" for="gridCheck">
+                                                        Guardar montos de la cotización
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
 
@@ -422,182 +476,466 @@
                                     </asp:Panel>
                                 </ContentTemplate>
                             </asp:UpdatePanel>
+                            <asp:UpdateProgress ID="updateProgressClienteNoPrecalificado" runat="server">
+                                <ProgressTemplate>
+                                    <div class="loading">
+                                        <div class="loader"></div>
+                                    </div>
+                                </ProgressTemplate>
+                            </asp:UpdateProgress>
                         </div>
                     </div>
                 </div>
+                <!-- /.modal -->
 
                 <!-- PDF DE LA COTIZACION (IGNORAR) -->
                 <div id="divContenedor" style="margin-top: 999px; display: none;">
-                    <div class="card m-0 divCotizacionPDF" runat="server" visible="true" id="divCotizacionPDF" style="display: none;">
-                        <div class="card-body pt-0">
-                            <div class="row">
-                                <div class="col-12 text-center">
-                                    <img src="/Imagenes/LogoPrestaditoMediano.png" />
-                                    <h3>COTIZACIÓN</h3>
-                                    <hr />
-                                </div>
-                                <div class="col-5">
-                                    <div class="form-group row mb-0">
-                                        <label class="col-4 font-12">CLIENTE:</label>
-                                        <asp:Label ID="lblCliente" CssClass="col-8 p-0 font-weight-bold font-12" Text="" runat="server"></asp:Label>
+                    <asp:UpdatePanel runat="server" ID="upCotizacionPDF" UpdateMode="Always" ChildrenAsTriggers="True">
+                        <ContentTemplate>
+                            <div class="card m-0 divCotizacionPDF" runat="server" visible="true" id="divCotizacionPDF" style="display: none;">
+                                <div class="card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-12 text-center">
+                                            <img src="/Imagenes/LogoPrestaditoMediano.png" />
+                                            <h3>COTIZACIÓN</h3>
+                                            <hr />
+                                        </div>
+                                        <div class="col-12">
+                                            <table class="table table-borderless mb-0 table-condensed" style="width: 100%">
+                                                <tr>
+                                                    <td style="width: 10%" class="p-1">CLIENTE:</td>
+                                                    <td style="width: auto" class="p-1">
+                                                        <asp:Label ID="lblCliente" CssClass="p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+
+                                                    <td style="width: auto" class="pt-1 pb-1 pl-0 text-right">VENDEDOR:</td>
+                                                    <td style="width: auto" class="p-1 text-right">
+                                                        <asp:Label ID="lblVendedor" CssClass="col-8 p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 10%" class="p-1">FECHA:</td>
+                                                    <td style="width: auto" class="p-1">
+                                                        <asp:Label ID="lblFechaCotizacion" CssClass="p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+
+                                                    <td style="width: auto" class="pt-1 pb-1 pl-0 text-right">TELÉFONO:</td>
+                                                    <td style="width: auto" class="p-1 text-right">
+                                                        <asp:Label ID="lblTelefonoVendedor" CssClass="p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+                                                </tr>
+                                            </table>
+                                            <table class="table table-borderless mb-0" style="width: 100%">
+                                                <tr>
+                                                    <td style="width: 80%" class="p-1"></td>
+                                                    <td style="width: 10%" class="p-1 text-right">CORREO:</td>
+                                                    <td style="width: 10%" class="p-1 text-right">
+                                                        <asp:Label ID="lblCorreoVendedor" CssClass="p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-6 mt-4">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <td class="p-1">Valor del vehiculo</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblValorVehiculo">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">Prima</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblPrima">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">Monto a Financiar</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblMontoAFinanciar">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">Score</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblScore">0</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">Tasa mensual</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblTasaMensual">0.00%</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                        <div class="col-6 mt-4">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <td class="p-1" colspan="2">Plazo</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblPlazo"></asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1" colspan="2">Cuota del préstamo</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblCuotaPrestamo">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">GPS</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblGPS">NO</asp:Label></td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblValorGPS">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">SEGURO</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblSeguro">NO</asp:Label>
+                                                        </td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblValorSeguro">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">GASTOS DE CIERRE</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblGastosDeCierre">NO</asp:Label>
+                                                        </td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblMontoGastosDeCierre">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                        <div class="col-12 mt-2 text-center p-0">
+                                            <img src="/Imagenes/Cotizador/image3.png" class="img-fluid" /><br />
+                                            <label class="mt-1">Cotización valida únicamente por 5 días y está sujeta a cambios sin previo aviso por parte de Prestadito.</label>
+                                        </div>
+                                        <div class="col-6 mt-4">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="p-1 text-center">REQUISITOS PARA FINANCIAMIENTO</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="p-1 text-center">COPIA DE CÉDULA</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1 text-center">COMPROBAR INGRESOS</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1 text-center">RECIBO PÚBLICO</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1 text-center">CROQUIS DE VIVIENDA</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-6 mt-4">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="pt-1 pb-1 pl-0 pr-0 text-center">REQUISITOS PARA FINANCIAMIENTO CON GARANTÍA</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="p-1 text-center">COPIA DE CÉDULA</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1 text-center">RECIBO PÚBLICO</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1 text-center">CROQUIS DE VIVIENDA</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1 text-center">RTN</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-12 mt-2 text-center p-0">
+                                            <label class="mt-1">Para más información llama al 2540-1050</label>
+                                            <h5 class="font-weight-bold">¡Porque no importa la ocasión, PRESTADITO ES LA SOLUCIÓN!</h5>
+                                        </div>
                                     </div>
-                                    <div class="form-group row mb-0">
-                                        <label class="col-4 font-12">FECHA:</label>
-                                        <asp:Label ID="lblFechaCotizacion" CssClass="col-8 p-0 font-weight-bold font-12" Text="" runat="server"></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="col-7">
-                                    <div class="form-group row mb-0 justify-content-end">
-                                        <label class="col-3 font-12">VENDEDOR:</label>
-                                        <asp:Label ID="lblVendedor" CssClass="col-6 p-0 font-weight-bold font-12" Text="" runat="server"></asp:Label>
-                                    </div>
-                                    <div class="form-group row mb-0 justify-content-end">
-                                        <label class="col-3 font-12">TELÉFONO:</label>
-                                        <asp:Label ID="lblTelefonoVendedor" CssClass="col-6 p-0 font-weight-bold font-12" Text="" runat="server"></asp:Label>
-                                    </div>
-                                    <div class="form-group row mb-0 justify-content-end">
-                                        <label class="col-3 font-12">CORREO:</label>
-                                        <asp:Label runat="server" ID="lblCorreoVendedor" CssClass="col-6 p-0 font-weight-bold font-12" Text=""></asp:Label>
-                                    </div>
-                                </div>
-                                <div class="col-6 mt-4">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <td class="p-1">Valor del vehiculo</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblValorVehiculo">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">Prima</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblPrima">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">Monto a Financiar</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblMontoAFinanciar">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">Score</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblScore">0</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">Tasa mensual</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblTasaMensual">0.00%</asp:Label>
-                                                </td>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                                <div class="col-6 mt-4">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <td class="p-1" colspan="2">Plazo</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblPlazo"></asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1" colspan="2">Cuota del préstamo</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblCuotaPrestamo">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">GPS</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblGPS">NO</asp:Label></td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblValorGPS">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">SEGURO</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblSeguro">NO</asp:Label>
-                                                </td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblValorSeguro">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">GASTOS DE CIERRE</td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblGastosDeCierre">NO</asp:Label>
-                                                </td>
-                                                <td class="p-1">
-                                                    <asp:Label runat="server" ID="lblMontoGastosDeCierre">L 0.00</asp:Label>
-                                                </td>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                                <div class="col-12 mt-2 text-center p-0">
-                                    <img src="/Imagenes/Cotizador/image3.png" class="img-fluid" /><br />
-                                    <label class="mt-1">Cotización valida únicamente por 5 días y está sujeta a cambios sin previo aviso por parte de Prestadito.</label>
-                                </div>
-                                <div class="col-6 mt-4">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="p-1">REQUISITOS PARA FINANCIAMIENTO</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="p-1">COPIA DE CÉDULA</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">COMPROBAR INGRESOS</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">RECIBO PÚBLICO</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">CROQUIS DE VIVIENDA</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="col-6 mt-4">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="p-1">REQUISITOS PARA FINANCIAMIENTO CON GARANTÍA</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="p-1">COPIA DE CÉDULA</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">RECIBO PÚBLICO</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">CROQUIS DE VIVIENDA</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="p-1">RTN</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="col-12 mt-2 text-center p-0">
-                                    <label class="mt-1">Para más información llama al 2540-1050</label>
-                                    <h5 class="font-weight-bold">¡Porque no importa la ocasión, PRESTADITO ES LA SOLUCIÓN!</h5>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
                 </div>
+
+                <!-- PDF DE LA NEGOCIACIÓN (IGNORAR) -->
+                <div id="divContenedorNegociacion" style="/*margin-top: 999px;*/ display: none;">
+                    <asp:UpdatePanel runat="server" ID="upNegociacionPDF" UpdateMode="Always" ChildrenAsTriggers="True">
+                        <ContentTemplate>
+                            <div class="card m-0 divNegociacionPDF" runat="server" visible="true" id="divNegociacionPDF" style="display: none;">
+                                <div class="card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-12 text-center">
+                                            <img src="/Imagenes/LogoPrestaditoMediano.png" />
+                                            <h3>NEGOCIACIÓN DE CRÉDITO</h3>
+                                            <hr />
+                                        </div>
+                                        <div class="col-12">
+                                            <table class="table table-borderless mb-0" style="width: 100%">
+                                                <tr>
+                                                    <td style="width: 10%" class="p-1">CLIENTE:</td>
+                                                    <td style="width: 70%" class="p-1">
+                                                        <asp:Label ID="lblClienteNegociacion" CssClass="p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+
+                                                    <td style="width: 10%" class="p-1 text-right">TELÉFONO:</td>
+                                                    <td style="width: 10%" class="p-1 text-right">
+                                                        <asp:Label ID="lblTelefonoClienteNegociacion" CssClass="col-8 p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 10%" class="p-1">IDENTIDAD:</td>
+                                                    <td style="width: 70%" class="p-1">
+                                                        <asp:Label ID="lblIdentidadClienteNegociacion" CssClass="p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+
+                                                    <td style="width: 10%" class="p-1 text-right">FECHA:</td>
+                                                    <td style="width: 10%" class="p-1 text-right">
+                                                        <asp:Label ID="lblFechaNegociacion" CssClass="col-8 p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+                                                </tr>
+                                            </table>
+                                            <table class="table table-borderless mt-0" style="width: 100%">
+                                                <tr>
+                                                    <td style="width: 25%" class="p-1">OFICIAL DE NEGOCIOS:</td>
+                                                    <td style="width: 45%" class="p-1">
+                                                        <asp:Label ID="lblOficialNegociosNegociacion" CssClass="p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+
+                                                    <td style="width: 20%" class="p-1">CENTRO DE COSTO:</td>
+                                                    <td style="width: 10%" class="p-1 text-right">
+                                                        <asp:Label ID="lblCentroDeCostoNegociacion" CssClass="col-8 p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-6 mt-4">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <td class="p-1">Valor del vehiculo</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblValorVehiculoNegociacion">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">Prima</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblPrimaNegociacion">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">Monto a Financiar</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblMontoFinanciarNegociacion">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">Score</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblScoreNegociacion">0</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">Tasa mensual</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblTasaMensualNegociacion">0.00%</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                        <div class="col-6 mt-4">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <td class="p-1" colspan="2">Plazo</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblPlazoNegociacion"></asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1" colspan="2">Cuota del préstamo</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblCuotaDelPrestamoNegociacion">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">GPS</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblGPSNegociacion">NO</asp:Label></td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblValorGPSNegociacion">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">SEGURO</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblSeguroNegociacion">NO</asp:Label>
+                                                        </td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblValorSeguroNegociacion">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">GASTOS DE CIERRE</td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblGastosDeCierreNegociacion">NO</asp:Label>
+                                                        </td>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblMontoGastosDeCierreNegociacion">L 0.00</asp:Label>
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <div class="col-5">
+                                            <table class="table">
+                                                <thead class="text-center">
+                                                    <tr>
+                                                        <th colspan="2" class="p-1 font-weight-bold">VEHÍCULO</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="p-1">MARCA</td>
+                                                        <td class="p-1 text-center">
+                                                            <asp:Label runat="server" ID="lblMarca" Text=""></asp:Label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">MODELO</td>
+                                                        <td class="p-1 text-center">
+                                                            <asp:Label runat="server" ID="lblModelo" Text=""></asp:Label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">AÑO</td>
+                                                        <td class="p-1 text-center">
+                                                            <asp:Label runat="server" ID="lblAnio" Text=""></asp:Label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">MATRICULA</td>
+                                                        <td class="p-1 text-center">
+                                                            <asp:Label runat="server" ID="lblMatricula" Text=""></asp:Label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">COLOR</td>
+                                                        <td class="p-1 text-center">
+                                                            <asp:Label runat="server" ID="lblColor" Text=""></asp:Label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">CILINDRAJE</td>
+                                                        <td class="p-1 text-center">
+                                                            <asp:Label runat="server" ID="lblCilindraje" Text=""></asp:Label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">
+                                                            <asp:Label runat="server" ID="lblUnidadDeMedidaRecorrido" Text=""></asp:Label></td>
+                                                        <td class="p-1 text-center">
+                                                            <asp:Label runat="server" ID="lblRecorrido" Text=""></asp:Label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">ORIGEN</td>
+                                                        <td class="p-1 text-center">
+                                                            <asp:Label runat="server" ID="lblOrigenGarantia" Text=""></asp:Label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">VENDEDOR</td>
+                                                        <td class="p-1 text-center">
+                                                            <asp:Label runat="server" ID="lblVendedorGarantia" Text=""></asp:Label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="p-1">AUTOLOTE</td>
+                                                        <td class="p-1 text-center">
+                                                            <asp:Label runat="server" ID="lblAutolote" Text=""></asp:Label></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-7">
+                                            <figure class="text-center">
+                                                <asp:Image ID="imgVehiculoNegociacion" CssClass="img-fluid" runat="server" Style="max-width: 100%; max-height: 100%;" />
+                                                <figcaption>Fotografía del vehículo</figcaption>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3 align-items-end">
+                                        <div class="col-5">
+                                            <div class="col-12" runat="server" visible="false" id="tblRequisitosFinanciamiento">
+                                                <table class="table text-center">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="p-1">REQUISITOS PARA FINANCIAMIENTO</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="p-1">COPIA DE CÉDULA</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="p-1">COMPROBAR INGRESOS</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="p-1">RECIBO PÚBLICO</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="p-1">CROQUIS DE VIVIENDA</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-12" runat="server" visible="false" id="tblRequisitosFinanciamientoConGarantia">
+                                                <table class="table text-center">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="pt-1 pb-1 pl-0 pr-0 text-center">REQUISITOS PARA FINANCIAMIENTO CON GARANTÍA</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="p-1">COPIA DE CÉDULA</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="p-1">RECIBO PÚBLICO</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="p-1">CROQUIS DE VIVIENDA</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="p-1">RTN</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 text-center">
+                                            <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                                            <label class="mt-0 ">FIRMA DEL CLIENTE</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-2 text-center p-0">
+                                        <label class="mt-1">Para más información llama al 2540-1050</label>
+                                        <h5 class="font-weight-bold">¡Porque no importa la ocasión, PRESTADITO ES LA SOLUCIÓN!</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+
 
                 <script src="/Scripts/js/jquery.min.js"></script>
                 <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -605,6 +943,10 @@
                 <script type="text/javascript">
                     Sys.Application.add_load(CargarMascarasDeEntrada);
                     Sys.Application.add_load(InicializarCargaDeArchivos);
+                </script>
+                <script type="text/javascript">
+                    Sys.WebForms.PageRequestManager.getInstance().add_beginRequest(BeginRequestHandler);
+                    function BeginRequestHandler(sender, args) { var oControl = args.get_postBackElement(); oControl.disabled = true; }
                 </script>
             </ContentTemplate>
         </asp:UpdatePanel>

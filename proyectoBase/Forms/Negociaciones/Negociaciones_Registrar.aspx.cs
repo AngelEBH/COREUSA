@@ -19,12 +19,12 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
     public static string pcID = "";
     public static string pcIDProducto = "";
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-    public static NegociacionesDocumentosViewModel DocumentoNegociacion;
     private const string uploadDir = @"C:\inetpub\wwwroot\Documentos\Negociaciones\Temp\";
-    public static bool FinanciarGastosDeCierre = true;
+    public static NegociacionesDocumentosViewModel DocumentoNegociacion;
+    public static bool ImprimirNegociacion = true;
+    public static bool GuardarDocumentoNegociacion = true;
+    public static bool MostrarMensajeConfirmacion = true;
 
-
-    // Propiedades de CotizadorCarros.cs
     private static string NombreVendedor = "";
     private static string TelefonoVendedor = "";
     private static string CorreoVendedor = "";
@@ -66,7 +66,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                     if (!string.IsNullOrWhiteSpace(pcID))
                     {
                         CargarPrecalificado(pcID);
-                        CargarUltimaNegociacion(pcID);
+                        CargarUltimaCotizacion(pcID);
                     }
 
                     LlenarListas();
@@ -74,12 +74,11 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
             }
             catch (Exception ex)
             {
-                lblMensaje.Visible = true;
-                lblMensaje.Text = ex.Message;
+                MostrarMensaje("Ocurrió un error al cargar la información: " + ex.Message.ToString());
             }
         }
 
-        /* Carga de documentos */
+        /* Carga de documentos de la negociación */
         if (Request.HttpMethod == "POST" && type != null)
         {
             try
@@ -98,18 +97,18 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                 {
                     case "upload":
 
-                        // Proceso de carga
+                        /* Proceso de carga */
                         var data = fileUploader.Upload();
 
-                        // Resultado
+                        /* Resultado */
                         if (data["files"].Count == 1)
                             data["files"][0].Remove("file");
                         Response.Write(JsonConvert.SerializeObject(data));
 
-                        // Al subirse los archivos se guardan en este objeto de sesion
+                        /* Al subirse los archivos se guardan en este objeto de sesion */
                         var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
 
-                        // Guardar los items del objeto de sesion en nuestra propiedad estatica llamada DocumentoNegociacion
+                        /* Guardar los items del objeto de sesion en nuestra propiedad estatica llamada DocumentoNegociacion */
                         list.ForEach(val =>
                         {
                             DocumentoNegociacion = new NegociacionesDocumentosViewModel()
@@ -141,11 +140,10 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                 ex.Message.ToString();
             }
         }
-    }
-
-    private void CargarUltimaNegociacion(string pcID)
-    {
-        //throw new NotImplementedException();
+        if (lblMensaje.Text == "")
+        {
+            PanelMensajeErrores.Visible = false;
+        }
     }
 
     #region COTIZACIÓN
@@ -175,7 +173,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
         if (string.IsNullOrEmpty(txtValorVehiculo.Text) || string.IsNullOrEmpty(txtValorPrima.Text))
         {
-            lblMensaje.Text = "Debe ingresar todos los valores para calcular.";
+            MostrarMensaje("Debe ingresar todos los valores para calcular.");
             return;
         }
 
@@ -183,7 +181,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
         if (!lbEsNumerico)
         {
-            lblMensaje.Text = "Ingrese valores numéricos.";
+            MostrarMensaje("Ingrese valores numéricos.");
             return;
         }
 
@@ -191,25 +189,25 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
         if (!lbEsNumerico)
         {
-            lblMensaje.Text = "Ingrese valores numéricos.";
+            MostrarMensaje("Ingrese valores numéricos.");
             return;
         }
 
         if (Convert.ToDouble(txtValorPrima.Text) < (Convert.ToDouble(txtValorVehiculo.Text) * (0.20)))
         {
-            lblMensaje.Text = "Valor de la prima debe ser mayor o igual al 20%.";
+            MostrarMensaje("Valor de la prima debe ser mayor o igual al 20%.");
             return;
         }
 
         if (Convert.ToDouble(txtScorePromedio.Text) < 0 || Convert.ToDouble(txtScorePromedio.Text) > 999)
         {
-            lblMensaje.Text = "El score solo puede ser entre 0 y 999.";
+            MostrarMensaje("El score solo puede ser entre 0 y 999.");
             return;
         }
 
         if ((Convert.ToDouble(txtValorPrima.Text) < (Convert.ToDouble(txtValorVehiculo.Text) * (0.45))) && (rbEmpeno.Checked))
         {
-            lblMensaje.Text = "Valor de a financiar no puede ser mayor al 55%.";
+            MostrarMensaje("Valor de a financiar no puede ser mayor al 55%.");
             lblPorcenajedePrima.Text = "Maximo L " + string.Format("{0:N2}", Convert.ToString(Math.Round(Convert.ToDouble(txtValorVehiculo.Text) * (0.55), 2)));
             lblPorcenajedePrima.Visible = true;
             return;
@@ -223,7 +221,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
         else
         {
-            lblMensaje.Text = "Seleccione si es financiamiento o empeño.";
+            MostrarMensaje("Seleccione si es financiamiento o empeño.");
             return;
         }
         try
@@ -284,11 +282,11 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            lblMensaje.Visible = true;
-            lblMensaje.Text = ex.Message;
+            MostrarMensaje("Ocurrió un error al realizar el cálculo de la cotización: " + ex.Message.ToString());
             return;
         }
     }
+
 
     /* Si se empeño o financiamiento con garantía */
     protected void rbEmpeno_CheckedChanged(object sender, EventArgs e)
@@ -310,11 +308,10 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            lblMensaje.Visible = true;
-            lblMensaje.Text = ex.Message;
+            MostrarMensaje("Ocurrió un error al cargar los plazos: " + ex.Message.ToString());
         }
-
     }
+
 
     /* Si se selecciona financiamiento */
     protected void rbFinanciamiento_CheckedChanged(object sender, EventArgs e)
@@ -337,10 +334,10 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            lblMensaje.Visible = true;
-            lblMensaje.Text = ex.Message;
+            MostrarMensaje("Ocurrió un error al cargar los plazos: " + ex.Message.ToString());
         }
     }
+
 
     /* Nueva cotización */
     protected void btnNuevaCotizacion_Click(object sender, EventArgs e)
@@ -362,10 +359,10 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            lblMensaje.Visible = true;
-            lblMensaje.Text = ex.Message;
+            MostrarMensaje("No se pudo cargar la nueva cotización: " + ex.Message.ToString());
         }
     }
+
 
     /* Cotización con gastos de cierre en efectivo */
     protected void btnDescargarCotizacion_Click(object sender, EventArgs e)
@@ -384,6 +381,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
         MandarAImprimirCotizacion(valorVehiculo, prima, montoFinanciar, score, tasa, plazo, cuotaPrestamo, servicioGPS, valorSeguro, gastosCierreEfectivo, cliente);
     }
+
 
     /* Cotización con gastos de cierre financiados */
     protected void btnDescargarCotizacion2_Click(object sender, EventArgs e)
@@ -405,21 +403,22 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         MandarAImprimirCotizacion(valorVehiculo, prima, montoFinanciar, score, tasa, plazo, cuotaPrestamo, servicioGPS, valorSeguro, gastosCierre, cliente);
     }
 
+
     protected void MandarAImprimirCotizacion(decimal valorVehiculo, decimal prima, decimal montoFinanciar, int score, decimal tasaMensual, string plazo, decimal cuotaPrestamo, decimal valorGPS, decimal valorSeguro, decimal gastosDeCierre, string cliente = "CLIENTE FINAL")
     {
         try
         {
-            ExportarPDF(NombreVendedor, TelefonoVendedor, CorreoVendedor, valorVehiculo, prima, montoFinanciar, score, tasaMensual, plazo, cuotaPrestamo, valorGPS, valorSeguro, gastosDeCierre, NombreVendedor, cliente);
+            ExportarCotizacionPDF(NombreVendedor, TelefonoVendedor, CorreoVendedor, valorVehiculo, prima, montoFinanciar, score, tasaMensual, plazo, cuotaPrestamo, valorGPS, valorSeguro, gastosDeCierre, NombreVendedor, cliente);
         }
         catch (Exception ex)
         {
-            lblMensaje.Visible = true;
-            lblMensaje.Text = "No se pudo imprimir la cotización: " + ex.Message;
+            MostrarMensaje("No se pudo imprimir la cotización: " + ex.Message.ToString());
             return;
         }
     }
 
-    protected void ExportarPDF(string vendedor, string telefonoVendedor, string correoVendedor, decimal valorVehiculo, decimal prima, decimal montoFinanciar, int score, decimal tasaMensual, string plazo, decimal cuotaPrestamo, decimal valorGPS, decimal valorSeguro, decimal gastosDeCierre, string usuarioImprime, string cliente = "CLIENTE FINAL")
+
+    protected void ExportarCotizacionPDF(string vendedor, string telefonoVendedor, string correoVendedor, decimal valorVehiculo, decimal prima, decimal montoFinanciar, int score, decimal tasaMensual, string plazo, decimal cuotaPrestamo, decimal valorGPS, decimal valorSeguro, decimal gastosDeCierre, string usuarioImprime, string cliente = "CLIENTE FINAL")
     {
         try
         {
@@ -453,29 +452,23 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
             //lblUsuarioImprime.Text = "Impreso por "+ usuarioImprime;
 
-            string scriptImprimir = "ExportToPDF('Cotizacion_+" + DateTime.Now.ToString("yyyy_dd_M_HH_mm_ss") + "')";
+            string scriptImprimir = "ExportToPDF('Cotizacion_" + DateTime.Now.ToString("yyyy_dd_M_HH_mm_ss") + "')";
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "_self", scriptImprimir, true);
         }
         catch (Exception ex)
         {
-            ex.Message.ToString();
-            return;
+            MostrarMensaje("No se pudo imprimir la cotización: " + ex.Message.ToString());
         }
     }
 
-    private string RespuestaLogica(decimal cantidad)
-    {
-        return cantidad > 0 ? "SI" : "NO";
-    }
-
     #endregion
+
 
     #region NEGOCIACIÓN
 
     /* Guardar negociacion en la base de datos */
     protected void btnGuardarNegociacion_Click(object sender, EventArgs e)
     {
-        btnGuardarNegociacion.Enabled = false;
         txtValorVehiculo.Text = txtValorVehiculo.Text.Replace(",", "");
         txtValorPrima.Text = txtValorPrima.Text.Replace(",", "");
 
@@ -491,7 +484,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
         if (string.IsNullOrEmpty(txtValorVehiculo.Text) || string.IsNullOrEmpty(txtValorPrima.Text))
         {
-            lblMensaje.Text = "Debe ingresar todos los valores para calcular.";
+            MostrarMensajeNegociacion("Debe ingresar todos los valores para calcular.");
             return;
         }
 
@@ -499,7 +492,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
         if (!lbEsNumerico)
         {
-            lblMensaje.Text = "Ingrese valores numéricos.";
+            MostrarMensajeNegociacion("Ingrese valores numéricos.");
             return;
         }
 
@@ -507,19 +500,19 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
         if (!lbEsNumerico)
         {
-            lblMensaje.Text = "Ingrese valores numéricos.";
+            MostrarMensajeNegociacion("Ingrese valores numéricos.");
             return;
         }
 
         if (Convert.ToDouble(txtValorPrima.Text) < (Convert.ToDouble(txtValorVehiculo.Text) * (0.20)))
         {
-            lblMensaje.Text = "Valor de la prima debe ser mayor o igual al 20%.";
+            MostrarMensajeNegociacion("Valor de la prima debe ser mayor o igual al 20%.");
             return;
         }
 
         if (Convert.ToDouble(txtScorePromedio.Text) < 0 || Convert.ToDouble(txtScorePromedio.Text) > 999)
         {
-            lblMensaje.Text = "El score solo puede ser entre 0 y 999.";
+            MostrarMensajeNegociacion("El score solo puede ser entre 0 y 999.");
             return;
         }
 
@@ -531,57 +524,66 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
         else
         {
-            lblMensaje.Text = "Seleccione si es financiamiento o empeño.";
+            MostrarMensajeNegociacion("Seleccione si es financiamiento o empeño.");
             return;
         }
 
         /* Validar entradas */
         if (ddlAutolote.SelectedValue == "0")
         {
-            lblMensaje.Text = "Seleccione un autolote.";
+            MostrarMensajeNegociacion("Seleccione un autolote.");
             return;
         }
 
         if (ddlOrigen.SelectedValue == "0")
         {
-            lblMensaje.Text = "Seleccione un origen.";
+            MostrarMensajeNegociacion("Seleccione un origen.");
             return;
         }
 
         if (ddlPlazos.SelectedValue == "")
         {
-            lblMensaje.Text = "Seleccione un plazo.";
+            MostrarMensajeNegociacion("Seleccione un plazo.");
             return;
         }
 
         if (ddlMarca.SelectedValue == "0")
         {
-            lblMensaje.Text = "Seleccione una marca y modelo.";
+            MostrarMensajeNegociacion("Seleccione una marca y modelo.");
             return;
         }
 
         if (ddlModelo.SelectedValue == "0")
         {
-            lblMensaje.Text = "Seleccione una modelo.";
+            MostrarMensajeNegociacion("Seleccione una modelo.");
             return;
         }
 
         if (ddlUnidadDeMedida.SelectedValue == "0")
         {
-            lblMensaje.Text = "Seleccione una unidad de medida para el valor recorrido.";
+            MostrarMensajeNegociacion("Seleccione una unidad de medida para el valor recorrido.");
             return;
         }
 
-        if (DocumentoNegociacion.NombreAntiguo == "" || DocumentoNegociacion.NombreAntiguo == null)
+        if (DocumentoNegociacion != null)
         {
-            lblMensaje.Text = "Adjunte una fotografía de la garantía.";
+            if (DocumentoNegociacion.NombreAntiguo == "" || DocumentoNegociacion.NombreAntiguo == null)
+            {
+                MostrarMensajeNegociacion("Adjunte una fotografía de la garantía.");
+                return;
+            }
+        }
+
+        if (!rbGastosDeCierreEfectivo.Checked && !rbGastosDeCierreFinanciados.Checked)
+        {
+            MostrarMensajeNegociacion("Seleccione el tipo de financiamiento");
             return;
         }
 
         try
         {
             // Gastos de cierre efectivo
-            if (FinanciarGastosDeCierre == false)
+            if (rbGastosDeCierreEfectivo.Checked)
             {
                 var tasa = Convert.ToDecimal(lblEtiqueta1.Text.Replace("%", "").Replace("Tasa al", "").Trim());
                 var cuotaPrestamo = Convert.ToDecimal(txtCuotaTotal1.Text.Replace(",", "").Replace("L", "").Trim());
@@ -590,11 +592,10 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                 var gastosDeCierre = Convert.ToDecimal(txtGastosdeCierreEfectivo.Text.Replace(",", "").Replace("L", "").Trim());
                 var valorFinanciar = Convert.ToDecimal(txtValorPrestamo1.Text.Replace(",", "").Replace("L", "").Trim()); ;
 
-                GuardarNegociacion(tasa, cuotaPrestamo, servicioGPS, valorSeguro, gastosDeCierre, valorFinanciar, NombreVendedor, TelefonoVendedor, CorreoVendedor);
+                GuardarNegociacion(tasa, cuotaPrestamo, servicioGPS, valorSeguro, gastosDeCierre, valorFinanciar);
             }
-
             // Gastos de cierre financiados
-            if (FinanciarGastosDeCierre == true)
+            else if (rbGastosDeCierreFinanciados.Checked)
             {
                 var tasa = Convert.ToDecimal(lblEtiqueta2.Text.Replace("%", "").Replace("Tasa al", "").Trim());
                 var cuotaPrestamo = Convert.ToDecimal(txtCuotaTotal2.Text.Replace(",", "").Replace("L", "").Trim());
@@ -603,97 +604,16 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                 var gastosDeCierre = 0;
                 var valorFinanciar = Convert.ToDecimal(txtValorPrestamo2.Text.Replace(",", "").Replace("L", "").Trim()); ;
 
-                GuardarNegociacion(tasa, cuotaPrestamo, servicioGPS, valorSeguro, gastosDeCierre, valorFinanciar, NombreVendedor, TelefonoVendedor, CorreoVendedor);
+                GuardarNegociacion(tasa, cuotaPrestamo, servicioGPS, valorSeguro, gastosDeCierre, valorFinanciar);
             }
         }
         catch (Exception ex)
         {
-            lblMensaje.Visible = true;
-            lblMensaje.Text = ex.Message;
+            MostrarMensajeNegociacion("Error al obtener datos de la negociación: " + ex.Message.ToString());
             return;
         }
     }
 
-    /* Guardar o actualizar negociacion en la base de datos */
-    private void GuardarNegociacion(decimal tasa, decimal cuotaPrestamo, decimal serivicioGPS, decimal seguro, decimal gastosDeCierre, decimal montoFinanciar, string nombreVendedor, string telefonoVendedor, string correoVendedor)
-    {
-        try
-        {
-            /* Cambiarle el nombre al documento */
-            DocumentoNegociacion.fcNombreArchivo = GenerarNombreDocumento();
-            DocumentoNegociacion.URLArchivo = "/Documentos/Negociaciones/Negociacion_" + pcID + "/" + DocumentoNegociacion.fcNombreArchivo + ".png";
-
-            using (var context = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["conexionEncriptada"].ToString())))
-            {
-                context.Open();
-
-                using (var sqlComando = new SqlCommand("sp_CREDNegociaciones_Maestro_Guardar", context))
-                {
-                    sqlComando.CommandType = System.Data.CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
-                    sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
-                    sqlComando.Parameters.AddWithValue("@piIDProducto", pcIDProducto);
-                    sqlComando.Parameters.AddWithValue("@piIDTipoNegociacion", 1);
-                    sqlComando.Parameters.AddWithValue("@pnValorGarantia", txtValorVehiculo.Text);
-                    sqlComando.Parameters.AddWithValue("@pnValorPrima", txtValorPrima.Text);
-                    sqlComando.Parameters.AddWithValue("@pnMontoFinanciar", montoFinanciar);
-                    sqlComando.Parameters.AddWithValue("@piIDMoneda", 1);
-                    sqlComando.Parameters.AddWithValue("@piScore", txtScorePromedio.Text.Trim());
-                    sqlComando.Parameters.AddWithValue("@pnTasa", tasa);
-                    sqlComando.Parameters.AddWithValue("@piIDTipoDeTasa", 1);
-                    sqlComando.Parameters.AddWithValue("@piPlazo", ddlPlazos.Text.Substring(0, 3).Trim());
-                    sqlComando.Parameters.AddWithValue("@pnCuotaDelPrestamo", cuotaPrestamo);
-                    sqlComando.Parameters.AddWithValue("@pnServicioGPS", serivicioGPS);
-                    sqlComando.Parameters.AddWithValue("@pnSeguro", seguro);
-                    sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", gastosDeCierre);
-                    sqlComando.Parameters.AddWithValue("@piIDOrigenGarantia", ddlOrigen.SelectedValue);
-                    sqlComando.Parameters.AddWithValue("@pcNombreVendedorGarantia", txtVendedor.Text.Trim());
-                    sqlComando.Parameters.AddWithValue("@piIDAutolote", ddlAutolote.SelectedValue);
-                    sqlComando.Parameters.AddWithValue("@piIDMarca", ddlMarca.SelectedValue);
-                    sqlComando.Parameters.AddWithValue("@piIDModelo", ddlModelo.SelectedValue);
-                    sqlComando.Parameters.AddWithValue("@piAnio", txtAnio.Text.Replace(",", "").Trim());
-                    sqlComando.Parameters.AddWithValue("@pcMatricula", txtMatricula.Text.Trim());
-                    sqlComando.Parameters.AddWithValue("@pcColor", txtColor.Text.Trim());
-                    sqlComando.Parameters.AddWithValue("@pnRecorrido", txtRecorrido.Text.Replace(",", "").Trim());
-                    sqlComando.Parameters.AddWithValue("@piUnidadDeDistancia", ddlUnidadDeMedida.SelectedValue);
-                    sqlComando.Parameters.AddWithValue("@pcDetalleGarantia", txtDetallesGarantia.Value.Trim());
-                    sqlComando.Parameters.AddWithValue("@pcNombreFotografia", DocumentoNegociacion.fcNombreArchivo);
-                    sqlComando.Parameters.AddWithValue("@pcRutaFotografia", DocumentoNegociacion.fcRutaArchivo);
-                    sqlComando.Parameters.AddWithValue("@pcURLFotografia", DocumentoNegociacion.URLArchivo);
-                    sqlComando.CommandTimeout = 120;
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            string idNegociacionGuardada = sqlResultado["MensajeError"].ToString();
-                            if (!idNegociacionGuardada.StartsWith("-1"))
-                            {
-                                btnGuardarNegociacion.Visible = false;
-                                btnNuevaCotizacion.Visible = true;
-                                GuardarDocumentosNegociacion(DocumentoNegociacion);
-                                DescargarPDF(idNegociacionGuardada);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            btnGuardarNegociacion.Enabled = true;
-            ex.Message.ToString();
-        }
-    }
-
-    /* Descargar negociacion en PDF */
-    private void DescargarPDF(string idNegociacion)
-    {
-        //throw new NotImplementedException();
-    }
 
     /* Cargar informacion del precalificado del cliente o redirigirlo a precalificar si todavia no lo esta */
     private void CargarPrecalificado(string pcID)
@@ -706,7 +626,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
                 using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
                 {
-                    sqlComando.CommandType = System.Data.CommandType.StoredProcedure;
+                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
@@ -724,10 +644,10 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
                         while (sqlResultado.Read())
                         {
-                            txtIdentidadCliente.Text = (string)sqlResultado["fcIdentidad"];
-                            txtNombreCliente.Text = (string)sqlResultado["fcPrimerNombre"] + " " + (string)sqlResultado["fcSegundoNombre"] + " " + (string)sqlResultado["fcPrimerApellido"] + " " + (string)sqlResultado["fcSegundoApellido"];
-                            txtTelefonoCliente.Text = (string)sqlResultado["fcTelefono"];
-                            pcIDProducto = (string)sqlResultado["fiIDProducto"].ToString();
+                            txtIdentidadCliente.Text = sqlResultado["fcIdentidad"].ToString();
+                            txtNombreCliente.Text = sqlResultado["fcPrimerNombre"].ToString() + " " + sqlResultado["fcSegundoNombre"].ToString() + " " + sqlResultado["fcPrimerApellido"].ToString() + " " + sqlResultado["fcSegundoApellido"].ToString();
+                            txtTelefonoCliente.Text = sqlResultado["fcTelefono"].ToString();
+                            pcIDProducto = sqlResultado["fiIDProducto"].ToString();
                         }
                     }
                 }
@@ -735,9 +655,10 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            return;
+            MostrarMensaje("Error al cargar precalificado " + pcID + ": " + ex.Message.ToString());
         }
     }
+
 
     /* Llenar listas desplegables */
     protected void LlenarListas()
@@ -750,7 +671,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
                 using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDNegociaciones_Guardar_LlenarListas", sqlConexion))
                 {
-                    sqlComando.CommandType = System.Data.CommandType.StoredProcedure;
+                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -808,56 +729,10 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            return;
+            MostrarMensaje("Error al cargar información del formulario de negociación: " + ex.Message.ToString());
         }
     }
 
-    /* Guardar documentos de la negociacion en su respectivo directorio */
-    public static bool GuardarDocumentosNegociacion(NegociacionesDocumentosViewModel DocumentoNegociacion)
-    {
-        bool result;
-        try
-        {
-            if (DocumentoNegociacion != null)
-            {
-                /* Crear el nuevo directorio para los documentos de la negociacion */
-                string DirectorioTemporal = @"C:\inetpub\wwwroot\Documentos\Negociaciones\Temp\";
-                string NombreCarpetaDocumentos = "Negociacion_" + pcID;
-                string DirectorioDocumentos = @"C:\inetpub\wwwroot\Documentos\Negociaciones\" + NombreCarpetaDocumentos + "\\";
-                bool CarpetaExistente = System.IO.Directory.Exists(DirectorioDocumentos);
-
-                if (!CarpetaExistente)
-                    System.IO.Directory.CreateDirectory(DirectorioDocumentos);
-
-                string ViejoDirectorio = DirectorioTemporal + DocumentoNegociacion.NombreAntiguo;
-                string NuevoNombreDocumento = DocumentoNegociacion.fcNombreArchivo;
-                string NuevoDirectorio = DirectorioDocumentos + NuevoNombreDocumento + ".png";
-
-                if (File.Exists(ViejoDirectorio))
-                    File.Move(ViejoDirectorio, NuevoDirectorio);
-            }
-            result = true;
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            result = false;
-        }
-        return result;
-    }
-
-    /* Generar nombre de documentos */
-    public static string GenerarNombreDocumento()
-    {
-        string lcBloqueFechaHora;
-        string lcRespuesta;
-        lcBloqueFechaHora = System.DateTime.Now.ToString("yyyy-mm-dd hh:mm:ss");
-        lcBloqueFechaHora = lcBloqueFechaHora.Replace("-", "");
-        lcBloqueFechaHora = lcBloqueFechaHora.Replace(":", "");
-        lcBloqueFechaHora = lcBloqueFechaHora.Replace(" ", "T");
-        lcRespuesta = "N" + "-" + lcBloqueFechaHora;
-        return lcRespuesta;
-    }
 
     /* Cargar modelos de la marca seleccionada */
     protected void ddlMarca_SelectedIndexChanged(object sender, EventArgs e)
@@ -903,19 +778,22 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            return;
+            MostrarMensaje("Error al cargar los modelos de la marca seleccionada: " + ex.Message.ToString());
         }
     }
 
+
+    /* Nueva negociación */
     protected void btnNuevaNegociacion_Click(object sender, EventArgs e)
     {
-        string lcScript = "window.open('precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')";
+        string lcScript = "window.open('../Clientes/precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')";
         Response.Write("<script>");
         Response.Write(lcScript);
         Response.Write("</script>");
     }
 
-    /* Primer paso para guardar la negociacion */
+
+    /* Primer paso para guardar la negociacion (Solicitar identidad en caso de que no venga en la URL o caso contrario, mostrar formulario de negociacion) */
     protected void btnModalGuardarNegociacion_Click(object sender, EventArgs e)
     {
         divInformacionNegociacion.Visible = true;
@@ -924,12 +802,12 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
     }
 
+
+    /* En caso de que la identidad no se reciba en la URL, se solicita al cliente y luego se verifica si está precalificado en este método */
     protected void btnBuscarIdentidadCliente_Click(object sender, EventArgs e)
     {
         try
         {
-            pcID = txtBuscarIdentidad.Text.Trim();
-
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
@@ -939,7 +817,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                     sqlComando.CommandType = System.Data.CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                    sqlComando.Parameters.AddWithValue("@pcIdentidad", txtBuscarIdentidad.Text.Trim());
                     sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
@@ -953,10 +831,11 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
 
                         while (sqlResultado.Read())
                         {
-                            txtIdentidadCliente.Text = (string)sqlResultado["fcIdentidad"];
-                            txtNombreCliente.Text = (string)sqlResultado["fcPrimerNombre"] + " " + (string)sqlResultado["fcSegundoNombre"] + " " + (string)sqlResultado["fcPrimerApellido"] + " " + (string)sqlResultado["fcSegundoApellido"];
-                            txtTelefonoCliente.Text = (string)sqlResultado["fcTelefono"];
-                            pcIDProducto = (string)sqlResultado["fiIDProducto"].ToString();
+                            txtIdentidadCliente.Text = sqlResultado["fcIdentidad"].ToString();
+                            txtNombreCliente.Text = sqlResultado["fcPrimerNombre"].ToString() + " " + sqlResultado["fcSegundoNombre"].ToString() + " " + sqlResultado["fcPrimerApellido"].ToString() + " " + sqlResultado["fcSegundoApellido"].ToString();
+                            txtTelefonoCliente.Text = sqlResultado["fcTelefono"].ToString();
+                            pcIDProducto = sqlResultado["fiIDProducto"].ToString();
+                            pcID = txtBuscarIdentidad.Text.Trim();
 
                             string script = "$('#modalSolicitarIdentidad').modal('hide'); $('#modalGuardarNegociacion').modal();";
                             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "_self", script, true);
@@ -968,19 +847,137 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            ex.Message.ToString();
+            MostrarMensaje("Error al buscar la identidad proporcionada: " + ex.Message.ToString());
         }
     }
 
+
+    /* Cuando un cliente no está precalificado y el usuario de click en "Precalificar ahora" */
     protected void btnPrecalificarCliente_Click(object sender, EventArgs e)
     {
         try
         {
-            /* Guardar negociacion hasta este momento */
-            // ...
+            /* Guardar los montos de la cotización y asociarla a la identidad ingresada */
+            if (cbGuardarMontosCotizacion.Checked)
+            {
+                ImprimirNegociacion = false;
+                GuardarDocumentoNegociacion = false;
+                MostrarMensajeConfirmacion = false;
+                pcIDProducto = rbFinanciamiento.Checked ? "202" : "203";
+                pcID = txtBuscarIdentidad.Text.Trim();
+                DocumentoNegociacion = new NegociacionesDocumentosViewModel() { fcNombreArchivo = "", fcRutaArchivo = "", NombreAntiguo = "", URLArchivo = "" };
 
-            string script = "window.open('precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')";
+                NombreVendedor = "";
+                TelefonoVendedor = "";
+                CorreoVendedor = "";
+
+                GuardarNegociacion(0, 0, 0, 0, 0, 0);
+            }
+
+            RedirigirAPrecalificar();
+        }
+        catch (Exception ex)
+        {
+            MostrarMensaje("Error al redirigir al precalificado de clientes: " + ex.Message.ToString());
+        }
+    }
+
+
+    /* Redirigir a pantalla de precalificar cliente */
+    protected void RedirigirAPrecalificar()
+    {
+        try
+        {
+            string script = "window.open('../Clientes/precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')";
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "_self", script, true);
+        }
+        catch (Exception ex)
+        {
+            MostrarMensaje("Error al redirigir al precalificado de clientes: " + ex.Message.ToString());
+        }
+    }
+
+
+    /* Cuando se reciba la identidad en la URL, buscar la ultima cotización asociada a ella*/
+    private void CargarUltimaCotizacion(string pcID)
+    {
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDNegociaciones_ListarPorIdentidad", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        if (sqlResultado.HasRows)
+                        {
+                            try
+                            {
+                                while (sqlResultado.Read())
+                                {
+                                    txtValorVehiculo.Text = sqlResultado["fnValorGarantia"].ToString();
+                                    txtValorPrima.Text = sqlResultado["fnValorPrima"].ToString();
+                                    txtScorePromedio.Text = sqlResultado["fiScore"].ToString();
+                                    pcIDProducto = sqlResultado["fiIDProducto"].ToString();
+                                    string plazoSeleccionado = sqlResultado["fiPlazo"].ToString() + " Meses";
+
+                                    if (pcIDProducto == "202")
+                                    {
+                                        rbFinanciamiento.Checked = true;
+
+                                        divPrima.Visible = !rbEmpeno.Checked;
+                                        txtValorPrima.Visible = !rbEmpeno.Checked;
+                                        lblPorcenajedePrima.Visible = !rbEmpeno.Checked;
+                                        divMontoFinanciarVehiculo.Visible = rbEmpeno.Checked;
+                                        txtMonto.Enabled = rbEmpeno.Checked;
+
+                                        ddlPlazos.Items.Clear();
+                                        ddlPlazos.Items.Add("12 Meses");
+                                        ddlPlazos.Items.Add("18 Meses");
+                                        ddlPlazos.Items.Add("24 Meses");
+                                        ddlPlazos.Items.Add("36 Meses");
+                                        ddlPlazos.Items.Add("48 Meses");
+                                        ddlPlazos.Items.Add("60 Meses");
+                                        ddlPlazos.SelectedValue = plazoSeleccionado;
+                                    }
+
+                                    if (pcIDProducto == "203")
+                                    {
+                                        rbEmpeno.Checked = true;
+
+                                        divPrima.Visible = !rbEmpeno.Checked;
+                                        txtValorPrima.Visible = !rbEmpeno.Checked;
+                                        lblPorcenajedePrima.Visible = !rbEmpeno.Checked;
+
+                                        divMontoFinanciarVehiculo.Visible = rbEmpeno.Checked;
+                                        txtMonto.Enabled = rbEmpeno.Checked;
+
+                                        ddlPlazos.Items.Clear();
+                                        ddlPlazos.Items.Add("12 Meses");
+                                        ddlPlazos.Items.Add("18 Meses");
+                                        ddlPlazos.Items.Add("24 Meses");
+                                        ddlPlazos.Items.Add("30 Meses");
+                                        ddlPlazos.SelectedValue = plazoSeleccionado;
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MostrarMensaje("No se pudo cargar la ultima cotización del cliente: " + pcID);
+                            }
+                        }
+                    }
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -988,8 +985,274 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
         }
     }
 
-    // si no encutro la solucion a eso, ocultar y mostrar la solicitud de la identidad
+
+    /* Guardar o actualizar negociacion en la base de datos */
+    private void GuardarNegociacion(decimal tasa, decimal cuotaPrestamo, decimal serivicioGPS, decimal seguro, decimal gastosDeCierre, decimal montoFinanciar)
+    {
+        try
+        {
+            /* Cambiarle el nombre al documento */
+            DocumentoNegociacion.fcNombreArchivo = GenerarNombreDocumento();
+            DocumentoNegociacion.URLArchivo = "/Documentos/Negociaciones/Negociacion_" + pcID + "/" + DocumentoNegociacion.fcNombreArchivo + ".png";
+
+            using (var context = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["conexionEncriptada"].ToString())))
+            {
+                context.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDNegociaciones_Maestro_Guardar", context))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
+                    sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                    sqlComando.Parameters.AddWithValue("@piIDProducto", pcIDProducto);
+                    sqlComando.Parameters.AddWithValue("@piIDTipoNegociacion", 1);
+                    sqlComando.Parameters.AddWithValue("@pnValorGarantia", txtValorVehiculo.Text);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", txtValorPrima.Text);
+                    sqlComando.Parameters.AddWithValue("@pnMontoFinanciar", montoFinanciar);
+                    sqlComando.Parameters.AddWithValue("@piIDMoneda", 1);
+                    sqlComando.Parameters.AddWithValue("@piScore", txtScorePromedio.Text.Trim());
+                    sqlComando.Parameters.AddWithValue("@pnTasa", tasa);
+                    sqlComando.Parameters.AddWithValue("@piIDTipoDeTasa", 1);
+                    sqlComando.Parameters.AddWithValue("@piPlazo", ddlPlazos.Text.Substring(0, 3).Trim());
+                    sqlComando.Parameters.AddWithValue("@pnCuotaDelPrestamo", cuotaPrestamo);
+                    sqlComando.Parameters.AddWithValue("@pnServicioGPS", serivicioGPS);
+                    sqlComando.Parameters.AddWithValue("@pnSeguro", seguro);
+                    sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", gastosDeCierre);
+                    sqlComando.Parameters.AddWithValue("@piIDOrigenGarantia", ddlOrigen.SelectedValue);
+                    sqlComando.Parameters.AddWithValue("@pcNombreVendedorGarantia", txtVendedor.Text.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDAutolote", ddlAutolote.SelectedValue);
+                    sqlComando.Parameters.AddWithValue("@piIDMarca", ddlMarca.SelectedValue);
+                    sqlComando.Parameters.AddWithValue("@piIDModelo", ddlModelo.SelectedValue);
+                    sqlComando.Parameters.AddWithValue("@piAnio", txtAnio.Text.Replace(",", "").Trim() == "" ? "0" : txtAnio.Text.Replace(",", "").Trim());
+                    sqlComando.Parameters.AddWithValue("@pcMatricula", txtMatricula.Text.Trim());
+                    sqlComando.Parameters.AddWithValue("@pcColor", txtColor.Text.Trim());
+                    sqlComando.Parameters.AddWithValue("@pnRecorrido", txtRecorrido.Text.Replace(",", "").Trim() == "" ? "0" : txtRecorrido.Text.Replace(",", "").Trim());
+                    sqlComando.Parameters.AddWithValue("@piUnidadDeDistancia", ddlUnidadDeMedida.SelectedValue);
+                    sqlComando.Parameters.AddWithValue("@pcDetalleGarantia", txtDetallesGarantia.Value.Trim());
+                    sqlComando.Parameters.AddWithValue("@pcNombreFotografia", DocumentoNegociacion.fcNombreArchivo);
+                    sqlComando.Parameters.AddWithValue("@pcRutaFotografia", DocumentoNegociacion.fcRutaArchivo);
+                    sqlComando.Parameters.AddWithValue("@pcURLFotografia", DocumentoNegociacion.URLArchivo);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            string idNegociacionGuardada = sqlResultado["MensajeError"].ToString();
+                            if (!idNegociacionGuardada.StartsWith("-1"))
+                            {
+                                if (!GuardarDocumentosNegociacion(DocumentoNegociacion))
+                                {
+                                    MostrarMensajeNegociacion("No se pudo guardar la documentación de la negociación");
+                                }
+                                
+                                if (!ImprimirNegociacionPDF(tasa, cuotaPrestamo, serivicioGPS, seguro, gastosDeCierre, montoFinanciar))
+                                {
+                                    MostrarMensajeNegociacion("No se pudo descargar el PDF de la negociación");
+                                }
+
+                                /* Mostrar mensaje de exito */
+                                if (MostrarMensajeConfirmacion)
+                                {
+                                    NegociacionGuardadCorrectamente();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            MostrarMensajeNegociacion("Error al guardar negociación: " + ex.Message.ToString());
+        }
+    }
+
+
+    /* Descargar negociacion en PDF */
+    private bool ImprimirNegociacionPDF(decimal tasa, decimal cuotaPrestamo, decimal serivicioGPS, decimal valorSeguro, decimal gastosDeCierre, decimal montoFinanciar)
+    {
+        if (!ImprimirNegociacion)
+        {
+            return true;
+        }
+        else
+        {
+            try
+            {
+                lblClienteNegociacion.Text = txtNombreCliente.Text;
+                lblTelefonoClienteNegociacion.Text = txtTelefonoCliente.Text;
+                lblIdentidadClienteNegociacion.Text = txtIdentidadCliente.Text;
+
+                lblFechaNegociacion.Text = DateTime.Now.ToString("MM/dd/yyyy");
+                lblOficialNegociosNegociacion.Text = NombreVendedor;
+                lblCentroDeCostoNegociacion.Text = "";
+                //lblTelefonoVendedor.Text = telefonoVendedor;
+                //lblCorreoVendedor.Text = correoVendedor;
+
+                lblValorVehiculoNegociacion.Text = "L " + string.Format("{0:#,###0.00}", txtValorVehiculo.Text);
+                lblPrimaNegociacion.Text = "L " + string.Format("{0:#,###0.00}", txtValorPrima.Text);
+                lblMontoFinanciarNegociacion.Text = "L " + string.Format("{0:#,###0.00}", montoFinanciar);
+                lblScoreNegociacion.Text = string.Format("{0:#,###0}", txtScorePromedio.Text);
+                lblTasaMensualNegociacion.Text = string.Format("{0:#,###0.00}", tasa.ToString()) + "%";
+                lblPlazoNegociacion.Text = ddlPlazos.Text;
+                lblCuotaDelPrestamoNegociacion.Text = "L " + string.Format("{0:#,###0.00}", cuotaPrestamo);
+                lblGPSNegociacion.Text = RespuestaLogica(serivicioGPS);
+                lblValorGPSNegociacion.Text = "L " + string.Format("{0:#,###0.00}", serivicioGPS);
+                lblSeguroNegociacion.Text = RespuestaLogica(valorSeguro);
+                lblValorSeguroNegociacion.Text = "L " + string.Format("{0:#,###0.00}", valorSeguro);
+                lblGastosDeCierreNegociacion.Text = RespuestaLogica(gastosDeCierre);
+                lblMontoGastosDeCierreNegociacion.Text = "L " + string.Format("{0:#,###0.00}", gastosDeCierre);
+
+                lblMarca.Text = ddlMarca.Text;
+                lblModelo.Text = ddlModelo.Text;
+                lblAnio.Text = txtAnio.Text;
+                lblMatricula.Text = txtMatricula.Text;
+
+                lblColor.Text = txtColor.Text;
+                lblCilindraje.Text = txtCilindraje.Text;
+                lblUnidadDeMedidaRecorrido.Text = ddlUnidadDeMedida.Text;
+                lblRecorrido.Text = txtRecorrido.Text;
+                lblOrigenGarantia.Text = ddlOrigen.Text;
+                lblVendedorGarantia.Text = txtVendedor.Text;
+                lblAutolote.Text = ddlAutolote.Text;
+                imgVehiculoNegociacion.ImageUrl = @"http://172.20.3.140/" + DocumentoNegociacion.URLArchivo;
+                tblRequisitosFinanciamiento.Visible = rbFinanciamiento.Checked;
+                tblRequisitosFinanciamientoConGarantia.Visible = rbEmpeno.Checked;
+                //lblUsuarioImprime.Text = usuarioImprime;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+                return false;
+            }
+        }
+    }
+
+
+    private void NegociacionGuardadCorrectamente()
+    {
+        /* Negociacion guardada correctamente */
+        pcID = "";
+        txtNombreCliente.Text = "";
+        txtIdentidadCliente.Text = "";
+        txtTelefonoCliente.Text = "";
+        ddlMarca.SelectedValue = "0";
+        ddlModelo.Items.Clear();
+        ddlModelo.Items.Add(new ListItem("Seleccione una marca", "0"));
+        ddlModelo.Enabled = false;
+
+        txtAnio.Text = "";
+        txtMatricula.Text = "";
+        txtColor.Text = "";
+        txtCilindraje.Text = "";
+        txtRecorrido.Text = "";
+        //ddlUnidadDeMedida.SelectedValue = "0";
+        //ddlOrigen.SelectedValue = "0";
+        txtVendedor.Text = "";
+        //ddlAutolote.SelectedValue = "0";
+        DocumentoNegociacion = new NegociacionesDocumentosViewModel();
+        txtDetallesGarantia.Value = "";
+
+        txtValorVehiculo.Text = string.Empty;
+        txtValorPrima.Text = string.Empty;
+        lblPorcenajedePrima.Visible = false;
+        txtMonto.Text = string.Empty;
+        txtScorePromedio.Text = string.Empty;
+        rbEmpeno.Checked = false;
+        rbFinanciamiento.Checked = false;
+        ddlPlazos.Items.Clear();
+
+        PanelCreditos1.Visible = false;
+        divNuevoCalculo.Visible = false;
+        divParametros.Visible = true;
+
+        ImprimirNegociacion = true;
+        GuardarDocumentoNegociacion = true;
+        MostrarMensajeConfirmacion = true;
+
+        string script = "NegociacionGuardadaCorrectamente();";
+        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "_self", script, true);
+    }
+
+
+    /* Guardar documentos de la negociacion en su respectivo directorio */
+    public static bool GuardarDocumentosNegociacion(NegociacionesDocumentosViewModel DocumentoNegociacion)
+    {
+        bool result;
+        try
+        {
+            if (DocumentoNegociacion != null && GuardarDocumentoNegociacion == true)
+            {
+                /* Crear el nuevo directorio para los documentos de la negociacion */
+                string DirectorioTemporal = @"C:\inetpub\wwwroot\Documentos\Negociaciones\Temp\";
+                string NombreCarpetaDocumentos = "Negociacion_" + pcID;
+                string DirectorioDocumentos = @"C:\inetpub\wwwroot\Documentos\Negociaciones\" + NombreCarpetaDocumentos + "\\";
+                bool CarpetaExistente = Directory.Exists(DirectorioDocumentos);
+
+                if (!CarpetaExistente)
+                    Directory.CreateDirectory(DirectorioDocumentos);
+
+                string ViejoDirectorio = DirectorioTemporal + DocumentoNegociacion.NombreAntiguo;
+                string NuevoNombreDocumento = DocumentoNegociacion.fcNombreArchivo;
+                string NuevoDirectorio = DirectorioDocumentos + NuevoNombreDocumento + ".png";
+
+                if (File.Exists(ViejoDirectorio))
+                    File.Move(ViejoDirectorio, NuevoDirectorio);
+            }
+            result = true;
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            result = false;
+        }
+        return result;
+    }
+
+
+    /* Generar nombre de documentos */
+    public static string GenerarNombreDocumento()
+    {
+        string lcBloqueFechaHora;
+        string lcRespuesta;
+        lcBloqueFechaHora = System.DateTime.Now.ToString("yyyy-mm-dd hh:mm:ss");
+        lcBloqueFechaHora = lcBloqueFechaHora.Replace("-", "");
+        lcBloqueFechaHora = lcBloqueFechaHora.Replace(":", "");
+        lcBloqueFechaHora = lcBloqueFechaHora.Replace(" ", "T");
+        lcRespuesta = "N" + "-" + lcBloqueFechaHora;
+        return lcRespuesta;
+    }
+
+
     #endregion
+
+
+    protected void MostrarMensaje(string mensaje)
+    {
+        PanelMensajeErrores.Visible = true;
+        lblMensaje.Visible = true;
+        lblMensaje.Text = mensaje;
+    }
+
+
+    protected void MostrarMensajeNegociacion(string mensaje)
+    {
+        PanelMensajeGuardarNegociacion.Visible = true;
+        lblMensajeGuardarNegociacion.Visible = true;
+        lblMensajeGuardarNegociacion.Text = mensaje;
+    }
+
+
+    private string RespuestaLogica(decimal cantidad)
+    {
+        return cantidad > 0 ? "SI" : "NO";
+    }
 }
 
 public class NegociacionesDocumentosViewModel
