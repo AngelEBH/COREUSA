@@ -45,7 +45,7 @@ TABLES OF CSS
 
 
 */
-@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600");
+/*@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600");*/
 /* ======
 01. General
    ====== */
@@ -55,7 +55,7 @@ TABLES OF CSS
 body {
   background-repeat: repeat;
   background: #f5f5f5;
-  font-family: "Poppins", sans-serif;
+  font-family: "Microsoft Tai Le";
   color: #5b626b;
   font-size: 13px;
 }

@@ -788,6 +788,7 @@
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Ingresadas.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ListaMantenimiento.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Mantenimiento.aspx" />
+    <Content Include="Forms\Solicitudes\SolicitudesCredito_NoAsignadas.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Precalificar.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_RegistradaDetalles.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Registrar.aspx" />
@@ -1580,6 +1581,13 @@
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Mantenimiento.aspx.designer.cs">
       <DependentUpon>SolicitudesCredito_Mantenimiento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_NoAsignadas.aspx.cs">
+      <DependentUpon>SolicitudesCredito_NoAsignadas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_NoAsignadas.aspx.designer.cs">
+      <DependentUpon>SolicitudesCredito_NoAsignadas.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Precalificar.aspx.cs">
       <DependentUpon>SolicitudesCredito_Precalificar.aspx</DependentUpon>

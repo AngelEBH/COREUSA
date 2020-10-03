@@ -122,7 +122,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 //if((string)reader["fcRTN"] != "")
                 //    rtnCliente.Enabled = false;
 
-                int tipoDeSolicitud = (int)reader["fiTipoSolicitudCliente"];
+                int tipoDeSolicitud = (byte)reader["fiTipoSolicitudCliente"];
                 tipoSolicitud.Text = tipoDeSolicitud == 1 ? "NUEVO" : tipoDeSolicitud == 2 ? "REFINANCIAMIENTO" : tipoDeSolicitud == 3 ? "RECOMPRA" : "";
                 CLTIdentidad = (string)reader["fcIdentidad"];
                 objPrecalificado = new PrecalificadoViewModel()
@@ -137,7 +137,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     ingresos = Decimal.Parse(reader["fnIngresos"].ToString()),
                     disponible = Decimal.Parse(reader["fnCapacidadDisponible"].ToString()),
                     fechaNacimiento = DateTime.Parse(reader["fdFechadeNacimiento"].ToString()),
-                    tipoSolicitud = (int)reader["fiTipoSolicitudCliente"],
+                    tipoSolicitud = (byte)reader["fiTipoSolicitudCliente"],
                     tipoProducto = (int)reader["fiIDProducto"],
                     Producto = (string)reader["fcProducto"]
                 };

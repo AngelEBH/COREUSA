@@ -1237,15 +1237,6 @@ public partial class Negociaciones_Registrar
     protected global::System.Web.UI.WebControls.Label lblAutolote;
 
     /// <summary>
-    /// Control imgVehiculoNegociacion.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Image imgVehiculoNegociacion;
-
-    /// <summary>
     /// Control tblRequisitosFinanciamiento.
     /// </summary>
     /// <remarks>
@@ -1262,6 +1253,15 @@ public partial class Negociaciones_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl tblRequisitosFinanciamientoConGarantia;
+
+    /// <summary>
+    /// Control imgVehiculoNegociacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Image imgVehiculoNegociacion;
 
     /// <summary>
     /// Control updateProgress.

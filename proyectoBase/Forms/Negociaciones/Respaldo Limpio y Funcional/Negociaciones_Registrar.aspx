@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" EnableEventValidation="false" CodeFile="Negociaciones_Registrar.aspx.cs" Inherits="Negociaciones_Registrar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" EnableEventValidation="false" CodeBehind="Negociaciones_Registrar.aspx.cs" Inherits="Negociaciones_Registrar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -138,7 +138,7 @@
                                     </div>
                                     <div class="form-group row mb-0">
                                         <div class="button-items col-sm-12">
-                                            <asp:Button ID="btnCalcular" Text="Calcular" CssClass="btn btn-primary btn-lg btn-block waves-effect waves-light" UseSubmitBehavior="false" runat="server" OnClick="btnCalcular_Click" />
+                                            <asp:Button ID="btnCalcular" Text="Calcular" CssClass="btn btn-primary btn-lg btn-block waves-effect waves-light" runat="server" OnClick="btnCalcular_Click" />
                                         </div>
                                     </div>
                                 </asp:Panel>
@@ -174,7 +174,7 @@
                                                     <label class="col-form-label">Valor del prestamo (<span class="text-xs"><asp:Label CssClass="col-form-label p-0 font-weight-bold align-self-center" ID="lblEtiqueta1" runat="server" Text="" /></span>)</label>
                                                 </div>
                                                 <div class="col-2 justify-content-end">
-                                                    <asp:Button ID="btnDescargarCotizacion" runat="server" OnClick="btnDescargarCotizacion_Click" UseSubmitBehavior="false" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
+                                                    <asp:Button ID="btnDescargarCotizacion" runat="server" OnClick="btnDescargarCotizacion_Click" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
                                                 </div>
                                                 <div class="col-12">
                                                     <asp:TextBox ID="txtValorPrestamo1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
@@ -214,7 +214,7 @@
                                                     <label class="col-form-label">Valor del prestamo (<span class="text-xs"><asp:Label CssClass="col-form-label p-0 font-weight-bold align-self-center" ID="lblEtiqueta2" runat="server" Text="" /></span>)</label>
                                                 </div>
                                                 <div class="col-2">
-                                                    <asp:Button ID="btnDescargarCotizacion2" runat="server" OnClick="btnDescargarCotizacion2_Click" UseSubmitBehavior="false" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
+                                                    <asp:Button ID="btnDescargarCotizacion2" runat="server" OnClick="btnDescargarCotizacion2_Click" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
                                                 </div>
                                                 <div class="col-12">
                                                     <asp:TextBox ID="txtValorPrestamo2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
@@ -251,9 +251,9 @@
                                     <!-- Boton para Nueva cotización -->
                                     <div class="form-group row m-0" runat="server" id="divNuevoCalculo" visible="false">
                                         <div class="button-items col-sm-12 p-0 text-center">
-                                            <asp:Button ID="btnNuevaCotizacion" Text="Nueva cotización" CssClass="btn btn-primary waves-effect waves-light m-0" UseSubmitBehavior="false" runat="server" OnClick="btnNuevaCotizacion_Click" />
+                                            <asp:Button ID="btnNuevaCotizacion" Text="Nueva cotización" CssClass="btn btn-primary waves-effect waves-light m-0" runat="server" OnClick="btnNuevaCotizacion_Click" />
 
-                                            <asp:Button ID="btnModalGuardarNegociacion" Text="Guardar negociación" CssClass="btn btn-primary waves-effect waves-light m-0" UseSubmitBehavior="false" runat="server" OnClick="btnModalGuardarNegociacion_Click" />
+                                            <asp:Button ID="btnModalGuardarNegociacion" Text="Guardar negociación" CssClass="btn btn-primary waves-effect waves-light m-0" runat="server" OnClick="btnModalGuardarNegociacion_Click" />
                                         </div>
                                     </div>
                                 </asp:Panel>
@@ -288,8 +288,8 @@
                                     <ContentTemplate>
 
                                         <asp:Panel ID="divInformacionNegociacion" runat="server" Visible="false">
-                                            <!-- INFORMACION DEL CLIENTE -->
                                             <div class="form-group form-row">
+                                                <!-- INFORMACION DEL CLIENTE -->
                                                 <div class="col-12">
                                                     <label class="col-form-label">Cliente</label>
                                                     <asp:TextBox ID="txtNombreCliente" Enabled="false" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
@@ -303,8 +303,6 @@
                                                     <asp:TextBox ID="txtTelefonoCliente" type="tel" Enabled="false" CssClass="form-control form-control-sm col-form-label telefono" Text="" runat="server"></asp:TextBox>
                                                 </div>
                                             </div>
-
-                                            <!-- TIPO DE GASTOS DE CIERRE -->
                                             <div class="form-group">
                                                 <div>
                                                     <div class="form-check form-check-inline">
@@ -388,7 +386,7 @@
                                                 <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensajeGuardarNegociacion" runat="server" Text=""></asp:Label>
                                             </div>
                                             <div class="modal-footer">
-                                                <asp:Button ID="btnGuardarNegociacion" Text="Confirmar" CssClass="btn btn-primary waves-effect waves-light" UseSubmitBehavior="false" OnClick="btnGuardarNegociacion_Click" runat="server" />
+                                                <asp:Button ID="btnGuardarNegociacion" Text="Confirmar" CssClass="btn btn-primary waves-effect waves-light" OnClick="btnGuardarNegociacion_Click" runat="server" />
 
                                                 <button type="button" data-dismiss="modal" class="btn btn-secondary waves-effect">
                                                     Cancelar
@@ -430,7 +428,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <asp:Button ID="btnBuscarIdentidadCliente" Text="Buscar" CausesValidation="false" UseSubmitBehavior="false" CssClass="btn btn-primary waves-effect waves-light" OnClick="btnBuscarIdentidadCliente_Click" runat="server" />
+                                            <asp:Button ID="btnBuscarIdentidadCliente" Text="Buscar" CausesValidation="false" CssClass="btn btn-primary waves-effect waves-light" OnClick="btnBuscarIdentidadCliente_Click" runat="server" />
 
                                             <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
                                                 Cancelar
@@ -474,7 +472,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <asp:Button ID="btnPrecalificarCliente" CausesValidation="false" Text="Precalificar ahora" CssClass="btn btn-primary waves-effect waves-light" UseSubmitBehavior="false" OnClick="btnPrecalificarCliente_Click" runat="server" />
+                                            <asp:Button ID="btnPrecalificarCliente" CausesValidation="false" Text="Precalificar ahora" CssClass="btn btn-primary waves-effect waves-light" OnClick="btnPrecalificarCliente_Click" runat="server" />
 
                                             <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
                                                 Cancelar
@@ -830,7 +828,6 @@
                                     </div>
 
                                     <div class="row">
-
                                         <div class="col-5">
                                             <!-- Características del vehículo -->
                                             <table class="table table-bordered" style="width: 100%">
@@ -902,21 +899,7 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
 
-                                        <!-- Fotografía del vehiculo -->
-                                        <div class="col-7">
-                                            <figure class="text-center">
-                                                <asp:Image ID="imgVehiculoNegociacion" CssClass="img-fluid" runat="server" Style="max-width: 100%; max-height: 100%;" />
-                                                <figcaption>Fotografía del vehículo</figcaption>
-                                            </figure>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row">
-                                        <!-- Requisitos para financiamiento y financiamiento con garantía -->
-                                        <div class="col-5">
                                             <!-- Tablas requisitos para financimiento -->
                                             <div class="col-12 p-0" runat="server" visible="false" id="tblRequisitosFinanciamiento">
                                                 <table class="table table-bordered text-center pl-0" style="width: 100%">
@@ -967,13 +950,20 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <!-- Firma del cliente -->
-                                        <div class="col-7 align-self-end text-center">
-                                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
-                                            <label class="mt-0 ">Firma del cliente</label>
+                                        <!-- Fotografía del vehiculo -->
+                                        <div class="col-7">
+                                            <figure class="text-center">
+                                                <asp:Image ID="imgVehiculoNegociacion" CssClass="img-fluid" runat="server" Style="max-width: 100%; max-height: 100%;" />
+                                                <figcaption>Fotografía del vehículo</figcaption>
+                                            </figure>
+
+                                            <!-- Firma del cliente -->
+                                            <div class="col-12 align-self-end text-center mt-5">
+                                                <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                                                <label class="mt-0 ">Firma del cliente</label>
+                                            </div>
                                         </div>
                                     </div>
-
                                     <div class="col-12 text-center p-0 mt-3">
                                         <label class="">Para más información llama al 2540-1050</label>
                                         <h6 class="font-weight-bold mt-1">¡Porque no importa la ocasión, PRESTADITO ES LA SOLUCIÓN!</h6>
