@@ -32,100 +32,149 @@
     </style>
 </head>
 <body class="EstiloBody-Listado-W1100px">
-    <div class="card">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-8">
-                    <h6>Pre Solicitudes</h6>
-                </div>
-                <div class="col-4">
-                    <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
-                        aria-label="Buscar" />
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
-
-            <div class="form-inline justify-content-center">
-                <div class="form-group mb-2">
-                    <label class="form-control-plaintext">Búsqueda por Mes</label>
-                </div>
-                <div class="form-group mx-sm-3 mb-2">
-                    <select id="mesIngreso" class="form-control form-control-sm">
-                        <option value="" selected="selected">Seleccionar</option>
-                        <option value="01">Enero</option>
-                        <option value="02">Febrero</option>
-                        <option value="03">Marzo</option>
-                        <option value="04">Abril</option>
-                        <option value="05">Mayo</option>
-                        <option value="06">Junio</option>
-                        <option value="07">Julio</option>
-                        <option value="08">Agosto</option>
-                        <option value="09">Septiembre</option>
-                        <option value="10">Octubre</option>
-                        <option value="11">Noviembre</option>
-                        <option value="12">Diciembre</option>
-                    </select>
-                </div>
-
-                <div class="form-group mb-2">
-                    <label class="form-control-plaintext">Búsqueda por Año</label>
-                </div>
-                <div class="form-group mx-sm-3 mb-2">
-                    <input id="añoIngreso" class="form-control form-control-sm" type="text" />
-                </div>
-
-                <div class="form-group mb-2">
-                    <label class="form-control-plaintext">Búsqueda por Fecha</label>
-                </div>
-                <div class="form-group mx-sm-3 mb-2 col-sm-2">
-                    <div class="input-daterange input-group" id="date-range">
-                        <input type="text" class="form-control form-control-sm" name="min" id="min" />
-                        <input type="text" class="form-control form-control-sm" name="max" id="max" />
+    <form runat="server">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-8">
+                        <h6>Pre Solicitudes</h6>
+                    </div>
+                    <div class="col-4">
+                        <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
+                            aria-label="Buscar" />
                     </div>
                 </div>
             </div>
+            <div class="card-body">
 
-            <table id="datatable-presolicitudes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
-                <thead>
-                    <tr>
-                        <th>Identidad</th>
-                        <th>Nombre cliente</th>
-                        <th>Fecha</th>
-                        <th>CC</th>
-                        <th>Gestor</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+                <div class="form-inline justify-content-center">
+                    <div class="form-group mb-2">
+                        <label class="form-control-plaintext">Búsqueda por Mes</label>
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <select id="mesIngreso" class="form-control form-control-sm">
+                            <option value="" selected="selected">Seleccionar</option>
+                            <option value="01">Enero</option>
+                            <option value="02">Febrero</option>
+                            <option value="03">Marzo</option>
+                            <option value="04">Abril</option>
+                            <option value="05">Mayo</option>
+                            <option value="06">Junio</option>
+                            <option value="07">Julio</option>
+                            <option value="08">Agosto</option>
+                            <option value="09">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label class="form-control-plaintext">Búsqueda por Año</label>
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input id="añoIngreso" class="form-control form-control-sm" type="text" />
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label class="form-control-plaintext">Búsqueda por Fecha</label>
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2 col-sm-2">
+                        <div class="input-daterange input-group" id="date-range">
+                            <input type="text" class="form-control form-control-sm" name="min" id="min" />
+                            <input type="text" class="form-control form-control-sm" name="max" id="max" />
+                        </div>
+                    </div>
+                </div>
+
+                <table id="datatable-presolicitudes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                    <thead>
+                        <tr>
+                            <th>Identidad</th>
+                            <th>Nombre cliente</th>
+                            <th>Fecha</th>
+                            <th>CC</th>
+                            <th>Gestor</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <!--modal de confirmacion de actualizar una solicitud condicionada -->
-    <div id="modalActualizarSolicitud" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalActualizarSolicitudLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalActualizarSolicitudLabel">Detalles</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-                    
-                </div>
-                <div class="modal-footer">
-                    <button id="btnActualizar" class="btn btn-primary waves-effect waves-light">
-                        Confirmar
-                    </button>
-                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                        Cancelar
-                    </button>
+        <!--modal de confirmacion de actualizar una solicitud condicionada -->
+        <div id="modalDetalles" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalActualizarSolicitudLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title mt-0" id="modalActualizarSolicitudLabel">Detalles</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <h5 class="border-bottom pb-2">Guardar Pre-Solicitud</h5>
+
+                        <!-- INFORMACION DEL CLIENTE -->
+                        <div class="form-group form-row">
+                            <div class="col-12">
+                                <label class="col-form-label">Cliente</label>
+                                <asp:TextBox ID="txtNombreCliente" Enabled="false" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-6">
+                                <label class="col-form-label">Identidad</label>
+                                <asp:TextBox ID="txtIdentidadCliente" Enabled="false" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-6">
+                                <label class="col-form-label">Teléfono</label>
+                                <asp:TextBox ID="txtTelefonoCliente" type="tel" Enabled="false" CssClass="form-control form-control-sm col-form-label mascara-telefono" Text="" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-row">
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Departamento</label>
+                                <asp:DropDownList ID="ddlDepartamento" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Municipio</label>
+                                <asp:DropDownList ID="ddlMunicipio" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Ciudad/Poblado</label>
+                                <asp:DropDownList ID="ddlCiudad" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Barrio/Colonia</label>
+                                <asp:DropDownList ID="ddlBarrioColonia" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-row">
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Detalle dirección</label>
+                                <asp:TextBox ID="txtDireccionDetallada" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Teléfono casa</label>
+                                <asp:TextBox ID="txtTelefonoCasa" type="tel" CssClass="form-control form-control-sm col-form-label mascara-telefono" Text="" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-12">
+                                <label class="col-form-label">Referencias del domicilio</label>
+                                <textarea id="txtReferenciasDomicilio" runat="server" class="form-control" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->

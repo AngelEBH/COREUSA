@@ -58,7 +58,12 @@ $(document).ready(function () {
                 }
             },
             { "data": "Agencia" },
-            { "data": "GestorValidador" },
+            {
+                "data": "GestorValidador",
+                "render": function (value) {
+                    return value == '' ? 'No Asingado' : value;
+                }
+            },
             {
                 "data": "IdEstadoPreSolicitud",
                 "render": function (data, type, row) {
@@ -156,10 +161,10 @@ $(document).on('click', 'button#btnDetalles', function () {
 
             if (data.d != "-1") {
 
-                MensajeError('Esta opción sigue en desarrollo...');
+                $("#modalDetalles").modal();
             }
             else {
-                MensajeError('Esta opción sigue en desarrollo...');
+                MensajeError('No se pudo cargar los detalles de la pre solicitud, contacte al administrador.');
             }
         }
     });

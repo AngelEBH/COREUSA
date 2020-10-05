@@ -173,7 +173,29 @@ public class PreSolicitud_Listado_ViewModel
     public string NombreCliente { get; set; }
     public int? IdGestorValidador { get; set; }
     public string GestorValidador { get; set; }
-    public int  IdUsuarioCra { get; set; }
+    public int IdUsuarioCra { get; set; }
+    public string UsuarioCrea { get; set; }
+    public DateTime? FechaCreacion { get; set; }
+    public int IdUsuarioUltimaModificacion { get; set; }
+    public string UsuarioUltimaMoficiacion { get; set; }
+    public DateTime? FechaUltimaModificacion { get; set; }
+    public int IdEstadoPreSolicitud { get; set; }
+    public string EstadoPreSolicitud { get; set; }
+    public int EstadoFavorable { get; set; }
+}
+
+public class PreSolicitud_Detalles_ViewModel
+{
+    public int IdPreSolicitud { get; set; }
+    public int IdPais { get; set; }
+    public int IdCanal { get; set; }
+    public string CentroDeCosto { get; set; }
+    public string Agencia { get; set; }
+    public string IdentidadCliente { get; set; }
+    public string NombreCliente { get; set; }
+    public int? IdGestorValidador { get; set; }
+    public string GestorValidador { get; set; }
+    public int IdUsuarioCra { get; set; }
     public string UsuarioCrea { get; set; }
     public DateTime? FechaCreacion { get; set; }
     public int IdUsuarioUltimaModificacion { get; set; }
