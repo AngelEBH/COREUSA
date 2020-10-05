@@ -69,8 +69,8 @@
                 fcPuestoAsignado: $("#puestoAsignado").val(),
                 fcFechaIngreso: $("#fechaIngreso").val(),
                 fdTelefonoEmpresa: $("#telefonoEmpresa").val(),
-                fcExtensionRecursosHumanos: $("#extensionRRHH").val().replace(/_/g, ''),
-                fcExtensionCliente: $("#extensionCliente").val().replace(/_/g, ''),
+                fcExtensionRecursosHumanos: $("#extensionRRHH").val(),
+                fcExtensionCliente: $("#extensionCliente").val(),
                 fiCiudadEmpresa: $("#ciudadEmpresa").val(),
                 fiIDBarrioColonia: $("#barrioColoniaEmpresa :selected").val(),
                 fiIDDepto: $("#departamentoEmpresa :selected").val(),
@@ -466,7 +466,7 @@ function LlenarListas() {
             var divEstadoCivil = $("#divEstadoCivil");
             $.each(data.d.EstadosCiviles, function (i, iter) {
                 divEstadoCivil.append("<div class='form-check form-check-inline'>" +
-                    "<input data-info='" + iter.fbRequiereInformacionConyugal + "' class='form-check-input' required='required' type='radio' name ='estadoCivil' value='" + iter.fiIDEstadoCivil + "'>" +
+                    "<input data-info='" + iter.fbRequiereInformacionConyugal + "' class='form-check-input' type='radio' name ='estadoCivil' value='" + iter.fiIDEstadoCivil + "'>" +
                     "<label class='form-check-label'>" + iter.fcDescripcionEstadoCivil + "</label>" +
                     "</div>");
             });
@@ -489,13 +489,13 @@ function LlenarListas() {
                 departamentoDdl.append("<option value='" + iter.fiIDDepto + "'>" + iter.fcNombreDepto + "</option>");// llenar lista desplegable de departamentos
             });
 
-            $("#municipio").append("<option value=''>Seleccione un depto.</option>");// llenar lista de municipios
+            $("#municipio").append("<option value=''>Seleccione un depto.</option>");// llenar lista de municipios 
             ListaMunicipios = [];
 
             $("#ciudad").append("<option value=''>Seleccione un municipio</option>");// llenar lista de ciudades
             ListaCiudades = [];
 
-            $("#barrioColonia").append("<option value=''>Seleccione una ciudad</option>");// llenar lista de barrios y colonias
+            $("#barrioColonia").append("<option value=''>Seleccione una ciudad</option>");// llenar lista de barrios y colonias 
             ListaBarriosColonias = [];
 
             var departamentoEmpresaDdl = $("#departamentoEmpresa"); // llenar lista de departamentos de cliente informacion laboral
@@ -743,8 +743,8 @@ function VerificarExistenciaCliente() {
         }
     });
 
-    /* verificar que no hayan respaldos ANTERIORES de solicitudes de clientes diferentes al actual, si las identidades no coinciden, quiere decir que son clientes diferentes,
-    * entonces se borraran los respaldos ANTERIORES y se iniciará el proceso de ingreso como una solicitud completamento nueva
+    /* verificar que no hayan respaldos ANTERIORES de solicitudes de clientes diferentes al actual, si las identidades no coinciden, quiere decir que son clientes diferentes, 
+     * entonces se borraran los respaldos ANTERIORES y se iniciará el proceso de ingreso como una solicitud completamento nueva
     */
     var RespaldoInformacionPrestamo = JSON.parse(localStorage.getItem('RespaldoInformacionPrestamo'));
 
@@ -781,7 +781,7 @@ function cargarPrecalificado() {
 }
 
 function cargarPrestamosSugeridosPrima(valorProducto, valorPrima) {
-    debugger;
+
     var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
@@ -793,25 +793,16 @@ function cargarPrestamosSugeridosPrima(valorProducto, valorPrima) {
             MensajeError('No se pudo cargar los préstamos sugeridos, contacte al administrador');
         },
         success: function (data) {
-            debugger;
 
             var listaPrestamosSugeridos = data.d.cotizadorProductos;
-
-
-            var capacidadPago = calcularCapacidadPago(objPrecalificado.tipoProducto, objPrecalificado.obligaciones, objPrecalificado.ingresos);
-
-
             var DDLMontosSugeridos = $("#pmosSugeridos");
             DDLMontosSugeridos.empty();
             DDLMontosSugeridos.append("<option selected value='''>Seleccione una opción</option>");
-
-            if (capacidadPago >= listaPrestamosSugeridos[0].fnCuotaQuincenal) {
-                DDLMontosSugeridos.append("<option value='" + listaPrestamosSugeridos[0].fnMontoOfertado + "' data-pmoplz='" + listaPrestamosSugeridos[0].fiPlazo + "'>" + 'Producto: ' + listaPrestamosSugeridos[0].ProductoDescripcion + ' | Monto ofertado: ' + listaPrestamosSugeridos[0].fnMontoOfertado + ' | Plazo ' + listaPrestamosSugeridos[0].TipoCuota + ': ' + listaPrestamosSugeridos[0].fiPlazo + ' | Cuota ' + listaPrestamosSugeridos[0].TipoCuota + ': ' + listaPrestamosSugeridos[0].fnCuotaQuincenal + "</option>");
-            }
+            DDLMontosSugeridos.append("<option value='" + listaPrestamosSugeridos[0].fnMontoOfertado + "' data-pmoplz='" + listaPrestamosSugeridos[0].fiPlazo + "'>" + 'Producto: ' + listaPrestamosSugeridos[0].ProductoDescripcion + ' | Monto ofertado: ' + listaPrestamosSugeridos[0].fnMontoOfertado + ' | Plazo: ' + listaPrestamosSugeridos[0].fiPlazo + ' | Cuota: ' + listaPrestamosSugeridos[0].fnCuotaQuincenal + "</option>");
+            var capacidadPago = calcularCapacidadPago(objPrecalificado.tipoProducto, objPrecalificado.obligaciones, objPrecalificado.ingresos);
             for (var i = 1; i < listaPrestamosSugeridos.length; i++) {
-                if (capacidadPago >= listaPrestamosSugeridos[i].fnCuotaQuincenal) {
-                    DDLMontosSugeridos.append("<option value='" + listaPrestamosSugeridos[i].fnMontoOfertado + "' data-pmoplz='" + listaPrestamosSugeridos[i].fiPlazo + "'>" + 'Producto: ' + listaPrestamosSugeridos[i].ProductoDescripcion + ' | Monto ofertado: ' + listaPrestamosSugeridos[i].fnMontoOfertado + ' | Plazo ' + listaPrestamosSugeridos[i].TipoCuota + ': ' + listaPrestamosSugeridos[i].fiPlazo + ' | Cuota ' + listaPrestamosSugeridos[i].TipoCuota + ': ' + listaPrestamosSugeridos[i].fnCuotaQuincenal + "</option>");
-                }
+                    DDLMontosSugeridos.append("<option value='" + listaPrestamosSugeridos[i].fnMontoOfertado + "' data-pmoplz='" + listaPrestamosSugeridos[i].fiPlazo + "'>" + 'Producto: ' + listaPrestamosSugeridos[i].ProductoDescripcion + ' | Monto ofertado: ' + listaPrestamosSugeridos[i].fnMontoOfertado + ' | Plazo ' + listaPrestamosSugeridos[i].TipoCuota + ': ' + listaPrestamosSugeridos[i].fiPlazo + ' | Cuota ' + listaPrestamosSugeridos[i].TipoCuota +': ' + listaPrestamosSugeridos[i].fnCuotaQuincenal + "</option>");
+                
             }
             $("#titlePrestamosSugeridos,#divPmosSugeridos").css('display', '');
         }
@@ -832,8 +823,8 @@ function recuperarInformacionPrecalificado(objPrecalificado) {
     $("#tipoPrestamo,#btnBuscarCliente,#rtnCliente,#identidadCliente,#primerNombreCliente,#SegundoNombreCliente,#primerApellidoCliente,#segundoApellidoCliente,#ingresosPrecalificado,#ingresosMensuales,#numeroTelefono,#telefonoMovil,#fechaNacimiento").prop('disabled', true);
     $("#tipoPrestamo").val(objPrecalificado.Producto);
     $("#tipoPrestamo").data('cod', objPrecalificado.tipoProducto);
-    $("#lblPlazoPMO").text('Plazo ' + objPrecalificado.cotizadorProductos[0].TipoCuota);
-    $("#lblCuotaMaxima").text('Cuota ' + objPrecalificado.cotizadorProductos[0].TipoCuota);
+    $("#lblPlazoPMO").text('Plazo ' + objPrecalificado.TipoCuota);
+    $("#lblCuotaMaxima").text('Cuota ' + objPrecalificado.TipoCuota);
 
     if ($("#tipoPrestamo").data('cod') != '101') {
         cargarOrigenes($("#tipoPrestamo").data('cod')); // cargar origenes de este tipo de producto
@@ -862,6 +853,9 @@ function recuperarInformacionPrecalificado(objPrecalificado) {
     var edad = Math.floor((today - FechaNac) / (365.25 * 24 * 60 * 60 * 1000));
     $('#edadCliente').val(edad + ' años');
     $('#edadCliente').prop('disabled', true);
+
+    debugger;
+    console.log(objPrecalificado);
     listadoCotizaciones = objPrecalificado.cotizadorProductos;
     var DDLMontosSugeridos = $("#pmoSugeridoSeleccionado"); // llenar lista de montos sugeridos
     DDLMontosSugeridos.empty();
@@ -888,7 +882,7 @@ $('#txtValorVehiculo').blur(function () {
         $('#txtPrima').val(prima);
     }
 
-    var totalAFinanciar = valorVehiculo - prima;// calcular total a financiar
+    var totalAFinanciar = valorVehiculo - prima;// calcular total a financiar 
     $('#txtValorFinanciar').val(totalAFinanciar);
 
     var mensajeErrorFinanciar = '';
@@ -909,7 +903,7 @@ $('#txtValorVehiculo').blur(function () {
         $('#txtValorFinanciar').removeClass('text-danger');
     }
 
-    if (mensajeErrorFinanciar == '' && $('#txtPrima').val() != '') { // si no hay errores, cargar nuevas ofertas de prestamos
+    if (mensajeErrorFinanciar == '' && $('#txtPrima').val() != '') { // si no hay errores, cargar nuevas ofertas de prestamos 
         cargarPrestamosSugeridosPrima($("#txtValorVehiculo").val(), $('#txtPrima').val());
     }
 });
@@ -965,7 +959,7 @@ $('#txtPrima').blur(function () {
         $('#txtValorFinanciar').removeClass('text-danger');
     }
 
-    if ($("#txtValorVehiculo").val() != '' && mensajeErrorFinanciar == '') {// si no hay errores, cargar nuevas ofertas de prestamos
+    if ($("#txtValorVehiculo").val() != '' && mensajeErrorFinanciar == '') {// si no hay errores, cargar nuevas ofertas de prestamos 
         cargarPrestamosSugeridosPrima($("#txtValorVehiculo").val(), $('#txtPrima').val());
     }
 });
@@ -1199,8 +1193,8 @@ function cargarInformacionCompletaDelCliente(informacionCliente) {
 
     // cargar respaldos
 
-    /* verificar que no hayan respaldos ANTERIORES de solicitudes de clientes diferentes al actual, si las identidades no coinciden, quiere decir que son clientes diferentes,
-    * entonces se borraran los respaldos ANTERIORES y se iniciará el proceso de ingreso como una solicitud completamento nueva
+    /* verificar que no hayan respaldos ANTERIORES de solicitudes de clientes diferentes al actual, si las identidades no coinciden, quiere decir que son clientes diferentes, 
+     * entonces se borraran los respaldos ANTERIORES y se iniciará el proceso de ingreso como una solicitud completamento nueva
     */
     var RespaldoInformacionPrestamo = JSON.parse(localStorage.getItem('RespaldoInformacionPrestamo'));
 
@@ -1241,7 +1235,7 @@ function cargarInformacionCompletaDelCliente(informacionCliente) {
     });
 }
 
-/* habilitar ddl de municipios de la informacion de domicilio del cliente cuando se seleccione un departamento cliente valido */
+/* habilitar ddl  de municipios de la informacion de domicilio del cliente cuando se seleccione un departamento cliente valido */
 var CODDepto = 0;
 $("#departamento").change(function () {
 
@@ -1582,7 +1576,7 @@ function calcularCapacidadPago(tipoPrestamo, ObligacionesPrecalificado, Ingresos
     else if (tipoPrestamo == '201') {
         capacidadPago = ObligacionesPrecalificado == 0 ? IngresosReales * 0.30 : (IngresosReales - ObligacionesPrecalificado) * 0.30;
     }
-    else if (tipoPrestamo == '202') {
+    else if (tipoPrestamo == '202' || tipoPrestamo == '203') {
         capacidadPago = ObligacionesPrecalificado == 0 ? IngresosReales * 0.40 : (IngresosReales - ObligacionesPrecalificado) * 0.40;
     }
     return capacidadPago.toFixed(2);
@@ -1780,7 +1774,7 @@ function recuperarRespaldos() {
         $("#txtValorVehiculo").val(RespaldoInformacionPrestamo.valorVehiculo);
         $("#txtValorFinanciar").val(RespaldoInformacionPrestamo.valorVehiculo - RespaldoInformacionPrestamo.prima);
         $("#txtMontoPmoEfectivo").val(RespaldoInformacionPrestamo.montoPmoEfectivo);
-        var prestamoSeleccionadoMax = parseFloat($("#pmoSugeridoSeleccionado :selected").val()).toFixed(2);
+
         if ($("#tipoPrestamo").data('cod') == '101') { // si el prestamo requerido es en efectivo, no se requiere prima y el plazo es quincenal
 
             $(".divPrestamoVehiculo").css('display', 'none');
@@ -1793,7 +1787,7 @@ function recuperarRespaldos() {
             $(".divPrestamoEfectivo").css('display', '');
 
             var montoPmoEfectivo = $('#txtMontoPmoEfectivo').val().replace(/,/g, '');
-
+            var prestamoSeleccionadoMax = parseFloat($("#pmoSugeridoSeleccionado :selected").val()).toFixed(2);
             if (montoPmoEfectivo != '') {
                 if (parseFloat(montoPmoEfectivo) <= parseFloat(prestamoSeleccionadoMax)) {
                     cargarPrestamosSugeridosPrima(montoPmoEfectivo, "0"); // cargar oferas de prestamos
@@ -1810,11 +1804,11 @@ function recuperarRespaldos() {
             $("#lblPlazoPMO").text('Plazo');
             $(".divPrestamoVehiculo").css('display', '');
             $("#txtPrima,#txtValorVehiculo").prop('disabled', false);
-            var prima = parseFloat($('#txtPrima').val().replace(/,/g, '') == '' ? 0 : $('#txtPrima').val().replace(/,/g, ''));
-            var valorVehiculo = parseFloat($('#txtValorVehiculo').val().replace(/,/g, '') == '' ? 0 : $('#txtValorVehiculo').val().replace(/,/g, ''));
+            var prima = $('#txtPrima').val().replace(/,/g, '');
+            var valorVehiculo = $('#txtValorVehiculo').val().replace(/,/g, '');
             var totalAFinanciar = valorVehiculo - prima;
             $('#txtValorFinanciar').val(totalAFinanciar);
-            if (totalAFinanciar > prestamoSeleccionadoMax || valorVehiculo <= 0) {
+            if (totalAFinanciar > parseFloat($("#pmoSugeridoSeleccionado :selected").val()).toFixed(2) || valorVehiculo <= 0) {
                 $('#txtValorFinanciar').addClass('parsley-error');
                 $('#txtValorFinanciar').addClass('text-danger');
                 $('#error-valorFinanciar').css('display', '');
@@ -1828,8 +1822,8 @@ function recuperarRespaldos() {
 
                 if (prima < (valorVehiculo * 0.10)) { estadoPrimaMinima = false; }
             }
-            if (totalAFinanciar <= prestamoSeleccionadoMax && valorVehiculo >= 0 && valorVehiculo > prima && estadoPrimaMinima == true) {
-                cargarPrestamosSugeridosPrima($('#txtValorVehiculo').val(), $('#txtPrima').val());
+            if (totalAFinanciar < parseFloat($("#pmoSugeridoSeleccionado :selected").val()).toFixed(2) && valorVehiculo >= 0 && valorVehiculo >= prima && estadoPrimaMinima == true) {
+                cargarPrestamosSugeridosPrima(valorVehiculo, prima);
             }
             else { MensajeError('No se cargaron los préstamos sugeridos porque los valores ingresados no son válidos'); }
         }

@@ -780,6 +780,8 @@
     <Content Include="Forms\Otros\CompromisoLegal.aspx" />
     <Content Include="Forms\Otros\ContratoVehiculoClausulaLicencia.aspx" />
     <Content Include="Forms\CoreFinancieroMovil\ImprimirCotizacion.aspx" />
+    <Content Include="Forms\PreSolicitudes\PreSolicitud_Guardar.aspx" />
+    <Content Include="Forms\PreSolicitudes\PreSolicitud_Listado.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Analisis.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Bandeja.aspx" />
@@ -1096,6 +1098,7 @@
     <Content Include="Scripts\app\CoreMovil\BandejaMisSolicitudes.js" />
     <Content Include="Scripts\app\CoreMovil\Clientes_BandejaPrecalificados.js" />
     <Content Include="Scripts\app\Negociaciones\Negociaciones_Registrar.js" />
+    <Content Include="Scripts\app\PreSolicitudes\PreSolicitud_Listado.js" />
     <Content Include="Scripts\app\Scripts_Cobros\Scripts_Cobros.js" />
     <Content Include="Scripts\app\solicitudesCredito\SolicitudesCredito_ListaMantenimiento.js" />
     <Content Include="Scripts\app\solicitudesCredito\SolicitudesCredito_Mantenimiento.js" />
@@ -1525,6 +1528,20 @@
     </Compile>
     <Compile Include="Forms\CoreFinancieroMovil\ImprimirCotizacion.aspx.designer.cs">
       <DependentUpon>ImprimirCotizacion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PreSolicitudes\PreSolicitud_Guardar.aspx.cs">
+      <DependentUpon>PreSolicitud_Guardar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\PreSolicitudes\PreSolicitud_Guardar.aspx.designer.cs">
+      <DependentUpon>PreSolicitud_Guardar.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PreSolicitudes\PreSolicitud_Listado.aspx.cs">
+      <DependentUpon>PreSolicitud_Listado.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\PreSolicitudes\PreSolicitud_Listado.aspx.designer.cs">
+      <DependentUpon>PreSolicitud_Listado.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx.cs">
       <DependentUpon>SolicitudesCredito_ActualizarSolicitud.aspx</DependentUpon>

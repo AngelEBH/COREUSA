@@ -192,7 +192,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
             if (ClienteSolicitudesActivas > 0)
             {
-                //lblAlerta.Visible = true;
+                lblAlerta.Visible = true;
             }
             cmd.Dispose();
         }
@@ -971,7 +971,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@fnValorGarantia", SolicitudesMaster.fnValorGarantia);
                         sqlComando.Parameters.AddWithValue("@fiIDOrigen", SolicitudesMaster.fiIDOrigen);
                         sqlComando.Parameters.AddWithValue("@fdFechaIngresoLaborarCliente", ClientesInformacionLaboral.fcFechaIngreso);
-                        sqlComando.Parameters.AddWithValue("@fcCentrodeCosteAsignado", "");
+                        sqlComando.Parameters.AddWithValue("@fcCentrodeCosteAsignado", "0100");
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioAsignado",5);
                         sqlComando.Parameters.AddWithValue("@fdEnIngresoInicio", bitacora.fdEnIngresoInicio);
                         sqlComando.Parameters.AddWithValue("@piIDSesion", "1");

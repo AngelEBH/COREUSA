@@ -763,6 +763,15 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                                 ddlModelo.Items.Add(new ListItem(sqlResultado["fcModelo"].ToString(), sqlResultado["fiIDModelo"].ToString()));
                             }
                             ddlModelo.Enabled = true;
+
+                            if(!rbGastosDeCierreEfectivo.Checked && !rbGastosDeCierreFinanciados.Checked)
+                            {
+                                rbGastosDeCierreFinanciados.Focus();
+                            }
+                            else
+                            {
+                                ddlModelo.Focus();
+                            }
                         }
                     }
                 }
