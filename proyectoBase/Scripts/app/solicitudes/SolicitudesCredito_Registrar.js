@@ -201,7 +201,7 @@ $(document).ready(function () {
             $('#smartwizard').smartWizard("stepState", [4], "show");
         }
 
-        if (stepDirection == 'forward') {// validar solo si se quiere ir hacia el siguiente paso
+        if (stepDirection == 'forwards') {// validar solo si se quiere ir hacia el siguiente paso
 
             if (stepNumber == 0) {
                 var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionPrestamo', excluded: ':disabled' });// validar informacion prestamo

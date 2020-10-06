@@ -104,26 +104,17 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             string CLTIdentidad = "";
             while (reader.Read())
             {
-                identidadCliente.Text = (string)reader["fcIdentidad"];
-                identidadCliente.Enabled = false;
-                primerNombreCliente.Text = (string)reader["fcPrimerNombre"];
-                primerNombreCliente.Enabled = false;
-                SegundoNombreCliente.Text = (string)reader["fcSegundoNombre"];
-                SegundoNombreCliente.Enabled = false;
-                primerApellidoCliente.Text = (string)reader["fcPrimerApellido"];
-                primerApellidoCliente.Enabled = false;
-                segundoApellidoCliente.Text = (string)reader["fcSegundoApellido"];
-                segundoApellidoCliente.Enabled = false;
-                ingresosPrecalificado.Text = Decimal.Parse(reader["fnIngresos"].ToString()).ToString();
-                ingresosPrecalificado.Enabled = false;
-                numeroTelefono.Text = (string)reader["fcTelefono"];
-                numeroTelefono.Enabled = false;
-                //rtnCliente.Text = (string)reader["fcRTN"];
-                //if((string)reader["fcRTN"] != "")
-                //    rtnCliente.Enabled = false;
+                txtIdentidadCliente.Text = reader["fcIdentidad"].ToString();
+                txtPrimerNombre.Text = reader["fcPrimerNombre"].ToString();
+                txtSegundoNombre.Text = reader["fcSegundoNombre"].ToString();
+                txtPrimerApellido.Text = reader["fcPrimerApellido"].ToString();
+                txtSegundoApellido.Text = reader["fcSegundoApellido"].ToString();
+                txtIngresosPrecalificados.Text = decimal.Parse(reader["fnIngresos"].ToString()).ToString();
+                numeroTelefono.Text = reader["fcTelefono"].ToString();
+                txtRtnCliente.Text = reader["fcRTN"].ToString();
 
                 int tipoDeSolicitud = (byte)reader["fiTipoSolicitudCliente"];
-                tipoSolicitud.Text = tipoDeSolicitud == 1 ? "NUEVO" : tipoDeSolicitud == 2 ? "REFINANCIAMIENTO" : tipoDeSolicitud == 3 ? "RECOMPRA" : "";
+                lblTipodeSolicitud.InnerText = tipoDeSolicitud == 1 ? "NUEVO" : tipoDeSolicitud == 2 ? "REFINANCIAMIENTO" : tipoDeSolicitud == 3 ? "RECOMPRA" : "";
                 CLTIdentidad = (string)reader["fcIdentidad"];
                 objPrecalificado = new PrecalificadoViewModel()
                 {

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -37,146 +37,155 @@
             <form runat="server" id="frmSolicitud" class="" action="#" data-parsley-excluded="[disabled]">
                 <div id="smartwizard" class="h-100">
                     <ul>
-                        <li><a href="#step-1" class="pt-3 pb-2">(1) Información del préstamo</a></li>
-                        <li><a href="#step-2" class="pt-3 pb-2">(2) Información personal</a></li>
-                        <li><a href="#step-3" class="pt-3 pb-2">(3) Información domicilio</a></li>
-                        <li><a href="#step-4" class="pt-3 pb-2">(4) Información laboral</a></li>
-                        <li><a href="#step-5" class="pt-3 pb-2">(5) Información conyugal</a></li>
-                        <li><a href="#step-6" class="pt-3 pb-2">(6) Referencias personales</a></li>
-                        <li><a href="#step-7" class="pt-3 pb-2">(7) Documentación</a></li>
+                        <li><a href="#step-1" class="pt-3 pb-2 font-12">(1) Información del préstamo</a></li>
+                        <li><a href="#step-2" class="pt-3 pb-2 font-12">(2) Información personal</a></li>
+                        <li><a href="#step-3" class="pt-3 pb-2 font-12">(3) Información domicilio</a></li>
+                        <li><a href="#step-4" class="pt-3 pb-2 font-12">(4) Información laboral</a></li>
+                        <li><a href="#step-5" class="pt-3 pb-2 font-12">(5) Información conyugal</a></li>
+                        <li><a href="#step-6" class="pt-3 pb-2 font-12">(6) Referencias personales</a></li>
+                        <li><a href="#step-7" class="pt-3 pb-2 font-12">(7) Documentación</a></li>
+                        <li><a href="#step-7" class="pt-3 pb-2 font-12">(8) Información garantía</a></li>
                     </ul>
                     <div>
                         <!-- Información principal -->
                         <div id="step-1" class="form-section">
-                            <div class="float-right" id="spinnerCargando">
+                            
+                            <!-- loader -->
+                            <div class="float-right" id="spinnerCargando" runat="server" visible="false">
                                 <div class="spinner-border" role="status">
                                     <span class="sr-only"></span>
                                 </div>
                             </div>
-
                             <div class="form-group row m-0 border-bottom border-gray">
                                 <div class="col-8 p-0">
-                                    <h5 class="mt-1">Información del préstamo</h5>
+                                    <h6 class="mt-1">Información del préstamo</h6>
                                 </div>
                                 <div class="col-4 align-self-end text-right">
-                                    <label>Tipo de solicitud: <span class="btn btn-sm btn-info mb-0">NUEVO</span></label>
-                                    <label>Producto: <span class="btn btn-sm btn-info mb-0">Prestadito Motos</span></label>
+                                    <label>Tipo de solicitud: <span class="btn btn-sm btn-info mb-0" id="lblTipodeSolicitud" runat="server">NUEVO</span></label>
+                                    <label>Producto: <span class="btn btn-sm btn-info mb-0" id="lblProducto" runat="server">Prestadito Motos</span></label>
                                 </div>
                             </div>
 
-                            <!-- Tipo de solicitud, producto, origen -->
-                            <div class="form-group row" runat="server" visible="false">
-                                <div class="col-4">
-                                    <label class="col-form-label">Tipo de solicitud</label>
-                                    <asp:TextBox ID="tipoSolicitud" Enabled="false" CssClass="form-control" type="text" Text="NUEVO" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                            <div class="row mb-0">
+
+                                <!-- Información del cliente -->
+                                <div class="col-lg-6">
+                                    <h6 class="mt-3 mb-1">Datos del cliente</h6>
+
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <label class="col-form-label">No. Identidad</label>
+                                            <asp:TextBox ID="txtIdentidadCliente" CssClass="form-control form-control-sm mascara-identidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="col-form-label">RTN numérico</label>
+                                            <asp:TextBox ID="txtRtnCliente" CssClass="form-control form-control-sm mascara-rtn" type="text" Enabled="false" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Primer nombre</label>
+                                            <asp:TextBox ID="txtPrimerNombre" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Segundo nombre</label>
+                                            <asp:TextBox ID="txtSegundoNombre" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Primer apellido</label>
+                                            <asp:TextBox ID="txtPrimerApellido" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Segundo apellido</label>
+                                            <asp:TextBox ID="txtSegundoApellido" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="col-form-label">Ingresos precalificado</label>
+                                            <asp:TextBox ID="txtIngresosPrecalificados" CssClass="form-control form-control-sm mascara-cantidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-4">
-                                    <label class="col-form-label">Producto</label>
-                                    <asp:TextBox ID="tipoPrestamo" ReadOnly="true" Enabled="false" CssClass="form-control" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+
+                                <!-- Información del préstamo máximo -->
+                                <div class="col-lg-6">
+                                    <h6 class="mt-3 mb-1">Información préstamo máximo</h6>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">PMO máximo sugerido</label>
+                                            <asp:TextBox ID="txtPrestamoMaximo" CssClass="form-control form-control-sm mascara-cantidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <asp:Label CssClass="col-form-label" ID="lblTituloPlazoMaximo" runat="server" Text="Plazo" AssociatedControlID="txtPlazoMaximo" />
+                                            <asp:TextBox ID="txtPlazoMaximo" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <asp:Label CssClass="col-form-label" ID="lblTituloCuotaMaxima" runat="server" Text="Cuota" AssociatedControlID="txtCuotaMaxima" />
+                                            <asp:TextBox ID="txtCuotaMaxima" CssClass="form-control form-control-sm mascara-cantidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Nombre del cliente -->
-                            <div class="form-group row">
-                                <div class="col-2">
-                                    <label class="col-form-label">No. Identidad</label>
-                                    <asp:TextBox ID="identidadCliente" CssClass="form-control identidad" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-2">
-                                    <label class="col-form-label">RTN numérico</label>
-                                    <asp:TextBox ID="rtnCliente" CssClass="form-control formatoRTN" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-2">
-                                    <label class="col-form-label">Primer nombre</label>
-                                    <asp:TextBox ID="primerNombreCliente" placeholder="Primer nombre" CssClass="form-control" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-2">
-                                    <label class="col-form-label">Segundo nombre</label>
-                                    <asp:TextBox ID="SegundoNombreCliente" placeholder="Segundo nombre" CssClass="form-control" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-2">
-                                    <label class="col-form-label">Primer apellido</label>
-                                    <asp:TextBox ID="primerApellidoCliente" placeholder="Primer apellido" CssClass="form-control" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-2">
-                                    <label class="col-form-label">Segundo apellido</label>
-                                    <asp:TextBox ID="segundoApellidoCliente" placeholder="Segundo apellido" CssClass="form-control" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                                </div>
-                            </div>
-
-
-                            <div class="form-group row">                                
-                                <div class="col-2">
-                                    <label class="col-form-label">Ingresos precalificado</label>
-                                    <asp:TextBox ID="ingresosPrecalificado" CssClass="form-control MascaraCantidad" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-2" runat="server" id="titleOrigen">
-                                    <label class="col-form-label">Origen</label>
-                                    <select name="ddlOrigen" id="ddlOrigen" class="form-control form-control-sm" disabled="disabled" style="display: none;" data-parsley-group="informacionPrestamo" required="required">
-                                        <option value="">Seleccione una opción</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- PMO SUGERIDO, PLAZO, CUOTA -->
-                            <div class="form-group row">
-                                <div class="col-3">
-                                    <label class="col-form-label">PMO Máximo sugerido</label>
-                                    <select name="pmoSugeridoSeleccionado" id="pmoSugeridoSeleccionado" disabled="disabled" class="form-control" data-parsley-group="informacionPrestamo" required="required">
-                                        <option value="">Seleccione una opción</option>
-                                    </select>
-                                </div>
-                                <div class="col-3">
-                                    <label class="col-form-label" id="lblPlazoPMO">Plazo</label>
-                                    <input id="plazoPmoSeleccionado" readonly="readonly" class="form-control MascaraEnteros" type="text" required="required" data-parsley-group="informacionPrestamo" />
-                                </div>
-                                <div class="col-3">
-                                    <label class="col-form-label" id="lblCuotaMaxima">Cuota</label>
-                                    <input id="cutoaQuinceal" class="form-control MascaraCantidad" readonly="readonly" type="text" required="required" data-parsley-group="informacionPrestamo" />
-                                </div>
-                            </div>
-                            <!-- PRESTAMO EFECTIVO -->
-                            <div class="form-group row divPrestamoEfectivo" style="display: none;">
-                                <label id="lblMontoPmo" class="col-sm-2 col-form-label">Monto</label>
-                                <div class="col-sm-2">
-                                    <input id="txtMontoPmoEfectivo" class="form-control MascaraCantidad" disabled="disabled" type="text" required="required" data-parsley-group="informacionPrestamo" />
-                                </div>
-                            </div>
-                            <!-- PRESTAMO CON PRIMA -->
-                            <div class="form-group row divPrestamoVehiculo" style="display: none;">
-                                <label id="lblValorVehiculo" class="col-sm-2 col-form-label">Valor Vehículo</label>
-                                <div class="col-sm-2">
-                                    <input id="txtValorVehiculo" class="form-control MascaraCantidad" disabled="disabled" type="text" required="required" data-parsley-group="informacionPrestamo" />
-                                </div>
-                                <label id="lblPrima" class="col-sm-2 col-form-label">Valor Prima</label>
-                                <div class="col-sm-2">
-                                    <input id="txtPrima" class="form-control MascaraCantidad" disabled="disabled" type="text" required="required" data-parsley-group="informacionPrestamo" />
-                                    <span id="error-prima" style="display: none;"></span>
-                                </div>
-                                <label id="lblValorFinanciar" class="col-sm-2 col-form-label">Valor financiar</label>
-                                <div class="col-sm-2">
-                                    <input id="txtValorFinanciar" disabled="disabled" required="required" readonly="readonly" class="form-control MascaraCantidad" type="text" data-parsley-group="informacionPrestamo" />
-                                    <span id="error-valorFinanciar"></span>
-                                </div>
-                            </div>
-                            <!-- PRESTAMOS SUGERIDOS -->
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label" id="titlePrestamosSugeridos" style="display: none;">Prestamos disponibles</label>
-                                <div class="col-sm-10" id="divPmosSugeridos" style="display: none;">
-                                    <select name="pmosSugeridos" id="pmosSugeridos" class="form-control" data-parsley-group="informacionPrestamo" required="required">
-                                        <option value="">Seleccione una opción</option>
-                                    </select>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h6 class="mt-1 mb-1">Montos de la solicitud</h6>
+                                    <div class="form-group row">
+                                        <!-- Monto global -->
+                                        <div class="col-sm-3">                                            
+                                            <asp:Label CssClass="col-form-label" ID="lblTituloMontoPrestmo" runat="server" Text="Valor global" AssociatedControlID="txtValorGlobal" />
+                                            <asp:TextBox ID="txtValorGlobal" CssClass="form-control form-control-sm mascara-cantidad" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <!-- Valor de la prima -->
+                                        <div class="col-sm-3" id="divPrima" runat="server">
+                                            <label class="col-form-label">Valor de la prima</label>
+                                            <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm mascara-cantidad" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <!-- Valor a Financiar -->
+                                        <div class="col-sm-3" id="divValorFinanciar" runat="server">
+                                            <label class="col-form-label">Valor a Financiar</label>
+                                            <asp:TextBox ID="txtValorFinanciar" CssClass="form-control form-control-sm mascara-cantidad" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <!-- Origen -->
+                                        <div class="col-sm-3" runat="server" id="divOrigen">
+                                            <label class="col-form-label">Origen</label>
+                                            <asp:DropDownList ID="ddlOrigen" runat="server" CssClass="form-control form-control-sm" Enabled="false" data-parsley-group="informacionPrestamo" required="required"></asp:DropDownList>
+                                        </div>
+                                        <!-- Préstamos disponibles -->
+                                        <div class="col-12" id="divPrestamosDisponibles" runat="server" visible="true">
+                                            <label class="col-form-label">Préstamos disponibles</label>       
+                                            <asp:DropDownList ID="ddlPrestamosDisponibles" runat="server" CssClass="form-control form-control-sm" data-parsley-group="informacionPrestamo" required="required"></asp:DropDownList>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- INFORMACION PERSONAL DEL CLIENTE -->
+
+                        <!-- Información personal -->
                         <div id="step-2" class="form-section">
-                            <h5 class="border-bottom border-gray pb-2">Información personal</h5>
+
+                            <div class="form-group row m-0 border-bottom border-gray">
+                                <div class="col-12 p-0">
+                                    <h6 class="mt-1">Información personal</h6>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-6">
+                                    <label class="col-form-label">Profesión</label>
+                                    <asp:TextBox ID="txtProfesion" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                    <input id="profesion"          class="form-control" type="text" required="required" data-parsley-group="informacionPersonal" />
+                                </div>
+                                <div class="col-6">
+                                    <label class="col-form-label">RTN numérico</label>
+                                    <asp:TextBox ID="TextBox2" CssClass="form-control form-control-sm mascara-rtn" type="text" Enabled="false" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                </div>
+                            </div>
 
                             <!-- PROFESION, NACIONALIDAD, FECHA DE NACIMIENTO -->
                             <div class="form-group row">
                                 <label class="col-sm-1 col-form-label">Profesión</label>
                                 <div class="col-sm-2">
-                                    <input id="profesion" class="form-control" type="text" required="required" data-parsley-group="informacionPersonal" />
+                                    
                                 </div>
                                 <label class="col-sm-1 col-form-label">Nacionalidad</label>
                                 <div class="col-sm-2">
@@ -197,7 +206,7 @@
                                 </div>
                                 <label class="col-sm-1 col-form-label">Télefono</label>
                                 <div class="col-sm-2">
-                                    <asp:TextBox ID="numeroTelefono" CssClass="form-control Telefono" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="numeroTelefono" CssClass="form-control mascara-telefono" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                 </div>
                                 <label class="col-sm-2 col-form-label">Edad cliente</label>
                                 <div class="col-sm-2">
@@ -302,11 +311,11 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Telefono casa</label>
                                 <div class="col-sm-3">
-                                    <input id="telefonoCasa" class="form-control Telefono" type="text" data-parsley-group="informacionDomiciliar" />
+                                    <input id="telefonoCasa" class="form-control mascara-telefono" type="text" data-parsley-group="informacionDomiciliar" />
                                 </div>
                                 <label class="col-sm-3 col-form-label">Telefono movil</label>
                                 <div class="col-sm-3">
-                                    <asp:TextBox ID="telefonoMovil" CssClass="form-control Telefono" type="text" required="required" data-parsley-group="informacionDomiciliar" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="telefonoMovil" CssClass="form-control mascara-telefono" type="text" required="required" data-parsley-group="informacionDomiciliar" runat="server"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -335,7 +344,7 @@
                                 </div>
                                 <label class="col-sm-3 col-form-label">Ingresos mensuales</label>
                                 <div class="col-sm-3">
-                                    <input id="ingresosMensuales" class="form-control MascaraCantidad" type="text" required="required" data-parsley-group="informacionLaboral" />
+                                    <input id="ingresosMensuales" class="form-control mascara-cantidad" type="text" required="required" data-parsley-group="informacionLaboral" />
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -351,15 +360,15 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Telefono de la empresa</label>
                                 <div class="col-sm-3">
-                                    <input id="telefonoEmpresa" name="telefonoEmpresa" class="form-control Telefono" type="text" required="required" data-parsley-group="informacionLaboral" />
+                                    <input id="telefonoEmpresa" name="telefonoEmpresa" class="form-control mascara-telefono" type="text" required="required" data-parsley-group="informacionLaboral" />
                                 </div>
                                 <label class="col-sm-2 col-form-label">Extension RRHH</label>
                                 <div class="col-sm-1">
-                                    <input id="extensionRRHH" name="extensionRRHH" class="form-control Extension" type="text" data-parsley-group="informacionLaboral" data-parsley-required-message="Requerido" />
+                                    <input id="extensionRRHH" name="extensionRRHH" class="form-control mascara-extension" type="text" data-parsley-group="informacionLaboral" data-parsley-required-message="Requerido" />
                                 </div>
                                 <label class="col-sm-2 col-form-label">Extension cliente</label>
                                 <div class="col-sm-1">
-                                    <input id="extensionCliente" name="extensionCliente" class="form-control Extension" type="text" data-parsley-group="informacionLabral" data-parsley-required-message="Requerido" />
+                                    <input id="extensionCliente" name="extensionCliente" class="form-control mascara-extension" type="text" data-parsley-group="informacionLabral" data-parsley-required-message="Requerido" />
                                 </div>
                             </div>
                             <!-- AQUI TEMRMINA INFO GENERAL Y EMPIEZA UBICACION DE LA EMPRESA -->
@@ -421,7 +430,7 @@
                                 </div>
                                 <label class="col-sm-3 col-form-label">Valor otros ingresos</label>
                                 <div class="col-sm-3">
-                                    <input id="valorOtrosIngresos" class="form-control MascaraCantidad" type="text" data-parsley-group="informacionLaboral" />
+                                    <input id="valorOtrosIngresos" class="form-control mascara-cantidad" type="text" data-parsley-group="informacionLaboral" />
                                 </div>
                             </div>
                         </div>
@@ -443,7 +452,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Identidad conyugue</label>
                                 <div class="col-sm-3">
-                                    <input id="identidadConyugue" class="form-control infoConyugal identidad" type="text" required="required" data-parsley-group="informacionConyugal" />
+                                    <input id="identidadConyugue" class="form-control infoConyugal mascara-identidad" type="text" required="required" data-parsley-group="informacionConyugal" />
                                 </div>
                                 <label class="col-sm-3 col-form-label">Fecha nacimiento</label>
                                 <div class="col-sm-3">
@@ -453,7 +462,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Telefono del conyugue</label>
                                 <div class="col-sm-3">
-                                    <input id="telefonoConyugue" class="form-control infoConyugal Telefono" type="text" required="required" data-parsley-group="informacionConyugal" />
+                                    <input id="telefonoConyugue" class="form-control infoConyugal mascara-telefono" type="text" required="required" data-parsley-group="informacionConyugal" />
                                 </div>
                                 <label class="col-sm-3 col-form-label">Lugar de trabajo</label>
                                 <div class="col-sm-3">
@@ -463,11 +472,11 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Ingreso mensual</label>
                                 <div class="col-sm-3">
-                                    <input id="ingresoMensualesConyugue" class="form-control infoConyugal MascaraCantidad" type="text" required="required" data-parsley-group="informacionConyugal" />
+                                    <input id="ingresoMensualesConyugue" class="form-control infoConyugal mascara-cantidad" type="text" required="required" data-parsley-group="informacionConyugal" />
                                 </div>
                                 <label class="col-sm-3 col-form-label">Telefono trabajo </label>
                                 <div class="col-sm-3">
-                                    <input id="telefonoTrabajoConyugue" class="form-control infoConyugal Telefono" type="text" required="required" data-parsley-group="informacionConyugal" />
+                                    <input id="telefonoTrabajoConyugue" class="form-control infoConyugal mascara-telefono" type="text" required="required" data-parsley-group="informacionConyugal" />
                                 </div>
                             </div>
                         </div>
@@ -543,7 +552,7 @@
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label">Telefono ref</label>
                             <div class="col-sm-7">
-                                <input id="telefonoRef" class="form-control Telefono" type="text" required="required" data-parsley-group="referenciasPersonales" />
+                                <input id="telefonoRef" class="form-control mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonales" />
                             </div>
                         </div>
                         <div class="form-group row">
@@ -562,86 +571,6 @@
                         </button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <!--modal de agregar referencia personal -->
-    <%--<div id="modalAddReferencia" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="myModalLabel">Agregar referencia</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <form id="addReferencia-form" action="#">
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Nombre completo ref</label>
-                            <div class="col-sm-7">
-                                <input id="nombreCompletoRef" class="form-control" type="text" required="required" data-parsley-group="referenciasPersonales" />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Lugar de trabajo ref</label>
-                            <div class="col-sm-7">
-                                <input id="lugarTrabajoRef" class="form-control" type="text" required="required" data-parsley-group="referenciasPersonales" />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Tiempo de conocer ref</label>
-                            <div class="col-sm-7">
-                                <select name="tiempoConocerRef" id="tiempoConocerRef" class="form-control" data-parsley-group="informacionPrestamo" required="required">
-                                    <option value="">Seleccione una opción</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Telefono ref</label>
-                            <div class="col-sm-7">
-                                <input id="telefonoRef" class="form-control Telefono" type="text" required="required" data-parsley-group="referenciasPersonales" />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Parentesco</label>
-                            <div class="col-sm-7">
-                                <select name="parentescoRef" id="parentescoRef" class="form-control" required="required" data-parsley-group="referenciasPersonales">
-                                    <option value="">Seleccione una opción</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <input value="Guardar" type="submit" class="btn btn-primary waves-effect waves-light mr-1 send_add" />
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cancelar
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>--%>
-
-    <!-- modal reiniciar solicitud -->
-    <div id="modalReiniciarSolicitud" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalReiniciarSolicitudLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalReiniciarSolicitudLabel">Reiniciar solicitud</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-                    ¿Está seguro de que desear reiniciar la solcitud?<br />
-                    Se recomienda llevar a cabo esta acción antes de iniciar el ingreso de una nueva solicitud
-                </div>
-                <div class="modal-footer">
-                    <button id="btnReiniciarSolicitud" data-dismiss="modal" class="btn btn-danger waves-effect">
-                        Confirmar
-                    </button>
-                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                        Cancelar
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -651,7 +580,7 @@
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script>
         $(document).ready(function () {
-            $(".MascaraCantidad").inputmask("decimal", {
+            $(".mascara-cantidad").inputmask("decimal", {
                 alias: 'numeric',
                 groupSeparator: ',',
                 digits: 2,
@@ -662,10 +591,10 @@
                 autoGroup: true,
                 min: 0.00
             });
-            $(".Telefono").inputmask("9999-9999");
-            $(".Extension").inputmask("9999");
-            $(".identidad").inputmask("9999999999999");
-            $(".formatoRTN").inputmask("99999999999999");
+            $(".mascara-telefono").inputmask("9999-9999");
+            $(".mascara-extension").inputmask("9999");
+            $(".mascara-identidad").inputmask("9999999999999");
+            $(".mascara-rtn").inputmask("99999999999999");
         });
     </script>
     <!-- SCRIPTS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
