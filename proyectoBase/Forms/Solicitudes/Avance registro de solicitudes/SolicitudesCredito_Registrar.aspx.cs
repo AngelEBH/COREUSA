@@ -110,7 +110,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 txtPrimerApellido.Text = reader["fcPrimerApellido"].ToString();
                 txtSegundoApellido.Text = reader["fcSegundoApellido"].ToString();
                 txtIngresosPrecalificados.Text = decimal.Parse(reader["fnIngresos"].ToString()).ToString();
-                txtNumeroTelefono.Text = reader["fcTelefono"].ToString();
+                numeroTelefono.Text = reader["fcTelefono"].ToString();
                 txtRtnCliente.Text = reader["fcRTN"].ToString();
 
                 int tipoDeSolicitud = (byte)reader["fiTipoSolicitudCliente"];

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -170,40 +170,49 @@
                             </div>
 
                             <div class="form-group row">
-                                <div class="col-sm-3">
-                                    <label class="col-form-label">Nacionalidad</label>
-                                    <asp:DropDownList ID="ddlNacionalidad" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal"></asp:DropDownList>
-                                </div>
-                                <div class="col-sm-3">
+                                <div class="col-6">
                                     <label class="col-form-label">Profesión</label>
                                     <asp:TextBox ID="txtProfesion" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                    <input id="profesion"          class="form-control" type="text" required="required" data-parsley-group="informacionPersonal" />
                                 </div>
-                                <div class="col-sm-3">
-                                    <label class="col-form-label">Email</label>
-                                    <asp:TextBox ID="txtCorreoElectronico" CssClass="form-control form-control-sm mascara-telefono" Enabled="false" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-sm-3">
-                                    <label class="col-form-label">Télefono</label>
-                                    <asp:TextBox ID="txtNumeroTelefono" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                <div class="col-6">
+                                    <label class="col-form-label">RTN numérico</label>
+                                    <asp:TextBox ID="TextBox2" CssClass="form-control form-control-sm mascara-rtn" type="text" Enabled="false" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                 </div>
                             </div>
 
-                            <div class="form-group row">                                
-                                <div class="col-3">
-                                    <label class="col-form-label">Fecha de nacimiento</label>
-                                    <asp:TextBox ID="txtFechaDeNacimiento" CssClass="form-control form-control-sm datepicker" type="date" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                            <!-- PROFESION, NACIONALIDAD, FECHA DE NACIMIENTO -->
+                            <div class="form-group row">
+                                <label class="col-sm-1 col-form-label">Profesión</label>
+                                <div class="col-sm-2">
+                                    
                                 </div>
-                                <div class="col-3">
-                                    <label class="col-form-label">Edad del cliente</label>
-                                    <asp:TextBox ID="txtEdadDelCliente" CssClass="form-control form-control-sm" Enabled="false" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
-                                </div>           
-                                
-                                <div class="col-3">
-                                    <label class="col-form-label">Edad del cliente</label>
-                                    <asp:TextBox ID="TextBox1" CssClass="form-control form-control-sm" Enabled="false" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
-                                </div>           
+                                <label class="col-sm-1 col-form-label">Nacionalidad</label>
+                                <div class="col-sm-2">
+                                    <select name="nacionalidad" id="nacionalidad" class="form-control buscadorddl" required="required" data-parsley-group="informacionPersonal">
+                                        <option value="">Seleccione una opción</option>
+                                    </select>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Fecha de Nac.</label>
+                                <div class="col-sm-2">
+                                    <input id="fechaNacimiento" class="form-control datepicker" type="date" required="required" data-parsley-group="informacionPersonal" />
+                                </div>
                             </div>
-
+                            <!-- EMAIL, TELEFONO,TIPO DE VIVIENDA -->
+                            <div class="form-group row">
+                                <label class="col-sm-1 col-form-label">Email</label>
+                                <div class="col-sm-2">
+                                    <input id="correoElectronico" class="form-control" type="email" required="required" data-parsley-group="informacionPersonal" />
+                                </div>
+                                <label class="col-sm-1 col-form-label">Télefono</label>
+                                <div class="col-sm-2">
+                                    <asp:TextBox ID="numeroTelefono" CssClass="form-control mascara-telefono" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Edad cliente</label>
+                                <div class="col-sm-2">
+                                    <input id="edadCliente" class="form-control" readonly=" " type="text" data-parsley-group="informacionPersonal" />
+                                </div>
+                            </div>
                             <!-- SEXO -->
                             <div class="form-group row">
                                 <div class="col-sm-10 border border-gray">
