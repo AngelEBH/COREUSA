@@ -52,31 +52,6 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string EncriptarParametros(int IDSOL, string dataCrypt, string Identidad)
-    {
-        string resultado;
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-
-            string lcParametros = "usr=" + pcIDUsuario +
-            "&IDApp=" + pcIDApp +
-            "&SID=" + pcIDSesion +
-            "&pcID=" + Identidad +
-            "&IDSOL=" + IDSOL;
-            resultado = DSC.Encriptar(lcParametros);
-        }
-        catch
-        {
-            resultado = "-1";
-        }
-        return resultado;
-    }
-
-    [WebMethod]
     public static List<PreSolicitud_Listado_ViewModel> CargarPreSolicitudes()
     {
         var preSolicitudes = new List<PreSolicitud_Listado_ViewModel>();
@@ -131,6 +106,90 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
             ex.Message.ToString();
         }
         return preSolicitudes;
+    }
+
+    [WebMethod]
+    public static PreSolicitud_Detalles_ViewModel DetallesPreSolicitud(int idPreSolicitud)
+    {
+        var preSolicitud = new PreSolicitud_Detalles_ViewModel();
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_Detalles", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDPreSolicitud", idPreSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            preSolicitud = new PreSolicitud_Detalles_ViewModel()
+                            {
+                                IdPreSolicitud = int.Parse(reader["fiIDPreSolicitud"].ToString()),
+                                IdPais = int.Parse(reader["fiIDPais"].ToString()),
+                                IdCanal = int.Parse(reader["fiIDCanal"].ToString()),
+                                CentroDeCosto = reader["fcCentrodeCosto"].ToString(),
+                                Agencia = reader["fcNombreAgencia"].ToString(),
+                                IdentidadCliente = reader["fcIdentidad"].ToString(),
+                                NombreCliente = reader["fcNombreCliente"].ToString(),
+                                TelefonoCasa = reader["fcTelefonoCasa"].ToString(),
+                                Telefono = reader["fcTelefono"].ToString(),
+                                IdDepartamento = int.Parse(reader["fiIDDepartamento"].ToString()),
+                                Departamento = reader["fcDepartamento"].ToString(),
+                                IdMunicipio = int.Parse(reader["fiIDMunicipio"].ToString()),
+                                Municipio = reader["fcMunicipio"].ToString(),
+                                IdCiudadPoblado = int.Parse(reader["fiIDCiudad"].ToString()),
+                                CiudadPoblado = reader["fcPoblado"].ToString(),
+                                IdBarrioColonia = int.Parse(reader["fiIDBarrioColonia"].ToString()),
+                                BarrioColonia = reader["fcBarrio"].ToString(),
+                                DireccionDetallada = reader["fcDireccionDetalladaDomicilio"].ToString(),
+                                ReferenciasDireccionDetallada = reader["fcReferenciasDireccionDetalladaDomicilio"].ToString(),
+
+                                // usuario crea
+                                IdUsuarioCra = int.Parse(reader["fiIDUsuarioCrea"].ToString()),
+                                UsuarioCrea = reader["fcUsuarioCrea"].ToString(),
+                                FechaCreacion = DateTime.Parse(reader["fdFechaCrea"].ToString()),
+                                // usuario modifica
+                                IdUsuarioUltimaModificacion = int.Parse(reader["fiIDUsuarioModificacion"].ToString()),
+                                UsuarioUltimaMoficiacion = reader["fcUsuarioModifica"].ToString(),
+                                FechaUltimaModificacion = DateTime.Parse(reader["fdFechaUltimaModificacion"].ToString()),
+
+                                // gestor
+                                IdGestorValidador = int.Parse(reader["fiIDGestorValidador"].ToString()),
+                                GestorValidador = reader["fcGestorValidador"].ToString(),
+                                // validacion de gestoria
+                                Latitud = reader["fcLatitud"].ToString(),
+                                Longitud = reader["fcLongitud"].ToString(),
+                                IdInvestigacionDeCampo = byte.Parse(reader["fiIDInvestigacionDeCampo"].ToString()),
+
+                                TipoResultadoDeCampo = int.Parse(reader["fiTipodeResultado"].ToString()), // para poner clase text danger, success, warining, etc
+                                ResultadoDeCampo = reader["fcResultadodeCampo"].ToString(), // Aprobado, Rechazado, Pendiente
+                                GestionDeCampo = reader["fcGestion"].ToString(), // Del Catalogo de investigaciones
+                                FechaValidacion = (DateTime)reader["fdFechaValidacion"],
+                                ObservacionesDeCampo = reader["fcObservacionesCampo"].ToString(),
+
+                                IdEstadoDeGestion = byte.Parse(reader["fiIDEstadoDeGestion"].ToString()), // para cuestiones internas de la bbdd
+                                IdEstadoPreSolicitud = byte.Parse(reader["fiEstadoPreSolicitud"].ToString()), // id estado pre solicitud
+                                EstadoPreSolicitud = reader["fcEstadoPreSolicitud"].ToString(), // del catalogo de estados de presolucitud
+                                EstadoFavorable = byte.Parse(reader["fiFavorable"].ToString()) // para poner clase text danger, success, warining, etc
+                            };
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return preSolicitud;
     }
 
     public static Uri DesencriptarURL(string URL)
@@ -193,14 +252,39 @@ public class PreSolicitud_Detalles_ViewModel
     public string Agencia { get; set; }
     public string IdentidadCliente { get; set; }
     public string NombreCliente { get; set; }
-    public int? IdGestorValidador { get; set; }
-    public string GestorValidador { get; set; }
+    public string Telefono { get; set; }
+    public string TelefonoCasa { get; set; }
+    public int IdDepartamento { get; set; }
+    public string Departamento { get; set; }
+    public int IdMunicipio { get; set; }
+    public string Municipio { get; set; }
+    public int IdCiudadPoblado { get; set; }
+    public string CiudadPoblado { get; set; }
+    public int IdBarrioColonia { get; set; }
+    public string BarrioColonia { get; set; }
+    public string DireccionDetallada { get; set; }
+    public string ReferenciasDireccionDetallada { get; set; }
+    // usuario crea
     public int IdUsuarioCra { get; set; }
     public string UsuarioCrea { get; set; }
     public DateTime? FechaCreacion { get; set; }
+    // usuario ultima modificacion
     public int IdUsuarioUltimaModificacion { get; set; }
     public string UsuarioUltimaMoficiacion { get; set; }
     public DateTime? FechaUltimaModificacion { get; set; }
+    // gestor
+    public int? IdGestorValidador { get; set; }
+    public string GestorValidador { get; set; }
+    // validacion de gestoria
+    public string Latitud { get; set; }
+    public string Longitud { get; set; }
+    public int IdInvestigacionDeCampo { get; set; }
+    public int TipoResultadoDeCampo { get; set; }
+    public string ResultadoDeCampo { get; set; }
+    public string GestionDeCampo { get; set; }
+    public DateTime FechaValidacion { get; set; }
+    public string ObservacionesDeCampo { get; set; }
+    public int IdEstadoDeGestion { get; set; }
     public int IdEstadoPreSolicitud { get; set; }
     public string EstadoPreSolicitud { get; set; }
     public int EstadoFavorable { get; set; }

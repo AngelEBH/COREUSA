@@ -350,9 +350,9 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
                         sqlComando.Parameters.AddWithValue("@pcTelefonoCasa", txtTelefonoCasa.Text.Trim().Replace("_","").Replace("-",""));
                         sqlComando.Parameters.AddWithValue("@piIDDepartamento", ddlDepartamento.SelectedValue);
-                        sqlComando.Parameters.AddWithValue("@piIDMunicipio", ddlDepartamento.SelectedValue);
-                        sqlComando.Parameters.AddWithValue("@piIDCiudad", ddlDepartamento.SelectedValue);
-                        sqlComando.Parameters.AddWithValue("@piIDBarrioColonia", ddlDepartamento.SelectedValue);
+                        sqlComando.Parameters.AddWithValue("@piIDMunicipio", ddlMunicipio.SelectedValue);
+                        sqlComando.Parameters.AddWithValue("@piIDCiudad", ddlCiudad.SelectedValue);
+                        sqlComando.Parameters.AddWithValue("@piIDBarrioColonia", ddlBarrioColonia.SelectedValue);
                         sqlComando.Parameters.AddWithValue("@pcDireccionDetallada", txtDireccionDetallada.Text.Trim());
                         sqlComando.Parameters.AddWithValue("@pcReferenciasDireccionDetallada", txtReferenciasDomicilio.Value.Trim());
                         sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);

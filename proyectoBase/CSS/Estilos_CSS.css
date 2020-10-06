@@ -36,8 +36,8 @@ body {
 
 /* borde de los modales */
 .modal-dialog {
-    -webkit-box-shadow: 0 0 15px rgba(133,133,133,1);
-    box-shadow: 0 0 15px rgba(133,133,133,1);
+    /*box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;*/
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
 }
 
 /* eliminar sombra del card */

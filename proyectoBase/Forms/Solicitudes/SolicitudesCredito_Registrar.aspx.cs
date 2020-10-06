@@ -192,7 +192,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
             if (ClienteSolicitudesActivas > 0)
             {
-                lblAlerta.Visible = true;
+                //lblAlerta.Visible = true;
             }
             cmd.Dispose();
         }

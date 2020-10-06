@@ -1,6 +1,7 @@
 ﻿var FiltroActual = "";
 var idPreSolicitud = 0;
 var identidadCliente = "";
+var telefonoCliente = '';
 estadoMasRelevante = '';
 
 $(document).ready(function () {
@@ -53,7 +54,7 @@ $(document).ready(function () {
             {
                 "data": "FechaCreacion",
                 "render": function (value) {
-                    if (value === '/Date(-62135575200000)/') return "";
+                    if (value === '/Date(-2208967200000)/') return "";
                     return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
                 }
             },
@@ -145,6 +146,15 @@ $(document).ready(function () {
     $('#txtDatatableFilter').keyup(function () {
         dtPreSolicitudes.search($(this).val()).draw();
     });
+
+    $("#datatable-presolicitudes tbody").on("click", "tr", function () {
+
+        var row = dtPreSolicitudes.row(this).data();
+        idPreSolicitud = row.IdPreSolicitud;
+        identidadCliente = row.IdentidadCliente;
+        $("#txtNombreCliente").val(row.NombreCliente);
+        $("#txtIdentidadCliente").val(identidadCliente);
+    });
 });
 
 $(document).on('click', 'button#btnDetalles', function () {
@@ -160,6 +170,38 @@ $(document).on('click', 'button#btnDetalles', function () {
         success: function (data) {
 
             if (data.d != "-1") {
+
+                var preSolicitud = data.d;                
+
+                // estado pre solicitud
+                var classEstadoPreSolicitud = preSolicitud.EstadoFavorable == 0 ? 'warning' : preSolicitud.EstadoFavorable == 1 ? 'success' : preSolicitud.EstadoFavorable == 2 ? 'danger' : 'warning';
+                $("#lblEstadoPreSolicitud").text(preSolicitud.EstadoPreSolicitud);
+                $("#lblEstadoPreSolicitud").removeClass('btn-danger').removeClass('btn-success').removeClass('btn-warning').addClass('btn-' + classEstadoPreSolicitud);
+
+                $("#txtTelefonoCliente").val(preSolicitud.Telefono);
+                $("#txtDepartamento").val(preSolicitud.Departamento);
+                $("#txtMunicipio").val(preSolicitud.Municipio);
+                $("#txtCiudadPoblado").val(preSolicitud.CiudadPoblado);
+                $("#txtBarrioColonia").val(preSolicitud.BarrioColonia);
+                $("#txtDireccionDetallada").val(preSolicitud.DireccionDetallada);
+                $("#txtTelefonoCasa").val(preSolicitud.TelefonoCasa);
+                $("#txtReferenciasDomicilio").val(preSolicitud.ReferenciasDireccionDetallada);
+
+                // gestoria
+                var classEstadoCampo = preSolicitud.TipoResultadoDeCampo == 0 ? 'warning' : preSolicitud.TipoResultadoDeCampo == 1 ? 'success' : preSolicitud.TipoResultadoDeCampo == 2 ? 'danger' : 'warning';
+                $("#lblResultadoGestoria").text(preSolicitud.ResultadoDeCampo);
+                $("#lblResultadoGestoria").removeClass('btn-danger').removeClass('btn-success').removeClass('btn-warning').addClass('btn-' + classEstadoCampo);
+                $("#txtGestorAsignado").val(preSolicitud.IdGestorValidador == 0 ? 'No Asignado' : preSolicitud.GestorValidador);
+                $("#txtGestion").val(preSolicitud.GestionDeCampo);
+                $("#txtFechaValidacion").val(preSolicitud.FechaValidacion == '/Date(-2208967200000)/' ? 'No Validado' : moment(preSolicitud.FechaValidacion).locale('es').format('YYYY/MM/DD h:mm:ss a'));
+                $("#txtObservacionesGestoria").val(preSolicitud.ObservacionesDeCampo);
+
+                // auditoria
+                $("#txtUsuarioCreacion").val(preSolicitud.UsuarioCrea);
+                $("#txtFechaCreacion").val(moment(preSolicitud.FechaCreacion).locale('es').format('YYYY/MM/DD h:mm:ss a'));
+
+                $("#txtUsuarioUltimaModificacion").val(preSolicitud.UsuarioUltimaMoficiacion == '' ? 'Sin Modificaciones' : preSolicitud.UsuarioUltimaMoficiacion);
+                $("#txtFechaUltimaModificacion").val(preSolicitud.FechaUltimaModificacion == '/Date(-2208967200000)/' ? 'Sin Modificaciones' : moment(preSolicitud.FechaUltimaModificacion).locale('es').format('YYYY/MM/DD h:mm:ss a'));
 
                 $("#modalDetalles").modal();
             }
