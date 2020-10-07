@@ -247,6 +247,15 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.DropDownList ddlPrestamosDisponibles;
 
     /// <summary>
+    /// Control ddlNacionalidad.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlNacionalidad;
+
+    /// <summary>
     /// Control txtProfesion.
     /// </summary>
     /// <remarks>
@@ -256,22 +265,58 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtProfesion;
 
     /// <summary>
-    /// Control TextBox2.
+    /// Control txtCorreoElectronico.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBox2;
+    protected global::System.Web.UI.WebControls.TextBox txtCorreoElectronico;
 
     /// <summary>
-    /// Control numeroTelefono.
+    /// Control txtNumeroTelefono.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox numeroTelefono;
+    protected global::System.Web.UI.WebControls.TextBox txtNumeroTelefono;
+
+    /// <summary>
+    /// Control txtFechaDeNacimiento.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtFechaDeNacimiento;
+
+    /// <summary>
+    /// Control txtEdadDelCliente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtEdadDelCliente;
+
+    /// <summary>
+    /// Control TextBox1.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox TextBox1;
+
+    /// <summary>
+    /// Control ddlEstado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlEstado;
 
     /// <summary>
     /// Control telefonoMovil.

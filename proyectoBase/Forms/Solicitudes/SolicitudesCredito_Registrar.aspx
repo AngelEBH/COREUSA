@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -199,8 +199,9 @@
                                 </div>           
                                 
                                 <div class="col-3">
-                                    <label class="col-form-label">Edad del cliente</label>
+                                    <label class="col-form-label">Estado civil</label>
                                     <asp:TextBox ID="TextBox1" CssClass="form-control form-control-sm" Enabled="false" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                    <asp:DropDownList ID="ddlEstado" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal"></asp:DropDownList>
                                 </div>           
                             </div>
 
