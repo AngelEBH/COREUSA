@@ -31,7 +31,7 @@
 <body>
     <div class="card mb-0">
         <div class="card-header pb-1 pt-1">
-            <h5>Nueva solicitud de crédito</h5>
+            <h5>Nueva solicitud de crédito <small><span runat="server" id="lblMensaje" class="text-danger"></span></small></h5>
         </div>
         <div class="card-body">
             <form runat="server" id="frmSolicitud" class="" action="#" data-parsley-excluded="[disabled]">

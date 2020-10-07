@@ -19,9 +19,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     private static string pcID = "";
     private static string pcIDApp = "";
     private static string pcIDSesion = "";
-    private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-    public static DateTime HoraAlCargar;
-    public static Precalificado_ViewModel Precalificado = new Precalificado_ViewModel();
+    private static DSCore.DataCrypt DSC;
+    public static Precalificado_ViewModel Precalificado;
+    public static SolicitudesCredito_Registrar_Constantes Constantes;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -32,7 +32,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         {
             var lcURL = Request.Url.ToString();
             var liParamStart = lcURL.IndexOf("?");
-            HoraAlCargar = DateTime.Now;
+            DSC = new DSCore.DataCrypt();
+            Precalificado = new Precalificado_ViewModel();
+            Constantes = new SolicitudesCredito_Registrar_Constantes();
 
             string lcParametros;
             if (liParamStart > 0)
@@ -226,7 +228,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             if (int.Parse(sqlResultado["fiClienteSolicitudesActivas"].ToString()) > 0)
                             {
-                                //lblAlerta.Visible = true;
+                                lblMensaje.InnerText = "(Este cliente ya cuenta con una solicitud de crédito activa, esperar resolución)";
                             }
                         }
                     }
@@ -355,26 +357,12 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         }
     }
 
-    [WebMethod]
-    public static ClientesViewModel ObtenerInformacionCliente()
+    public void ObtenerInformacionCliente()
     {
-        SqlConnection sqlConexion = null;
-        SqlDataReader reader = null;
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        ClientesViewModel objCliente = new ClientesViewModel();
         try
         {
-            string lcURL = HttpContext.Current.Request.Url.ToString();
-            Uri lURLDesencriptado = DesencriptarURL(lcURL);
-            int IDUSR = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            int IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string identidad = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
-
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
             string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
+            var sqlConexion = new SqlConnection(sqlConnectionString);
 
             #region CLIENTES MASTER
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_ObtenerInformacion", sqlConexion);
@@ -579,16 +567,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         {
             ex.Message.ToString();
         }
-        finally
-        {
-            if (sqlConexion != null)
-            {
-                if (sqlConexion.State == ConnectionState.Open)
-                    sqlConexion.Close();
-            }
-            if (reader != null)
-                reader.Close();
-        }
         return objCliente;
     }
 
@@ -598,12 +576,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     {
         SqlConnection sqlConexion = null;
         SqlDataReader reader = null;
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         List<MunicipiosViewModel> municipios = new List<MunicipiosViewModel>();
         try
         {
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
             string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
             sqlConexion = new SqlConnection(sqlConnectionString);
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoMunicipio", sqlConexion);
@@ -627,16 +602,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         {
             ex.Message.ToString();
         }
-        finally
-        {
-            if (sqlConexion != null)
-            {
-                if (sqlConexion.State == ConnectionState.Open)
-                    sqlConexion.Close();
-            }
-            if (reader != null)
-                reader.Close();
-        }
         return municipios;
     }
 
@@ -645,7 +610,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     {
         SqlConnection sqlConexion = null;
         SqlDataReader reader = null;
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         List<CiudadesViewModel> ciudades = new List<CiudadesViewModel>();
         try
         {
@@ -676,16 +640,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         {
             ex.Message.ToString();
         }
-        finally
-        {
-            if (sqlConexion != null)
-            {
-                if (sqlConexion.State == ConnectionState.Open)
-                    sqlConexion.Close();
-            }
-            if (reader != null)
-                reader.Close();
-        }
         return ciudades;
     }
 
@@ -694,12 +648,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     {
         SqlConnection sqlConexion = null;
         SqlDataReader reader = null;
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         List<BarriosColoniasViewModel> Barrios = new List<BarriosColoniasViewModel>();
         try
         {
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
             string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
             sqlConexion = new SqlConnection(sqlConnectionString);
             SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoBarrios", sqlConexion);
@@ -726,16 +677,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         catch (Exception ex)
         {
             ex.Message.ToString();
-        }
-        finally
-        {
-            if (sqlConexion != null)
-            {
-                if (sqlConexion.State == ConnectionState.Open)
-                    sqlConexion.Close();
-            }
-            if (reader != null)
-                reader.Close();
         }
         return Barrios;
     }
@@ -1225,16 +1166,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     resultadoProceso.message = "Error al guardar solicitud, contacte al administrador";
                     ExceptionLogging.SendExcepToDB(ex);
                 }
-                finally
-                {
-                    if (sqlConexion != null)
-                    {
-                        if (sqlConexion.State == ConnectionState.Open)
-                            sqlConexion.Close();
-                    }
-                    if (reader != null)
-                        reader.Close();
-                }
             }
         }
         return resultadoProceso;
@@ -1281,16 +1212,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         catch (Exception ex)
         {
             ex.Message.ToString();
-        }
-        finally
-        {
-            if (conn != null)
-            {
-                if (conn.State == ConnectionState.Open)
-                    conn.Close();
-            }
-            if (reader != null)
-                reader.Close();
         }
         return objPrecalificado;
     }
@@ -1361,4 +1282,19 @@ public class CotizadorProductos_ViewModel
     public int Plazo { get; set; }
     public string TipoCuota { get; set; }
     public decimal CuotaQuincenal { get; set; }
+}
+
+public class SolicitudesCredito_Registrar_Constantes
+{
+    public DateTime HoraAlCargar { get; set; }
+    public bool EsClienteNuevo { get; set; }
+    public decimal PrestamoMaximo_Monto { get; set; }
+    public decimal PrestamoMaximo_Cuota { get; set; }
+    public int PrestamoMaximo_Plazo { get; set; }
+    public string PrestamoMaximo_TipoDePlazo { get; set; }
+
+    public SolicitudesCredito_Registrar_Constantes()
+    {
+        HoraAlCargar = DateTime.Now;
+    }
 }
