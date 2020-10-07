@@ -265,22 +265,13 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtProfesion;
 
     /// <summary>
-    /// Control txtCorreoElectronico.
+    /// Control ddlEstadoCivil.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtCorreoElectronico;
-
-    /// <summary>
-    /// Control txtNumeroTelefono.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtNumeroTelefono;
+    protected global::System.Web.UI.WebControls.DropDownList ddlEstadoCivil;
 
     /// <summary>
     /// Control txtFechaDeNacimiento.
@@ -301,29 +292,335 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtEdadDelCliente;
 
     /// <summary>
-    /// Control TextBox1.
+    /// Control txtCorreoElectronico.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBox1;
+    protected global::System.Web.UI.WebControls.TextBox txtCorreoElectronico;
 
     /// <summary>
-    /// Control ddlEstado.
+    /// Control txtNumeroTelefono.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlEstado;
+    protected global::System.Web.UI.WebControls.TextBox txtNumeroTelefono;
 
     /// <summary>
-    /// Control telefonoMovil.
+    /// Control ddlTipoDeVivienda.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox telefonoMovil;
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeVivienda;
+
+    /// <summary>
+    /// Control ddlTiempoDeResidir.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlTiempoDeResidir;
+
+    /// <summary>
+    /// Control ddlDepartamentoDomicilio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlDepartamentoDomicilio;
+
+    /// <summary>
+    /// Control ddlMunicipioDomicilio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlMunicipioDomicilio;
+
+    /// <summary>
+    /// Control ddlCiudadPobladoDomicilio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlCiudadPobladoDomicilio;
+
+    /// <summary>
+    /// Control ddlBarrioColoniaDomicilio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlBarrioColoniaDomicilio;
+
+    /// <summary>
+    /// Control txtTelefonoCasa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtTelefonoCasa;
+
+    /// <summary>
+    /// Control txtDireccionDetalladaDomicilio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtDireccionDetalladaDomicilio;
+
+    /// <summary>
+    /// Control txtNombreDelTrabajo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtNombreDelTrabajo;
+
+    /// <summary>
+    /// Control txtFechaDeIngreso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtFechaDeIngreso;
+
+    /// <summary>
+    /// Control txtPuestoAsignado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtPuestoAsignado;
+
+    /// <summary>
+    /// Control txtIngresosMensuales.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtIngresosMensuales;
+
+    /// <summary>
+    /// Control txtTelefonoEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtTelefonoEmpresa;
+
+    /// <summary>
+    /// Control txtExtensionRecursosHumanos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtExtensionRecursosHumanos;
+
+    /// <summary>
+    /// Control txtExtensionCliente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtExtensionCliente;
+
+    /// <summary>
+    /// Control txtFuenteDeOtrosIngresos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtFuenteDeOtrosIngresos;
+
+    /// <summary>
+    /// Control txtValorOtrosIngresos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtValorOtrosIngresos;
+
+    /// <summary>
+    /// Control ddlDepartamentoEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlDepartamentoEmpresa;
+
+    /// <summary>
+    /// Control ddlMunicipioEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlMunicipioEmpresa;
+
+    /// <summary>
+    /// Control ddlCiudadPobladoEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlCiudadPobladoEmpresa;
+
+    /// <summary>
+    /// Control ddlBarrioColoniaEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlBarrioColoniaEmpresa;
+
+    /// <summary>
+    /// Control txtDireccionDetalladaEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtDireccionDetalladaEmpresa;
+
+    /// <summary>
+    /// Control txtIdentidadConyugue.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtIdentidadConyugue;
+
+    /// <summary>
+    /// Control txtNombresConyugue.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtNombresConyugue;
+
+    /// <summary>
+    /// Control txtApellidosConyugue.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtApellidosConyugue;
+
+    /// <summary>
+    /// Control txtFechaNacimientoConyugue.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtFechaNacimientoConyugue;
+
+    /// <summary>
+    /// Control txtTelefonoConyugue.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtTelefonoConyugue;
+
+    /// <summary>
+    /// Control txtLugarDeTrabajoConyuge.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtLugarDeTrabajoConyuge;
+
+    /// <summary>
+    /// Control txtIngresosMensualesConyugue.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtIngresosMensualesConyugue;
+
+    /// <summary>
+    /// Control txtTelefonoTrabajoConyugue.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtTelefonoTrabajoConyugue;
+
+    /// <summary>
+    /// Control txtNombreReferencia.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtNombreReferencia;
+
+    /// <summary>
+    /// Control txtTelefonoReferencia.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtTelefonoReferencia;
+
+    /// <summary>
+    /// Control ddTiempoDeConocerReferencia.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddTiempoDeConocerReferencia;
+
+    /// <summary>
+    /// Control ddlParentescos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlParentescos;
+
+    /// <summary>
+    /// Control txtLugarTrabajoReferencia.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtLugarTrabajoReferencia;
 }
