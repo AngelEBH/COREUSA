@@ -11,17 +11,17 @@ using System.Linq;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.WebControls;
-using UI.Web.Models.ViewModel;
 
 public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 {
-    private static string pcIDUsuario = "";
     private static string pcID = "";
     private static string pcIDApp = "";
     private static string pcIDSesion = "";
+    private static string pcIDUsuario = "";
     private static DSCore.DataCrypt DSC;
     public static Precalificado_ViewModel Precalificado;
     public static SolicitudesCredito_Registrar_Constantes Constantes;
+    public static List<TipoDocumento_ViewModel> DocumentosRequeridos;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -35,6 +35,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             DSC = new DSCore.DataCrypt();
             Precalificado = new Precalificado_ViewModel();
             Constantes = new SolicitudesCredito_Registrar_Constantes();
+            DocumentosRequeridos = new List<TipoDocumento_ViewModel>();
 
             string lcParametros;
             if (liParamStart > 0)
@@ -47,12 +48,16 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 var pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
                 CargarPrecalificado();
                 ValidarClienteSolicitudesActivas();
+                CargarListas();
+                CargarOrigenes();
+                ObtenerInformacionCliente();
             }
         }
 
@@ -127,7 +132,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         while (sqlResultado.Read())
                         {
                             Precalificado.Identidad = sqlResultado["fcIdentidad"].ToString();
-                            Precalificado.Rtn = sqlResultado["fcRTN"].ToString();
+                            //Precalificado.Rtn = sqlResultado["fcRTN"].ToString();
                             Precalificado.PrimerNombre = sqlResultado["fcPrimerNombre"].ToString();
                             Precalificado.SegundoNombre = sqlResultado["fcSegundoNombre"].ToString();
                             Precalificado.PrimerApellido = sqlResultado["fcPrimerApellido"].ToString();
@@ -164,7 +169,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@pcIdentidad", Precalificado.Identidad);
                     sqlComando.Parameters.AddWithValue("@piConObligaciones", Precalificado.Obligaciones > 0 ? "1" : "0");
                     sqlComando.Parameters.AddWithValue("@pnIngresosBrutos", Precalificado.Ingresos);
-                    sqlComando.Parameters.AddWithValue("@pnIngresosDisponibles", Precalificado.Disponible);
+                    sqlComando.Parameters.AddWithValue("@pnIngresosDisponible", Precalificado.Disponible);
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -185,8 +190,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                     Producto = sqlResultado["fcProducto"].ToString(),
                                     MontoOfertado = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString()),
                                     Plazo = int.Parse(sqlResultado["fiPlazo"].ToString()),
-                                    CuotaQuincenal = decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
-                                    TipoCuota = sqlResultado["fcTipodeCuota"].ToString()
+                                    Cuota = decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
+                                    TipoPlazo = sqlResultado["fcTipodeCuota"].ToString()
                                 };
                             }
                             montoMayor = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString());
@@ -229,6 +234,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             if (int.Parse(sqlResultado["fiClienteSolicitudesActivas"].ToString()) > 0)
                             {
                                 lblMensaje.InnerText = "(Este cliente ya cuenta con una solicitud de crédito activa, esperar resolución)";
+                                lblMensaje.Visible = true;
                             }
                         }
                     }
@@ -303,18 +309,46 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlResultado.NextResult();
 
                         /* Tipos de documentos */
-                        //ddlTipoDeDocumentos.Items.Clear();
+                        while (sqlResultado.Read())
+                        {
+                            DocumentosRequeridos.Add(new TipoDocumento_ViewModel() 
+                            {
+                                IdTipoDocumento = (short)sqlResultado["fiIDTipoDocumento"],
+                                DescripcionTipoDocumento = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
+                                CantidadMaximaDoucmentos = (byte)sqlResultado["fiCantidadDocumentos"],
+                                TipoVisibilidad = (byte)sqlResultado["fiTipodeVisibilidad"]
+                            });
+                        }
 
                         sqlResultado.NextResult();
 
                         /* Parentescos */
-                        ddlNacionalidad.Items.Clear();
-                        ddlNacionalidad.Items.Add(new ListItem("Seleccionar", "0"));
+                        ddlParentescos.Items.Clear();
+                        ddlParentescos.Items.Add(new ListItem("Seleccionar", "0"));
                         while (sqlResultado.Read())
                         {
-                            ddlNacionalidad.Items.Add(new ListItem(sqlResultado["fcDescripcionNacionalidad"].ToString(), sqlResultado["fiIDNacionalidad"].ToString()));
+                            ddlParentescos.Items.Add(new ListItem(sqlResultado["fcDescripcionParentesco"].ToString(), sqlResultado["fiIDParentesco"].ToString()));
                         }
 
+                        sqlResultado.NextResult();
+
+                        /* Tiempo de residir */
+                        ddlTiempoDeResidir.Items.Clear();
+                        ddlTiempoDeResidir.Items.Add(new ListItem("Seleccionar", "0"));
+                        while (sqlResultado.Read())
+                        {
+                            ddlTiempoDeResidir.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeResidir"].ToString()));
+                        }
+
+                        sqlResultado.NextResult();
+
+                        /* Tiempo de conocer referencia */
+                        ddlTiempoDeConocerReferencia.Items.Clear();
+                        ddlTiempoDeConocerReferencia.Items.Add(new ListItem("Seleccionar", "0"));
+                        while (sqlResultado.Read())
+                        {
+                            ddlTiempoDeConocerReferencia.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
+                        }
                     }
                 }
             }
@@ -365,7 +399,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_ObtenerInformacion", sqlConexion))
+                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_ObtenerInformacionPorIdentidad", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", pcID);
@@ -378,314 +412,361 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         if (!reader.HasRows)
                             return;
 
+                        /* Clientes Maestro */
                         while (reader.Read())
                         {
-                            objCliente.clientesMaster = new ClientesMasterViewModel()
+                            Constantes.EsClienteNuevo = false;
+                            Constantes.IdCliente = int.Parse(reader["fiIDCliente"].ToString());
+                            Constantes.EstadoCliente = (bool)reader["fbClienteActivo"];
+                            Constantes.RazonInactivo = reader["fcRazonInactivo"].ToString();
+
+                            txtIdentidadCliente.Text = reader["fcIdentidadCliente"].ToString();
+                            txtRtnCliente.Text = reader["fcRTN"].ToString();
+                            txtPrimerNombre.Text = reader["fcPrimerNombreCliente"].ToString();
+                            txtSegundoNombre.Text = reader["fcSegundoNombreCliente"].ToString();
+                            txtPrimerApellido.Text = reader["fcPrimerApellidoCliente"].ToString();
+                            txtSegundoApellido.Text = reader["fcSegundoApellidoCliente"].ToString();
+                            //txtNumeroTelefono.Text = reader["fcTelefonoPrimarioCliente"].ToString();
+                            ddlNacionalidad.SelectedValue = reader["fiNacionalidadCliente"].ToString();
+
+                            DateTime FechaNacimientoCliente = (DateTime)reader["fdNacimientoCliente"];
+                            txtFechaDeNacimiento.Text = FechaNacimientoCliente.ToString("MM/dd/yyyy");
+                            
+                            /* Calcular edad del cliente */
+                            var hoy = DateTime.Today;
+                            var edad = hoy.Year - FechaNacimientoCliente.Year;
+                            if (FechaNacimientoCliente.Date > hoy.AddYears(-edad)) edad--;
+
+                            txtEdadDelCliente.Text = edad + " años";
+                            txtCorreoElectronico.Text = reader["fcCorreoElectronicoCliente"].ToString();
+                            txtProfesion.Text = reader["fcProfesionOficioCliente"].ToString();
+
+                            if (reader["fcSexoCliente"].ToString() == "F")
                             {
-                                fiIDCliente = (int)reader["fiIDCliente"],
-                                fcIdentidadCliente = (string)reader["fcIdentidadCliente"],
-                                RTNCliente = (string)reader["fcRTN"],
-                                fcPrimerNombreCliente = (string)reader["fcPrimerNombreCliente"],
-                                fcSegundoNombreCliente = (string)reader["fcSegundoNombreCliente"],
-                                fcPrimerApellidoCliente = (string)reader["fcPrimerApellidoCliente"],
-                                fcSegundoApellidoCliente = (string)reader["fcSegundoApellidoCliente"],
-                                fcTelefonoCliente = (string)reader["fcTelefonoPrimarioCliente"],
-                                fiNacionalidadCliente = (int)reader["fiNacionalidadCliente"],
-                                fcDescripcionNacionalidad = (string)reader["fcDescripcionNacionalidad"],
-                                fbNacionalidadActivo = (bool)reader["fbNacionalidadActivo"],
-                                fdFechaNacimientoCliente = (DateTime)reader["fdFechaNacimientoCliente"],
-                                fcCorreoElectronicoCliente = (string)reader["fcCorreoElectronicoCliente"],
-                                fcProfesionOficioCliente = (string)reader["fcProfesionOficioCliente"],
-                                fcSexoCliente = (string)reader["fcSexoCliente"],
-                                fiIDEstadoCivil = (int)reader["fiIDEstadoCivil"],
-                                fcDescripcionEstadoCivil = (string)reader["fcDescripcionEstadoCivil"],
-                                fiIDVivienda = (int)reader["fiIDVivienda"],
-                                fcDescripcionVivienda = (string)reader["fcDescripcionVivienda"],
-                                fiTiempoResidir = (short)reader["fiTiempoResidir"],
-                                fbClienteActivo = (bool)reader["fbClienteActivo"],
-                                fcRazonInactivo = (string)reader["fcRazonInactivo"],
-                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
-                            };
+                                rbSexoFemenino.Checked = true;
+                            }
+                            else
+                            {
+                                rbSexoMasculino.Checked = true;
+                            }
+                            ddlEstadoCivil.Text = reader["fiIDEstadoCivil"].ToString();
+                            ddlTipoDeVivienda.Text = reader["fiIDVivienda"].ToString();
+                            ddlTiempoDeResidir.Text = reader["fiTiempoResidir"].ToString();
+                        }
+
+                        reader.NextResult();
+
+                        /* Información de domicilio */
+                        while (reader.Read())
+                        {
+                            txtTelefonoCasa.Text = reader["fcTelefonoCasa"].ToString();
+                            txtDireccionDetalladaDomicilio.Text = reader["fcDireccionDetalladaDomicilio"].ToString();
+                            txtReferenciasDelDomicilio.Value = reader["fcReferenciasDireccionDetalladaDomicilio"].ToString();
+                            
+                            /* Departamento */
+                            ddlDepartamentoDomicilio.SelectedValue = reader["fiCodDepartamento"].ToString();
+
+                            /* Municipio del domicilio */
+                            var municipiosDeDepartamento = CargarMunicipios(int.Parse(reader["fiCodDepartamento"].ToString()));
+
+                            ddlMunicipioDomicilio.Items.Clear();
+                            ddlMunicipioDomicilio.Items.Add(new ListItem("Seleccionar", "0"));
+
+                            municipiosDeDepartamento.ForEach(municipio =>
+                            {
+                                ddlMunicipioDomicilio.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
+                            });
+                            ddlMunicipioDomicilio.SelectedValue = reader["fiCodMunicipio"].ToString();
+                            ddlMunicipioDomicilio.Enabled = true;
+
+                            /* Ciudad o Poblado del domicilio */
+                            var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(reader["fiCodDepartamento"].ToString()), int.Parse(reader["fiCodMunicipio"].ToString()));
+
+                            ddlCiudadPobladoDomicilio.Items.Clear();
+                            ddlCiudadPobladoDomicilio.Items.Add(new ListItem("Seleccionar", "0"));
+
+                            ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
+                            {
+                                ddlCiudadPobladoDomicilio.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
+                            });
+                            ddlCiudadPobladoDomicilio.SelectedValue = reader["fiCodPoblado"].ToString();
+                            ddlCiudadPobladoDomicilio.Enabled = true;
+
+                            /* Barrio o colonia del domicilio */
+                            var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(reader["fiCodDepartamento"].ToString()), int.Parse(reader["fiCodMunicipio"].ToString()), int.Parse(reader["fiCodPoblado"].ToString()));
+
+                            ddlBarrioColoniaDomicilio.Items.Clear();
+                            ddlBarrioColoniaDomicilio.Items.Add(new ListItem("Seleccionar", "0"));
+
+                            barriosColoniasDelPoblado.ForEach(barrioColonia =>
+                            {
+                                ddlBarrioColoniaDomicilio.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
+                            });
+                            ddlBarrioColoniaDomicilio.SelectedValue = reader["fiCodBarrio"].ToString();
+                            ddlBarrioColoniaDomicilio.Enabled = true;
+                        }
+
+                        reader.NextResult();
+
+                        /* Información laboral */
+                        while (reader.Read())
+                        {
+                            txtNombreDelTrabajo.Text = reader["fcNombreTrabajo"].ToString();
+                            txtFechaDeIngreso.Text = DateTime.Parse(reader["fdFechaIngreso"].ToString()).ToString("MM/dd/yyyy");                            
+                            txtPuestoAsignado.Text = reader["fcPuestoAsignado"].ToString();
+                            txtIngresosMensuales.Text = reader["fnIngresosMensuales"].ToString();
+
+                            txtTelefonoEmpresa.Text = reader["fcTelefonoEmpresa"].ToString();
+                            txtExtensionRecursosHumanos.Text = reader["fcExtensionRecursosHumanos"].ToString();
+                            txtExtensionCliente.Text = reader["fcExtensionCliente"].ToString();
+                            txtFuenteDeOtrosIngresos.Text = reader["fcFuenteOtrosIngresos"].ToString();
+                            txtValorOtrosIngresos.Text = reader["fnValorOtrosIngresosMensuales"].ToString();
+                            txtDireccionDetalladaEmpresa.Text = reader["fcDireccionDetalladaEmpresa"].ToString();
+                            txtReferenciasEmpresa.Value = reader["fcReferenciasDireccionDetalladaEmpresa"].ToString();
+
+                            /* Departamento de la empresa */
+                            ddlDepartamentoEmpresa.SelectedValue = reader["fiIDDepartamento"].ToString();
+
+                            /* Municipio de la empresa */
+                            var municipiosDeDepartamento = CargarMunicipios(int.Parse(reader["fiIDDepartamento"].ToString()));
+
+                            ddlMunicipioEmpresa.Items.Clear();
+                            ddlMunicipioEmpresa.Items.Add(new ListItem("Seleccionar", "0"));
+
+                            municipiosDeDepartamento.ForEach(municipio =>
+                            {
+                                ddlMunicipioEmpresa.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
+                            });
+                            ddlMunicipioEmpresa.SelectedValue = reader["fiIDMunicipio"].ToString();
+                            ddlMunicipioEmpresa.Enabled = true;
+
+                            /* Ciudad o Poblado de la empresa */
+                            var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(reader["fiIDDepartamento"].ToString()), int.Parse(reader["fiIDMunicipio"].ToString()));
+
+                            ddlCiudadPobladoEmpresa.Items.Clear();
+                            ddlCiudadPobladoEmpresa.Items.Add(new ListItem("Seleccionar", "0"));
+
+                            ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
+                            {
+                                ddlCiudadPobladoEmpresa.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
+                            });
+                            ddlCiudadPobladoEmpresa.SelectedValue = reader["fiIDCiudad"].ToString();
+                            ddlCiudadPobladoEmpresa.Enabled = true;
+
+                            /* Barrio o colonia de la empresa */
+                            var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(reader["fiIDDepartamento"].ToString()), int.Parse(reader["fiIDMunicipio"].ToString()), int.Parse(reader["fiIDCiudad"].ToString()));
+
+                            ddlBarrioColoniaEmpresa.Items.Clear();
+                            ddlBarrioColoniaEmpresa.Items.Add(new ListItem("Seleccionar", "0"));
+
+                            barriosColoniasDelPoblado.ForEach(barrioColonia =>
+                            {
+                                ddlBarrioColoniaEmpresa.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
+                            });
+                            ddlBarrioColoniaEmpresa.SelectedValue = reader["fiIDBarrioColonia"].ToString();
+                            ddlBarrioColoniaEmpresa.Enabled = true;
+                        }
+
+                        reader.NextResult();
+
+                        /* Información del conyugue */
+                        while (reader.Read())
+                        {
+                            txtIdentidadConyugue.Text = reader["fcIndentidadConyugue"].ToString();
+                            txtNombresConyugue.Text = reader["fcNombreCompletoConyugue"].ToString();
+                            txtFechaNacimientoConyugue.Text = DateTime.Parse(reader["fdFechaNacimientoConyugue"].ToString()).ToString("MM/dd/yyyy");
+                            txtTelefonoConyugue.Text = reader["fcTelefonoConyugue"].ToString();
+                            txtLugarDeTrabajoConyuge.Text = reader["fcLugarTrabajoConyugue"].ToString();
+                            txtIngresosMensualesConyugue.Text = reader["fnIngresosMensualesConyugue"].ToString();
+                            txtTelefonoTrabajoConyugue.Text = reader["fcTelefonoTrabajoConyugue"].ToString();
                         }
                     }
                 }
-
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Laboral_Listar", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", 0);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            objCliente.ClientesInformacionLaboral = new ClientesInformacionLaboralViewModel()
-                            {
-                                fiIDCliente = (int)reader["fiIDCliente"],
-                                fiIDInformacionLaboral = (int)reader["fiIDInformacionLaboral"],
-                                fcNombreTrabajo = (string)reader["fcNombreTrabajo"],
-                                fiIngresosMensuales = (decimal)reader["fnIngresosMensuales"],
-                                fcPuestoAsignado = (string)reader["fcPuestoAsignado"],
-                                fcFechaIngreso = (DateTime)reader["fdFechaIngreso"],
-                                fdTelefonoEmpresa = (string)reader["fcTelefonoEmpresa"],
-                                fcExtensionRecursosHumanos = (string)reader["fcExtensionRecursosHumanos"],
-                                fcExtensionCliente = (string)reader["fcExtensionCliente"],
-                                fcDireccionDetalladaEmpresa = (string)reader["fcDireccionDetalladaEmpresa"],
-                                fcReferenciasDireccionDetallada = (string)reader["fcReferenciasDireccionDetalladaEmpresa"],
-                                fcFuenteOtrosIngresos = (string)reader["fcFuenteOtrosIngresos"],
-                                fiValorOtrosIngresosMensuales = (decimal)reader["fnValorOtrosIngresosMensuales"],
-                                fiIDBarrioColonia = (int)reader["fiIDBarrioColonia"],
-                                fcNombreBarrioColonia = (string)reader["fcBarrio"],
-                                fiIDCiudad = (int)reader["fiIDCiudad"],
-                                fcNombreCiudad = (string)reader["fcPoblado"],
-                                fiIDMunicipio = (int)reader["fiIDMunicipio"],
-                                fcNombreMunicipio = (string)reader["fcMunicipio"],
-                                fiIDDepto = (int)reader["fiIDDepartamento"],
-                                fcNombreDepto = (string)reader["fcDepartamento"],
-                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
-                            };
-                        }
-                    }
-                }
-
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionConyugal_Listar", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
-                    sqlComando.Parameters.AddWithValue("@fiIDSOlicitud", 0);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            objCliente.ClientesInformacionConyugal = new ClientesInformacionConyugalViewModel()
-                            {
-                                fiIDInformacionConyugal = (int)reader["fiIDInformacionConyugal"],
-                                fiIDCliente = (int)reader["fiIDCliente"],
-                                fcNombreCompletoConyugue = (string)reader["fcNombreCompletoConyugue"],
-                                fcIndentidadConyugue = (string)reader["fcIndentidadConyugue"],
-                                fdFechaNacimientoConyugue = (DateTime)reader["fdFechaNacimientoConyugue"],
-                                fcTelefonoConyugue = (string)reader["fcTelefonoConyugue"],
-                                fcLugarTrabajoConyugue = (string)reader["fcLugarTrabajoConyugue"],
-                                fcIngresosMensualesConyugue = (decimal)reader["fnIngresosMensualesConyugue"],
-                                fcTelefonoTrabajoConyugue = (string)reader["fcTelefonoTrabajoConyugue"],
-                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
-                            };
-                        }
-                    }
-                }
-
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionDomiciliar_Listar", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", 0);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-
-                    }
-                }
             }
-
-            while (reader.Read())
-            {
-                objCliente.ClientesInformacionDomiciliar = new ClientesInformacionDomiciliarViewModel()
-                {
-                    fiIDInformacionDomicilio = (int)reader["fiIDInformacionDomicilio"],
-                    fiIDCliente = (int)reader["fiIDCliente"],
-                    fcTelefonoCasa = (string)reader["fcTelefonoCasa"],
-                    fcDireccionDetallada = (string)reader["fcDireccionDetalladaDomicilio"],
-                    fcReferenciasDireccionDetallada = (string)reader["fcReferenciasDireccionDetalladaDomicilio"],
-                    fiIDBarrioColonia = (short)reader["fiCodBarrio"],
-                    fcNombreBarrioColonia = (string)reader["fcBarrio"],
-                    fiIDCiudad = (short)reader["fiCodPoblado"],
-                    fcNombreCiudad = (string)reader["fcPoblado"],
-                    fiIDMunicipio = (short)reader["fiCodMunicipio"],
-                    fcNombreMunicipio = (string)reader["fcMunicipio"],
-                    fiIDDepto = (short)reader["fiCodDepartamento"],
-                    fcNombreDepto = (string)reader["fcDepartamento"],
-                    fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                    fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                    fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                    fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
-                };
-            }
-            if (reader != null)
-                reader.Close();
-            sqlComando.Dispose();
-            #endregion
-
-            #region CLIENTE REFERENCIAS PERSONALES
-            objCliente.ClientesReferenciasPersonales = new List<ClientesReferenciasViewModel>();
-            sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Referencias_Listar", sqlConexion);
-            sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
-            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", 0);
-            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
-            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-            sqlComando.Parameters.AddWithValue("@piIDUsuario", IDUSR);
-            reader = sqlComando.ExecuteReader();
-            while (reader.Read())
-            {
-                objCliente.ClientesReferenciasPersonales.Add(new ClientesReferenciasViewModel()
-                {
-                    fiIDReferencia = (int)reader["fiIDReferencia"],
-                    fiIDCliente = (int)reader["fiIDCliente"],
-                    fcNombreCompletoReferencia = (string)reader["fcNombreCompletoReferencia"],
-                    fcLugarTrabajoReferencia = (string)reader["fcLugarTrabajoReferencia"],
-                    fiTiempoConocerReferencia = (short)reader["fiTiempoConocerReferencia"],
-                    fcTelefonoReferencia = (string)reader["fcTelefonoReferencia"],
-                    fiIDParentescoReferencia = (int)reader["fiIDParentescoReferencia"],
-                    fcDescripcionParentesco = (string)reader["fcDescripcionParentesco"],
-                    fbReferenciaActivo = (bool)reader["fbReferenciaActivo"],
-                    fcRazonInactivo = (string)reader["fcRazonInactivo"],
-                    fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                    fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                    fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                    fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
-                    fcComentarioDeptoCredito = (string)reader["fcComentarioDeptoCredito"],
-                    fiAnalistaComentario = (int)reader["fiAnalistaComentario"]
-                });
-            }
-            sqlComando.Dispose();
-            #endregion
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return objCliente;
     }
 
-
-    [WebMethod]
-    public static List<MunicipiosViewModel> CargarMunicipios(int CODDepto)
+    public static List<Municipios_ViewModel> CargarMunicipios(int idDepartamento)
     {
-        SqlConnection sqlConexion = null;
-        SqlDataReader reader = null;
-        List<MunicipiosViewModel> municipios = new List<MunicipiosViewModel>();
+        var municipios = new List<Municipios_ViewModel>();
         try
         {
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
-            SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoMunicipio", sqlConexion);
-            sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@piPais", 1);
-            sqlComando.Parameters.AddWithValue("@piDepartamento", CODDepto);
-            sqlComando.Parameters.AddWithValue("@piMunicipio", 0);
-            sqlConexion.Open();
-            reader = sqlComando.ExecuteReader();
-            while (reader.Read())
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
             {
-                municipios.Add(new MunicipiosViewModel()
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoMunicipio", sqlConexion))
                 {
-                    fiIDDepto = (short)reader["fiCodDepartamento"],
-                    fiIDMunicipio = (short)reader["fiCodMunicipio"],
-                    fcNombreMunicipio = (string)reader["fcMunicipio"],
-                });
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piPais", 1);
+                    sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
+                    sqlComando.Parameters.AddWithValue("@piMunicipio", 0);
+                }
             }
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
+            municipios = null;
         }
         return municipios;
     }
 
-    [WebMethod]
-    public static List<CiudadesViewModel> CargarPoblados(int CODDepto, int CODMunicipio)
+    public static List<Ciudades_ViewModel> CargarCiudadesPoblados(int idDepartamento, int idMunicipio)
     {
-        SqlConnection sqlConexion = null;
-        SqlDataReader reader = null;
-        List<CiudadesViewModel> ciudades = new List<CiudadesViewModel>();
+        var ciudades = new List<Ciudades_ViewModel>();
         try
         {
-            //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
-            //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
-            SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoPoblado", sqlConexion);
-            sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@piPais", 1);
-            sqlComando.Parameters.AddWithValue("@piDepartamento", CODDepto);
-            sqlComando.Parameters.AddWithValue("@piMunicipio", CODMunicipio);
-            sqlComando.Parameters.AddWithValue("@piPoblado", 0);
-            sqlConexion.Open();
-            reader = sqlComando.ExecuteReader();
-            while (reader.Read())
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
             {
-                ciudades.Add(new CiudadesViewModel()
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoPoblado", sqlConexion))
                 {
-                    fiIDDepto = (short)reader["fiCodDepartamento"],
-                    fiIDMunicipio = (short)reader["fiCodMunicipio"],
-                    fiIDCiudad = (short)reader["fiCodPoblado"],
-                    fcNombreCiudad = (string)reader["fcPoblado"],
-                });
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piPais", 1);
+                    sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
+                    sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
+                    sqlComando.Parameters.AddWithValue("@piPoblado", 0);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            ciudades.Add(new Ciudades_ViewModel()
+                            {
+                                IdDepartamento = (short)sqlResultado["fiCodDepartamento"],
+                                IdMunicipio = (short)sqlResultado["fiCodMunicipio"],
+                                IdCiudadPoblado = (short)sqlResultado["fiCodPoblado"],
+                                NombreCiudadPoblado = sqlResultado["fcPoblado"].ToString(),
+                            });
+                        }
+                    }
+                }
             }
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
+            ciudades = null;
         }
         return ciudades;
     }
 
-    [WebMethod]
-    public static List<BarriosColoniasViewModel> CargarBarrios(int CODDepto, int CODMunicipio, int CODPoblado)
+    public static List<BarriosColonias_ViewModel> CargarBarriosColonias(int idDepartamento, int idMunicipio, int idCiudadPoblado)
     {
-        SqlConnection sqlConexion = null;
-        SqlDataReader reader = null;
-        List<BarriosColoniasViewModel> Barrios = new List<BarriosColoniasViewModel>();
+        var BarriosColonias = new List<BarriosColonias_ViewModel>();
         try
         {
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            sqlConexion = new SqlConnection(sqlConnectionString);
-            SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoBarrios", sqlConexion);
-            sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@piPais", 1);
-            sqlComando.Parameters.AddWithValue("@piDepartamento", CODDepto);
-            sqlComando.Parameters.AddWithValue("@piMunicipio", CODMunicipio);
-            sqlComando.Parameters.AddWithValue("@piPoblado", CODPoblado);
-            sqlComando.Parameters.AddWithValue("@piBarrio", 0);
-            sqlConexion.Open();
-            reader = sqlComando.ExecuteReader();
-            while (reader.Read())
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
             {
-                Barrios.Add(new BarriosColoniasViewModel()
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoBarrios", sqlConexion))
                 {
-                    fiIDDepto = (short)reader["fiCodDepartamento"],
-                    fiIDMunicipio = (short)reader["fiCodMunicipio"],
-                    fiIDCiudad = (short)reader["fiCodPoblado"],
-                    fiIDBarrioColonia = (short)reader["fiCodBarrio"],
-                    fcNombreBarrioColonia = (string)reader["fcBarrioColonia"],
-                });
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piPais", 1);
+                    sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
+                    sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
+                    sqlComando.Parameters.AddWithValue("@piPoblado", idCiudadPoblado);
+                    sqlComando.Parameters.AddWithValue("@piBarrio", 0);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            BarriosColonias.Add(new BarriosColonias_ViewModel()
+                            {
+                                IdDepartamento = (short)sqlResultado["fiCodDepartamento"],
+                                IdMunicipio = (short)sqlResultado["fiCodMunicipio"],
+                                IdCiudadPoblado = (short)sqlResultado["fiCodPoblado"],
+                                IdBarrioColonia = (short)sqlResultado["fiCodBarrio"],
+                                NombreBarrioColonia = sqlResultado["fcBarrioColonia"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            BarriosColonias = null;
+        }
+        return BarriosColonias;
+    }
+
+    [WebMethod]
+    public static List<TipoDocumento_ViewModel> CargarDocumentosRequeridos()
+    {
+        return DocumentosRequeridos;
+    }
+
+    [WebMethod]
+    public static List<Municipios_ViewModel> CargarListaMunicipios(int idDepartamento)
+    {
+        return CargarMunicipios(idDepartamento);
+    }
+
+    [WebMethod]
+    public static List<Ciudades_ViewModel> CargarListaCiudadesPoblados(int idDepartamento, int idMunicipio)
+    {
+        return CargarCiudadesPoblados(idDepartamento, idMunicipio);
+    }
+
+    [WebMethod]
+    public static List<BarriosColonias_ViewModel> CargarListaBarriosColonias(int idDepartamento, int idMunicipio, int idCiudadPoblado)
+    {
+        return CargarBarriosColonias(idDepartamento, idMunicipio, idCiudadPoblado);
+    }
+
+    [WebMethod]
+    public static List<CotizadorProductos_ViewModel> CargarPrestamosOfertados(decimal valorProducto, decimal valorPrima)
+    {
+        var PrestamosOfertados = new List<CotizadorProductos_ViewModel>();
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CredCotizador_ConPrima", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                    sqlComando.Parameters.AddWithValue("@pnValorProducto", valorProducto);
+                    sqlComando.Parameters.AddWithValue("@pnPrima", valorPrima);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        int IdContador = 1;
+
+                        while (sqlResultado.Read())
+                        {
+                            PrestamosOfertados.Add(new CotizadorProductos_ViewModel()
+                            {
+                                IdCotizacion = IdContador,
+                                Producto = sqlResultado["fcProducto"].ToString(),
+                                MontoOfertado = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString()),
+                                Plazo = int.Parse(sqlResultado["fiIDPlazo"].ToString()),
+                                Cuota = decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
+                                TipoPlazo = sqlResultado["fcTipodeCuota"].ToString()
+                            });
+                            IdContador++;
+                        }
+                    }
+                }
             }
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return Barrios;
+        return PrestamosOfertados;
     }
 
     [WebMethod]
@@ -700,7 +781,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         SqlDataReader reader = null;
         SqlCommand sqlComando;
         string MensajeError;
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         ResponseEntitie resultadoProceso = new ResponseEntitie();
 
         string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
@@ -1160,6 +1240,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
                     #endregion
+                    
                     tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
@@ -1177,69 +1258,24 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         }
         return resultadoProceso;
     }
-
-    [WebMethod]
-    public static PrecalificadoViewModel CargarPrestamosSugeridos(decimal valorProducto, decimal valorPrima)
-    {
-        PrecalificadoViewModel objPrecalificado = new PrecalificadoViewModel();
-        List<cotizadorProductosViewModel> listaCotizadorProductos = new List<cotizadorProductosViewModel>();
-        string connectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-        SqlConnection conn = null;
-        SqlDataReader reader = null;
-        try
-        {
-            string lcURL = HttpContext.Current.Request.Url.ToString();
-            Uri lURLDesencriptado = DesencriptarURL(lcURL);
-            string identidad = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
-
-            conn = new SqlConnection(connectionString);
-            SqlCommand cmd = new SqlCommand("CoreFinanciero.dbo.sp_CredCotizador_ConPrima", conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@pcIdentidad", identidad);
-            cmd.Parameters.AddWithValue("@pnValorProducto", valorProducto);
-            cmd.Parameters.AddWithValue("@pnPrima", valorPrima);
-            conn.Open();
-            reader = cmd.ExecuteReader();
-            int IDContador = 1;
-            while (reader.Read())
-            {
-                listaCotizadorProductos.Add(new cotizadorProductosViewModel()
-                {
-                    IDCotizacion = IDContador,
-                    ProductoDescripcion = (string)reader["fcProducto"].ToString(),
-                    fnMontoOfertado = decimal.Parse(reader["fnMontoOfertado"].ToString()),
-                    fiPlazo = int.Parse(reader["fiIDPlazo"].ToString()),
-                    fnCuotaQuincenal = decimal.Parse(reader["fnCuotaQuincenal"].ToString()),
-                    TipoCuota = (string)reader["fcTipodeCuota"]
-                });
-                IDContador += 1;
-            }
-            objPrecalificado.cotizadorProductos = listaCotizadorProductos;
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return objPrecalificado;
-    }
-
-    public static Uri DesencriptarURL(string URL)
+    
+    public static Uri DesencriptarURL(string Url)
     {
         Uri lURLDesencriptado = null;
         try
         {
             var lcParametros = "";
             var pcEncriptado = "";
-            var liParamStart = URL.IndexOf("?");
+            var liParamStart = Url.IndexOf("?");
 
             if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
+                lcParametros = Url.Substring(liParamStart, Url.Length - liParamStart);
             else
                 lcParametros = string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
+                pcEncriptado = Url.Substring((liParamStart + 1), Url.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
@@ -1280,6 +1316,7 @@ public class Precalificado_ViewModel
     public CotizadorProductos_ViewModel PrestamoMaximoSugerido { get; set; }
 
 }
+
 public class CotizadorProductos_ViewModel
 {
     public int IdCotizacion { get; set; }
@@ -1287,21 +1324,80 @@ public class CotizadorProductos_ViewModel
     public string Producto { get; set; }
     public decimal MontoOfertado { get; set; }
     public int Plazo { get; set; }
-    public string TipoCuota { get; set; }
-    public decimal CuotaQuincenal { get; set; }
+    public string TipoPlazo { get; set; }
+    public decimal Cuota { get; set; }
 }
 
 public class SolicitudesCredito_Registrar_Constantes
 {
     public DateTime HoraAlCargar { get; set; }
     public bool EsClienteNuevo { get; set; }
+    public int IdCliente { get; set; }
     public decimal PrestamoMaximo_Monto { get; set; }
     public decimal PrestamoMaximo_Cuota { get; set; }
     public int PrestamoMaximo_Plazo { get; set; }
     public string PrestamoMaximo_TipoDePlazo { get; set; }
+    public bool EstadoCliente { get; internal set; }
+    public string RazonInactivo { get; internal set; }
 
     public SolicitudesCredito_Registrar_Constantes()
     {
         HoraAlCargar = DateTime.Now;
     }
+}
+
+public class BarriosColonias_ViewModel
+{
+    public int IdCiudadPoblado { get; set; }
+    public int IdMunicipio { get; set; }
+    public int IdDepartamento { get; set; }
+    public int IdBarrioColonia { get; set; }
+    public string NombreBarrioColonia { get; set; }
+}
+
+public class Ciudades_ViewModel
+{
+    public int IdDepartamento { get; set; }
+    public int IdMunicipio { get; set; }
+    public int IdCiudadPoblado { get; set; }
+    public string NombreCiudadPoblado { get; set; }
+}
+
+public class Municipios_ViewModel
+{
+    public int IdDepartamento { get; set; }
+    public int IdMunicipio { get; set; }
+    public string NombreMunicipio { get; set; }
+}
+
+public class Cliente_ViewModel
+{
+    /* Clientes maestro */
+    public int IdCliente { get; set; }
+    public int IdTipoCliente { get; set; }
+    public string IdentidadCliente { get; set; }
+    public string RtnCliente { get; set; }
+    public string PrimerNombre { get; set; }
+    public string SegundoNombre { get; set; }
+    public string PrimerApellido { get; set; }
+    public string SegundoApellido { get; set; }
+    public string TelefonoCliente { get; set; }
+    public int IdNacionalidad { get; set; }
+    public DateTime FechaNacimiento { get; set; }
+    public string Correo { get; set; }
+    public string ProfesionOficio { get; set; }
+    public string Sexo { get; set; }
+    public int IdEstadoCivil { get; set; }
+    public int IdVivienda { get; set; }
+    public int IdTiempoResidir { get; set; }
+    public bool ClienteActivo { get; set; }
+    public string RazonInactivo { get; set; }
+}
+
+public class TipoDocumento_ViewModel
+{
+    public int IdTipoDocumento { get; set; }
+    public string DescripcionTipoDocumento { get; set; }
+    public int CantidadMaximaDoucmentos { get; set; }
+    public int TipoVisibilidad { get; set; }
 }

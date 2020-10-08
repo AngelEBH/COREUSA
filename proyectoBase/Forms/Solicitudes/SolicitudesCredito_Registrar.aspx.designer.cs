@@ -13,15 +13,6 @@ public partial class SolicitudesCredito_Registrar
 {
 
     /// <summary>
-    /// Control lblMensaje.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMensaje;
-
-    /// <summary>
     /// Control frmSolicitud.
     /// </summary>
     /// <remarks>
@@ -29,6 +20,15 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlForm frmSolicitud;
+
+    /// <summary>
+    /// Control lblMensaje.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMensaje;
 
     /// <summary>
     /// Control spinnerCargando.
@@ -301,6 +301,24 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtEdadDelCliente;
 
     /// <summary>
+    /// Control rbSexoMasculino.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton rbSexoMasculino;
+
+    /// <summary>
+    /// Control rbSexoFemenino.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton rbSexoFemenino;
+
+    /// <summary>
     /// Control txtCorreoElectronico.
     /// </summary>
     /// <remarks>
@@ -389,6 +407,15 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtDireccionDetalladaDomicilio;
+
+    /// <summary>
+    /// Control txtReferenciasDelDomicilio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtReferenciasDelDomicilio;
 
     /// <summary>
     /// Control txtNombreDelTrabajo.
@@ -517,6 +544,15 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtDireccionDetalladaEmpresa;
 
     /// <summary>
+    /// Control txtReferenciasEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtReferenciasEmpresa;
+
+    /// <summary>
     /// Control txtIdentidadConyugue.
     /// </summary>
     /// <remarks>
@@ -533,15 +569,6 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtNombresConyugue;
-
-    /// <summary>
-    /// Control txtApellidosConyugue.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtApellidosConyugue;
 
     /// <summary>
     /// Control txtFechaNacimientoConyugue.
@@ -607,13 +634,13 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtTelefonoReferencia;
 
     /// <summary>
-    /// Control ddTiempoDeConocerReferencia.
+    /// Control ddlTiempoDeConocerReferencia.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddTiempoDeConocerReferencia;
+    protected global::System.Web.UI.WebControls.DropDownList ddlTiempoDeConocerReferencia;
 
     /// <summary>
     /// Control ddlParentescos.

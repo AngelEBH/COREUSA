@@ -5,21 +5,22 @@
         $('#frmSolicitud').submit(function (e) { e.preventDefault() });
 
         $('#frmSolicitud').parsley().validate({ group: 'informacionPrestamo', force: true });
-        var modelStateFormPrestamo = $('#frmSolicitud').parsley().isValid({ group: 'informacionPrestamo' });
+        var modelStateInformacionPrestamo = $('#frmSolicitud').parsley().isValid({ group: 'informacionPrestamo' });
 
         $('#frmSolicitud').parsley().validate({ group: 'informacionPersonal', force: true });
-        var modelStateFormPersonal = $('#frmSolicitud').parsley().isValid({ group: 'informacionPersonal' });
+        var modelStateInformacionPersonal = $('#frmSolicitud').parsley().isValid({ group: 'informacionPersonal' });
 
         $('#frmSolicitud').parsley().validate({ group: 'informacionDomiciliar', force: true });
-        var modelStateFormDomiciliar = $('#frmSolicitud').parsley().isValid({ group: 'informacionDomiciliar' });
+        var modelStateInformacionDomicilio = $('#frmSolicitud').parsley().isValid({ group: 'informacionDomiciliar' });
 
         $('#frmSolicitud').parsley().validate({ group: 'informacionLaboral', force: true });
-        var modelStateFormLaboral = $('#frmSolicitud').parsley().isValid({ group: 'informacionLaboral' });
+        var modelStateInformacionLaboral = $('#frmSolicitud').parsley().isValid({ group: 'informacionLaboral' });
 
-        var modelStateFormConyugal = true;
+        var modelStateInformacionConyugal = true;
+
         if ($("input[name='estadoCivil']:checked").data('info') == true) {
             $('#frmSolicitud').parsley().validate({ group: 'informacionConyugal', force: true });
-            modelStateFormConyugal = $('#frmSolicitud').parsley().isValid({ group: 'informacionConyugal' });
+            modelStateInformacionConyugal = $('#frmSolicitud').parsley().isValid({ group: 'informacionConyugal' });
         }
         if (cantidadReferencias == 0) {
             if (modelStateFormPrestamo == true && modelStateFormPersonal == true && modelStateFormDomiciliar == true && modelStateFormLaboral == true && modelStateFormConyugal == true) {
@@ -109,6 +110,7 @@
             }
 
             ClientesReferencias = listaClientesReferencias;
+
             var qString = "?" + window.location.href.split("?")[1];
             $.ajax({
                 type: "POST",
@@ -158,7 +160,6 @@ var ListaMunicipios = [];
 var ListaCiudades = [];
 var ListaBarriosColonias = [];
 var objPrecalificado = [];
-cargarPrecalificado();
 var ingresoInicio = '';
 var estadoFuncionLlenarDDL = false;
 var estadoFuncionRecuperarInfoCliente = false;
@@ -201,7 +202,7 @@ $(document).ready(function () {
             $('#smartwizard').smartWizard("stepState", [4], "show");
         }
 
-        if (stepDirection == 'forward') {// validar solo si se quiere ir hacia el siguiente paso
+        if (stepDirection == 'forwards') {// validar solo si se quiere ir hacia el siguiente paso
 
             if (stepNumber == 0) {
                 var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionPrestamo', excluded: ':disabled' });// validar informacion prestamo
@@ -323,6 +324,9 @@ $(document).ready(function () {
             }
         }//termina if fowards
     });
+
+    CargarDocumentosRequeridos();
+
     $(".buscadorddl").select2({
         language: {
             errorLoading: function () { return "No se pudieron cargar los resultados" },
@@ -336,23 +340,8 @@ $(document).ready(function () {
         }
     });
     if (localStorage.getItem("EnIngresoInicio") == null || localStorage.getItem("EnIngresoInicio") == "undefined" || localStorage.getItem("EnIngresoInicio") == undefined) {
-        obtenerFechaActual();
+        //obtenerFechaActual();
     }
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1;
-    var yyyy = today.getFullYear();
-    if (dd < 10) {
-        dd = '0' + dd
-    }
-    if (mm < 10) {
-        mm = '0' + mm
-    }
-    today = yyyy + '-' + mm + '-' + dd;
-    document.getElementById("fechaNacimiento").setAttribute("max", today);
-    document.getElementById("fechaIngreso").setAttribute("max", today);
-    document.getElementById("fechaNacimientoConyugue").setAttribute("max", today);
-    document.getElementById("fechaNacimiento").setAttribute("max", today);
 });
 
 /* agregar referencias personales (abrir modal) */
@@ -405,114 +394,16 @@ $('#addReferencia-form').submit(function (e) {
     }
 });
 
-/* inicializar datatable de referencias personales del cliente */
-var tableReferencias = $('#datatable-buttons').DataTable({
-    "searching": false,
-    "lengthChange": false,
-    "pageLength": 4,
-    "paging": true,
-    "responsive": true,
-    "language": {
-        "sProcessing": "Procesando...",
-        "sLengthMenu": "Mostrar _MENU_ registros",
-        "sZeroRecords": "No se encontraron resultados",
-        "sEmptyTable": "Ningún dato disponible en esta tabla",
-        "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-        "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-        "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-        "sInfoPostFix": "",
-        "sSearch": "Buscar:",
-        "sUrl": "",
-        "sInfoThousands": ",",
-        "sLoadingRecords": "Cargando...",
-        "oPaginate": {
-            "sFirst": "Primero",
-            "sLast": "Último",
-            "sNext": "Siguiente",
-            "sPrevious": "Anterior"
-        },
-        "oAria": {
-            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-        },
-        "decimal": ".",
-        "thousands": ","
-    }
-});
+function CargarDocumentosRequeridos() {
 
-function LlenarListas() {
-
-    estadoFuncionLlenarDDL = false;
-    $("#spinnerCargando").css('display', '');
-    $("select").empty();
-
-    var qString = "?" + window.location.href.split("?")[1];
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/CargarListas" + qString,
+        url: "SolicitudesCredito_Registrar.aspx/CargarDocumentosRequeridos",
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la información, contacte al administrador');
         },
         success: function (data) {
-
-            var nacionalidadDdl = $("#nacionalidad");
-            nacionalidadDdl.append("<option value=''>Seleccione una opción</option>");
-            $.each(data.d.Nacionalidades, function (i, iter) {
-                nacionalidadDdl.append("<option value='" + iter.fiIDNacionalidad + "'>" + iter.fcDescripcionNacionalidad + "</option>");// llenar lista desplegable de nacionalidades
-            });
-
-            // cargar estados civiles
-            var divEstadoCivil = $("#divEstadoCivil");
-            $.each(data.d.EstadosCiviles, function (i, iter) {
-                divEstadoCivil.append("<div class='form-check form-check-inline'>" +
-                    "<input data-info='" + iter.fbRequiereInformacionConyugal + "' class='form-check-input' required='required' type='radio' name ='estadoCivil' value='" + iter.fiIDEstadoCivil + "'>" +
-                    "<label class='form-check-label'>" + iter.fcDescripcionEstadoCivil + "</label>" +
-                    "</div>");
-            });
-
-            var tiempoConocerRefDdl = $("#tiempoConocerRef");// llenar select de tiempo de conocer referencia personal
-            tiempoConocerRefDdl.append("<option value='Menos de un año'>-1 año</option>");
-            tiempoConocerRefDdl.append("<option value='1'>1 año</option>");
-            tiempoConocerRefDdl.append("<option value='2'>2 años</option>");
-            tiempoConocerRefDdl.append("<option value='3'>+2 años</option>");
-
-            var viviendaDdl = $("#vivivenda");
-            viviendaDdl.append("<option value=''>Seleccione una opción</option>");
-            $.each(data.d.Vivienda, function (i, iter) {
-                viviendaDdl.append("<option value='" + iter.fiIDVivienda + "'>" + iter.fcDescripcionVivienda + "</option>");// llenar lista desplegable de vivivendas
-            });
-
-            var departamentoDdl = $("#departamento");
-            departamentoDdl.append("<option value=''>Seleccione una opción</option>");
-            $.each(data.d.Departamentos, function (i, iter) {
-                departamentoDdl.append("<option value='" + iter.fiIDDepto + "'>" + iter.fcNombreDepto + "</option>");// llenar lista desplegable de departamentos
-            });
-
-            $("#municipio").append("<option value=''>Seleccione un depto.</option>");// llenar lista de municipios
-            ListaMunicipios = [];
-
-            $("#ciudad").append("<option value=''>Seleccione un municipio</option>");// llenar lista de ciudades
-            ListaCiudades = [];
-
-            $("#barrioColonia").append("<option value=''>Seleccione una ciudad</option>");// llenar lista de barrios y colonias
-            ListaBarriosColonias = [];
-
-            var departamentoEmpresaDdl = $("#departamentoEmpresa"); // llenar lista de departamentos de cliente informacion laboral
-            departamentoEmpresaDdl.append("<option value=''>Seleccione una opción</option>");
-            $.each(data.d.Departamentos, function (i, iter) {
-                departamentoEmpresaDdl.append("<option value='" + iter.fiIDDepto + "'>" + iter.fcNombreDepto + "</option>");
-            });
-
-            $("#municipioEmpresa").append("<option value=''>Seleccione un depto</option>");// llenar lista de municipios de cliente informacion laboral
-            $("#ciudadEmpresa").append("<option value=''>Seleccione un municipio</option>"); // llenar lista de ciudades de cliente informacion laboral
-            $("#barrioColoniaEmpresa").append("<option value=''>Seleccione una ciudad</option>"); // llenar lista de barrios y colonias de cliente informacion laboral
-
-            var parentescoRefDdl = $("#parentescoRef");
-            parentescoRefDdl.append("<option value=''>Seleccione una opción</option>");
-            $.each(data.d.Parentescos, function (i, iter) {
-                parentescoRefDdl.append("<option value='" + iter.fiIDParentescos + "'>" + iter.fcDescripcionParentesco + "</option>");// llenar listado de referencias personales en el modal de agregar referencia personal del cliente
-            });
 
             var LenguajeEspanol = {
                 feedback: 'Arrastra y suelta los archivos aqui',
@@ -528,7 +419,7 @@ function LlenarListas() {
                 '</div>';
 
             var divDocumentacion = $("#DivDocumentacion");
-            $.each(data.d.TipoDocumento, function (i, iter) {
+            $.each(data.d, function (i, iter) {
 
                 var IDInput = 'Doc' + iter.IDTipoDocumento;
                 divDocumentacion.append("<div class='col-sm-2'>" +
@@ -624,13 +515,6 @@ function LlenarListas() {
                     captions: $.extend(true, {}, $.fn.fileuploader.languages['es'], LenguajeEspanol)
                 });
             });
-
-            /* TERMINA CARGA DE LISTADOS */
-            estadoFuncionLlenarDDL = true;
-            VerificarExistenciaCliente();
-            if (estadoFuncionRecuperarInfoCliente == true && estadoFuncionRecuperarRespaldos == true) {
-                $("#spinnerCargando").css('display', 'none');
-            }
         }
     });
 }
@@ -672,76 +556,8 @@ $("#tipoPrestamo").on('change', function () {
     }
 });
 
-
-function cargarOrigenes(COD) {
-
-    $("#spinnerCargando").css('display', '');
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/CargarOrigenes",
-        data: JSON.stringify({ COD: COD }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar catalogo de orígenes');
-            if (estadoFuncionLlenarDDL == true && estadoFuncionRecuperarRespaldos == true) {
-                $("#spinnerCargando").css('display', 'none');
-            }
-            $("#ddlOrigen").prop('disabled', true);
-        },
-        success: function (data) {
-
-            if (data.d != null) {
-                var origenesDdl = $("#ddlOrigen");
-                origenesDdl.empty();
-                origenesDdl.append("<option value=''>Seleccione una opción</option>");
-                var listaOrigenes = data.d;
-                $.each(listaOrigenes, function (i, iter) {
-                    origenesDdl.append("<option value='" + iter.fiIDOrigen + "'>" + iter.fcOrigen + "</option>"); // llenar listado de origenes en informacion del prestamo
-                });
-                $("#spinnerCargando").css('display', 'none');
-                $("#ddlOrigen,#titleOrigen").css('display', '');
-                $("#ddlOrigen").prop('disabled', false);
-            }
-            else {
-                if (estadoFuncionLlenarDDL == true && estadoFuncionRecuperarRespaldos == true) {
-                    $("#spinnerCargando").css('display', 'none');
-                }
-            }
-        }
-    });
-}
-
 /* Cargar informacion de clientes existentes, pendiente pasar esta logica al backend */
 function VerificarExistenciaCliente() {
-
-    estadoFuncionRecuperarInfoCliente = false;
-    $("#spinnerCargando").css('display', '');
-    var qString = "?" + window.location.href.split("?")[1];
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/ObtenerInformacionCliente" + qString,
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al verificar existencia del cliente');
-            estadoFuncionCargarInformacionCliente = true;
-            if (estadoFuncionLlenarDDL == true && estadoFuncionRecuperarRespaldos == true) {
-                $("#spinnerCargando").css('display', 'none');
-            }
-        },
-        success: function (data) {
-            if (data.d.clientesMaster != null) {
-                $("#spinnerCargando").css('display', '');
-                var infoCompletaCliente = data.d;
-                cargarInformacionCompletaDelCliente(infoCompletaCliente); // invocar metodo que cargara la informacion del cliente
-            }
-            else {
-                estadoFuncionCargarInformacionCliente = true;
-                if (estadoFuncionLlenarDDL == true && estadoFuncionRecuperarRespaldos == true) {
-                    $("#spinnerCargando").css('display', 'none');
-                }
-            }
-        }
-    });
 
     /* verificar que no hayan respaldos ANTERIORES de solicitudes de clientes diferentes al actual, si las identidades no coinciden, quiere decir que son clientes diferentes,
     * entonces se borraran los respaldos ANTERIORES y se iniciará el proceso de ingreso como una solicitud completamento nueva
@@ -764,21 +580,6 @@ function VerificarExistenciaCliente() {
 }
 
 var clienteID = 0; // id clt
-function cargarPrecalificado() {
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/GetDetallesPrecalificado",
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar información del precalificado');
-        },
-        success: function (data) {
-            objPrecalificado = data.d;
-            LlenarListas();
-            recuperarInformacionPrecalificado(objPrecalificado);
-        }
-    });
-}
 
 function cargarPrestamosSugeridosPrima(valorProducto, valorPrima) {
 
@@ -799,10 +600,10 @@ function cargarPrestamosSugeridosPrima(valorProducto, valorPrima) {
             DDLMontosSugeridos.empty();
             DDLMontosSugeridos.append("<option selected value='''>Seleccione una opción</option>");
             DDLMontosSugeridos.append("<option value='" + listaPrestamosSugeridos[0].fnMontoOfertado + "' data-pmoplz='" + listaPrestamosSugeridos[0].fiPlazo + "'>" + 'Producto: ' + listaPrestamosSugeridos[0].ProductoDescripcion + ' | Monto ofertado: ' + listaPrestamosSugeridos[0].fnMontoOfertado + ' | Plazo ' + listaPrestamosSugeridos[0].TipoCuota + ': ' + listaPrestamosSugeridos[0].fiPlazo + ' | Cuota ' + listaPrestamosSugeridos[0].TipoCuota + ': ' + listaPrestamosSugeridos[0].fnCuotaQuincenal + "</option>");
-            
+
             for (var i = 1; i < listaPrestamosSugeridos.length; i++) {
-                    DDLMontosSugeridos.append("<option value='" + listaPrestamosSugeridos[i].fnMontoOfertado + "' data-pmoplz='" + listaPrestamosSugeridos[i].fiPlazo + "'>" + 'Producto: ' + listaPrestamosSugeridos[i].ProductoDescripcion + ' | Monto ofertado: ' + listaPrestamosSugeridos[i].fnMontoOfertado + ' | Plazo ' + listaPrestamosSugeridos[i].TipoCuota + ': ' + listaPrestamosSugeridos[i].fiPlazo + ' | Cuota ' + listaPrestamosSugeridos[i].TipoCuota + ': ' + listaPrestamosSugeridos[i].fnCuotaQuincenal + "</option>");
-                
+                DDLMontosSugeridos.append("<option value='" + listaPrestamosSugeridos[i].fnMontoOfertado + "' data-pmoplz='" + listaPrestamosSugeridos[i].fiPlazo + "'>" + 'Producto: ' + listaPrestamosSugeridos[i].ProductoDescripcion + ' | Monto ofertado: ' + listaPrestamosSugeridos[i].fnMontoOfertado + ' | Plazo ' + listaPrestamosSugeridos[i].TipoCuota + ': ' + listaPrestamosSugeridos[i].fiPlazo + ' | Cuota ' + listaPrestamosSugeridos[i].TipoCuota + ': ' + listaPrestamosSugeridos[i].fnCuotaQuincenal + "</option>");
+
             }
             $("#titlePrestamosSugeridos,#divPmosSugeridos").css('display', '');
         }
@@ -844,24 +645,6 @@ function recuperarInformacionPrecalificado(objPrecalificado) {
         if (montoPmoEfectivo != '') {
             cargarPrestamosSugeridosPrima(montoPmoEfectivo, "0");
         }
-    }
-    $("#ingresosMensuales").val(objPrecalificado.ingresos);
-    $("#telefonoMovil").val(objPrecalificado.telefono);
-    $("#fechaNacimiento").val(dateFormat(objPrecalificado.fechaNacimiento));
-    var FechaNac = new Date(parseInt(objPrecalificado.fechaNacimiento.replace("/Date(", "").replace(")/", ""), 10));
-    var today = new Date();
-    var edad = Math.floor((today - FechaNac) / (365.25 * 24 * 60 * 60 * 1000));
-    $('#edadCliente').val(edad + ' años');
-    $('#edadCliente').prop('disabled', true);
-    listadoCotizaciones = objPrecalificado.cotizadorProductos;
-    var DDLMontosSugeridos = $("#pmoSugeridoSeleccionado"); // llenar lista de montos sugeridos
-    DDLMontosSugeridos.empty();
-    DDLMontosSugeridos.append("<option selected value='" + listadoCotizaciones[0].fnMontoOfertado + "'>" + listadoCotizaciones[0].fnMontoOfertado + "</option>");
-    $("#plazoPmoSeleccionado").val(listadoCotizaciones[0].fiPlazo);
-    $("#cutoaQuinceal").val(listadoCotizaciones[0].fnCuotaQuincenal);
-
-    for (var i = 1; i < listadoCotizaciones.length; i++) {
-        DDLMontosSugeridos.append("<option value='" + listadoCotizaciones[i].fnMontoOfertado + "'>" + listadoCotizaciones[i].fnMontoOfertado + "</option>");// llenar lista de montos sugeridos
     }
 }
 
@@ -992,245 +775,6 @@ $('#txtMontoPmoEfectivo').blur(function () {
 var ListaMunicipiosDomicilioCargada = false;
 var ListaCiudadesDomicilioCargada = false;
 var ListaBarriossDomicilioCargada = false;
-
-/* funcion para llenar el formulario con la informacion de un cliente existente */
-function cargarInformacionCompletaDelCliente(informacionCliente) {
-
-    estadoFuncionRecuperarInfoCliente = false;
-    $("#spinnerCargando").css('display', '');
-    rowData = informacionCliente;
-    clienteNuevo = false;
-    clienteID = rowData.clientesMaster.fiIDCliente;
-
-    $(".buscardorddl").select2("destroy");
-    $("#nacionalidad").val(rowData.clientesMaster.fiNacionalidadCliente);
-    //llenar el campo fecha de nacimiento del cliente
-    $("#fechaNacimiento").val(dateFormat(rowData.clientesMaster.fdFechaNacimientoCliente));
-    var FechaNac = new Date(parseInt(objPrecalificado.fechaNacimiento.replace("/Date(", "").replace(")/", ""), 10));
-    var today = new Date();
-    var edad = Math.floor((today - FechaNac) / (365.25 * 24 * 60 * 60 * 1000));
-    $('#edadCliente').val(edad + ' años');
-    $("#edadCliente").attr('readonly', true);
-    //llenar correo electronico
-    $("#correoElectronico").val(rowData.clientesMaster.fcCorreoElectronicoCliente);
-    $("#rtnCliente").val(rowData.clientesMaster.RTNCliente);
-    $("#profesion").val(rowData.clientesMaster.fcProfesionOficioCliente);
-    $("input[name=sexo][value=" + rowData.clientesMaster.fcSexoCliente + "]").prop('checked', true);
-    $("input[name=sexo]").prop('disabled', true);
-    $("input[name=estadoCivil][value=" + rowData.clientesMaster.fiIDEstadoCivil + "]").prop('checked', true);
-    $("#vivivenda").val(rowData.clientesMaster.fiIDVivienda);
-    $("input[name=tiempoResidir][value=" + rowData.clientesMaster.fiTiempoResidir + "]").prop('checked', true);
-    $("#nacionalidad,#fechaNacimiento,#profesion").attr('disabled', true);
-    // INFORMACION DOMICILIO
-    $("#departamento").val(rowData.ClientesInformacionDomiciliar.fiIDDepto);
-    $('#departamento').select2().trigger('change');
-    var qString = "?" + window.location.href.split("?")[1];
-    //cargar municipios
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/CargarMunicipios" + qString,
-        data: JSON.stringify({ CODDepto: rowData.ClientesInformacionDomiciliar.fiIDDepto }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar municipios de este departamento');
-        },
-        success: function (data) {
-            var municipiosDelDepto = data.d;
-            var municipioClienteDdl = $("#municipio");
-            municipioClienteDdl.empty();
-            $.each(municipiosDelDepto, function (i, iter) {
-                municipioClienteDdl.append("<option " + (iter.fiIDMunicipio == rowData.ClientesInformacionDomiciliar.fiIDMunicipio ? 'selected' : '') + " value='" + iter.fiIDMunicipio + "'>" + iter.fcNombreMunicipio + "</option>");
-            });
-            municipioClienteDdl.attr('disabled', false);
-        }
-    });
-    //cargar ciudades
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/CargarPoblados" + qString,
-        data: JSON.stringify({ CODDepto: rowData.ClientesInformacionDomiciliar.fiIDDepto, CODMunicipio: rowData.ClientesInformacionDomiciliar.fiIDMunicipio }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar ciudades de este municipio');
-        },
-        success: function (data) {
-            var ciudadesDelMunicipio = data.d;
-            var ciudadDdl = $("#ciudad");
-            ciudadDdl.empty();
-            $.each(ciudadesDelMunicipio, function (i, iter) {
-                ciudadDdl.append("<option " + (iter.fiIDCiudad == rowData.ClientesInformacionDomiciliar.fiIDCiudad ? 'selected' : '') + " value='" + iter.fiIDCiudad + "'>" + iter.fcNombreCiudad + "</option>");
-            });
-            ciudadDdl.attr('disabled', false);
-        }
-    });
-    //cargar Barrio
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/CargarBarrios" + qString,
-        data: JSON.stringify({ CODDepto: rowData.ClientesInformacionDomiciliar.fiIDDepto, CODMunicipio: rowData.ClientesInformacionDomiciliar.fiIDMunicipio, CODPoblado: rowData.ClientesInformacionDomiciliar.fiIDCiudad }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar ciudades de este municipio');
-        },
-        success: function (data) {
-            var barriosDeLaCiudad = data.d;
-            var BarrioColoniaDdl = $("#barrioColonia");
-            BarrioColoniaDdl.empty();
-            $.each(barriosDeLaCiudad, function (i, iter) {
-                BarrioColoniaDdl.append("<option " + (iter.fiIDBarrioColonia == rowData.ClientesInformacionDomiciliar.fiIDBarrioColonia ? 'selected' : '') + " value='" + iter.fiIDBarrioColonia + "'>" + iter.fcNombreBarrioColonia + "</option>");
-            });
-            BarrioColoniaDdl.attr('disabled', false);
-        }
-    });
-    $("#telefonoCasa").val(rowData.ClientesInformacionDomiciliar.fcTelefonoCasa);
-    $("#telefonoMovil").val(rowData.clientesMaster.fcTelefonoCliente);
-    $("#direccionDetallada").val(rowData.ClientesInformacionDomiciliar.fcDireccionDetallada);
-    $("#referenciaDireccionDetallada").val(rowData.ClientesInformacionDomiciliar.fcReferenciasDireccionDetallada);
-    // INFORMACION LABORAL
-    $("#nombreDelTrabajo").val(rowData.ClientesInformacionLaboral.fcNombreTrabajo);
-    $("#ingresosMensuales").val(rowData.ClientesInformacionLaboral.fiIngresosMensuales);
-    $("#puestoAsignado").val(rowData.ClientesInformacionLaboral.fcPuestoAsignado);
-    $("#fechaIngreso").val(dateFormat(rowData.ClientesInformacionLaboral.fcFechaIngreso));
-    $("#telefonoEmpresa").val(rowData.ClientesInformacionLaboral.fdTelefonoEmpresa);
-    $("#extensionRRHH").val(rowData.ClientesInformacionLaboral.fcExtensionRecursosHumanos);
-    $("#extensionCliente").val(rowData.ClientesInformacionLaboral.fcExtensionCliente);
-    $("#ingresosMensuales").val(rowData.ClientesInformacionLaboral.fiIngresosMensuales);
-    $("#puestoAsignado").val(rowData.ClientesInformacionLaboral.fcPuestoAsignado);
-    // informacion laboral
-    $("#departamentoEmpresa").val(rowData.ClientesInformacionLaboral.fiIDDepto);
-    $('#departamentoEmpresa').select2().trigger('change');
-    //cargar municipios
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/CargarMunicipios" + qString,
-        data: JSON.stringify({ CODDepto: rowData.ClientesInformacionLaboral.fiIDDepto }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar municipios de este departamento');
-        },
-        success: function (data) {
-            var municipiosDelDeptoEmpresa = data.d;
-            var municipioEmpresaClienteDdl = $("#municipioEmpresa");
-            municipioEmpresaClienteDdl.empty();
-            $.each(municipiosDelDeptoEmpresa, function (i, iter) {
-                municipioEmpresaClienteDdl.append("<option " + (iter.fiIDMunicipio == rowData.ClientesInformacionLaboral.fiIDMunicipio ? 'selected' : '') + " value='" + iter.fiIDMunicipio + "'>" + iter.fcNombreMunicipio + "</option>");
-            });
-            municipioEmpresaClienteDdl.attr('disabled', false);
-        }
-    });
-    //cargar ciudades
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/CargarPoblados" + qString,
-        data: JSON.stringify({ CODDepto: rowData.ClientesInformacionLaboral.fiIDDepto, CODMunicipio: rowData.ClientesInformacionLaboral.fiIDMunicipio }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar ciudades de este municipio');
-        },
-        success: function (data) {
-            var ciudadesDelMunicipioEmpresa = data.d;
-            var ciudadEmpresaClienteDdl = $("#ciudadEmpresa");
-            ciudadEmpresaClienteDdl.empty();
-            $.each(ciudadesDelMunicipioEmpresa, function (i, iter) {
-                ciudadEmpresaClienteDdl.append("<option " + (iter.fiIDCiudad == rowData.ClientesInformacionLaboral.fiIDCiudad ? 'selected' : '') + " value='" + iter.fiIDCiudad + "'>" + iter.fcNombreCiudad + "</option>");
-            });
-            ciudadEmpresaClienteDdl.attr('disabled', false);
-        }
-    });
-    //cargar Barrio
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/CargarBarrios" + qString,
-        data: JSON.stringify({ CODDepto: rowData.ClientesInformacionLaboral.fiIDDepto, CODMunicipio: rowData.ClientesInformacionLaboral.fiIDMunicipio, CODPoblado: rowData.ClientesInformacionLaboral.fiIDCiudad }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar ciudades de este municipio');
-        },
-        success: function (data) {
-            var barriosDeLaCiudadEmpresa = data.d;
-            var BarrioColoniaEmpresaClienteDdl = $("#barrioColoniaEmpresa");
-            BarrioColoniaEmpresaClienteDdl.empty();
-            $.each(barriosDeLaCiudadEmpresa, function (i, iter) {
-                BarrioColoniaEmpresaClienteDdl.append("<option " + (iter.fiIDBarrioColonia == rowData.ClientesInformacionLaboral.fiIDBarrioColonia ? 'selected' : '') + " value='" + iter.fiIDBarrioColonia + "'>" + iter.fcNombreBarrioColonia + "</option>");
-            });
-            BarrioColoniaEmpresaClienteDdl.attr('disabled', false);
-        }
-    });
-    $("#direccionDetalladaEmpresa").val(rowData.ClientesInformacionLaboral.fcDireccionDetalladaEmpresa);
-    $("#referenciaDireccionDetalladaEmpresa").val(rowData.ClientesInformacionLaboral.fcReferenciasDireccionDetallada);
-    $("#fuenteOtrosIngresos").val(rowData.ClientesInformacionLaboral.fcFuenteOtrosIngresos);
-    $("#valorOtrosIngresos").val(rowData.ClientesInformacionLaboral.fiValorOtrosIngresosMensuales);
-    //INFORMACION CONYUGAL
-    if (rowData.ClientesInformacionConyugal != null) {
-
-        $("#nombresConyugue").val('');
-        if (rowData.ClientesInformacionConyugal.fcNombreCompletoConyugue != null) {
-            $("#nombresConyugue").val(rowData.ClientesInformacionConyugal.fcNombreCompletoConyugue.toString().split(' ').slice(0, -1).join(' '));
-        }
-        $("#apellidosConyugue").val('');
-        if (rowData.ClientesInformacionConyugal.fcNombreCompletoConyugue != null) {
-            $("#apellidosConyugue").val(rowData.ClientesInformacionConyugal.fcNombreCompletoConyugue.toString().split(' ').slice(-1).join(' '));
-        }
-        $("#identidadConyugue").val(rowData.ClientesInformacionConyugal.fcIndentidadConyugue);
-        $("#fechaNacimientoConyugue").val(dateFormat(rowData.ClientesInformacionConyugal.fdFechaNacimientoConyugue));
-        $("#telefonoConyugue").val(rowData.ClientesInformacionConyugal.fcTelefonoConyugue);
-        $("#lugarTrabajoConyugue").val(rowData.ClientesInformacionConyugal.fcLugarTrabajoConyugue);
-        $("#ingresoMensualesConyugue").val(rowData.ClientesInformacionConyugal.fcIngresosMensualesConyugue);
-        $("#telefonoTrabajoConyugue").val(FechaFormato(rowData.ClientesInformacionConyugal.fcTelefonoTrabajoConyugue));
-    }
-    //REFERENCIAS PERSONALES
-    if (listaClientesReferencias.length == 0) {
-        $('#datatable-buttons').DataTable().clear();
-        listaClientesReferencias = [];
-    }
-    estadoFuncionRecuperarInfoCliente = true;
-    if (estadoFuncionLlenarDDL == true && estadoFuncionRecuperarRespaldos == true) {
-        $("#spinnerCargando").css('display', 'none');
-    }
-
-    // cargar respaldos
-
-    /* verificar que no hayan respaldos ANTERIORES de solicitudes de clientes diferentes al actual, si las identidades no coinciden, quiere decir que son clientes diferentes,
-    * entonces se borraran los respaldos ANTERIORES y se iniciará el proceso de ingreso como una solicitud completamento nueva
-    */
-    var RespaldoInformacionPrestamo = JSON.parse(localStorage.getItem('RespaldoInformacionPrestamo'));
-
-    if (RespaldoInformacionPrestamo != null) {
-        if (objPrecalificado.identidad != RespaldoInformacionPrestamo.identidadCliente) {// si los respaldos que hay son de otro cliente, reemplazarlos por el actual del que se cargó la información
-            guardarRespaldoInformacionPrestamo();
-            guardarRespaldoInformacionPersonal();
-            guardarRespaldoInformacionDomiciliar();
-            guardarRespaldoInformacionLaboral();
-            guardarRespaldoInformacionConyugal();
-            guardarRespaldoReferenciasPersonales();
-        }
-        else {
-            estadoFuncionRecuperarRespaldos = true;
-            //localStorage.clear(); // eliminar respaldos anteriores
-            //obtenerFechaActual(); // determinar la hora en la que se empieza a llenar la solicitd
-        }
-    } else {
-        estadoFuncionRecuperarRespaldos = true;
-        //localStorage.clear(); // eliminar respaldos anteriores
-        //obtenerFechaActual(); // determinar la hora en la que se empieza a llenar la solicitud
-    }
-    //guardar
-
-    $("#spinnerCargando").css('display', 'none');
-    MensajeInformacion('La información de este cliente se cargó correctamente');
-    $(".buscadorddl").select2({
-        language: {
-            errorLoading: function () { return "No se pudieron cargar los resultados" },
-            inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-            inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-            loadingMore: function () { return "Cargando más resultados…" },
-            maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
-            noResults: function () { return "No se encontraron resultados" },
-            searching: function () { return "Buscando…" },
-            removeAllItems: function () { return "Eliminar todos los elementos" }
-        }
-    });
-}
 
 /* habilitar ddl de municipios de la informacion de domicilio del cliente cuando se seleccione un departamento cliente valido */
 var CODDepto = 0;
@@ -1546,39 +1090,6 @@ $('input[type=radio][name=estadoCivil]').change(function () {
     }
 });
 
-$("#AbrirmodalReiniciarSolicitud").click(function () {
-    $("#modalReiniciarSolicitud").modal();
-});
-
-$("#btnReiniciarSolicitud").click(function () {
-    resetForm($("#frmSolicitud"));
-    $('#frmSolicitud').parsley().reset();
-    $('#datatable-buttons').DataTable().clear().draw();
-    $("#frmSolicitud :input").prop('disabled', false);
-    $("#frmSolicitud :input").prop('readonly', false);
-    clienteID = 0;
-    cantidadReferencias = 0;
-    listaClientesReferencias = [];
-    localStorage.clear();
-    localStorage.setItem('precalificado', null);
-    localStorage.clear();
-});
-
-function calcularCapacidadPago(tipoPrestamo, ObligacionesPrecalificado, IngresosReales) {
-
-    var capacidadPago = 0;
-    if (tipoPrestamo == '101') {
-        capacidadPago = ObligacionesPrecalificado == 0 ? IngresosReales * 0.13 : (IngresosReales - ObligacionesPrecalificado) * 0.13;
-    }
-    else if (tipoPrestamo == '201') {
-        capacidadPago = ObligacionesPrecalificado == 0 ? IngresosReales * 0.30 : (IngresosReales - ObligacionesPrecalificado) * 0.30;
-    }
-    else if (tipoPrestamo == '202') {
-        capacidadPago = ObligacionesPrecalificado == 0 ? IngresosReales * 0.40 : (IngresosReales - ObligacionesPrecalificado) * 0.40;
-    }
-    return capacidadPago.toFixed(2);
-}
-
 function resetForm($form) {
     $form.find('input:text, input:password, input:file,input[type="date"],input[type="email"], select, textarea').val('');
     $form.find('input:radio, input:checkbox')
@@ -1608,68 +1119,6 @@ function MensajeInformacion(mensaje) {
 
 function pad2(number) {
     return (number < 10 ? '0' : '') + number
-}
-
-function FechaFormato(pFecha) {
-    if (!pFecha)
-        return "Sin modificaciones";
-    var fechaString = pFecha.substr(6, 19);
-    var fechaActual = new Date(parseInt(fechaString));
-    var mes = fechaActual.getMonth() + 1;
-    var dia = pad2(fechaActual.getDate());
-    var anio = fechaActual.getFullYear();
-    var hora = pad2(fechaActual.getHours());
-    var minutos = pad2(fechaActual.getMinutes());
-    var segundos = pad2(fechaActual.getSeconds().toString());
-    var FechaFinal = dia + "/" + mes + "/" + anio + " " + hora + ":" + minutos + ":" + segundos;
-    return FechaFinal;
-}
-
-function dateFormat(jsondate) {
-    var result = FechaFormato(jsondate);
-    var fechaNormal = result.split(' ')[0];
-    var dateVal = new Date();
-    var numeroMes = parseInt(fechaNormal.substring(3, 5).replace(/\//g, ''));
-    var mes = numeroMes < 10 ? '0' + fechaNormal.substring(3, 4) : fechaNormal.substring(3, 5);
-    var anio = numeroMes < 10 ? fechaNormal.substring(5, 9) : fechaNormal.substring(6, 10);
-    var dia = fechaNormal.substring(0, 2);
-    dateVal = anio + "-" + mes + "-" + dia;
-    return dateVal;
-}
-
-function obtenerFechaActual() {
-
-    $.ajax({ // obtener hora actual del servidor
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/GetFecha",
-        data: JSON.stringify({}),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            var dt = new Date();
-            var fechaActual = `${
-                dt.getFullYear().toString().padStart(4, '0')}-${
-                (dt.getMonth() + 1).toString().padStart(2, '0')}-${
-                dt.getDate().toString().padStart(2, '0')} ${
-                dt.getHours().toString().padStart(2, '0')}:${
-                dt.getMinutes().toString().padStart(2, '0')}:${
-                dt.getSeconds().toString().padStart(2, '0')}`;
-            ingresoInicio = fechaActual;
-            localStorage.setItem("EnIngresoInicio", ingresoInicio);
-        },
-        success: function (data) {
-            var milli = data.d.replace(/\/Date\((-?\d+)\)\//, '$1');
-            var dt = new Date(parseInt(milli));
-            var fechaActual = `${
-                dt.getFullYear().toString().padStart(4, '0')}-${
-                (dt.getMonth() + 1).toString().padStart(2, '0')}-${
-                dt.getDate().toString().padStart(2, '0')} ${
-                dt.getHours().toString().padStart(2, '0')}:${
-                dt.getMinutes().toString().padStart(2, '0')}:${
-                dt.getSeconds().toString().padStart(2, '0')}`;
-            ingresoInicio = fechaActual;
-            localStorage.setItem("EnIngresoInicio", ingresoInicio);
-        }
-    });
 }
 
 function guardarRespaldoInformacionPrestamo() {

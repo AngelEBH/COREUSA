@@ -29,12 +29,13 @@
     </style>
 </head>
 <body>
-    <div class="card mb-0">
-        <div class="card-header pb-1 pt-1">
-            <h5>Nueva solicitud de crédito <small><span runat="server" id="lblMensaje" class="text-danger"></span></small></h5>
-        </div>
-        <div class="card-body">
-            <form runat="server" id="frmSolicitud" class="" action="#" data-parsley-excluded="[disabled]">
+    <form runat="server" id="frmSolicitud" class="" action="#" data-parsley-excluded="[disabled]">
+        <div class="card mb-0">
+            <div class="card-header pb-1 pt-1">
+                <h5>Nueva solicitud de crédito <small><span runat="server" id="lblMensaje" class="text-danger" visible="false"></span></small></h5>
+            </div>
+            <div class="card-body">
+
                 <div id="smartwizard" class="h-100">
                     <ul>
                         <li><a href="#step-1" class="pt-3 pb-2 font-12">(1) Información del préstamo</a></li>
@@ -197,11 +198,11 @@
                                             <label class="col-form-label">Sexo</label>
                                             <div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="sexo" value="M" />
+                                                    <input class="form-check-input" type="radio" name="sexo" value="M" runat="server" id="rbSexoMasculino" />
                                                     <label class="form-check-label" for="inlineRadio1">Masculino</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="sexo" value="F" />
+                                                    <input class="form-check-input" type="radio" name="sexo" value="F" runat="server" id="rbSexoFemenino" />
                                                     <label class="form-check-label" for="inlineRadio2">Femenino</label>
                                                 </div>
                                             </div>
@@ -277,7 +278,7 @@
                             <div class="form-group row">
                                 <div class="col-12">
                                     <label class="col-form-label">Referencias del domicilio</label>
-                                    <textarea id="txtReferenciasDelDomicilio" required="required" class="form-control form-control-sm" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2" data-parsley-group="informacionDomicilio"></textarea>
+                                    <textarea id="txtReferenciasDelDomicilio" runat="server" required="required" class="form-control form-control-sm" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2" data-parsley-group="informacionDomicilio"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -372,7 +373,7 @@
                             <div class="form-group row">
                                 <div class="col-12">
                                     <label class="col-form-label">Referencias de la ubicación del trabajo</label>
-                                    <textarea id="txtReferenciasEmpresa" required="required" class="form-control form-control-sm" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2" data-parsley-group="informacionLaboral"></textarea>
+                                    <textarea id="txtReferenciasEmpresa" runat="server" required="required" class="form-control form-control-sm" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2" data-parsley-group="informacionLaboral"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -391,13 +392,9 @@
                                     <label class="col-form-label">Identidad</label>
                                     <asp:TextBox ID="txtIdentidadConyugue" CssClass="form-control form-control-sm mascara-identidad infoConyugal" type="text" required="required" data-parsley-group="informacionConyugal" runat="server"></asp:TextBox>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-8">
                                     <label class="col-form-label">Nombres del cónyugue</label>
                                     <asp:TextBox ID="txtNombresConyugue" CssClass="form-control form-control-sm infoConyugal" type="text" required="required" data-parsley-group="informacionConyugal" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label class="col-form-label">Apellidos del cónyugue</label>
-                                    <asp:TextBox ID="txtApellidosConyugue" CssClass="form-control form-control-sm infoConyugal" type="text" required="required" data-parsley-group="informacionConyugal" runat="server"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -475,60 +472,59 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
 
-    <div class="modal fade" id="modalAgregarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarReferenciaPersonalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header pb-1 pt-1">
-                    <h6 class="modal-title" id="modalAgregarReferenciaPersonalLabel">Agregar referencia personal</h6>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Nombre completo</label>
-                        <div class="col-sm-8">
-                            <asp:TextBox ID="txtNombreReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+        <div class="modal fade" id="modalAgregarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarReferenciaPersonalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header pb-1 pt-1">
+                        <h6 class="modal-title" id="modalAgregarReferenciaPersonalLabel">Agregar referencia personal</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Nombre completo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtNombreReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Telefono</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtTelefonoReferencia" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Tiempo de conocer</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlTiempoDeConocerReferencia" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Parentesco</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlParentescos" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtLugarTrabajoReferencia" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Telefono</label>
-                        <div class="col-sm-8">
-                            <asp:TextBox ID="txtTelefonoReferencia" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
-                        </div>
+                    <div class="modal-footer pt-2 pb-2">
+                        <button id="btnAgregarReferenciaTabla" type="button" class="btn btn-primary waves-effect waves-light mr-1">
+                            Agregar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Tiempo de conocer</label>
-                        <div class="col-sm-8">
-                            <asp:DropDownList ID="ddTiempoDeConocerReferencia" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:DropDownList>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Parentesco</label>
-                        <div class="col-sm-8">
-                            <asp:DropDownList ID="ddlParentescos" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:DropDownList>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
-                        <div class="col-sm-8">
-                            <asp:TextBox ID="txtLugarTrabajoReferencia" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer pt-2 pb-2">
-                    <button id="btnAgregarReferenciaTabla" type="button" class="btn btn-primary waves-effect waves-light mr-1">
-                        Agregar
-                    </button>
-                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                        Cancelar
-                    </button>
                 </div>
             </div>
         </div>
-    </div>
-
+    </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
