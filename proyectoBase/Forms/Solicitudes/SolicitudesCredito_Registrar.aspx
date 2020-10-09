@@ -78,7 +78,7 @@
                                         </div>
                                         <div class="col-6">
                                             <label class="col-form-label">RTN numérico</label>
-                                            <asp:TextBox ID="txtRtnCliente" CssClass="form-control form-control-sm mascara-rtn" type="text" Enabled="false" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtRtnCliente" CssClass="form-control form-control-sm mascara-rtn" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -137,22 +137,24 @@
                                         <!-- Valor de la prima -->
                                         <div class="col-sm-3" id="divPrima" runat="server">
                                             <label class="col-form-label">Valor de la prima</label>
-                                            <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm mascara-cantidad" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm mascara-cantidad" Enabled="false" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
                                         <!-- Valor a Financiar -->
                                         <div class="col-sm-3" id="divValorFinanciar" runat="server">
                                             <label class="col-form-label">Valor a Financiar</label>
-                                            <asp:TextBox ID="txtValorFinanciar" CssClass="form-control form-control-sm mascara-cantidad" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtValorFinanciar" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
                                         <!-- Origen -->
                                         <div class="col-sm-3" runat="server" id="divOrigen">
                                             <label class="col-form-label">Origen</label>
-                                            <asp:DropDownList ID="ddlOrigen" runat="server" CssClass="form-control form-control-sm" Enabled="false" data-parsley-group="informacionPrestamo" required="required"></asp:DropDownList>
+                                            <asp:DropDownList ID="ddlOrigen" runat="server" CssClass="form-control form-control-sm" Enabled="false" data-parsley-group="informacionPrestamo" required="required" data-parsley-errors-container="#error-ddlOrigen"></asp:DropDownList>
+                                            <div id="error-ddlOrigen"></div>
                                         </div>
                                         <!-- Préstamos disponibles -->
                                         <div class="col-12" id="divPrestamosDisponibles" runat="server" visible="true">
                                             <label class="col-form-label">Préstamos disponibles</label>
-                                            <asp:DropDownList ID="ddlPrestamosDisponibles" runat="server" CssClass="form-control form-control-sm" data-parsley-group="informacionPrestamo" required="required"></asp:DropDownList>
+                                            <asp:DropDownList ID="ddlPrestamosDisponibles" runat="server" CssClass="form-control form-control-sm" data-parsley-group="informacionPrestamo" required="required" data-parsley-errors-container="#error-ddlPrestamosDisponibles"></asp:DropDownList>
+                                            <div id="error-ddlPrestamosDisponibles"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -174,7 +176,8 @@
                                     <div class="form-group row">
                                         <div class="col-md-4">
                                             <label class="col-form-label">Nacionalidad</label>
-                                            <asp:DropDownList ID="ddlNacionalidad" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal"></asp:DropDownList>
+                                            <asp:DropDownList ID="ddlNacionalidad" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlNacionalidad" ></asp:DropDownList>
+                                            <div id="error-ddlNacionalidad"></div>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="col-form-label">Profesión</label>
@@ -182,7 +185,8 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label class="col-form-label">Estado civil</label>
-                                            <asp:DropDownList ID="ddlEstadoCivil" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:DropDownList>
+                                            <asp:DropDownList ID="ddlEstadoCivil" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlEstadoCivil"></asp:DropDownList>
+                                            <div id="error-ddlEstadoCivil"></div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -198,14 +202,15 @@
                                             <label class="col-form-label">Sexo</label>
                                             <div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="sexo" value="M" runat="server" id="rbSexoMasculino" />
-                                                    <label class="form-check-label" for="inlineRadio1">Masculino</label>
+                                                    <input class="form-check-input" type="radio" name="sexoCliente" value="M" runat="server" id="rbSexoMasculino" required="required" data-parsley-errors-container="#error-sexo"  data-parsley-group="informacionPersonal"/>
+                                                    <label class="form-check-label" for="rbSexoMasculino">Masculino</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="sexo" value="F" runat="server" id="rbSexoFemenino" />
-                                                    <label class="form-check-label" for="inlineRadio2">Femenino</label>
+                                                    <input class="form-check-input" type="radio" name="sexoCliente" value="F" runat="server" id="rbSexoFemenino" required="required" data-parsley-errors-container="#error-sexo" data-parsley-group="informacionPersonal" />
+                                                    <label class="form-check-label" for="rbSexoFemenino">Femenino</label>
                                                 </div>
                                             </div>
+                                            <div id="error-sexo"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -229,11 +234,13 @@
                                     <div class="form-group row">
                                         <div class="col-sm-3">
                                             <label class="col-form-label">Tipo de Vivienda</label>
-                                            <asp:DropDownList ID="ddlTipoDeVivienda" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:DropDownList>
+                                            <asp:DropDownList ID="ddlTipoDeVivienda" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlTipoDeVivienda"></asp:DropDownList>
+                                            <div id="error-ddlTipoDeVivienda"></div>
                                         </div>
                                         <div class="col-sm-3">
                                             <label class="col-form-label">Tiempo de residir</label>
-                                            <asp:DropDownList ID="ddlTiempoDeResidir" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:DropDownList>
+                                            <asp:DropDownList ID="ddlTiempoDeResidir" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlTiempoDeResidir"></asp:DropDownList>
+                                            <div id="error-ddlTiempoDeResidir"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -250,19 +257,23 @@
                             <div class="form-group row">
                                 <div class="col-sm-3">
                                     <label class="col-form-label">Departamento</label>
-                                    <asp:DropDownList ID="ddlDepartamentoDomicilio" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionDomicilio" runat="server"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlDepartamentoDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlDepartamentoDomicilio"></asp:DropDownList>
+                                    <div id="error-ddlDepartamentoDomicilio"></div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="col-form-label">Municipio</label>
-                                    <asp:DropDownList ID="ddlMunicipioDomicilio" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" runat="server"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlMunicipioDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlMunicipioDomicilio"></asp:DropDownList>
+                                    <div id="error-ddlMunicipioDomicilio"></div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="col-form-label">Ciudad/Poblado</label>
-                                    <asp:DropDownList ID="ddlCiudadPobladoDomicilio" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" runat="server"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlCiudadPobladoDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlCiudadPobladoDomicilio"></asp:DropDownList>
+                                    <div id="error-ddlCiudadPobladoDomicilio"></div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="col-form-label">Barrio/Colonia</label>
-                                    <asp:DropDownList ID="ddlBarrioColoniaDomicilio" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" runat="server"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlBarrioColoniaDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlBarrioColoniaDomicilio"></asp:DropDownList>
+                                    <div id="error-ddlBarrioColoniaDomicilio"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -348,19 +359,23 @@
                             <div class="form-group row">
                                 <div class="col-sm-3">
                                     <label class="col-form-label">Departamento</label>
-                                    <asp:DropDownList ID="ddlDepartamentoEmpresa" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionLaboral" runat="server"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlDepartamentoEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlDepartamentoEmpresa"></asp:DropDownList>
+                                    <div id="error-ddlDepartamentoEmpresa"></div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="col-form-label">Municipio</label>
-                                    <asp:DropDownList ID="ddlMunicipioEmpresa" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionLaboral" runat="server"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlMunicipioEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlMunicipioEmpresa"></asp:DropDownList>
+                                    <div id="error-ddlMunicipioEmpresa"></div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="col-form-label">Ciudad/Poblado</label>
-                                    <asp:DropDownList ID="ddlCiudadPobladoEmpresa" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionLaboral" runat="server"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlCiudadPobladoEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlCiudadPobladoEmpresa"></asp:DropDownList>
+                                    <div id="error-ddlCiudadPobladoEmpresa"></div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="col-form-label">Barrio/Colonia</label>
-                                    <asp:DropDownList ID="ddlBarrioColoniaEmpresa" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionLaboral" runat="server"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlBarrioColoniaEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlBarrioColoniaEmpresa"></asp:DropDownList>
+                                    <div id="error-ddlBarrioColoniaEmpresa"></div>
                                 </div>
                             </div>
 
@@ -386,7 +401,6 @@
                                     <h6 class="mt-1">Información del cónyugue</h6>
                                 </div>
                             </div>
-
                             <div class="form-group row">
                                 <div class="col-sm-4">
                                     <label class="col-form-label">Identidad</label>
@@ -427,7 +441,7 @@
                             </div>
                         </div>
 
-                        <!-- REFERENCIAS PERSONALES DEL CLIENTE -->
+                        <!-- Referencias personales del cliente -->
                         <div id="step-6" class="form-section">
 
                             <div class="form-group row m-0 border-bottom border-gray">
@@ -436,7 +450,7 @@
                                 </div>
                             </div>
                             <div class="mt-2 header-title">
-                                <label class="col-form-label">Mínimo 4 referencias personales. Entre ellas 2 familiares.</label>
+                                <label class="col-form-label">Mínimo 4 referencias personales. Entre ellas 2 familiares. <small class="text-info">(Consejo: Si te equivocas en el dato de una referencia, quítala y vuleve a agregarla.)</small></label>
                                 <button id="btnNuevaReferencia" type="button" class="btn btn-info waves-effect waves-light float-right">
                                     Agregar referencia
                                 </button>
@@ -446,9 +460,9 @@
                                     <thead>
                                         <tr>
                                             <th>Nombre completo</th>
+                                            <th>Telefono</th>
                                             <th>Lugar de trabajo</th>
                                             <th>Tiempo de conocer</th>
-                                            <th>Telefono</th>
                                             <th>Parentesco</th>
                                             <th>Quitar</th>
                                         </tr>
@@ -463,7 +477,7 @@
                         <div id="step-7" class="form-section">
                             <div class="form-group row m-0 border-bottom border-gray">
                                 <div class="col-12 p-0">
-                                    <h6 class="mt-1">Documentación de la solicitud</h6>
+                                    <h6 class="mt-1">Documentación de la solicitud <small class="text-info">(Estimado usuario, recuerda subir toda la documentación hasta que ya vayas a guardar la solicitud)</small></h6>
                                 </div>
                             </div>
                             <!-- Div donde se generan dinamicamente los inputs para la documentación -->
@@ -497,19 +511,21 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Tiempo de conocer</label>
                             <div class="col-sm-8">
-                                <asp:DropDownList ID="ddlTiempoDeConocerReferencia" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlTiempoDeConocerReferencia" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales"  data-parsley-errors-container="#error-ddlTiempoDeConocerReferencia"></asp:DropDownList>
+                                <div id="error-ddlTiempoDeConocerReferencia"></div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Parentesco</label>
                             <div class="col-sm-8">
-                                <asp:DropDownList ID="ddlParentescos" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlParentescos" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" data-parsley-errors-container="#error-ddlParentescos"></asp:DropDownList>
+                                <div id="error-ddlParentescos"></div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
                             <div class="col-sm-8">
-                                <asp:TextBox ID="txtLugarTrabajoReferencia" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtLugarTrabajoReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -529,7 +545,11 @@
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script>
+        const CONSTANTES = <%=this.jsonConstantes%>;
+    </script>
+    <script>
         $(document).ready(function () {
+
             $(".mascara-cantidad").inputmask("decimal", {
                 alias: 'numeric',
                 groupSeparator: ',',
