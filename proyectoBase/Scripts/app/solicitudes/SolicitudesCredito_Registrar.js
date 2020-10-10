@@ -42,7 +42,6 @@
         if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true && cantidadReferencias > 0) {
 
             var SolicitudesMaster = {
-                fiIDCliente: clienteID,
                 fiIDTipoPrestamo: $("#tipoPrestamo").data('cod'),
                 fcTipoSolicitud: $("#tipoSolicitud").val(),
                 fnPrima: $("#txtPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtPrima").val().replace(/,/g, ''),
@@ -57,7 +56,6 @@
                 fdEnIngresoFin: ''
             };
             var ClienteMaster = {
-                fiIDCliente: clienteID,
                 fcIdentidadCliente: $("#identidadCliente").val(),
                 RTNCliente: $("#rtnCliente").val(),
                 fcTelefonoCliente: $("#numeroTelefono").val(),
@@ -214,7 +212,7 @@ $(document).ready(function () {
                 var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionPrestamo', excluded: ':disabled' }); /* Validar pestaña informacion prestamo */
 
                 if (state == true) {
-                    guardarRespaldoInformacionPrestamo(); /* Si es valido, guardar respaldo en el localstorage */
+                    GuardarRespaldoInformacionPrestamo(); /* Si es valido, guardar respaldo en el localstorage */
                 }
                 else {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionPrestamo', excluded: ':disabled', force: true }); /* Si no es valido, mostrar validaciones al usuario */
@@ -274,7 +272,7 @@ $(document).ready(function () {
                 var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionPersonal', excluded: ':disabled' });
 
                 if (state == true) {
-                    guardarRespaldoInformacionPersonal();
+                    GuardarRespaldoInformacionPersonal();
                 }
                 else {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionPersonal', force: true });
@@ -288,7 +286,7 @@ $(document).ready(function () {
                 var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionDomicilio' });
 
                 if (state == true) {
-                    guardarRespaldoinformacionDomicilio();
+                    GuardarRespaldoinformacionDomicilio();
                 }
                 else {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionDomicilio', force: true });
@@ -302,7 +300,7 @@ $(document).ready(function () {
                 var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionLaboral' });
 
                 if (state == true) {
-                    guardarRespaldoInformacionLaboral();
+                    GuardarRespaldoInformacionLaboral();
                 }
                 else {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionLaboral', force: true });
@@ -318,7 +316,7 @@ $(document).ready(function () {
                     var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionConyugal' });
 
                     if (state == true) {
-                        guardarRespaldoInformacionConyugal();
+                        GuardarRespaldoInformacionConyugal();
                     }
                     else {
                         $('#frmSolicitud').parsley().validate({ group: 'informacionConyugal', force: true });
@@ -337,7 +335,7 @@ $(document).ready(function () {
 
                     if (listaReferenciasPersonales.length > 0) {
 
-                        guardarRespaldoReferenciasPersonales();
+                        GuardarRespaldoReferenciasPersonales();
 
                         if (listaReferenciasPersonales.length >= 4) {
                             state = true;
@@ -374,7 +372,7 @@ $(document).ready(function () {
     if (respaldoInformacionPrestamo != null) {
 
         if (CONSTANTES.IdentidadCliente == respaldoInformacionPrestamo.IdentidadCliente) {
-            recuperarRespaldos();
+            RecuperarRespaldos();
         }
         else {
             localStorage.clear();
@@ -417,7 +415,7 @@ $('#btnAgregarReferenciaTabla').on('click', function (e) {
         var parentescoReferenciaDescripcion = $("#ddlParentescos :selected").text();
         var btnQuitarReferencia = '<button type="button" id="btnQuitarReferenciaPersonal" ' +
             'data-nombreReferencia="' + nombreReferencia + '" data-telefonoReferencia="' + telefonoReferencia + '" data-lugarTrabajoReferencia="' + lugarTrabajoReferencia + '"' +
-            'data-tiempoDeConocerReferencia="' + tiempoDeConocerReferencia + '" data-tiempoDeConocerReferenciaDescripcion="' + tiempoDeConocerReferenciaDescripcion + '" data-parentescoReferencia="' + parentescoReferencia + ' " data-parentescoReferenciaDescripcion="' + parentescoReferenciaDescripcion + '"' +
+            'data-tiempoDeConocerReferencia="' + tiempoDeConocerReferencia + '" data-tiempoDeConocerReferenciaDescripcion="' + tiempoDeConocerReferenciaDescripcion + '" data-parentescoReferencia="' + parentescoReferencia + '" data-parentescoReferenciaDescripcion="' + parentescoReferenciaDescripcion + '"' +
             'class="btn btn-sm btn-danger" > Quitar</button > ';
 
         /* Agregar referencia a la tabla de referencias personales */
@@ -448,15 +446,13 @@ $('#btnAgregarReferenciaTabla').on('click', function (e) {
 /* Quitar referencia personal de la tabla */
 $(document).on('click', 'button#btnQuitarReferenciaPersonal', function () {
 
-    debugger;
-
     $(this).closest('tr').remove();
 
     var referenciaPersonal = {
         nombreReferencia: $(this).data('nombrereferencia'),
         telefonoReferencia: $(this).data('telefonoreferencia'),
         lugarTrabajoReferencia: $(this).data('lugartrabajoreferencia'),
-        tiempoDeConocerReferencia: $(this).data('tiempodeconocerreferencia'),
+        tiempoDeConocerReferencia: $(this).data('tiempodeconocerreferencia').toString(),
         tiempoDeConocerReferenciaDescripcion: $(this).data('tiempodeconocerreferenciadescripcion'),
         parentescoReferencia: $(this).data('parentescoreferencia').toString(),
         parentescoReferenciaDescripcion: $(this).data('parentescoreferenciadescripcion'),
@@ -1179,101 +1175,98 @@ function MensajeInformacion(mensaje) {
     });
 }
 
-function guardarRespaldoInformacionPrestamo() {
-    var RespaldoInformacionPrestamo = {
-        clienteID: clienteID,
-        tipoPrestamo: $("#tipoPrestamo").val(),
-        tipoSolicitud: $("#tipoSolicitud").val(),
-        identidadCliente: $("#identidadCliente").val(),
-        RTNCliente: $("#RTNCliente").val(),
-        pmoSugeridoSeleccionado: $("#pmoSugeridoSeleccionado :selected").val(),
-        plazoPmoSeleccionado: $("#plazoPmoSeleccionado option:selected").val(),
-        prima: $("#txtPrima").val().replace(/,/g, ''),
-        valorVehiculo: $("#txtValorVehiculo").val().replace(/,/g, ''),
-        montoPmoEfectivo: $("#txtMontoPmoEfectivo").val().replace(/,/g, '')
+function GuardarRespaldoInformacionPrestamo() {
+
+    var respaldoInformacionPrestamo = {
+
+        txtRtnCliente: $("#txtRtnCliente").val(),
+        txtValorGlobal: $("#txtValorGlobal").val().replace(/,/g, ''),
+        txtValorPrima: $("#txtValorPrima").val().replace(/,/g, ''),
+        ddlOrigen: $("#ddlOrigen :selected").val()
     }
-    localStorage.setItem('RespaldoInformacionPrestamo', JSON.stringify(RespaldoInformacionPrestamo));
+    localStorage.setItem('RespaldoInformacionPrestamo', JSON.stringify(respaldoInformacionPrestamo));
 }
 
-function guardarRespaldoInformacionPersonal() {
+function GuardarRespaldoInformacionPersonal() {
+
     var respaldoInformacionPersonal = {
-        clienteID: clienteID,
-        numeroTelefono: $("#numeroTelefono").val(),
-        nacionalidad: $("#nacionalidad").val(),
-        fechaNacimiento: $("#fechaNacimiento").val(),
-        correoElectronico: $("#correoElectronico").val(),
-        RTNCliente: $("#rtnCliente").val(),
-        profesion: $("#profesion").val(),
-        sexo: $("input[name='sexo']:checked").val(),
-        estadoCivil: $("input[name='estadoCivil']:checked").val(),
-        vivivenda: $("#vivivenda").val(),
-        tiempoResidir: $("input[name='tiempoResidir']:checked").val()
+
+        ddlNacionalidad: $("#ddlNacionalidad").val(),
+        txtProfesion: $("#txtProfesion").val(),
+        ddlEstadoCivil: $("#ddlEstadoCivil :selected").val(),
+        txtFechaDeNacimiento: $("#txtFechaDeNacimiento").val(),
+        txtEdadDelCliente: $("#txtEdadDelCliente").val(),
+        sexoCliente: $("input[name='sexoCliente']:checked").val(),        
+        txtCorreoElectronico: $("#txtCorreoElectronico").val(),
+        ddlTipoDeVivienda: $("#ddlTipoDeVivienda :selected").val(),
+        ddlTiempoDeResidir: $("#ddlTiempoDeResidir :selected").val()
     }
     localStorage.setItem('RespaldoInformacionPersonal', JSON.stringify(respaldoInformacionPersonal));
 }
 
-function guardarRespaldoinformacionDomicilio() {
+function GuardarRespaldoinformacionDomicilio() {
+
     var respaldoinformacionDomicilio = {
-        departamento: $("#departamento").val(),
-        municipio: $("#municipio").val(),
-        ciudad: $("#ciudad").val(),
-        barrioColonia: $("#barrioColonia").val(),
-        telefonoCasa: $("#telefonoCasa").val(),
-        telefonoMovil: $("#telefonoMovil").val(),
-        direccionDetallada: $("#direccionDetallada").val(),
-        referenciaDireccionDetallada: $("#referenciaDireccionDetallada").val()
+
+        ddlDepartamentoDomicilio: $("#ddlDepartamentoDomicilio :selected").val(),
+        ddlMunicipioDomicilio: $("#ddlMunicipioDomicilio :selected").val(),
+        ddlCiudadPobladoDomicilio: $("#ddlCiudadPobladoDomicilio :selected").val(),
+        ddlBarrioColoniaDomicilio: $("#ddlBarrioColoniaDomicilio :selected").val(),
+        txtTelefonoCasa: $("#txtTelefonoCasa").val(),
+        txtDireccionDetalladaDomicilio: $("#txtDireccionDetalladaDomicilio").val(),
+        txtReferenciasDelDomicilio: $("#txtReferenciasDelDomicilio").val()
     }
     localStorage.setItem('RespaldoinformacionDomicilio', JSON.stringify(respaldoinformacionDomicilio));
 }
 
-function guardarRespaldoInformacionLaboral() {
+function GuardarRespaldoInformacionLaboral() {
+
     var respaldoInformacionLaboral = {
-        nombreDelTrabajo: $("#nombreDelTrabajo").val(),
-        ingresosMensuales: $("#ingresosMensuales").val().replace(/,/g, ''),
-        puestoAsignado: $("#puestoAsignado").val(),
-        fechaIngreso: $("#fechaIngreso").val(),
-        telefonoEmpresa: $("#telefonoEmpresa").val(),
-        extensionRRHH: $("#extensionRRHH").val(),
-        extensionCliente: $("#extensionCliente").val(),
-        departamentoEmpresa: $("#ddlDepartamentoEmpresa").val(),
-        municipioEmpresa: $("#ddlMunicipioEmpresa").val(),
-        ciudadEmpresa: $("#ddlCiudadPobladoEmpresa").val(),
-        barrioColoniaEmpresa: $("#ddlBarrioColoniaEmpresa").val(),
-        direccionDetalladaEmpresa: $("#direccionDetalladaEmpresa").val(),
-        referenciaDireccionDetalladaEmpresa: $("#referenciaDireccionDetalladaEmpresa").val(),
-        fuenteOtrosIngresos: $("#fuenteOtrosIngresos").val(),
-        valorOtrosIngresos: $("#valorOtrosIngresos").val().replace(/,/g, '')
+
+        txtNombreDelTrabajo: $("#txtNombreDelTrabajo").val(),
+        txtFechaDeIngreso: $("#txtFechaDeIngreso").val(),
+        txtPuestoAsignado: $("#txtPuestoAsignado").val(),
+        
+        txtTelefonoEmpresa: $("#txtTelefonoEmpresa").val(),
+        txtExtensionRecursosHumanos: $("#txtExtensionRecursosHumanos").val(),
+        txtExtensionCliente: $("#txtExtensionCliente").val(),
+        txtFuenteDeOtrosIngresos: $("#txtFuenteDeOtrosIngresos").val(),
+        txtValorOtrosIngresos: $("#txtValorOtrosIngresos").val().replace(/,/g, ''),
+        ddlDepartamentoEmpresa: $("#ddlDepartamentoEmpresa :selected").val(),
+        ddlMunicipioEmpresa: $("#ddlMunicipioEmpresa :selected").val(),
+        ddlCiudadPobladoEmpresa: $("#ddlCiudadPobladoEmpresa :selected").val(),
+        ddlBarrioColoniaEmpresa: $("#ddlBarrioColoniaEmpresa :selected").val(),
+        txtDireccionDetalladaEmpresa: $("#txtDireccionDetalladaEmpresa").val(),
+        txtReferenciasEmpresa: $("#txtReferenciasEmpresa").val(),
+        
     }
     localStorage.setItem('RespaldoInformacionLaboral', JSON.stringify(respaldoInformacionLaboral));
 }
 
-function guardarRespaldoInformacionConyugal() {
+function GuardarRespaldoInformacionConyugal() {
+
     var respaldoInformacionConyugal = {
-        nombresConyugue: $("#nombresConyugue").val(),
-        apellidosConyugue: $("#apellidosConyugue").val(),
-        identidadConyugue: $("#identidadConyugue").val(),
-        fechaNacimientoConyugue: $("#fechaNacimientoConyugue").val(),
-        telefonoConyugue: $("#telefonoConyugue").val(),
-        lugarTrabajoConyugue: $("#lugarTrabajoConyugue").val(),
-        ingresoMensualesConyugue: $("#ingresoMensualesConyugue").val().replace(/,/g, ''),
-        telefonoTrabajoConyugue: $("#telefonoTrabajoConyugue").val()
+        txtIdentidadConyugue: $("#txtIdentidadConyugue").val(),
+        txtNombresConyugue: $("#txtNombresConyugue").val(),
+        txtFechaNacimientoConyugue: $("#txtFechaNacimientoConyugue").val(),
+        txtTelefonoConyugue: $("#txtTelefonoConyugue").val(),
+        txtLugarDeTrabajoConyuge: $("#txtLugarDeTrabajoConyuge").val(),
+        txtIngresosMensualesConyugue: $("#txtIngresosMensualesConyugue").val().replace(/,/g, ''),
+        txtTelefonoTrabajoConyugue: $("#txtTelefonoTrabajoConyugue").val()
     }
     localStorage.setItem('RespaldoInformacionConyugal', JSON.stringify(respaldoInformacionConyugal));
 }
 
-function guardarRespaldoReferenciasPersonales() {
+function GuardarRespaldoReferenciasPersonales() {
+
     localStorage.setItem('RespaldoReferenciasPersonales', JSON.stringify(listaReferenciasPersonales));
 }
 
-function recuperarRespaldos() {
+function RecuperarRespaldos() {
 
-    $("#spinnerCargando").css('display', '');
-    estadoFuncionRecuperarRespaldos = false;
-
-    if (localStorage.getItem('RespaldoInformacionPrestamo') != null) { // recuperar respaldos del paso "informacion del prestamo"
+    if (localStorage.getItem('RespaldoInformacionPrestamo') != null) {
 
         var RespaldoInformacionPrestamo = JSON.parse(localStorage.getItem('RespaldoInformacionPrestamo'));
-        clienteID = RespaldoInformacionPrestamo.clienteID;
         $("#txtPrima").val(RespaldoInformacionPrestamo.prima);
         $("#txtValorVehiculo").val(RespaldoInformacionPrestamo.valorVehiculo);
         $("#txtValorFinanciar").val(RespaldoInformacionPrestamo.valorVehiculo - RespaldoInformacionPrestamo.prima);
@@ -1336,16 +1329,19 @@ function recuperarRespaldos() {
     if (localStorage.getItem('RespaldoInformacionPersonal') != null) { // recuperar informacion del paso "informacion personal"
 
         var respaldoInformacionPersonal = JSON.parse(localStorage.getItem('RespaldoInformacionPersonal'));
-        clienteID = respaldoInformacionPersonal.clienteID;
-        $("#nacionalidad").val(respaldoInformacionPersonal.nacionalidad);
-        $("#fechaNacimiento").val(respaldoInformacionPersonal.fechaNacimiento);
-        $("#correoElectronico").val(respaldoInformacionPersonal.correoElectronico);
-        $("#rtnCliente").val(respaldoInformacionPersonal.RTNCliente);
-        $("#profesion").val(respaldoInformacionPersonal.profesion);
-        $("input[name=sexo][value=" + respaldoInformacionPersonal.sexo + "]").prop('checked', true);
-        $("input[name=estadoCivil][value=" + respaldoInformacionPersonal.estadoCivil + "]").prop('checked', true);
-        $("#vivivenda").val(respaldoInformacionPersonal.vivivenda);
-        $("input[name=tiempoResidir][value=" + respaldoInformacionPersonal.tiempoResidir + "]").prop('checked', true);
+
+        $("#ddlNacionalidad").val(respaldoInformacionPersonal.ddlNacionalidad);
+        $("#txtProfesion").val(respaldoInformacionPersonal.txtProfesion);
+        $("#ddlEstadoCivil").val(respaldoInformacionPersonal.ddlEstadoCivil);
+        $("#txtFechaDeNacimiento").val(respaldoInformacionPersonal.txtFechaDeNacimiento);
+        $("#txtEdadDelCliente").val(respaldoInformacionPersonal.txtEdadDelCliente);
+        
+        $("input[name=sexoCliente][value=" + respaldoInformacionPersonal.sexoCliente + "]").prop('checked', true);
+        $("#txtCorreoElectronico").val(respaldoInformacionPersonal.txtCorreoElectronico);
+        $("#txtNumeroTelefono").val(respaldoInformacionPersonal.txtNumeroTelefono);
+
+        $("#ddlTipoDeVivienda").val(respaldoInformacionPersonal.ddlTipoDeVivienda);
+        $("#ddlTiempoDeResidir").val(respaldoInformacionPersonal.ddlTiempoDeResidir);
     }
 
     if (localStorage.getItem('RespaldoinformacionDomicilio') != null) { // recuperar informacion del paso "informacion domiciliar"
@@ -1422,9 +1418,5 @@ function recuperarRespaldos() {
                 listaReferenciasPersonales.push(RespaldolistaReferenciasPersonales[i]);
             }
         }
-    }
-    estadoFuncionRecuperarRespaldos = true
-    if (estadoFuncionRecuperarInfoCliente == true && estadoFuncionLlenarDDL == true) {
-        $("#spinnerCargando").css('display', 'none');
     }
 }
