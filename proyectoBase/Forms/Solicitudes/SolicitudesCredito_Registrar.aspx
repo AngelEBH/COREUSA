@@ -192,7 +192,7 @@
                                     <div class="form-group row">
                                         <div class="col-md-4">
                                             <label class="col-form-label">Fecha de nacimiento</label>
-                                            <asp:TextBox ID="txtFechaDeNacimiento" CssClass="form-control form-control-sm" type="date" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtFechaDeNacimiento" CssClass="form-control form-control-sm" type="date" Enabled="false" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="col-form-label">Edad del cliente</label>
@@ -279,7 +279,7 @@
                             <div class="form-group row">
                                 <div class="col-sm-3">
                                     <label class="col-form-label">Teléfono casa</label>
-                                    <asp:TextBox ID="txtTelefonoCasa" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="informacionDomicilio" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="txtTelefonoCasa" CssClass="form-control form-control-sm mascara-telefono" type="text" data-parsley-group="informacionDomicilio" runat="server"></asp:TextBox>
                                 </div>
                                 <div class="col-sm-9">
                                     <label class="col-form-label">Dirección detallada del domicilio</label>
@@ -320,7 +320,7 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label class="col-form-label">Ingresos mensuales</label>
-                                            <asp:TextBox ID="txtIngresosMensuales" CssClass="form-control form-control-sm mascara-cantidad" type="text" required="required" data-parsley-group="informacionLaboral" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtIngresosMensuales" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" type="text" required="required" data-parsley-group="informacionLaboral" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -330,11 +330,11 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <label class="col-form-label">Extensión RRHH</label>
-                                            <asp:TextBox ID="txtExtensionRecursosHumanos" CssClass="form-control form-control-sm mascara-extension" type="text" required="required" data-parsley-group="informacionLaboral" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtExtensionRecursosHumanos" CssClass="form-control form-control-sm mascara-extension" type="text" data-parsley-group="informacionLaboral" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-3">
                                             <label class="col-form-label">Extensión Cliente</label>
-                                            <asp:TextBox ID="txtExtensionCliente" CssClass="form-control form-control-sm mascara-extension" type="text" required="required" data-parsley-group="informacionLaboral" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtExtensionCliente" CssClass="form-control form-control-sm mascara-extension" type="text" data-parsley-group="informacionLaboral" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
@@ -343,11 +343,11 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Fuente de otros ingresos</label>
-                                            <asp:TextBox ID="txtFuenteDeOtrosIngresos" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="informacionLaboral" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtFuenteDeOtrosIngresos" CssClass="form-control form-control-sm" type="text" data-parsley-group="informacionLaboral" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Valor otros ingresos</label>
-                                            <asp:TextBox ID="txtValorOtrosIngresos" CssClass="form-control form-control-sm mascara-cantidad" type="text" required="required" data-parsley-group="informacionLaboral" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtValorOtrosIngresos" CssClass="form-control form-control-sm mascara-cantidad" type="text" data-parsley-group="informacionLaboral" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>

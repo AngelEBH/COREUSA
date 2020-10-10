@@ -140,10 +140,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-                { "limit", 1 },
-                { "title", "auto" },
-                { "uploadDir", uploadDir }
-            });
+{ "limit", 1 },
+{ "title", "auto" },
+{ "uploadDir", uploadDir }
+});
 
             switch (type)
             {
@@ -204,7 +204,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         while (sqlResultado.Read())
                         {
                             Precalificado.Identidad = sqlResultado["fcIdentidad"].ToString();
-                            //Precalificado.Rtn = sqlResultado["fcRTN"].ToString();
                             Precalificado.PrimerNombre = sqlResultado["fcPrimerNombre"].ToString();
                             Precalificado.SegundoNombre = sqlResultado["fcSegundoNombre"].ToString();
                             Precalificado.PrimerApellido = sqlResultado["fcPrimerApellido"].ToString();
@@ -221,14 +220,15 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                             /* Capacidad de pago del cliente */
                             Constantes.CapacidadDePagoCliente = Precalificado.Disponible;
+                            Constantes.IdentidadCliente = Precalificado.Identidad;
 
                             txtIdentidadCliente.Text = Precalificado.Identidad;
-                            txtRtnCliente.Text = Precalificado.Rtn;
                             txtPrimerNombre.Text = Precalificado.PrimerNombre;
                             txtSegundoNombre.Text = Precalificado.SegundoNombre;
                             txtPrimerApellido.Text = Precalificado.PrimerApellido;
                             txtSegundoApellido.Text = Precalificado.SegundoApellido;
                             txtIngresosPrecalificados.Text = Precalificado.Ingresos.ToString();
+                            txtIngresosMensuales.Text = Precalificado.Ingresos.ToString();
                             txtNumeroTelefono.Text = Precalificado.Telefono;
                             lblTipodeSolicitud.InnerText = Precalificado.TipoDeSolicitud;
                             lblProducto.InnerText = Precalificado.Producto;
@@ -892,34 +892,29 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     SolicitudesBitacoraViewModel bitacora,
     ClientesMasterViewModel ClienteMaster,
     ClientesInformacionLaboralViewModel ClientesInformacionLaboral,
-    ClientesInformacionDomiciliarViewModel ClientesInformacionDomiciliar,
+    ClientesInformacionDomiciliarViewModel ClienteInformacionDomicilio,
     ClientesInformacionConyugalViewModel ClientesInformacionConyugal,
-    List<ClientesReferenciasViewModel> ClientesReferencias, bool clienteNuevo)
+    List<ClientesReferenciasViewModel> ClientesReferencias)
     {
         SqlDataReader reader = null;
         SqlCommand sqlComando;
         string MensajeError;
         ResponseEntitie resultadoProceso = new ResponseEntitie();
 
-        string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-
-        using (SqlConnection sqlConexion = new SqlConnection(sqlConnectionString))
+        using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada0"].ToString())))
         {
             sqlConexion.Open();
+
             using (SqlTransaction tran = sqlConexion.BeginTransaction())
             {
                 try
                 {
-                    string lcURL = HttpContext.Current.Request.Url.ToString();
-                    Uri lURLDesencriptado = DesencriptarURL(lcURL);
-                    int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-                    string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    string nombreUsuario = "";
-                    DateTime fechaActual = DateTime.Now;
+                    var nombreUsuario = "";
+                    var fechaActual = DateTime.Now;
 
                     int contadorErrores = 0;
                     int clienteMaster = 0;
-                    if (clienteNuevo == true)
+                    if (Constantes.EsClienteNuevo == true)
                     {
                         #region VERIFICAR DUPLICIDAD DE LA IDENTIDAD
                         int DuplicidadIdentidad = 0;
@@ -928,11 +923,12 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         using (sqlComando = new SqlCommand("dbo.sp_CredCliente_ValidarDuplicidadIdentidades", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", ClienteMaster.fcIdentidadCliente);
-                            sqlComando.Parameters.AddWithValue("@fcRTN", ClienteMaster.RTNCliente);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                            sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", Precalificado.Identidad);
+                            sqlComando.Parameters.AddWithValue("@fcRTN", "");
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
                             using (reader = sqlComando.ExecuteReader())
                             {
                                 while (reader.Read())
@@ -964,15 +960,15 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@fiTipoCliente", 1);
-                            sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", ClienteMaster.fcIdentidadCliente);
+                            sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", Precalificado.Identidad);
                             sqlComando.Parameters.AddWithValue("@fcRTN", ClienteMaster.RTNCliente);
-                            sqlComando.Parameters.AddWithValue("@fcPrimerNombreCliente", ClienteMaster.fcPrimerNombreCliente);
-                            sqlComando.Parameters.AddWithValue("@fcSegundoNombreCliente", ClienteMaster.fcSegundoNombreCliente);
-                            sqlComando.Parameters.AddWithValue("@fcPrimerApellidoCliente", ClienteMaster.fcPrimerApellidoCliente);
-                            sqlComando.Parameters.AddWithValue("@fcSegundoApellidoCliente", ClienteMaster.fcSegundoApellidoCliente);
-                            sqlComando.Parameters.AddWithValue("@fcTelefonoCliente", ClienteMaster.fcTelefonoCliente);
+                            sqlComando.Parameters.AddWithValue("@fcPrimerNombreCliente", Precalificado.PrimerNombre);
+                            sqlComando.Parameters.AddWithValue("@fcSegundoNombreCliente", Precalificado.SegundoNombre);
+                            sqlComando.Parameters.AddWithValue("@fcPrimerApellidoCliente", Precalificado.PrimerApellido);
+                            sqlComando.Parameters.AddWithValue("@fcSegundoApellidoCliente", Precalificado.SegundoApellido);
+                            sqlComando.Parameters.AddWithValue("@fcTelefonoCliente", Precalificado.Telefono);
                             sqlComando.Parameters.AddWithValue("@fiNacionalidadCliente", ClienteMaster.fiNacionalidadCliente);
-                            sqlComando.Parameters.AddWithValue("@fdFechaNacimientoCliente", ClienteMaster.fdFechaNacimientoCliente);
+                            sqlComando.Parameters.AddWithValue("@fdFechaNacimientoCliente", Precalificado.FechaNacimiento);
                             sqlComando.Parameters.AddWithValue("@fcCorreoElectronicoCliente", ClienteMaster.fcCorreoElectronicoCliente);
                             sqlComando.Parameters.AddWithValue("@fcProfesionOficioCliente", ClienteMaster.fcProfesionOficioCliente);
                             sqlComando.Parameters.AddWithValue("@fcSexoCliente", ClienteMaster.fcSexoCliente);
@@ -980,7 +976,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@fiIDVivienda", ClienteMaster.fiIDVivienda);
                             sqlComando.Parameters.AddWithValue("@fiTiempoResidir", ClienteMaster.fiTiempoResidir);
                             sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
@@ -1007,7 +1003,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         SolicitudesMaster.fiIDCliente = clienteMaster;
                         #endregion
                     }
-                    if (clienteNuevo == false)
+                    if (Constantes.EsClienteNuevo == false)
                     {
                         #region SI EL CLIENTE NO ES NUEVO, VALIDAR QUE NO TENGA SOLICITUDES ACTIVAS
                         int ClienteSolicitudesActivas = 0;
@@ -1016,7 +1012,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@fiIDCliente", SolicitudesMaster.fiIDCliente);
                             sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", "");
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             using (reader = sqlComando.ExecuteReader())
@@ -1038,15 +1034,14 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                     #region REGISTRAR SOLICITUD MAESTRO
                     int IDSolicitudMaestro = 0;
-                    int fcTipoSolicitud = SolicitudesMaster.fcTipoSolicitud == "NUEVO" ? 1 : SolicitudesMaster.fcTipoSolicitud == "REFINANCIAMIENTO" ? 2 : SolicitudesMaster.fcTipoSolicitud == "RECOMPRA" ? 3 : 0;
                     using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_Maestro_Insert", sqlConexion, tran))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@fiIDPais", 1);
                         sqlComando.Parameters.AddWithValue("@fiIDCanal", 1);
                         sqlComando.Parameters.AddWithValue("@fiIDCliente", SolicitudesMaster.fiIDCliente);
-                        sqlComando.Parameters.AddWithValue("@fiIDTipoProducto", SolicitudesMaster.fiIDTipoPrestamo);
-                        sqlComando.Parameters.AddWithValue("@fiTipoSolicitud", fcTipoSolicitud);
+                        sqlComando.Parameters.AddWithValue("@fiIDTipoProducto", Precalificado.IdProducto);
+                        sqlComando.Parameters.AddWithValue("@fiTipoSolicitud", Precalificado.IdTipoDeSolicitud);
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@fnValorSeleccionado", SolicitudesMaster.fdValorPmoSugeridoSeleccionado);
                         sqlComando.Parameters.AddWithValue("@fiMoneda", 1);
@@ -1058,7 +1053,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@fcCentrodeCosteAsignado", "0100");
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioAsignado", 5);
                         sqlComando.Parameters.AddWithValue("@fdEnIngresoInicio", bitacora.fdEnIngresoInicio);
-                        sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                        sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
@@ -1156,7 +1151,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@fcURL", documento.URLArchivo);
                             sqlComando.Parameters.AddWithValue("@fiTipoDocumento", documento.fiTipoDocumento);
                             sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
@@ -1189,7 +1184,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                     #endregion
 
-                    //cheque
                     #region REGISTRAR CLIENTE INFORMACION LABORAL
                     using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionLaboral_Insert", sqlConexion, tran))
                     {
@@ -1197,7 +1191,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@fiIDCliente", SolicitudesMaster.fiIDCliente);
                         sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitudMaestro);
                         sqlComando.Parameters.AddWithValue("@fcNombreTrabajo", ClientesInformacionLaboral.fcNombreTrabajo);
-                        sqlComando.Parameters.AddWithValue("@fnIngresosMensuales", ClientesInformacionLaboral.fiIngresosMensuales);
+                        sqlComando.Parameters.AddWithValue("@fnIngresosMensuales", Precalificado.Ingresos);
                         sqlComando.Parameters.AddWithValue("@fcPuestoAsignado", ClientesInformacionLaboral.fcPuestoAsignado);
                         sqlComando.Parameters.AddWithValue("@fdFechaIngreso", ClientesInformacionLaboral.fcFechaIngreso);
                         sqlComando.Parameters.AddWithValue("@fcTelefonoEmpresa", ClientesInformacionLaboral.fdTelefonoEmpresa);
@@ -1212,7 +1206,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@fcFuenteOtrosIngresos", ClientesInformacionLaboral.fcFuenteOtrosIngresos);
                         sqlComando.Parameters.AddWithValue("@fnValorOtrosIngresosMensuales", ClientesInformacionLaboral.fiValorOtrosIngresosMensuales);
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
-                        sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                        sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
@@ -1235,22 +1229,21 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
                     #endregion
 
-                    //cheque
                     #region REGISTRAR INFORMACION DOMICILIO
                     using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionDomiciliar_Insert", sqlConexion, tran))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@fiIDCliente", SolicitudesMaster.fiIDCliente);
                         sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitudMaestro);
-                        sqlComando.Parameters.AddWithValue("@fcTelefonoCasa", ClientesInformacionDomiciliar.fcTelefonoCasa);
-                        sqlComando.Parameters.AddWithValue("@fiIDDepartamento", ClientesInformacionDomiciliar.fiIDDepto);
-                        sqlComando.Parameters.AddWithValue("@fiIDMunicipio", ClientesInformacionDomiciliar.fiIDMunicipio);
-                        sqlComando.Parameters.AddWithValue("@fiIDCiudad", ClientesInformacionDomiciliar.fiIDCiudad);
-                        sqlComando.Parameters.AddWithValue("@fiIDBarrioColonia", ClientesInformacionDomiciliar.fiIDBarrioColonia);
-                        sqlComando.Parameters.AddWithValue("@fcDireccionDetallada", ClientesInformacionDomiciliar.fcDireccionDetallada);
-                        sqlComando.Parameters.AddWithValue("@fcReferenciasDireccionDetallada", ClientesInformacionDomiciliar.fcReferenciasDireccionDetallada);
+                        sqlComando.Parameters.AddWithValue("@fcTelefonoCasa", ClienteInformacionDomicilio.fcTelefonoCasa);
+                        sqlComando.Parameters.AddWithValue("@fiIDDepartamento", ClienteInformacionDomicilio.fiIDDepto);
+                        sqlComando.Parameters.AddWithValue("@fiIDMunicipio", ClienteInformacionDomicilio.fiIDMunicipio);
+                        sqlComando.Parameters.AddWithValue("@fiIDCiudad", ClienteInformacionDomicilio.fiIDCiudad);
+                        sqlComando.Parameters.AddWithValue("@fiIDBarrioColonia", ClienteInformacionDomicilio.fiIDBarrioColonia);
+                        sqlComando.Parameters.AddWithValue("@fcDireccionDetallada", ClienteInformacionDomicilio.fcDireccionDetallada);
+                        sqlComando.Parameters.AddWithValue("@fcReferenciasDireccionDetallada", ClienteInformacionDomicilio.fcReferenciasDireccionDetallada);
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
-                        sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                        sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
@@ -1273,7 +1266,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
                     #endregion
 
-                    //cheque
                     #region REGISTRAR CLIENTE INFORMACION CONYUGAL
                     if (ClientesInformacionConyugal.fcIndentidadConyugue != "" && ClientesInformacionConyugal.fcIndentidadConyugue != null)
                     {
@@ -1290,7 +1282,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@fnIngresosMensualesConyugue", ClientesInformacionConyugal.fcIngresosMensualesConyugue);
                             sqlComando.Parameters.AddWithValue("@fcTelefonoTrabajoConyugue", ClientesInformacionConyugal.fcTelefonoTrabajoConyugue);
                             sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
@@ -1314,7 +1306,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
                     #endregion
 
-                    //cheque
                     #region REFERENCIAS PERSONALES DEL CLIENTE
                     if (ClientesReferencias != null)
                     {
@@ -1333,7 +1324,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                     sqlComando.Parameters.AddWithValue("@fcTelefonoReferencia", clienteReferencia.fcTelefonoReferencia);
                                     sqlComando.Parameters.AddWithValue("@fiIDParentescoReferencia", clienteReferencia.fiIDParentescoReferencia);
                                     sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
-                                    sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                                     sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
@@ -1359,7 +1350,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
                     #endregion
 
-                    tran.Commit();
+                    //tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
@@ -1370,7 +1361,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     ex.Message.ToString();
                     resultadoProceso.response = false;
                     resultadoProceso.message = "Error al guardar solicitud, contacte al administrador";
-                    ExceptionLogging.SendExcepToDB(ex);
                 }
             }
         }
@@ -1473,6 +1463,9 @@ public class SolicitudesCredito_Registrar_Constantes
     public bool RequierePrima { get; set; }
     public bool RequiereOrigen { get; set; }
 
+    public int? PlazoMaximoCliente { get; set; }
+    public decimal? MontoFinanciarMaximoCliente { get; set; }
+
     public SolicitudesCredito_Registrar_Constantes()
     {
         HoraAlCargar = DateTime.Now;
@@ -1488,6 +1481,8 @@ public class SolicitudesCredito_Registrar_Constantes
         RequiereOrigen = false;
     }
 }
+
+/* 32025399 */
 
 public class BarriosColonias_ViewModel
 {
