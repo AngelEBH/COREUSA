@@ -794,7 +794,7 @@ $('#txtValorGlobal,#txtValorPrima,#txtPlazo').blur(function () {
         MensajeAdvertencia('El monto máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Monto + '.');
     }
 
-    if (valorGlobal > 0 && plazo > 0 && state == true) {
+    if (valorGlobal > 0 && plazo > 0 && valorPrima > 0 && state == true) {
         CalculoPrestamo(valorGlobal.toString(), valorPrima.toString(), plazo.toString());
     }
 });
@@ -1088,7 +1088,7 @@ function RecuperarRespaldos() {
         $("#txtPlazo").val(plazo);
         $("#ddlMoneda").val(RespaldoInformacionPrestamo.ddlMoneda);
 
-        if (valorGlobal > 0 && plazo > 0) {
+        if (valorGlobal > 0 && plazo > 0 && valorPrima > 0) {
             CalculoPrestamo(valorGlobal.toString(), valorPrima.toString(), plazo.toString());
         }
     }

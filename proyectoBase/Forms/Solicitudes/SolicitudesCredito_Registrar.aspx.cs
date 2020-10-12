@@ -1,7 +1,4 @@
-﻿using adminfiles;
-using Newtonsoft.Json;
-using proyectoBase.Models.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -11,18 +8,22 @@ using System.Linq;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using proyectoBase.Models.ViewModel;
+using adminfiles;
 
 public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 {
-    private static string pcID = "";
-    private static string pcIDApp = "";
-    private static string pcIDSesion = "";
-    private static string pcIDUsuario = "";
+    private string pcID = "";
+    private string pcIDApp = "";
+    private string pcIDSesion = "";
+    private string pcIDUsuario = "";
     private static DSCore.DataCrypt DSC;
-    public static Precalificado_ViewModel Precalificado;
-    public static List<TipoDocumento_ViewModel> DocumentosRequeridos;
-    public static SolicitudesCredito_Registrar_Constantes Constantes;
+    public Precalificado_ViewModel Precalificado;
+    public List<TipoDocumento_ViewModel> DocumentosRequeridos;
+    public SolicitudesCredito_Registrar_Constantes Constantes;
     public string jsonConstantes;
+    public string jsonPrecalicado;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -69,7 +70,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         Constantes.MontoFinanciarMinimo = 6000;
                         break;
 
-
                     /* Prestadito Motos */
                     case 201:
 
@@ -78,7 +78,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         Constantes.PorcentajePrimaMinima = 10;
                         Constantes.MontoFinanciarMinimo = 6000;
                         break;
-
 
                     /* Prestadito Automovil Financ. */
                     case 202:
@@ -89,14 +88,12 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         Constantes.RequiereOrigen = true;
                         break;
 
-
                     /* Prestadito Automovil Empeño */
                     case 203:
 
                         Constantes.RequierePrima = false;
                         Constantes.RequiereOrigen = true;
                         break;
-
 
                     /* Prestadito Consumo HardGoods */
                     case 301:
@@ -106,7 +103,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         Constantes.PlazoMinimo = 12;
                         Constantes.PlazoMaximo = 36;
                         break;
-
 
                     /* Prestadito Consumo SoftGoods */
                     case 302:
@@ -130,6 +126,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                 /* Para utilizar las constantes de validaciones en el frontend */
                 jsonConstantes = JsonConvert.SerializeObject(Constantes);
+                jsonPrecalicado = JsonConvert.SerializeObject(Precalificado);
             }
         }
 
@@ -140,10 +137,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-{ "limit", 1 },
-{ "title", "auto" },
-{ "uploadDir", uploadDir }
-});
+                { "limit", 1 },
+                { "title", "auto" },
+                { "uploadDir", uploadDir }
+            });
 
             switch (type)
             {
@@ -227,9 +224,16 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             txtSegundoNombre.Text = Precalificado.SegundoNombre;
                             txtPrimerApellido.Text = Precalificado.PrimerApellido;
                             txtSegundoApellido.Text = Precalificado.SegundoApellido;
+                            txtNumeroTelefono.Text = Precalificado.Telefono;
                             txtIngresosPrecalificados.Text = Precalificado.Ingresos.ToString();
                             txtIngresosMensuales.Text = Precalificado.Ingresos.ToString();
-                            txtNumeroTelefono.Text = Precalificado.Telefono;
+                            txtFechaDeNacimiento.Text = Precalificado.FechaNacimiento.ToString("yyyy-MM-dd");
+                            /* Calcular edad del cliente */
+                            var hoy = DateTime.Today;
+                            var edad = hoy.Year - Precalificado.FechaNacimiento.Year;
+                            if (Precalificado.FechaNacimiento.Date > hoy.AddYears(-edad)) edad--;
+
+                            txtEdadDelCliente.Text = edad + " años";
                             lblTipodeSolicitud.InnerText = Precalificado.TipoDeSolicitud;
                             lblProducto.InnerText = Precalificado.Producto;
                         }
@@ -287,6 +291,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         txtCuotaMaxima.Text = Constantes.PrestamoMaximo_Cuota.ToString();
                         lblTituloPlazoMaximo.Text = "Plazo " + Constantes.PrestamoMaximo_TipoDePlazo;
                         lblTituloCuotaMaxima.Text = "Cuota " + Constantes.PrestamoMaximo_TipoDePlazo;
+                        lblTituloPlazo.Text = "Plazo " + Constantes.PrestamoMaximo_TipoDePlazo;
                     }
                 } // using sp cotizador productos
             }// using conexion
@@ -423,6 +428,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 TipoVisibilidad = (byte)sqlResultado["fiTipodeVisibilidad"]
                             });
                         }
+                        Session["DocumentosRequeridos"] = DocumentosRequeridos;
 
                         sqlResultado.NextResult();
 
@@ -452,6 +458,26 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         while (sqlResultado.Read())
                         {
                             ddlTiempoDeConocerReferencia.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
+                        }
+
+                        sqlResultado.NextResult();
+
+                        /* Moneda */
+                        ddlMoneda.Items.Clear();
+                        ddlMoneda.Items.Add(new ListItem("Seleccionar", ""));
+                        while (sqlResultado.Read())
+                        {
+                            ddlMoneda.Items.Add(new ListItem(sqlResultado["fcNombreMoneda"].ToString(), sqlResultado["fiMoneda"].ToString()));
+                        }
+
+                        sqlResultado.NextResult();
+
+                        /* Tipo de cliente */
+                        ddlTipoDeCliente.Items.Clear();
+                        ddlTipoDeCliente.Items.Add(new ListItem("Seleccionar", ""));
+                        while (sqlResultado.Read())
+                        {
+                            ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
                         }
                     }
                 }
@@ -531,18 +557,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             txtSegundoNombre.Text = reader["fcSegundoNombreCliente"].ToString();
                             txtPrimerApellido.Text = reader["fcPrimerApellidoCliente"].ToString();
                             txtSegundoApellido.Text = reader["fcSegundoApellidoCliente"].ToString();
-                            //txtNumeroTelefono.Text = reader["fcTelefonoPrimarioCliente"].ToString();
                             ddlNacionalidad.SelectedValue = reader["fiNacionalidadCliente"].ToString();
-
-                            DateTime FechaNacimientoCliente = (DateTime)reader["fdFechaNacimientoCliente"];
-                            txtFechaDeNacimiento.Text = FechaNacimientoCliente.ToString("MM/dd/yyyy");
-
-                            /* Calcular edad del cliente */
-                            var hoy = DateTime.Today;
-                            var edad = hoy.Year - FechaNacimientoCliente.Year;
-                            if (FechaNacimientoCliente.Date > hoy.AddYears(-edad)) edad--;
-
-                            txtEdadDelCliente.Text = edad + " años";
                             txtCorreoElectronico.Text = reader["fcCorreoElectronicoCliente"].ToString();
                             txtProfesion.Text = reader["fcProfesionOficioCliente"].ToString();
 
@@ -679,7 +694,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             txtIdentidadConyugue.Text = reader["fcIndentidadConyugue"].ToString();
                             txtNombresConyugue.Text = reader["fcNombreCompletoConyugue"].ToString();
-                            txtFechaNacimientoConyugue.Text = DateTime.Parse(reader["fdFechaNacimientoConyugue"].ToString()).ToString("MM/dd/yyyy");
+                            txtFechaNacimientoConyugue.Text = DateTime.Parse(reader["fdFechaNacimientoConyugue"].ToString()).ToString("yyyy-MM-dd");
                             txtTelefonoConyugue.Text = reader["fcTelefonoConyugue"].ToString();
                             txtLugarDeTrabajoConyuge.Text = reader["fcLugarTrabajoConyugue"].ToString();
                             txtIngresosMensualesConyugue.Text = reader["fnIngresosMensualesConyugue"].ToString();
@@ -821,7 +836,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     [WebMethod]
     public static List<TipoDocumento_ViewModel> CargarDocumentosRequeridos()
     {
-        return DocumentosRequeridos;
+        return (List<TipoDocumento_ViewModel>)HttpContext.Current.Session["DocumentosRequeridos"];
     }
 
     [WebMethod]
@@ -843,38 +858,46 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<CotizadorProductos_ViewModel> CargarPrestamosOfertados(decimal valorProducto, decimal valorPrima)
+    public static CalculoPrestamo_ViewModel CalculoPrestamo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string dataCrypt)
     {
-        var PrestamosOfertados = new List<CotizadorProductos_ViewModel>();
+        var calculo = new CalculoPrestamo_ViewModel();
         try
         {
+            var urlDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
+            var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr");
+
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CredCotizador_ConPrima", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CredSolicitud_CalculoPrestamo", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
-                    sqlComando.Parameters.AddWithValue("@pnValorProducto", valorProducto);
-                    sqlComando.Parameters.AddWithValue("@pnPrima", valorPrima);
+                    sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
+                    sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", valorGlobal);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
+                    sqlComando.Parameters.AddWithValue("@liPlazo", plazo);                    
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        int IdContador = 1;
-
                         while (sqlResultado.Read())
                         {
-                            PrestamosOfertados.Add(new CotizadorProductos_ViewModel()
+                            calculo = new CalculoPrestamo_ViewModel() 
                             {
-                                IdCotizacion = IdContador,
-                                Producto = sqlResultado["fcProducto"].ToString(),
-                                MontoOfertado = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString()),
-                                Plazo = int.Parse(sqlResultado["fiIDPlazo"].ToString()),
-                                Cuota = decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
-                                TipoPlazo = sqlResultado["fcTipodeCuota"].ToString()
-                            });
-                            IdContador++;
+                                SegurodeDeuda = decimal.Parse(sqlResultado["fnSegurodeDeuda"].ToString()),
+                                SegurodeVehiculo = decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
+                                GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
+                                ValoraFinanciar = decimal.Parse(sqlResultado["fnValoraFinanciar"].ToString()),
+                                CuotaQuincenal = decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
+                                CuotaMensual = decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()),
+                                CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
+                                CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
+                                CuotaMensualNeta = decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()),
+                                TotalSeguroVehiculo = decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString())
+                            };
                         }
                     }
                 }
@@ -883,25 +906,19 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         catch (Exception ex)
         {
             ex.Message.ToString();
+            calculo = null;
         }
-        return PrestamosOfertados;
+        return calculo;
     }
 
     [WebMethod]
-    public static ResponseEntitie IngresarSolicitud(SolicitudesMasterViewModel SolicitudesMaster,
-    SolicitudesBitacoraViewModel bitacora,
-    ClientesMasterViewModel ClienteMaster,
-    ClientesInformacionLaboralViewModel ClientesInformacionLaboral,
-    ClientesInformacionDomiciliarViewModel ClienteInformacionDomicilio,
-    ClientesInformacionConyugalViewModel ClientesInformacionConyugal,
-    List<ClientesReferenciasViewModel> ClientesReferencias)
+    public static ResponseEntitie IngresarSolicitud(Solicitud_Maestro_ViewModel solicitud, Cliente_ViewModel cliente, Precalificado_ViewModel precalificado, bool esClienteNuevo, string dataCrypt)
     {
-        SqlDataReader reader = null;
-        SqlCommand sqlComando;
-        string MensajeError;
-        ResponseEntitie resultadoProceso = new ResponseEntitie();
+        var resultadoProceso = new ResponseEntitie();
+        var mensajeError = string.Empty;
 
-        using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada0"].ToString())))
+        //using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+        using (var sqlConexion = new SqlConnection("Server=(LocalDb)\\.;Initial Catalog=CoreFinanciero;Integrated Security=SSPI;"))        
         {
             sqlConexion.Open();
 
@@ -909,165 +926,176 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 try
                 {
-                    var nombreUsuario = "";
+                    var urlDesencriptado = DesencriptarURL(dataCrypt);
+                    var pcID = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("ID");
+                    var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
+                    var pcIDSesion = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("SID") ?? "0";
+                    var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr");
+                    var nombreUsuario = string.Empty;
                     var fechaActual = DateTime.Now;
-
                     int contadorErrores = 0;
-                    int clienteMaster = 0;
-                    if (Constantes.EsClienteNuevo == true)
-                    {
-                        #region VERIFICAR DUPLICIDAD DE LA IDENTIDAD
-                        int DuplicidadIdentidad = 0;
-                        int DuplicidadRTN = 0;
+                    int idClienteInsertado = 0;
 
-                        using (sqlComando = new SqlCommand("dbo.sp_CredCliente_ValidarDuplicidadIdentidades", sqlConexion, tran))
+                    if (esClienteNuevo == true)
+                    {
+                        /* Verificar duplicidad de identidad y RTN */
+                        int duplicidadIdentidad = 0;
+                        int duplicidadRTN = 0;
+
+                        using (var sqlComando = new SqlCommand("sp_CredCliente_ValidarDuplicidadIdentidades", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", Precalificado.Identidad);
-                            sqlComando.Parameters.AddWithValue("@fcRTN", "");
+                            sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", precalificado.Identidad);
+                            sqlComando.Parameters.AddWithValue("@fcRTN", cliente.RtnCliente);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                            using (reader = sqlComando.ExecuteReader())
+                            using (var sqlResultado = sqlComando.ExecuteReader())
                             {
-                                while (reader.Read())
+                                while (sqlResultado.Read())
                                 {
-                                    DuplicidadIdentidad = (int)reader["fiValidacionIdentidad"];
-                                    DuplicidadRTN = (int)reader["fiValidacionRTN"];
+                                    duplicidadIdentidad = (int)sqlResultado["fiValidacionIdentidad"];
+                                    duplicidadRTN = (int)sqlResultado["fiValidacionRTN"];
                                 }
                             }
                         }
-                        if (DuplicidadIdentidad > 0 || DuplicidadRTN > 0)
+                        if (duplicidadIdentidad > 0 || duplicidadRTN > 0)
                         {
-                            string MensajeDuplicidad = string.Empty;
+                            string mensajeDuplicidad = string.Empty;
 
-                            if (DuplicidadIdentidad > 0 && DuplicidadRTN > 0)
-                                MensajeDuplicidad = "Error de duplicidad, el número de identidad y RTN ingresados ya existen";
-                            else if (DuplicidadIdentidad > 0)
-                                MensajeDuplicidad = "Error de duplicidad, el número de identidad ingresado ya existe";
-                            else if (DuplicidadRTN > 0)
-                                MensajeDuplicidad = "Error de duplicidad, el número de RTN ingresado ya existe";
+                            if (duplicidadIdentidad > 0 && duplicidadRTN > 0)
+                            {
+                                mensajeDuplicidad = "Error de duplicidad, el número de identidad y RTN ingresados ya existen";
+                            }
+                            else if (duplicidadIdentidad > 0)
+                            {
+                                mensajeDuplicidad = "Error de duplicidad, el número de identidad ingresado ya existe";
+                            }
+                            else if (duplicidadRTN > 0)
+                            {
+                                mensajeDuplicidad = "Error de duplicidad, el número de RTN ingresado ya existe";
+                            }
 
                             resultadoProceso.response = false;
-                            resultadoProceso.message = MensajeDuplicidad;
+                            resultadoProceso.message = mensajeDuplicidad;
                             return resultadoProceso;
                         }
-                        #endregion
 
-                        #region REGISTRAR CLIENTE MASTER
-                        using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Insert", sqlConexion, tran))
+                        /* Registrar cliente maestro */
+                        using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Insert", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", 1);
-                            sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", Precalificado.Identidad);
-                            sqlComando.Parameters.AddWithValue("@fcRTN", ClienteMaster.RTNCliente);
-                            sqlComando.Parameters.AddWithValue("@fcPrimerNombreCliente", Precalificado.PrimerNombre);
-                            sqlComando.Parameters.AddWithValue("@fcSegundoNombreCliente", Precalificado.SegundoNombre);
-                            sqlComando.Parameters.AddWithValue("@fcPrimerApellidoCliente", Precalificado.PrimerApellido);
-                            sqlComando.Parameters.AddWithValue("@fcSegundoApellidoCliente", Precalificado.SegundoApellido);
-                            sqlComando.Parameters.AddWithValue("@fcTelefonoCliente", Precalificado.Telefono);
-                            sqlComando.Parameters.AddWithValue("@fiNacionalidadCliente", ClienteMaster.fiNacionalidadCliente);
-                            sqlComando.Parameters.AddWithValue("@fdFechaNacimientoCliente", Precalificado.FechaNacimiento);
-                            sqlComando.Parameters.AddWithValue("@fcCorreoElectronicoCliente", ClienteMaster.fcCorreoElectronicoCliente);
-                            sqlComando.Parameters.AddWithValue("@fcProfesionOficioCliente", ClienteMaster.fcProfesionOficioCliente);
-                            sqlComando.Parameters.AddWithValue("@fcSexoCliente", ClienteMaster.fcSexoCliente);
-                            sqlComando.Parameters.AddWithValue("@fiIDEstadoCivil", ClienteMaster.fiIDEstadoCivil);
-                            sqlComando.Parameters.AddWithValue("@fiIDVivienda", ClienteMaster.fiIDVivienda);
-                            sqlComando.Parameters.AddWithValue("@fiTiempoResidir", ClienteMaster.fiTiempoResidir);
+                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", cliente.IdTipoCliente);
+                            sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", precalificado.Identidad);
+                            sqlComando.Parameters.AddWithValue("@fcRTN", cliente.RtnCliente);
+                            sqlComando.Parameters.AddWithValue("@fcPrimerNombreCliente", precalificado.PrimerNombre);
+                            sqlComando.Parameters.AddWithValue("@fcSegundoNombreCliente", precalificado.SegundoNombre);
+                            sqlComando.Parameters.AddWithValue("@fcPrimerApellidoCliente", precalificado.PrimerApellido);
+                            sqlComando.Parameters.AddWithValue("@fcSegundoApellidoCliente", precalificado.SegundoApellido);
+                            sqlComando.Parameters.AddWithValue("@fcTelefonoCliente", precalificado.Telefono);
+                            sqlComando.Parameters.AddWithValue("@fiNacionalidadCliente", cliente.IdNacionalidad);
+                            sqlComando.Parameters.AddWithValue("@fdFechaNacimientoCliente", precalificado.FechaNacimiento);
+                            sqlComando.Parameters.AddWithValue("@fcCorreoElectronicoCliente", cliente.Correo);
+                            sqlComando.Parameters.AddWithValue("@fcProfesionOficioCliente", cliente.ProfesionOficio);
+                            sqlComando.Parameters.AddWithValue("@fcSexoCliente", cliente.Sexo);
+                            sqlComando.Parameters.AddWithValue("@fiIDEstadoCivil", cliente.IdEstadoCivil);
+                            sqlComando.Parameters.AddWithValue("@fiIDVivienda", cliente.IdVivienda);
+                            sqlComando.Parameters.AddWithValue("@fiTiempoResidir", cliente.IdTiempoResidir);
                             sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
                             sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
-                            using (reader = sqlComando.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    MensajeError = (string)reader["MensajeError"];
 
-                                    if (MensajeError.StartsWith("-1"))
+                            using (var sqlResultado = sqlComando.ExecuteReader())
+                            {
+                                while (sqlResultado.Read())
+                                {
+                                    mensajeError = sqlResultado["MensajeError"].ToString();
+
+                                    if (mensajeError.StartsWith("-1"))
                                         contadorErrores++;
                                     else
-                                        clienteMaster = Convert.ToInt32(MensajeError);
+                                        idClienteInsertado = Convert.ToInt32(mensajeError);
                                 }
                             }
                         }
-                        if (contadorErrores > 0 || clienteMaster == 0)
+                        if (contadorErrores > 0 || idClienteInsertado == 0)
                         {
                             resultadoProceso.response = false;
                             resultadoProceso.message = "Error al guardar informacion personal del cliente";
                             return resultadoProceso;
                         }
-                        SolicitudesMaster.fiIDCliente = clienteMaster;
-                        #endregion
+                        solicitud.IdCliente = idClienteInsertado;
                     }
-                    if (Constantes.EsClienteNuevo == false)
+
+                    if (esClienteNuevo == false)
                     {
-                        #region SI EL CLIENTE NO ES NUEVO, VALIDAR QUE NO TENGA SOLICITUDES ACTIVAS
-                        int ClienteSolicitudesActivas = 0;
-                        using (sqlComando = new SqlCommand("dbo.sp_CredSolicitud_ValidarClienteSolicitudesActivas", sqlConexion, tran))
+                        /* Si el cliente no es nuevo, validar que no tenga solicitudes de crédito activas */
+                        int solicitudesActivas = 0;
+
+                        using (var sqlComando = new SqlCommand("sp_CredSolicitud_ValidarClienteSolicitudesActivas", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDCliente", SolicitudesMaster.fiIDCliente);
+                            sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
                             sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", "");
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                            using (reader = sqlComando.ExecuteReader())
+                            using (var sqlResultado = sqlComando.ExecuteReader())
                             {
-                                while (reader.Read())
-                                    ClienteSolicitudesActivas = (int)reader["fiClienteSolicitudesActivas"];
+                                while (sqlResultado.Read())
+                                {
+                                    solicitudesActivas = (int)sqlResultado["fiClienteSolicitudesActivas"];
+                                }
                             }
                         }
-                        if (ClienteSolicitudesActivas > 0)
+                        if (solicitudesActivas > 0)
                         {
                             resultadoProceso.response = false;
-                            resultadoProceso.message = "Ya hay una solicitud activa de este cliente, esperar resolución";
+                            resultadoProceso.message = "Hay una solicitud de crédito activa de este cliente, esperar resolución.";
                             return resultadoProceso;
                         }
-                        #endregion
                     }
 
-                    #region SOLICITUD
-
-                    #region REGISTRAR SOLICITUD MAESTRO
-                    int IDSolicitudMaestro = 0;
-                    using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_Maestro_Insert", sqlConexion, tran))
+                    /* Registrar cliente maestro */
+                    int IdSolicitudInsertada = 0;
+                    using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_Maestro_Insert", sqlConexion, tran))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@fiIDPais", 1);
                         sqlComando.Parameters.AddWithValue("@fiIDCanal", 1);
-                        sqlComando.Parameters.AddWithValue("@fiIDCliente", SolicitudesMaster.fiIDCliente);
-                        sqlComando.Parameters.AddWithValue("@fiIDTipoProducto", Precalificado.IdProducto);
-                        sqlComando.Parameters.AddWithValue("@fiTipoSolicitud", Precalificado.IdTipoDeSolicitud);
+                        sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
+                        sqlComando.Parameters.AddWithValue("@fiIDTipoProducto", precalificado.IdProducto);
+                        sqlComando.Parameters.AddWithValue("@fiTipoSolicitud", precalificado.IdTipoDeSolicitud);
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
-                        sqlComando.Parameters.AddWithValue("@fnValorSeleccionado", SolicitudesMaster.fdValorPmoSugeridoSeleccionado);
-                        sqlComando.Parameters.AddWithValue("@fiMoneda", 1);
-                        sqlComando.Parameters.AddWithValue("@fiPlazoSeleccionado", SolicitudesMaster.fiPlazoPmoSeleccionado);
-                        sqlComando.Parameters.AddWithValue("@fnValorPrima", SolicitudesMaster.fnPrima);
-                        sqlComando.Parameters.AddWithValue("@fnValorGarantia", SolicitudesMaster.fnValorGarantia);
-                        sqlComando.Parameters.AddWithValue("@fiIDOrigen", SolicitudesMaster.fiIDOrigen);
-                        sqlComando.Parameters.AddWithValue("@fdFechaIngresoLaborarCliente", ClientesInformacionLaboral.fcFechaIngreso);
+                        sqlComando.Parameters.AddWithValue("@fnValorSeleccionado", solicitud.ValorSeleccionado);
+                        sqlComando.Parameters.AddWithValue("@fiMoneda", solicitud.IdTipoMoneda);
+                        sqlComando.Parameters.AddWithValue("@fiPlazoSeleccionado", solicitud.PlazoSeleccionado);
+                        sqlComando.Parameters.AddWithValue("@fnValorPrima", solicitud.ValorPrima);
+                        sqlComando.Parameters.AddWithValue("@fnValorGarantia", solicitud.ValorPrima == 0 ? 0 : solicitud.ValorGlobal);
+                        sqlComando.Parameters.AddWithValue("@fiIDOrigen", solicitud.IdOrigen);
+                        sqlComando.Parameters.AddWithValue("@fdFechaIngresoLaborarCliente", cliente.InformacionLaboral.FechaIngreso);
                         sqlComando.Parameters.AddWithValue("@fcCentrodeCosteAsignado", "0100");
-                        sqlComando.Parameters.AddWithValue("@fiIDUsuarioAsignado", 5);
-                        sqlComando.Parameters.AddWithValue("@fdEnIngresoInicio", bitacora.fdEnIngresoInicio);
+                        sqlComando.Parameters.AddWithValue("@fiIDUsuarioAsignado", pcIDUsuario);
+                        sqlComando.Parameters.AddWithValue("@fdEnIngresoInicio", solicitud.EnIngresoInicio);
                         sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
                         sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
-                        using (reader = sqlComando.ExecuteReader())
+                        using (var sqlResultado = sqlComando.ExecuteReader())
                         {
-                            while (reader.Read())
+                            while (sqlResultado.Read())
                             {
-                                MensajeError = (string)reader["MensajeError"];
+                                mensajeError = sqlResultado["MensajeError"].ToString();
 
-                                if (MensajeError.StartsWith("-1"))
+                                if (mensajeError.StartsWith("-1"))
                                     contadorErrores++;
                                 else
-                                    IDSolicitudMaestro = Convert.ToInt32(MensajeError);
+                                    IdSolicitudInsertada = Convert.ToInt32(mensajeError);
                             }
                         }
                     }
@@ -1077,26 +1105,24 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         resultadoProceso.message = "Error al guardar la solicitud, contacte al administrador";
                         return resultadoProceso;
                     }
-                    #endregion
 
-                    #region REGISTRAR DOCUMENTACIÓN DE LA SOLICITUD
-
+                    /* Registrar documentacion de la solicitud */
                     int DocumentacionCliente = 1;
-                    string NombreCarpetaDocumentos = "Solicitud" + IDSolicitudMaestro;
+                    string NombreCarpetaDocumentos = "Solicitud" + IdSolicitudInsertada;
                     string NuevoNombreDocumento = "";
 
-                    // lista de documentos adjuntados por el usuario
+                    /* lista de documentos adjuntados por el usuario */
                     var listaDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
 
-                    // Lista de documentos que se va ingresar en la base de datos y se va mover al nuevo directorio
-                    List<SolicitudesDocumentosViewModel> SolicitudesDocumentos = new List<SolicitudesDocumentosViewModel>();
+                    /* Lista de documentos que se va ingresar en la base de datos y se va mover al nuevo directorio */
+                    List<SolicitudesDocumentosViewModel> solicitudesDocumentos = new List<SolicitudesDocumentosViewModel>();
 
                     if (listaDocumentos != null)
                     {
-                        // lista de bloques y la cantidad de documentos que contiene cada uno
+                        /* lista de bloques y la cantidad de documentos que contiene cada uno */
                         var Bloques = listaDocumentos.GroupBy(TipoDocumento => TipoDocumento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
 
-                        // lista donde se guardara temporalmente los documentos adjuntados por el usuario dependiendo del tipo de documento en el iterador
+                        /* lista donde se guardara temporalmente los documentos adjuntados por el usuario dependiendo del tipo de documento en el iterador */
                         List<SolicitudesDocumentosViewModel> DocumentosBloque = new List<SolicitudesDocumentosViewModel>();
 
                         foreach (var Bloque in Bloques)
@@ -1105,15 +1131,15 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             int CantidadDocumentos = Bloque.Count;
 
                             DocumentosBloque = listaDocumentos.Where(x => x.fiTipoDocumento == TipoDocumento).ToList();// documentos de este bloque
-                            String[] NombresGenerador = Funciones.MultiNombres.GenerarNombreCredDocumento(DocumentacionCliente, IDSolicitudMaestro, TipoDocumento, CantidadDocumentos);
+                            String[] NombresGenerador = Funciones.MultiNombres.GenerarNombreCredDocumento(DocumentacionCliente, IdSolicitudInsertada, TipoDocumento, CantidadDocumentos);
 
                             int ContadorNombre = 0;
                             foreach (SolicitudesDocumentosViewModel file in DocumentosBloque)
                             {
-                                if (File.Exists(file.fcRutaArchivo + @"\" + file.NombreAntiguo))//si el archivo existe, que se agregue a la lista
+                                if (File.Exists(file.fcRutaArchivo + @"\" + file.NombreAntiguo)) /* si el archivo existe, que se agregue a la lista */
                                 {
                                     NuevoNombreDocumento = NombresGenerador[ContadorNombre];
-                                    SolicitudesDocumentos.Add(new SolicitudesDocumentosViewModel()
+                                    solicitudesDocumentos.Add(new SolicitudesDocumentosViewModel()
                                     {
                                         fcNombreArchivo = NuevoNombreDocumento,
                                         NombreAntiguo = file.NombreAntiguo,
@@ -1133,18 +1159,19 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         resultadoProceso.message = "Error al registrar la documentación, compruebe los documentos adjuntados o vuelva a cargarlos";
                         return resultadoProceso;
                     }
-                    if (SolicitudesDocumentos.Count <= 0)
+                    if (solicitudesDocumentos.Count <= 0)
                     {
                         resultadoProceso.response = false;
                         resultadoProceso.message = "Error al guardar documentación, compruebe que haya cargado los documentos correctamente o vuelva a cargarlos";
                         return resultadoProceso;
                     }
-                    foreach (SolicitudesDocumentosViewModel documento in SolicitudesDocumentos)
+
+                    foreach (SolicitudesDocumentosViewModel documento in solicitudesDocumentos)
                     {
-                        using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_Documentos_Insert", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_Documentos_Insert", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitudMaestro);
+                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IdSolicitudInsertada);
                             sqlComando.Parameters.AddWithValue("@fcNombreArchivo", documento.fcNombreArchivo);
                             sqlComando.Parameters.AddWithValue("@fcTipoArchivo", ".png");
                             sqlComando.Parameters.AddWithValue("@fcRutaArchivo", documento.fcRutaArchivo);
@@ -1156,12 +1183,12 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
                             sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
-                            using (reader = sqlComando.ExecuteReader())
+                            using (var sqlResultado = sqlComando.ExecuteReader())
                             {
-                                while (reader.Read())
+                                while (sqlResultado.Read())
                                 {
-                                    MensajeError = (string)reader["MensajeError"];
-                                    if (MensajeError.StartsWith("-1"))
+                                    mensajeError = sqlResultado["MensajeError"].ToString();
+                                    if (mensajeError.StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -1173,50 +1200,48 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             return resultadoProceso;
                         }
                     }
+
                     /* Mover documentos al directorio de la solicitud */
-                    if (!FileUploader.GuardarSolicitudDocumentos(IDSolicitudMaestro, SolicitudesDocumentos))
+                    if (!FileUploader.GuardarSolicitudDocumentos(IdSolicitudInsertada, solicitudesDocumentos))
                     {
                         resultadoProceso.response = false;
                         resultadoProceso.message = "Error al guardar la documentación de la solicitud";
                         return resultadoProceso;
                     }
-                    #endregion
 
-                    #endregion
-
-                    #region REGISTRAR CLIENTE INFORMACION LABORAL
-                    using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionLaboral_Insert", sqlConexion, tran))
+                    /* Registrar informacion laboral del cliente */
+                    using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionLaboral_Insert", sqlConexion, tran))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@fiIDCliente", SolicitudesMaster.fiIDCliente);
-                        sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitudMaestro);
-                        sqlComando.Parameters.AddWithValue("@fcNombreTrabajo", ClientesInformacionLaboral.fcNombreTrabajo);
-                        sqlComando.Parameters.AddWithValue("@fnIngresosMensuales", Precalificado.Ingresos);
-                        sqlComando.Parameters.AddWithValue("@fcPuestoAsignado", ClientesInformacionLaboral.fcPuestoAsignado);
-                        sqlComando.Parameters.AddWithValue("@fdFechaIngreso", ClientesInformacionLaboral.fcFechaIngreso);
-                        sqlComando.Parameters.AddWithValue("@fcTelefonoEmpresa", ClientesInformacionLaboral.fdTelefonoEmpresa);
-                        sqlComando.Parameters.AddWithValue("@fcExtensionRecursosHumanos", ClientesInformacionLaboral.fcExtensionRecursosHumanos);
-                        sqlComando.Parameters.AddWithValue("@fcExtensionCliente", ClientesInformacionLaboral.fcExtensionCliente);
-                        sqlComando.Parameters.AddWithValue("@fiIDDepartamento", ClientesInformacionLaboral.fiIDDepto);
-                        sqlComando.Parameters.AddWithValue("@fiIDMunicipio", ClientesInformacionLaboral.fiIDMunicipio);
-                        sqlComando.Parameters.AddWithValue("@fiIDCiudad", ClientesInformacionLaboral.fiIDCiudad);
-                        sqlComando.Parameters.AddWithValue("@fiIDBarrioColonia", ClientesInformacionLaboral.fiIDBarrioColonia);
-                        sqlComando.Parameters.AddWithValue("@fcDireccionDetalladaEmpresa", ClientesInformacionLaboral.fcDireccionDetalladaEmpresa);
-                        sqlComando.Parameters.AddWithValue("@fcReferenciasDireccionDetallada", ClientesInformacionLaboral.fcReferenciasDireccionDetallada);
-                        sqlComando.Parameters.AddWithValue("@fcFuenteOtrosIngresos", ClientesInformacionLaboral.fcFuenteOtrosIngresos);
-                        sqlComando.Parameters.AddWithValue("@fnValorOtrosIngresosMensuales", ClientesInformacionLaboral.fiValorOtrosIngresosMensuales);
+                        sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
+                        sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IdSolicitudInsertada);
+                        sqlComando.Parameters.AddWithValue("@fcNombreTrabajo", cliente.InformacionLaboral.NombreTrabajo);
+                        sqlComando.Parameters.AddWithValue("@fnIngresosMensuales", precalificado.Ingresos);
+                        sqlComando.Parameters.AddWithValue("@fcPuestoAsignado", cliente.InformacionLaboral.PuestoAsignado);
+                        sqlComando.Parameters.AddWithValue("@fdFechaIngreso", cliente.InformacionLaboral.FechaIngreso);
+                        sqlComando.Parameters.AddWithValue("@fcTelefonoEmpresa", cliente.InformacionLaboral.TelefonoEmpresa);
+                        sqlComando.Parameters.AddWithValue("@fcExtensionRecursosHumanos", cliente.InformacionLaboral.ExtensionRecursosHumanos);
+                        sqlComando.Parameters.AddWithValue("@fcExtensionCliente", cliente.InformacionLaboral.ExtensionCliente);
+                        sqlComando.Parameters.AddWithValue("@fiIDDepartamento", cliente.InformacionLaboral.IdDepartamento);
+                        sqlComando.Parameters.AddWithValue("@fiIDMunicipio", cliente.InformacionLaboral.IdMunicipio);
+                        sqlComando.Parameters.AddWithValue("@fiIDCiudad", cliente.InformacionLaboral.IdCiudadPoblado);
+                        sqlComando.Parameters.AddWithValue("@fiIDBarrioColonia", cliente.InformacionLaboral.IdBarrioColonia);
+                        sqlComando.Parameters.AddWithValue("@fcDireccionDetalladaEmpresa", cliente.InformacionLaboral.DireccionDetalladaEmpresa);
+                        sqlComando.Parameters.AddWithValue("@fcReferenciasDireccionDetallada", cliente.InformacionLaboral.ReferenciasDireccionDetallada);
+                        sqlComando.Parameters.AddWithValue("@fcFuenteOtrosIngresos", cliente.InformacionLaboral.FuenteOtrosIngresos);
+                        sqlComando.Parameters.AddWithValue("@fnValorOtrosIngresosMensuales", cliente.InformacionLaboral.ValorOtrosIngresos);
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
                         sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
-                        using (reader = sqlComando.ExecuteReader())
+                        using (var sqlResultado = sqlComando.ExecuteReader())
                         {
-                            while (reader.Read())
+                            while (sqlResultado.Read())
                             {
-                                MensajeError = (string)reader["MensajeError"];
-                                if (MensajeError.StartsWith("-1"))
+                                mensajeError = sqlResultado["MensajeError"].ToString();
+                                if (mensajeError.StartsWith("-1"))
                                     contadorErrores++;
                             }
                         }
@@ -1227,33 +1252,32 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         resultadoProceso.message = "Error al registrar información laboral del cliente";
                         return resultadoProceso;
                     }
-                    #endregion
 
-                    #region REGISTRAR INFORMACION DOMICILIO
-                    using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionDomiciliar_Insert", sqlConexion, tran))
+                    /* Registrar información del domicilio del cliente */
+                    using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionDomiciliar_Insert", sqlConexion, tran))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@fiIDCliente", SolicitudesMaster.fiIDCliente);
-                        sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitudMaestro);
-                        sqlComando.Parameters.AddWithValue("@fcTelefonoCasa", ClienteInformacionDomicilio.fcTelefonoCasa);
-                        sqlComando.Parameters.AddWithValue("@fiIDDepartamento", ClienteInformacionDomicilio.fiIDDepto);
-                        sqlComando.Parameters.AddWithValue("@fiIDMunicipio", ClienteInformacionDomicilio.fiIDMunicipio);
-                        sqlComando.Parameters.AddWithValue("@fiIDCiudad", ClienteInformacionDomicilio.fiIDCiudad);
-                        sqlComando.Parameters.AddWithValue("@fiIDBarrioColonia", ClienteInformacionDomicilio.fiIDBarrioColonia);
-                        sqlComando.Parameters.AddWithValue("@fcDireccionDetallada", ClienteInformacionDomicilio.fcDireccionDetallada);
-                        sqlComando.Parameters.AddWithValue("@fcReferenciasDireccionDetallada", ClienteInformacionDomicilio.fcReferenciasDireccionDetallada);
+                        sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
+                        sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IdSolicitudInsertada);
+                        sqlComando.Parameters.AddWithValue("@fcTelefonoCasa", cliente.InformacionDomicilio.TelefonoCasa);
+                        sqlComando.Parameters.AddWithValue("@fiIDDepartamento", cliente.InformacionDomicilio.IdDepartamento);
+                        sqlComando.Parameters.AddWithValue("@fiIDMunicipio", cliente.InformacionDomicilio.IdMunicipio);
+                        sqlComando.Parameters.AddWithValue("@fiIDCiudad", cliente.InformacionDomicilio.IdCiudadPoblado);
+                        sqlComando.Parameters.AddWithValue("@fiIDBarrioColonia", cliente.InformacionDomicilio.IdBarrioColonia);
+                        sqlComando.Parameters.AddWithValue("@fcDireccionDetallada", cliente.InformacionDomicilio.DireccionDetallada);
+                        sqlComando.Parameters.AddWithValue("@fcReferenciasDireccionDetallada", cliente.InformacionDomicilio.ReferenciasDireccionDetallada);
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
                         sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
-                        using (reader = sqlComando.ExecuteReader())
+                        using (var sqlResultado = sqlComando.ExecuteReader())
                         {
-                            while (reader.Read())
+                            while (sqlResultado.Read())
                             {
-                                MensajeError = (string)reader["MensajeError"];
-                                if (MensajeError.StartsWith("-1"))
+                                mensajeError = sqlResultado["MensajeError"].ToString();
+                                if (mensajeError.StartsWith("-1"))
                                     contadorErrores++;
                             }
                         }
@@ -1264,35 +1288,34 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         resultadoProceso.message = "Error al guardar informacion domiciliar del cliente";
                         return resultadoProceso;
                     }
-                    #endregion
 
-                    #region REGISTRAR CLIENTE INFORMACION CONYUGAL
-                    if (ClientesInformacionConyugal.fcIndentidadConyugue != "" && ClientesInformacionConyugal.fcIndentidadConyugue != null)
+                    /* Registrar información conyugal del cliente */
+                    if (cliente.InformacionConyugal.IndentidadConyugue != null)
                     {
-                        using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionConyugal_Insert", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionConyugal_Insert", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDCliente", SolicitudesMaster.fiIDCliente);
-                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitudMaestro);
-                            sqlComando.Parameters.AddWithValue("@fcNombreCompletoConyugue", ClientesInformacionConyugal.fcNombreCompletoConyugue);
-                            sqlComando.Parameters.AddWithValue("@fcIndentidadConyugue", ClientesInformacionConyugal.fcIndentidadConyugue);
-                            sqlComando.Parameters.AddWithValue("@fdFechaNacimientoConyugue", ClientesInformacionConyugal.fdFechaNacimientoConyugue);
-                            sqlComando.Parameters.AddWithValue("@fcTelefonoConyugue", ClientesInformacionConyugal.fcTelefonoConyugue);
-                            sqlComando.Parameters.AddWithValue("@fcLugarTrabajoConyugue", ClientesInformacionConyugal.fcLugarTrabajoConyugue);
-                            sqlComando.Parameters.AddWithValue("@fnIngresosMensualesConyugue", ClientesInformacionConyugal.fcIngresosMensualesConyugue);
-                            sqlComando.Parameters.AddWithValue("@fcTelefonoTrabajoConyugue", ClientesInformacionConyugal.fcTelefonoTrabajoConyugue);
+                            sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
+                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IdSolicitudInsertada);
+                            sqlComando.Parameters.AddWithValue("@fcNombreCompletoConyugue", cliente.InformacionConyugal.NombreCompletoConyugue);
+                            sqlComando.Parameters.AddWithValue("@fcIndentidadConyugue", cliente.InformacionConyugal.IndentidadConyugue);
+                            sqlComando.Parameters.AddWithValue("@fdFechaNacimientoConyugue", cliente.InformacionConyugal.FechaNacimientoConyugue);
+                            sqlComando.Parameters.AddWithValue("@fcTelefonoConyugue", cliente.InformacionConyugal.TelefonoConyugue);
+                            sqlComando.Parameters.AddWithValue("@fcLugarTrabajoConyugue", cliente.InformacionConyugal.LugarTrabajoConyugue);
+                            sqlComando.Parameters.AddWithValue("@fnIngresosMensualesConyugue", cliente.InformacionConyugal.IngresosMensualesConyugue);
+                            sqlComando.Parameters.AddWithValue("@fcTelefonoTrabajoConyugue", cliente.InformacionConyugal.TelefonoConyugue);
                             sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
                             sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
-                            using (reader = sqlComando.ExecuteReader())
+                            using (var sqlResultado = sqlComando.ExecuteReader())
                             {
-                                while (reader.Read())
+                                while (sqlResultado.Read())
                                 {
-                                    MensajeError = (string)reader["MensajeError"];
-                                    if (MensajeError.StartsWith("-1"))
+                                    mensajeError = (string)sqlResultado["MensajeError"];
+                                    if (mensajeError.StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -1304,38 +1327,41 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             return resultadoProceso;
                         }
                     }
-                    #endregion
 
-                    #region REFERENCIAS PERSONALES DEL CLIENTE
-                    if (ClientesReferencias != null)
+                    /* Guardar referencias personales del cliente */
+                    if (cliente.ListaReferenciasPersonales != null)
                     {
-                        if (ClientesReferencias.Count != 0)
+                        if (cliente.ListaReferenciasPersonales.Count != 0)
                         {
-                            foreach (ClientesReferenciasViewModel clienteReferencia in ClientesReferencias)
+                            foreach (var referenciaPersonal in cliente.ListaReferenciasPersonales)
                             {
-                                using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Referencias_Insert", sqlConexion, tran))
+                                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Referencias_Insert", sqlConexion, tran))
                                 {
                                     sqlComando.CommandType = CommandType.StoredProcedure;
-                                    sqlComando.Parameters.AddWithValue("@fiIDCliente", SolicitudesMaster.fiIDCliente);
-                                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitudMaestro);
-                                    sqlComando.Parameters.AddWithValue("@fcNombreCompletoReferencia", clienteReferencia.fcNombreCompletoReferencia);
-                                    sqlComando.Parameters.AddWithValue("@fcLugarTrabajoReferencia", clienteReferencia.fcLugarTrabajoReferencia);
-                                    sqlComando.Parameters.AddWithValue("@fiTiempoConocerReferencia", clienteReferencia.fiTiempoConocerReferencia);
-                                    sqlComando.Parameters.AddWithValue("@fcTelefonoReferencia", clienteReferencia.fcTelefonoReferencia);
-                                    sqlComando.Parameters.AddWithValue("@fiIDParentescoReferencia", clienteReferencia.fiIDParentescoReferencia);
+                                    sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
+                                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IdSolicitudInsertada);
+                                    sqlComando.Parameters.AddWithValue("@fcNombreCompletoReferencia", referenciaPersonal.NombreCompletoReferencia);
+                                    sqlComando.Parameters.AddWithValue("@fcLugarTrabajoReferencia", referenciaPersonal.LugarTrabajoReferencia);
+                                    sqlComando.Parameters.AddWithValue("@fiTiempoConocerReferencia", referenciaPersonal.IdTiempoConocerReferencia);
+                                    sqlComando.Parameters.AddWithValue("@fcTelefonoReferencia", referenciaPersonal.TelefonoReferencia);
+                                    sqlComando.Parameters.AddWithValue("@fiIDParentescoReferencia", referenciaPersonal.IdParentescoReferencia);
                                     sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                                     sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
                                     sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
-                                    using (reader = sqlComando.ExecuteReader())
+
+                                    using (var sqlResultado = sqlComando.ExecuteReader())
                                     {
-                                        while (reader.Read())
+                                        while (sqlResultado.Read())
                                         {
-                                            MensajeError = (string)reader["MensajeError"];
-                                            if (MensajeError.StartsWith("-1"))
+                                            mensajeError = sqlResultado["MensajeError"].ToString();
+
+                                            if (mensajeError.StartsWith("-1"))
+                                            {
                                                 contadorErrores++;
+                                            }
                                         }
                                     }
                                 }
@@ -1348,9 +1374,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             }
                         }
                     }
-                    #endregion
 
-                    //tran.Commit();
+                    tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
@@ -1394,11 +1419,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         }
         return lURLDesencriptado;
     }
-
 }
 
 
-/* View Models */
+#region View Models
 public class Origenes_ViewModel
 {
     public int IdOrigen { get; set; }
@@ -1423,7 +1447,6 @@ public class Precalificado_ViewModel
     public int IdProducto { get; set; }
     public string Producto { get; set; }
     public CotizadorProductos_ViewModel PrestamoMaximoSugerido { get; set; }
-
 }
 
 public class CotizadorProductos_ViewModel
@@ -1435,6 +1458,21 @@ public class CotizadorProductos_ViewModel
     public int Plazo { get; set; }
     public string TipoPlazo { get; set; }
     public decimal Cuota { get; set; }
+}
+public class CalculoPrestamo_ViewModel
+{
+    public decimal SegurodeDeuda { get; set; }
+    public decimal GastosdeCierre { get; set; }
+    public decimal ValoraFinanciar { get; set; }
+    public decimal CuotaQuincenal { get; set; }
+    public decimal CuotaMensual { get; set; }
+    public decimal SegurodeVehiculo { get; set; }
+    public decimal CostoGPS { get; set; }
+    public decimal CuotaServicioGPS { get; set; }
+    public decimal TotalSeguroVehiculo { get; set; }
+    public decimal CuotaSegurodeVehiculo { get; set; }
+    public decimal CuotaMensualNeta { get; set; }
+    public string TipoCuota { get; set; }
 }
 
 public class SolicitudesCredito_Registrar_Constantes
@@ -1469,7 +1507,7 @@ public class SolicitudesCredito_Registrar_Constantes
     public SolicitudesCredito_Registrar_Constantes()
     {
         HoraAlCargar = DateTime.Now;
-        EsClienteNuevo = false;
+        EsClienteNuevo = true;
         IdCliente = 0;
         PorcentajePrimaMinima = null;
         MontoFinanciarMinimo = null;
@@ -1481,8 +1519,6 @@ public class SolicitudesCredito_Registrar_Constantes
         RequiereOrigen = false;
     }
 }
-
-/* 32025399 */
 
 public class BarriosColonias_ViewModel
 {
@@ -1508,6 +1544,14 @@ public class Municipios_ViewModel
     public string NombreMunicipio { get; set; }
 }
 
+public class TipoDocumento_ViewModel
+{
+    public int IdTipoDocumento { get; set; }
+    public string DescripcionTipoDocumento { get; set; }
+    public int CantidadMaximaDoucmentos { get; set; }
+    public int TipoVisibilidad { get; set; }
+}
+
 public class Cliente_ViewModel
 {
     /* Clientes maestro */
@@ -1530,12 +1574,83 @@ public class Cliente_ViewModel
     public int IdTiempoResidir { get; set; }
     public bool ClienteActivo { get; set; }
     public string RazonInactivo { get; set; }
+
+    public Cliente_InformacionDomicilio_ViewModel InformacionDomicilio { get; set; }
+    public Cliente_InformacionLaboral_ViewModel InformacionLaboral { get; set; }
+    public Cliente_InformacionConyugal_ViewModel InformacionConyugal { get; set; }
+    public List<Cliente_ReferenciaPersonal_ViewModel> ListaReferenciasPersonales { get; set; }
 }
 
-public class TipoDocumento_ViewModel
+public class Cliente_InformacionDomicilio_ViewModel
 {
-    public int IdTipoDocumento { get; set; }
-    public string DescripcionTipoDocumento { get; set; }
-    public int CantidadMaximaDoucmentos { get; set; }
-    public int TipoVisibilidad { get; set; }
+    public int IdInformacionDomicilio { get; set; }
+    public int IdCliente { get; set; }
+    public string TelefonoCasa { get; set; }
+    public int IdDepartamento { get; set; }
+    public int IdMunicipio { get; set; }
+    public int IdCiudadPoblado { get; set; }
+    public int IdBarrioColonia { get; set; }
+    public string DireccionDetallada { get; set; }
+    public string ReferenciasDireccionDetallada { get; set; }
 }
+
+public class Cliente_InformacionLaboral_ViewModel
+{
+    public int IdInformacionLaboral { get; set; }
+    public int IdCliente { get; set; }
+    public string NombreTrabajo { get; set; }
+    public decimal IngresosMensuales { get; set; }
+    public string PuestoAsignado { get; set; }
+    public DateTime FechaIngreso { get; set; }
+    public string TelefonoEmpresa { get; set; }
+    public string ExtensionRecursosHumanos { get; set; }
+    public string ExtensionCliente { get; set; }
+    public string FuenteOtrosIngresos { get; set; }
+    public decimal? ValorOtrosIngresos { get; set; }
+    public int IdDepartamento { get; set; }
+    public int IdMunicipio { get; set; }
+    public int IdCiudadPoblado { get; set; }
+    public int IdBarrioColonia { get; set; }
+    public string DireccionDetalladaEmpresa { get; set; }
+    public string ReferenciasDireccionDetallada { get; set; }
+}
+
+public class Cliente_InformacionConyugal_ViewModel
+{
+    public int IdInformacionConyugal { get; set; }
+    public int IdCliente { get; set; }
+    public string IndentidadConyugue { get; set; }
+    public string NombreCompletoConyugue { get; set; }
+    public string TelefonoTrabajoConyugue { get; set; }
+    public DateTime FechaNacimientoConyugue { get; set; }
+    public string TelefonoConyugue { get; set; }
+    public string LugarTrabajoConyugue { get; set; }
+    public decimal IngresosMensualesConyugue { get; set; }
+}
+
+public class Cliente_ReferenciaPersonal_ViewModel
+{
+    public int IdReferencia { get; set; }
+    public int IdCliente { get; set; }
+    public string NombreCompletoReferencia { get; set; }
+    public string TelefonoReferencia { get; set; }
+    public string LugarTrabajoReferencia { get; set; }
+    public short IdTiempoConocerReferencia { get; set; }
+    public int IdParentescoReferencia { get; set; }
+}
+
+public class Solicitud_Maestro_ViewModel
+{
+    public int IdSolicitud { get; set; }
+    public int IdCliente { get; set; }
+    public int IdProducto { get; set; }
+    public int IdTipoDeSolicitud { get; set; }
+    public int IdTipoMoneda { get; set; }
+    public decimal ValorSeleccionado { get; set; }
+    public int PlazoSeleccionado { get; set; }
+    public decimal ValorPrima { get; set; }
+    public decimal ValorGlobal { get; set; }
+    public int IdOrigen { get; set; }
+    public DateTime EnIngresoInicio { get; set; }
+}
+#endregion

@@ -25,6 +25,5 @@ namespace proyectoBase.Models.ViewModel
         public Nullable<System.DateTime> fdFechaUltimaModifica { get; set; }
         public string fcComentarioDeptoCredito { get; set; }
         public Nullable<int> fiAnalistaComentario { get; set; }
-
     }
 }
