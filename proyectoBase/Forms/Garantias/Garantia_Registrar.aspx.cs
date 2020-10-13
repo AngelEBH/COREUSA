@@ -6,9 +6,8 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Web;
-using System.Web.UI;
+using System.Web.Services;
 using System.Web.UI.WebControls;
 
 public partial class Garantia_Registrar : System.Web.UI.Page
@@ -101,7 +100,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDNegociaciones_Guardar_LlenarListas", sqlConexion))
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_Catalogo_Garantias_SeccionGarantia_Listar", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -115,7 +114,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                         {
                             Documentos_Secciones_Garantia.Add(new SeccionGarantia_ViewModel() 
                             {
-                                IdSeccionGarantia = (int)sqlResultado["fiIDSeccionGarantia"],
+                                IdSeccionGarantia = int.Parse(sqlResultado["fiIDSeccionGarantia"].ToString()),
                                 DescripcionSeccion = (string)sqlResultado["fcSeccionGarantia"]
                             });
                         }
@@ -136,6 +135,12 @@ public partial class Garantia_Registrar : System.Web.UI.Page
         {
             ex.Message.ToString();
         }
+    }
+
+    [WebMethod]
+    public static List<SeccionGarantia_ViewModel> CargarDocumentosRequeridos()
+    {
+        return (List<SeccionGarantia_ViewModel>)HttpContext.Current.Session["Documentos_Secciones_Garantia"];
     }
 
     public class SeccionGarantia_ViewModel

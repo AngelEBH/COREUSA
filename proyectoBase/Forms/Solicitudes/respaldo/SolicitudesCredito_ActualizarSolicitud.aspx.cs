@@ -487,7 +487,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static bool ActualizarCondicionamiento(int ID, string seccionFormulario, string objSeccion)
+    public static bool ActualizarCondicionamiento(int ID, string seccionFormulario, string objSeccion, int clienteID)
     {
         SqlConnection sqlConexion = null;
         SqlDataReader reader = null;
@@ -521,11 +521,11 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     break;
                 case "Correccion Referencias":
                     List<ClientesReferenciasViewModel> clientesReferencias = json_serializer.Deserialize<List<ClientesReferenciasViewModel>>(objSeccion);
-                    resultadoActualizacion = obj.ActualizarInformacionReferenciasPersonales(clientesReferencias);
+                    resultadoActualizacion = obj.ActualizarInformacionReferenciasPersonales(clientesReferencias, clienteID);
                     break;
                 case "Cambio de Referencias":
                     List<ClientesReferenciasViewModel> clientesCambioReferencias = json_serializer.Deserialize<List<ClientesReferenciasViewModel>>(objSeccion);
-                    resultadoActualizacion = obj.ActualizarInformacionReferenciasPersonales(clientesCambioReferencias);
+                    resultadoActualizacion = obj.ActualizarInformacionReferenciasPersonales(clientesCambioReferencias, clienteID);
                     break;
                 case "Documentacion":
                     resultadoActualizacion = obj.ActualizarDocumentacion();
@@ -962,7 +962,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return MensajeError;
     }
 
-    public string ActualizarInformacionReferenciasPersonales(List<ClientesReferenciasViewModel> ClientesReferencias)
+    public string ActualizarInformacionReferenciasPersonales(List<ClientesReferenciasViewModel> ClientesReferencias, int clienteID)
     {
         SqlConnection sqlConexion = null;
         SqlDataReader reader = null;
@@ -1024,7 +1024,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                 });
                             }
                         }
-                        IDCliente = referenciasExistentes[0].fiIDCliente;
+                        IDCliente = clienteID;
                         #endregion
 
                         #region INSERTAR NUEVAS REFERENCIAS
@@ -1336,11 +1336,11 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<CondicionesViewModel> DetallesCondicion()
+    public static List<CondicionesViewModel_prueba> DetallesCondicion()
     {
         SqlConnection sqlConexion = null;
         SqlDataReader reader = null;
-        List<CondicionesViewModel> condicionesSolicitud = new List<CondicionesViewModel>();
+        List<CondicionesViewModel_prueba> condicionesSolicitud = new List<CondicionesViewModel_prueba>();
         try
         {
             string lcURL = HttpContext.Current.Request.Url.ToString();
@@ -1363,7 +1363,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
             reader = sqlComando.ExecuteReader();
             while (reader.Read())
             {
-                condicionesSolicitud.Add(new CondicionesViewModel()
+                condicionesSolicitud.Add(new CondicionesViewModel_prueba()
                 {
                     IDSolicitudCondicion = (int)reader["fiIDSolicitudCondicion"],
                     IDCondicion = (int)reader["fiIDCondicion"],
@@ -1785,15 +1785,15 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         else
             return (T)obj;
     }
+}
 
-    public class CondicionesViewModel
-    {
-        public int IDSolicitudCondicion { get; set; }
-        public int IDCondicion { get; set; }
-        public int IDSolicitud { get; set; }
-        public string TipoCondicion { get; set; }
-        public string DescripcionCondicion { get; set; }
-        public string ComentarioAdicional { get; set; }
-        public bool Estado { get; set; }
-    }
+public class CondicionesViewModel_prueba
+{
+    public int IDSolicitudCondicion { get; set; }
+    public int IDCondicion { get; set; }
+    public int IDSolicitud { get; set; }
+    public string TipoCondicion { get; set; }
+    public string DescripcionCondicion { get; set; }
+    public string ComentarioAdicional { get; set; }
+    public bool Estado { get; set; }
 }

@@ -70,7 +70,6 @@
                                             </div>
                                             <div class="col-sm-auto align-self-end pr-0">
                                                 <button type="button" id="btnBuscarVIN" class="btn btn-secondary">Buscar</button>
-
                                             </div>
                                         </div>
                                     </div>
@@ -83,7 +82,6 @@
                                     <h6 class="mb-1">Físicas</h6>
 
                                     <div class="form-group row">
-
                                         <div class="col-12">
                                             <label class="col-form-label">VIN</label>
                                             <asp:TextBox ID="txtVIN" CssClass="form-control form-control-sm mascara-vin" type="text" Enabled="false" required="required" runat="server"></asp:TextBox>

@@ -200,6 +200,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                         while (sqlResultado.Read())
                         {
+                            Precalificado.IdClienteSAF = sqlResultado["fcIDCliente"].ToString();
                             Precalificado.Identidad = sqlResultado["fcIdentidad"].ToString();
                             Precalificado.PrimerNombre = sqlResultado["fcPrimerNombre"].ToString();
                             Precalificado.SegundoNombre = sqlResultado["fcSegundoNombre"].ToString();
@@ -293,6 +294,37 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         lblTituloCuotaMaxima.Text = "Cuota " + Constantes.PrestamoMaximo_TipoDePlazo;
                     }
                 } // using sp cotizador productos
+
+                /* Verificar el tipo de cliente cuando se trate de renoviaciones y refinanciamiento para validar que solo se ingresen clientes excelentes y muy buenos*/
+                if (Precalificado.IdClienteSAF != "")
+                {
+                    using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.Sp_Creditos_ClienteClasificacion", sqlConexion))
+                    {
+                        sqlComando.CommandType = CommandType.StoredProcedure;
+                        sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                        sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                        sqlComando.Parameters.AddWithValue("@IDCliente", Precalificado.IdClienteSAF);
+
+                        using (var sqlResultado = sqlComando.ExecuteReader())
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                Precalificado.TipoDeClienteSAF = sqlResultado["fcClasificacionCliente"].ToString();
+                            }
+
+                            if (Precalificado.TipoDeClienteSAF == "A - Excelente" || Precalificado.TipoDeClienteSAF == "B - Muy Bueno")
+                            {
+                                Precalificado.PermitirIngresarSolicitud = true;
+                            }
+                            else
+                            {
+                                Precalificado.PermitirIngresarSolicitud = false;
+                                lblMensaje.InnerText = "(Esta solicitud no puede ser ingresada debido a la clasificación del cliente: " + Precalificado.TipoDeClienteSAF + ". Solo se permite A - Excelente y B - Muy Bueno)";
+                                lblMensaje.Visible = true;
+                            }
+                        }
+                    }
+                }
             }// using conexion
         }
         catch (Exception ex)
@@ -1347,7 +1379,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    //tran.Commit();
+                    tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
@@ -1403,6 +1435,9 @@ public class Origenes_ViewModel
 
 public class Precalificado_ViewModel
 {
+    public string IdClienteSAF { get; set; }
+    public string TipoDeClienteSAF { get; set; }
+    public bool PermitirIngresarSolicitud { get; set; }
     public string Identidad { get; set; }
     public string Rtn { get; set; }
     public string PrimerNombre { get; set; }

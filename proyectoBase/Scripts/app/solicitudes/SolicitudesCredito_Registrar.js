@@ -40,10 +40,7 @@
             }
         }
 
-        if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true && cantidadReferencias >= 4) {
-
-
-            var fechaEnIngresoInicio = ConvertirFechaJavaScriptAFechaCsharp(localStorage.getItem("EnIngresoInicio"));
+        if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true && cantidadReferencias >= 4 && PRECALIFICADO.PermitirIngresarSolicitud == true) {
 
             var solicitud = {
                 IdCliente: CONSTANTES.IdCliente,
@@ -52,7 +49,7 @@
                 ValorSeleccionado: $("#ddlPrestamosDisponibles option:selected").val(),
                 PlazoSeleccionado: $("#ddlPrestamosDisponibles option:selected").data('plazoseleccionado'),
                 IdOrigen: $("#ddlOrigen option:selected").val() == null ? 1 : parseInt($("#ddlOrigen option:selected").val()),
-                EnIngresoInicio: fechaEnIngresoInicio
+                EnIngresoInicio: ConvertirFechaJavaScriptAFechaCsharp(localStorage.getItem("EnIngresoInicio"))
             };
 
             var Cliente_InformacionConyugal = {};
@@ -290,6 +287,11 @@ $(document).ready(function () {
                 //    MensajeError('El plazo máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Plazo + '.');
                 //}
 
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                    state = false;
+                }
+
                 return state;
             }
 
@@ -304,6 +306,12 @@ $(document).ready(function () {
                 else {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionPersonal', force: true });
                 }
+
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                    state = false;
+                }
+
                 return state;
             }
 
@@ -318,6 +326,12 @@ $(document).ready(function () {
                 else {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionDomicilio', force: true });
                 }
+
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                    state = false;
+                }
+
                 return state;
             }
 
@@ -332,6 +346,12 @@ $(document).ready(function () {
                 else {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionLaboral', force: true });
                 }
+
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                    state = false;
+                }
+
                 return state;
             }
 
@@ -348,6 +368,12 @@ $(document).ready(function () {
                     else {
                         $('#frmSolicitud').parsley().validate({ group: 'informacionConyugal', force: true });
                     }
+
+                    if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+                        MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                        state = false;
+                    }
+
                     return state;
                 }
             }
@@ -374,6 +400,11 @@ $(document).ready(function () {
                     else {
                         MensajeError('La cantidad mínima de referencias es 4, entre ellos 2 familiares');
                     }
+                }
+
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                    state = false;
                 }
 
                 return state;
@@ -1201,7 +1232,6 @@ function RecuperarRespaldos() {
 }
 
 function ConvertirFechaJavaScriptAFechaCsharp(fecha) {
-
     var date = new Date(fecha);
     var milliseconds = date.getTime();
     var dt = new Date(parseInt(milliseconds));

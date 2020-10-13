@@ -573,6 +573,6 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/plugins/fileUploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar.js?v=20201012162415"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar.js?v=8792131566"></script>
 </body>
 </html>

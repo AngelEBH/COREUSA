@@ -112,7 +112,7 @@ $(document).ready(function () {
         }
     });
 
-    //CargarDocumentosRequeridos();
+    CargarDocumentosRequeridos();
 });
 
 /* Cargar los inputs de los documentos requeridos */
@@ -123,7 +123,7 @@ function CargarDocumentosRequeridos() {
         url: "Garantia_Registrar.aspx/CargarDocumentosRequeridos",
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudo cargar la información, contacte al administrador');
+            MensajeError('No se pudo cargar el listado de documentos requeridos, contacte al administrador');
         },
         success: function (data) {
 
@@ -150,12 +150,12 @@ function CargarDocumentosRequeridos() {
 
             $.each(data.d, function (i, iter) {
 
-                var IdInput = 'Documento' + iter.IdTipoDocumento;
+                var IdInput = 'Documento' + iter.IdSeccionGarantia;
 
                 divDocumentacion.append("<div class='col-sm-2 mt-3 pr-1 pl-1'>" +
-                    "<label class='form-label mb-1'>" + iter.DescripcionTipoDocumento + "</label>" +
-                    "<form action='Garantia_Registrar.aspx?type=upload&doc=" + iter.IdTipoDocumento + "' method='post' enctype='multipart/form-data'>" +
-                    "<input id='" + IdInput + "' type='file' name='files' data-tipo='" + iter.IdTipoDocumento + "' />" +
+                    "<label class='form-label mb-1'>" + iter.DescripcionSeccion + "</label>" +
+                    "<form action='Garantia_Registrar.aspx?type=upload&doc=" + iter.IdSeccionGarantia + "' method='post' enctype='multipart/form-data'>" +
+                    "<input id='" + IdInput + "' type='file' name='files' data-tipo='" + iter.IdSeccionGarantia + "' />" +
                     "</form>" +
                     "</div");
 
@@ -168,7 +168,7 @@ function CargarDocumentosRequeridos() {
                     fileMaxSize: 2, // Peso máximo de un archivo
                     extensions: ['jpg', 'png'],// Extensiones/formatos permitidos
                     upload: {
-                        url: 'Garantia_Registrar.aspx?type=upload&doc=' + iter.IdTipoDocumento,
+                        url: 'Garantia_Registrar.aspx?type=upload&doc=' + iter.IdSeccionGarantia,
                         data: null,
                         type: 'POST',
                         enctype: 'multipart/form-data',
