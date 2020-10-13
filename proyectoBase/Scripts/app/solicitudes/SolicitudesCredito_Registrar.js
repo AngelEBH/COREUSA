@@ -42,6 +42,9 @@
 
         if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true && cantidadReferencias >= 4) {
 
+
+            var fechaEnIngresoInicio = ConvertirFechaJavaScriptAFechaCsharp(localStorage.getItem("EnIngresoInicio"));
+
             var solicitud = {
                 IdCliente: CONSTANTES.IdCliente,
                 ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
@@ -49,7 +52,7 @@
                 ValorSeleccionado: $("#ddlPrestamosDisponibles option:selected").val(),
                 PlazoSeleccionado: $("#ddlPrestamosDisponibles option:selected").data('plazoseleccionado'),
                 IdOrigen: $("#ddlOrigen option:selected").val() == null ? 1 : parseInt($("#ddlOrigen option:selected").val()),
-                EnIngresoInicio: ConvertirFechaJavaScriptAFechaCsharp(localStorage.getItem("EnIngresoInicio"))
+                EnIngresoInicio: fechaEnIngresoInicio
             };
 
             var Cliente_InformacionConyugal = {};
@@ -1198,13 +1201,17 @@ function RecuperarRespaldos() {
 }
 
 function ConvertirFechaJavaScriptAFechaCsharp(fecha) {
-    var date = new Date(fecha);
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-    var hour = date.getHours();
-    var minute = date.getMinutes();
-    var second = date.getSeconds();
 
-    return day + "/" + month + "/" + year + " " + hour + ':' + minute + ':' + second;
+    var date = new Date(fecha);
+    var milliseconds = date.getTime();
+    var dt = new Date(parseInt(milliseconds));
+    var fechaConvertida = `${
+        dt.getFullYear().toString().padStart(4, '0')}-${
+        (dt.getMonth() + 1).toString().padStart(2, '0')}-${
+        dt.getDate().toString().padStart(2, '0')} ${
+        dt.getHours().toString().padStart(2, '0')}:${
+        dt.getMinutes().toString().padStart(2, '0')}:${
+        dt.getSeconds().toString().padStart(2, '0')}`;
+
+    return fechaConvertida
 }

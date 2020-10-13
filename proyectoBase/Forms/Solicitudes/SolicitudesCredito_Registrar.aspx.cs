@@ -291,7 +291,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         txtCuotaMaxima.Text = Constantes.PrestamoMaximo_Cuota.ToString();
                         lblTituloPlazoMaximo.Text = "Plazo " + Constantes.PrestamoMaximo_TipoDePlazo;
                         lblTituloCuotaMaxima.Text = "Cuota " + Constantes.PrestamoMaximo_TipoDePlazo;
-                        lblTituloPlazo.Text = "Plazo " + Constantes.PrestamoMaximo_TipoDePlazo;
                     }
                 } // using sp cotizador productos
             }// using conexion
@@ -458,26 +457,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         while (sqlResultado.Read())
                         {
                             ddlTiempoDeConocerReferencia.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
-                        }
-
-                        sqlResultado.NextResult();
-
-                        /* Moneda */
-                        ddlMoneda.Items.Clear();
-                        ddlMoneda.Items.Add(new ListItem("Seleccionar", ""));
-                        while (sqlResultado.Read())
-                        {
-                            ddlMoneda.Items.Add(new ListItem(sqlResultado["fcNombreMoneda"].ToString(), sqlResultado["fiMoneda"].ToString()));
-                        }
-
-                        sqlResultado.NextResult();
-
-                        /* Tipo de cliente */
-                        ddlTipoDeCliente.Items.Clear();
-                        ddlTipoDeCliente.Items.Add(new ListItem("Seleccionar", ""));
-                        while (sqlResultado.Read())
-                        {
-                            ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
                         }
                     }
                 }
@@ -858,46 +837,41 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static CalculoPrestamo_ViewModel CalculoPrestamo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string dataCrypt)
+    public static List<CotizadorProductos_ViewModel> CargarPrestamosOfertados(decimal valorProducto, decimal valorPrima, string dataCrypt)
     {
-        var calculo = new CalculoPrestamo_ViewModel();
+        var PrestamosOfertados = new List<CotizadorProductos_ViewModel>();
         try
         {
             var urlDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
-            var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr");
+            var pcID = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("ID");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CredSolicitud_CalculoPrestamo", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CredCotizador_ConPrima", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
-                    sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", valorGlobal);
-                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
-                    sqlComando.Parameters.AddWithValue("@liPlazo", plazo);                    
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                    sqlComando.Parameters.AddWithValue("@pnValorProducto", valorProducto);
+                    sqlComando.Parameters.AddWithValue("@pnPrima", valorPrima);
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
+                        int IdContador = 1;
+
                         while (sqlResultado.Read())
                         {
-                            calculo = new CalculoPrestamo_ViewModel() 
+                            PrestamosOfertados.Add(new CotizadorProductos_ViewModel()
                             {
-                                SegurodeDeuda = decimal.Parse(sqlResultado["fnSegurodeDeuda"].ToString()),
-                                SegurodeVehiculo = decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
-                                GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
-                                ValoraFinanciar = decimal.Parse(sqlResultado["fnValoraFinanciar"].ToString()),
-                                CuotaQuincenal = decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
-                                CuotaMensual = decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()),
-                                CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
-                                CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
-                                CuotaMensualNeta = decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()),
-                                TotalSeguroVehiculo = decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString())
-                            };
+                                IdCotizacion = IdContador,
+                                Producto = sqlResultado["fcProducto"].ToString(),
+                                MontoOfertado = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString()),
+                                Plazo = int.Parse(sqlResultado["fiIDPlazo"].ToString()),
+                                Cuota = decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
+                                TipoPlazo = sqlResultado["fcTipodeCuota"].ToString()
+                            });
+                            IdContador++;
                         }
                     }
                 }
@@ -906,9 +880,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         catch (Exception ex)
         {
             ex.Message.ToString();
-            calculo = null;
         }
-        return calculo;
+        return PrestamosOfertados;
     }
 
     [WebMethod]
@@ -917,8 +890,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         var resultadoProceso = new ResponseEntitie();
         var mensajeError = string.Empty;
 
-        //using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
-        using (var sqlConexion = new SqlConnection("Server=(LocalDb)\\.;Initial Catalog=CoreFinanciero;Integrated Security=SSPI;"))        
+        using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
         {
             sqlConexion.Open();
 
@@ -986,7 +958,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Insert", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", cliente.IdTipoCliente);
+                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", 1);
                             sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", precalificado.Identidad);
                             sqlComando.Parameters.AddWithValue("@fcRTN", cliente.RtnCliente);
                             sqlComando.Parameters.AddWithValue("@fcPrimerNombreCliente", precalificado.PrimerNombre);
@@ -1072,13 +1044,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@fiTipoSolicitud", precalificado.IdTipoDeSolicitud);
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@fnValorSeleccionado", solicitud.ValorSeleccionado);
-                        sqlComando.Parameters.AddWithValue("@fiMoneda", solicitud.IdTipoMoneda);
+                        sqlComando.Parameters.AddWithValue("@fiMoneda", 1);
                         sqlComando.Parameters.AddWithValue("@fiPlazoSeleccionado", solicitud.PlazoSeleccionado);
                         sqlComando.Parameters.AddWithValue("@fnValorPrima", solicitud.ValorPrima);
                         sqlComando.Parameters.AddWithValue("@fnValorGarantia", solicitud.ValorPrima == 0 ? 0 : solicitud.ValorGlobal);
                         sqlComando.Parameters.AddWithValue("@fiIDOrigen", solicitud.IdOrigen);
                         sqlComando.Parameters.AddWithValue("@fdFechaIngresoLaborarCliente", cliente.InformacionLaboral.FechaIngreso);
-                        sqlComando.Parameters.AddWithValue("@fcCentrodeCosteAsignado", "0100");
+                        sqlComando.Parameters.AddWithValue("@fcCentrodeCosteAsignado", "");
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioAsignado", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@fdEnIngresoInicio", solicitud.EnIngresoInicio);
                         sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
@@ -1375,7 +1347,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    tran.Commit();
+                    //tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
@@ -1458,21 +1430,6 @@ public class CotizadorProductos_ViewModel
     public int Plazo { get; set; }
     public string TipoPlazo { get; set; }
     public decimal Cuota { get; set; }
-}
-public class CalculoPrestamo_ViewModel
-{
-    public decimal SegurodeDeuda { get; set; }
-    public decimal GastosdeCierre { get; set; }
-    public decimal ValoraFinanciar { get; set; }
-    public decimal CuotaQuincenal { get; set; }
-    public decimal CuotaMensual { get; set; }
-    public decimal SegurodeVehiculo { get; set; }
-    public decimal CostoGPS { get; set; }
-    public decimal CuotaServicioGPS { get; set; }
-    public decimal TotalSeguroVehiculo { get; set; }
-    public decimal CuotaSegurodeVehiculo { get; set; }
-    public decimal CuotaMensualNeta { get; set; }
-    public string TipoCuota { get; set; }
 }
 
 public class SolicitudesCredito_Registrar_Constantes
