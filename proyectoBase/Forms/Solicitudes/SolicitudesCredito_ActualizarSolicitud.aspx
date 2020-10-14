@@ -9,7 +9,7 @@
     <title>Actualizar solicitud de crédito</title>
     <!-- BOOTSTRAP -->
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031044" rel="stylesheet" />
+    <link href="/Content/css/style.css?v=202010031100" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
@@ -207,7 +207,11 @@
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input informacionPersonal" type="radio" name="tiempoResidir" value="3" />
-                                        <label class="form-check-label" for="inlineRadio2">+2 años</label>
+                                        <label class="form-check-label" for="inlineRadio2">3 años</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input informacionPersonal" type="radio" name="tiempoResidir" value="4" />
+                                        <label class="form-check-label" for="inlineRadio2">+3 años</label>
                                     </div>
                                 </div>
                             </div>
@@ -633,6 +637,6 @@
     <script src="../../Scripts/app/uploader/SolicitudesCredito_ActualizarSolicitud/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=20200930092658"></script>
+    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=202000930092758"></script>
 </body>
 </html>

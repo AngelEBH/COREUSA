@@ -487,7 +487,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static bool ActualizarCondicionamiento(int ID, string seccionFormulario, string objSeccion)
+    public static bool ActualizarCondicionamiento(int ID, string seccionFormulario, string objSeccion, int idCliente)
     {
         SqlConnection sqlConexion = null;
         SqlDataReader reader = null;
@@ -521,11 +521,11 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     break;
                 case "Correccion Referencias":
                     List<ClientesReferenciasViewModel> clientesReferencias = json_serializer.Deserialize<List<ClientesReferenciasViewModel>>(objSeccion);
-                    resultadoActualizacion = obj.ActualizarInformacionReferenciasPersonales(clientesReferencias);
+                    resultadoActualizacion = obj.ActualizarInformacionReferenciasPersonales(clientesReferencias, idCliente);
                     break;
                 case "Cambio de Referencias":
                     List<ClientesReferenciasViewModel> clientesCambioReferencias = json_serializer.Deserialize<List<ClientesReferenciasViewModel>>(objSeccion);
-                    resultadoActualizacion = obj.ActualizarInformacionReferenciasPersonales(clientesCambioReferencias);
+                    resultadoActualizacion = obj.ActualizarInformacionReferenciasPersonales(clientesCambioReferencias, idCliente);
                     break;
                 case "Documentacion":
                     resultadoActualizacion = obj.ActualizarDocumentacion();
@@ -962,7 +962,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return MensajeError;
     }
 
-    public string ActualizarInformacionReferenciasPersonales(List<ClientesReferenciasViewModel> ClientesReferencias)
+    public string ActualizarInformacionReferenciasPersonales(List<ClientesReferenciasViewModel> ClientesReferencias, int idCliente)
     {
         SqlConnection sqlConexion = null;
         SqlDataReader reader = null;
@@ -993,7 +993,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         List<ClientesReferenciasViewModel> referenciasExistentes = new List<ClientesReferenciasViewModel>();
                         sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Referencias_Listar", sqlConexion, tran);
                         sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@fiIDCliente", ClientesReferencias[0].fiIDCliente);
+                        sqlComando.Parameters.AddWithValue("@fiIDCliente", idCliente);
                         sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
                         sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -1024,7 +1024,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                 });
                             }
                         }
-                        IDCliente = referenciasExistentes[0].fiIDCliente;
+                        IDCliente = idCliente;
                         #endregion
 
                         #region INSERTAR NUEVAS REFERENCIAS

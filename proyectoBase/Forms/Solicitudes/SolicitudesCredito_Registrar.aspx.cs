@@ -325,6 +325,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
                 }
+                else
+                {
+                    Precalificado.PermitirIngresarSolicitud = true;
+                }
             }// using conexion
         }
         catch (Exception ex)

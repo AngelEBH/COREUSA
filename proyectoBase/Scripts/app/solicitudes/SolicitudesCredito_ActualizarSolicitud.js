@@ -775,7 +775,7 @@ $("#btnTerminarCondicionFinalizar").click(function () {
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_ActualizarSolicitud.aspx/ActualizarCondicionamiento' + qString,
-        data: JSON.stringify({ ID: idCondicion, seccionFormulario: seccionFormulario, objSeccion: objSeccion }),
+        data: JSON.stringify({ ID: idCondicion, seccionFormulario: seccionFormulario, objSeccion: objSeccion, idCliente: clienteID }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al finalizar condicionamiento');
@@ -942,6 +942,7 @@ function cargarInformacionCompletaDelCliente(informacionCliente) {
             removeAllItems: function () { return "Eliminar todos los elementos" }
         }
     });
+    debugger;
 
     $("input[name=tiempoResidir][value=" + rowData.clientesMaster.fiTiempoResidir + "]").prop('checked', true);
     $("input[name=tiempoResidir]").attr('disabled', true);

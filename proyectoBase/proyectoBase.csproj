@@ -783,6 +783,7 @@
     <Content Include="Forms\CoreFinancieroMovil\ImprimirCotizacion.aspx" />
     <Content Include="Forms\PreSolicitudes\PreSolicitud_Guardar.aspx" />
     <Content Include="Forms\PreSolicitudes\PreSolicitud_Listado.aspx" />
+    <Content Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Analisis.aspx" />
@@ -1108,6 +1109,7 @@
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ActualizarAval.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ActualizarSolicitud.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Analisis.js" />
+    <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ListadoGarantias.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Bandeja.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ClientesPrecalificados.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Detalles.js" />
@@ -1552,6 +1554,13 @@
     </Compile>
     <Compile Include="Forms\PreSolicitudes\PreSolicitud_Listado.aspx.designer.cs">
       <DependentUpon>PreSolicitud_Listado.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx.cs">
+      <DependentUpon>SolicitudesCredito_ListadoGarantias.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx.designer.cs">
+      <DependentUpon>SolicitudesCredito_ListadoGarantias.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx.cs">
       <DependentUpon>SolicitudesCredito_Registrar_Supervisor.aspx</DependentUpon>

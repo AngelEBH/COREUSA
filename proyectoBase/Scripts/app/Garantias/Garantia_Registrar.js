@@ -3,17 +3,39 @@
 var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').text('Finalizar').addClass('btn btn-info').css('display', 'none')
     .on('click', function () {
 
-        var modelState = $('#frmGarantia').parsley().isValid({ group: 'informacionPrestamo' });
+        var modelState = $('#frmGarantia').parsley().isValid();
 
         if (!modelState) {
-            $('#frmGarantia').parsley().validate({ group: 'informacionPrestamo', force: true });
+            $('#frmGarantia').parsley().validate();
         }
 
         if (modelState) {
 
+            var garantia = {
+
+                VIN: $("#txtVIN").val(),
+                TipoDeGarantia: $("#ddlTipoDeGarantia").val(),
+                TipoDeVehiculo: $("#txtTipoDeVehiculo").val(),
+                Marca: $("#txtMarca").val(),
+                Modelo: $("#txtModelo").val(),
+                Anio: $("#txtAnio").val().replace(/,/g, ''),
+                Color: $("#txtColor").val(),
+                Matricula: $("#txtMatricula").val(),
+                Cilindraje: $("#txtCilindraje").val(),
+                Recorrido: $("#txtRecorrido").val().replace(/,/g, ''),
+                UnidadDeDistancia: $("#ddlUnidadDeMedida").val(),
+                Transmision: $("#txtTransmision").val(),
+                TipoDeCombustible: $("#txtTipoDeCombustible").val(),
+                SerieUno: $("#txtSerieUno").val(),
+                SerieDos: $("#txtSerieDos").val(),
+                GPS: $("#txtGPS").val(),
+                Comentario: $("#txtComentario").val(),
+                esDigitadoManualmente: esDigitadoManualmente
+            }
+
             $.ajax({
                 type: "POST",
-                url: 'Garantia_Registrar.aspx/IngresarSolicitud',
+                url: 'Garantia_Registrar.aspx/GuardarGarantia',
                 data: JSON.stringify({ garantia: garantia, dataCrypt: window.location.href }),
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -21,15 +43,17 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
                 },
                 success: function (data) {
 
-                    if (data.d.response == true) {
+                    let resultado = data.d;
 
-                        MensajeExito(data.d.message);
-                        localStorage.clear();
+                    if (resultado.ResultadoExitoso == true) {
+
+                        MensajeExito(resultado.MensajeResultado);
                         resetForm($("#frmGarantia"));
                         $($('#smartwizard')).smartWizard("reset");
                     }
                     else {
-                        MensajeError(data.d.message);
+                        MensajeError(resultado.MensajeResultado);
+                        console.log(resultado.DebugString);
                     }
                 }
             });
@@ -83,29 +107,13 @@ $(document).ready(function () {
         if (stepDirection == 'forward') {
 
             /* Validar pestaña de la informacion personal del cliente */
-            if (stepNumber == 1) {
+            if (stepNumber == 0) {
 
-                var state = $('#frmGarantia').parsley().isValid({ group: 'informacionPersonal', excluded: ':disabled' });
+                var state = $('#frmGarantia').parsley().isValid();
 
-                if (state == true) {
-                    GuardarRespaldoInformacionPersonal();
-                }
-                else {
-                    $('#frmGarantia').parsley().validate({ group: 'informacionPersonal', force: true });
-                }
-                return state;
-            }
+                if (state == false) {
 
-            /* Validar pestaña de la informacion de domicilio del cliente */
-            if (stepNumber == 2) {
-
-                var state = $('#frmGarantia').parsley().isValid({ group: 'informacionDomicilio' });
-
-                if (state == true) {
-                    GuardarRespaldoinformacionDomicilio();
-                }
-                else {
-                    $('#frmGarantia').parsley().validate({ group: 'informacionDomicilio', force: true });
+                    $('#frmGarantia').parsley().validate();
                 }
                 return state;
             }
@@ -115,7 +123,76 @@ $(document).ready(function () {
     CargarDocumentosRequeridos();
 });
 
-/* Cargar los inputs de los documentos requeridos */
+$("#btnBuscarVIN").on('click', function () {
+
+    BuscarVIN();
+
+});
+
+$("#cbDigitarManualmente").on('change', function () {
+
+    let digitarManualmente = $("#cbDigitarManualmente").prop("checked");
+
+    $("#btnBuscarVIN,#txtBuscarVIN").prop("disabled", digitarManualmente).prop("title", digitarManualmente == true ? 'La búsqueda está desactivada' : '');
+
+    $("#txtVIN,#txtTipoDeVehiculo,#txtMarca,#txtModelo,#txtAnio,#txtCilindraje,#txtTransmision,#txtTipoDeCombustible,#txtSerieUno,#txtSerieDos").prop("readonly", !digitarManualmente);
+
+    if (digitarManualmente == false) {
+
+        let txtVin = $("#txtVIN").val();
+
+        if (txtVin != '') {
+            $("#txtBuscarVIN").val(txtVin);
+        }
+
+        $("#txtVIN,#txtTipoDeVehiculo,#txtMarca,#txtModelo,#txtAnio,#txtCilindraje,#txtTransmision,#txtTipoDeCombustible,#txtSerieUno,#txtSerieDos").val('');
+    }
+
+    esDigitadoManualmente = digitarManualmente;
+});
+
+function BuscarVIN() {
+
+    let idVIN = $("#txtBuscarVIN").val().trim();
+
+    if (idVIN) {
+
+        MostrarLoader();
+
+        $.ajax({
+            url: 'https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/' + idVIN,
+            type: 'Get',
+            data: { format: "json" },
+            success: function (data) {
+
+                if (data.Results[0].ErrorCode != "0") {
+                    MensajeError('Resultado de la búsqueda: ' + data.Results[0].ErrorText);
+                }
+
+                $("#txtVIN").val(data.Results[0].VIN);
+                $("#txtMarca").val(data.Results[0].Make);
+                $("#txtModelo").val(data.Results[0].Model);
+                $("#txtTipoDeVehiculo").val(data.Results[0].VehicleType);
+                $("#txtAnio").val(data.Results[0].ModelYear);
+                $("#txtTipoDeVehiculo").val(data.Results[0].BodyClass);
+                $("#txtCilindraje").val(data.Results[0].DisplacementL);
+                $("#txtTipoDeCombustible").val(data.Results[0].FuelTypePrimary);
+                $("#txtSerieUno").val(data.Results[0].Series);
+                $("#txtTransmision").val(data.Results[0].TransmissionStyle);
+
+                OcultarLoader();
+            },
+            error: function (data) {
+                console.log('ocurrió un error: ' + data);
+
+                OcultarLoader();
+                MensajeError('No se pudo cargar la información de este VIN');
+            }
+        });
+    }
+}
+
+/* Cargar y generar los inputs de los documentos de la garantía */
 function CargarDocumentosRequeridos() {
 
     $.ajax({
@@ -250,55 +327,39 @@ function CargarDocumentosRequeridos() {
     }); /* Termina Ajax */
 }
 
-$("#btnBuscarVIN").on('click', function () {
+function MensajeExito(mensaje) {
+    iziToast.success({
+        title: 'Exito',
+        message: mensaje
+    });
+}
 
-    BuscarVIN();
+function MensajeError(mensaje) {
+    iziToast.error({
+        title: 'Error',
+        message: mensaje
+    });
+}
 
-});
+function MensajeInformacion(mensaje) {
+    iziToast.info({
+        title: 'Info',
+        message: mensaje
+    });
+}
 
+function MostrarLoader() {
 
-$("#cbDigitarManualmente").on('change', function () {
+    $("#Loader").css('display', '');
+}
 
-    let digitarManualmente = $("#cbDigitarManualmente").prop("checked");
-    $("#btnBuscarVIN,#txtBuscarVIN").prop("disabled", digitarManualmente).prop("title", digitarManualmente == true ? 'La búsqueda está desactivada' : '');
+function OcultarLoader() {
 
-    $("#txtVIN,#txtTipoDeVehiculo,#txtMarca,#txtModelo,#txtAnio,#txtCilindraje,#txtTransmision,#txtTipoDeCombustible,#txtSerieUno,#txtSerieDos").prop("disabled", !digitarManualmente);
+    $("#Loader").css('display', 'none');
+}
 
-    esDigitadoManualmente = digitarManualmente;
-});
-
-
-function BuscarVIN() {
-
-    let idVIN = $("#txtBuscarVIN").val().trim();
-
-    if (idVIN) {
-
-        $.ajax({
-            url: 'https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/' + idVIN,
-            type: 'Get',
-            data: { format: "json" },
-            success: function (data) {
-
-                if (data.Results[0].ErrorCode != "0") {
-                    MensajeError('Resultado de la búsqueda: ' + data.Results[0].ErrorText);
-                }
-
-                $("#txtVIN").val(data.Results[0].VIN);
-                $("#txtMarca").val(data.Results[0].Make);
-                $("#txtModelo").val(data.Results[0].Model);
-                $("#txtTipoDeVehiculo").val(data.Results[0].VehicleType);
-                $("#txtAnio").val(data.Results[0].ModelYear);
-
-                $("#txtTipoDeVehiculo").val(data.Results[0].BodyClass);
-                $("#txtCilindraje").val(data.Results[0].DisplacementL);
-                $("#txtTipoDeCombustible").val(data.Results[0].FuelTypePrimary);
-                $("#txtSerieUno").val(data.Results[0].Series);
-                $("#txtTransmision").val(data.Results[0].TransmissionStyle);
-            },
-            error: function (data) {
-                console.log('ocurrió un error: ' + data);
-            }
-        });
-    }
+function resetForm($form) {
+    $form.find('input:text, input:password, input:file,input[type="date"],input[type="email"], select, textarea').val('');
+    $form.find('input:radio, input:checkbox')
+        .removeAttr('checked').removeAttr('selected');
 }
