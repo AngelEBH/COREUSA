@@ -1,7 +1,4 @@
-﻿using adminfiles;
-using Newtonsoft.Json;
-using proyectoBase.Models.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -10,6 +7,9 @@ using System.IO;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.WebControls;
+using adminfiles;
+using Newtonsoft.Json;
+using proyectoBase.Models.ViewModel;
 
 public partial class Garantia_Registrar : System.Web.UI.Page
 {
@@ -48,6 +48,10 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSol") ?? "0";
                 lblNoSolicitud.InnerText = pcIDSolicitud;
+
+                HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
+                HttpContext.Current.Session["ListaDocumentosGarantia"] = null;
+                Session.Timeout = 60;
             }
             LlenarListas();
         }
@@ -59,10 +63,10 @@ public partial class Garantia_Registrar : System.Web.UI.Page
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-{ "limit", 1 },
-{ "title", "auto" },
-{ "uploadDir", uploadDir }
-});
+                { "limit", 1 },
+                { "title", "auto" },
+                { "uploadDir", uploadDir }
+            });
 
             switch (type)
             {
@@ -96,10 +100,6 @@ public partial class Garantia_Registrar : System.Web.UI.Page
             }
             Response.End();
         }
-        else
-        {
-            HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
-        }
     }
 
     public void LlenarListas()
@@ -110,12 +110,13 @@ public partial class Garantia_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_Catalogo_Garantias_SeccionGarantia_Listar", sqlConexion))
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDGarantias_Guardar_LlenarListas", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
                     sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
@@ -129,6 +130,20 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                             });
                         }
                         Session["Documentos_Secciones_Garantia"] = Documentos_Secciones_Garantia;
+
+                        sqlResultado.NextResult();
+
+                        ddlTipoDeGarantia.Items.Clear();
+
+                        while (sqlResultado.Read())
+                        {
+                            ddlTipoDeGarantia.Items.Add(new ListItem(sqlResultado["fcTipoDeGarantia"].ToString(), sqlResultado["fcTipoDeGarantia"].ToString()));
+                        }
+
+                        if (pcIDSolicitud == "0")
+                        {
+                            ddlTipoDeGarantia.Enabled = true;
+                        }
                     }
                 }
             }
@@ -136,10 +151,6 @@ public partial class Garantia_Registrar : System.Web.UI.Page
             ddlUnidadDeMedida.Items.Clear();
             ddlUnidadDeMedida.Items.Add(new ListItem("Kilómetros", "KM"));
             ddlUnidadDeMedida.Items.Add(new ListItem("Millas", "M"));
-
-            ddlTipoDeGarantia.Items.Clear();
-            ddlTipoDeGarantia.Items.Add(new ListItem("AUTO", "AUTO"));
-            ddlTipoDeGarantia.Items.Add(new ListItem("MOTO", "MOTO"));
         }
         catch (Exception ex)
         {
@@ -180,8 +191,8 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
                         sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
                         sqlComando.Parameters.AddWithValue("@pcVin", garantia.VIN);
-                        sqlComando.Parameters.AddWithValue("@pcTipoGarantia", garantia.TipoDeGarantia);
                         sqlComando.Parameters.AddWithValue("@pcTipoVehiculo", garantia.TipoDeVehiculo);
+                        sqlComando.Parameters.AddWithValue("@pcTipoGarantia", garantia.TipoDeGarantia);
                         sqlComando.Parameters.AddWithValue("@pcMarca", garantia.Marca);
                         sqlComando.Parameters.AddWithValue("@pcModelo", garantia.Modelo);
                         sqlComando.Parameters.AddWithValue("@piAnio", garantia.Anio);
@@ -194,6 +205,8 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@pcMatricula", garantia.Matricula);
                         sqlComando.Parameters.AddWithValue("@pcSerieUno", garantia.SerieUno);
                         sqlComando.Parameters.AddWithValue("@pcSerieDos", garantia.SerieDos);
+                        sqlComando.Parameters.AddWithValue("@pcChasis", garantia.SerieChasis);
+                        sqlComando.Parameters.AddWithValue("@pcMotor", garantia.SerieMotor);
                         sqlComando.Parameters.AddWithValue("@pcGPS", garantia.GPS);
                         sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
                         sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.esDigitadoManualmente);
@@ -249,7 +262,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                         {
                             if (File.Exists(file.fcRutaArchivo + @"\" + file.NombreAntiguo)) /* si el archivo existe, que se agregue a la lista */
                             {
-                                NuevoNombreDocumento = GenerarNombreDocumento(idGarantiaGuardada, file.fiTipoDocumento);
+                                NuevoNombreDocumento = GenerarNombreDocumento(pcIDSolicitud, garantia.VIN);
 
                                 garantiaDocumentos.Add(new SolicitudesDocumentosViewModel()
                                 {
@@ -323,14 +336,9 @@ public partial class Garantia_Registrar : System.Web.UI.Page
         return resultado;
     }
 
-    private static string GenerarNombreDocumento(int idGarantiaGuardada, int? idSeccion)
+    private static string GenerarNombreDocumento(string idSolicitud, string vin)
     {
-        string lcBloqueFechaHora = DateTime.Now.ToString("yyyy-mm-dd hh:mm:ss");
-        lcBloqueFechaHora = lcBloqueFechaHora.Replace("-", "");
-        lcBloqueFechaHora = lcBloqueFechaHora.Replace(":", "");
-        lcBloqueFechaHora = lcBloqueFechaHora.Replace(" ", "T");
-
-        return "G" + idGarantiaGuardada + "D" + idSeccion + "-" + lcBloqueFechaHora;
+        return "G_" + idSolicitud + "_" + vin + "_" + Guid.NewGuid();
     }
 
     public static bool GuardarDocumentosGarantia(List<SolicitudesDocumentosViewModel> ListaDocumentos, string idSolicitud)
@@ -420,6 +428,8 @@ public partial class Garantia_Registrar : System.Web.UI.Page
         public string Matricula { get; set; }
         public string SerieUno { get; set; }
         public string SerieDos { get; set; }
+        public string SerieChasis { get; set; }
+        public string SerieMotor { get; set; }
         public string GPS { get; set; }
         public string Comentario { get; set; }
         public bool esDigitadoManualmente { get; set; }

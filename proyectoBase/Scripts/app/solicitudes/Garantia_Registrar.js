@@ -28,6 +28,8 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
                 TipoDeCombustible: $("#txtTipoDeCombustible").val(),
                 SerieUno: $("#txtSerieUno").val(),
                 SerieDos: $("#txtSerieDos").val(),
+                SerieMotor: $("#txtSerieMotor").val(),
+                SerieChasis: $("#txtSerieChasis").val(),
                 GPS: $("#txtGPS").val(),
                 Comentario: $("#txtComentario").val(),
                 esDigitadoManualmente: esDigitadoManualmente
@@ -47,9 +49,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
 
                     if (resultado.ResultadoExitoso == true) {
 
-                        MensajeExito(resultado.MensajeResultado);
-                        resetForm($("#frmGarantia"));
-                        $($('#smartwizard')).smartWizard("reset");
+                        window.location = "SolicitudesCredito_ListadoGarantias.aspx?" + window.location.href.split('?')[1];
                     }
                     else {
                         MensajeError(resultado.MensajeResultado);
@@ -103,10 +103,8 @@ $(document).ready(function () {
 
     $("#smartwizard").on("leaveStep", function (e, anchorObject, stepNumber, stepDirection) {
 
-        /* Validar solo si se quiere ir hacia el siguiente paso */
         if (stepDirection == 'forward') {
 
-            /* Validar pestaña de la informacion personal del cliente */
             if (stepNumber == 0) {
 
                 var state = $('#frmGarantia').parsley().isValid();
@@ -129,13 +127,14 @@ $("#btnBuscarVIN").on('click', function () {
 
 });
 
+/* De momento no se utiliza debido a cambios solicitados */
 $("#cbDigitarManualmente").on('change', function () {
 
     let digitarManualmente = $("#cbDigitarManualmente").prop("checked");
 
     $("#btnBuscarVIN,#txtBuscarVIN").prop("disabled", digitarManualmente).prop("title", digitarManualmente == true ? 'La búsqueda está desactivada' : '');
 
-    $("#txtVIN,#txtTipoDeVehiculo,#txtMarca,#txtModelo,#txtAnio,#txtCilindraje,#txtTransmision,#txtTipoDeCombustible,#txtSerieUno,#txtSerieDos").prop("readonly", !digitarManualmente);
+    $("#txtVIN,#txtTipoDeVehiculo,#txtMarca,#txtModelo,#txtAnio,#txtCilindraje,#txtTransmision,#txtTipoDeCombustible,#txtSerieUno").prop("readonly", !digitarManualmente);
 
     if (digitarManualmente == false) {
 
@@ -145,7 +144,7 @@ $("#cbDigitarManualmente").on('change', function () {
             $("#txtBuscarVIN").val(txtVin);
         }
 
-        $("#txtVIN,#txtTipoDeVehiculo,#txtMarca,#txtModelo,#txtAnio,#txtCilindraje,#txtTransmision,#txtTipoDeCombustible,#txtSerieUno,#txtSerieDos").val('');
+        $("#txtVIN,#txtTipoDeVehiculo,#txtMarca,#txtModelo,#txtAnio,#txtCilindraje,#txtTransmision,#txtTipoDeCombustible,#txtSerieUno").val('');
     }
 
     esDigitadoManualmente = digitarManualmente;

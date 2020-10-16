@@ -7,10 +7,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
-    <title>Nueva Pre-Solicitud</title>
+    <title>Nueva Pre Solicitud</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <style>
         html, body {
@@ -70,7 +70,7 @@
                     <ContentTemplate>
                         <asp:Panel ID="divInformacionDomicilio" runat="server" Visible="true">
 
-                            <h5 class="border-bottom pb-2">Guardar Pre-Solicitud</h5>
+                            <h5 class="border-bottom pb-2">Guardar nueva Pre-Solicitud</h5>
 
                             <!-- INFORMACION DEL CLIENTE -->
                             <div class="form-group form-row">

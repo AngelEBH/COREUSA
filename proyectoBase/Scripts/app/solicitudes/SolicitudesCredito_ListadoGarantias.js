@@ -1,17 +1,16 @@
-﻿var IconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">,</label></i>';
-var IconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">.</label></i>';
-var IconoRojo = '<i class="mdi mdi mdi-close-circle mdi-24px text-danger p-0"></i>';
-var ProcesoPendiente = "/Date(-2208967200000)/";
-var IDNT = "";
-var IDSOL = 0;
-var FiltroActual = "";
+﻿var iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">,</label></i>';
+var iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">.</label></i>';
+var identidad = '';
+var idSolicitud = 0;
+var filtroActual = '';
+var nombreCliente = '';
 
 $(document).ready(function () {
 
     dtListado = $('#datatable-listado').DataTable({
         "pageLength": 15,
         "aaSorting": [],
-        "dom": "<'row'<'col-sm-12'B>>" +
+        "dom": "<'row'<'col-sm-12'>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
         "language": {
@@ -47,70 +46,82 @@ $(document).ready(function () {
                 }
             }
         },
-        buttons: [
+        "ajax": {
+            type: "POST",
+            url: "SolicitudesCredito_ListadoGarantias.aspx/CargarListado",
+            contentType: 'application/json; charset=utf-8',
+            data: function (dtParms) {
+                return JSON.stringify({ dataCrypt: window.location.href });
+            },
+            "dataSrc": function (json) {
+                var return_data = json.d;
+                return return_data;
+            }
+        },
+        "columns": [
+            { "data": "IdSolicitud", "className": "text-center" },
+            { "data": "Agencia" },
             {
-                extend: 'copy',
-                text: 'Copiar'
+                "data": "Producto",
+                "render": function (value) {
+                    return value.split(' ')[1]
+                }
+            },
+            { "data": "Identidad" },
+            {
+                "data": "PrimerNombre",
+                "render": function (data, type, row) {
+                    return row["PrimerNombre"] + ' ' + row["SegundoNombre"] + ' ' + row["PrimerApellido"] + ' ' + row["SegundoApellido"]
+                }
             },
             {
-                extend: 'excelHtml5',
-                title: 'Solicitudes_de_credito_' + moment(),
-                autoFilter: true,
-                messageTop: 'Solicitudes de crédito ' + moment().format('YYYY/MM/DD')//,
-                //exportOptions: {
-                //    columns: [0, 1, 2, 3, 4, 5, 13]
-                //}
+                "data": "FechaCreacion",
+                "render": function (value) {
+                    if (value === null) return "";
+                    return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
+                }
             },
             {
-                extend: 'colvis',
-                text: 'Ocultar columnas'
+                "data": "IdGarantia", "className": "text-center",
+                "render": function (data, type, row) {
+
+                    return row["IdGarantia"] != 0 ? iconoExito : iconoPendiente;
+                }
+            },
+            {
+                "data": "IdGarantia", "className": "text-center",
+                "render": function (value) {
+
+                    return value == 0 ? '<button id="btnGuardar" data-id="' + value + '" class="btn btn-sm btn-block btn-info mb-0">Registrar</button>' :
+                        '<button id="btnActualizar" data-id="' + value + '" class="btn btn-sm btn-block btn-info mb-0">Actualizar</button>';
+                }
             }
         ],
         columnDefs: [
-            //{ targets: [6,7,8,9,10,11,12], orderable: false },
+            { targets: 6, orderable: false },
             { "width": "1%", "targets": 0 }
         ]
     });
 
     /* Filtrar cuando se seleccione una opción */
     $("input[type=radio][name=filtros]").change(function () {
-        //var filtro = this.value;
-        //dtListado.columns().search("").draw();
 
-        //switch (filtro) {
-        //    case "0":
-        //        dtListado.columns([6, 7, 8, 9, 10, 11, 12, 13]).search("").draw();
-        //        break;
-        //    case "7":
-        //        dtListado.columns(7).search(".").columns(13).search("Pendiente").draw();
-        //        break;
-        //    case "8":
-        //        dtListado.columns(8).search(".").columns(9).search("_").columns(10).search("_").columns(13).search("Pendiente").draw();
-        //        break;
-        //    case "9":
-        //        dtListado.columns(9).search(".").columns(13).search("Pendiente").draw();
-        //        break;
-        //    case "10":
-        //        dtListado.columns(10).search(".").columns(13).search("Pendiente").draw();
-        //        break;
-        //    case "11":
-        //        dtListado.columns(11).search(".").columns(13).search("Pendiente").draw();
-        //        break;
-        //    case "12":
-        //        dtListado.columns(12).search(".").columns(13).search("Pendiente").draw();
-        //        break;
-        //    case "13":
-        //        dtListado.columns(13).search("Pendiente").draw();
-        //        break;
-        //    case "14":
-        //        dtListado.columns(13).search("Aprobada").draw();
-        //        break;
-        //    case "15":
-        //        dtListado.columns(13).search("Rechazada").draw();
-        //        break;
-        //    default:
-        //        dtListado.columns([6, 7, 8, 9, 10, 11, 12, 13]).search("").draw();
-        //}
+        let filtro = this.value;
+        dtListado.columns().search("").draw();
+
+        switch (filtro) {
+            case "0":
+                dtListado.columns(7).search("").draw();
+                break;
+            case "1":
+                dtListado.columns(7).search("Guardar").draw();
+                break;
+            case "2":
+                dtListado.columns(7).search("Actualizar").draw();
+                break;
+            default:
+                dtListado.columns(7).search("").draw();
+        }
     });
 
     /* busqueda por mes de ingreso */
@@ -136,7 +147,7 @@ $(document).ready(function () {
 
     $("#min").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
@@ -144,20 +155,20 @@ $(document).ready(function () {
 
     $("#max").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
     });
 
     $("#min, #max").change(function () {
-        FiltroActual = 'rangoFechas';
+        filtroActual = 'rangoFechas';
         dtListado.draw();
     });
 
     /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
-        if (FiltroActual == 'rangoFechas') {
+        if (filtroActual == 'rangoFechas') {
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
                 FechaIngreso = new Date(a[5]);
@@ -178,72 +189,79 @@ $(document).ready(function () {
     });
 
     $("#datatable-listado tbody").on("click", "tr", function () {
-        var row = dtListado.row(this).data(),
-            IDAnalistaEncargado = row.fiIDUsuarioModifica,
-            IDSolicitud = row.fiIDSolicitud;
 
-        $("#lblCliente").text(row.fcPrimerNombreCliente + ' ' + row.fcSegundoNombreCliente + ' ' + row.fcPrimerApellidoCliente + ' ' + row.fcSegundoApellidoCliente + ' ');
-        $("#lblIdentidadCliente").text(row.fcIdentidadCliente);        
-
-        if (IDAnalistaEncargado != 0 || 1 == 1) {
-            $.ajax({
-                type: "POST",
-                url: "SolicitudesCredito_ListadoGarantias.aspx/VerificarAnalista",
-                data: JSON.stringify({ dataCrypt: window.location.href,  ID: IDAnalistaEncargado }),
-                contentType: "application/json; charset=utf-8",
-                error: function (xhr, ajaxOptions, thrownError) {
-                    MensajeError("No se pudo cargar la información, contacte al administrador");
-                },
-                success: function (data) {
-                    //if (data.d == true) {
-                        $("#modalAbrirSolicitud").modal({ backdrop: !1 });
-                        IDSOL = IDSolicitud;
-                        IDNT = row.fcIdentidadCliente;
-                    //}
-                }
-            });
-        }
-        else {
-            IDSOL = IDSolicitud;
-            IDNT = row.fcIdentidadCliente;
-            $("#modalAbrirSolicitud").modal({ backdrop: !1 });
-        }
-    });
-
-    FiltrarSolicitudesMesActual();
-});
-
-
-$("#btnAbrirSolicitud").click(function (e) {
-
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_ListadoGarantias.aspx/AbrirAnalisisSolicitud",
-        data: JSON.stringify({ dataCrypt: window.location.href,  IDSOL: IDSOL, Identidad: IDNT }),
-        contentType: "application/json; charset=utf-8",
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError("No se pudo cargar la solicitud, contacte al administrador");
-        },
-        success: function (data) {
-            data.d != "-1" ? window.location = "SolicitudesCredito_Analisis.aspx?" + data.d : MensajeError("Esta solicitud ya está siendo analizada por otro usuario");
-        }
+        var row = dtListado.row(this).data();
+        idSolicitud = row.IdSolicitud;
+        nombreCliente = row["PrimerNombre"] + ' ' + row["SegundoNombre"] + ' ' + row["PrimerApellido"] + ' ' + row["SegundoApellido"];
     });
 });
 
-$("#btnDetallesSolicitud").click(function (e) {
+$(document).on('click', 'button#btnActualizar', function () {
+
+    $("#lblIdSolicitudActualizar").text(idSolicitud);
+    $("#lblNombreClienteActualizar").text(nombreCliente);
+    $("#modalActualizarGarantia").modal();
+});
+
+$(document).on('click', 'button#btnGuardar', function () {
+
+    $("#lblIdSolicitudGuardar").text(idSolicitud);
+    $("#lblNombreClienteGuardar").text(nombreCliente);
+    $("#modalGuardarGarantia").modal();
+});
+
+$("#btnGuardarGarantia").click(function (e) {
 
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_ListadoGarantias.aspx/EncriptarParametros",
-        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: IDSOL, Identidad: IDNT }),
+        data: JSON.stringify({ idSolicitud: idSolicitud, dataCrypt: window.location.href }),
         contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError("No se pudo cargar la solicitud, contacte al administrador");
+            MensajeError("No se pudo redireccionar al registro de la garantía");
         },
         success: function (data) {
-            data.d != "-1" ? window.location = "SolicitudesCredito_Detalles.aspx?" + data.d : MensajeError("No se pudo al redireccionar a pantalla de detalles");
-        },
+            data.d != "-1" ? window.location = "Garantia_Registrar.aspx?" + data.d : MensajeError("No se pudo redireccionar al registro de la garantía");
+        }
     });
+});
+
+
+$("#btnRegistrarGarantiaSinSolicitud").click(function (e) {
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_ListadoGarantias.aspx/EncriptarParametros",
+        data: JSON.stringify({ idSolicitud: 0, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError("No se pudo redireccionar al registro de la garantía");
+        },
+        success: function (data) {
+            data.d != "-1" ? window.location = "Garantia_Registrar.aspx?" + data.d : MensajeError("No se pudo redireccionar al registro de la garantía");
+        }
+    });
+});
+
+$("#btnActualizarGarantia").click(function (e) {
+
+    iziToast.info({
+        title: 'Atención',
+        message: 'Esta función sigue en desarrollo.'
+    });
+
+    //$.ajax({
+    //    type: "POST",
+    //    url: "SolicitudesCredito_ListadoGarantias.aspx/EncriptarParametros",
+    //    data: JSON.stringify({ idSolicitud: idSolicitud, dataCrypt: window.location.href}),
+    //    contentType: "application/json; charset=utf-8",
+    //    error: function (xhr, ajaxOptions, thrownError) {
+    //        MensajeError("No se pudo cargar la solicitud, contacte al administrador");
+    //    },
+    //    success: function (data) {
+    //        data.d != "-1" ? window.location = "Garantia_Registrar.aspx?" + data.d : MensajeError("No se pudo redireccionar al registro de la garantía");
+    //    },
+    //});
 });
 
 jQuery("#date-range").datepicker({
@@ -255,13 +273,4 @@ function MensajeError(mensaje) {
         title: 'Error',
         message: mensaje
     });
-}
-
-function FiltrarSolicitudesMesActual() {
-
-    var mesActual = moment().format("MM");
-
-    dtListado.columns(5)
-        .search('/' + mesActual + '/')
-        .draw();
 }

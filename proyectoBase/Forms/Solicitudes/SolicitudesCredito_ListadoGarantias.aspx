@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_ListadoGarantias.aspx.cs" Inherits="SolicitudesCredito_ListadoGarantias" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_ListadoGarantias.aspx.cs" Inherits="SolicitudesCredito_ListadoGarantias" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -6,11 +6,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
-    <title>Garantías</title>
+    <title>Garantías de solicitudes aprobadas</title>
     <!-- BOOTSTRAP -->
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -18,7 +18,6 @@
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />    
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
-    <link href="/Content/css/bandejaSolicitudes.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
         .opcion {
@@ -46,7 +45,7 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-8">
-                    <h6>Bandeja general de solicitudes</h6>
+                    <h6>Garantias de solicitudes aprobadas</h6>
                 </div>
                 <div class="col-4">
                     <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
@@ -62,18 +61,20 @@
                         General
                     </label>
                     <label class="btn btn-secondary opcion">
-                        <input id="recepcion" type="radio" name="filtros" value="7" />
+                        <input id="recepcion" type="radio" name="filtros" value="1" />
                         Pendientes
                     </label>
                     <label class="btn btn-secondary opcion">
-                        <input id="analisis" type="radio" name="filtros" value="8" />
+                        <input id="analisis" type="radio" name="filtros" value="2" />
                         Guardadas
                     </label>
                 </div>
             </div>
             <br />
 
-            <div class="form-inline justify-content-center">
+            <button id="btnRegistrarGarantiaSinSolicitud" class="btn btn-warning align-self-start float-left">Registrar garantía sin solicitud</button>
+
+            <div class="form-inline justify-content-center">                
                 <div class="form-group mb-2">
                     <label class="form-control-plaintext">Búsqueda por Mes</label>
                 </div>
@@ -95,12 +96,12 @@
                     </select>
                 </div>
 
-                <div class="form-group mb-2">
+                <%--<div class="form-group mb-2">
                     <label class="form-control-plaintext">Búsqueda por Año</label>
                 </div>
                 <div class="form-group mx-sm-3 mb-2">
                     <input id="añoIngreso" class="form-control form-control-sm" type="text" />
-                </div>
+                </div>--%>
 
                 <div class="form-group mb-2">
                     <label class="form-control-plaintext">Búsqueda por Fecha</label>
@@ -112,7 +113,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="table-responsive">
                 <table id="datatable-listado" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
@@ -131,6 +131,51 @@
                     <tbody></tbody>
                     <tfoot></tfoot>
                 </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="modalActualizarGarantia" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalActualizarGarantiaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="modalActualizarGarantiaLabel">Actualizar garantía</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro de actualizar la información de la garantía de esta solicitud? <br /> Solicitud No: <span id="lblIdSolicitudActualizar"></span>. Cliente: <span id="lblNombreClienteActualizar"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button id="btnActualizarGarantia" class="btn btn-primary waves-effect waves-light">
+                        Confirmar
+                    </button>
+                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalGuardarGarantia" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalGuardarGarantiaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="modalGuardarGarantiaLabel">Guardar garantía</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro de guardar la información de la garantía de esta solicitud? <br /> Solicitud No: <span id="lblIdSolicitudGuardar"></span>. Cliente: <span id="lblNombreClienteGuardar"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button id="btnGuardarGarantia" class="btn btn-primary waves-effect waves-light">
+                        Confirmar
+                    </button>
+                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        Cancelar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
