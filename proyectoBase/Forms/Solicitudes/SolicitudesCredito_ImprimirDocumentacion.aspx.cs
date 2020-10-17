@@ -3,8 +3,6 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Page
 {

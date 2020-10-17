@@ -1,7 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_ImprimirDocumentacion.aspx.cs" Inherits="SolicitudesCredito_ImprimirDocumentacion" %>
 
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -12,13 +11,51 @@
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <style>
-        html, body {
-            background-color: #fff;
+        html {
+            background-color: rgb(255,255,255) !important;
         }
 
+        .FormatoBotonesIconoCuadrado40 {
+            position: absolute;
+            background-color: white;
+            border-style: solid;
+            /*color: white;*/
+            /*padding: 5px 5px;*/
+            border-color: lightgray;
+            border-width: 1px;
+            margin: 0;
+            white-space: normal !important;
+            vertical-align: text-top;
+            text-align: center;
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-top: 55px;
+            padding-bottom: 5px;
+            height: 95px;
+            width: 80px;
+            font-size: 12px;
+            cursor: pointer;
+            background-repeat: no-repeat;
+            background-position-y: 10px;
+            background-position-x: center;
+            display: inline-block;
+            text-wrap: normal;
+            color: #808080;
+        }
+
+            .FormatoBotonesIconoCuadrado40:hover {
+                background-color: #b3ecff;
+                color: black;
+                /*color: white;*/
+            }
+
         .card {
-            box-shadow: none;
+            border: none;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
         }
     </style>
 </head>
@@ -26,7 +63,6 @@
     <form id="frmGuardarPreSolicitud" runat="server">
         <asp:ScriptManager runat="server" ID="smMultiview"></asp:ScriptManager>
         <div class="card m-0">
-
             <div class="card-header pb-1 pt-1">
                 <!-- loader -->
                 <div class="float-right p-1" id="Loader" style="display: none;">
@@ -37,7 +73,6 @@
                 <h5>Imprimir documentación solicitud de crédito No. <span class="font-weight-bold">330</span></h5>
             </div>
             <div class="card-body pt-0">
-
                 <div class="row mb-0">
                     <div class="col-md-6">
                         <div class="form-group row">
@@ -58,8 +93,6 @@
                                 <asp:TextBox ID="txtTelefonoCliente" type="tel" Enabled="false" CssClass="form-control form-control-sm col-form-label mascara-telefono" Text="9611-6376" runat="server"></asp:TextBox>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6 border-left border-gray">
                         <div class="form-group row">
                             <div class="col-sm-3">
                                 <label class="col-form-label">Producto</label>
@@ -79,13 +112,42 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6 border-left border-gray justify-content-center">
+                        <h6 class="">Imprimir documentos</h6>
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <button type="button" id="btnReiniciarResolucion" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    Contrato
+                                </button>
+                                <button type="button" id="btnReiniciarAnalisis" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    Pagaré
+                                </button>
+                                <button type="button" id="btnEliminarDocumento" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    Compromiso Legal
+                                </button>
+                                <button type="button" id="btnReasignarSolicitud" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    C. y V. para vehic. finan.
+                                </button>
+                                <button type="button" id="btnEliminarCondicion" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');">
+                                    Inspección de vehículo
+                                </button>
+                                <button type="button" id="btnReiniciarValidacion" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');">
+                                    Inspección seguro
+                                </button>
+                                <button type="button" id="btnReiniciarCampo" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
+                                    Traspaso
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="row mb-0">
+                <div class="row mb-0" id="divInformacionGarantia" style="display: none;">
                     <div class="col-12">
                         <h6 class="border-bottom pb-2">Información de la garantía</h6>
                     </div>
                     <div class="col-lg-6">
+                        <h6 class="m-0">Características físicas</h6>
                         <div class="form-group row">
                             <div class="col-12">
                                 <label class="col-form-label">VIN</label>
@@ -122,8 +184,7 @@
                                 <asp:TextBox ID="txtMatricula" placeholder="EJ. AAA 9999" CssClass="form-control form-control-sm mascara-matricula" ReadOnly="true" type="text" Text="HAC 5798" required="required" runat="server"></asp:TextBox>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6 border-left border-gray">
+                        <h6 class="m-0">Características mecánicas</h6>
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label class="col-form-label">Cilindraje</label>
@@ -147,41 +208,23 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="row mb-0 text-center text-lg-left">
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <div class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_4c5e04ed-fd6c-4a9e-b073-3689a0378c1b.png" style="min-width: 205.84px; max-width: 205.84px; min-height: 142.5px; max-height: 142.5px;" alt="" />
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <div class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_cca1db4e-7882-4508-818d-bef4283ba54a.png" style="min-width: 205.84px; max-width: 205.84px; min-height: 142.5px; max-height: 142.5px;" alt="" />
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <div class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_1877762a-4056-408b-8422-08d369a4b4f8.png" style="min-width: 205.84px; max-width: 205.84px; min-height: 142.5px; max-height: 142.5px;" alt="" />
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <div class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_5910bc6e-c4f0-4bc5-a28b-7f2de4ab474d.png" style="min-width: 205.84px; max-width: 205.84px; min-height: 142.5px; max-height: 142.5px;" alt="" />
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <div class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_eeafbd08-256d-46ea-a64b-29b54a7f3ebc.png" style="min-width: 205.84px; max-width: 205.84px; min-height: 142.5px; max-height: 142.5px;" alt="" />
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <div class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_e66f1142-e60f-4199-bf68-e9eeee4659e7.png" style="min-width: 205.84px; max-width: 205.84px; min-height: 142.5px; max-height: 142.5px;" alt="" />
+                    <div class="col-lg-6 border-left border-gray">
+                        <h6 class="">Fotografías de la garantía</h6>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <div class="align-self-center" id="galeriaGarantia" style="display: none;">
+                                    <%--<img alt="No hay fotografías disponibles" src="/Imagenes/Imagen_no_disponible.png" data-image="/Imagenes/Imagen_no_disponible.png" data-description="No hay fotografías disponibles" />--%>
+                                    <img alt="Frontal" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_4c5e04ed-fd6c-4a9e-b073-3689a0378c1b.png" data-image="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_4c5e04ed-fd6c-4a9e-b073-3689a0378c1b.png" data-description="Frontal" />
+                                    <img alt="Trasera" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_cca1db4e-7882-4508-818d-bef4283ba54a.png" data-image="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_cca1db4e-7882-4508-818d-bef4283ba54a.png" data-description="Trasera" />
+                                    <img alt="Lateral derecho" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_1877762a-4056-408b-8422-08d369a4b4f8.png" data-image="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_cca1db4e-7882-4508-818d-bef4283ba54a.png" data-description="Lateral derecho" />
+                                    <img alt="Lateral izquiero" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_5910bc6e-c4f0-4bc5-a28b-7f2de4ab474d.png" data-image="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_5910bc6e-c4f0-4bc5-a28b-7f2de4ab474d.png" data-description="Lateral izquierdo" />
+                                    <img alt="Tablero" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_eeafbd08-256d-46ea-a64b-29b54a7f3ebc.png" data-image="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_eeafbd08-256d-46ea-a64b-29b54a7f3ebc.png" data-description="Tablero" />
+                                    <img alt="VIN" src="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_e66f1142-e60f-4199-bf68-e9eeee4659e7.png" data-image="http://172.20.3.140/Documentos/Solicitudes/Solicitud326/G_326_2T1KR32EX3C158977_e66f1142-e60f-4199-bf68-e9eeee4659e7.png" data-description="VIN" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group row mr-0 ml-0 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="false">
                     <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server"></asp:Label>
                 </div>
@@ -192,5 +235,13 @@
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
+    <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
+    <script>
+        $("#galeriaGarantia").unitegallery({
+            gallery_width: 900,
+            gallery_height: 550
+        });
+    </script>
 </body>
 </html>
