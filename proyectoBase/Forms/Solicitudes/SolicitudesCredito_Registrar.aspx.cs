@@ -102,6 +102,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         Constantes.MontoFinanciarMaximo = 40000;
                         Constantes.PlazoMinimo = 12;
                         Constantes.PlazoMaximo = 36;
+                        Constantes.RequierePrima = true;
                         break;
 
                     /* Prestadito Consumo SoftGoods */
@@ -111,6 +112,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         Constantes.MontoFinanciarMaximo = 20000;
                         Constantes.PlazoMinimo = 12;
                         Constantes.PlazoMaximo = 36;
+                        Constantes.RequierePrima = true;
                         break;
                 }
 

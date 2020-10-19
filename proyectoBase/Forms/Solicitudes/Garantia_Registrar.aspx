@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Garantia_Registrar.aspx.cs" Inherits="Garantia_Registrar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Garantia_Registrar.aspx.cs" Inherits="Garantia_Registrar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Guardar nueva garantía</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <style>
         html {
@@ -57,26 +57,21 @@
                                 </div>
                             </div>
                             <div class="row m-0 border-bottom border-gray">
-                                <div class="col-sm-3 p-0">
-                                    <h6 class="mt-1">Características de la garantía</h6>
-                                </div>
-                                <div class="col-sm-9">
-                                    <div class="col-12 pr-0">
-                                        <div class="form-group row justify-content-end pr-0 mb-1">
-                                            <div class="m-0 p-0">
-                                                <label class="col-form-label">Digitar manualmente&nbsp;</label>
-                                                <input type="checkbox" id="cbDigitarManualmente" switch="info" class="align-bottom mb-1" />
-                                                <label for="cbDigitarManualmente" data-on-label="ON" data-off-label="OFF" class="align-bottom mb-1"></label>
-                                            </div>
-                                            <div class="col-sm-auto pr-0">
-                                                <label class="col-form-label">VIN</label>
-                                            </div>
-                                            <div class="col-sm-4 pr-0">
-                                                <asp:TextBox ID="txtBuscarVIN" CssClass="form-control form-control-sm mascara-vin" placeholder="EJ. JH4TB2H26CC000000" type="text" required="required" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-sm-auto align-self-end pr-0">
-                                                <button type="button" id="btnBuscarVIN" class="btn btn-secondary">Buscar</button>
-                                            </div>
+                                <div class="col-12">
+                                    <div class="form-group row mb-1">
+                                        <div class="col-sm-auto p-0">
+                                            <label class="col-form-label">VIN</label>
+                                        </div>
+                                        <div class="col-sm-4 pr-0">
+                                            <asp:TextBox ID="txtBuscarVIN" CssClass="form-control form-control-sm mascara-vin" placeholder="EJ. JH4TB2H26CC000000" type="text" required="required" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-auto pl-1">
+                                            <button type="button" id="btnBuscarVIN" class="btn btn-secondary text-center pt-1">Buscar</button>
+                                        </div>
+                                        <div class="m-0 p-0">
+                                            <label class="col-form-label">Digitar manualmente&nbsp;</label>
+                                            <input type="checkbox" id="cbDigitarManualmente" switch="info" class="align-bottom mb-1" />
+                                            <label for="cbDigitarManualmente" data-on-label="ON" data-off-label="OFF" class="align-bottom mb-1"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -245,6 +240,6 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/Garantia_Registrar.js?v=20200926121795"></script>
+    <script src="/Scripts/app/solicitudes/Garantia_Registrar.js?v=202010161640"></script>
 </body>
 </html>

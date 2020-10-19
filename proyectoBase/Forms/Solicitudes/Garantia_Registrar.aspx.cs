@@ -65,7 +65,8 @@ public partial class Garantia_Registrar : System.Web.UI.Page
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
                 { "limit", 1 },
                 { "title", "auto" },
-                { "uploadDir", uploadDir }
+                { "uploadDir", uploadDir },
+                { "extensions", new string[] { "jpg", "png", "jpeg"} },
             });
 
             switch (type)
