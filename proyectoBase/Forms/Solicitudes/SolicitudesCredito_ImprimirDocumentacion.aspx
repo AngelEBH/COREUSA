@@ -641,7 +641,7 @@
                             <table class="table table-bordered border-dark" style="border-width: 1px;">
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0">Asegurado</th>
-                                    <td colspan="5" class="pt-0 pb-0">Delcy Alexandra Caceres Guardado</td>
+                                    <td colspan="5" class="pt-0 pb-0"><asp:Label runat="server" ID="lblNombre_InspeccionSeguro"></asp:Label></td>
                                 </tr>
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0">Marca</th>
@@ -771,7 +771,7 @@
                                         </tr>
                                         <tr>
                                             <th>
-                                                Chasis:
+                                                Matricula:
                                             </th>
                                             <td>
                                                 <asp:Label runat="server" ID="lblMatricula_Traspaso"></asp:Label>

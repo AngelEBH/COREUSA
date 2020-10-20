@@ -652,6 +652,15 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInspeccionSeguroPDF;
 
     /// <summary>
+    /// Control lblNombre_InspeccionSeguro.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombre_InspeccionSeguro;
+
+    /// <summary>
     /// Control lblMarca_InspeccionSeguro.
     /// </summary>
     /// <remarks>

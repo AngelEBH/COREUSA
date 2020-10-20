@@ -163,11 +163,30 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         txtSerieDos.Text = serieDos;
                                         txtComentario.InnerText = comentario;
 
-                                        /* Pagaré */
-                                        lblNombreFirma_Pagare.Text = nombreCliente;
+                                        /* Inspeccion seguro */
+                                        lblNombre_InspeccionSeguro.Text = nombreCliente;
+                                        lblMarca_InspeccionSeguro.Text = marca;
+                                        lblModelo_InspeccionSeguro.Text = modelo;
+                                        lblAnio_InspeccionSeguro.Text = anio;
+                                        lblTipoDeVehiculo_InspeccionSeguro.Text = tipoDeVehiculo;
+                                        lblRecorrido_InspeccionSeguro.Text = recorrido;
+                                        lblMatricula_InspeccionSeguro.Text = matricula;
+
+                                        /* Traspaso */
+                                        lblNombreCliente_Traspaso.Text = nombreCliente;
                                         lblIdentidad_Traspaso.Text = identidad;
                                         lblNacionalidad_Traspaso.Text = nacionalidad;
                                         lblDireccion_Traspaso.Text = "no definido";
+                                        lblMarca_Traspaso.Text = marca;
+                                        lblModelo_Traspaso.Text = modelo;
+                                        lblSerieMotor_Traspaso.Text = serieMotor;
+                                        lblAnio_Traspaso.Text = anio;
+                                        lblCilindraje_Traspaso.Text = cilindraje;
+                                        lblTipoDeVehiculo_Traspaso.Text = tipoDeVehiculo;
+                                        lblColor_Traspaso.Text = color;
+                                        lblSerieChasis_Traspaso.Text = serieChasis;
+                                        lblMatricula_Traspaso.Text = matricula;
+
                                     }
 
                                     sqlResultado.NextResult();
