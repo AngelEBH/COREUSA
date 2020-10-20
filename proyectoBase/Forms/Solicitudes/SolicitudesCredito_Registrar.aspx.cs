@@ -102,7 +102,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         Constantes.MontoFinanciarMaximo = 40000;
                         Constantes.PlazoMinimo = 12;
                         Constantes.PlazoMaximo = 36;
-                        Constantes.RequierePrima = true;
                         break;
 
                     /* Prestadito Consumo SoftGoods */
@@ -112,7 +111,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         Constantes.MontoFinanciarMaximo = 20000;
                         Constantes.PlazoMinimo = 12;
                         Constantes.PlazoMaximo = 36;
-                        Constantes.RequierePrima = true;
                         break;
                 }
 
@@ -124,6 +122,42 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 if (Constantes.RequierePrima)
                 {
                     txtValorPrima.Enabled = true;
+                }
+
+                if (Precalificado.Identidad == "0201197000160")
+                {
+                    Precalificado.PermitirIngresarSolicitud = true;
+
+                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 15000;
+                    Constantes.PrestamoMaximo_Monto = 15000;
+                }
+
+                if (Precalificado.Identidad == "0801197700790")
+                {
+                    Precalificado.PermitirIngresarSolicitud = true;
+
+                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 18000;
+                    Constantes.PrestamoMaximo_Monto = 18000;
+                }
+                if (Precalificado.Identidad == "0501198807143")
+                {
+                    Precalificado.PermitirIngresarSolicitud = true;
+                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 300000;
+                    Constantes.PrestamoMaximo_Monto = 300000;
+                }
+
+                if (Precalificado.Identidad == "0401196200577")
+                {
+                    Precalificado.PermitirIngresarSolicitud = true;
+                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 30000;
+                    Constantes.PrestamoMaximo_Monto = 30000;
+                }
+
+                if (Precalificado.Identidad == "1102197300076")
+                {
+                    Precalificado.PermitirIngresarSolicitud = true;
+                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 15000;
+                    Constantes.PrestamoMaximo_Monto = 15000;
                 }
 
                 /* Para utilizar las constantes de validaciones en el frontend */
@@ -1385,7 +1419,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    tran.Commit();
+                    //tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";

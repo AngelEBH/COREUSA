@@ -328,6 +328,33 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblMensaje;
 
     /// <summary>
+    /// Control divContratoPDF.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divContratoPDF;
+
+    /// <summary>
+    /// Control lblNombreFirma_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombreFirma_Contrato;
+
+    /// <summary>
+    /// Control lblIdentidadFirma_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblIdentidadFirma_Contrato;
+
+    /// <summary>
     /// Control divPagarePDF.
     /// </summary>
     /// <remarks>
@@ -335,6 +362,105 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPagarePDF;
+
+    /// <summary>
+    /// Control lblMontoTitulo_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoTitulo_Pagare;
+
+    /// <summary>
+    /// Control lblNombre_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombre_Pagare;
+
+    /// <summary>
+    /// Control lblProfesion_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblProfesion_Pagare;
+
+    /// <summary>
+    /// Control lblIdentidad_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblIdentidad_Pagare;
+
+    /// <summary>
+    /// Control lblDireccion_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblDireccion_Pagare;
+
+    /// <summary>
+    /// Control lblMontoPalabras_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoPalabras_Pagare;
+
+    /// <summary>
+    /// Control lblMontoDigitos_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoDigitos_Pagare;
+
+    /// <summary>
+    /// Control lblPorcentajeInteresFluctuante_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblPorcentajeInteresFluctuante_Pagare;
+
+    /// <summary>
+    /// Control lblInteresesMoratorios_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblInteresesMoratorios_Pagare;
+
+    /// <summary>
+    /// Control lblNombreFirma_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombreFirma_Pagare;
+
+    /// <summary>
+    /// Control lblIdentidadFirma_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblIdentidadFirma_Pagare;
 
     /// <summary>
     /// Control divCompromisoLegalPDF.
@@ -346,6 +472,42 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divCompromisoLegalPDF;
 
     /// <summary>
+    /// Control lblNombreCliente_CompromisoLegal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombreCliente_CompromisoLegal;
+
+    /// <summary>
+    /// Control lblCuotas_CompromisoLegal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblCuotas_CompromisoLegal;
+
+    /// <summary>
+    /// Control lblNombreFirma_CompromisoLegal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombreFirma_CompromisoLegal;
+
+    /// <summary>
+    /// Control lblIdentidadFirma_CompromisoLegal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblIdentidadFirma_CompromisoLegal;
+
+    /// <summary>
     /// Control divConevionCyVPDF.
     /// </summary>
     /// <remarks>
@@ -355,6 +517,132 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divConevionCyVPDF;
 
     /// <summary>
+    /// Control lblNombreCliente_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombreCliente_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblNacionalidad_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNacionalidad_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblEstadoCivil_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblEstadoCivil_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblIdentidad_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblIdentidad_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblCiudadCliente_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblCiudadCliente_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblMarca_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMarca_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblModelo_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblModelo_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblAnio_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblAnio_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblSerieMotor_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblSerieMotor_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblSerieChasis_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblSerieChasis_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblTipoVehiculoConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblTipoVehiculoConvenioCyV;
+
+    /// <summary>
+    /// Control lblColor_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblColor_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblMatricula_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMatricula_ConvenioCyV;
+
+    /// <summary>
+    /// Control lblNombre_ConvenioCyV.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombre_ConvenioCyV;
+
+    /// <summary>
     /// Control divInspeccionSeguroPDF.
     /// </summary>
     /// <remarks>
@@ -362,6 +650,60 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInspeccionSeguroPDF;
+
+    /// <summary>
+    /// Control lblMarca_InspeccionSeguro.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMarca_InspeccionSeguro;
+
+    /// <summary>
+    /// Control lblModelo_InspeccionSeguro.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblModelo_InspeccionSeguro;
+
+    /// <summary>
+    /// Control lblAnio_InspeccionSeguro.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblAnio_InspeccionSeguro;
+
+    /// <summary>
+    /// Control lblTipoDeVehiculo_InspeccionSeguro.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblTipoDeVehiculo_InspeccionSeguro;
+
+    /// <summary>
+    /// Control lblRecorrido_InspeccionSeguro.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblRecorrido_InspeccionSeguro;
+
+    /// <summary>
+    /// Control lblMatricula_InspeccionSeguro.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMatricula_InspeccionSeguro;
 
     /// <summary>
     /// Control divGaleriaInspeccionSeguroDeVehiculo.
@@ -380,4 +722,121 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divTraspasoPDF;
+
+    /// <summary>
+    /// Control lblNombreCliente_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombreCliente_Traspaso;
+
+    /// <summary>
+    /// Control lblNacionalidad_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNacionalidad_Traspaso;
+
+    /// <summary>
+    /// Control lblIdentidad_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblIdentidad_Traspaso;
+
+    /// <summary>
+    /// Control lblDireccion_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblDireccion_Traspaso;
+
+    /// <summary>
+    /// Control lblMarca_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMarca_Traspaso;
+
+    /// <summary>
+    /// Control lblModelo_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblModelo_Traspaso;
+
+    /// <summary>
+    /// Control lblSerieMotor_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblSerieMotor_Traspaso;
+
+    /// <summary>
+    /// Control lblAnio_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblAnio_Traspaso;
+
+    /// <summary>
+    /// Control lblCilindraje_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblCilindraje_Traspaso;
+
+    /// <summary>
+    /// Control lblTipoDeVehiculo_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblTipoDeVehiculo_Traspaso;
+
+    /// <summary>
+    /// Control lblColor_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblColor_Traspaso;
+
+    /// <summary>
+    /// Control lblSerieChasis_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblSerieChasis_Traspaso;
+
+    /// <summary>
+    /// Control lblMatricula_Traspaso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMatricula_Traspaso;
 }

@@ -2,17 +2,18 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.Text;
 using System.Web;
 
 public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Page
 {
-    private string pcIDUsuario = "";
-    private string pcIDApp = "";
-    private string pcIDSesion = "";
-    private string pcIDSolicitud = "";
-    private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public string pcIDUsuario = "";
+    public string pcIDApp = "";
+    public string pcIDSesion = "";
+    public string pcIDSolicitud = "";
+    public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public InformacionPrincipal_Cliente_Solicitud_ViewModel InformacionPrincipal { get; set; }
+    public string JsonInformacionPrincipal { get; set; }
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -83,17 +84,28 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                         while (sqlResultado.Read())
                         {
+                            var nombreCliente = sqlResultado["fcNombreCliente"].ToString();
+                            var identidad = sqlResultado["fcIdentidadCliente"].ToString();
+                            var RTN = sqlResultado["fcRTN"].ToString();
+                            var telefonoPrimario = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
+                            var nacionalidad = sqlResultado["fcDescripcionNacionalidad"].ToString();
+                            var producto = sqlResultado["fcProducto"].ToString();
+                            var montoFinalFinanciar = sqlResultado["fnMontoFinalFinanciar"].ToString();
+                            var plazoFinalAprobado = sqlResultado["fiPlazoFinalAprobado"].ToString();
+                            var tipoDePlazo = sqlResultado["fcTipoDePlazo"].ToString();
+                            var valorCuota = sqlResultado["fiCuotaFinal"].ToString();
+
                             lblIdSolicitud.InnerText = pcIDSolicitud;
-                            txtNombreCliente.Text = sqlResultado["fcNombreCliente"].ToString();
-                            txtIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
-                            txtRtn.Text = sqlResultado["fcRTN"].ToString();
-                            txtTelefonoCliente.Text = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
-                            txtProducto.Text = sqlResultado["fcProducto"].ToString();
-                            txtMontoFinalAFinanciar.Text = sqlResultado["fnMontoFinalFinanciar"].ToString();
-                            txtPlazoFinanciar.Text = sqlResultado["fiPlazoFinalAprobado"].ToString();
-                            lblTipoDePlazo.InnerText = sqlResultado["fcTipoDePlazo"].ToString();
-                            txtValorCuota.Text = sqlResultado["fiCuotaFinal"].ToString();
-                            lblTipoDePlazoCuota.InnerText = sqlResultado["fcTipoDePlazo"].ToString();
+                            txtNombreCliente.Text = nombreCliente;
+                            txtIdentidadCliente.Text = identidad;
+                            txtRtn.Text = RTN;
+                            txtTelefonoCliente.Text = telefonoPrimario;
+                            txtProducto.Text = producto;
+                            txtMontoFinalAFinanciar.Text = montoFinalFinanciar;
+                            txtPlazoFinanciar.Text = plazoFinalAprobado;
+                            lblTipoDePlazo.InnerText = tipoDePlazo;
+                            txtValorCuota.Text = valorCuota;
+                            lblTipoDePlazoCuota.InnerText = tipoDePlazo;
 
                             int requiereGarantia = (byte)sqlResultado["fiRequiereGarantia"];
 
@@ -113,26 +125,49 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     /* Informacion del garantía */
                                     while (sqlResultado.Read())
                                     {
-                                        txtVIN.Text = sqlResultado["fcVin"].ToString();
-                                        txtTipoDeGarantia.Text = sqlResultado["fcTipoGarantia"].ToString();
-                                        txtTipoDeVehiculo.Text = sqlResultado["fcTipoVehiculo"].ToString();
-                                        txtMarca.Text = sqlResultado["fcMarca"].ToString();
-                                        txtModelo.Text = sqlResultado["fcModelo"].ToString();
-                                        txtAnio.Text = sqlResultado["fiAnio"].ToString();
+                                        var VIN = sqlResultado["fcVin"].ToString();
+                                        var tipoDeGarantia = sqlResultado["fcVin"].ToString();
+                                        var tipoDeVehiculo = sqlResultado["fcTipoVehiculo"].ToString();
+                                        var marca = sqlResultado["fcMarca"].ToString();
+                                        var modelo = sqlResultado["fcModelo"].ToString();
+                                        var anio = sqlResultado["fiAnio"].ToString();
+                                        var color = sqlResultado["fcColor"].ToString();
+                                        var matricula = sqlResultado["fcMatricula"].ToString();
+                                        var serieMotor = sqlResultado["fcMotor"].ToString();
+                                        var serieChasis = sqlResultado["fcChasis"].ToString();
+                                        var GPS = sqlResultado["fcGPS"].ToString();
+                                        var cilindraje = sqlResultado["fcCilindraje"].ToString();
+                                        var recorrido = string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnRecorrido"].ToString())) + " " + sqlResultado["fcUnidadDeDistancia"].ToString();
+                                        var transmision = sqlResultado["fcTransmision"].ToString();
+                                        var tipoDeCombustible = sqlResultado["fcTipoCombustible"].ToString();
+                                        var serieUno = sqlResultado["fcSerieUno"].ToString();
+                                        var serieDos = sqlResultado["fcSerieDos"].ToString();
+                                        var comentario = sqlResultado["fcComentario"].ToString().Trim();
 
-                                        txtColor.Text = sqlResultado["fcColor"].ToString();
-                                        txtMatricula.Text = sqlResultado["fcMatricula"].ToString();
-                                        txtSerieMotor.Text = sqlResultado["fcMotor"].ToString();
-                                        txtSerieChasis.Text = sqlResultado["fcChasis"].ToString();
-                                        txtGPS.Text = sqlResultado["fcGPS"].ToString();
+                                        txtVIN.Text = VIN;
+                                        txtTipoDeGarantia.Text = tipoDeGarantia;
+                                        txtTipoDeVehiculo.Text = tipoDeVehiculo;
+                                        txtMarca.Text = marca;
+                                        txtModelo.Text = modelo;
+                                        txtAnio.Text = anio;
+                                        txtColor.Text = color;
+                                        txtMatricula.Text = matricula;
+                                        txtSerieMotor.Text = serieMotor;
+                                        txtSerieChasis.Text = serieChasis;
+                                        txtGPS.Text = GPS;
+                                        txtCilindraje.Text = cilindraje;
+                                        txtRecorrido.Text = recorrido;
+                                        txtTransmision.Text = transmision;
+                                        txtTipoDeCombustible.Text = tipoDeCombustible;
+                                        txtSerieUno.Text = serieUno;
+                                        txtSerieDos.Text = serieDos;
+                                        txtComentario.InnerText = comentario;
 
-                                        txtCilindraje.Text = sqlResultado["fcCilindraje"].ToString();
-                                        txtRecorrido.Text = string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnRecorrido"].ToString())) + " " + sqlResultado["fcUnidadDeDistancia"].ToString();
-                                        txtTransmision.Text = sqlResultado["fcTransmision"].ToString();
-                                        txtTipoDeCombustible.Text = sqlResultado["fcTipoCombustible"].ToString();
-                                        txtSerieUno.Text = sqlResultado["fcSerieUno"].ToString();
-                                        txtSerieDos.Text = sqlResultado["fcSerieDos"].ToString();
-                                        txtComentario.InnerText = sqlResultado["fcComentario"].ToString().Trim();
+                                        /* Pagaré */
+                                        lblNombreFirma_Pagare.Text = nombreCliente;
+                                        lblIdentidad_Traspaso.Text = identidad;
+                                        lblNacionalidad_Traspaso.Text = nacionalidad;
+                                        lblDireccion_Traspaso.Text = "no definido";
                                     }
 
                                     sqlResultado.NextResult();
@@ -174,5 +209,40 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         PanelMensajeErrores.Visible = true;
         lblMensaje.Visible = true;
         lblMensaje.Text = mensaje;
+    }
+
+    public class InformacionPrincipal_Cliente_Solicitud_ViewModel
+    {
+        public int IdSolicitud { get; set; }
+        public string Identidad { get; set; }
+        public string Nombre { get; set; }
+        public string DireccionDomicilio { get; set; }
+        public string Correo { get; set; }
+        public string Nacionalidad { get; set; }
+        public string EstadoCivil { get; set; }
+        public Garantia_ViewModel Garantia { get; set; }
+    }
+
+    public class Garantia_ViewModel
+    {
+        public int IdGarantia { get; set; }
+        public string VIN { get; set; }
+        public string TipoDeVehiculo { get; set; }
+        public string TipoDeGarantia { get; set; }
+        public string Marca { get; set; }
+        public string Modelo { get; set; }
+        public string Anio { get; set; }
+        public string Color { get; set; }
+        public string Cilindraje { get; set; }
+        public decimal Recorrido { get; set; }
+        public string UnidadDeDistancia { get; set; }
+        public string Transmision { get; set; }
+        public string Matricula { get; set; }
+        public string SerieUno { get; set; }
+        public string SerieDos { get; set; }
+        public string SerieChasis { get; set; }
+        public string SerieMotor { get; set; }
+        public string GPS { get; set; }
+        public string Comentario { get; set; }
     }
 }

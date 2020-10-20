@@ -224,7 +224,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Télefono</label>
-                                            <asp:TextBox ID="txtNumeroTelefono" CssClass="form-control form-control-sm mascara-telefono" Enabled="false" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtNumeroTelefono" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>

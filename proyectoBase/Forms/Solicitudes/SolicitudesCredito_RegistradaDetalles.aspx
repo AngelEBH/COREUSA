@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles de la solicitud</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
@@ -324,7 +324,6 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group row">
-                                                                
 
                                                                 <label class="col-sm-6">Departamento empresa</label>
                                                                 <asp:Label ID="lblDeptoEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
@@ -389,7 +388,7 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row" id="divAval">
+                                                <div class="form-group row" id="divAval" style="display: none;">
                                                     <h4>Aval</h4>
                                                     <div class="table-responsive">
                                                         <table class="table table-condensed" id="tblAvales">
@@ -581,6 +580,70 @@
                                                                     </label>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default" id="divInformaciondeCampo" style="display: none;">
+                                    <div class="panel-heading p-1 seccion-header" role="tab" id="headingEight">
+                                        <h6 class="m-0 font-14">
+                                            <a href="#collapseInformaciondeCampo" class="text-dark collapsed h5" data-toggle="collapse"
+                                                aria-expanded="false"
+                                                aria-controls="collapseThree">
+                                                <i class="mdi mdi-account-check mdi-24px"></i>
+                                                Informacion de Campo
+                                            </a>
+                                        </h6>
+                                    </div>
+                                    <div id="collapseInformaciondeCampo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
+                                        <div class="panel-body">
+                                            <div class="card-body">
+                                                <div class="row" id="divResolucionDomicilio" style="display: none;">
+                                                    <div class="col-md-8">
+                                                        <h5>Resolución del Domicilio <small id="lblResolucionCampoDomicilio"></small></h5>
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-6">Gestor validador</label>
+                                                            <asp:Label ID="lblGestorValidadorDomicilio" CssClass="col-sm-6" runat="server"></asp:Label>
+
+                                                            <label class="col-sm-6">Resolucion</label>
+                                                            <asp:Label ID="lblResolucionDomicilio" CssClass="col-sm-6" runat="server"></asp:Label>
+
+                                                            <label class="col-sm-6">Fecha de validacion</label>
+                                                            <asp:Label ID="lblFechaValidacionDomicilio" CssClass="col-sm-6" runat="server"></asp:Label>
+
+                                                            <label class="col-sm-6">Observaciones</label>
+                                                            <asp:Label ID="lblObservacionesCampoDomicilio" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="header-title tituloDocumentacionCampoDomicilio">Documentación</label>
+                                                        <div class="container" id="divDocumentacionCampoDomicilio">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="divResolucionTrabajo" style="display: none;">
+                                                    <div class="col-md-8">
+                                                        <h5>Resolución del Trabajo <small id="lblResolucionCampoTrabajo"></small></h5>
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-6">Gestor validador</label>
+                                                            <asp:Label ID="lblGestorValidadorTrabajo" CssClass="col-sm-6" runat="server"></asp:Label>
+
+                                                            <label class="col-sm-6">Resolucion</label>
+                                                            <asp:Label ID="lblResolucionTrabajo" CssClass="col-sm-6" runat="server"></asp:Label>
+
+                                                            <label class="col-sm-6">Fecha de validacion</label>
+                                                            <asp:Label ID="lblFechaValidacionTrabajo" CssClass="col-sm-6" runat="server"></asp:Label>
+
+                                                            <label class="col-sm-6">Observaciones</label>
+                                                            <asp:Label ID="lblObservacionesCampoTrabajo" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="header-title tituloDocumentacionCampoLaboral">Documentación</label>
+                                                        <div class="container" id="divDocumentacionCampoTrabajo">
                                                         </div>
                                                     </div>
                                                 </div>

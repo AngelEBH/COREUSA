@@ -23,117 +23,131 @@ function cargarInformacionSolicitud() {
             //variable de informacion de la solicitud
             var rowDataSolicitud = data.d.solicitud;
 
-            idSolicitud = rowDataSolicitud.fiIDSolicitud;
-
             //variable de documentacion de la solicitud
             var rowDataDocumentos = data.d.documentos;
 
-            console.log(data.d);
-
             objSolicitud = data.d.solicitud;
+            idSolicitud = rowDataSolicitud.fiIDSolicitud;
 
             $("#btnHistorialExterno,#btnHistorialInterno").prop('disabled', false);
 
             var ProcesoPendiente = '/Date(-2208967200000)/';
+            var IconoExito = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
+            var IconoPendiente = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
+            var IconoRojo = '<i class="mdi mdi mdi-close-circle-outline mdi-18px text-danger"></i>';
 
-            //cargar status de la solicitud
+            /* Cargar status de la solicitud */
             var statusIngreso = '';
             if (rowDataSolicitud.fdEnIngresoInicio != ProcesoPendiente) {
-
-                if (rowDataSolicitud.fdEnIngresoFin != ProcesoPendiente) {
-                    statusIngreso = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
-                }
-                else {
-                    statusIngreso = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
-                }
+                statusIngreso = rowDataSolicitud.fdEnIngresoFin != ProcesoPendiente ? IconoExito : IconoPendiente;
             }
 
-            //estado en tramite de la solicitud
+            /* Estado en tramite de la solicitud */
             var statusTramite = '';
             if (rowDataSolicitud.fdEnTramiteInicio != ProcesoPendiente) {
 
                 if (rowDataSolicitud.fdEnTramiteFin != ProcesoPendiente) {
-                    statusTramite = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
+                    statusTramite = IconoExito;
                 }
                 else {
-                    statusTramite = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
+                    statusTramite = IconoPendiente;
+                }
+                if (rowDataSolicitud.fdEnTramiteFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusTramite = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
                 }
             }
 
-            //validar si ya se inició y terminó el proceso de analisis de la solicitud
+            /* Validar si ya se inició y terminó el proceso de analisis de la solicitud */
             var statusAnalisis = '';
             if (rowDataSolicitud.fdEnAnalisisInicio != ProcesoPendiente) {
-
                 if (rowDataSolicitud.fdEnAnalisisFin != ProcesoPendiente) {
-                    statusAnalisis = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
+                    statusAnalisis = IconoExito;
                 }
                 else {
-                    statusAnalisis = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
+                    statusAnalisis = IconoPendiente;
+                }
+                if (rowDataSolicitud.fdEnAnalisisFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusAnalisis = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
                 }
             }
 
-            //validar si ya se envió a campo y si ya se recibió respuesta de gestoria
+            /* Validar si ya se envió a campo y si ya se recibió respuesta de gestoria */
             var statusCampo = '';
             if (rowDataSolicitud.fdEnvioARutaAnalista != ProcesoPendiente) {
 
                 if (rowDataSolicitud.fdEnCampoFin != ProcesoPendiente || rowDataSolicitud.fiEstadoDeCampo == 2) {
-                    statusCampo = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
+                    statusCampo = IconoExito;
                 }
                 else {
-                    statusCampo = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
+                    statusCampo = IconoPendiente;
+                }
+                if (rowDataSolicitud.fdEnCampoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusCampo = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
+                }
+                if (rowDataSolicitud.fiEstadoSolicitud == 5) {
+                    statusCampo = IconoRojo;
+                    habilitarResolucion = false;
                 }
             }
 
-            //validar si la solicitud está condicionada y sigue sin recibirse actualizacion del agente de ventas
+            /* Validar si la solicitud está condicionada y sigue sin recibirse actualizacion del agente de ventas */
             var statusCondicionada = '';
             if (rowDataSolicitud.fdCondicionadoInicio != ProcesoPendiente) {
 
                 if (rowDataSolicitud.fdCondificionadoFin != ProcesoPendiente) {
-                    statusCondicionada = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
+                    statusCondicionada = IconoExito;
                 }
                 else {
-                    statusCondicionada = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
+                    statusCondicionada = IconoPendiente;
+                }
+                if (rowDataSolicitud.fdCondificionadoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusCondicionada = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
                 }
             }
 
-            //validar si la solicitud está reprogramada
+            /* Validar si la solicitud está reprogramada */
             var statusReprogramado = '';
             if (rowDataSolicitud.fdReprogramadoInicio != ProcesoPendiente) {
 
                 if (rowDataSolicitud.fdReprogramadoFin != ProcesoPendiente) {
-                    statusReprogramado = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
+                    statusReprogramado = IconoExito;
                 }
                 else {
-                    statusReprogramado = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
+                    statusReprogramado = IconoPendiente;
+                }
+                if (rowDataSolicitud.fdReprogramadoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusReprogramado = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
                 }
             }
 
-            //validar proceso de validacion
+            /* Validar proceso de validacion */
             var statusValidacion = '';
             if (rowDataSolicitud.PasoFinalInicio != ProcesoPendiente) {
 
                 if (rowDataSolicitud.PasoFinalFin != ProcesoPendiente) {
-                    statusValidacion = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
+                    statusValidacion = IconoExito;
+                } else {
+                    statusValidacion = IconoPendiente;
                 }
-                else {
-                    statusValidacion = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
+                if (rowDataSolicitud.PasoFinalFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusValidacion = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
                 }
             }
 
-            //validar si la solicitud ya ha sido aprobada o rechazada
+            /* Validar si la solicitud ya ha sido aprobada o rechazada */
             var resolucionFinal = '';
             if (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7) {
 
                 if (rowDataSolicitud.fiEstadoSolicitud == 7) {
-                    resolucionFinal = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
+                    resolucionFinal = IconoExito;
                 }
                 else {
-                    resolucionFinal = '<i class="mdi mdi-check-circle-outline mdi-18px text-danger"></i>';
+                    resolucionFinal = IconoRojo;
                 }
             }
             else {
                 if (rowDataSolicitud.PasoFinalInicio != ProcesoPendiente) {
-                    resolucionFinal = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
+                    resolucionFinal = IconoPendiente;
                 }
             }
 
@@ -183,6 +197,17 @@ function cargarInformacionSolicitud() {
             $('#lblBarrioColoniaCliente').text(infoDomiciliar.fcNombreBarrioColonia);
             $('#lblDireccionDetalladaCliente').text(infoDomiciliar.fcDireccionDetallada);
             $('#lblReferenciaDomicilioCliente').text(infoDomiciliar.fcReferenciasDireccionDetallada);
+            /* Si el proceso de campo del domicilio ya se completo, mostrarlo */
+            if (infoDomiciliar.fiIDInvestigacionDeCampo != 0) {
+                $("#divInformaciondeCampo,#divResolucionDomicilio,#tituloCampoDomicilioModal").css('display', '');
+                var ClassResultadodeCampo = infoDomiciliar.IDTipoResultado == 1 ? 'text-success' : infoDomiciliar.IDTipoResultado == 2 ? 'text-danger' : '';
+                $("#lblResolucionCampoDomicilio").text('(' + infoDomiciliar.fcResultadodeCampo + ')').addClass(ClassResultadodeCampo);
+                $("#lblGestorValidadorDomicilio").text(infoDomiciliar.fcGestorValidadorDomicilio);
+                $("#lblResolucionDomicilio").text(infoDomiciliar.fcGestionDomicilio);
+                $("#lblFechaValidacionDomicilio").text(FechaFormato(infoDomiciliar.fdFechaValidacion));
+                $("#lblObservacionesCampoDomicilio").text(infoDomiciliar.fcObservacionesCampo);
+                $("#lblResumenGestorDomicilio").text(infoDomiciliar.fcGestorValidadorDomicilio); // ficha de resumen
+            }
             //informacion laboral
             var infoLaboral = rowDataCliente.ClientesInformacionLaboral;
             $('#lblNombreTrabajoCliente').text(infoLaboral.fcNombreTrabajo);
@@ -200,6 +225,17 @@ function cargarInformacionSolicitud() {
             $('#lblBarrioColoniaEmpresa').text(infoLaboral.fcNombreBarrioColonia);
             $('#lblDireccionDetalladaEmpresa').text(infoLaboral.fcDireccionDetalladaEmpresa);
             $('#lblReferenciaUbicacionEmpresa').text(infoLaboral.fcReferenciasDireccionDetallada);
+            /* Si el proceso de campo del trabajo ya se completo, mostrarlo */
+            if (infoLaboral.fiIDInvestigacionDeCampo != 0) {
+                $("#divInformaciondeCampo,#divResolucionTrabajo,#tituloCampoTrabajoModal").css('display', '');
+                var ClassResultadodeCampoLaboral = infoLaboral.IDTipoResultado == 1 ? 'text-success' : infoLaboral.IDTipoResultado == 2 ? 'text-danger' : '';
+                $("#lblResolucionCampoTrabajo").text('(' + infoLaboral.fcResultadodeCampo + ')').addClass(ClassResultadodeCampoLaboral);
+                $("#lblGestorValidadorTrabajo").text(infoLaboral.fcGestorValidadorTrabajo);
+                $("#lblResolucionTrabajo").text(infoLaboral.fcGestionTrabajo);
+                $("#lblFechaValidacionTrabajo").text(FechaFormato(infoLaboral.fdFechaValidacion));
+                $("#lblObservacionesCampoTrabajo").text(infoLaboral.fcObservacionesCampo);
+                $("#lblResumenGestorTrabajo").text(infoLaboral.fcGestorValidadorTrabajo); // ficha de resumen
+            }
             //informacion conyugal
             if (rowDataCliente.ClientesInformacionConyugal != null) {
 
@@ -309,8 +345,7 @@ function cargarInformacionSolicitud() {
             }
             $('#lblMontoPrima').text(addComasFormatoNumerico(rowDataSolicitud.fnPrima));
             $('#lblEdadCliente').text(rowDataSolicitud.fiEdadCliente + ' años');
-            var arraigoLaboral = rowDataSolicitud.fiClienteArraigoLaboralAños + ' años ' + rowDataSolicitud.fiClienteArraigoLaboralMeses + ' meses ' + rowDataSolicitud.fiClienteArraigoLaboralDias + ' dias';
-            $('#lblArraigoLaboral').text(arraigoLaboral);
+            
 
             //informacion del analisis
             $("#tipoEmpresa").prop('disabled', true);
