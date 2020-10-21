@@ -60,6 +60,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 CargarListas();
                 ObtenerInformacionCliente();
 
+                HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
+                Session.Timeout = 60;
+
                 /* Lógica de negocio dependiendo el tipo de producto */
                 switch (Precalificado.IdProducto)
                 {
@@ -200,10 +203,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     break;
             }
             Response.End();
-        }
-        else
-        {
-            HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
         }
     }
 

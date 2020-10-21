@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Garantia_Registrar.aspx.cs" Inherits="Garantia_Registrar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Garantia_Registrar.aspx.cs" Inherits="Garantia_Registrar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -92,7 +92,7 @@
                                         </div>
                                         <div class="col-6">
                                             <label class="col-form-label">Tipo de vehículo</label>
-                                            <asp:TextBox ID="txtTipoDeVehiculo" placeholder="EJ. Turismo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>                                            
+                                            <asp:TextBox ID="txtTipoDeVehiculo" placeholder="EJ. Turismo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -121,7 +121,7 @@
                                 <!-- Información del préstamo máximo -->
                                 <div class="col-lg-6 border-left border-gray">
                                     <h6 class="mb-1">Mecánicas</h6>
-                                    <div class="form-group row">
+                                    <div class="form-group row mb-4">
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Cilindraje</label>
                                             <asp:TextBox ID="txtCilindraje" placeholder="EJ. 1.8" CssClass="form-control form-control-sm mascara-cilindraje" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
@@ -143,11 +143,31 @@
                                             <asp:TextBox ID="txtTipoDeCombustible" placeholder="EJ. Gasolina" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
+
+                                    <h6 class="mb-1">Valores de la garantía</h6>
+                                    <div class="form-group row">
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Precio mercado</label>
+                                            <asp:TextBox ID="txtPrecioMercado" CssClass="form-control form-control-sm mascara-cantidad" type="text" Text="0" required="required" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Prima</label>
+                                            <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm mascara-cantidad" type="text" Text="0" required="required" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Financiado</label>
+                                            <asp:TextBox ID="txtValorFinanciado" CssClass="form-control form-control-sm mascara-cantidad" type="text" Text="0" required="required" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Gastos de cierre</label>
+                                            <asp:TextBox ID="txtGastosDeCierre" CssClass="form-control form-control-sm mascara-cantidad" type="text" Text="0" required="required" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <h6 class="mb-0 border-top border-gray pt-2">Otros</h6>
+                                    <h6 class="mb-0 border-top border-gray pt-2"></h6>
                                     <div class="form-group row">
                                         <div class="col-sm-2">
                                             <label class="col-form-label">Serie 1</label>
@@ -240,6 +260,6 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/Garantia_Registrar.js?v=202010161640"></script>
+    <script src="/Scripts/app/solicitudes/Garantia_Registrar.js?v=20201020150795862"></script>
 </body>
 </html>

@@ -74,8 +74,8 @@
             page-break-before: always;
         }
 
-        .ug-thumbs-grid{
-            left:50px !important;
+        .ug-thumbs-grid {
+            left: 50px !important;
         }
     </style>
 </head>
@@ -92,7 +92,7 @@
                 <h5>Imprimir documentación solicitud de crédito No. <span id="lblIdSolicitud" class="font-weight-bold" runat="server">330</span></h5>
             </div>
             <div class="card-body pt-0">
-                <div class="row mb-0">                    
+                <div class="row mb-0">
                     <div class="col-md-6">
                         <div class="form-group row">
                             <div class="col-sm-12">
@@ -129,7 +129,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6 border-left border-gray justify-content-center">
                         <h6 class="">Imprimir documentos</h6>
                         <div class="form-group row mb-0">
@@ -257,7 +257,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="form-group row mr-0 ml-0 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="false">
                     <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server"></asp:Label>
                 </div>
@@ -393,7 +393,7 @@
                                 <b>- El CLIENTE:</b> autoriza de manera expresa y voluntaria que en caso de que PRESTADITO retire el vehículo, pueda ser subastado al mejor postor y el dinero recibido de la misma se abonara a la deuda, si existiera un excedente se le dará al <b>CLIENTE</b> y en caso que no cubriese el total adeudado, <b>PRESTADITO</b> se reserva el derecho de ejercer acciones legales contra el <b>CLIENTE</b> por el pago de saldo total adeudado, que incluye capital, intereses y otros cargos gastos o cargos que incurra.
                                 <b>- DÉCIMO TERCERA: COMPROBACION DE HABER RECIBIDO INSTRUCCIÓN Y ORIENTACION DEL PRODUCTO Y ENTREGA DE COPIA DEL CONVENIO Y PLAN DE PAGO.- EL CLIENTE</b> por este acto acepta que previo a la celebración de este contrato, ha recibido toda la orientación y explicación necesaria sobre las condiciones del convenio, las consecuencias legales y judiciales de su incumplimiento, así como que ha recibido una copia íntegra de este documento y del plan  de pagos  respectivo.
                                 .-  Finalmente  las partes  declaramos  que es cierto  todo  lo anteriormente  expresado,  y que por ser ello lo convenido,  aceptamos  libre  y  voluntariamente,  todas  estipulaciones,  condiciones  y  cláusulas  contenidas  en  el  presente  contrato  de préstamo.
-                                En fe de lo cual firmamos en la Ciudad de <span id="lblCiudad_Contrato">SAN PEDRO SULA</span>, a los <span id="lblDia_Contrato">21</span> días del mes de <span id="lblMes_Contrato">septiembre</span> del año <span id="lblAño_Contrato">2020</span>.
+                                En fe de lo cual firmamos en la Ciudad de <span class="lblCiudad_Firma"></span>, a los <span id="lblDia_Contrato">21</span> días del mes de <span id="lblMes_Contrato">septiembre</span> del año <span id="lblAño_Contrato">2020</span>.
                             </p>
                         </div>
                     </div>
@@ -427,7 +427,8 @@
                             <img src="/Imagenes/LogoPrestadito.png" />
                         </div>
                         <div class="col-12">
-                            <h5 class="text-center font-weight-bold">PAGARÉ POR <asp:Label runat="server" ID="lblMontoTitulo_Pagare"></asp:Label></h5>
+                            <h5 class="text-center font-weight-bold">PAGARÉ POR
+                                <asp:Label runat="server" ID="lblMontoTitulo_Pagare"></asp:Label></h5>
                             <hr />
                         </div>
                     </div>
@@ -435,20 +436,29 @@
                     <div class="row">
                         <div class="col-12">
                             <p>
-                                <b>YO, <asp:Label runat="server" ID="lblNombre_Pagare"></asp:Label>,</b>
-                                mayor de edad, de profesión <asp:Label runat="server" ID="lblProfesion_Pagare"></asp:Label>,
-                                con tarjeta de identidad <asp:Label runat="server" ID="lblIdentidad_Pagare"></asp:Label> y con domicilio
-                                en <asp:Label runat="server" ID="lblDireccion_Pagare"></asp:Label>,
+                                <b>YO,
+                                    <asp:Label runat="server" ID="lblNombre_Pagare"></asp:Label>,</b>
+                                mayor de edad, de profesión
+                                <asp:Label runat="server" ID="lblProfesion_Pagare"></asp:Label>,
+                                con tarjeta de identidad
+                                <asp:Label runat="server" ID="lblIdentidad_Pagare"></asp:Label>
+                                y con domicilio
+                                en
+                                <asp:Label runat="server" ID="lblDireccion_Pagare"></asp:Label>,
                                 actuando en condición personal, acepto que <b>DEBO y PAGARÉ</b> incondicionalmente <b>SIN PROTESTO,</b> y a la orden de <b>PRESTADITO S.A. de C.V.</b>,
-                                la cantidad de <asp:Label runat="server" ID="lblMontoPalabras_Pagare"></asp:Label> (<asp:Label runat="server" ID="lblMontoDigitos_Pagare"></asp:Label>).
+                                la cantidad de
+                                <asp:Label runat="server" ID="lblMontoPalabras_Pagare"></asp:Label>
+                                (<asp:Label runat="server" ID="lblMontoDigitos_Pagare"></asp:Label>).
                                 Dicha cantidad será pagada el día ___ del mes de ____________ del año _____, en las oficinas, agencias, sucursales y ventanillas de <b>PRESTADITO S.A. de C.V.</b>.
 
-                                La cantidad consignada en este PAGARE devengará, a partir de esta fecha, una tasa de interés fluctuante del <asp:Label runat="server" ID="lblPorcentajeInteresFluctuante_Pagare"></asp:Label>% PORCIENTO MENSUAL,
+                                La cantidad consignada en este PAGARE devengará, a partir de esta fecha, una tasa de interés fluctuante del
+                                <asp:Label runat="server" ID="lblPorcentajeInteresFluctuante_Pagare"></asp:Label>% PORCIENTO MENSUAL,
                                 sobre el saldo total de la deuda, a pagar mensualmente. En caso de mora, que se producirá por la falta de pago al vencimiento tanto del capital o de los intereses,
-                                dará derecho a <b>PRESTADITO S.A. de C.V.</b> a exigir el pago de intereses moratorios del <asp:Label runat="server" ID="lblInteresesMoratorios_Pagare"></asp:Label>% PORCIENTO MENSUAL;
+                                dará derecho a <b>PRESTADITO S.A. de C.V.</b> a exigir el pago de intereses moratorios del
+                                <asp:Label runat="server" ID="lblInteresesMoratorios_Pagare"></asp:Label>% PORCIENTO MENSUAL;
                                 a su vez, en caso de ejecución legal de la presente obligación, me someto a la jurisdicción que establezca <b>PRESTADITO S.A. de C.V.</b>,
                                 quedando incorporadas en este documento todas las disposiciones del Código de Comercio.
-                                En fe de lo cual, firmo (amos) en la ciudad de SAN PEDRO SULA departamento de CORTES, a los 18 días del mes de septiembre del año 2020.
+                                En fe de lo cual, firmo (amos) en la ciudad de <span class="lblCiudad_Firma"></span>, departamento de <span class="lblDepartamento_Firma"></span>, a los <span class="lblNumeroDia_Firma"></span> días del mes de <span class="lblMes_Firma"></span> del año <span class="lblAnio_Firma"></span>.
                             </p>
                         </div>
                     </div>
@@ -483,9 +493,11 @@
                     <div class="row">
                         <div class="col-12">
                             <p>
-                                <b>YO, <asp:Label runat="server" ID="lblNombreCliente_CompromisoLegal"></asp:Label>,</b>
+                                <b>YO,
+                                    <asp:Label runat="server" ID="lblNombreCliente_CompromisoLegal"></asp:Label>,</b>
                                 acepto haber adquirido un préstamo en efectivo con la empresa <b>PRESTADITO S.A. de C.V.</b>,
-                                financiamiento otorgado a <asp:Label runat="server" ID="lblCuotas_CompromisoLegal"></asp:Label>, para la compra de contado de un Vehículo Automotor,
+                                financiamiento otorgado a
+                                <asp:Label runat="server" ID="lblCuotas_CompromisoLegal"></asp:Label>, para la compra de contado de un Vehículo Automotor,
                                 el cual queda como garantía prendaria del financiamiento otorgado.
                                 Por lo que, durante el plazo del financiamiento del vehículo automotor,
                                 soy el único responsable por todo acto de carácter legal o ilegal que se encuentre involucrado dicho automotor,
@@ -508,7 +520,7 @@
                                 <br />
 
                                 Doy fe de lo anterior y de recibir el vehículo y para esto firmo de forma libre y espontáneamente la presente Constancia
-                                en la ciudad de San Pedro Sula, departamento de Cortes, a los 18 días del mes de septiembre del año 2020
+                                en la ciudad de <span class="lblCiudad_Firma"></span>, departamento de <span class="lblDepartamento_Firma"></span>, a los <span class="lblNumeroDia_Firma"></span> días del mes de <span class="lblMes_Firma"></span> del año <span class="lblAnio_Firma"></span>.
                             </p>
                         </div>
                     </div>
@@ -520,7 +532,7 @@
                             <asp:Label class="mt-0 d-block" runat="server" ID="lblNombreFirma_CompromisoLegal"></asp:Label>
                         </div>
                         <div class="col-4 text-center mt-3">
-                            <asp:Label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;" runat="server" ID="lblIdentidadFirma_CompromisoLegal"></asp:Label>
+                            <asp:Label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" Style="border-radius: 0px;" runat="server" ID="lblIdentidadFirma_CompromisoLegal"></asp:Label>
                             <label class="mt-0 d-block">No. Identidad</label>
                         </div>
                         <div class="col-1"></div>
@@ -546,13 +558,28 @@
                                 Legal de la Empresa Mercantil denominada “PRESTADITO S.A DE C.V. con Registro Tributario Nacional 05019016811399, Empresa Constituida mediante
                                 escritura pública Instrumento número 86 autorizada en esta Ciudad el día 18 de Diciembre del año 2,015 por el Notario Efraín Antonio Gutiérrez Ardon e inscrita
                                 bajo número de MATRICULA 96565 del Registro Mercantil del Centro Asociado de la Cámara de Comercio e Industria de Cortes,
-                                en este convenio se denominara <b>LA EMPRESA</b> y <b>AL SEÑOR</b> <asp:Label runat="server" ID="lblNombreCliente_ConvenioCyV"></asp:Label>
-                                mayor de edad, <asp:Label runat="server" ID="lblNacionalidad_ConvenioCyV"></asp:Label>, <asp:Label runat="server" ID="lblEstadoCivil_ConvenioCyV"></asp:Label>,
-                                con tarjeta de identidad número <asp:Label runat="server" ID="lblIdentidad_ConvenioCyV"></asp:Label> y con domicilio en la ciudad de <asp:Label runat="server" ID="lblCiudadCliente_ConvenioCyV"></asp:Label>,
-                                quien actúa en calidad de propietario de un vehículo marca <asp:Label runat="server" ID="lblMarca_ConvenioCyV"></asp:Label>, modelo <asp:Label runat="server" ID="lblModelo_ConvenioCyV"></asp:Label>,
-                                año <asp:Label runat="server" ID="lblAnio_ConvenioCyV"></asp:Label>, con motor: <asp:Label runat="server" ID="lblSerieMotor_ConvenioCyV"></asp:Label>,
-                                y con chasis: <asp:Label runat="server" ID="lblSerieChasis_ConvenioCyV"></asp:Label> tipo <asp:Label runat="server" ID="lblTipoVehiculoConvenioCyV"></asp:Label>
-                                color <asp:Label runat="server" ID="lblColor_ConvenioCyV"></asp:Label>, Placa: <asp:Label runat="server" ID="lblMatricula_ConvenioCyV"></asp:Label>,
+                                en este convenio se denominara <b>LA EMPRESA</b> y <b>AL SEÑOR</b>
+                                <asp:Label runat="server" ID="lblNombreCliente_ConvenioCyV"></asp:Label>
+                                mayor de edad,
+                                <asp:Label runat="server" ID="lblNacionalidad_ConvenioCyV"></asp:Label>,
+                                <asp:Label runat="server" ID="lblEstadoCivil_ConvenioCyV"></asp:Label>,
+                                con tarjeta de identidad número
+                                <asp:Label runat="server" ID="lblIdentidad_ConvenioCyV"></asp:Label>
+                                y con domicilio en la ciudad de
+                                <asp:Label runat="server" ID="lblCiudadCliente_ConvenioCyV"></asp:Label>,
+                                quien actúa en calidad de propietario de un vehículo marca
+                                <asp:Label runat="server" ID="lblMarca_ConvenioCyV"></asp:Label>, modelo
+                                <asp:Label runat="server" ID="lblModelo_ConvenioCyV"></asp:Label>,
+                                año
+                                <asp:Label runat="server" ID="lblAnio_ConvenioCyV"></asp:Label>, con motor:
+                                <asp:Label runat="server" ID="lblSerieMotor_ConvenioCyV"></asp:Label>,
+                                y con chasis:
+                                <asp:Label runat="server" ID="lblSerieChasis_ConvenioCyV"></asp:Label>
+                                tipo
+                                <asp:Label runat="server" ID="lblTipoVehiculoConvenioCyV"></asp:Label>
+                                color
+                                <asp:Label runat="server" ID="lblColor_ConvenioCyV"></asp:Label>, Placa:
+                                <asp:Label runat="server" ID="lblMatricula_ConvenioCyV"></asp:Label>,
                                 Ambos cuentan con la capacidad y facultades suficientes para poder contratar, quienes voluntariamente con plena libertad y
                                 sin presión de ninguna naturaleza manifestamos lo siguiente:
                             </p>
@@ -600,7 +627,7 @@
                                 <b>Décimo primero:</b>
                                 En caso de controversia se someten al centro de Conciliación y Arbitraje de la cámara de comercio e Industrias de Cortes.
                                 <br />
-                                El presente convenio se firma en duplicado en la Ciudad de San Pedro Sula, Cortes a los 29 días del mes de febrero del año 2020.
+                                El presente convenio se firma en duplicado en la Ciudad de <span class="lblCiudad_Firma"></span>, <span class="lblDepartamento_Firma"></span> a los <span class="lblNumeroDia_Firma"></span> días del mes de <span class="lblMes_Firma"></span> del año <span class="lblAnio_Firma"></span>.
                             </p>
                         </div>
                     </div>
@@ -641,34 +668,41 @@
                             <table class="table table-bordered border-dark" style="border-width: 1px;">
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0">Asegurado</th>
-                                    <td colspan="5" class="pt-0 pb-0"><asp:Label runat="server" ID="lblNombre_InspeccionSeguro"></asp:Label></td>
+                                    <td colspan="5" class="pt-0 pb-0">
+                                        <asp:Label runat="server" ID="lblNombre_InspeccionSeguro"></asp:Label></td>
                                 </tr>
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0">Marca</th>
-                                    <td class="pt-0 pb-0"><asp:Label runat="server" ID="lblMarca_InspeccionSeguro"></asp:Label></td>
+                                    <td class="pt-0 pb-0">
+                                        <asp:Label runat="server" ID="lblMarca_InspeccionSeguro"></asp:Label></td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0">Modelo</th>
-                                    <td class="pt-0 pb-0"><asp:Label runat="server" ID="lblModelo_InspeccionSeguro"></asp:Label></td>
+                                    <td class="pt-0 pb-0">
+                                        <asp:Label runat="server" ID="lblModelo_InspeccionSeguro"></asp:Label></td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0">Año</th>
-                                    <td class="pt-0 pb-0"><asp:Label runat="server" ID="lblAnio_InspeccionSeguro"></asp:Label></td>
+                                    <td class="pt-0 pb-0">
+                                        <asp:Label runat="server" ID="lblAnio_InspeccionSeguro"></asp:Label></td>
                                 </tr>
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0">Tipo</th>
-                                    <td class="pt-0 pb-0"><asp:Label runat="server" ID="lblTipoDeVehiculo_InspeccionSeguro"></asp:Label></td>
+                                    <td class="pt-0 pb-0">
+                                        <asp:Label runat="server" ID="lblTipoDeVehiculo_InspeccionSeguro"></asp:Label></td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0">Kilometraje</th>
-                                    <td class="pt-0 pb-0"><asp:Label runat="server" ID="lblRecorrido_InspeccionSeguro"></asp:Label></td>
+                                    <td class="pt-0 pb-0">
+                                        <asp:Label runat="server" ID="lblRecorrido_InspeccionSeguro"></asp:Label></td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0">Placa</th>
-                                    <td class="pt-0 pb-0"><asp:Label runat="server" ID="lblMatricula_InspeccionSeguro"></asp:Label></td>
+                                    <td class="pt-0 pb-0">
+                                        <asp:Label runat="server" ID="lblMatricula_InspeccionSeguro"></asp:Label></td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 pl-0 align-items-center justify-content-center justify-items-center">
-                            <div style="max-width:794px !important; min-width:794px !important;" >
-                            <!-- Div donde se muestran las imágenes de la garantía-->
-                            <div id="divGaleriaInspeccionSeguroDeVehiculo" runat="server">
+                            <div style="max-width: 794px !important; min-width: 794px !important;">
+                                <!-- Div donde se muestran las imágenes de la garantía-->
+                                <div id="divGaleriaInspeccionSeguroDeVehiculo" runat="server">
+                                </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                 </div>
@@ -691,98 +725,101 @@
                     <div class="row">
                         <div class="col-12">
                             <p>
-                                <b>YO, <asp:Label runat="server" ID="lblNombreCliente_Traspaso"></asp:Label>,</b>
-                                mayor de edad, <asp:Label runat="server" ID="lblNacionalidad_Traspaso"></asp:Label>,
-                                con tarjeta de identidad <asp:Label runat="server" ID="lblIdentidad_Traspaso"></asp:Label> y con domicilio
-                                en <asp:Label runat="server" ID="lblDireccion_Traspaso"></asp:Label>,
+                                <b>YO,
+                                    <asp:Label runat="server" ID="lblNombreCliente_Traspaso"></asp:Label>,</b>
+                                mayor de edad,
+                                <asp:Label runat="server" ID="lblNacionalidad_Traspaso"></asp:Label>,
+                                con tarjeta de identidad
+                                <asp:Label runat="server" ID="lblIdentidad_Traspaso"></asp:Label>
+                                y con domicilio
+                                en
+                                <asp:Label runat="server" ID="lblDireccion_Traspaso"></asp:Label>,
                                 en mi condición de propietario, por medio de este documento hago formal el traspaso del vehiculo que se describe de la forma siguiente
                             </p>
 
                             <div class="row">
                                 <div class="col-6">
-                                    <table>
-                                        <tr>
-                                            <th>
-                                                Marca:
-                                            </th>
-                                            <td>
-                                                <asp:Label runat="server" ID="lblMarca_Traspaso"></asp:Label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Modelo:
-                                            </th>
-                                            <td>
-                                                <asp:Label runat="server" ID="lblModelo_Traspaso"></asp:Label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Motor:
-                                            </th>
-                                            <td>
-                                                <asp:Label runat="server" ID="lblSerieMotor_Traspaso"></asp:Label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Año:
-                                            </th>
-                                            <td>
-                                                <asp:Label runat="server" ID="lblAnio_Traspaso"></asp:Label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Cilindraje:
-                                            </th>
-                                            <td>
-                                                <asp:Label runat="server" ID="lblCilindraje_Traspaso"></asp:Label>
-                                            </td>
-                                        </tr>
-                                    </table>                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            Marca:
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <asp:Label runat="server" ID="lblMarca_Traspaso"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            Modelo:
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <asp:Label runat="server" ID="lblModelo_Traspaso"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            Motor:
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <asp:Label runat="server" ID="lblSerieMotor_Traspaso"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            Año:
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <asp:Label runat="server" ID="lblAnio_Traspaso"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            Cilindraje:
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <asp:Label runat="server" ID="lblCilindraje_Traspaso"></asp:Label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-6">
-                                    <table>
-                                        <tr>
-                                            <th>
-                                                Tipo:
-                                            </th>
-                                            <td>
-                                                <asp:Label runat="server" ID="lblTipoDeVehiculo_Traspaso"></asp:Label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Color:
-                                            </th>
-                                            <td>
-                                                <asp:Label runat="server" ID="lblColor_Traspaso"></asp:Label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Chasis:
-                                            </th>
-                                            <td>
-                                                <asp:Label runat="server" ID="lblSerieChasis_Traspaso"></asp:Label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Matricula:
-                                            </th>
-                                            <td>
-                                                <asp:Label runat="server" ID="lblMatricula_Traspaso"></asp:Label>
-                                            </td>
-                                        </tr>
-                                    </table>                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            Tipo:
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <asp:Label runat="server" ID="lblTipoDeVehiculo_Traspaso"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            Color:
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <asp:Label runat="server" ID="lblColor_Traspaso"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            Chasis:
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <asp:Label runat="server" ID="lblSerieChasis_Traspaso"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            Matricula:
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <asp:Label runat="server" ID="lblMatricula_Traspaso"></asp:Label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <p>
-                                El cual cedo todos los deberes y derechos que antes ejercía sobre el vehículo antes mencionado a PRESTADITO SA, con Numero de RTN 0501-9016-811399, aceptando que el vehículo es usado y se encuentra de su entera satisfacción sin garantía alguna.
-                                Y para seguridad y constancia de las autoridades firmo en la ciudad de SAN PEDRO SULA, a los 29 días del mes de febrero del año 2020.
+                                El cual cedo todos los deberes y derechos que antes ejercía sobre el vehículo antes mencionado a PRESTADITO SA, con Numero de RTN 0501-9016-811399, aceptando que el vehículo es
+                                <asp:Label runat="server" ID="lblGarantiaUsada_Traspaso"></asp:Label>
+                                y se encuentra de su entera satisfacción sin garantía alguna.
+                                Y para seguridad y constancia de las autoridades firmo en la ciudad de <span class="lblCiudad_Firma"></span>, a los <span class="lblNumeroDia_Firma"></span> días del mes de <span class="lblMes_Firma"></span> del año <span class="lblAnio_Firma"></span>.
                             </p>
                         </div>
                     </div>
@@ -826,16 +863,27 @@
 
         $("#divGaleriaInspeccionSeguroDeVehiculo").unitegallery({
             gallery_theme: "tilesgrid",
-            tile_width: 280,
-            tile_height: 250
+            tile_width: 300,
+            tile_height: 220
         });
 
         $("#divContenedorInspeccionSeguro").css('margin-top', '999px').css('display', 'none');
         $("#divInspeccionSeguroPDF").css('display', 'none');
 
+
+        const ciudad_Firma = '<%=Ciudad_Firma%>';
+        const dia_firma = '<%=Dias_Firma%>';
+        const mes_Firma = ' <%=Mes_Firma%>';
+        const anio_Firma = ' <%=Anio_Firma%>';
+
+        $('.lblCiudad_Firma').text(ciudad_Firma);
+        $('.lblNumeroDia_Firma').text(dia_firma);
+        $('.lblMes_Firma').text(mes_Firma);
+        $('.lblAnio_Firma').text(anio_Firma);
+
         function ExportToPDF(fileName, divContenedor, divPDF) {
 
-            $("#Loader").css('display','');
+            $("#Loader").css('display', '');
 
             const cotizacion = this.document.getElementById(divPDF);
 

@@ -32,7 +32,12 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
                 SerieChasis: $("#txtSerieChasis").val(),
                 GPS: $("#txtGPS").val(),
                 Comentario: $("#txtComentario").val(),
-                esDigitadoManualmente: esDigitadoManualmente
+                esDigitadoManualmente: esDigitadoManualmente,
+
+                ValorMercado: $("#txtPrecioMercado").val().replace(/,/g, ''),
+                ValorPrima: $("#txtValorPrima").val().replace(/,/g, ''),
+                ValorFinanciado: $("#txtValorFinanciado").val().replace(/,/g, ''),
+                GastosDeCierre: $("#txtGastosDeCierre").val().replace(/,/g, ''),
             }
 
             $.ajax({
@@ -240,9 +245,9 @@ function CargarDocumentosRequeridos() {
                     changeInput: Input,
                     theme: 'dragdrop',
                     limit: 1, // Limite de archivos a subir
-                    maxSize: 10, // Peso máximo de todos los archivos seleccionado en megas (MB)
-                    fileMaxSize: 2, // Peso máximo de un archivo
-                    extensions: ['jpg', 'png'],// Extensiones/formatos permitidos
+                    maxSize: 200, // Peso máximo de todos los archivos seleccionado en megas (MB)
+                    fileMaxSize: 20, // Peso máximo de un archivo
+                    extensions: ['jpg', 'png', 'jpeg'],// Extensiones/formatos permitidos
                     upload: {
                         url: 'Garantia_Registrar.aspx?type=upload&doc=' + iter.IdSeccionGarantia,
                         data: null,

@@ -175,6 +175,42 @@ public partial class Garantia_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtTipoDeCombustible;
 
     /// <summary>
+    /// Control txtPrecioMercado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtPrecioMercado;
+
+    /// <summary>
+    /// Control txtValorPrima.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtValorPrima;
+
+    /// <summary>
+    /// Control txtValorFinanciado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtValorFinanciado;
+
+    /// <summary>
+    /// Control txtGastosDeCierre.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtGastosDeCierre;
+
+    /// <summary>
     /// Control txtSerieUno.
     /// </summary>
     /// <remarks>

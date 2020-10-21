@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Text;
 using System.Web;
 
@@ -14,6 +15,11 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
     public InformacionPrincipal_Cliente_Solicitud_ViewModel InformacionPrincipal { get; set; }
     public string JsonInformacionPrincipal { get; set; }
+
+    public string Ciudad_Firma { get; set; }
+    public string Dias_Firma { get; set; }
+    public string Mes_Firma { get; set; }
+    public string Anio_Firma { get; set; }
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -46,6 +52,14 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL") ?? "";
                     CargarInformacion();
+
+                    var hoy = DateTime.Today;
+
+                    Ciudad_Firma = "SAN PEDRO SULA";
+                    Dias_Firma = hoy.Day.ToString();
+                    Mes_Firma = hoy.ToString("MMMM");
+                    Anio_Firma = hoy.Year.ToString();
+
                 }
             }
             catch (Exception ex)
@@ -137,6 +151,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         var serieChasis = sqlResultado["fcChasis"].ToString();
                                         var GPS = sqlResultado["fcGPS"].ToString();
                                         var cilindraje = sqlResultado["fcCilindraje"].ToString();
+                                        var recorridoNumerico = Convert.ToDecimal(sqlResultado["fnRecorrido"].ToString());
                                         var recorrido = string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnRecorrido"].ToString())) + " " + sqlResultado["fcUnidadDeDistancia"].ToString();
                                         var transmision = sqlResultado["fcTransmision"].ToString();
                                         var tipoDeCombustible = sqlResultado["fcTipoCombustible"].ToString();
@@ -186,6 +201,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblColor_Traspaso.Text = color;
                                         lblSerieChasis_Traspaso.Text = serieChasis;
                                         lblMatricula_Traspaso.Text = matricula;
+                                        lblGarantiaUsada_Traspaso.Text = Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" : "usado";
 
                                     }
 

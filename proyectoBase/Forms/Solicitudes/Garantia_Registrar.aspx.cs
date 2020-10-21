@@ -63,11 +63,13 @@ public partial class Garantia_Registrar : System.Web.UI.Page
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-                { "limit", 1 },
-                { "title", "auto" },
-                { "uploadDir", uploadDir },
-                { "extensions", new string[] { "jpg", "png", "jpeg"} },
-            });
+{ "limit", 1 },
+{ "title", "auto" },
+{ "uploadDir", uploadDir },
+{ "extensions", new string[] { "jpg", "png", "jpeg"} },
+{ "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
+{ "fileMaxSize", 20 }, //peso máximo por archivo
+});
 
             switch (type)
             {
@@ -136,14 +138,52 @@ public partial class Garantia_Registrar : System.Web.UI.Page
 
                         ddlTipoDeGarantia.Items.Clear();
 
+                        string tipoGarantia = "";
+
                         while (sqlResultado.Read())
                         {
                             ddlTipoDeGarantia.Items.Add(new ListItem(sqlResultado["fcTipoDeGarantia"].ToString(), sqlResultado["fcTipoDeGarantia"].ToString()));
+                            tipoGarantia = sqlResultado["fcTipoDeGarantia"].ToString();
                         }
 
                         if (pcIDSolicitud == "0")
                         {
                             ddlTipoDeGarantia.Enabled = true;
+                        }
+                        else if (tipoGarantia == "MOTO")
+                        {
+                            txtRecorrido.Text = "0";
+                            txtTransmision.Text = "Automatico";
+                            txtTipoDeCombustible.Text = "Gasolina";
+                            txtMatricula.Text = "XXX XXXX";
+                        }
+
+                        /* Cargar valores de la garantia de la tabla credgarantias en caso de que se haya creado la garantia al ingresar la solicitud */
+                        sqlResultado.NextResult();
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                txtMarca.Text = sqlResultado["fcMarca"].ToString();
+                                txtModelo.Text = sqlResultado["fcModelo"].ToString();
+                                txtAnio.Text = sqlResultado["fiAnio"].ToString();
+                                txtPrecioMercado.Text = sqlResultado["fnValorGarantia"].ToString();
+                                txtValorPrima.Text = sqlResultado["fnValorPrima"].ToString();
+                                txtValorFinanciado.Text = sqlResultado["fnValorFinanciado"].ToString();
+                                txtGastosDeCierre.Text = sqlResultado["fnGastosDeCierre"].ToString();
+                            }
+                        }
+
+                        /* Cargar valores de la garantia de la tabla credsolicitud_maestro con los montos ya aprobados*/
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            txtPrecioMercado.Text = sqlResultado["fnValorGarantia"].ToString();
+                            txtValorPrima.Text = sqlResultado["fnValorPrima"].ToString();
+                            txtValorFinanciado.Text = sqlResultado["fnMontoFinalFinanciar"].ToString();
+                            txtGastosDeCierre.Text = sqlResultado["fnGastosDeCierre"].ToString();
                         }
                     }
                 }
@@ -209,6 +249,10 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@pcChasis", garantia.SerieChasis);
                         sqlComando.Parameters.AddWithValue("@pcMotor", garantia.SerieMotor);
                         sqlComando.Parameters.AddWithValue("@pcGPS", garantia.GPS);
+                        sqlComando.Parameters.AddWithValue("@pnValorGarantia", garantia.ValorMercado);
+                        sqlComando.Parameters.AddWithValue("@pnValorPrima", garantia.ValorPrima);
+                        sqlComando.Parameters.AddWithValue("@pnValorFinanciado", garantia.ValorFinanciado);
+                        sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", garantia.GastosDeCierre);
                         sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
                         sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.esDigitadoManualmente);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -434,6 +478,11 @@ public partial class Garantia_Registrar : System.Web.UI.Page
         public string GPS { get; set; }
         public string Comentario { get; set; }
         public bool esDigitadoManualmente { get; set; }
+
+        public decimal ValorMercado { get; set; }
+        public decimal ValorPrima { get; set; }
+        public decimal ValorFinanciado { get; set; }
+        public decimal GastosDeCierre { get; set; }
     }
 
     public class Garantia_Documentos_ViewModel
