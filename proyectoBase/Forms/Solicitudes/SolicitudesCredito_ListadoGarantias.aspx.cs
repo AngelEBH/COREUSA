@@ -67,13 +67,15 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                         {
                             listado.Add(new SolicitudesCredito_ListadoGarantias_ViewModel()
                             {
-                                IdSolicitud = (int)reader["fiIDSolicitud"],                                
+                                IdSolicitud = (int)reader["fiIDSolicitud"],
+                                IdCanal = (int)reader["fiIDCanal"],
                                 Agencia = (string)reader["fcAgencia"],
                                 IdProducto = (int)reader["fiIDTipoProducto"],
                                 Producto = (string)reader["fcProducto"],
                                 FechaCreacion = (DateTime)reader["fdFechaCreacionSolicitud"],
-                                IdEstadoSolicitud = (byte) reader["fiEstadoSolicitud"],
+                                IdEstadoSolicitud = (byte)reader["fiEstadoSolicitud"],
                                 IdUsuarioAsignado = (int)reader["fiIDUsuarioAsignado"],
+                                UsuarioAsignado = reader["fcUsuarioAsignado"].ToString(),
                                 IdUsuarioCreador = (int)reader["fiIDUsuarioCrea"],
                                 FechaCreado = (DateTime)reader["fdFechaCrea"],
                                 SolicitudActiva = (byte)reader["fiSolicitudActiva"],
@@ -84,6 +86,55 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 PrimerApellido = (string)reader["fcPrimerApellidoCliente"],
                                 SegundoApellido = (string)reader["fcSegundoApellidoCliente"],
                                 IdGarantia = (int)reader["fiIDGarantia"],
+                            });
+                        }
+                    } // using reader
+                } // using command
+            } // using connection
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return listado;
+    }
+
+    [WebMethod]
+    public static List<GarantiaSinSolicitud_ViewModel> CargarListadoGarantiasSinGarantia(string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var listado = new List<GarantiaSinSolicitud_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDGarantias_SinSolicitudListado", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            listado.Add(new GarantiaSinSolicitud_ViewModel()
+                            {
+                                IdGarantia = (int)reader["fiIDGarantia"],
+                                Vendedor = reader["fcNombreCorto"].ToString(),
+                                Agencia = reader["fcAgencia"].ToString(),
+                                VIN = reader["fcVin"].ToString(),
+                                TipoDeGarantia = reader["fcTipoGarantia"].ToString(),
+                                TipoDeVehiculo = reader["fcTipoVehiculo"].ToString(),
+                                FechaCreacion = (DateTime)reader["fdFechaCreado"],
                             });
                         }
                     } // using reader
@@ -113,6 +164,31 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             "&IDApp=" + pcIDApp +
             "&SID=" + pcIDSesion +
             "&IDSOL=" + idSolicitud;
+            resultado = DSC.Encriptar(lcParametros);
+        }
+        catch
+        {
+            resultado = "-1";
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static string EncriptarParametros_SinSolicitud(int idGarantia, string dataCrypt)
+    {
+        string resultado;
+        var DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+
+            string lcParametros = "usr=" + pcIDUsuario +
+            "&IDApp=" + pcIDApp +
+            "&SID=" + pcIDSesion +
+            "&IDGarantia=" + idGarantia;
             resultado = DSC.Encriptar(lcParametros);
         }
         catch
@@ -155,12 +231,14 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 public class SolicitudesCredito_ListadoGarantias_ViewModel
 {
     public int IdSolicitud { get; set; }
+    public int IdCanal { get; set; }
     public string Agencia { get; set; }
     public int IdProducto { get; set; }
     public string Producto { get; set; }
     public DateTime FechaCreacion { get; set; }
     public int IdEstadoSolicitud { get; set; }
     public int IdUsuarioAsignado { get; set; }
+    public string UsuarioAsignado { get; set; }
     public int IdUsuarioCreador { get; set; }
     public DateTime FechaCreado { get; set; }
     public int SolicitudActiva { get; set; }
@@ -171,4 +249,15 @@ public class SolicitudesCredito_ListadoGarantias_ViewModel
     public string PrimerApellido { get; set; }
     public string SegundoApellido { get; set; }
     public int IdGarantia { get; set; }
+}
+
+public class GarantiaSinSolicitud_ViewModel
+{
+    public int IdGarantia { get; set; }
+    public string Agencia { get; set; }
+    public string Vendedor { get; set; }
+    public string TipoDeGarantia { get; set; }
+    public string TipoDeVehiculo { get; set; }
+    public string VIN { get; set; }
+    public DateTime FechaCreacion { get; set; }
 }

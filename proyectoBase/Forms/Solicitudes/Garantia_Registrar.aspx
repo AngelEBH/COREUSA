@@ -38,7 +38,7 @@
                         <span class="sr-only"></span>
                     </div>
                 </div>
-                <h5>Guardar garantía: Solicitud <span runat="server" id="lblNoSolicitud"></span><small><span runat="server" id="lblMensaje" class="text-danger" visible="false"></span></small></h5>
+                <h5>Guardar garantía: Solicitud de crédito No. <span runat="server" id="lblNoSolicitud"></span><small><span runat="server" id="lblMensaje" class="text-danger" visible="false"></span></small></h5>
             </div>
             <div class="card-body">
                 <div id="smartwizard" class="h-100">

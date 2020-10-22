@@ -2,3 +2,6 @@
 
 # IDE0001: Simplificar nombres
 dotnet_diagnostic.IDE0001.severity = none
+
+# IDE0005: El uso de la directiva no es necesario.
+dotnet_diagnostic.IDE0005.severity = error

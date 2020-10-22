@@ -791,6 +791,25 @@
     <Content Include="Documentos\Solicitudes\Solicitud320\G_320_1C4NJRFB7FD270814_c860c6bd-61d9-4487-bfd8-ff8279a315e2.png" />
     <Content Include="Documentos\Solicitudes\Solicitud320\G_320_1C4NJRFB7FD270814_dc4b241a-c546-48e1-a7df-502b81129397.png" />
     <Content Include="Documentos\Solicitudes\Solicitud320\G_320_1C4NJRFB7FD270814_f9f04562-53e2-4dec-8c2e-c2f67c11398f.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\CTES365C8-20201020T152115-001.jpg" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\CTES365C9-20201020T145612-001.jpg" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\CTES365D1-20205620T115630-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\CTES365D18-20205620T115630-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\CTES365D19-20205620T115630-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\CTES365D2-20205620T115630-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\CTES365D3-20205620T115630-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\CTES365D4-20205620T115630-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\CTES365D5-20205620T115630-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\CTES365D6-20205620T115630-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\CTES365D7-20205620T115630-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\G_365_1GCHSBEAXK1288858_22e39c8c-c835-4ae9-91bd-ff1d996e5fc9.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\G_365_1GCHSBEAXK1288858_40d91dcc-8c2b-471f-9e8c-f3d66ffcf94a.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\G_365_1GCHSBEAXK1288858_4b77b74e-56bf-4f93-a961-0c4d4da5e7f8.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\G_365_1GCHSBEAXK1288858_6e094dbf-ccf5-44f9-aff3-33469d5a617e.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\G_365_1GCHSBEAXK1288858_acb8e62b-ade2-4590-8a22-edf0095a4b5a.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\G_365_1GCHSBEAXK1288858_cc7728a7-1bde-493f-8514-f0804ebdc79c.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\G_365_1GCHSBEAXK1288858_d9f0ad1c-152f-4874-8a71-9d3d58f09bc9.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud365\G_365_1GCHSBEAXK1288858_eaa57c33-0784-46de-a04f-e005e49ca255.png" />
     <Content Include="favicon.ico" />
     <Content Include="Forms\Aval\Aval_Actualizar.aspx" />
     <Content Include="Forms\Aval\Aval_Detalles.aspx" />
@@ -798,6 +817,8 @@
     <Content Include="Forms\Aval\Aval_Registrar.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
     <Content Include="Forms\CoreFinancieroMovil\CotizadorCarros.aspx" />
+    <Content Include="Forms\Solicitudes\Garantia_Actualizar.aspx" />
+    <Content Include="Forms\Solicitudes\GarantiaSinSolicitud_Detalles.aspx" />
     <Content Include="Forms\Solicitudes\Garantia_Registrar.aspx" />
     <Content Include="Forms\Movil\BandejaMisSolicitudes.aspx" />
     <Content Include="Forms\Movil\BandejaPrecalificados.aspx" />
@@ -813,6 +834,7 @@
     <Content Include="Forms\CoreFinancieroMovil\ImprimirCotizacion.aspx" />
     <Content Include="Forms\PreSolicitudes\PreSolicitud_Guardar.aspx" />
     <Content Include="Forms\PreSolicitudes\PreSolicitud_Listado.aspx" />
+    <Content Include="Forms\Solicitudes\Garantia_Detalles.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ImprimirDocumentacion.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx" />
@@ -1598,6 +1620,20 @@
     <Compile Include="Forms\CoreFinancieroMovil\CotizadorCarros.aspx.designer.cs">
       <DependentUpon>CotizadorCarros.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Solicitudes\Garantia_Actualizar.aspx.cs">
+      <DependentUpon>Garantia_Actualizar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\Garantia_Actualizar.aspx.designer.cs">
+      <DependentUpon>Garantia_Actualizar.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\GarantiaSinSolicitud_Detalles.aspx.cs">
+      <DependentUpon>GarantiaSinSolicitud_Detalles.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\GarantiaSinSolicitud_Detalles.aspx.designer.cs">
+      <DependentUpon>GarantiaSinSolicitud_Detalles.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Solicitudes\Garantia_Registrar.aspx.cs">
       <DependentUpon>Garantia_Registrar.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1702,6 +1738,13 @@
     </Compile>
     <Compile Include="Forms\PreSolicitudes\PreSolicitud_Listado.aspx.designer.cs">
       <DependentUpon>PreSolicitud_Listado.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\Garantia_Detalles.aspx.cs">
+      <DependentUpon>Garantia_Detalles.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\Garantia_Detalles.aspx.designer.cs">
+      <DependentUpon>Garantia_Detalles.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_ImprimirDocumentacion.aspx.cs">
       <DependentUpon>SolicitudesCredito_ImprimirDocumentacion.aspx</DependentUpon>
