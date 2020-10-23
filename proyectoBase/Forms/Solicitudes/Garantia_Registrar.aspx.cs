@@ -51,7 +51,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 HttpContext.Current.Session["ListaDocumentosGarantia"] = null;
-                Session.Timeout = 60;
+                Session.Timeout = 1440;
             }
             LlenarListas();
         }
@@ -63,13 +63,13 @@ public partial class Garantia_Registrar : System.Web.UI.Page
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-{ "limit", 1 },
-{ "title", "auto" },
-{ "uploadDir", uploadDir },
-{ "extensions", new string[] { "jpg", "png", "jpeg"} },
-{ "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
-{ "fileMaxSize", 20 }, //peso máximo por archivo
-});
+                { "limit", 1 },
+                { "title", "auto" },
+                { "uploadDir", uploadDir },
+                { "extensions", new string[] { "jpg", "png", "jpeg"} },
+                { "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
+                { "fileMaxSize", 20 }, //peso máximo por archivo
+            });
 
             switch (type)
             {
@@ -231,6 +231,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
                         sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                        sqlComando.Parameters.AddWithValue("@pcPrestamo", garantia.NumeroPrestamo);
                         sqlComando.Parameters.AddWithValue("@pcVin", garantia.VIN);
                         sqlComando.Parameters.AddWithValue("@pcTipoVehiculo", garantia.TipoDeVehiculo);
                         sqlComando.Parameters.AddWithValue("@pcTipoGarantia", garantia.TipoDeGarantia);
@@ -252,7 +253,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@pnValorGarantia", garantia.ValorMercado);
                         sqlComando.Parameters.AddWithValue("@pnValorPrima", garantia.ValorPrima);
                         sqlComando.Parameters.AddWithValue("@pnValorFinanciado", garantia.ValorFinanciado);
-                        sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", garantia.GastosDeCierre);
+                        sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", garantia.GastosDeCierre);                        
                         sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
                         sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.esDigitadoManualmente);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -283,7 +284,6 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                                     {
                                         resultado.MensajeResultado = "El VIN que intenta guardar ya está asociado a esta solicitud.";
                                     }
-
                                     return resultado;
                                 }
                             }
@@ -291,33 +291,36 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                     }
 
                     /* Registrar documentacion de la solicitud */
-                    string NombreCarpetaDocumentos = "Solicitud" + pcIDSolicitud;
-                    string NuevoNombreDocumento = "";
-
-                    /* lista de documentos adjuntados por el usuario */
-                    var listaDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaDocumentosGarantia"];
 
                     /* Lista de documentos que se va ingresar en la base de datos y se va mover al nuevo directorio */
                     var garantiaDocumentos = new List<SolicitudesDocumentosViewModel>();
 
-                    if (listaDocumentos != null)
+                    if (HttpContext.Current.Session["ListaDocumentosGarantia"] != null)
                     {
+                        /* lista de documentos adjuntados por el usuario */
+                        var listaDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaDocumentosGarantia"];
 
-                        foreach (SolicitudesDocumentosViewModel file in listaDocumentos)
+                        if (listaDocumentos != null)
                         {
-                            if (File.Exists(file.fcRutaArchivo + @"\" + file.NombreAntiguo)) /* si el archivo existe, que se agregue a la lista */
-                            {
-                                NuevoNombreDocumento = GenerarNombreDocumento(pcIDSolicitud, garantia.VIN);
+                            string NombreCarpetaDocumentos = "Solicitud" + pcIDSolicitud;
+                            string NuevoNombreDocumento = "";
 
-                                garantiaDocumentos.Add(new SolicitudesDocumentosViewModel()
+                            foreach (SolicitudesDocumentosViewModel file in listaDocumentos)
+                            {
+                                if (File.Exists(file.fcRutaArchivo + @"\" + file.NombreAntiguo)) /* si el archivo existe, que se agregue a la lista */
                                 {
-                                    fcNombreArchivo = NuevoNombreDocumento,
-                                    NombreAntiguo = file.NombreAntiguo,
-                                    fcTipoArchivo = file.fcTipoArchivo,
-                                    fcRutaArchivo = file.fcRutaArchivo.Replace("Temp", "") + NombreCarpetaDocumentos,
-                                    URLArchivo = "/Documentos/Solicitudes/" + NombreCarpetaDocumentos + "/" + NuevoNombreDocumento + ".png",
-                                    fiTipoDocumento = file.fiTipoDocumento
-                                });
+                                    NuevoNombreDocumento = GenerarNombreDocumento(pcIDSolicitud, garantia.VIN);
+
+                                    garantiaDocumentos.Add(new SolicitudesDocumentosViewModel()
+                                    {
+                                        fcNombreArchivo = NuevoNombreDocumento,
+                                        NombreAntiguo = file.NombreAntiguo,
+                                        fcTipoArchivo = file.fcTipoArchivo,
+                                        fcRutaArchivo = file.fcRutaArchivo.Replace("Temp", "") + NombreCarpetaDocumentos,
+                                        URLArchivo = "/Documentos/Solicitudes/" + NombreCarpetaDocumentos + "/" + NuevoNombreDocumento + ".png",
+                                        fiTipoDocumento = file.fiTipoDocumento
+                                    });
+                                }
                             }
                         }
                     }
@@ -362,7 +365,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                     if (!GuardarDocumentosGarantia(garantiaDocumentos, pcIDSolicitud))
                     {
                         resultado.ResultadoExitoso = false;
-                        resultado.MensajeResultado = "No se pudo guardar la documentación de la garantía, contacte al administrador.";
+                        resultado.MensajeResultado = "No se pudo guardar la documentación de la garantía, contacte al administrador..";
                         resultado.DebugString = "GuardarDocumentosGarantia()";
                         return resultado;
                     }
@@ -458,6 +461,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
 
     public class Garantia_ViewModel
     {
+        public string NumeroPrestamo { get; set; }
         public string VIN { get; set; }
         public string TipoDeGarantia { get; set; }
         public string TipoDeVehiculo { get; set; }
@@ -475,7 +479,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
         public string SerieDos { get; set; }
         public string SerieChasis { get; set; }
         public string SerieMotor { get; set; }
-        public string GPS { get; set; }
+        public string GPS { get; set; }        
         public string Comentario { get; set; }
         public bool esDigitadoManualmente { get; set; }
 

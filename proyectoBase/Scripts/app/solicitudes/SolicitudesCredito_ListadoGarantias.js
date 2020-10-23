@@ -2,6 +2,7 @@
 var iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">estadoPendiente</label></i>';
 var identidad = '';
 var idSolicitud = 0;
+var idGarantia = 0;
 var filtroActual = '';
 var nombreCliente = '';
 var tabActivo = 'tab_Listado_Solicitudes_Garantias';
@@ -95,6 +96,7 @@ $(document).ready(function () {
                         (value == 0 ? '<button type="button" class="dropdown-item" id="btnGuardar"><i class="fas fa-plus"></i> Agregar</button>' : '') +
                         (value == 0 ? '' : '<button type="button" class="dropdown-item" id="btnDetalles"><i class="fas fa-tasks"></i> Detalles</button>') +
                         (value == 0 ? '' : '<button type="button" class="dropdown-item" id="btnActualizar"><i class="far fa-edit"></i> Actualizar</button>') +
+                        (value == 0 ? '' : '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion"><i class="far fa-file-alt"></i> Imprimir Doc.</button>') +
                         '</div>' +
                         '</div >';
                 }
@@ -300,12 +302,14 @@ $(document).ready(function () {
 
         var row = dtListado.row(this).data();
         idSolicitud = row.IdSolicitud;
+        idGarantia = row.IdGarantia;
         nombreCliente = row["PrimerNombre"] + ' ' + row["SegundoNombre"] + ' ' + row["PrimerApellido"] + ' ' + row["SegundoApellido"];
     });
 
     $("#datatable-garantiasSinSolicutd tbody").on("click", "tr", function () {
 
         var row = dtListado_Garantias_SinSolicitud.row(this).data();
+        idSolicitud = 0;
         idGarantia = row.IdGarantia;
     });
 });
@@ -331,17 +335,17 @@ $(document).on('click', 'button#btnDetalles', function () {
     $("#modalDetallesGarantia").modal();
 });
 
-$("#btnGuardarGarantia").click(function (e) {
+$("#btnGuardarGarantia_Confirmar").click(function (e) {
 
     RedirigirAccion('Garantia_Registrar.aspx', 'registro de la garantía');
 });
 
-$("#btnActualizarGarantia").click(function (e) {
+$("#btnActualizarGarantia_Confirmar").click(function (e) {
 
-    //RedirigirAccion('Garantia_Actualizar.aspx', 'actualizar información de la garantía');
+    RedirigirAccion('Garantia_Actualizar.aspx', 'actualizar información de la garantía');
 });
 
-$("#btnDetallesGarantia").click(function (e) {
+$("#btnDetallesGarantia_Confirmar").click(function (e) {
 
     RedirigirAccion('Garantia_Detalles.aspx', 'detalles de la garantía');
 });
@@ -353,7 +357,6 @@ $("#btnRegistrarGarantiaSinSolicitud").click(function (e) {
     RedirigirAccion('Garantia_Registrar.aspx', 'registro de la garantía sin solicitud');
 });
 
-
 /* Sin solicitud */
 $(document).on('click', 'button#btnDetalles_SinSolicitud', function () {
 
@@ -362,17 +365,30 @@ $(document).on('click', 'button#btnDetalles_SinSolicitud', function () {
 
 $(document).on('click', 'button#btnActualizar_SinSolicitud', function () {
 
-    $("#modalDetallesGarantia_SinSolicitud").modal();
+    $("#modalActualizarGarantia_SinSolicitud").modal();
 });
 
-$("#btnDetallesGarantia_SinSolicitud").click(function (e) {
+$("#btnDetallesGarantia_SinSolicitud_Confirmar").click(function (e) {
 
-    RedirigirAccion_SinSolicitud('GarantiaSinSolicitud_Detalles.aspx', 'detalles de la garantía');
+    RedirigirAccion('GarantiaSinSolicitud_Detalles.aspx', 'detalles de la garantía');
 });
 
-$("#btnActualizarGarantia_SinSolicitud").click(function (e) {
+$("#btnActualizarGarantia_SinSolicitud_Confirmar").click(function (e) {
 
-    //RedirigirAccion_SinSolicitud('GarantiaSinSolicitud_Detalles.aspx', 'detalles de la garantía');
+    RedirigirAccion('Garantia_Actualizar.aspx', 'actualizar información de la garantía');
+});
+
+/* Imprimir documentación */
+$(document).on('click', 'button#btnImprimirDocumentacion', function () {
+
+    $("#lblIdSolicitudImprimirDocumentacion").text(idSolicitud);
+    $("#lblNombreClienteImprimirDocumentacion").text(nombreCliente);
+    $("#modalImprimirDocumentacion").modal();
+});
+
+$("#btnImprimirDocumentacion_Confirmar").click(function (e) {
+
+    RedirigirAccion('SolicitudesCredito_ImprimirDocumentacion.aspx', 'imprimir documentación de la solicitud');
 });
 
 function RedirigirAccion(nombreFormulario, accion) {
@@ -380,26 +396,10 @@ function RedirigirAccion(nombreFormulario, accion) {
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_ListadoGarantias.aspx/EncriptarParametros",
-        data: JSON.stringify({ idSolicitud: idSolicitud, dataCrypt: window.location.href }),
+        data: JSON.stringify({ idSolicitud: idSolicitud, idGarantia: idGarantia, dataCrypt: window.location.href }),
         contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError("No se pudo redireccionar a" + accion);
-        },
-        success: function (data) {
-            data.d != "-1" ? window.location = nombreFormulario + "?" + data.d : MensajeError("No se pudo redireccionar a" + accion);
-        }
-    });
-}
-
-function RedirigirAccion_SinSolicitud(nombreFormulario, accion) {
-
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_ListadoGarantias.aspx/EncriptarParametros_SinSolicitud",
-        data: JSON.stringify({ idGarantia: idGarantia, dataCrypt: window.location.href }),
-        contentType: "application/json; charset=utf-8",
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError("No se pudo redireccionar a" + accion);
+            MensajeError("No se pudo redireccionar a " + accion);
         },
         success: function (data) {
             data.d != "-1" ? window.location = nombreFormulario + "?" + data.d : MensajeError("No se pudo redireccionar a" + accion);
@@ -414,7 +414,6 @@ $("#tab_Listado_Solicitudes_Garantias_link").on("click", function () {
 $("#tab_Listado_Garantias_SinSolicitud_link").on("click", function () {
     tabActivo = 'tab_Listado_Garantias_SinSolicitud';
 });
-
 
 jQuery("#date-range").datepicker({
     toggleActive: !0

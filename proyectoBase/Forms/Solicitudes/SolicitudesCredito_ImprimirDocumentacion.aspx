@@ -74,14 +74,17 @@
             page-break-before: always;
         }
 
+        .ug-thumb-wrapper.ug-tile.ug-tile-clickable{
+            page-break-after: auto;
+        }
+
         .ug-thumbs-grid {
             left: 50px !important;
         }
     </style>
 </head>
 <body class="EstiloBody">
-    <form id="frmGuardarPreSolicitud" runat="server">
-        <asp:ScriptManager runat="server" ID="smMultiview"></asp:ScriptManager>
+    <form id="frmGuardarPreSolicitud" runat="server">        
         <div class="card m-0">
             <div class="card-header pb-1 pt-1">
                 <div class="float-right p-1" id="Loader" style="display: none;">
@@ -698,9 +701,9 @@
                     </div>
                     <div class="row">
                         <div class="col-12 pl-0 align-items-center justify-content-center justify-items-center">
-                            <div style="max-width: 794px !important; min-width: 794px !important;">
+                            <div style="max-width: 794px !important; min-width: 794px !important; overflow-x: hidden;">
                                 <!-- Div donde se muestran las imágenes de la garantía-->
-                                <div id="divGaleriaInspeccionSeguroDeVehiculo" runat="server">
+                                <div id="divGaleriaInspeccionSeguroDeVehiculo" style="max-width:100% !important; overflow-x: hidden;" runat="server">
                                 </div>
                             </div>
                         </div>
@@ -740,76 +743,76 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             Marca:
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-8">
                                             <asp:Label runat="server" ID="lblMarca_Traspaso"></asp:Label>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             Modelo:
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-8">
                                             <asp:Label runat="server" ID="lblModelo_Traspaso"></asp:Label>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             Motor:
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-8">
                                             <asp:Label runat="server" ID="lblSerieMotor_Traspaso"></asp:Label>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             Año:
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-8">
                                             <asp:Label runat="server" ID="lblAnio_Traspaso"></asp:Label>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             Cilindraje:
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-8">
                                             <asp:Label runat="server" ID="lblCilindraje_Traspaso"></asp:Label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             Tipo:
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-8">
                                             <asp:Label runat="server" ID="lblTipoDeVehiculo_Traspaso"></asp:Label>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             Color:
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-8">
                                             <asp:Label runat="server" ID="lblColor_Traspaso"></asp:Label>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             Chasis:
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-8">
                                             <asp:Label runat="server" ID="lblSerieChasis_Traspaso"></asp:Label>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             Matricula:
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-8">
                                             <asp:Label runat="server" ID="lblMatricula_Traspaso"></asp:Label>
                                         </div>
                                     </div>
@@ -869,7 +872,6 @@
 
         $("#divContenedorInspeccionSeguro").css('margin-top', '999px').css('display', 'none');
         $("#divInspeccionSeguroPDF").css('display', 'none');
-
 
         const ciudad_Firma = '<%=Ciudad_Firma%>';
         const dia_firma = '<%=Dias_Firma%>';

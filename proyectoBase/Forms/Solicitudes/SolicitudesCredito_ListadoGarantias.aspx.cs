@@ -149,7 +149,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string EncriptarParametros(int idSolicitud, string dataCrypt)
+    public static string EncriptarParametros(int idSolicitud, int idGarantia, string dataCrypt)
     {
         string resultado;
         var DSC = new DSCore.DataCrypt();
@@ -163,7 +163,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             string lcParametros = "usr=" + pcIDUsuario +
             "&IDApp=" + pcIDApp +
             "&SID=" + pcIDSesion +
-            "&IDSOL=" + idSolicitud;
+            "&IDSOL=" + idSolicitud +
+            "&IDGarantia=" + idGarantia;
             resultado = DSC.Encriptar(lcParametros);
         }
         catch

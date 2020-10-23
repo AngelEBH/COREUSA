@@ -1,5 +1,4 @@
-﻿var esDigitadoManualmente = false;
-
+﻿
 var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').text('Finalizar').addClass('btn btn-info').css('display', 'none')
     .on('click', function () {
 
@@ -43,7 +42,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
 
             $.ajax({
                 type: "POST",
-                url: 'Garantia_Registrar.aspx/GuardarGarantia',
+                url: 'Garantia_Actualizar.aspx/ActualizarGarantia',
                 data: JSON.stringify({ garantia: garantia, dataCrypt: window.location.href }),
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -149,8 +148,6 @@ $("#cbDigitarManualmente").on('change', function () {
         if (txtVin != '') {
             $("#txtBuscarVIN").val(txtVin);
         }
-
-        //$("#txtVIN,#txtTipoDeVehiculo,#txtMarca,#txtModelo,#txtAnio,#txtCilindraje,#txtTransmision,#txtTipoDeCombustible,#txtSerieUno").val('');
     }
 
     esDigitadoManualmente = digitarManualmente;
@@ -202,7 +199,7 @@ function CargarDocumentosRequeridos() {
 
     $.ajax({
         type: "POST",
-        url: "Garantia_Registrar.aspx/CargarDocumentosRequeridos",
+        url: "Garantia_Actualizar.aspx/CargarDocumentosRequeridos",
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar el listado de documentos requeridos, contacte al administrador');
@@ -236,7 +233,7 @@ function CargarDocumentosRequeridos() {
 
                 divDocumentacion.append("<div class='col-sm-2 mt-3 pr-1 pl-1'>" +
                     "<label class='form-label mb-1'>" + iter.DescripcionSeccion + "</label>" +
-                    "<form action='Garantia_Registrar.aspx?type=upload&doc=" + iter.IdSeccionGarantia + "' method='post' enctype='multipart/form-data'>" +
+                    "<form action='Garantia_Actualizar.aspx?type=upload&doc=" + iter.IdSeccionGarantia + "' method='post' enctype='multipart/form-data'>" +
                     "<input id='" + IdInput + "' type='file' name='files' data-tipo='" + iter.IdSeccionGarantia + "' />" +
                     "</form>" +
                     "</div");
@@ -250,7 +247,7 @@ function CargarDocumentosRequeridos() {
                     fileMaxSize: 20, // Peso máximo de un archivo
                     extensions: ['jpg', 'png', 'jpeg'],// Extensiones/formatos permitidos
                     upload: {
-                        url: 'Garantia_Registrar.aspx?type=upload&doc=' + iter.IdSeccionGarantia,
+                        url: 'Garantia_Actualizar.aspx?type=upload&doc=' + iter.IdSeccionGarantia,
                         data: null,
                         type: 'POST',
                         enctype: 'multipart/form-data',
@@ -310,7 +307,7 @@ function CargarDocumentosRequeridos() {
                         onComplete: null,
                     },
                     onRemove: function (item) {
-                        $.post('Garantia_Registrar.aspx?type=remove', { file: item.name });
+                        $.post('Garantia_Actualizar.aspx?type=remove', { file: item.name });
                     },
                     dialogs: {
                         alert: function (text) {

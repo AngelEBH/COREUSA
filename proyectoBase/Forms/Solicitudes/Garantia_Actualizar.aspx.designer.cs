@@ -22,15 +22,6 @@ public partial class Garantia_Actualizar
     protected global::System.Web.UI.HtmlControls.HtmlForm frmGarantia;
 
     /// <summary>
-    /// Control lblNoSolicitud.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoSolicitud;
-
-    /// <summary>
     /// Control lblMensaje.
     /// </summary>
     /// <remarks>
@@ -254,6 +245,15 @@ public partial class Garantia_Actualizar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtGPS;
+
+    /// <summary>
+    /// Control txtNumeroPrestamo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtNumeroPrestamo;
 
     /// <summary>
     /// Control txtComentario.

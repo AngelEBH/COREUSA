@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Garantías de solicitudes aprobadas</title>
     <!-- BOOTSTRAP -->
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -182,16 +182,17 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalActualizarGarantiaLabel">Actualizar garantía</h5>
+                    <h5 class="modal-title mt-0" id="modalActualizarGarantiaLabel">Actualizar garantía (Solicitud <span id="lblIdSolicitudActualizar"></span>)</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
                     ¿Está seguro de actualizar la información de la garantía de esta solicitud?
                     <br />
-                    Solicitud No: <span id="lblIdSolicitudActualizar"></span>. Cliente: <span id="lblNombreClienteActualizar"></span>
+                    <br />
+                    Cliente: <span class="font-weight-bold" id="lblNombreClienteActualizar"></span>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnActualizarGarantia" class="btn btn-primary waves-effect waves-light">
+                    <button id="btnActualizarGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -206,16 +207,17 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalGuardarGarantiaLabel">Guardar garantía</h5>
+                    <h5 class="modal-title mt-0" id="modalGuardarGarantiaLabel">Guardar garantía (Solicitud <span id="lblIdSolicitudGuardar"></span>)</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
                     ¿Está seguro de guardar la información de la garantía de esta solicitud?
                     <br />
-                    Solicitud No: <span id="lblIdSolicitudGuardar"></span>. Cliente: <span id="lblNombreClienteGuardar"></span>
+                    <br />
+                    Cliente: <span class="font-weight-bold" id="lblNombreClienteGuardar"></span>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnGuardarGarantia" class="btn btn-primary waves-effect waves-light">
+                    <button id="btnGuardarGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -230,16 +232,17 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalDetallesGarantiaLabel">Detalles de la garantía</h5>
+                    <h5 class="modal-title mt-0" id="modalDetallesGarantiaLabel">Detalles de la garantía (Solicitud <span id="lblIdSolicitudDetalles"></span>)</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
                     ¿Está seguro de redirigir a los detalles de esta garantía?
                     <br />
-                    Solicitud No: <span id="lblIdSolicitudDetalles"></span>. Cliente: <span id="lblNombreClienteDetalles"></span>
+                    <br />
+                    Cliente: <span class="font-weight-bold" id="lblNombreClienteDetalles"></span>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnDetallesGarantia" class="btn btn-primary waves-effect waves-light">
+                    <button id="btnDetallesGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -261,7 +264,7 @@
                     ¿Está seguro de redirigir a los detalles de esta garantía?
                 </div>
                 <div class="modal-footer">
-                    <button id="btnDetallesGarantia_SinSolicitud" class="btn btn-primary waves-effect waves-light">
+                    <button id="btnDetallesGarantia_SinSolicitud_Confirmar" class="btn btn-primary waves-effect waves-light">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -283,7 +286,32 @@
                     ¿Está seguro de actualizar la información de la garantía de esta solicitud?
                 </div>
                 <div class="modal-footer">
-                    <button id="btnActualizarGarantia_SinSolicitud" class="btn btn-primary waves-effect waves-light">
+                    <button id="btnActualizarGarantia_SinSolicitud_Confirmar" class="btn btn-primary waves-effect waves-light">
+                        Confirmar
+                    </button>
+                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalImprimirDocumentacion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalImprimirDocumentacionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="modalImprimirDocumentacionLabel">Imprimir documentación (Solicitud <span id="lblIdSolicitudImprimirDocumentacion"></span>)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro de redirigir a la impresión de documentación?
+                    <br />
+                    <br />
+                    Cliente: <span class="font-weight-bold" id="lblNombreClienteImprimirDocumentacion"></span>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnImprimirDocumentacion_Confirmar" class="btn btn-primary waves-effect waves-light">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -317,6 +345,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20201022174525"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=202010231406"></script>
 </body>
 </html>

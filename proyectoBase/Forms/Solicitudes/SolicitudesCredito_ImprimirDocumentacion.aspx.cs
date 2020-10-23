@@ -2,7 +2,6 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.Text;
 using System.Web;
 
@@ -13,8 +12,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     public string pcIDSesion = "";
     public string pcIDSolicitud = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-    public InformacionPrincipal_Cliente_Solicitud_ViewModel InformacionPrincipal { get; set; }
-    public string JsonInformacionPrincipal { get; set; }
 
     public string Ciudad_Firma { get; set; }
     public string Dias_Firma { get; set; }
@@ -59,7 +56,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     Dias_Firma = hoy.Day.ToString();
                     Mes_Firma = hoy.ToString("MMMM");
                     Anio_Firma = hoy.Year.ToString();
-
                 }
             }
             catch (Exception ex)
@@ -223,6 +219,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                                         divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
                                         divGaleriaInspeccionSeguroDeVehiculo.InnerHtml = imagenesGarantia.ToString();
+                                        divGaleriaInspeccionSeguroDeVehiculo.InnerHtml += imagenesGarantia.ToString();
                                     }
                                 }
 

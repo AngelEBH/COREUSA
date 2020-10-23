@@ -37,11 +37,8 @@
             </div>
             <div class="card-body pt-0">
                 <div class="row mb-0" id="divInformacionGarantia" runat="server">
-                    <div class="col-12">
-                        <h6 class="border-bottom pb-2">Información de la garantía</h6>
-                    </div>
                     <div class="col-lg-6">
-                        <h6 class="m-0">Características físicas</h6>
+                        <h6 class="mb-0">Características físicas</h6>
                         <div class="form-group row">
                             <div class="col-12">
                                 <label class="col-form-label">VIN</label>
@@ -90,27 +87,27 @@
                         </div>
                         <h6 class="m-0 pt-2">Características mecánicas</h6>
                         <div class="form-group row">
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Cilindraje</label>
                                 <asp:TextBox ID="txtCilindraje" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Recorrido</label>
                                 <asp:TextBox ID="txtRecorrido" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Transmisión</label>
                                 <asp:TextBox ID="txtTransmision" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Tipo de combustible</label>
                                 <asp:TextBox ID="txtTipoDeCombustible" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Serie 1</label>
                                 <asp:TextBox ID="txtSerieUno" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Serie 2</label>
                                 <asp:TextBox ID="txtSerieDos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>

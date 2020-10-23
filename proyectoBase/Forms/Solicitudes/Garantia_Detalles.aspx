@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles de la garantía</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -33,7 +33,7 @@
                         <span class="sr-only"></span>
                     </div>
                 </div>
-                <h5>Detalles de la garantía: Solicitud de crédito No. <span id="lblIdSolicitud" class="font-weight-bold" runat="server"></span></h5>
+                <h5>Detalles de la garantía Solicitud de crédito No. <span id="lblIdSolicitud" class="font-weight-bold" runat="server"></span></h5>
             </div>
             <div class="card-body pt-0">
                 <div class="row mb-0">
@@ -129,27 +129,27 @@
                         </div>
                         <h6 class="m-0 pt-2">Características mecánicas</h6>
                         <div class="form-group row">
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Cilindraje</label>
                                 <asp:TextBox ID="txtCilindraje" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Recorrido</label>
                                 <asp:TextBox ID="txtRecorrido" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Transmisión</label>
                                 <asp:TextBox ID="txtTransmision" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Tipo de combustible</label>
                                 <asp:TextBox ID="txtTipoDeCombustible" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Serie 1</label>
                                 <asp:TextBox ID="txtSerieUno" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Serie 2</label>
                                 <asp:TextBox ID="txtSerieDos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
