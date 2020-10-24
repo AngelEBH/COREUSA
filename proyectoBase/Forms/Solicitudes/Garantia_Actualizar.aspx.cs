@@ -379,7 +379,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
 
     private static string GenerarNombreDocumento(string idSolicitud, string vin)
     {
-        return "G_" + idSolicitud + "_" + vin + "_" + Guid.NewGuid();
+        return ("G_" + idSolicitud + "_" + vin + "_" + Guid.NewGuid()).Replace("*", "").Replace("/", "").Replace("\\", "").Replace(":", "").Replace("?", "").Replace("<", "").Replace(">", "").Replace("|", "");
     }
 
     public static bool GuardarDocumentosGarantia(List<SolicitudesDocumentosViewModel> ListaDocumentos, string idSolicitud)
