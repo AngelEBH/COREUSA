@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_ListadoGarantias.aspx.cs" Inherits="SolicitudesCredito_ListadoGarantias" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_ListadoGarantias.aspx.cs" Inherits="SolicitudesCredito_ListadoGarantias" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -18,6 +18,7 @@
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
         .opcion {
@@ -45,11 +46,14 @@
     </style>
 </head>
 <body runat="server" class="EstiloBody-Listado">
+
     <div class="card">
         <div class="card-header">
             <div class="row">
                 <div class="col-8">
-                    <h6>Garantias de solicitudes aprobadas</h6>
+                    <h6>Garantias de solicitudes aprobadas <small>
+                        <label runat="server" id="lblMensajeError" class="text-danger"></label>
+                    </small></h6>
                 </div>
                 <div class="col-4">
                     <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
@@ -62,7 +66,7 @@
                 <div class="col-md-12">
                     <div class="form-group row">
                         <div class="col-lg-2 col-sm-3 pr-0 align-self-end">
-                            <button id="btnRegistrarGarantiaSinSolicitud" class="btn btn-block btn-warning pr-0 pl-0">Registrar sin solicitud</button>
+                            <button type="button" id="btnRegistrarGarantiaSinSolicitud" class="btn btn-block btn-warning pr-0 pl-0">Registrar sin solicitud</button>
                         </div>
                         <div class="col-lg-3 col-sm-3 align-self-end">
                             <label class="col-form-label">Búsqueda por Mes</label>
@@ -192,7 +196,7 @@
                     Cliente: <span class="font-weight-bold" id="lblNombreClienteActualizar"></span>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnActualizarGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
+                    <button type="button" id="btnActualizarGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -217,7 +221,7 @@
                     Cliente: <span class="font-weight-bold" id="lblNombreClienteGuardar"></span>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnGuardarGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
+                    <button type="button" id="btnGuardarGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -241,8 +245,8 @@
                     <br />
                     Cliente: <span class="font-weight-bold" id="lblNombreClienteDetalles"></span>
                 </div>
-                <div class="modal-footer">
-                    <button id="btnDetallesGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
+                <div class="modal-footer pt-2 pb-2">
+                    <button type="button" id="btnDetallesGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -263,8 +267,8 @@
                 <div class="modal-body">
                     ¿Está seguro de redirigir a los detalles de esta garantía?
                 </div>
-                <div class="modal-footer">
-                    <button id="btnDetallesGarantia_SinSolicitud_Confirmar" class="btn btn-primary waves-effect waves-light">
+                <div class="modal-footer pt-2 pb-2">
+                    <button type="button" id="btnDetallesGarantia_SinSolicitud_Confirmar" class="btn btn-primary waves-effect waves-light">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -285,8 +289,8 @@
                 <div class="modal-body">
                     ¿Está seguro de actualizar la información de la garantía de esta solicitud?
                 </div>
-                <div class="modal-footer">
-                    <button id="btnActualizarGarantia_SinSolicitud_Confirmar" class="btn btn-primary waves-effect waves-light">
+                <div class="modal-footer pt-2 pb-2">
+                    <button type="button" id="btnActualizarGarantia_SinSolicitud_Confirmar" class="btn btn-primary waves-effect waves-light">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -310,8 +314,8 @@
                     <br />
                     Cliente: <span class="font-weight-bold" id="lblNombreClienteImprimirDocumentacion"></span>
                 </div>
-                <div class="modal-footer">
-                    <button id="btnImprimirDocumentacion_Confirmar" class="btn btn-primary waves-effect waves-light">
+                <div class="modal-footer pt-2 pb-2">
+                    <button type="button" id="btnImprimirDocumentacion_Confirmar" class="btn btn-primary waves-effect waves-light">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -321,6 +325,55 @@
             </div>
         </div>
     </div>
+
+
+
+    <form runat="server" id="frmPrincipal" data-parsley-excluded="[disabled]">
+
+        <div id="modalSolicitarGPS" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalSolicitarGPSLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalSolicitarGPSLabel">Solicitar GPS (Solicitud <span id="lblIdSolicitudSolicitarGPS"></span>)</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-form-label">VIN</label>
+                            <input id="txtVIN_SolicitarGPS" type="text" class="form-control form-control-sm col-form-label" data-parsley-group="InstalacionGPS_Guardar" readonly="readonly" />
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Ubicación</label>
+                                    <asp:DropDownList runat="server" ID="ddlUbicacionInstalacion" class="form-control form-control-sm col-form-label" data-parsley-group="InstalacionGPS_Guardar" required="required"></asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Fecha de instalación</label>
+                                    <input type="date" class="form-control form-control-sm" name="txtFechaInstalacion" id="txtFechaInstalacion" data-parsley-group="InstalacionGPS_Guardar" />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="col-form-label">Comentario</label>
+                                    <textarea id="txtComentario" runat="server" required="required" class="form-control form-control-sm" data-parsley-group="InstalacionGPS_Guardar" data-parsley-maxlength="300" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer pt-2 pb-2">
+                        <button type="button" id="btnSolicitarGPS_Confirmar" class="btn btn-primary waves-effect waves-light">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>

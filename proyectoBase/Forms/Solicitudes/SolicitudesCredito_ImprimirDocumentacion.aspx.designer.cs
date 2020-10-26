@@ -328,6 +328,339 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divContratoPDF;
 
     /// <summary>
+    /// Control lblNombre_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombre_Contrato;
+
+    /// <summary>
+    /// Control lblNacionalidad_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNacionalidad_Contrato;
+
+    /// <summary>
+    /// Control lblIdentidad_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblIdentidad_Contrato;
+
+    /// <summary>
+    /// Control lblDireccion_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblDireccion_Contrato;
+
+    /// <summary>
+    /// Control lblMontoPrestamoEnPalabras_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoPrestamoEnPalabras_Contrato;
+
+    /// <summary>
+    /// Control lblMontoPrestamo_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoPrestamo_Contrato;
+
+    /// <summary>
+    /// Control lblMontoParaCompraVehiculoEnPalabras_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoParaCompraVehiculoEnPalabras_Contrato;
+
+    /// <summary>
+    /// Control lblMontoParaCompraVehiculo_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoParaCompraVehiculo_Contrato;
+
+    /// <summary>
+    /// Control lblMontoParaCompraSeguroYGPSEnPalabras_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoParaCompraSeguroYGPSEnPalabras_Contrato;
+
+    /// <summary>
+    /// Control lblMontoParaCompraSeguroYGPS_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoParaCompraSeguroYGPS_Contrato;
+
+    /// <summary>
+    /// Control lblMontoGastosDeCierre_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoGastosDeCierre_Contrato;
+
+    /// <summary>
+    /// Control lblMarca_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMarca_Contrato;
+
+    /// <summary>
+    /// Control lblTipoVehiculo_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblTipoVehiculo_Contrato;
+
+    /// <summary>
+    /// Control lblModelo_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblModelo_Contrato;
+
+    /// <summary>
+    /// Control lblAnio_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblAnio_Contrato;
+
+    /// <summary>
+    /// Control lblColor_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblColor_Contrato;
+
+    /// <summary>
+    /// Control lblCilindraje_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblCilindraje_Contrato;
+
+    /// <summary>
+    /// Control lblMatricula_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMatricula_Contrato;
+
+    /// <summary>
+    /// Control lblVIN_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblVIN_Contrato;
+
+    /// <summary>
+    /// Control lblNumeroMotor_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNumeroMotor_Contrato;
+
+    /// <summary>
+    /// Control lblTasaInteresSimple_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblTasaInteresSimple_Contrato;
+
+    /// <summary>
+    /// Control lblTipoDePlazo_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblTipoDePlazo_Contrato;
+
+    /// <summary>
+    /// Control lblCAT_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblCAT_Contrato;
+
+    /// <summary>
+    /// Control lblMontoPrima_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoPrima_Contrato;
+
+    /// <summary>
+    /// Control lblPlazo_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblPlazo_Contrato;
+
+    /// <summary>
+    /// Control lblFrecuenciaPago_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblFrecuenciaPago_Contrato;
+
+    /// <summary>
+    /// Control lblValorCuotaPalabras_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblValorCuotaPalabras_Contrato;
+
+    /// <summary>
+    /// Control lblValorCuota_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblValorCuota_Contrato;
+
+    /// <summary>
+    /// Control lblPlazoGPS_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblPlazoGPS_Contrato;
+
+    /// <summary>
+    /// Control lblValorCuotaGPSPalabras_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblValorCuotaGPSPalabras_Contrato;
+
+    /// <summary>
+    /// Control lblPlazoSeguro_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblPlazoSeguro_Contrato;
+
+    /// <summary>
+    /// Control lblValorCuotaSeguroPalabras_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblValorCuotaSeguroPalabras_Contrato;
+
+    /// <summary>
+    /// Control lblValorCuotaSeguro_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblValorCuotaSeguro_Contrato;
+
+    /// <summary>
+    /// Control lblFechaPrimerCuota_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblFechaPrimerCuota_Contrato;
+
+    /// <summary>
+    /// Control lblPlazoPago_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblPlazoPago_Contrato;
+
+    /// <summary>
+    /// Control lblMontoPrestamo2_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoPrestamo2_Contrato;
+
+    /// <summary>
+    /// Control lblCorreo_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblCorreo_Contrato;
+
+    /// <summary>
     /// Control lblNombreFirma_Contrato.
     /// </summary>
     /// <remarks>
@@ -472,13 +805,31 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblNombreCliente_CompromisoLegal;
 
     /// <summary>
-    /// Control lblCuotas_CompromisoLegal.
+    /// Control lblCantidadCuotas_CompromisoLegal.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblCuotas_CompromisoLegal;
+    protected global::System.Web.UI.WebControls.Label lblCantidadCuotas_CompromisoLegal;
+
+    /// <summary>
+    /// Control lblCuota_CompromisoLegal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblCuota_CompromisoLegal;
+
+    /// <summary>
+    /// Control lblGarantiaUsada_CompromisoLegal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblGarantiaUsada_CompromisoLegal;
 
     /// <summary>
     /// Control lblNombreFirma_CompromisoLegal.
