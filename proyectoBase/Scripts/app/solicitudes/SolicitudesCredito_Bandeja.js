@@ -79,7 +79,7 @@ $(document).ready(function () {
                 "data": "fdFechaCreacionSolicitud",
                 "render": function (value) {
                     if (value === null) return "";
-                    return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
+                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a');
                 }
             },
             {
@@ -263,22 +263,16 @@ $(document).ready(function () {
     /* busqueda por mes de ingreso */
     $('#mesIngreso').on('change', function () {
         if (this.value != '') {
-            dtBandeja.columns(5)
-                .search('/' + this.value + '/')
-                .draw();
+            dtBandeja.columns(5).search('/' + this.value + '/').draw();
         }
         else {
-            dtBandeja.columns(5)
-                .search('')
-                .draw();
+            dtBandeja.columns(5).search('').draw();
         }
     });
 
     /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
-        dtBandeja.columns(5)
-            .search(this.value + '/')
-            .draw();
+        dtBandeja.columns(5).search(this.value + '/').draw();
     });
 
     $("#min").datepicker({

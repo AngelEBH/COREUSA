@@ -170,7 +170,7 @@ $(document).ready(function () {
             $("#btnGuardarSolicitud").css('display', 'none');
         }
         if (stepNumber == 4) {
-            $('#frmSolicitud').parsley().reset({ group: 'informacionConyugal', force: true }); /* Validar información conyugal del formulario cada vez que se muestre */
+            $('#frmSolicitud').parsley().reset({ group: 'informacionConyugal', force: true }); /* Validar información conyugal del formulario cada vez que se muestre*/
         }
     });
 

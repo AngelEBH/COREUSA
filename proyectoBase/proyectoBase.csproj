@@ -1188,6 +1188,7 @@
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ActualizarAval.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ActualizarSolicitud.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Analisis.js" />
+    <Content Include="Scripts\app\solicitudes\SolicitudesCredito_NoAsignadas.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ListadoGarantias.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Bandeja.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ClientesPrecalificados.js" />

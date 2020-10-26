@@ -59,9 +59,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 ValidarClienteSolicitudesActivas();
                 CargarListas();
                 ObtenerInformacionCliente();
+                CargarOrigenes();
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
-                Session.Timeout = 60;
+                Session.Timeout = 1440;
 
                 /* Lógica de negocio dependiendo el tipo de producto */
                 switch (Precalificado.IdProducto)
@@ -117,50 +118,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         break;
                 }
 
-                if (Constantes.RequiereOrigen)
-                {
-                    CargarOrigenes();
-                }
-
                 if (Constantes.RequierePrima)
                 {
                     txtValorPrima.Enabled = true;
-                }
-
-                if (Precalificado.Identidad == "0201197000160")
-                {
-                    Precalificado.PermitirIngresarSolicitud = true;
-
-                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 15000;
-                    Constantes.PrestamoMaximo_Monto = 15000;
-                }
-
-                if (Precalificado.Identidad == "0801197700790")
-                {
-                    Precalificado.PermitirIngresarSolicitud = true;
-
-                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 18000;
-                    Constantes.PrestamoMaximo_Monto = 18000;
-                }
-                if (Precalificado.Identidad == "0501198807143")
-                {
-                    Precalificado.PermitirIngresarSolicitud = true;
-                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 300000;
-                    Constantes.PrestamoMaximo_Monto = 300000;
-                }
-
-                if (Precalificado.Identidad == "0401196200577")
-                {
-                    Precalificado.PermitirIngresarSolicitud = true;
-                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 30000;
-                    Constantes.PrestamoMaximo_Monto = 30000;
-                }
-
-                if (Precalificado.Identidad == "1102197300076")
-                {
-                    Precalificado.PermitirIngresarSolicitud = true;
-                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 15000;
-                    Constantes.PrestamoMaximo_Monto = 15000;
                 }
 
                 /* Para utilizar las constantes de validaciones en el frontend */
@@ -557,11 +517,14 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         ddlOrigen.Items.Clear();
                         ddlOrigen.Items.Add(new ListItem("Seleccionar origen", ""));
 
-                        while (sqlResultado.Read())
+                        if (sqlResultado.HasRows)
                         {
-                            ddlOrigen.Items.Add(new ListItem(sqlResultado["fcOrigen"].ToString(), sqlResultado["fiIDOrigen"].ToString()));
+                            while (sqlResultado.Read())
+                            {
+                                ddlOrigen.Items.Add(new ListItem(sqlResultado["fcOrigen"].ToString(), sqlResultado["fiIDOrigen"].ToString()));
+                            }
+                            ddlOrigen.Enabled = true;
                         }
-                        ddlOrigen.Enabled = true;
                     }
                 }
             }
@@ -1418,7 +1381,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    //tran.Commit();
+                    tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
@@ -1462,226 +1425,226 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         }
         return lURLDesencriptado;
     }
-}
 
-
-#region View Models
-public class Origenes_ViewModel
-{
-    public int IdOrigen { get; set; }
-    public string Origen { get; set; }
-}
-
-public class Precalificado_ViewModel
-{
-    public string IdClienteSAF { get; set; }
-    public string TipoDeClienteSAF { get; set; }
-    public bool PermitirIngresarSolicitud { get; set; }
-    public string Identidad { get; set; }
-    public string Rtn { get; set; }
-    public string PrimerNombre { get; set; }
-    public string SegundoNombre { get; set; }
-    public string PrimerApellido { get; set; }
-    public string SegundoApellido { get; set; }
-    public string Telefono { get; set; }
-    public decimal Obligaciones { get; set; }
-    public decimal Ingresos { get; set; }
-    public decimal Disponible { get; set; }
-    public DateTime FechaNacimiento { get; set; }
-    public int IdTipoDeSolicitud { get; set; }
-    public string TipoDeSolicitud { get; set; }
-    public int IdProducto { get; set; }
-    public string Producto { get; set; }
-    public CotizadorProductos_ViewModel PrestamoMaximoSugerido { get; set; }
-}
-
-public class CotizadorProductos_ViewModel
-{
-    public int IdCotizacion { get; set; }
-    public int IdProducto { get; set; }
-    public string Producto { get; set; }
-    public decimal MontoOfertado { get; set; }
-    public int Plazo { get; set; }
-    public string TipoPlazo { get; set; }
-    public decimal Cuota { get; set; }
-}
-
-public class SolicitudesCredito_Registrar_Constantes
-{
-    public DateTime HoraAlCargar { get; set; }
-    public bool EsClienteNuevo { get; set; }
-    public int IdCliente { get; set; }
-    public decimal PrestamoMaximo_Monto { get; set; }
-    public decimal PrestamoMaximo_Cuota { get; set; }
-    public int PrestamoMaximo_Plazo { get; set; }
-    public string PrestamoMaximo_TipoDePlazo { get; set; }
-    public bool EstadoCliente { get; internal set; }
-    public string RazonInactivo { get; internal set; }
-    public string TipoDePlazo { get; set; }
-    public string IdentidadCliente { get; set; }
-
-    /* Parametros de logica de negocio que dependen del tipo de producto */
-    public decimal CapacidadDePagoCliente { get; set; }
-    public decimal? PorcentajePrimaMinima { get; set; }
-    public decimal? MontoFinanciarMinimo { get; set; }
-    public decimal? MontoFinanciarMaximo { get; set; }
-    public int? PlazoMinimo { get; set; }
-    public int? PlazoMaximo { get; set; }
-    public int ReferenciasPersonalesMinimas { get; set; }
-
-    public bool RequierePrima { get; set; }
-    public bool RequiereOrigen { get; set; }
-
-    public int? PlazoMaximoCliente { get; set; }
-    public decimal? MontoFinanciarMaximoCliente { get; set; }
-
-    public SolicitudesCredito_Registrar_Constantes()
+    #region View Models
+    public class Origenes_ViewModel
     {
-        HoraAlCargar = DateTime.Now;
-        EsClienteNuevo = true;
-        IdCliente = 0;
-        PorcentajePrimaMinima = null;
-        MontoFinanciarMinimo = null;
-        MontoFinanciarMaximo = null;
-        PlazoMinimo = null;
-        PlazoMaximo = null;
-        ReferenciasPersonalesMinimas = 4;
-        RequierePrima = false;
-        RequiereOrigen = false;
+        public int IdOrigen { get; set; }
+        public string Origen { get; set; }
     }
-}
 
-public class BarriosColonias_ViewModel
-{
-    public int IdCiudadPoblado { get; set; }
-    public int IdMunicipio { get; set; }
-    public int IdDepartamento { get; set; }
-    public int IdBarrioColonia { get; set; }
-    public string NombreBarrioColonia { get; set; }
-}
+    public class Precalificado_ViewModel
+    {
+        public string IdClienteSAF { get; set; }
+        public string TipoDeClienteSAF { get; set; }
+        public bool PermitirIngresarSolicitud { get; set; }
+        public string Identidad { get; set; }
+        public string Rtn { get; set; }
+        public string PrimerNombre { get; set; }
+        public string SegundoNombre { get; set; }
+        public string PrimerApellido { get; set; }
+        public string SegundoApellido { get; set; }
+        public string Telefono { get; set; }
+        public decimal Obligaciones { get; set; }
+        public decimal Ingresos { get; set; }
+        public decimal Disponible { get; set; }
+        public DateTime FechaNacimiento { get; set; }
+        public int IdTipoDeSolicitud { get; set; }
+        public string TipoDeSolicitud { get; set; }
+        public int IdProducto { get; set; }
+        public string Producto { get; set; }
+        public CotizadorProductos_ViewModel PrestamoMaximoSugerido { get; set; }
+    }
 
-public class Ciudades_ViewModel
-{
-    public int IdDepartamento { get; set; }
-    public int IdMunicipio { get; set; }
-    public int IdCiudadPoblado { get; set; }
-    public string NombreCiudadPoblado { get; set; }
-}
+    public class CotizadorProductos_ViewModel
+    {
+        public int IdCotizacion { get; set; }
+        public int IdProducto { get; set; }
+        public string Producto { get; set; }
+        public decimal MontoOfertado { get; set; }
+        public int Plazo { get; set; }
+        public string TipoPlazo { get; set; }
+        public decimal Cuota { get; set; }
+    }
 
-public class Municipios_ViewModel
-{
-    public int IdDepartamento { get; set; }
-    public int IdMunicipio { get; set; }
-    public string NombreMunicipio { get; set; }
-}
+    public class SolicitudesCredito_Registrar_Constantes
+    {
+        public DateTime HoraAlCargar { get; set; }
+        public bool EsClienteNuevo { get; set; }
+        public int IdCliente { get; set; }
+        public decimal PrestamoMaximo_Monto { get; set; }
+        public decimal PrestamoMaximo_Cuota { get; set; }
+        public int PrestamoMaximo_Plazo { get; set; }
+        public string PrestamoMaximo_TipoDePlazo { get; set; }
+        public bool EstadoCliente { get; internal set; }
+        public string RazonInactivo { get; internal set; }
+        public string TipoDePlazo { get; set; }
+        public string IdentidadCliente { get; set; }
 
-public class TipoDocumento_ViewModel
-{
-    public int IdTipoDocumento { get; set; }
-    public string DescripcionTipoDocumento { get; set; }
-    public int CantidadMaximaDoucmentos { get; set; }
-    public int TipoVisibilidad { get; set; }
-}
+        /* Parametros de logica de negocio que dependen del tipo de producto */
+        public decimal CapacidadDePagoCliente { get; set; }
+        public decimal? PorcentajePrimaMinima { get; set; }
+        public decimal? MontoFinanciarMinimo { get; set; }
+        public decimal? MontoFinanciarMaximo { get; set; }
+        public int? PlazoMinimo { get; set; }
+        public int? PlazoMaximo { get; set; }
+        public int ReferenciasPersonalesMinimas { get; set; }
 
-public class Cliente_ViewModel
-{
-    /* Clientes maestro */
-    public int IdCliente { get; set; }
-    public int IdTipoCliente { get; set; }
-    public string IdentidadCliente { get; set; }
-    public string RtnCliente { get; set; }
-    public string PrimerNombre { get; set; }
-    public string SegundoNombre { get; set; }
-    public string PrimerApellido { get; set; }
-    public string SegundoApellido { get; set; }
-    public string TelefonoCliente { get; set; }
-    public int IdNacionalidad { get; set; }
-    public DateTime FechaNacimiento { get; set; }
-    public string Correo { get; set; }
-    public string ProfesionOficio { get; set; }
-    public string Sexo { get; set; }
-    public int IdEstadoCivil { get; set; }
-    public int IdVivienda { get; set; }
-    public int IdTiempoResidir { get; set; }
-    public bool ClienteActivo { get; set; }
-    public string RazonInactivo { get; set; }
+        public bool RequierePrima { get; set; }
+        public bool RequiereOrigen { get; set; }
+        public bool RequiereGarantia { get; set; }
 
-    public Cliente_InformacionDomicilio_ViewModel InformacionDomicilio { get; set; }
-    public Cliente_InformacionLaboral_ViewModel InformacionLaboral { get; set; }
-    public Cliente_InformacionConyugal_ViewModel InformacionConyugal { get; set; }
-    public List<Cliente_ReferenciaPersonal_ViewModel> ListaReferenciasPersonales { get; set; }
-}
+        public int? PlazoMaximoCliente { get; set; }
+        public decimal? MontoFinanciarMaximoCliente { get; set; }
 
-public class Cliente_InformacionDomicilio_ViewModel
-{
-    public int IdInformacionDomicilio { get; set; }
-    public int IdCliente { get; set; }
-    public string TelefonoCasa { get; set; }
-    public int IdDepartamento { get; set; }
-    public int IdMunicipio { get; set; }
-    public int IdCiudadPoblado { get; set; }
-    public int IdBarrioColonia { get; set; }
-    public string DireccionDetallada { get; set; }
-    public string ReferenciasDireccionDetallada { get; set; }
-}
+        public SolicitudesCredito_Registrar_Constantes()
+        {
+            HoraAlCargar = DateTime.Now;
+            EsClienteNuevo = true;
+            IdCliente = 0;
+            PorcentajePrimaMinima = null;
+            MontoFinanciarMinimo = null;
+            MontoFinanciarMaximo = null;
+            PlazoMinimo = null;
+            PlazoMaximo = null;
+            ReferenciasPersonalesMinimas = 4;
+            RequierePrima = false;
+            RequiereOrigen = false;
+        }
+    }
 
-public class Cliente_InformacionLaboral_ViewModel
-{
-    public int IdInformacionLaboral { get; set; }
-    public int IdCliente { get; set; }
-    public string NombreTrabajo { get; set; }
-    public decimal IngresosMensuales { get; set; }
-    public string PuestoAsignado { get; set; }
-    public DateTime FechaIngreso { get; set; }
-    public string TelefonoEmpresa { get; set; }
-    public string ExtensionRecursosHumanos { get; set; }
-    public string ExtensionCliente { get; set; }
-    public string FuenteOtrosIngresos { get; set; }
-    public decimal? ValorOtrosIngresos { get; set; }
-    public int IdDepartamento { get; set; }
-    public int IdMunicipio { get; set; }
-    public int IdCiudadPoblado { get; set; }
-    public int IdBarrioColonia { get; set; }
-    public string DireccionDetalladaEmpresa { get; set; }
-    public string ReferenciasDireccionDetallada { get; set; }
-}
+    public class BarriosColonias_ViewModel
+    {
+        public int IdCiudadPoblado { get; set; }
+        public int IdMunicipio { get; set; }
+        public int IdDepartamento { get; set; }
+        public int IdBarrioColonia { get; set; }
+        public string NombreBarrioColonia { get; set; }
+    }
 
-public class Cliente_InformacionConyugal_ViewModel
-{
-    public int IdInformacionConyugal { get; set; }
-    public int IdCliente { get; set; }
-    public string IndentidadConyugue { get; set; }
-    public string NombreCompletoConyugue { get; set; }
-    public string TelefonoTrabajoConyugue { get; set; }
-    public DateTime FechaNacimientoConyugue { get; set; }
-    public string TelefonoConyugue { get; set; }
-    public string LugarTrabajoConyugue { get; set; }
-    public decimal IngresosMensualesConyugue { get; set; }
-}
+    public class Ciudades_ViewModel
+    {
+        public int IdDepartamento { get; set; }
+        public int IdMunicipio { get; set; }
+        public int IdCiudadPoblado { get; set; }
+        public string NombreCiudadPoblado { get; set; }
+    }
 
-public class Cliente_ReferenciaPersonal_ViewModel
-{
-    public int IdReferencia { get; set; }
-    public int IdCliente { get; set; }
-    public string NombreCompletoReferencia { get; set; }
-    public string TelefonoReferencia { get; set; }
-    public string LugarTrabajoReferencia { get; set; }
-    public short IdTiempoConocerReferencia { get; set; }
-    public int IdParentescoReferencia { get; set; }
-}
+    public class Municipios_ViewModel
+    {
+        public int IdDepartamento { get; set; }
+        public int IdMunicipio { get; set; }
+        public string NombreMunicipio { get; set; }
+    }
 
-public class Solicitud_Maestro_ViewModel
-{
-    public int IdSolicitud { get; set; }
-    public int IdCliente { get; set; }
-    public int IdProducto { get; set; }
-    public int IdTipoDeSolicitud { get; set; }
-    public int IdTipoMoneda { get; set; }
-    public decimal ValorSeleccionado { get; set; }
-    public int PlazoSeleccionado { get; set; }
-    public decimal ValorPrima { get; set; }
-    public decimal ValorGlobal { get; set; }
-    public int IdOrigen { get; set; }
-    public DateTime EnIngresoInicio { get; set; }
+    public class TipoDocumento_ViewModel
+    {
+        public int IdTipoDocumento { get; set; }
+        public string DescripcionTipoDocumento { get; set; }
+        public int CantidadMaximaDoucmentos { get; set; }
+        public int TipoVisibilidad { get; set; }
+    }
+
+    public class Cliente_ViewModel
+    {
+        /* Clientes maestro */
+        public int IdCliente { get; set; }
+        public int IdTipoCliente { get; set; }
+        public string IdentidadCliente { get; set; }
+        public string RtnCliente { get; set; }
+        public string PrimerNombre { get; set; }
+        public string SegundoNombre { get; set; }
+        public string PrimerApellido { get; set; }
+        public string SegundoApellido { get; set; }
+        public string TelefonoCliente { get; set; }
+        public int IdNacionalidad { get; set; }
+        public DateTime FechaNacimiento { get; set; }
+        public string Correo { get; set; }
+        public string ProfesionOficio { get; set; }
+        public string Sexo { get; set; }
+        public int IdEstadoCivil { get; set; }
+        public int IdVivienda { get; set; }
+        public int IdTiempoResidir { get; set; }
+        public bool ClienteActivo { get; set; }
+        public string RazonInactivo { get; set; }
+
+        public Cliente_InformacionDomicilio_ViewModel InformacionDomicilio { get; set; }
+        public Cliente_InformacionLaboral_ViewModel InformacionLaboral { get; set; }
+        public Cliente_InformacionConyugal_ViewModel InformacionConyugal { get; set; }
+        public List<Cliente_ReferenciaPersonal_ViewModel> ListaReferenciasPersonales { get; set; }
+    }
+
+    public class Cliente_InformacionDomicilio_ViewModel
+    {
+        public int IdInformacionDomicilio { get; set; }
+        public int IdCliente { get; set; }
+        public string TelefonoCasa { get; set; }
+        public int IdDepartamento { get; set; }
+        public int IdMunicipio { get; set; }
+        public int IdCiudadPoblado { get; set; }
+        public int IdBarrioColonia { get; set; }
+        public string DireccionDetallada { get; set; }
+        public string ReferenciasDireccionDetallada { get; set; }
+    }
+
+    public class Cliente_InformacionLaboral_ViewModel
+    {
+        public int IdInformacionLaboral { get; set; }
+        public int IdCliente { get; set; }
+        public string NombreTrabajo { get; set; }
+        public decimal IngresosMensuales { get; set; }
+        public string PuestoAsignado { get; set; }
+        public DateTime FechaIngreso { get; set; }
+        public string TelefonoEmpresa { get; set; }
+        public string ExtensionRecursosHumanos { get; set; }
+        public string ExtensionCliente { get; set; }
+        public string FuenteOtrosIngresos { get; set; }
+        public decimal? ValorOtrosIngresos { get; set; }
+        public int IdDepartamento { get; set; }
+        public int IdMunicipio { get; set; }
+        public int IdCiudadPoblado { get; set; }
+        public int IdBarrioColonia { get; set; }
+        public string DireccionDetalladaEmpresa { get; set; }
+        public string ReferenciasDireccionDetallada { get; set; }
+    }
+
+    public class Cliente_InformacionConyugal_ViewModel
+    {
+        public int IdInformacionConyugal { get; set; }
+        public int IdCliente { get; set; }
+        public string IndentidadConyugue { get; set; }
+        public string NombreCompletoConyugue { get; set; }
+        public string TelefonoTrabajoConyugue { get; set; }
+        public DateTime FechaNacimientoConyugue { get; set; }
+        public string TelefonoConyugue { get; set; }
+        public string LugarTrabajoConyugue { get; set; }
+        public decimal IngresosMensualesConyugue { get; set; }
+    }
+
+    public class Cliente_ReferenciaPersonal_ViewModel
+    {
+        public int IdReferencia { get; set; }
+        public int IdCliente { get; set; }
+        public string NombreCompletoReferencia { get; set; }
+        public string TelefonoReferencia { get; set; }
+        public string LugarTrabajoReferencia { get; set; }
+        public short IdTiempoConocerReferencia { get; set; }
+        public int IdParentescoReferencia { get; set; }
+    }
+
+    public class Solicitud_Maestro_ViewModel
+    {
+        public int IdSolicitud { get; set; }
+        public int IdCliente { get; set; }
+        public int IdProducto { get; set; }
+        public int IdTipoDeSolicitud { get; set; }
+        public int IdTipoMoneda { get; set; }
+        public decimal ValorSeleccionado { get; set; }
+        public int PlazoSeleccionado { get; set; }
+        public decimal ValorPrima { get; set; }
+        public decimal ValorGlobal { get; set; }
+        public int IdOrigen { get; set; }
+        public DateTime EnIngresoInicio { get; set; }
+    }
+    #endregion
 }
-#endregion
