@@ -1,15 +1,25 @@
-﻿var iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">estadoListo</label></i>';
+﻿/* Variables generales que se utilizan en casi todas las acciones */
+var identidad = ''; /* Identidad del cliente seleccionado del listado de garantias de solicitudes aprobadas */
+var idSolicitud = 0; /* No. solicitud seleccionado de cualquiera de las listas */
+var idGarantia = 0; /* Id garantia seleccionado de cualquiera de las listas */
+var marcaGarantia = 0; /* Id garantia seleccionado de cualquiera de las listas */
+var modeloGarantia = 0; /* Id garantia seleccionado de cualquiera de las listas */
+var anioGarantia = 0; /* Id garantia seleccionado de cualquiera de las listas */
+var idSolicitudInstalacionGPS = 0; /* Id de la solicitud de instalacion de gps para garantia registrada de una solicitud aprobada */
+var VIN = ''; /* VIN seleccionado del listado de garantias de solicitudes aprobadas */
+var nombreCliente = ''; /* Nombre del cliente seleccionado del listado de garantias de solicitudes aprobadas */
+
+/* Iconos de estado para el listado de garantias de solicitudes aprobadas */
+var iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">estadoListo</label></i>';
 var iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">estadoPendiente</label></i>';
-var identidad = '';
-var idSolicitud = 0;
-var idGarantia = 0;
-var VIN = '';
+
+/* Para realizar filtros en ambas listas*/
 var filtroActual = '';
-var nombreCliente = '';
 var tabActivo = 'tab_Listado_Solicitudes_Garantias';
 
 $(document).ready(function () {
 
+    /* Inicializar datatable del listado de garantias de solicitudes aprobadas */
     dtListado = $('#datatable-listado').DataTable({
         "pageLength": 15,
         "aaSorting": [],
@@ -55,6 +65,25 @@ $(document).ready(function () {
             }
         },
         "columns": [
+            {
+                "data": "IdGarantia", "className": "text-center",
+                "render": function (data, type, row) {
+
+                    return '<div class="dropdown mo-mb-2">' +
+                        '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >' +
+                        '<i class="fa fa-bars"></i>' +
+                        '</button >' +
+                        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+                        (row["IdGarantia"] == 0 ? '<button type="button" class="dropdown-item" id="btnGuardar"><i class="fas fa-plus"></i> Agregar</button>' : '') +
+                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnDetalles"><i class="fas fa-tasks"></i> Detalles</button>') +
+                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnActualizar"><i class="far fa-edit"></i> Actualizar</button>') +
+                        //(row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion"><i class="far fa-file-alt"></i> Imprimir Doc.</button>') +
+                        ((row["IdAutoGPSInstalacion"] == 0 && row["IdGarantia"] != 0) ? '<button type="button" class="dropdown-item" id="btnSolicitarGPS"><i class="fas fa-map-marker-alt"></i> Solicitar GPS</button>' : '') +
+                        ((row["IdAutoGPSInstalacion"] != 0) ? '<button type="button" class="dropdown-item" id="btnDetalleSolicitudGPS"><i class="fas fa-map-marker-alt"></i> Detalles solicitud GPS</button>' : '') +
+                        '</div>' +
+                        '</div >';
+                }
+            },
             { "data": "IdSolicitud", "className": "text-center" },
             { "data": "Agencia" },
             { "data": "UsuarioAsignado" },
@@ -84,33 +113,15 @@ $(document).ready(function () {
 
                     return row["IdGarantia"] != 0 ? iconoExito : iconoPendiente;
                 }
-            },
-            {
-                "data": "IdGarantia", "className": "text-center",
-                "render": function (data, type, row) {
-
-                    return '<div class="dropdown mo-mb-2">' +
-                        '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >' +
-                        '<i class="fa fa-bars"></i>' +
-                        '</button >' +
-                        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
-                        (row["IdGarantia"] == 0 ? '<button type="button" class="dropdown-item" id="btnGuardar"><i class="fas fa-plus"></i> Agregar</button>' : '') +
-                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnDetalles"><i class="fas fa-tasks"></i> Detalles</button>') +
-                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnActualizar"><i class="far fa-edit"></i> Actualizar</button>') +
-                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion"><i class="far fa-file-alt"></i> Imprimir Doc.</button>') +
-                        (row["IdAutoGPSInstalacion"] == 0 ? '<button type="button" class="dropdown-item" id="btnSolicitarGPS"><i class="fas fa-map-marker-alt"></i> Solicitar GPS</button>' : '') +
-                        ((row["IdAutoGPSInstalacion"] != 0 && row["IdEstadoInstalacion"] == 1) ? '<button type="button" class="dropdown-item" id="btnActualizarSolicitudGPS"><i class="fas fa-map-marker-alt"></i> Actualizar solicitud GPS</button>' : '') +
-                        '</div>' +
-                        '</div >';
-                }
             }
         ],
         columnDefs: [
-            { targets: [7, 8], orderable: false },
-            { "width": "1%", "targets": 0 }
+            { targets: [0, 8], orderable: false },
+            { "width": "1%", "targets": 1 }
         ]
     });
 
+    /* Inicializar datable del listado de garantias sin solicitud */
     dtListado_Garantias_SinSolicitud = $('#datatable-garantiasSinSolicutd').DataTable({
         "pageLength": 15,
         "aaSorting": [],
@@ -156,6 +167,21 @@ $(document).ready(function () {
             }
         },
         "columns": [
+            {
+                "data": "IdGarantia", "className": "text-center",
+                "render": function (value) {
+
+                    return '<div class="dropdown mo-mb-2">' +
+                        '<button class="btn pt-1 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >' +
+                        '<i class="fa fa-bars"></i>' +
+                        '</button >' +
+                        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+                        '<button type="button" class="dropdown-item" id="btnDetalles_SinSolicitud"><i class="fas fa-tasks"></i> Detalles</button>' +
+                        '<button type="button" class="dropdown-item" id="btnActualizar_SinSolicitud"><i class="far fa-edit"></i> Actualizar</button>' +
+                        '</div>' +
+                        '</div >';
+                }
+            },
             { "data": "Agencia" },
             { "data": "Vendedor" },
             { "data": "VIN" },
@@ -167,25 +193,10 @@ $(document).ready(function () {
                     if (value === null) return "";
                     return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a');
                 }
-            },
-            {
-                "data": "IdGarantia", "className": "text-center",
-                "render": function (value) {
-
-                    return '<div class="dropdown mo-mb-2">' +
-                        '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >' +
-                        '<i class="fa fa-bars"></i>' +
-                        '</button >' +
-                        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
-                        '<button type="button" class="dropdown-item" id="btnDetalles_SinSolicitud"><i class="fas fa-tasks"></i> Detalles</button>' +
-                        '<button type="button" class="dropdown-item" id="btnActualizar_SinSolicitud"><i class="far fa-edit"></i> Actualizar</button>' +
-                        '</div>' +
-                        '</div >';
-                }
             }
         ],
         columnDefs: [
-            { targets: [6], orderable: false }
+            { targets: [0], orderable: false }
         ]
     });
 
@@ -197,16 +208,16 @@ $(document).ready(function () {
 
         switch (filtro) {
             case "0":
-                dtListado.columns(7).search("").draw();
+                dtListado.columns(8).search("").draw();
                 break;
             case "1":
-                dtListado.columns(7).search("estadoPendiente").draw();
+                dtListado.columns(8).search("estadoPendiente").draw();
                 break;
             case "2":
-                dtListado.columns(7).search("estadoListo").draw();
+                dtListado.columns(8).search("estadoListo").draw();
                 break;
             default:
-                dtListado.columns(7).search("").draw();
+                dtListado.columns(8).search("").draw();
         }
     });
 
@@ -216,19 +227,19 @@ $(document).ready(function () {
         if (this.value != '') {
 
             if (tabActivo == 'tab_Listado_Solicitudes_Garantias') {
-                dtListado.columns(6).search('/' + this.value + '/').draw();
+                dtListado.columns(7).search('/' + this.value + '/').draw();
             }
             else {
-                dtListado_Garantias_SinSolicitud.columns(5).search('/' + this.value + '/').draw();
+                dtListado_Garantias_SinSolicitud.columns(6).search('/' + this.value + '/').draw();
             }
         }
         else {
 
             if (tabActivo == 'tab_Listado_Solicitudes_Garantias') {
-                dtListado.columns(6).search('').draw();
+                dtListado.columns(7).search('').draw();
             }
             else {
-                dtListado_Garantias_SinSolicitud.columns(5).search('').draw();
+                dtListado_Garantias_SinSolicitud.columns(6).search('').draw();
             }
         }
     });
@@ -237,10 +248,10 @@ $(document).ready(function () {
     $('#añoIngreso').on('change', function () {
 
         if (tabActivo == 'tab_Listado_Solicitudes_Garantias') {
-            dtListado.columns(6).search(this.value + '/').draw();
+            dtListado.columns(7).search(this.value + '/').draw();
         }
         else {
-            dtListado_Garantias_SinSolicitud.columns(5).search(this.value + '/').draw();
+            dtListado_Garantias_SinSolicitud.columns(6).search(this.value + '/').draw();
         }
     });
 
@@ -270,14 +281,14 @@ $(document).ready(function () {
         if (filtroActual == 'rangoFechas' && tabActivo == 'tab_Listado_Solicitudes_Garantias') {
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
-                FechaIngreso = new Date(a[6]);
+                FechaIngreso = new Date(a[7]);
             return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaIngreso <= Hasta) || ("Invalid Date" == Hasta && FechaIngreso >= Desde) || (FechaIngreso <= Hasta && FechaIngreso >= Desde);
         }
         else if (filtroActual == 'rangoFechas') {
 
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
-                FechaIngreso = new Date(a[5]);
+                FechaIngreso = new Date(a[6]);
             return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaIngreso <= Hasta) || ("Invalid Date" == Hasta && FechaIngreso >= Desde) || (FechaIngreso <= Hasta && FechaIngreso >= Desde);
         }
         else {
@@ -306,8 +317,20 @@ $(document).ready(function () {
         var row = dtListado.row(this).data();
         idSolicitud = row.IdSolicitud;
         idGarantia = row.IdGarantia;
+        marcaGarantia = row.Marca;
+        modeloGarantia = row.Modelo;
+        anioGarantia = row.Anio;
+
+        idSolicitudInstalacionGPS = row.IdAutoGPSInstalacion;
         VIN = row.VIN;
         nombreCliente = row["PrimerNombre"] + ' ' + row["SegundoNombre"] + ' ' + row["PrimerApellido"] + ' ' + row["SegundoApellido"];
+        identidad = row["Identidad"]
+
+        if (idSolicitudInstalacionGPS != 0) {
+            $("#ddlUbicacionInstalacion_Actualizar").val(row.IDAgenciaInstalacion);
+            $("#txtComentario_Actualizar").val(row.Comentario_Instalacion);
+            $("#txtFechaInstalacion_Actualizar").val(new Date(parseInt(row.FechaInstalacion.substr(6, 19))).toJSON().slice(0, 19));
+        }
     });
 
     $("#datatable-garantiasSinSolicutd tbody").on("click", "tr", function () {
@@ -318,6 +341,7 @@ $(document).ready(function () {
     });
 });
 
+/* Acciones para el listado de garantias de solicitudes aprobadas */
 $(document).on('click', 'button#btnActualizar', function () {
 
     $("#lblIdSolicitudActualizar").text(idSolicitud);
@@ -361,7 +385,7 @@ $("#btnRegistrarGarantiaSinSolicitud").click(function (e) {
     RedirigirAccion('Garantia_Registrar.aspx', 'registro de la garantía sin solicitud');
 });
 
-/* Sin solicitud */
+/* Acciones para garantias sin solicitud */
 $(document).on('click', 'button#btnDetalles_SinSolicitud', function () {
 
     $("#modalDetallesGarantia_SinSolicitud").modal();
@@ -412,7 +436,10 @@ function RedirigirAccion(nombreFormulario, accion) {
 }
 
 /* Solicitar instalacion de GPS */
+var btnSolicitarGPS = '';
 $(document).on('click', 'button#btnSolicitarGPS', function () {
+
+    btnSolicitarGPS = $(this);
 
     $("#lblIdSolicitudSolicitarGPS").text(idSolicitud);
     $("#txtVIN_SolicitarGPS").val(VIN);
@@ -421,16 +448,23 @@ $(document).on('click', 'button#btnSolicitarGPS', function () {
 
 $("#btnSolicitarGPS_Confirmar").click(function (e) {
 
-    debugger;
     if ($('#frmPrincipal').parsley().isValid({ group: 'InstalacionGPS_Guardar' })) {
 
-        var solicitudGPS = {
+        var solicitudGPS = {            
             IdSolicitud: idSolicitud,
             IdGarantia: idGarantia,
             VIN: VIN,
+            NombreCliente: nombreCliente,
+            IdentidadCliente: identidad,
+            Marca: marcaGarantia,
+            Modelo: modeloGarantia,
+            Anio: anioGarantia,
             FechaInstalacion: $("#txtFechaInstalacion").val(),
             IDAgenciaInstalacion: $("#ddlUbicacionInstalacion :selected").val(),
-            Comentario_Instalacion: $("#txtComentario").val().trim()
+            AgenciaInstalacion: $("#ddlUbicacionInstalacion :selected").text(),
+            Comentario_Instalacion: $("#txtComentario").val().trim(),
+            NombreUsuario: NOMBRE_USUARIO,
+            CorreoUsuario: CORREO_USUARIO
         }
 
         $.ajax({
@@ -439,34 +473,122 @@ $("#btnSolicitarGPS_Confirmar").click(function (e) {
             data: JSON.stringify({ solicitudGPS: solicitudGPS, dataCrypt: window.location.href }),
             contentType: "application/json; charset=utf-8",
             error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo guardar la solicitud de GPS, contacte al administrador.'); 
+                MensajeError('No se pudo guardar la solicitud de GPS, contacte al administrador.');
             },
             success: function (data) {
 
                 $("#modalSolicitarGPS").modal('hide');
 
-                data.d == true ? MensajeExito('La solicitud se guardó correctamente') : MensajeError('No se pudo guardar la solicitud de GPS, contacte al administrador.');                
+                data.d == true ? MensajeExito('La solicitud se guardó correctamente') : MensajeError('No se pudo guardar la solicitud de GPS, contacte al administrador.');
 
                 $("#txtFechaInstalacion,#ddlUbicacionInstalacion,#txtComentario").val('');
+
+                $(btnSolicitarGPS).replaceWith('<button type="button" class="dropdown-item" id="btnDetalleSolicitudGPS"><i class="fas fa-map-marker-alt"></i> Detalles solicitud GPS</button>');
+
             }
         });
     }
     else {
         $('#frmPrincipal').parsley().validate({ group: 'InstalacionGPS_Guardar', force: true });
     }
-    
-    
+});
 
-    
+/* Actualizar solicitud de GPS */
+var idSolicitudGPS_Actualizar = 0;
+$(document).on('click', 'button#btnDetalleSolicitudGPS', function () {
 
-    
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_ListadoGarantias.aspx/CargarInformacionSolicitudGPS",
+        data: JSON.stringify({ idSolicitud: idSolicitud, idGarantia: idGarantia, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo cargar la información de la solicitud de GPS, contacte al administrador.');
+        },
+        success: function (data) {
 
+            if (data.d != null) {
 
+                var solicitudGPS = data.d;
+
+                idSolicitudGPS_Actualizar = solicitudGPS.IdAutoGPSInstalacion;
+                $("#lblEstadoSolicitudGPS_Actualizar,#lblEstadoSolicitudGPS_Detalle").text(solicitudGPS.EstadoInstalacionGPS);
+                $("#lblEstadoSolicitudGPS_Actualizar,#lblEstadoSolicitudGPS_Detalle").removeClass('btn-info').removeClass('btn-warning').removeClass('btn-success').addClass('btn-' + solicitudGPS.EstadoInstalacionClassName);
+                $("#ddlUbicacionInstalacion_Actualizar, #ddlUbicacionInstalacion_Detalle").val(solicitudGPS.IDAgenciaInstalacion);
+                $("#txtComentario_Actualizar,#txtComentario_Detalle").val(solicitudGPS.Comentario_Instalacion);
+                $("#txtFechaInstalacion_Actualizar,#txtFechaInstalacion_Detalle").val(moment(new Date(parseInt(solicitudGPS.FechaInstalacion.substr(6, 19)))).format().slice(0, 19));
+                $("#lblIdSolicitudActualizarSolicitudGPS, #lblIdSolicitudDetalleSolicitudGPS").text(solicitudGPS.IdSolicitud);
+                $("#txtVIN_SolicitarGPS_Actualizar,#txtVIN_SolicitarGPS_Detalle").val(solicitudGPS.VIN);
+
+                if (solicitudGPS.IdEstadoInstalacion != 1) {
+                    $("#btnActualizarSolicitudGPS").prop('disabled', true).removeClass('btn-primary').addClass('btn-secondary').prop('title', 'Esta solicitud de GPS ya no puede ser actualizada debido a su estado').addClass('disabled');
+                }
+                else {
+                    $("#btnActualizarSolicitudGPS").prop('disabled', false).removeClass('btn-secondary').addClass('btn-primary').prop('title', 'Actualizar información de esta solicitud de GPS').removeClass('disabled');
+                }
+
+                $("#modalDetalleSolicitudGPS").modal();
+            }
+            else {
+                MensajeError('No se pudo cargar la información de la solicitud de GPS, contacte al administrador.');
+            }
+        }
+    });
+});
+
+$("#btnActualizarSolicitudGPS").click(function (e) {
+
+    $("#modalDetalleSolicitudGPS").modal('hide');
+    $("#modalActualizarSolicitudGPS").modal();
     
 });
 
-/**/
+$("#btnActualizarSolicitudGPS_Confirmar").click(function (e) {
 
+    if ($('#frmPrincipal').parsley().isValid({ group: 'InstalacionGPS_Actualizar' })) {
+
+        var solicitudGPS = {
+            IdAutoGPSInstalacion: idSolicitudGPS_Actualizar,
+            IdSolicitud: idSolicitud,
+            IdGarantia: idGarantia,
+            NombreCliente: nombreCliente,
+            IdentidadCliente: identidad,
+            Marca: marcaGarantia,
+            Modelo: modeloGarantia,
+            Anio: anioGarantia,
+            VIN: VIN,
+            FechaInstalacion: $("#txtFechaInstalacion_Actualizar").val(),
+            IDAgenciaInstalacion: $("#ddlUbicacionInstalacion_Actualizar :selected").val(),
+            AgenciaInstalacion: $("#ddlUbicacionInstalacion_Actualizar :selected").text(),
+            Comentario_Instalacion: $("#txtComentario_Actualizar").val().trim(),
+            NombreUsuario: NOMBRE_USUARIO,
+            CorreoUsuario: CORREO_USUARIO
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_ListadoGarantias.aspx/ActualizarSolicitudGPS",
+            data: JSON.stringify({ solicitudGPS: solicitudGPS, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('No se pudo actualizar la solicitud de GPS, contacte al administrador.');
+            },
+            success: function (data) {
+
+                $("#modalActualizarSolicitudGPS").modal('hide');
+
+                data.d == true ? MensajeExito('La solicitud de GPS se actualizó correctamente') : MensajeError('No se pudo actualizar la solicitud de GPS, contacte al administrador.');
+
+                $("#txtFechaInstalacion_Actualizar,#ddlUbicacionInstalacion_Actualizar,#txtComentario_Actualizar").val('');
+            }
+        });
+    }
+    else {
+        $('#frmPrincipal').parsley().validate({ group: 'InstalacionGPS_Actualizar', force: true });
+    }
+});
+
+/* Otros */
 $("#tab_Listado_Solicitudes_Garantias_link").on("click", function () {
     tabActivo = 'tab_Listado_Solicitudes_Garantias';
 });
@@ -492,3 +614,11 @@ function MensajeExito(mensaje) {
         message: mensaje
     });
 }
+
+$('.table-responsive').on('show.bs.dropdown', function () {
+    $('.table-responsive').css("overflow", "inherit");
+});
+
+$('.table-responsive').on('hide.bs.dropdown', function () {
+    $('.table-responsive').css("overflow", "auto");
+})

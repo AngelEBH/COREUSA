@@ -35,7 +35,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
-                if (pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1")
+                if (pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "146")
                     btnAbrirSolicitud.Visible = true;
             }
         }

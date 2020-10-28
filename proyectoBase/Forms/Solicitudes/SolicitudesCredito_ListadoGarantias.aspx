@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_ListadoGarantias.aspx.cs" Inherits="SolicitudesCredito_ListadoGarantias" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_ListadoGarantias.aspx.cs" Inherits="SolicitudesCredito_ListadoGarantias" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Garantías de solicitudes aprobadas</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -25,11 +25,11 @@
             cursor: pointer;
         }
 
-        #datatable-listado tbody tr {
+        .dataTable tbody tr {
             cursor: pointer;
         }
 
-        #datatable-listado tbody td {
+        .dataTable tbody td {
             outline: none;
             padding-top: 0 !important;
             padding-bottom: 0 !important;
@@ -142,6 +142,7 @@
                         <table id="datatable-listado" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
+                                    <th>Acciones</th>                                    
                                     <th>No</th>
                                     <th>Agencia</th>
                                     <th>Vendedor</th>
@@ -150,7 +151,6 @@
                                     <th>Nombre cliente</th>
                                     <th>Fecha de ingreso</th>
                                     <th>Estado</th>
-                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -164,13 +164,13 @@
                         <table id="datatable-garantiasSinSolicutd" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
+                                    <th>Acciones</th>
                                     <th>Agencia</th>
                                     <th>Vendedor</th>
                                     <th>VIN</th>
                                     <th>T. Garantia</th>
                                     <th>T. Vehiculo</th>
                                     <th>Fecha creación</th>
-                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -351,7 +351,7 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label class="col-form-label">Fecha de instalación</label>
-                                    <input type="date" class="form-control form-control-sm" name="txtFechaInstalacion" id="txtFechaInstalacion" data-parsley-group="InstalacionGPS_Guardar" />
+                                    <input type="datetime-local" class="form-control form-control-sm" name="txtFechaInstalacion" id="txtFechaInstalacion" data-parsley-group="InstalacionGPS_Guardar" />
                                 </div>
                             </div>
                             <div class="col-12">
@@ -364,6 +364,94 @@
                     </div>
                     <div class="modal-footer pt-2 pb-2">
                         <button type="button" id="btnSolicitarGPS_Confirmar" class="btn btn-primary waves-effect waves-light">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalDetalleSolicitudGPS" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDetalleSolicitudGPSLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalDetalleSolicitudGPSLabel">Detalles de la solicitud GPS (Solicitud <span id="lblIdSolicitudDetalleSolicitudGPS"></span>)</h6> <span id="lblEstadoSolicitudGPS_Detalle" class="btn btn-sm btn-warning float-right">Pendiente</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-form-label">VIN</label>
+                            <input id="txtVIN_SolicitarGPS_Detalle" type="text" class="form-control form-control-sm col-form-label" data-parsley-group="InstalacionGPS_Detalle" readonly="readonly" />
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Ubicación</label>
+                                    <asp:DropDownList runat="server" ID="ddlUbicacionInstalacion_Detalle" ReadOnly="True" class="form-control form-control-sm col-form-label" data-parsley-group="InstalacionGPS_Detalle" required="required"></asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Fecha de instalación</label>
+                                    <input type="datetime-local" class="form-control form-control-sm" name="txtFechaInstalacion_Detalle" id="txtFechaInstalacion_Detalle" readonly="readonly" data-parsley-group="InstalacionGPS_Detalle" />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="col-form-label">Comentario</label>
+                                    <textarea id="txtComentario_Detalle" runat="server" required="required" class="form-control form-control-sm" readonly="readonly" data-parsley-group="InstalacionGPS_Detalle" data-parsley-maxlength="300" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer pt-2 pb-2">
+                        <button type="button" id="btnActualizarSolicitudGPS" class="btn btn-primary waves-effect waves-light">
+                            Actualizar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalActualizarSolicitudGPS" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalActualizarSolicitudGPSLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalActualizarSolicitudGPSLabel">Actualizar solicitud GPS (Solicitud <span id="lblIdSolicitudActualizarSolicitudGPS"></span>)</h6> <span id="lblEstadoSolicitudGPS_Actualizar" class="btn btn-sm btn-warning float-right">Pendiente</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-form-label">VIN</label>
+                            <input id="txtVIN_SolicitarGPS_Actualizar" type="text" class="form-control form-control-sm col-form-label" data-parsley-group="InstalacionGPS_Actualizar" readonly="readonly" />
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Ubicación</label>
+                                    <asp:DropDownList runat="server" ID="ddlUbicacionInstalacion_Actualizar" class="form-control form-control-sm col-form-label" data-parsley-group="InstalacionGPS_Actualizar" required="required"></asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Fecha de instalación</label>
+                                    <input type="datetime-local" class="form-control form-control-sm" name="txtFechaInstalacion_Actualizar" id="txtFechaInstalacion_Actualizar" data-parsley-group="InstalacionGPS_Actualizar" />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="col-form-label">Comentario</label>
+                                    <textarea id="txtComentario_Actualizar" runat="server" required="required" class="form-control form-control-sm" data-parsley-group="InstalacionGPS_Actualizar" data-parsley-maxlength="300" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer pt-2 pb-2">
+                        <button type="button" id="btnActualizarSolicitudGPS_Confirmar" class="btn btn-primary waves-effect waves-light">
                             Confirmar
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -398,6 +486,11 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=202010231406"></script>
+    <script>
+        debugger;
+        const NOMBRE_USUARIO = '<%=pcNombreUsuario %>';
+        const CORREO_USUARIO = '<%=pcBuzoCorreoUsuario%>';
+    </script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20201027082725"></script>
 </body>
 </html>

@@ -1,10 +1,22 @@
 ﻿using System;
 using System.Configuration;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 using System.Data;
+using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
+using System.IO;
 using System.Net;
+using System.Security;
+using System.Security.Principal;
+using System.Security.Authentication;
+
+
 /// <summary>
 /// Summary description for Funciones
 /// </summary>
@@ -15,6 +27,7 @@ public class Funciones
         //
         // TODO: Add constructor logic here
         //
+
     }
 
     public class FuncionesComunes
@@ -72,9 +85,11 @@ public class Funciones
             SqlConnection sqlConexion = null;
             SqlCommand sqlComando = null;
             SqlDataReader slqReader = null;
+
             DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
             sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+
             sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
             try
             {
@@ -94,24 +109,37 @@ public class Funciones
             {
                 lcPaginaUsuario = "";
             }
-            finally
-            {
-                sqlConexion.Close();
-            }
+			finally
+			{
+				sqlConexion.Close();
+			}
+
             return lcPaginaUsuario;
         }
 
+
         public Boolean ValReturnar(string pcValor)
         {
-            return pcValor == "1" ? true : false;
+            Boolean lbRespuesta=false;
+
+            if (pcValor == "1")
+                lbRespuesta = true;
+
+            return lbRespuesta;
         }
+
     }
 
     public class Convertidores
     {
         public Boolean CaracteraLogico(string pcValor)
         {
-            return pcValor == "1" ? true : false;
+            Boolean lbRespuesta = false;
+
+            if (pcValor == "1")
+                lbRespuesta = true;
+
+            return lbRespuesta;
         }
     }
 
@@ -156,13 +184,16 @@ public class Funciones
             SqlConnection sqlConexion = null;
             SqlDataReader sqlResultado = null;
             SqlCommand sqlComando = null;
+
             string[] lcAcceso = new string[3];
 
             sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
             sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
+
             try
             {
                 sqlConexion.Open();
+
                 //lcSQLInstruccion = "exec CoreSeguridad.dbo.sp_MasterLogin " + piIDApp + ",'" + pcUsuario.Trim() + "','" + pcPassword.Trim() + "','" + pcIPUsuario + "'";
                 lcSQLInstruccion = "exec CoreSeguridad.dbo.sp_MasterLogin " + piIDApp + ",'" + pcUsuario.Trim() + "','" + pcPassword.Trim() + "'";
                 sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion);
@@ -187,11 +218,13 @@ public class Funciones
                 sqlConexion.Close();
                 sqlConexion.Dispose();
             }
+
             return lcAcceso;
         }
 
         public string FinalizarSesion(string piIDApp, int piIDSesion, string pcIDUsuario)
         {
+
             return " ";
         }
 

@@ -8,14 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Bandeja de solicitudes</title>
     <!-- BOOTSTRAP -->
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css?v=202010031105" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />    
+    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/Content/css/bandejaSolicitudes.css" rel="stylesheet" />
@@ -117,7 +117,7 @@
                         <option value="07">Julio</option>
                         <option value="08">Agosto</option>
                         <option value="09">Septiembre</option>
-                        <option value="10">Octubre</option>
+                        <option value="10" selected="selected">Octubre</option>
                         <option value="11">Noviembre</option>
                         <option value="12">Diciembre</option>
                     </select>
@@ -217,6 +217,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=202009241031"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=20201024085485"></script>
 </body>
 </html>
