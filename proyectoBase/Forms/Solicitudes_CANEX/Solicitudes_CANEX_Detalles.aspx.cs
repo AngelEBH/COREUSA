@@ -14,180 +14,186 @@ using System.Web.UI.HtmlControls;
 
 public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 {
-    String pcEncriptado = "";
+    string pcEncriptado = "";
     string pcIDUsuario = "";
+    string pcIDSesion = "1";
     string pcIDApp = "";
-    string pcSesionID = "1";
-    public short IDPais = 0;
-    public short IDSocio = 0;
-    public short IDAgencia = 0;
-    public decimal IDEstadoSolicitud = 0;
-    public int IDSolicitudPrestadito = 0;
+    public short IdPais = 0;
+    public short IdSocio = 0;
+    public short IdAgencia = 0;
+    public decimal IdEstadoSolicitud = 0;
+    public int IdSolicitudPrestadito = 0;
+    public DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
             try
             {
-                int idSolicitud = 0;
-                string lcURL = "";
-                int liParamStart = 0;
-                string lcParametros = "";
-                string lcParametroDesencriptado = "";
-                Uri lURLDesencriptado = null;                
-                
+                var idSolicitud = "0";
+                var lcURL = "";
+                var liParamStart = 0;
+                var lcParametros = "";
+                var lcParametroDesencriptado = "";
+                Uri lURLDesencriptado = null;
+
                 lcURL = Request.Url.ToString();
                 liParamStart = lcURL.IndexOf("?");
 
                 if (liParamStart > 0)
                     lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
                 else
-                    lcParametros = String.Empty;
+                    lcParametros = string.Empty;
 
-                if (lcParametros != String.Empty)
+                if (lcParametros != string.Empty)
                 {
                     pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                    idSolicitud = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+                    idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    pcSesionID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-                    int IDPRODUCTO = 0;
-                    decimal EstadoSolicitud = 0;
-                    string IdentidadCLTE = string.Empty;
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    var idProducto = 0;
+                    var estadoSolicitud = 0m;
+                    var identidadCliente = string.Empty;
 
-                    using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+                    using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
                     {
                         sqlConexion.Open();
 
                         /* Informacion de la solicitud */
-                        using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Detalle", sqlConexion))
+                        using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Detalle", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                            using (SqlDataReader reader = sqlComando.ExecuteReader())
+                            using (var sqlResultado = sqlComando.ExecuteReader())
                             {
-                                while (reader.Read())
+                                while (sqlResultado.Read())
                                 {
-                                    IDPRODUCTO = (short)reader["fiIDProducto"];
-                                    EstadoSolicitud = (decimal)reader["fiEstadoSolicitud"];
-                                    IDEstadoSolicitud = EstadoSolicitud;
-                                    IDPais = (short)reader["fiIDPais"];
-                                    IDSocio = (short)reader["fiIDSocio"];
-                                    IDAgencia = (short)reader["fiIDAgencia"];
-                                    IDSolicitudPrestadito = (int)reader["fiIDSolicitudPrestadito"];
-                                    string NombreLogo = IDPRODUCTO == 101 ? "iconoRecibirDinero48.png" : IDPRODUCTO == 201 ? "iconoMoto48.png" : IDPRODUCTO == 202 ? "iconoAuto48.png" : IDPRODUCTO == 301 ? "iconoConsumo48.png" : "iconoConsumo48.png";
-                                    IdentidadCLTE = reader["fcIdentidad"].ToString();
-                                    int IDSolicitud = (int)reader["fiIDSolicitudCANEX"];
-                                    DateTime FechaNacimientoCliente = (DateTime)reader["fdNacimientoCliente"];
-                                    decimal EsComisionista = (decimal)reader["fiComisionista"];
+                                    idProducto = (short)sqlResultado["fiIDProducto"];
+                                    estadoSolicitud = (decimal)sqlResultado["fiEstadoSolicitud"];
+                                    IdEstadoSolicitud = estadoSolicitud;
+                                    IdPais = (short)sqlResultado["fiIDPais"];
+                                    IdSocio = (short)sqlResultado["fiIDSocio"];
+                                    IdAgencia = (short)sqlResultado["fiIDAgencia"];
+                                    IdSolicitudPrestadito = (int)sqlResultado["fiIDSolicitudPrestadito"];
+                                    identidadCliente = sqlResultado["fcIdentidad"].ToString();
+
+                                    var logo = idProducto == 101 ? "iconoRecibirDinero48.png" : idProducto == 201 ? "iconoMoto48.png" : idProducto == 202 ? "iconoAuto48.png" : idProducto == 301 ? "iconoConsumo48.png" : "iconoConsumo48.png";
+                                    var idSolicitudCanex = (int)sqlResultado["fiIDSolicitudCANEX"];
+                                    var fechaNacimientoCliente = (DateTime)sqlResultado["fdNacimientoCliente"];
+                                    var esComisionista = (decimal)sqlResultado["fiComisionista"];
 
                                     /* Verificar si la solicitud estaba en estado "enviada" y hay que pasarla a estatus "en revision" */
-                                    if (EstadoSolicitud == 2)
-                                        CambiarEstadoAEnRevision(IDSolicitud);
+                                    if (estadoSolicitud == 2)
+                                        CambiarEstadoAEnRevision(idSolicitudCanex);
 
-                                    lblTipoPrestamo.Text = (string)reader["fcNombreProducto"];
-                                    LogoPrestamo.ImageUrl = "/Imagenes/" + NombreLogo;
-                                    spanNombreCliente.Text = reader["fcNombreCliente"].ToString();
-                                    spanIdentidadCliente.Text = IdentidadCLTE;
-                                    lblNoSolicitud.Text = reader["fiIDSolicitudCANEX"].ToString();
-                                    lblNoCliente.Text = reader["fiIDCliente"].ToString();
+                                    lblTipoPrestamo.Text = sqlResultado["fcNombreProducto"].ToString();
+                                    LogoPrestamo.ImageUrl = "/Imagenes/" + logo;
+                                    spanNombreCliente.Text = sqlResultado["fcNombreCliente"].ToString();
+                                    spanIdentidadCliente.Text = identidadCliente;
+                                    lblNoSolicitud.Text = sqlResultado["fiIDSolicitudCANEX"].ToString();
+                                    lblNoCliente.Text = sqlResultado["fiIDCliente"].ToString();
                                     lblTipoSolicitud.Text = "Solicitud CANEX";
-                                    lblAgenteDeVentas.Text = reader["fcNombreUsuario"].ToString();
-                                    lblAgencia.Text = reader["fcNombreAgencia"].ToString();
-                                    lblEstadoSolicitud.Text = reader["fcEstadoSolicitud"].ToString();
-                                    lblEstadoSolicitudModal.Text = reader["fcEstadoSolicitud"].ToString();
-                                    lblRtnCliente.Text = reader["fcRTN"].ToString();
-                                    lblNumeroTelefono.NavigateUrl = "tel:" + reader["fcTelefonoPrimario"].ToString();
-                                    lblNumeroTelefono.Text = reader["fcTelefonoPrimario"].ToString();
-                                    lblNumeroTelefonoAlternativo.NavigateUrl = "tel:" + reader["fcTelefonoAlternativo"].ToString();
-                                    lblNumeroTelefonoAlternativo.Text = reader["fcTelefonoAlternativo"].ToString();
-                                    lblNacionalidad.Text = reader["fcNacionalidadCliente"].ToString();
+                                    lblAgenteDeVentas.Text = sqlResultado["fcNombreUsuario"].ToString();
+                                    lblAgencia.Text = sqlResultado["fcNombreAgencia"].ToString();
+                                    lblEstadoSolicitud.Text = sqlResultado["fcEstadoSolicitud"].ToString();
+                                    lblEstadoSolicitudModal.Text = sqlResultado["fcEstadoSolicitud"].ToString();
+                                    lblRtnCliente.Text = sqlResultado["fcRTN"].ToString();
+                                    lblNumeroTelefono.NavigateUrl = "tel:" + sqlResultado["fcTelefonoPrimario"].ToString();
+                                    lblNumeroTelefono.Text = sqlResultado["fcTelefonoPrimario"].ToString();
+                                    lblNumeroTelefonoAlternativo.NavigateUrl = "tel:" + sqlResultado["fcTelefonoAlternativo"].ToString();
+                                    lblNumeroTelefonoAlternativo.Text = sqlResultado["fcTelefonoAlternativo"].ToString();
+                                    lblNacionalidad.Text = sqlResultado["fcNacionalidadCliente"].ToString();
+
                                     /* Calcular edad del cliente */
                                     var hoy = DateTime.Today;
-                                    var edad = hoy.Year - FechaNacimientoCliente.Year;
-                                    if (FechaNacimientoCliente.Date > hoy.AddYears(-edad)) edad--;
-                                    lblFechaNacimientoCliente.Text = FechaNacimientoCliente.ToString("MM/dd/yyyy");
+                                    var edad = hoy.Year - fechaNacimientoCliente.Year;
+
+                                    if (fechaNacimientoCliente.Date > hoy.AddYears(-edad)) edad--;
+                                    lblFechaNacimientoCliente.Text = fechaNacimientoCliente.ToString("MM/dd/yyyy");
+
                                     lblEdadCliente.Text = edad.ToString();
-                                    lblProfesionCliente.Text = reader["fcProfesionuOficio"].ToString();
-                                    lblSexoCliente.Text = reader["fcSexoCliente"].ToString();
-                                    lblEstadoCivilCliente.Text = reader["fcEstadoCivilCliente"].ToString();
-                                    lblViviendaCliente.Text = reader["fcTipoResidenciaCliente"].ToString();
-                                    lblTiempoResidirCliente.Text = "n/a";
-                                    lblDeptoCliente.Text = reader["fcDepartamentoDomicilio"].ToString();
-                                    lblMunicipioCliente.Text = reader["fcMunicipioDomicilio"].ToString();
-                                    lblCiudadCliente.Text = reader["fcCiudadDomicilio"].ToString();
-                                    lblBarrioColoniaCliente.Text = reader["fcBarrioColoniaDomicilio"].ToString();
-                                    lblDireccionDetalladaCliente.Text = reader["fcDireccionDetallada"].ToString();
-                                    lblReferenciaDomicilioCliente.Text = reader["fcDireccionReferencias"].ToString();
-                                    String NombreCompletoConyugue = reader["fcPrimerNombreConyugue"].ToString() + reader["fcSegundoNombreConyugue"].ToString() + reader["fcPrimerApellidoConyugue"].ToString() + reader["fcSegundoApellidoConyugue"].ToString();
-                                    if (string.IsNullOrEmpty(reader["fcPrimerNombreConyugue"].ToString()))
+                                    lblProfesionCliente.Text = sqlResultado["fcProfesionuOficio"].ToString();
+                                    lblSexoCliente.Text = sqlResultado["fcSexoCliente"].ToString();
+                                    lblEstadoCivilCliente.Text = sqlResultado["fcEstadoCivilCliente"].ToString();
+                                    lblViviendaCliente.Text = sqlResultado["fcTipoResidenciaCliente"].ToString();
+                                    lblTiempoResidirCliente.Text = "N/A";
+                                    lblDeptoCliente.Text = sqlResultado["fcDepartamentoDomicilio"].ToString();
+                                    lblMunicipioCliente.Text = sqlResultado["fcMunicipioDomicilio"].ToString();
+                                    lblCiudadCliente.Text = sqlResultado["fcCiudadDomicilio"].ToString();
+                                    lblBarrioColoniaCliente.Text = sqlResultado["fcBarrioColoniaDomicilio"].ToString();
+                                    lblDireccionDetalladaCliente.Text = sqlResultado["fcDireccionDetallada"].ToString();
+                                    lblReferenciaDomicilioCliente.Text = sqlResultado["fcDireccionReferencias"].ToString();
+                                    string nombreCompletoConyugue = sqlResultado["fcPrimerNombreConyugue"].ToString() + sqlResultado["fcSegundoNombreConyugue"].ToString() + sqlResultado["fcPrimerApellidoConyugue"].ToString() + sqlResultado["fcSegundoApellidoConyugue"].ToString();
+                                    if (string.IsNullOrEmpty(sqlResultado["fcPrimerNombreConyugue"].ToString()))
                                     {
                                         divConyugueCliente.Visible = false;
                                     }
                                     else
                                     {
-                                        lblNombreConyugue.Text = NombreCompletoConyugue.Replace(" ", " ");
-                                        DateTime FechaNacimientoConyugue = (DateTime)reader["fdFechaNacimientoConyugue"];
-                                        lblFechaNacimientoConygue.Text = FechaNacimientoConyugue.ToString("MM/dd/yyyy");
-                                        lblTelefonoConyugue.NavigateUrl = "tel:" + reader["fcTelefonoConyugue"].ToString();
-                                        lblTelefonoConyugue.Text = reader["fcTelefonoConyugue"].ToString();
-                                        lblOcupacionConyugue.Text = reader["fcOcupacionConyugue"].ToString();
-                                        lblProfesionOficioConyugue.Text = reader["fcProfesionuOficioConyugue"].ToString();
-                                        lblPuestoAsignadoConyugue.Text = reader["fcPuestoConyugue"].ToString();
-                                        lblLugarTrabajoConyugue.Text = reader["fcNombreEmpresaConyugue"].ToString();
+                                        lblNombreConyugue.Text = nombreCompletoConyugue.Replace(" ", " ");
+                                        var fechaNacimientoConyugue = (DateTime)sqlResultado["fdFechaNacimientoConyugue"];
+                                        lblFechaNacimientoConygue.Text = fechaNacimientoConyugue.ToString("MM/dd/yyyy");
+                                        lblTelefonoConyugue.NavigateUrl = "tel:" + sqlResultado["fcTelefonoConyugue"].ToString();
+                                        lblTelefonoConyugue.Text = sqlResultado["fcTelefonoConyugue"].ToString();
+                                        lblOcupacionConyugue.Text = sqlResultado["fcOcupacionConyugue"].ToString();
+                                        lblProfesionOficioConyugue.Text = sqlResultado["fcProfesionuOficioConyugue"].ToString();
+                                        lblPuestoAsignadoConyugue.Text = sqlResultado["fcPuestoConyugue"].ToString();
+                                        lblLugarTrabajoConyugue.Text = sqlResultado["fcNombreEmpresaConyugue"].ToString();
                                     }
-                                    lblNombreTrabajoCliente.Text = reader["fcNombreEmpresa"].ToString();
-                                    lblIngresosMensualesCliente.Text = reader["fnIngresoMensualBase"].ToString();
-                                    if (EsComisionista == 0)
+
+                                    lblNombreTrabajoCliente.Text = sqlResultado["fcNombreEmpresa"].ToString();
+                                    lblIngresosMensualesCliente.Text = sqlResultado["fnIngresoMensualBase"].ToString();
+
+                                    if (esComisionista == 0)
                                     {
                                         lblComisionesClienteTitulo.Visible = false;
                                         lblComisionesCliente.Visible = false;
                                     }
                                     else
-                                        lblComisionesCliente.Text = reader["fnIngresoMensualComisiones"].ToString();
-                                    lblPuestoAsignadoCliente.Text = reader["fcPuesto"].ToString();
-                                    lblTelefonoEmpresaCliente.NavigateUrl = "tel:" + reader["fcTelefonoEmpresa"].ToString();
-                                    lblTelefonoEmpresaCliente.Text = reader["fcTelefonoEmpresa"].ToString();
-                                    lblExtension.Text = reader["fcExtension"].ToString();
-                                    lblDeptoEmpresa.Text = reader["fcDepartamentoEmpresa"].ToString();
-                                    lblMunicipioEmpresa.Text = reader["fcMunicipioEmpresa"].ToString();
-                                    lblCiudadEmpresa.Text = reader["fcCiudadEmpresa"].ToString();
-                                    lblBarrioColoniaEmpresa.Text = reader["fcBarrioColoniaEmpresa"].ToString();
-                                    lblDireccionDetalladaEmpresa.Text = reader["fcDireccionDetalladaEmpresa"].ToString();
-                                    lblReferenciaUbicacionEmpresa.Text = reader["fcDireccionReferenciasEmpresa"].ToString();
+                                        lblComisionesCliente.Text = sqlResultado["fnIngresoMensualComisiones"].ToString();
+                                    lblPuestoAsignadoCliente.Text = sqlResultado["fcPuesto"].ToString();
+                                    lblTelefonoEmpresaCliente.NavigateUrl = "tel:" + sqlResultado["fcTelefonoEmpresa"].ToString();
+                                    lblTelefonoEmpresaCliente.Text = sqlResultado["fcTelefonoEmpresa"].ToString();
+                                    lblExtension.Text = sqlResultado["fcExtension"].ToString();
+                                    lblDeptoEmpresa.Text = sqlResultado["fcDepartamentoEmpresa"].ToString();
+                                    lblMunicipioEmpresa.Text = sqlResultado["fcMunicipioEmpresa"].ToString();
+                                    lblCiudadEmpresa.Text = sqlResultado["fcCiudadEmpresa"].ToString();
+                                    lblBarrioColoniaEmpresa.Text = sqlResultado["fcBarrioColoniaEmpresa"].ToString();
+                                    lblDireccionDetalladaEmpresa.Text = sqlResultado["fcDireccionDetalladaEmpresa"].ToString();
+                                    lblReferenciaUbicacionEmpresa.Text = sqlResultado["fcDireccionReferenciasEmpresa"].ToString();
+
                                     /* Informacion del préstamo requerido */
-                                    lblValorGlobal.Text = ((decimal)reader["fnValorGlobal"]).ToString("N");
-                                    lblValorPrima.Text = ((decimal)reader["fnValorPrima"]).ToString("N");
-                                    lblPlazoTitulo.Text = "Plazo " + reader["fcTipodeCuota"].ToString();
-                                    lblPlazo.Text = reader["fcPlazo"].ToString();
-                                    lblMontoFinanciar.Text = ((decimal)reader["fnValorPrestamo"]).ToString("N");
+                                    lblValorGlobal.Text = ((decimal)sqlResultado["fnValorGlobal"]).ToString("N");
+                                    lblValorPrima.Text = ((decimal)sqlResultado["fnValorPrima"]).ToString("N");
+                                    lblPlazoTitulo.Text = "Plazo " + sqlResultado["fcTipodeCuota"].ToString();
+                                    lblPlazo.Text = sqlResultado["fcPlazo"].ToString();
+                                    lblMontoFinanciar.Text = ((decimal)sqlResultado["fnValorPrestamo"]).ToString("N");
 
                                     /* Habilitar/Inhabilitar botones de acciones */
-                                    int EstadoRechazada = 5;
-                                    int EstadoAprobada = 4;
-                                    int EstadoEnRevision = 3;
-                                    string title = string.Empty;
-                                    string colorClass = string.Empty;
+                                    var estadoRechazada = 5;
+                                    var estadoAprobada = 4;
+                                    var estadoEnRevision = 3;
+                                    var title = string.Empty;
+                                    var colorClass = string.Empty;
 
-                                    if (EstadoSolicitud == EstadoAprobada || EstadoSolicitud == EstadoRechazada)
+                                    if (estadoSolicitud == estadoAprobada || estadoSolicitud == estadoRechazada)
                                     {
-                                        string Desicion = EstadoSolicitud == EstadoAprobada ? "Aprobada" : "Rechazada";
-                                        title = "La solicitud ya fue " + Desicion;
-                                        colorClass = EstadoSolicitud == EstadoAprobada ? "text-success" : "text-danger";
+                                        string desicion = estadoSolicitud == estadoAprobada ? "Aprobada" : "Rechazada";
+                                        title = "La solicitud ya fue " + desicion;
+                                        colorClass = estadoSolicitud == estadoAprobada ? "text-success" : "text-danger";
 
                                         btnAceptarSolicitud.Disabled = true;
                                         btnRechazar.Disabled = true;
                                         btnCondicionarSolicitud.Disabled = true;
-
                                     }
-                                    else if (IDSolicitudPrestadito != 0)
+                                    else if (IdSolicitudPrestadito != 0)
                                     {
                                         title = "La solicitud ya fue importada";
                                         btnAceptarSolicitud.Disabled = true;
@@ -195,12 +201,12 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                         btnCondicionarSolicitud.Disabled = true;
                                         colorClass = "text-success";
                                     }
-                                    else if (EstadoSolicitud == EstadoEnRevision && IDSolicitudPrestadito == 0)
+                                    else if (estadoSolicitud == estadoEnRevision && IdSolicitudPrestadito == 0)
                                     {
                                         btnAceptarSolicitud.Disabled = false;
                                         colorClass = "text-warning";
                                     }
-                                    else if (EstadoSolicitud != EstadoRechazada && EstadoSolicitud != EstadoAprobada && IDSolicitudPrestadito == 0)
+                                    else if (estadoSolicitud != estadoRechazada && estadoSolicitud != estadoAprobada && IdSolicitudPrestadito == 0)
                                     {
                                         btnRechazar.Disabled = false;
                                         colorClass = "text-warning";
@@ -210,13 +216,13 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     btnRechazar.Attributes.Add("title", title);
                                     btnCondicionarSolicitud.Attributes.Add("title", title);
 
-                                    string claseCss = "col-form-label font-16 font-weight-bold " + colorClass;
-                                    lblEstadoSolicitud.Attributes.Add("class",colorClass);
+                                    var claseCss = "col-form-label font-16 font-weight-bold " + colorClass;
+                                    lblEstadoSolicitud.Attributes.Add("class", colorClass);
                                     lblEstadoSolicitudModal.Attributes.Add("class", claseCss);
 
                                     /* Comentarios acerca de la resolucion de la solicitud */
-                                    string nombreAnalistaResolucion = reader["fcNombreAnalistaResolucion"].ToString();
-                                    string comentarioResolucion = reader["fcComentarioResulucion"].ToString();
+                                    var nombreAnalistaResolucion = sqlResultado["fcNombreAnalistaResolucion"].ToString();
+                                    var comentarioResolucion = sqlResultado["fcComentarioResulucion"].ToString();
 
                                     if (!string.IsNullOrEmpty(comentarioResolucion))
                                     {
@@ -224,61 +230,49 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                         lblNombreAnalista.Text = nombreAnalistaResolucion;
                                         lblDetalleEstado.InnerText = comentarioResolucion;
                                     }
-
                                 }
                             }
                         }
 
                         /* Referencias del cliente */
-                        using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Referencias", sqlConexion))
+                        using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Referencias", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                            using (SqlDataReader reader = sqlComando.ExecuteReader())
+                            using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 /* Llenar table de referencias */
                                 HtmlTableRow tRowReferencias = null;
-                                while (reader.Read())
+                                while (sqlResultado.Read())
                                 {
                                     tRowReferencias = new HtmlTableRow();
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = reader["fcNombre"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = reader["fcTrabajo"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = reader["fcTiempoConocerlo"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = reader["fcTelefono"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = reader["fcParentesco"].ToString() });
+                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcNombre"].ToString() });
+                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTrabajo"].ToString() });
+                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTiempoConocerlo"].ToString() });
+                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTelefono"].ToString() });
+                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcParentesco"].ToString() });
                                     tblReferencias.Rows.Add(tRowReferencias);
                                 }
                             }
                         }
                         /* Informacion del precalificado */
-                        using (SqlCommand sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
+                        using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                            sqlComando.Parameters.AddWithValue("@pcIdentidad", IdentidadCLTE);
-                            using (SqlDataReader reader = sqlComando.ExecuteReader())
+                            sqlComando.Parameters.AddWithValue("@pcIdentidad", identidadCliente);
+                            using (var sqlResultado = sqlComando.ExecuteReader())
                             {
-                                while (reader.Read())
+                                while (sqlResultado.Read())
                                 {
-                                    decimal ObligacionesPrecalificado = (decimal)reader["fnTotalObligaciones"];
-                                    decimal IngresosReales = (decimal)reader["fnIngresos"];
-                                    decimal CapacidadPagoMensual = 0;
-                                    if (IDPRODUCTO == 101)
-                                    {
-                                        CapacidadPagoMensual = ObligacionesPrecalificado == 0 ? (IngresosReales * 13) / 100 : ((IngresosReales - ObligacionesPrecalificado) * 13) / 100;
-                                    }
-                                    else if (IDPRODUCTO == 201)
-                                    {
-                                        CapacidadPagoMensual = ObligacionesPrecalificado == 0 ? (IngresosReales * 30) / 100 : ((IngresosReales - ObligacionesPrecalificado) * 30) / 100;
-                                    }
-                                    else if (IDPRODUCTO == 202)
-                                    {
-                                        CapacidadPagoMensual = ObligacionesPrecalificado == 0 ? (IngresosReales * 40) / 100 : ((IngresosReales - ObligacionesPrecalificado) * 40) / 100;
-                                    }
+                                    var ObligacionesPrecalificado = (decimal)sqlResultado["fnTotalObligaciones"];
+                                    var IngresosReales = (decimal)sqlResultado["fnIngresos"];
+                                    var CapacidadPagoMensual = decimal.Parse(sqlResultado["fnCapacidadDisponible"].ToString());
+
                                     lblIngresosPrecalificado.Text = IngresosReales.ToString("N");
                                     lblObligacionesPrecalificado.Text = ObligacionesPrecalificado.ToString("N");
                                     lblDisponiblePrecalificado.Text = CapacidadPagoMensual.ToString("N");
@@ -288,29 +282,29 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             }
                         }
                         /* Verficar si la solicitud tiene condicionamientos pendientes */
-                        using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Condiciones", sqlConexion))
+                        using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Condiciones", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                            using (SqlDataReader reader = sqlComando.ExecuteReader())
+                            using (var sqlResultado = sqlComando.ExecuteReader())
                             {
-                                if (reader.HasRows)
+                                if (sqlResultado.HasRows)
                                 {
                                     pestanaListaSolicitudCondiciones.Style.Add("display", "");
 
                                     HtmlTableRow tRowSolicitudCondiciones = null;
                                     string EstadoCondicion = String.Empty;
                                     int contadorCondiciones = 1;
-                                    while (reader.Read())
+                                    while (sqlResultado.Read())
                                     {
-                                        EstadoCondicion = (short)reader["fiEstadoCondicion"] != 0 ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-danger mb-0'>Pendiente</label>";
+                                        EstadoCondicion = (short)sqlResultado["fiEstadoCondicion"] != 0 ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-danger mb-0'>Pendiente</label>";
                                         tRowSolicitudCondiciones = new HtmlTableRow();
-                                        tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = reader["fcCategoriaCondicion"].ToString() });
-                                        tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = reader["fcDescripcionCondicion"].ToString() });
-                                        tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = reader["fcObservaciones"].ToString() });
+                                        tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcCategoriaCondicion"].ToString() });
+                                        tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionCondicion"].ToString() });
+                                        tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcObservaciones"].ToString() });
                                         tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerHtml = EstadoCondicion });
                                         tblListaSolicitudCondiciones.Rows.Add(tRowSolicitudCondiciones);
                                         contadorCondiciones++;
@@ -319,10 +313,10 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             }
                         }
                         /* Catalogo de condiciones */
-                        string Comando = "EXEC sp_CANEX_Catalogo_Condiciones " + pcSesionID + "," + pcIDApp + "," + pcIDUsuario;
-                        using (SqlDataAdapter AdapterDDLCondiciones = new SqlDataAdapter(Comando, sqlConexion))
+                        string Comando = "EXEC sp_CANEX_Catalogo_Condiciones " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
+                        using (var AdapterDDLCondiciones = new SqlDataAdapter(Comando, sqlConexion))
                         {
-                            DataTable dtCondiciones = new DataTable();
+                            var dtCondiciones = new DataTable();
                             AdapterDDLCondiciones.Fill(dtCondiciones);
                             ddlCondiciones.DataSource = dtCondiciones;
                             ddlCondiciones.DataBind();
@@ -342,27 +336,26 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         }
     }
 
-    private void CambiarEstadoAEnRevision(int IDSolicitud)
+    private void CambiarEstadoAEnRevision(int idSolicitudCanex)
     {
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        const int EstadoEnRevision = 3;
+        const int estadoEnRevision = 3;
         try
         {
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
-                string lcSQLInstruccion = "CoreFinanciero.dbo.sp_CANEX_Solicitud_CambiarEstado";
-                using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
+
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CANEX_Solicitud_CambiarEstado", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcSesionID);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDPais", IDPais);
-                    sqlComando.Parameters.AddWithValue("@piIDSocio", IDSocio);
-                    sqlComando.Parameters.AddWithValue("@piIDAgencia", IDAgencia);
-                    sqlComando.Parameters.AddWithValue("@IDEstadoNuevo", EstadoEnRevision);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitudCanex);
+                    sqlComando.Parameters.AddWithValue("@piIDPais", IdPais);
+                    sqlComando.Parameters.AddWithValue("@piIDSocio", IdSocio);
+                    sqlComando.Parameters.AddWithValue("@piIDAgencia", IdAgencia);
+                    sqlComando.Parameters.AddWithValue("@IDEstadoNuevo", estadoEnRevision);
                     sqlComando.ExecuteReader();
                 }
             }
@@ -376,20 +369,21 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     [WebMethod]
     public static List<SolicitudesDocumentosViewModel> CargarDocumentos(string dataCrypt)
     {
-        List<SolicitudesDocumentosViewModel> ListadoDocumentos = new List<SolicitudesDocumentosViewModel>();
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        var ListadoDocumentos = new List<SolicitudesDocumentosViewModel>();
+        var DSC = new DSCore.DataCrypt();
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
-                using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
+
+                using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
@@ -397,21 +391,21 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         string fcNombreSocio = "";
                         string fcNombreImagen = "";
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
-                            fcNombreSocio = reader["fcNombreSocio"].ToString();
-                            fcNombreImagen = reader["fcNombreImagen"].ToString();
+                            fcNombreSocio = sqlResultado["fcNombreSocio"].ToString();
+                            fcNombreImagen = sqlResultado["fcNombreImagen"].ToString();
 
                             ListadoDocumentos.Add(new SolicitudesDocumentosViewModel()
                             {
-                                fiIDSolicitudDocs = (short)reader["fiIDImagen"],
-                                fcNombreArchivo = (string)reader["fcNombreImagen"],
+                                fiIDSolicitudDocs = (short)sqlResultado["fiIDImagen"],
+                                fcNombreArchivo = (string)sqlResultado["fcNombreImagen"],
                                 URLArchivo = "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen,
-                                fiTipoDocumento = (short)reader["fiIDImagen"]
+                                fiTipoDocumento = (short)sqlResultado["fiIDImagen"]
                             });
                         }
                     }
@@ -426,10 +420,10 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static bool CondicionarSolicitud(List<SolicitudesCondicionamientosViewModel> SolicitudCondiciones, int IDPais, int IDSocio, int IDAgencia, string dataCrypt)
+    public static bool CondicionarSolicitud(List<SolicitudesCondicionamientosViewModel> solicitudCondiciones, int idPais, int idSocio, int idAgencia, string dataCrypt)
     {
-        bool resultadoProceso = false;
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        var resultadoProceso = false;
+        var DSC = new DSCore.DataCrypt();
 
         using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
         {
@@ -440,41 +434,45 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                 try
                 {
                     Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-                    string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                    string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                    string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                    var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                    var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                     long MensajeError = 0;
 
-                    foreach (SolicitudesCondicionamientosViewModel item in SolicitudCondiciones)
+                    foreach (SolicitudesCondicionamientosViewModel item in solicitudCondiciones)
                     {
-                        using (SqlCommand sqlComandoList = new SqlCommand("sp_CANEX_Solicitud_Condicionar", sqlConexion, transaccion))
+                        using (var sqlComandoList = new SqlCommand("sp_CANEX_Solicitud_Condicionar", sqlConexion, transaccion))
                         {
                             sqlComandoList.CommandType = CommandType.StoredProcedure;
                             sqlComandoList.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComandoList.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComandoList.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComandoList.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                            sqlComandoList.Parameters.AddWithValue("@piIDPais", IDPais);
-                            sqlComandoList.Parameters.AddWithValue("@piIDSocio", IDSocio);
-                            sqlComandoList.Parameters.AddWithValue("@piIDAgencia", IDAgencia);
+                            sqlComandoList.Parameters.AddWithValue("@piIDPais", idPais);
+                            sqlComandoList.Parameters.AddWithValue("@piIDSocio", idSocio);
+                            sqlComandoList.Parameters.AddWithValue("@piIDAgencia", idAgencia);
                             sqlComandoList.Parameters.AddWithValue("@IDCondicion", item.fiIDCondicion);
                             sqlComandoList.Parameters.AddWithValue("@Observaciones", item.fcComentarioAdicional);
 
-                            using (SqlDataReader readerList = sqlComandoList.ExecuteReader())
+                            using (var readerList = sqlComandoList.ExecuteReader())
                             {
                                 while (readerList.Read())
+                                {
                                     MensajeError = (long)readerList["RESULT"];
+                                }
 
                                 if (MensajeError == 1)
+                                {
                                     resultadoProceso = true;
+                                }
                                 else
                                 {
                                     resultadoProceso = false;
                                     break;
                                 }
                             }
-                        } // using cmdList
+                        }
                     }
 
                     if (resultadoProceso == true)
@@ -485,58 +483,54 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     transaccion.Rollback();
                     ex.Message.ToString();
                 }
-
             }// using transaction
-
         } // using connection
-
         return resultadoProceso;
     }
 
     [WebMethod]
-    public static int RechazarSolicitud(int IDPais, int IDSocio, int IDAgencia, string Comentario, string dataCrypt)
+    public static int RechazarSolicitud(int idPais, int idSocio, int idAgencia, string comentario, string dataCrypt)
     {
         int resultadoProceso = 0;
         try
         {
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            long MensajeError = 0;
+            var DSC = new DSCore.DataCrypt();
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            long mensajeError = 0;
 
-            const int EstadoRechazado = 5;
-            int Resolucion = EstadoRechazado;
+            const int estadoRechazado = 5;
+            int resolucion = estadoRechazado;
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_SolicitudResolucion", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CANEX_SolicitudResolucion", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDPais", IDPais);
-                    sqlComando.Parameters.AddWithValue("@piIDSocio", IDSocio);
-                    sqlComando.Parameters.AddWithValue("@piIDAgencia", IDAgencia);
-                    sqlComando.Parameters.AddWithValue("@IDEstadoNuevo", Resolucion);
+                    sqlComando.Parameters.AddWithValue("@piIDPais", idPais);
+                    sqlComando.Parameters.AddWithValue("@piIDSocio", idSocio);
+                    sqlComando.Parameters.AddWithValue("@piIDAgencia", idAgencia);
+                    sqlComando.Parameters.AddWithValue("@IDEstadoNuevo", resolucion);
                     sqlComando.Parameters.AddWithValue("@piIDSolicitudPrestadito", "0");
-                    sqlComando.Parameters.AddWithValue("@pcComentario", Comentario.Trim());
+                    sqlComando.Parameters.AddWithValue("@pcComentario", comentario.Trim());
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
-                            MensajeError = (long)reader["RESULT"];
+                        while (sqlResultado.Read())
+                            mensajeError = (long)sqlResultado["RESULT"];
 
-                        if (MensajeError == 1)
-                            resultadoProceso = Convert.ToInt32(MensajeError);
+                        if (mensajeError == 1)
+                            resultadoProceso = Convert.ToInt32(mensajeError);
                     }
-
                 }
             }
         }
@@ -548,59 +542,62 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static ResponseEntitie ImportarSolicitud(int IDPais, int IDSocio, int IDAgencia, string Comentario, string dataCrypt)
+    public static ResponseEntitie ImportarSolicitud(int idPais, int idSocio, int idAgencia, string comentario, string dataCrypt)
     {
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        ResponseEntitie resultadoProceso = new ResponseEntitie();
-        List<SolicitudesDocumentosViewModel> ListadoDocumentosCANEX = new List<SolicitudesDocumentosViewModel>();
+        var DSC = new DSCore.DataCrypt();
+        var resultadoProceso = new ResponseEntitie();
+        var ListadoDocumentosCANEX = new List<SolicitudesDocumentosViewModel>();
 
         try
         {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
 
-            bool ResultadoSp = false;
-            string fcMensajeResultado = string.Empty;
-            string fcMensajeError = string.Empty;
-            int IDSolicitudPrestadito = 0;
+            var resultadoSp = false;
+            var mensajeResultado = string.Empty;
+            var mensajeError = string.Empty;
+            int idSolicitudPrestadito = 0;
             int contadorErrores = 0;
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_ImportarSolicitud", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_ImportarSolicitud", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSolicitudCANEX", idSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDPais", IDPais);
-                    sqlComando.Parameters.AddWithValue("@piIDSocio", IDSocio);
-                    sqlComando.Parameters.AddWithValue("@piIDAgencia", IDAgencia);
-                    sqlComando.Parameters.AddWithValue("@pcComentario", Comentario.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDPais", idPais);
+                    sqlComando.Parameters.AddWithValue("@piIDSocio", idSocio);
+                    sqlComando.Parameters.AddWithValue("@piIDAgencia", idAgencia);
+                    sqlComando.Parameters.AddWithValue("@pcComentario", comentario.Trim());
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
-                            ResultadoSp = (bool)reader["fbTipoResultado"];
-                            fcMensajeResultado = (string)reader["fcMensajeResultado"];
-                            fcMensajeError = (string)reader["fcMensajeError"];
-                            IDSolicitudPrestadito = (int)reader["fiIDSolicitud"];
+                            resultadoProceso.idInsertado = (int)sqlResultado["fiIDSolicitud"];
+                            resultadoProceso.message = "MensajeResultado:" + (string)sqlResultado["fcMensajeResultado"] + " | fcMensajeError" + (string)sqlResultado["fcMensajeError"]; ;
+                            resultadoProceso.response = (bool)sqlResultado["fbTipoResultado"];
+
+                            resultadoSp = (bool)sqlResultado["fbTipoResultado"];
+                            mensajeResultado = (string)sqlResultado["fcMensajeResultado"];
+                            mensajeError = (string)sqlResultado["fcMensajeError"];
+                            idSolicitudPrestadito = (int)sqlResultado["fiIDSolicitud"];
                         }
                     }
                 }
 
                 /* si se importó todo correctamente, guardar la documentacion */
-                if (ResultadoSp == true)
+                if (resultadoSp == true)
                 {
-                    using (SqlCommand sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
+                    using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
@@ -608,87 +605,89 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                        using (SqlDataReader reader = sqlComando.ExecuteReader())
+                        using (var sqlResultado = sqlComando.ExecuteReader())
                         {
-                            string fcNombreSocio = "";
-                            string fcNombreImagen = "";
+                            var nombreSocio = string.Empty;
+                            var nombreImagen = string.Empty;
 
-                            while (reader.Read())
+                            while (sqlResultado.Read())
                             {
-                                fcNombreSocio = reader["fcNombreSocio"].ToString();
-                                fcNombreImagen = reader["fcNombreImagen"].ToString();
+                                nombreSocio = sqlResultado["fcNombreSocio"].ToString();
+                                nombreImagen = sqlResultado["fcNombreImagen"].ToString();
 
                                 /* Lista de documentos canex, que se deben mover a la carpeta de documentos de solicitudes */
                                 ListadoDocumentosCANEX.Add(new SolicitudesDocumentosViewModel()
                                 {
-                                    fiIDSolicitudDocs = (short)reader["fiIDImagen"],
-                                    NombreAntiguo = (string)reader["fcNombreImagen"],
-                                    URLAntiguoArchivo = "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen,
-                                    fiTipoDocumento = (short)reader["fiIDImagen"]
+                                    fiIDSolicitudDocs = (short)sqlResultado["fiIDImagen"],
+                                    NombreAntiguo = (string)sqlResultado["fcNombreImagen"],
+                                    URLAntiguoArchivo = "http://canex.miprestadito.com/documentos/" + nombreSocio + "/SOL_" + idSolicitud + "/" + nombreImagen,
+                                    fiTipoDocumento = (short)sqlResultado["fiIDImagen"]
                                 });
                             }
                         }
                     }// using cmd
 
-                    int DocumentacionCliente = 1;
-                    int DocumentacionAval = 2;
-                    int TipoDocumentacion = 0;
+                    int documentacionCliente = 1;
+                    int documentacionAval = 2;
+                    int tipoDocumentacion = 0;
 
-                    int[] IDSDocumentosAval = new int[] { 10, 11, 12, 13, 14, 15, 16, 17, 20, 21 };
-                    int[] IDSDocumentosCliente = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 19 };
+                    int[] idsDocumentosAval = new int[] { 10, 11, 12, 13, 14, 15, 16, 17, 20, 21 };
+                    int[] idsDocumentosCliente = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 19 };
 
-                    if (IDSDocumentosAval.Contains(DocumentacionAval))
+                    if (idsDocumentosAval.Contains(documentacionAval))
                     {
-                        TipoDocumentacion = DocumentacionAval;
+                        tipoDocumentacion = documentacionAval;
                     }
                     else
                     {
-                        TipoDocumentacion = DocumentacionCliente;
+                        tipoDocumentacion = documentacionCliente;
                     }
 
-                    string NombreCarpetaDocumentos = "Solicitud" + IDSolicitudPrestadito;
-                    string NuevoNombreDocumento = "";
+                    string nombreCarpetaDocumentos = "Solicitud" + idSolicitudPrestadito;
+                    string nuevoNombreDocumento = "";
 
                     /* lista de documentos de la solicitud de canex */
                     var listaDocumentos = ListadoDocumentosCANEX;
 
                     /* Lista de documentos que se va registrar en la base de datos de credito y se va mover al nuevo directorio */
-                    List<SolicitudesDocumentosViewModel> SolicitudesDocumentos = new List<SolicitudesDocumentosViewModel>();
+                    var solicitudesDocumentos = new List<SolicitudesDocumentosViewModel>();
 
 
                     if (listaDocumentos != null)
                     {
                         /* lista de bloques y la cantidad de documentos que contiene cada uno */
-                        var Bloques = listaDocumentos.GroupBy(TipoDocumento => TipoDocumento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
+                        var bloques = listaDocumentos.GroupBy(TipoDocumento => TipoDocumento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
 
                         /* lista donde se guardara temporalmente los documentos dependiendo del tipo de documento en el iterador */
-                        List<SolicitudesDocumentosViewModel> DocumentosBloque = new List<SolicitudesDocumentosViewModel>();
+                        var documentosBloque = new List<SolicitudesDocumentosViewModel>();
 
-                        string NombreCarpetaDocumentosCANEX = "Solicitud" + IDSolicitudPrestadito;
-                        string DirectorioDocumentosSolicitudCANEX = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + NombreCarpetaDocumentosCANEX + "\\";
+                        var nombreCarpetaDocumentosCANEX = "Solicitud" + idSolicitudPrestadito;
+                        var directorioDocumentosSolicitudCANEX = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentosCANEX + "\\";
 
-                        foreach (var Bloque in Bloques)
+                        foreach (var bloque in bloques)
                         {
-                            int TipoDocumento = (int)Bloque.Key;
-                            int CantidadDocumentos = Bloque.Count;
+                            int tipoDocumento = (int)bloque.Key;
+                            int cantidadDocumentos = bloque.Count;
 
-                            DocumentosBloque = listaDocumentos.Where(x => x.fiTipoDocumento == TipoDocumento).ToList();// documentos de este bloque
-                            String[] NombresGenerador = Funciones.MultiNombres.GenerarNombreCredDocumento(DocumentacionCliente, IDSolicitudPrestadito, TipoDocumento, CantidadDocumentos);
+                            documentosBloque = listaDocumentos.Where(x => x.fiTipoDocumento == tipoDocumento).ToList();// documentos de este bloque
+                            string[] nombresGenerador = Funciones.MultiNombres.GenerarNombreCredDocumento(documentacionCliente, idSolicitudPrestadito, tipoDocumento, cantidadDocumentos);
 
-                            int ContadorNombre = 0;
-                            foreach (SolicitudesDocumentosViewModel file in DocumentosBloque)
+                            int contadorNombre = 0;
+
+                            foreach (SolicitudesDocumentosViewModel file in documentosBloque)
                             {
-                                NuevoNombreDocumento = NombresGenerador[ContadorNombre];
-                                SolicitudesDocumentos.Add(new SolicitudesDocumentosViewModel()
+                                nuevoNombreDocumento = nombresGenerador[contadorNombre];
+
+                                solicitudesDocumentos.Add(new SolicitudesDocumentosViewModel()
                                 {
-                                    fcNombreArchivo = NuevoNombreDocumento,
+                                    fcNombreArchivo = nuevoNombreDocumento,
                                     NombreAntiguo = file.NombreAntiguo,
-                                    fcRutaArchivo = DirectorioDocumentosSolicitudCANEX,
-                                    URLArchivo = "/Documentos/Solicitudes/" + NombreCarpetaDocumentos + "/" + NuevoNombreDocumento + ".png",
+                                    fcRutaArchivo = directorioDocumentosSolicitudCANEX,
+                                    URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDocumentos + "/" + nuevoNombreDocumento + ".png",
                                     URLAntiguoArchivo = file.URLAntiguoArchivo,
                                     fiTipoDocumento = file.fiTipoDocumento
                                 });
-                                ContadorNombre++;
+                                contadorNombre++;
                             }
                         }
                     }
@@ -698,18 +697,19 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         resultadoProceso.message = "Error al registrar la documentación";
                         return resultadoProceso;
                     }
-                    if (SolicitudesDocumentos.Count <= 0)
+                    if (solicitudesDocumentos.Count <= 0)
                     {
                         resultadoProceso.response = false;
                         resultadoProceso.message = "Error al guardar documentación, compruebe que los documentos se hayan cargado correctamente";
                         return resultadoProceso;
                     }
-                    foreach (SolicitudesDocumentosViewModel documento in SolicitudesDocumentos)
+
+                    foreach (SolicitudesDocumentosViewModel documento in solicitudesDocumentos)
                     {
-                        using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_Documentos_Insert", sqlConexion))
+                        using (var sqlComando = new SqlCommand("sp_CREDSolicitud_Documentos_Insert", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitudPrestadito);
+                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", idSolicitudPrestadito);
                             sqlComando.Parameters.AddWithValue("@fcNombreArchivo", documento.fcNombreArchivo);
                             sqlComando.Parameters.AddWithValue("@fcTipoArchivo", ".png");
                             sqlComando.Parameters.AddWithValue("@fcRutaArchivo", documento.fcRutaArchivo);
@@ -721,11 +721,12 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcUserNameCreated", string.Empty);
                             sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
-                            using (SqlDataReader reader = sqlComando.ExecuteReader())
+
+                            using (var sqlResultado = sqlComando.ExecuteReader())
                             {
-                                while (reader.Read())
+                                while (sqlResultado.Read())
                                 {
-                                    if (reader["MensajeError"].ToString().StartsWith("-1"))
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -738,17 +739,15 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         }
                     }
                     /* Mover documentos al directorio de la solicitud */
-                    if (!ImportarDocumentosCANEX(IDSolicitudPrestadito, SolicitudesDocumentos))
+                    if (!ImportarDocumentosCANEX(idSolicitudPrestadito, solicitudesDocumentos))
                     {
                         resultadoProceso.response = false;
                         resultadoProceso.message = "Error al guardar la documentación de la solicitud";
                         return resultadoProceso;
                     }
-
                 } // if SP == true
 
             } // using connection
-
         }
         catch (Exception ex)
         {
@@ -760,13 +759,13 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     [WebMethod]
     public static string ObtenerUrlEncriptado(string dataCrypt)
     {
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-        string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-        string pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
-        string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp").ToString();
+        var DSC = new DSCore.DataCrypt();
+        var lURLDesencriptado = DesencriptarURL(dataCrypt);
+        var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+        var pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
+        var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp").ToString();
 
-        string parametrosEncriptados = DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp);
+        var parametrosEncriptados = DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp);
         return parametrosEncriptados;
     }
 
@@ -775,20 +774,20 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+            var DSC = new DSCore.DataCrypt();
             int liParamStart = 0;
-            string lcParametros = "";
-            String pcEncriptado = "";
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
             liParamStart = URL.IndexOf("?");
             if (liParamStart > 0)
                 lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
             else
-                lcParametros = String.Empty;
+                lcParametros = string.Empty;
 
-            if (lcParametros != String.Empty)
+            if (lcParametros != string.Empty)
             {
                 pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
@@ -800,38 +799,38 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     }
 
     /* Descargar y guardar los documentos de la solicitud en su respectiva carpeta de documentos */
-    public static bool ImportarDocumentosCANEX(int IDSolicitud, List<SolicitudesDocumentosViewModel> ListaDocumentos)
+    public static bool ImportarDocumentosCANEX(int idSolicitud, List<SolicitudesDocumentosViewModel> listaDocumentos)
     {
         bool result;
         try
         {
-            WebClient client = new WebClient();
-            MD5 md5ArchivoDescargado = MD5.Create();
+            var client = new WebClient();
+            var md5ArchivoDescargado = MD5.Create();
 
-            if (ListaDocumentos != null)
+            if (listaDocumentos != null)
             {
-                /* CREAR EL NUEVO DIRECTORIO PARA LOS DOCUMENTOS DE LA SOLICITUD */
-                string NombreCarpetaDocumentos = "Solicitud" + IDSolicitud;
-                string DirectorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + NombreCarpetaDocumentos + "\\";
-                bool CarpetaExistente = System.IO.Directory.Exists(DirectorioDocumentosSolicitud);
+                /* Crear el nuevo directorio para los documentos de la solicitud  */
+                var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
+                var directorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentos + "\\";
+                var carpetaExistente = Directory.Exists(directorioDocumentosSolicitud);
 
-                if (!CarpetaExistente)
-                    System.IO.Directory.CreateDirectory(DirectorioDocumentosSolicitud);
+                if (!carpetaExistente)
+                    Directory.CreateDirectory(directorioDocumentosSolicitud);
 
-                foreach (SolicitudesDocumentosViewModel Documento in ListaDocumentos)
+                foreach (SolicitudesDocumentosViewModel Documento in listaDocumentos)
                 {
-                    string ViejoDirectorio = Documento.URLAntiguoArchivo;
-                    string NuevoNombreDocumento = Documento.fcNombreArchivo;
-                    string NuevoDirectorio = DirectorioDocumentosSolicitud + NuevoNombreDocumento + ".png";
+                    string viejoDirectorio = Documento.URLAntiguoArchivo;
+                    string nuevoNombreDocumento = Documento.fcNombreArchivo;
+                    string nuevoDirectorio = directorioDocumentosSolicitud + nuevoNombreDocumento + ".png";
 
-                    if (File.Exists(NuevoDirectorio))
-                        File.Delete(NuevoDirectorio);
+                    if (File.Exists(nuevoDirectorio))
+                        File.Delete(nuevoDirectorio);
 
-                    if (!System.IO.File.Exists(NuevoDirectorio))
+                    if (!File.Exists(nuevoDirectorio))
                     {
                         string lcURL = Documento.URLAntiguoArchivo;
 
-                        client.DownloadFile(new Uri(lcURL), NuevoDirectorio);
+                        client.DownloadFile(new Uri(lcURL), nuevoDirectorio);
                         client.Dispose();
                         client = null;
                         client = new WebClient();

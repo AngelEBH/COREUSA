@@ -39,6 +39,10 @@
             position: relative;
             float: left;
         }
+
+        #divContenedor_datatableButtons div .dropdown-menu{
+            overflow-y: auto; max-height: 300px !important;
+        }
     </style>
 </head>
 <body runat="server" class="EstiloBody-Listado">

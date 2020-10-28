@@ -7,15 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles de la solicitud CANEX</title>
-    <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
-    <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
+
     <style>
         .card-header {
             background-color: #ffffff;
@@ -505,7 +504,7 @@
                         <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#pestanaAgregarCondiciones" role="tab">
-                                    <span class="d-none d-sm-block">Agregar Nuevas Condiciones</span>
+                                    <span class="d-none d-sm-block">Agregar nuevas condiciones</span>
                                 </a>
                             </li>
                             <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones" style="display: none;">
@@ -595,7 +594,7 @@
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
                             <div>
-                                <textarea id="ComentarioRechazar" required="required" class="form-control" data-parsley-maxlength="255" rows="2"></textarea>
+                                <textarea id="txtComentarioRechazar" required="required" class="form-control" data-parsley-maxlength="255" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -625,7 +624,7 @@
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
                             <div>
-                                <textarea id="ComentarioAceptar" required="required" class="form-control" data-parsley-maxlength="255" rows="2"></textarea>
+                                <textarea id="txtComentarioAceptar" required="required" class="form-control" data-parsley-maxlength="255" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -653,7 +652,6 @@
                             <div class="text-center">
                                 <asp:Label ID="lblEstadoSolicitudModal" runat="server"></asp:Label>
                             </div>
-
                             <div class="mt-1">
                                 <label class="col-form-label">
                                     Analista:
@@ -685,14 +683,12 @@
     <script src="/Scripts/plugins/imgBox/jquery.imgbox.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script>
-        $(document).ready(function () {
-            IDPais = <%=this.IDPais%>;
-            IDAgencia = <%=this.IDAgencia%>;
-            IDSocio = <%=this.IDSocio%>;
-            IDEstado = <%=this.IDEstadoSolicitud%>;
-            IDSolicitudImportada = <%=this.IDSolicitudPrestadito%>;
-        });
+        const idPais = <%=this.IdPais%>;
+        const idAgencia = <%=this.IdAgencia%>;
+        const idSocio = <%=this.IdSocio%>;
+        idEstado = <%=this.IdEstadoSolicitud%>;
+        const idSolicitudImportada = <%=this.IdSolicitudPrestadito%>;
     </script>
-    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=202008241047"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=20201027154785"></script>
 </body>
 </html>

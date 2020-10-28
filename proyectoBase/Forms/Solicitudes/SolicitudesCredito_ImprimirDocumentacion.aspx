@@ -123,15 +123,15 @@
                             </div>
                             <div class="col-lg-3 col-md-6 col-sm-3">
                                 <label class="col-form-label">Monto a Financiar</label>
-                                <asp:TextBox ID="txtMontoFinalAFinanciar" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtMontoFinalAFinanciar" ReadOnly="true" CssClass="form-control form-control-sm col-form-label text-right" runat="server"></asp:TextBox>
                             </div>
                             <div class="col-lg-3 col-md-6 col-sm-3 col-6">
                                 <label class="col-form-label">Plazo <span runat="server" id="lblTipoDePlazo"></span></label>
-                                <asp:TextBox ID="txtPlazoFinanciar" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtPlazoFinanciar" ReadOnly="true" CssClass="form-control form-control-sm col-form-label text-right" runat="server"></asp:TextBox>
                             </div>
                             <div class="col-lg-3 col-md-6 col-sm-3 col-6">
                                 <label class="col-form-label">48 Cuotas <span runat="server" id="lblTipoDePlazoCuota"></span></label>
-                                <asp:TextBox ID="txtValorCuota" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtValorCuota" ReadOnly="true" CssClass="form-control form-control-sm col-form-label text-right" runat="server"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -290,7 +290,7 @@
                             <p>
                                 Nostros, <b>ERICK  GEOVANY  MOLINA  PADILLA</b>,
                                 Casado,  Ingeniero  Industrial,  con  domicilio  en  la  ciudad  de  San  Pedro  Sula, Departamento de Cortés, quien actúan en su condición de Representante Legal de la Sociedad Mercantil denominada
-                                <b>PRESTADITO S.A. de  C.V.</b> empresa domiciliada domiciliada  en  la  ciudad  de  San  Pedro  Sula,  departamento  de  Cortes,  llamada  en  adelante
+                                <b>PRESTADITO S.A. de  C.V.</b> empresa domiciliada  en  la  ciudad  de  San  Pedro  Sula,  departamento  de  Cortes,  llamada  en  adelante
                                 <b>PRESTADITO</b> o <b>PRESTAMISTA</b>; y por otra parte el Sr(a) <asp:Label runat="server" ID="lblNombre_Contrato" class="font-weight-bold"></asp:Label>,
                                 mayor de edad, de nacionalidad <asp:Label runat="server" ID="lblNacionalidad_Contrato" class="font-weight-bold"></asp:Label> y de este domicilio, 
                                 con identidad No. <asp:Label runat="server" ID="lblIdentidad_Contrato" class="font-weight-bold"></asp:Label> con domicilio y dirección en <asp:Label runat="server" ID="lblDireccion_Contrato"></asp:Label>,
@@ -465,7 +465,7 @@
                                 <asp:Label runat="server" ID="lblInteresesMoratorios_Pagare"></asp:Label>% PORCIENTO MENSUAL;
                                 a su vez, en caso de ejecución legal de la presente obligación, me someto a la jurisdicción que establezca <b>PRESTADITO S.A. de C.V.</b>,
                                 quedando incorporadas en este documento todas las disposiciones del Código de Comercio.
-                                En fe de lo cual, firmo (amos) en la ciudad de <span class="lblCiudad_Firma"></span>, departamento de <span class="lblDepartamento_Firma"></span>, a los <span class="lblNumeroDia_Firma"></span>días del mes de <span class="lblMes_Firma"></span>del año <span class="lblAnio_Firma"></span>.
+                                En fe de lo cual, firmo (amos) en la ciudad de <span class="lblCiudad_Firma"></span>, departamento de <span class="lblDepartamento_Firma"></span>, a los <span class="lblNumeroDia_Firma"></span> días del mes de <span class="lblMes_Firma"></span> del año <span class="lblAnio_Firma"></span>.
                             </p>
                         </div>
                     </div>
@@ -530,7 +530,7 @@
                                 <br />
 
                                 Doy fe de lo anterior y de recibir el vehículo y para esto firmo de forma libre y espontáneamente la presente Constancia
-                                en la ciudad de <span class="lblCiudad_Firma"></span>, departamento de <span class="lblDepartamento_Firma"></span>, a los <span class="lblNumeroDia_Firma"></span>días del mes de <span class="lblMes_Firma"></span>del año <span class="lblAnio_Firma"></span>.
+                                en la ciudad de <span class="lblCiudad_Firma"></span>, departamento de <span class="lblDepartamento_Firma"></span>, a los <span class="lblNumeroDia_Firma"></span> días del mes de <span class="lblMes_Firma"></span> del año <span class="lblAnio_Firma"></span>.
                             </p>
                         </div>
                     </div>
@@ -542,7 +542,7 @@
                             <asp:Label class="mt-0 d-block" runat="server" ID="lblNombreFirma_CompromisoLegal"></asp:Label>
                         </div>
                         <div class="col-4 text-center mt-3">
-                            <asp:Label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" Style="border-radius: 0px;" runat="server" ID="lblIdentidadFirma_CompromisoLegal"></asp:Label>
+                            <asp:Label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" ForeColor="Black" Style="border-radius: 0px;" runat="server" ID="lblIdentidadFirma_CompromisoLegal"></asp:Label>
                             <label class="mt-0 d-block">No. Identidad</label>
                         </div>
                         <div class="col-1"></div>
@@ -568,7 +568,7 @@
                                 Legal de la Empresa Mercantil denominada “PRESTADITO S.A DE C.V. con Registro Tributario Nacional 05019016811399, Empresa Constituida mediante
                                 escritura pública Instrumento número 86 autorizada en esta Ciudad el día 18 de Diciembre del año 2,015 por el Notario Efraín Antonio Gutiérrez Ardon e inscrita
                                 bajo número de MATRICULA 96565 del Registro Mercantil del Centro Asociado de la Cámara de Comercio e Industria de Cortes,
-                                en este convenio se denominara <b>LA EMPRESA</b> y <b>AL SEÑOR</b>
+                                en este convenio se denominara <b>LA EMPRESA</b> y <b>AL SEÑOR(A)</b>
                                 <asp:Label runat="server" ID="lblNombreCliente_ConvenioCyV"></asp:Label>
                                 mayor de edad,
                                 <asp:Label runat="server" ID="lblNacionalidad_ConvenioCyV"></asp:Label>,
@@ -640,7 +640,7 @@
                                 <b>Décimo primero:</b>
                                 En caso de controversia se someten al centro de Conciliación y Arbitraje de la cámara de comercio e Industrias de Cortes.
                                 <br />
-                                El presente convenio se firma en duplicado en la Ciudad de <span class="lblCiudad_Firma"></span>, <span class="lblDepartamento_Firma"></span>a los <span class="lblNumeroDia_Firma"></span>días del mes de <span class="lblMes_Firma"></span>del año <span class="lblAnio_Firma"></span>.
+                                El presente convenio se firma en duplicado en la Ciudad de <span class="lblCiudad_Firma"></span>, <span class="lblDepartamento_Firma"></span> a los <span class="lblNumeroDia_Firma"></span> días del mes de <span class="lblMes_Firma"></span> del año <span class="lblAnio_Firma"></span>.
                             </p>
                         </div>
                     </div>

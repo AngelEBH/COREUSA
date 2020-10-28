@@ -120,7 +120,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             txtRtn.Text = RTN;
                             txtTelefonoCliente.Text = telefonoPrimario;
                             txtProducto.Text = producto;
-                            txtMontoFinalAFinanciar.Text = montoFinalFinanciar;
+                            txtMontoFinalAFinanciar.Text = string.Format("{0:#,###0.00}", Convert.ToDecimal(montoFinalFinanciar));
                             txtPlazoFinanciar.Text = plazoFinalAprobado;
                             lblTipoDePlazo.InnerText = tipoDePlazo;
                             txtValorCuota.Text = valorCuota;
@@ -193,8 +193,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblMontoParaCompraVehiculoEnPalabras_Contrato.Text = ConvertirCantidadALetras(montoFinalFinanciar);
                                         lblMontoParaCompraVehiculo_Contrato.Text = montoFinalFinanciar;
                                         lblMontoParaCompraSeguroYGPSEnPalabras_Contrato.Text = ConvertirCantidadALetras("0");
-                                        lblMontoParaCompraSeguroYGPS_Contrato.Text = "0";
-                                        lblMontoGastosDeCierre_Contrato.Text = "0";
+                                        lblMontoParaCompraSeguroYGPS_Contrato.Text = string.Format("{0:#,###0.00}", Convert.ToDecimal("0"));
+                                        lblMontoGastosDeCierre_Contrato.Text = string.Format("{0:#,###0.00}", Convert.ToDecimal("0"));
                                         lblMarca_Contrato.Text = marca;
                                         lblTipoVehiculo_Contrato.Text = tipoDeVehiculo;
                                         lblModelo_Contrato.Text = modelo;
@@ -207,14 +207,11 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblTasaInteresSimple_Contrato.Text = "1.67";
                                         lblTipoDePlazo_Contrato.Text = tipoDePlazo;
                                         lblCAT_Contrato.Text = "20.04";
-                                        lblMontoPrima_Contrato.Text = valorPrima;
+                                        lblMontoPrima_Contrato.Text = string.Format("{0:#,###0.00}", Convert.ToDecimal(valorPrima));
                                         lblPlazo_Contrato.Text = plazoFinalAprobado;
                                         lblFrecuenciaPago_Contrato.Text = tipoDePlazo;
                                         lblValorCuotaPalabras_Contrato.Text = ConvertirCantidadALetras("0"); // pendiente
-                                        lblValorCuota_Contrato.Text = "0";
-
-
-
+                                        lblValorCuota_Contrato.Text = string.Format("{0:#,###0.00}", Convert.ToDecimal("0"));
 
                                         /* Pagare */
                                         lblMontoTitulo_Pagare.Text = "L. " + string.Format("{0:#,###0.00}", Convert.ToDecimal(montoFinalFinanciar));
