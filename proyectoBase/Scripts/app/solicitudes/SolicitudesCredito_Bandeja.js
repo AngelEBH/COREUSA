@@ -125,7 +125,7 @@ $(document).ready(function () {
                             Resultado = IconoRojo;
                         }
                     }
-                    
+
                     return Resultado;
                 }
             },
@@ -192,7 +192,15 @@ $(document).ready(function () {
                     }
                     return resolucionFinal;
                 }
-            }
+            },
+            {
+                "data": "ftTiempoTomaDecisionFinal", "visible": false, "title": 'Fecha resolución',
+                "render": function (value) {
+
+                    console.log(moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a'));
+                    return value != ProcesoPendiente ? moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a') : '';
+                }
+            },
         ],
         buttons: [
             {
@@ -205,19 +213,21 @@ $(document).ready(function () {
                 autoFilter: true,
                 messageTop: 'Solicitudes de crédito ' + moment().format('YYYY/MM/DD'),
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 13]
+                    columns: [0, 1, 2, 3, 4, 5, 13,14]
                 }
             },
             {
                 extend: 'colvis',
-                text: 'Ocultar columnas'
+                text: 'Columnas'
             }
         ],
         columnDefs: [
-            { targets: [6,7,8,9,10,11,12], orderable: false },
+            { targets: [6, 7, 8, 9, 10, 11, 12], orderable: false },
             { "width": "1%", "targets": 0 }
         ]
     });
+
+    dtBandeja.buttons().container().appendTo('#divContenedor_datatableButtons');
 
     /* Filtrar cuando se seleccione una opción */
     $("input[type=radio][name=filtros]").change(function () {
@@ -263,22 +273,16 @@ $(document).ready(function () {
     /* busqueda por mes de ingreso */
     $('#mesIngreso').on('change', function () {
         if (this.value != '') {
-            dtBandeja.columns(5)
-                .search('/' + this.value + '/')
-                .draw();
+            dtBandeja.columns(5).search('/' + this.value + '/').draw();
         }
         else {
-            dtBandeja.columns(5)
-                .search('')
-                .draw();
+            dtBandeja.columns(5).search('').draw();
         }
     });
 
     /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
-        dtBandeja.columns(5)
-            .search(this.value + '/')
-            .draw();
+        dtBandeja.columns(5).search(this.value + '/').draw();
     });
 
     $("#min").datepicker({
@@ -330,22 +334,22 @@ $(document).ready(function () {
             IDSolicitud = row.fiIDSolicitud;
 
         $("#lblCliente").text(row.fcPrimerNombreCliente + ' ' + row.fcSegundoNombreCliente + ' ' + row.fcPrimerApellidoCliente + ' ' + row.fcSegundoApellidoCliente + ' ');
-        $("#lblIdentidadCliente").text(row.fcIdentidadCliente);        
+        $("#lblIdentidadCliente").text(row.fcIdentidadCliente);
 
         if (IDAnalistaEncargado != 0 || 1 == 1) {
             $.ajax({
                 type: "POST",
                 url: "SolicitudesCredito_Bandeja.aspx/VerificarAnalista",
-                data: JSON.stringify({ dataCrypt: window.location.href,  ID: IDAnalistaEncargado }),
+                data: JSON.stringify({ dataCrypt: window.location.href, ID: IDAnalistaEncargado }),
                 contentType: "application/json; charset=utf-8",
                 error: function (xhr, ajaxOptions, thrownError) {
                     MensajeError("No se pudo cargar la información, contacte al administrador");
                 },
                 success: function (data) {
                     //if (data.d == true) {
-                        $("#modalAbrirSolicitud").modal({ backdrop: !1 });
-                        IDSOL = IDSolicitud;
-                        IDNT = row.fcIdentidadCliente;
+                    $("#modalAbrirSolicitud").modal({ backdrop: !1 });
+                    IDSOL = IDSolicitud;
+                    IDNT = row.fcIdentidadCliente;
                     //}
                 }
             });
@@ -366,7 +370,7 @@ $("#btnAbrirSolicitud").click(function (e) {
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Bandeja.aspx/AbrirAnalisisSolicitud",
-        data: JSON.stringify({ dataCrypt: window.location.href,  IDSOL: IDSOL, Identidad: IDNT }),
+        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: IDSOL, Identidad: IDNT }),
         contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError("No se pudo cargar la solicitud, contacte al administrador");
@@ -408,7 +412,5 @@ function FiltrarSolicitudesMesActual() {
 
     var mesActual = moment().format("MM");
 
-    dtBandeja.columns(5)
-        .search('/' + mesActual + '/')
-        .draw();
+    dtBandeja.columns(5).search('/' + mesActual + '/').draw();
 }

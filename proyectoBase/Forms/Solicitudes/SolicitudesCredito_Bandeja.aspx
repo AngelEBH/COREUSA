@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Bandeja de solicitudes</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031105" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031105" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -101,46 +101,44 @@
             </div>
             <br />
 
-            <div class="form-inline justify-content-center">
-                <div class="form-group mb-2">
-                    <label class="form-control-plaintext">Búsqueda por Mes</label>
-                </div>
-                <div class="form-group mx-sm-3 mb-2">
-                    <select id="mesIngreso" class="form-control form-control-sm">
-                        <option value="" selected="selected">Seleccionar</option>
-                        <option value="01">Enero</option>
-                        <option value="02">Febrero</option>
-                        <option value="03">Marzo</option>
-                        <option value="04">Abril</option>
-                        <option value="05">Mayo</option>
-                        <option value="06">Junio</option>
-                        <option value="07">Julio</option>
-                        <option value="08">Agosto</option>
-                        <option value="09">Septiembre</option>
-                        <option value="10" selected="selected">Octubre</option>
-                        <option value="11">Noviembre</option>
-                        <option value="12">Diciembre</option>
-                    </select>
-                </div>
-
-                <div class="form-group mb-2">
-                    <label class="form-control-plaintext">Búsqueda por Año</label>
-                </div>
-                <div class="form-group mx-sm-3 mb-2">
-                    <input id="añoIngreso" class="form-control form-control-sm" type="text" />
-                </div>
-
-                <div class="form-group mb-2">
-                    <label class="form-control-plaintext">Búsqueda por Fecha</label>
-                </div>
-                <div class="form-group mx-sm-3 mb-2 col-sm-2">
-                    <div class="input-daterange input-group" id="date-range">
-                        <input type="text" class="form-control form-control-sm" name="min" id="min" />
-                        <input type="text" class="form-control form-control-sm" name="max" id="max" />
+            <div class="row mb-0">
+                <div class="col-md-12">
+                    <div class="form-group row mb-1">
+                        <div class="col-lg-auto col-md-auto col-sm-auto col-6 pr-0 align-self-end">
+                            <div id="divContenedor_datatableButtons"></div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-6 align-self-end">
+                            <label class="col-form-label">Búsqueda por Mes</label>
+                            <select id="mesIngreso" class="form-control form-control-sm">
+                                <option value="" selected="selected">Seleccionar</option>
+                                <option value="01">Enero</option>
+                                <option value="02">Febrero</option>
+                                <option value="03">Marzo</option>
+                                <option value="04">Abril</option>
+                                <option value="05">Mayo</option>
+                                <option value="06">Junio</option>
+                                <option value="07">Julio</option>
+                                <option value="08">Agosto</option>
+                                <option value="09">Septiembre</option>
+                                <option value="10" selected="selected">Octubre</option>
+                                <option value="11">Noviembre</option>
+                                <option value="12">Diciembre</option>
+                            </select>
+                        </div>                        
+                        <div class="col-lg-4 col-md-3 col-sm-3 col-6">
+                            <label class="col-form-label">Búsqueda por Fecha</label>
+                            <div class="input-daterange input-group" id="date-range">
+                                <input type="text" class="form-control form-control-sm" name="min" id="min" />
+                                <input type="text" class="form-control form-control-sm" name="max" id="max" />
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-3 col-6 align-self-end">                            
+                            <label class="col-form-label">Búsqueda por Año</label>
+                            <input id="añoIngreso" class="form-control form-control-sm" type="text" />
+                        </div>
                     </div>
                 </div>
             </div>
-
 
             <div class="table-responsive">
                 <table id="datatable-bandeja" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
@@ -193,6 +191,7 @@
             </div>
         </div>
     </div>
+
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
@@ -217,6 +216,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=20201024085485"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=20201028094025"></script>
 </body>
 </html>

@@ -11,6 +11,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
 {
     private string pcEncriptado = "";
     private string pcIDUsuario = "";
+    private string pcIDSesion = "";
     private string pcIDApp = "";
 
     protected void Page_Load(object sender, EventArgs e)
@@ -32,8 +33,9 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                 pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
 
                 if (pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "146")
                     btnAbrirSolicitud.Visible = true;
@@ -49,10 +51,9 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            pcIDSesion = "1";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "1";
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -113,7 +114,8 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                                 IDUsuarioPasoFinal = (int)reader["fiIDUsuarioPasoFinal"],
                                 ComentarioPasoFinal = (string)reader["fcComentarioPasoFinal"],
                                 PasoFinalFin = (DateTime)reader["fdPasoFinalFin"],
-                                fiEstadoSolicitud = (byte)reader["fiEstadoSolicitud"]
+                                fiEstadoSolicitud = (byte)reader["fiEstadoSolicitud"],
+                                ftTiempoTomaDecisionFinal = (DateTime)reader["fdTiempoTomaDecisionFinal"]
                             });
                         }
                     } // using reader
