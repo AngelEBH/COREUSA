@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -38,13 +38,14 @@
 
                 <div id="smartwizard" class="h-100">
                     <ul>
-                        <li><a href="#step-1" class="pt-3 pb-2 font-12">(1) Información del préstamo</a></li>
-                        <li><a href="#step-2" class="pt-3 pb-2 font-12">(2) Información personal</a></li>
-                        <li><a href="#step-3" class="pt-3 pb-2 font-12">(3) Información domicilio</a></li>
-                        <li><a href="#step-4" class="pt-3 pb-2 font-12">(4) Información laboral</a></li>
-                        <li><a href="#step-5" class="pt-3 pb-2 font-12">(5) Información conyugal</a></li>
-                        <li><a href="#step-6" class="pt-3 pb-2 font-12">(6) Referencias personales</a></li>
-                        <li><a href="#step-7" class="pt-3 pb-2 font-12">(7) Documentación</a></li>
+                        <li><a href="#step-1" class="pt-3 pb-2 font-12">Información del préstamo</a></li>
+                        <li><a href="#step_garantia" class="pt-3 pb-2 font-12" runat="server" visible="true" id="step_garantia_titulo">Características garantía</a></li>
+                        <li><a href="#step-2" class="pt-3 pb-2 font-12">Información personal</a></li>
+                        <li><a href="#step-3" class="pt-3 pb-2 font-12">Información domicilio</a></li>
+                        <li><a href="#step-4" class="pt-3 pb-2 font-12">Información laboral</a></li>
+                        <li><a href="#step-5" class="pt-3 pb-2 font-12">Información conyugal</a></li>
+                        <li><a href="#step-6" class="pt-3 pb-2 font-12">Referencias personales</a></li>
+                        <li><a href="#step-7" class="pt-3 pb-2 font-12">Documentación</a></li>
                     </ul>
                     <div>
                         <!-- Información principal -->
@@ -155,6 +156,134 @@
                                             <label class="col-form-label">Préstamos disponibles</label>
                                             <asp:DropDownList ID="ddlPrestamosDisponibles" runat="server" CssClass="form-control form-control-sm" data-parsley-group="informacionPrestamo" required="required" data-parsley-errors-container="#error-ddlPrestamosDisponibles"></asp:DropDownList>
                                             <div id="error-ddlPrestamosDisponibles"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información de la garantía -->
+                        <div id="step_garantia" class="form-section" runat="server" visible="true">
+
+                            <div class="row justify-content-between m-0 border-bottom border-gray">
+                                <div class="col-auto">
+                                    <div class="form-group row align-items-center mb-1">
+                                        <div class="col-sm-auto pr-0 pl-0">
+                                            <asp:TextBox ID="txtBuscarVIN" placeholder="Buscar VIN" CssClass="form-control form-control-sm mascara-vin" type="text" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-auto pl-1">
+                                            <button type="button" id="btnBuscarVIN" class="btn btn-sm btn-secondary text-center"><i class="fas fa-search"></i></button>
+                                        </div>                                        
+                                    </div>
+                                </div>
+                                <div class="col-auto pr-0 align-items-center">
+                                    <div class="m-0 p-0">
+                                        <div class="alert alert-info bg-info text-white mb-0 pt-1 pb-1" role="alert">
+                                            <i class="fas fa-exclamation-circle text-white"></i> 
+                                            <strong>Estimado usuario,</strong> solo los campos con <strong>*</strong> son requeridos.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-0">
+                                <!-- Información del cliente -->
+                                <div class="col-lg-6">
+                                    <h6 class="mb-1">Características físicas</h6>
+
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label class="col-form-label">VIN</label>
+                                            <asp:TextBox ID="txtVIN" placeholder="EJ. JH4TB2H26CC000000" CssClass="form-control form-control-sm mascara-vin" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="col-form-label">Tipo de garantía</label>
+                                            <asp:DropDownList ID="ddlTipoDeGarantia" runat="server" CssClass="form-control form-control-sm col-form-label" required="required" data-parsley-group="informacionGarantia"></asp:DropDownList>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="col-form-label">Tipo de vehículo</label>
+                                            <asp:TextBox ID="txtTipoDeVehiculo" placeholder="EJ. Turismo" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Marca <strong class="text-danger">*</strong></label>
+                                            <asp:TextBox ID="txtMarca" placeholder="EJ. Honda" CssClass="form-control form-control-sm" type="text" required="required" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Modelo <strong class="text-danger">*</strong></label>
+                                            <asp:TextBox ID="txtModelo" placeholder="EJ. Civic" CssClass="form-control form-control-sm" type="text" required="required" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Año <strong class="text-danger">*</strong></label>
+                                            <asp:TextBox ID="txtAnio" CssClass="form-control form-control-sm mascara-enteros" type="text" required="required" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Color</label>
+                                            <asp:TextBox ID="txtColor" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="col-form-label">Matrícula</label>
+                                            <asp:TextBox ID="txtMatricula" placeholder="EJ. AAA 9999" CssClass="form-control form-control-sm mascara-matricula" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Información del préstamo máximo -->
+                                <div class="col-lg-6 border-left border-gray">
+                                    <h6 class="mb-1">Características mecánicas</h6>
+                                    <div class="form-group row mb-4">
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Cilindraje</label>
+                                            <asp:TextBox ID="txtCilindraje" placeholder="EJ. 1.8" CssClass="form-control form-control-sm mascara-cilindraje" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Recorrido</label>
+                                            <asp:TextBox ID="txtRecorrido" CssClass="form-control form-control-sm mascara-cantidad" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Unidad de medida</label>
+                                            <asp:DropDownList ID="ddlUnidadDeMedida" runat="server" CssClass="form-control form-control-sm col-form-label" data-parsley-group="informacionGarantia"></asp:DropDownList>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Transmisión</label>
+                                            <asp:TextBox ID="txtTransmision" placeholder="EJ. Automático" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Tipo de combustible</label>
+                                            <asp:TextBox ID="txtTipoDeCombustible" placeholder="EJ. Gasolina" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <h6 class="mb-1">Otros datos</h6>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Serie 1</label>
+                                            <asp:TextBox ID="txtSerieUno" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Serie motor</label>
+                                            <asp:TextBox ID="txtSerieMotor" placeholder="EJ. 0XX-0000000" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Serie chasis</label>
+                                            <asp:TextBox ID="txtSerieChasis" placeholder="EJ. 0XXXX00X0XX000000" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Otra serie (Opcional)</label>
+                                            <asp:TextBox ID="txtSerieDos" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">GPS</label>
+                                            <asp:TextBox ID="txtGPS" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h6 class="mb-0 border-top border-gray pt-2"></h6>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label class="col-form-label">Comentario</label>
+                                            <textarea id="txtComentario" runat="server" class="form-control form-control-sm" data-parsley-maxlength="300" rows="2"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -547,6 +676,7 @@
     <script>
         const CONSTANTES = <%=this.jsonConstantes%>;
         const PRECALIFICADO = <%=this.jsonPrecalicado%>;
+        const numeroPestanaInformacionGarantia = 1;
     </script>
     <script>
         $(document).ready(function () {
@@ -561,6 +691,17 @@
                 radixPoint: ".",
                 autoGroup: true,
                 min: 0.00
+            });
+            $(".mascara-enteros").inputmask("decimal", {
+                alias: "numeric",
+                groupSeparator: ",",
+                digits: 0,
+                integerDigits: 4,
+                digitsOptional: false,
+                placeholder: "0",
+                radixPoint: ".",
+                autoGroup: true,
+                min: 0.0,
             });
             $(".mascara-telefono").inputmask("9999-9999");
             $(".mascara-extension").inputmask("999999");

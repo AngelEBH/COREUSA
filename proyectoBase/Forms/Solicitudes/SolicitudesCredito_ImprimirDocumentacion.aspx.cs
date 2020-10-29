@@ -36,10 +36,10 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                 }
                 else
                 {
-                    lcParametros = String.Empty;
+                    lcParametros = string.Empty;
                 }
 
-                if (lcParametros != String.Empty)
+                if (lcParametros != string.Empty)
                 {
                     var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcEncriptado = lcEncriptado.Replace("%2f", "/");
@@ -296,7 +296,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         divGaleriaInspeccionSeguroDeVehiculo.InnerHtml = imagenesGarantia.ToString();
                                     }
                                 }
-
                                 divInformacionGarantia.Visible = true;
                             }
                         }

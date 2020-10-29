@@ -51,7 +51,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 HttpContext.Current.Session["ListaDocumentosGarantia"] = null;
-                Session.Timeout = 1440;
+                Session.Timeout = 10080;
             }
             LlenarListas();
         }

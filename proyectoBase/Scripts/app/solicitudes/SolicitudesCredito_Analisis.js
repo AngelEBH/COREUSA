@@ -17,6 +17,8 @@ function cargarInformacionSolicitud() {
         },
         success: function (data) {
 
+            debugger;
+
             /* Variable de informacion del cliente */
             var rowDataCliente = data.d.cliente;
 
@@ -619,6 +621,9 @@ function cargarInformacionSolicitud() {
             if (habilitarResolucion == true) {
                 $("#btnAprobar").prop('disabled', false);
                 $("#btnAprobar").prop('title', 'Resolución final de la solicitud');
+
+                $("#btnRechazar").prop('disabled', false);
+                $("#btnRechazar").prop('title', 'Resolución final de la solicitud');
             } else {
                 $("#btnRechazar").prop('disabled', false);
                 $("#btnRechazar").prop('title', 'Resolución final de la solicitud');
@@ -1062,16 +1067,15 @@ $("#btnActualizarMontoManualmente").click(function () {
             success: function (data) {
                 if (data.d == true) {
                     $("#lblMontoPrestamoEscogido").text(addFormatoNumerico(montoFinanciarCalculado));
-                    $("#lblPlazoEscogido").text(cantidadPlazos);                    
+                    $("#lblPlazoEscogido").text(cantidadPlazos);
+                    gMontoFinal = montoFinanciarCalculado;
+                    gPlazoFinal = cantidadPlazos;
                     $("#divPrestamoElegido").css('display', '');
                     $("#modalMontoFinanciar,#ModalDigitarMontosManualmente").modal('hide');
                     MensajeExito('Monto a financiar actualizado correctamente');
 
                     VALORGARANTIA_CARGADA_EN_PRESTAMOSSUGERIDOS = valorGlobal;
                     VALORPRIMA_CARGADA_EN_PRESTAMOSSUGERIDOS = valorPrima;
-
-                    gMontoFinal = montoFinanciarCalculado;
-                    gPlazoFinal = cantidadPlazos;
                 }
                 else { MensajeError('Error al actualizar ingresos'); }
             }

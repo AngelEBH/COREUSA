@@ -295,8 +295,22 @@ $(document).ready(function () {
                 return state;
             }
 
+            if (stepNumber == 1 && numeroPestanaInformacionGarantia != 0) {
+
+                var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionGarantia', excluded: ':disabled' });
+
+                if (state == true) {
+                    GuardarRespaldoInformacionGarantia();
+                }
+                else {
+                    $('#frmSolicitud').parsley().validate({ group: 'informacionGarantia', force: true });
+                }
+
+                return state;
+            }
+
             /* Validar pestaña de la informacion personal del cliente */
-            if (stepNumber == 1) {
+            if (stepNumber == (1 + numeroPestanaInformacionGarantia)) {
 
                 var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionPersonal', excluded: ':disabled' });
 
@@ -316,7 +330,7 @@ $(document).ready(function () {
             }
 
             /* Validar pestaña de la informacion de domicilio del cliente */
-            if (stepNumber == 2) {
+            if (stepNumber == (2 + numeroPestanaInformacionGarantia)) {
 
                 var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionDomicilio' });
 
@@ -336,7 +350,7 @@ $(document).ready(function () {
             }
 
             /* Validar pestaña de la informacion laboral */
-            if (stepNumber == 3) {
+            if (stepNumber == (3 + numeroPestanaInformacionGarantia)) {
 
                 var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionLaboral' });
 
@@ -356,7 +370,7 @@ $(document).ready(function () {
             }
 
             /* Validar pestaña de la informacion del cónyugue */
-            if (stepNumber == 4) {
+            if (stepNumber == (4 + numeroPestanaInformacionGarantia)) {
 
                 if ($("#ddlEstadoCivil option:selected").data('requiereinformacionconyugal') == true) {
 
@@ -379,7 +393,7 @@ $(document).ready(function () {
             }
 
             /* Validar referencias personales del cliente */
-            if (stepNumber == 5) {
+            if (stepNumber == (5 + numeroPestanaInformacionGarantia)) {
 
                 var state = false;
 
@@ -1092,6 +1106,32 @@ function GuardarRespaldoInformacionConyugal() {
     localStorage.setItem('RespaldoInformacionConyugal', JSON.stringify(respaldoInformacionConyugal));
 }
 
+function GuardarRespaldoInformacionGarantia() {
+
+    var respaldoInformacionGarantia = {
+        txtVIN: $("#txtVIN").val(),
+        txtTipoDeGarantia: $("#txtTipoDeGarantia").val(),
+        txtTipoDeVehiculo: $("#txtTipoDeVehiculo").val(),
+        txtMarca: $("#txtMarca").val(),
+        txtModelo: $("#txtModelo").val(),
+        txtAnio: $("#txtAnio").val().replace(/,/g, ''),
+        txtColor: $("#txtColor").val(),
+        txtMatricula: $("#txtMatricula").val(),
+        txtCilindraje: $("#txtCilindraje").val().replace(/,/g, ''),
+        txtRecorrido: $("#txtRecorrido").val().replace(/,/g, ''),
+        ddlUnidadDeMedida: $("#ddlUnidadDeMedida :selected").val(),
+        txtTransmision: $("#txtTransmision").val(),
+        txtTipoDeCombustible: $("#txtTipoDeCombustible").val(),
+        txtSerieUno: $("#txtSerieUno").val(),        
+        txtSerieMotor: $("#txtSerieMotor").val(),
+        txtSerieChasis: $("#txtSerieChasis").val(),
+        txtSerieDos: $("#txtSerieDos").val(),
+        txtGPS: $("#txtGPS").val(),
+        txtComentario: $("#txtComentario").val()
+    }
+    localStorage.setItem('RespaldoInformacionGarantia', JSON.stringify(respaldoInformacionGarantia));
+}
+
 function GuardarRespaldoReferenciasPersonales() {
 
     localStorage.setItem('RespaldoReferenciasPersonales', JSON.stringify(listaReferenciasPersonales));
@@ -1182,6 +1222,33 @@ function RecuperarRespaldos() {
     else if ($("#ddlEstadoCivil :selected").data('requiereinformacionconyugal') == false) {
 
         $(".infoConyugal").prop('disabled', true);
+    }
+
+
+    /* Recuperar informacion de pestaña de informacion de la garantia */
+    if (localStorage.getItem('RespaldoInformacionGarantia') != null) {
+
+        var respaldoInformacionGarantia = JSON.parse(localStorage.getItem('RespaldoInformacionGarantia'));
+
+        $("#txtVIN").val(respaldoInformacionGarantia.txtVIN);
+        $("#txtTipoDeGarantia").val(respaldoInformacionGarantia.txtTipoDeGarantia);
+        $("#txtTipoDeVehiculo").val(respaldoInformacionGarantia.txtTipoDeVehiculo);
+        $("#txtMarca").val(respaldoInformacionGarantia.txtMarca);
+        $("#txtModelo").val(respaldoInformacionGarantia.txtModelo);
+        $("#txtAnio").val(respaldoInformacionGarantia.txtAnio);
+        $("#txtColor").val(respaldoInformacionGarantia.txtColor);
+        $("#txtMatricula").val(respaldoInformacionGarantia.txtMatricula);
+        $("#txtCilindraje").val(respaldoInformacionGarantia.txtCilindraje);
+        $("#txtRecorrido").val(respaldoInformacionGarantia.txtRecorrido);
+        $("#ddlUnidadDeMedida").val(respaldoInformacionGarantia.ddlUnidadDeMedida);
+        $("#txtTransmision").val(respaldoInformacionGarantia.txtTransmision);
+        $("#txtTipoDeCombustible").val(respaldoInformacionGarantia.txtTipoDeCombustible);
+        $("#txtSerieUno").val(respaldoInformacionGarantia.txtSerieUno);
+        $("#txtSerieMotor").val(respaldoInformacionGarantia.txtSerieMotor);
+        $("#txtSerieChasis").val(respaldoInformacionGarantia.txtSerieChasis);
+        $("#txtSerieDos").val(respaldoInformacionGarantia.txtSerieDos);
+        $("#txtGPS").val(respaldoInformacionGarantia.txtGPS);
+        $("#txtComentario").val(respaldoInformacionGarantia.txtComentario);
     }
 
     /* Recuperar respaldo de pestaña de referencias personales del cliente */
