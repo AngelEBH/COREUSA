@@ -43,9 +43,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             if (liParamStart > 0)
                 lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
             else
-                lcParametros = String.Empty;
+                lcParametros = string.Empty;
 
-            if (lcParametros != String.Empty)
+            if (lcParametros != string.Empty)
             {
                 var pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
@@ -63,60 +63,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 Session.Timeout = 10080;
-
-                /* Lógica de negocio dependiendo el tipo de producto */
-                switch (Precalificado.IdProducto)
-                {
-                    /* Prestadito Efectivo */
-                    case 101:
-
-                        Constantes.RequierePrima = false;
-                        Constantes.MontoFinanciarMinimo = 6000;
-                        break;
-
-                    /* Prestadito Motos */
-                    case 201:
-
-                        Constantes.RequierePrima = true;
-                        Constantes.RequiereOrigen = true;
-                        Constantes.PorcentajePrimaMinima = 10;
-                        Constantes.MontoFinanciarMinimo = 6000;
-                        break;
-
-                    /* Prestadito Automovil Financ. */
-                    case 202:
-
-                        //Constantes.PorcentajePrimaMinima = 10;
-                        //Constantes.MontoFinanciarMinimo = 6000;
-                        Constantes.RequierePrima = true;
-                        Constantes.RequiereOrigen = true;
-                        break;
-
-                    /* Prestadito Automovil Empeño */
-                    case 203:
-
-                        Constantes.RequierePrima = false;
-                        Constantes.RequiereOrigen = true;
-                        break;
-
-                    /* Prestadito Consumo HardGoods */
-                    case 301:
-
-                        Constantes.MontoFinanciarMinimo = 5000;
-                        Constantes.MontoFinanciarMaximo = 40000;
-                        Constantes.PlazoMinimo = 12;
-                        Constantes.PlazoMaximo = 36;
-                        break;
-
-                    /* Prestadito Consumo SoftGoods */
-                    case 302:
-
-                        Constantes.MontoFinanciarMinimo = 5000;
-                        Constantes.MontoFinanciarMaximo = 20000;
-                        Constantes.PlazoMinimo = 12;
-                        Constantes.PlazoMaximo = 36;
-                        break;
-                }
 
                 if (Constantes.RequiereOrigen)
                 {
@@ -345,157 +291,41 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                /* Cargar precalificado del cliente */
-                using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_Catalogo_Productos_Listar", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        /* Si no está precalificado, retornar a pantalla de precalificacion */
-                        if (!sqlResultado.HasRows)
-                        {
-                            string lcScript = "window.open('precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')";
-                            Response.Write("<script>");
-                            Response.Write(lcScript);
-                            Response.Write("</script>");
-                        }
-
-                        while (sqlResultado.Read())
-                        {
-                            Precalificado.IdClienteSAF = sqlResultado["fcIDCliente"].ToString();
-                            Precalificado.Identidad = sqlResultado["fcIdentidad"].ToString();
-                            Precalificado.PrimerNombre = sqlResultado["fcPrimerNombre"].ToString();
-                            Precalificado.SegundoNombre = sqlResultado["fcSegundoNombre"].ToString();
-                            Precalificado.PrimerApellido = sqlResultado["fcPrimerApellido"].ToString();
-                            Precalificado.SegundoApellido = sqlResultado["fcSegundoApellido"].ToString();
-                            Precalificado.Telefono = sqlResultado["fcTelefono"].ToString();
-                            Precalificado.Ingresos = decimal.Parse(sqlResultado["fnIngresos"].ToString());
-                            Precalificado.Obligaciones = decimal.Parse(sqlResultado["fnTotalObligaciones"].ToString());
-                            Precalificado.Disponible = decimal.Parse(sqlResultado["fnCapacidadDisponible"].ToString());
-                            Precalificado.FechaNacimiento = DateTime.Parse(sqlResultado["fdFechadeNacimiento"].ToString());
-                            Precalificado.IdTipoDeSolicitud = (byte)sqlResultado["fiTipoSolicitudCliente"];
-                            Precalificado.TipoDeSolicitud = sqlResultado["fcTipoSolicitud"].ToString();
-                            Precalificado.IdProducto = int.Parse(sqlResultado["fiIDProducto"].ToString());
-                            Precalificado.Producto = sqlResultado["fcProducto"].ToString();
-
-                            /* Capacidad de pago del cliente */
-                            Constantes.CapacidadDePagoCliente = Precalificado.Disponible;
-                            Constantes.IdentidadCliente = Precalificado.Identidad;
-
-                            txtIdentidadCliente.Text = Precalificado.Identidad;
-                            txtPrimerNombre.Text = Precalificado.PrimerNombre;
-                            txtSegundoNombre.Text = Precalificado.SegundoNombre;
-                            txtPrimerApellido.Text = Precalificado.PrimerApellido;
-                            txtSegundoApellido.Text = Precalificado.SegundoApellido;
-                            txtNumeroTelefono.Text = Precalificado.Telefono;
-                            txtIngresosPrecalificados.Text = Precalificado.Ingresos.ToString();
-                            txtIngresosMensuales.Text = Precalificado.Ingresos.ToString();
-                            txtFechaDeNacimiento.Text = Precalificado.FechaNacimiento.ToString("yyyy-MM-dd");
-                            /* Calcular edad del cliente */
-                            var hoy = DateTime.Today;
-                            var edad = hoy.Year - Precalificado.FechaNacimiento.Year;
-                            if (Precalificado.FechaNacimiento.Date > hoy.AddYears(-edad)) edad--;
-
-                            txtEdadDelCliente.Text = edad + " años";
-                            lblTipodeSolicitud.InnerText = Precalificado.TipoDeSolicitud;
-                            lblProducto.InnerText = Precalificado.Producto;
-                        }
-                    }
-                } // using sp consulta ejecutivos
-
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CotizadorProductos", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDProducto", Precalificado.IdProducto);
-                    sqlComando.Parameters.AddWithValue("@pcIdentidad", Precalificado.Identidad);
-                    sqlComando.Parameters.AddWithValue("@piConObligaciones", Precalificado.Obligaciones > 0 ? "1" : "0");
-                    sqlComando.Parameters.AddWithValue("@pnIngresosBrutos", Precalificado.Ingresos);
-                    sqlComando.Parameters.AddWithValue("@pnIngresosDisponible", Precalificado.Disponible);
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        /* Obtener el préstamo máximo que se le puede ofertar al cliente para validaciones */
-                        CotizadorProductos_ViewModel prestamoMaximoSegurido = new CotizadorProductos_ViewModel();
-
-                        decimal montoMayor = 0;
-                        int IdContador = 1;
-
                         while (sqlResultado.Read())
                         {
-                            if (montoMayor < decimal.Parse(sqlResultado["fnMontoOfertado"].ToString()))
-                            {
-                                prestamoMaximoSegurido = new CotizadorProductos_ViewModel()
-                                {
-                                    IdCotizacion = IdContador,
-                                    IdProducto = int.Parse(sqlResultado["fiIDProducto"].ToString()),
-                                    Producto = sqlResultado["fcProducto"].ToString(),
-                                    MontoOfertado = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString()),
-                                    Plazo = int.Parse(sqlResultado["fiPlazo"].ToString()),
-                                    Cuota = decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
-                                    TipoPlazo = sqlResultado["fcTipodeCuota"].ToString()
-                                };
-                            }
-                            montoMayor = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString());
-                            IdContador++;
-                        }
-
-                        Precalificado.PrestamoMaximoSugerido = prestamoMaximoSegurido;
-
-                        /* Prestamo máximo del cliente */
-                        Constantes.PrestamoMaximo_Monto = prestamoMaximoSegurido.MontoOfertado;
-                        Constantes.PrestamoMaximo_Cuota = prestamoMaximoSegurido.Cuota;
-                        Constantes.PrestamoMaximo_Plazo = prestamoMaximoSegurido.Plazo;
-                        Constantes.PrestamoMaximo_TipoDePlazo = prestamoMaximoSegurido.TipoPlazo;
-                        Constantes.TipoDePlazo = prestamoMaximoSegurido.TipoPlazo;
-
-                        txtPrestamoMaximo.Text = Constantes.PrestamoMaximo_Monto.ToString();
-                        txtPlazoMaximo.Text = Constantes.PrestamoMaximo_Plazo.ToString();
-                        txtCuotaMaxima.Text = Constantes.PrestamoMaximo_Cuota.ToString();
-                        lblTituloPlazoMaximo.Text = "Plazo " + Constantes.PrestamoMaximo_TipoDePlazo;
-                        lblTituloCuotaMaxima.Text = "Cuota " + Constantes.PrestamoMaximo_TipoDePlazo;
-                    }
-                } // using sp cotizador productos
-
-                /* Verificar el tipo de cliente cuando se trate de renoviaciones y refinanciamiento para validar que solo se ingresen clientes excelentes y muy buenos*/
-                if (Precalificado.IdClienteSAF != "")
-                {
-                    using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.Sp_Creditos_ClienteClasificacion", sqlConexion))
-                    {
-                        sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                        sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                        sqlComando.Parameters.AddWithValue("@IDCliente", Precalificado.IdClienteSAF);
-
-                        using (var sqlResultado = sqlComando.ExecuteReader())
-                        {
-                            while (sqlResultado.Read())
-                            {
-                                Precalificado.TipoDeClienteSAF = sqlResultado["fcClasificacionCliente"].ToString();
-                            }
-
-                            if (Precalificado.TipoDeClienteSAF == "A - Excelente" || Precalificado.TipoDeClienteSAF == "B - Muy Bueno")
-                            {
-                                Precalificado.PermitirIngresarSolicitud = true;
-                            }
-                            else
-                            {
-                                Precalificado.PermitirIngresarSolicitud = false;
-                                lblMensaje.InnerText = "(Esta solicitud no puede ser ingresada debido a la clasificación del cliente: " + Precalificado.TipoDeClienteSAF + ". Solo se permite A - Excelente y B - Muy Bueno)";
-                                lblMensaje.Visible = true;
-                            }
+                            Constantes.RequierePrima = (bool)sqlResultado["fiRequierePrima"];
+                            Constantes.PorcentajePrimaMinima = (decimal)sqlResultado["fnPorcentajePrimaMinima"];
+                            Constantes.RequiereGarantia = (bool)sqlResultado["fiRequiereGarantia"];
+                            Constantes.TipoDeGarantiaRequerida = sqlResultado["fcTipoDeGarantia"].ToString();
+                            Constantes.RequiereOrigen = (bool)sqlResultado["fiRequiereOrigen"];
+                            Constantes.RequiereGPS = (bool)sqlResultado["fiRequiereGPS"];
+                            Constantes.MontoFinanciarMinimo = (decimal)sqlResultado["fnMontoFinanciarMinimo"];
+                            Constantes.MontoFinanciarMaximo = (decimal)sqlResultado["fnMontoFinanciarMaximo"];
+                            Constantes.IdTipoDePlazo = (int)sqlResultado["fiIDTipoDePlazo"];
+                            Constantes.TipoDePlazo = sqlResultado["fcTipoDePlazo"].ToString();
+                            Constantes.PlazoMinimo = (int)sqlResultado["fiPlazoMinimo"];
+                            Constantes.PlazoMaximo = (int)sqlResultado["fiPlazoMaximo"];
+                            Constantes.ReferenciasPersonalesMinimas = 4;
                         }
                     }
                 }
-                else
-                {
-                    Precalificado.PermitirIngresarSolicitud = true;
-                }
-            }// using conexion
+            }
+
+            if (Constantes.RequiereGarantia == true)
+            {
+                step_garantia.Visible = true;
+                step_garantia_titulo.Visible = true;
+            }
         }
         catch (Exception ex)
         {
@@ -1685,13 +1515,17 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public decimal? PorcentajePrimaMinima { get; set; }
         public decimal? MontoFinanciarMinimo { get; set; }
         public decimal? MontoFinanciarMaximo { get; set; }
-        public int? PlazoMinimo { get; set; }
-        public int? PlazoMaximo { get; set; }
         public int ReferenciasPersonalesMinimas { get; set; }
 
         public bool RequiereGarantia { get; set; }
+        public string TipoDeGarantiaRequerida { get; set; }
+        public bool RequiereGPS { get; set; }
         public bool RequierePrima { get; set; }
         public bool RequiereOrigen { get; set; }
+
+        public int IdTipoDePlazo { get; set; }
+        public int PlazoMinimo { get; set; }
+        public int PlazoMaximo { get; set; }
 
         public int? PlazoMaximoCliente { get; set; }
         public decimal? MontoFinanciarMaximoCliente { get; set; }
@@ -1701,15 +1535,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             HoraAlCargar = DateTime.Now;
             EsClienteNuevo = true;
             IdCliente = 0;
-            PorcentajePrimaMinima = null;
-            MontoFinanciarMinimo = null;
-            MontoFinanciarMaximo = null;
-            PlazoMinimo = null;
-            PlazoMaximo = null;
             ReferenciasPersonalesMinimas = 4;
-            RequiereGarantia = false;
-            RequierePrima = false;
-            RequiereOrigen = false;
         }
     }
 

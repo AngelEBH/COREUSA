@@ -19,7 +19,7 @@ public static class ExceptionLogging
             string exepurl = context.Current.Request.Url.ToString();
             SqlCommand com = new SqlCommand("CoreFinanciero.dbo.CapturarExcepciones", sqlConexion);
             com.CommandType = CommandType.StoredProcedure;
-            com.Parameters.AddWithValue("@ExceptionMsg", exdb.Message.ToString());
+            com.Parameters.AddWithValue("@ExceptionMsg", exdb.Message.ToString() + " | InnerException: " + exdb.InnerException.Message.ToString());
             com.Parameters.AddWithValue("@ExceptionType", exdb.GetType().Name.ToString());
             com.Parameters.AddWithValue("@ExceptionURL", exepurl);
             com.Parameters.AddWithValue("@ExceptionSource", exdb.StackTrace.ToString());

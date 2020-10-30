@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Garantías de solicitudes aprobadas</title>
     <!-- BOOTSTRAP -->
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -357,7 +357,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label class="col-form-label">Comentario</label>
-                                    <textarea id="txtComentario" runat="server" required="required" class="form-control form-control-sm" data-parsley-group="InstalacionGPS_Guardar" data-parsley-maxlength="300" rows="2"></textarea>
+                                    <textarea id="txtComentario" runat="server" class="form-control form-control-sm" data-parsley-group="InstalacionGPS_Guardar" data-parsley-maxlength="300" rows="2"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -401,7 +401,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label class="col-form-label">Comentario</label>
-                                    <textarea id="txtComentario_Detalle" runat="server" required="required" class="form-control form-control-sm" readonly="readonly" data-parsley-group="InstalacionGPS_Detalle" data-parsley-maxlength="300" rows="2"></textarea>
+                                    <textarea id="txtComentario_Detalle" runat="server" class="form-control form-control-sm" readonly="readonly" data-parsley-group="InstalacionGPS_Detalle" data-parsley-maxlength="300" rows="2"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -445,7 +445,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label class="col-form-label">Comentario</label>
-                                    <textarea id="txtComentario_Actualizar" runat="server" required="required" class="form-control form-control-sm" data-parsley-group="InstalacionGPS_Actualizar" data-parsley-maxlength="300" rows="2"></textarea>
+                                    <textarea id="txtComentario_Actualizar" runat="server" class="form-control form-control-sm" data-parsley-group="InstalacionGPS_Actualizar" data-parsley-maxlength="300" rows="2"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -487,7 +487,6 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script>
-        debugger;
         const NOMBRE_USUARIO = '<%=pcNombreUsuario %>';
         const CORREO_USUARIO = '<%=pcBuzoCorreoUsuario%>';
     </script>

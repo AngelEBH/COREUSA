@@ -51,7 +51,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 HttpContext.Current.Session["ListaDocumentosGarantia"] = null;
-                Session.Timeout = 10080;
+                Session.Timeout = 1440;
             }
             LlenarListas();
         }
@@ -386,7 +386,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
 
     private static string GenerarNombreDocumento(string idSolicitud, string vin)
     {
-        return ("G_" + idSolicitud + "_" + vin + "_" + Guid.NewGuid()).Replace("*", "").Replace("/", "").Replace("\\", "").Replace(":", "").Replace("?","").Replace("<","").Replace(">", "").Replace("|","");
+        return ("G_" + idSolicitud + "_" + vin + "_" + Guid.NewGuid()).Replace("*", "").Replace("/", "").Replace("\\", "").Replace(":", "").Replace("?", "").Replace("<", "").Replace(">", "").Replace("|", "");
     }
 
     public static bool GuardarDocumentosGarantia(List<SolicitudesDocumentosViewModel> ListaDocumentos, string idSolicitud)

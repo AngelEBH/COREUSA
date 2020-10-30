@@ -173,13 +173,13 @@
                                         </div>
                                         <div class="col-sm-auto pl-1">
                                             <button type="button" id="btnBuscarVIN" class="btn btn-sm btn-secondary text-center"><i class="fas fa-search"></i></button>
-                                        </div>                                        
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-auto pr-0 align-items-center">
                                     <div class="m-0 p-0">
                                         <div class="alert alert-info bg-info text-white mb-0 pt-1 pb-1" role="alert">
-                                            <i class="fas fa-exclamation-circle text-white"></i> 
+                                            <i class="fas fa-exclamation-circle text-white"></i>
                                             <strong>Estimado usuario,</strong> solo los campos con <strong>*</strong> son requeridos.
                                         </div>
                                     </div>
@@ -674,9 +674,10 @@
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script>
+        debugger;
         const CONSTANTES = <%=this.jsonConstantes%>;
         const PRECALIFICADO = <%=this.jsonPrecalicado%>;
-        const numeroPestanaInformacionGarantia = 1;
+        const numeroPestanaInformacionGarantia = CONSTANTES.RequiereGarantia;
     </script>
     <script>
         $(document).ready(function () {
