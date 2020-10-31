@@ -292,13 +292,13 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtVIN;
 
     /// <summary>
-    /// Control ddlTipoDeGarantia.
+    /// Control txtTipoDeGarantia.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeGarantia;
+    protected global::System.Web.UI.WebControls.TextBox txtTipoDeGarantia;
 
     /// <summary>
     /// Control txtTipoDeVehiculo.

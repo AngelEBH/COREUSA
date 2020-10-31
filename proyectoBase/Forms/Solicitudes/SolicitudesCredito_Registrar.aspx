@@ -197,7 +197,7 @@
                                         </div>
                                         <div class="col-6">
                                             <label class="col-form-label">Tipo de garantía</label>
-                                            <asp:DropDownList ID="ddlTipoDeGarantia" runat="server" CssClass="form-control form-control-sm col-form-label" required="required" data-parsley-group="informacionGarantia"></asp:DropDownList>
+                                            <asp:TextBox ID="txtTipoDeGarantia" ReadOnly="true" required="required" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
                                         </div>
                                         <div class="col-6">
                                             <label class="col-form-label">Tipo de vehículo</label>

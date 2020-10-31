@@ -64,12 +64,12 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 Session.Timeout = 10080;
 
-                if (Constantes.RequiereOrigen)
+                if (Constantes.RequiereOrigen == 1)
                 {
                     CargarOrigenes();
                 }
 
-                if (Constantes.RequierePrima)
+                if (Constantes.RequierePrima == 1)
                 {
                     txtValorPrima.Enabled = true;
                 }
@@ -303,29 +303,31 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            Constantes.RequierePrima = (bool)sqlResultado["fiRequierePrima"];
+                            Constantes.RequierePrima = (byte)sqlResultado["fiRequierePrima"];
                             Constantes.PorcentajePrimaMinima = (decimal)sqlResultado["fnPorcentajePrimaMinima"];
-                            Constantes.RequiereGarantia = (bool)sqlResultado["fiRequiereGarantia"];
+                            Constantes.RequiereGarantia = (byte)sqlResultado["fiRequiereGarantia"];
                             Constantes.TipoDeGarantiaRequerida = sqlResultado["fcTipoDeGarantia"].ToString();
-                            Constantes.RequiereOrigen = (bool)sqlResultado["fiRequiereOrigen"];
-                            Constantes.RequiereGPS = (bool)sqlResultado["fiRequiereGPS"];
+                            Constantes.RequiereOrigen = (byte)sqlResultado["fiRequiereOrigen"];
+                            Constantes.RequiereGPS = (byte)sqlResultado["fiRequiereGPS"];
                             Constantes.MontoFinanciarMinimo = (decimal)sqlResultado["fnMontoFinanciarMinimo"];
                             Constantes.MontoFinanciarMaximo = (decimal)sqlResultado["fnMontoFinanciarMaximo"];
                             Constantes.IdTipoDePlazo = (int)sqlResultado["fiIDTipoDePlazo"];
                             Constantes.TipoDePlazo = sqlResultado["fcTipoDePlazo"].ToString();
                             Constantes.PlazoMinimo = (int)sqlResultado["fiPlazoMinimo"];
                             Constantes.PlazoMaximo = (int)sqlResultado["fiPlazoMaximo"];
-                            Constantes.ReferenciasPersonalesMinimas = 4;
+                            Constantes.CantidadMinimaDeReferenciasPersonales = 4;
                         }
                     }
                 }
             }
-
-            if (Constantes.RequiereGarantia == true)
+            /* Si el producto requiere prima, mostrar */
+            if (Constantes.RequiereGarantia == 1)
             {
                 step_garantia.Visible = true;
                 step_garantia_titulo.Visible = true;
             }
+
+            txtTipoDeGarantia.Text = Constantes.TipoDeGarantiaRequerida;
         }
         catch (Exception ex)
         {
@@ -489,33 +491,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         while (sqlResultado.Read())
                         {
                             ddlTiempoDeConocerReferencia.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
-                        }
-                    }
-                }
-
-                /* Cargar listas de la información de la garantía */
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDGarantias_Guardar_LlenarListas", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", 0);
-                    sqlComando.CommandTimeout = 120;
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            sqlResultado.NextResult();
-
-                            ddlTipoDeGarantia.Items.Clear();
-                            ddlTipoDeGarantia.Items.Add(new ListItem("Seleccione una opción", ""));
-
-                            while (sqlResultado.Read())
-                            {
-                                ddlTipoDeGarantia.Items.Add(new ListItem(sqlResultado["fcTipoDeGarantia"].ToString(), sqlResultado["fcTipoDeGarantia"].ToString()));
-                            }
                         }
                     }
                 }
@@ -948,7 +923,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static ResponseEntitie IngresarSolicitud(Solicitud_Maestro_ViewModel solicitud, Cliente_ViewModel cliente, Precalificado_ViewModel precalificado, bool esClienteNuevo, string dataCrypt)
+    public static ResponseEntitie IngresarSolicitud(Solicitud_Maestro_ViewModel solicitud, Cliente_ViewModel cliente, Precalificado_ViewModel precalificado, Garantia_ViewModel garantia, bool esClienteNuevo, string dataCrypt)
     {
         var resultadoProceso = new ResponseEntitie();
         var mensajeError = string.Empty;
@@ -1410,7 +1385,68 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    tran.Commit();
+                    /* Si se requere garantía */
+                    if (garantia != null)
+                    {
+                        using (var sqlComando = new SqlCommand("sp_CREDGarantias_Guardar", sqlConexion, tran))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", IdSolicitudInsertada);
+                            sqlComando.Parameters.AddWithValue("@pcPrestamo", garantia.NumeroPrestamo);
+                            sqlComando.Parameters.AddWithValue("@pcVin", garantia.VIN);
+                            sqlComando.Parameters.AddWithValue("@pcTipoVehiculo", garantia.TipoDeVehiculo);
+                            sqlComando.Parameters.AddWithValue("@pcTipoGarantia", garantia.TipoDeGarantia);
+                            sqlComando.Parameters.AddWithValue("@pcMarca", garantia.Marca);
+                            sqlComando.Parameters.AddWithValue("@pcModelo", garantia.Modelo);
+                            sqlComando.Parameters.AddWithValue("@piAnio", garantia.Anio);
+                            sqlComando.Parameters.AddWithValue("@pcColor", garantia.Color);
+                            sqlComando.Parameters.AddWithValue("@pcCilindraje", garantia.Cilindraje);
+                            sqlComando.Parameters.AddWithValue("@pnRecorrido", garantia.Recorrido);
+                            sqlComando.Parameters.AddWithValue("@pcUnidadDeDistancia", garantia.UnidadDeDistancia);
+                            sqlComando.Parameters.AddWithValue("@pcTransmision", garantia.Transmision);
+                            sqlComando.Parameters.AddWithValue("@pcTipoCombustible", garantia.TipoDeCombustible);
+                            sqlComando.Parameters.AddWithValue("@pcMatricula", garantia.Matricula);
+                            sqlComando.Parameters.AddWithValue("@pcSerieUno", garantia.SerieUno);
+                            sqlComando.Parameters.AddWithValue("@pcSerieDos", garantia.SerieDos);
+                            sqlComando.Parameters.AddWithValue("@pcChasis", garantia.SerieChasis);
+                            sqlComando.Parameters.AddWithValue("@pcMotor", garantia.SerieMotor);
+                            sqlComando.Parameters.AddWithValue("@pcGPS", garantia.GPS);
+                            sqlComando.Parameters.AddWithValue("@pnValorGarantia", solicitud.ValorGlobal);
+                            sqlComando.Parameters.AddWithValue("@pnValorPrima", solicitud.ValorPrima);
+                            sqlComando.Parameters.AddWithValue("@pnValorFinanciado", solicitud.ValorSeleccionado);
+                            sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", 0);
+                            sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
+                            sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.EsDigitadoManualmente);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.CommandTimeout = 120;
+
+                            using (var sqlResultado = sqlComando.ExecuteReader())
+                            {
+                                while (sqlResultado.Read())
+                                {
+                                    var resultadoSp = sqlResultado["MensajeError"].ToString();
+
+                                    if (!resultadoSp.StartsWith("-1"))
+                                    {
+                                        mensajeError = sqlResultado["MensajeError"].ToString();
+                                        if (mensajeError.StartsWith("-1"))
+                                            contadorErrores++;
+                                    }
+                                }
+                            }
+                        }
+                        if (contadorErrores > 0)
+                        {
+                            resultadoProceso.response = false;
+                            resultadoProceso.message = "No se pudo guardar la información de la garantía, contacte al administrador";
+                            return resultadoProceso;
+                        }
+                    }
+
+                    //tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
@@ -1515,13 +1551,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public decimal? PorcentajePrimaMinima { get; set; }
         public decimal? MontoFinanciarMinimo { get; set; }
         public decimal? MontoFinanciarMaximo { get; set; }
-        public int ReferenciasPersonalesMinimas { get; set; }
+        public int CantidadMinimaDeReferenciasPersonales { get; set; }
 
-        public bool RequiereGarantia { get; set; }
+        public int RequiereGarantia { get; set; }
         public string TipoDeGarantiaRequerida { get; set; }
-        public bool RequiereGPS { get; set; }
-        public bool RequierePrima { get; set; }
-        public bool RequiereOrigen { get; set; }
+        public int RequiereGPS { get; set; }
+        public int RequierePrima { get; set; }
+        public int RequiereOrigen { get; set; }
 
         public int IdTipoDePlazo { get; set; }
         public int PlazoMinimo { get; set; }
@@ -1535,7 +1571,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             HoraAlCargar = DateTime.Now;
             EsClienteNuevo = true;
             IdCliente = 0;
-            ReferenciasPersonalesMinimas = 4;
+            CantidadMinimaDeReferenciasPersonales = 4;
         }
     }
 

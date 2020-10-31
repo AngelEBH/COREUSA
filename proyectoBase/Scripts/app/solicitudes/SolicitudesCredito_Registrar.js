@@ -31,16 +31,16 @@
             $('#frmSolicitud').parsley().validate({ group: 'informacionConyugal', force: true });
         }
 
-        if (cantidadReferencias < 4) {
+        if (cantidadReferencias < CONSTANTES.CantidadMinimaDeReferenciasPersonales) {
             if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true) {
                 iziToast.warning({
                     title: 'Atención',
-                    message: 'Se requieren mínimo 4 referencias personales. Entre ellas 2 familiares.'
+                    message: 'Se requieren mínimo ' + CONSTANTES.CantidadMinimaDeReferenciasPersonales + ' referencias personales. Entre ellas 2 familiares.'
                 });
             }
         }
 
-        if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true && cantidadReferencias >= 4 && PRECALIFICADO.PermitirIngresarSolicitud == true) {
+        if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true && cantidadReferencias >= CONSTANTES.CantidadMinimaDeReferenciasPersonales && PRECALIFICADO.PermitirIngresarSolicitud == true) {
 
             var solicitud = {
                 IdCliente: CONSTANTES.IdCliente,
@@ -107,6 +107,36 @@
                 },
                 InformacionConyugal: Cliente_InformacionConyugal,
                 ListaReferenciasPersonales: listaReferenciasPersonales
+            };
+
+            var garantia = null;
+
+            if (CONSTANTES.RequiereGarantia == 1) {
+
+                garantia = {
+                    VIN: $("#txtVIN").val(),
+                    TipoDeGarantia: $("#txtTipoDeGarantia").val(),
+                    TipoDeVehiculo: $("#txtTipoDeVehiculo").val(),
+                    Marca: $("#txtMarca").val(),
+                    Modelo: $("#txtModelo").val(),
+                    Anio: $("#txtAnio").val().replace(/,/g, ''),
+                    Color: $("#txtColor").val(),
+                    Matricula: $("#txtMatricula").val(),
+                    Cilindraje: $("#txtCilindraje").val(),
+                    Recorrido: $("#txtRecorrido").val().replace(/,/g, ''),
+                    UnidadDeDistancia: $("#ddlUnidadDeMedida").val(),
+                    Transmision: $("#txtTransmision").val(),
+                    TipoDeCombustible: $("#txtTipoDeCombustible").val(),
+                    SerieUno: $("#txtSerieUno").val(),
+                    SerieDos: $("#txtSerieDos").val(),
+                    SerieMotor: $("#txtSerieMotor").val(),
+                    SerieChasis: $("#txtSerieChasis").val(),
+                    GPS: $("#txtGPS").val(),
+                    Comentario: $("#txtComentario").val(),
+                    NumeroPrestamo: '',
+                    esDigitadoManualmente: true,
+                    GastosDeCierre: 0
+                }
             };
 
             $.ajax({
@@ -183,11 +213,11 @@ $(document).ready(function () {
         /* Si no requere informacion personal, saltarse esa pestaña */
         if ($("#ddlEstadoCivil option:selected").data('requiereinformacionconyugal') == false) {
 
-            $('#smartwizard').smartWizard("stepState", [4], "hide");
+            $('#smartwizard').smartWizard("stepState", [(4 + numeroPestanaInformacionGarantia)], "hide");
         }
         else if ($("#ddlEstadoCivil option:selected").data('requiereinformacionconyugal') == true) {
 
-            $('#smartwizard').smartWizard("stepState", [4], "show");
+            $('#smartwizard').smartWizard("stepState", [(4 + numeroPestanaInformacionGarantia)], "show");
         }
 
         /* Validar solo si se quiere ir hacia el siguiente paso */
@@ -221,7 +251,7 @@ $(document).ready(function () {
                     MensajeError('El monto del préstamo ofertado seleccionado no puede ser mayor que el valor a Financiar');
                 }
 
-                if (CONSTANTES.RequierePrima == true) {
+                if (CONSTANTES.RequierePrima == 1) {
 
                     var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
 
@@ -231,7 +261,7 @@ $(document).ready(function () {
                         MensajeError('El valor de la prima debe ser menor que el valor de la garantía');
                     }
 
-                    if (CONSTANTES.PorcentajePrimaMinima != null) {
+                    if (CONSTANTES.PorcentajePrimaMinima != 0) {
 
                         if (valorPrima < ((valorGlobal * CONSTANTES.PorcentajePrimaMinima) / 100)) {
 
@@ -241,7 +271,7 @@ $(document).ready(function () {
                     }
                 } /* if requiere prima */
 
-                if (CONSTANTES.MontoFinanciarMinimo != null) {
+                if (CONSTANTES.MontoFinanciarMinimo != 0) {
 
                     if (valorFinanciar < CONSTANTES.MontoFinanciarMinimo) {
 
@@ -250,7 +280,7 @@ $(document).ready(function () {
                     }
                 }
 
-                if (CONSTANTES.MontoFinanciarMaximo != null) {
+                if (CONSTANTES.MontoFinanciarMaximo != 0) {
 
                     if (valorFinanciar > CONSTANTES.MontoFinanciarMaximo) {
 
@@ -259,7 +289,7 @@ $(document).ready(function () {
                     }
                 }
 
-                if (CONSTANTES.PlazoMinimo != null) {
+                if (CONSTANTES.PlazoMinimo != 0) {
 
                     if (plazoSeleccionado < CONSTANTES.PlazoMinimo) {
 
@@ -268,7 +298,7 @@ $(document).ready(function () {
                     }
                 }
 
-                if (CONSTANTES.PlazoMaximo != null) {
+                if (CONSTANTES.PlazoMaximo != 0) {
 
                     if (plazoSeleccionado > CONSTANTES.PlazoMaximo) {
 
@@ -295,7 +325,7 @@ $(document).ready(function () {
                 return state;
             }
 
-            if (stepNumber == 1 && numeroPestanaInformacionGarantia != 0) {
+            if (stepNumber == 1 && CONSTANTES.RequiereGarantia == 1 && numeroPestanaInformacionGarantia != 0) {
 
                 var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionGarantia', excluded: ':disabled' });
 
@@ -785,12 +815,12 @@ $("#ddlEstadoCivil").change(function () {
     if (requiereInformacionConyugal == false) {
 
         $('input.infoConyugal').attr('disabled', true);
-        $('#smartwizard').smartWizard("stepState", [4], "hide");// Si no se requiere información conyugal, deshabilitar ese formulario
+        $('#smartwizard').smartWizard("stepState", [(4 + numeroPestanaInformacionGarantia)], "hide");// Si no se requiere información conyugal, deshabilitar ese formulario
     }
     else if (requiereInformacionConyugal == true) {
 
         $('input.infoConyugal').attr('disabled', false);
-        $('#smartwizard').smartWizard("stepState", [4], "show");// Si se requiere información conyugal, habilitar ese formulario
+        $('#smartwizard').smartWizard("stepState", [(4 + numeroPestanaInformacionGarantia)], "show");// Si se requiere información conyugal, habilitar ese formulario
     }
 });
 
@@ -806,7 +836,7 @@ $('#txtValorGlobal,#txtValorPrima').blur(function () {
     $("#txtValorFinanciar").val(valorFinanciar);
     var state = true;
 
-    if (CONSTANTES.RequierePrima == true) {
+    if (CONSTANTES.RequierePrima == 1) {
 
         if (valorPrima >= valorGlobal) {
 
@@ -814,7 +844,7 @@ $('#txtValorGlobal,#txtValorPrima').blur(function () {
             MensajeError('El valor de la prima debe ser menor que el valor de la garantía');
         }
 
-        if (CONSTANTES.PorcentajePrimaMinima != null) {
+        if (CONSTANTES.PorcentajePrimaMinima != 0) {
 
             if (valorPrima < ((valorGlobal * CONSTANTES.PorcentajePrimaMinima) / 100)) {
 
@@ -824,7 +854,7 @@ $('#txtValorGlobal,#txtValorPrima').blur(function () {
         }
     } /* if requiere prima */
 
-    if (CONSTANTES.MontoFinanciarMinimo != null) {
+    if (CONSTANTES.MontoFinanciarMinimo != 0) {
 
         if (valorFinanciar < CONSTANTES.MontoFinanciarMinimo) {
 
@@ -833,7 +863,7 @@ $('#txtValorGlobal,#txtValorPrima').blur(function () {
         }
     }
 
-    if (CONSTANTES.MontoFinanciarMaximo != null) {
+    if (CONSTANTES.MontoFinanciarMaximo != 0) {
 
         if (valorFinanciar > CONSTANTES.MontoFinanciarMaximo) {
 
@@ -1122,7 +1152,7 @@ function GuardarRespaldoInformacionGarantia() {
         ddlUnidadDeMedida: $("#ddlUnidadDeMedida :selected").val(),
         txtTransmision: $("#txtTransmision").val(),
         txtTipoDeCombustible: $("#txtTipoDeCombustible").val(),
-        txtSerieUno: $("#txtSerieUno").val(),        
+        txtSerieUno: $("#txtSerieUno").val(),
         txtSerieMotor: $("#txtSerieMotor").val(),
         txtSerieChasis: $("#txtSerieChasis").val(),
         txtSerieDos: $("#txtSerieDos").val(),
