@@ -1446,7 +1446,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    //tran.Commit();
+                    tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
@@ -1708,5 +1708,36 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public int IdOrigen { get; set; }
         public DateTime EnIngresoInicio { get; set; }
     }
+
+    public class Garantia_ViewModel
+    {
+        public int IdGarantia { get; set; }
+        public string NumeroPrestamo { get; set; }
+        public string VIN { get; set; }
+        public string TipoDeGarantia { get; set; }
+        public string TipoDeVehiculo { get; set; }
+        public string Marca { get; set; }
+        public string Modelo { get; set; }
+        public string Anio { get; set; }
+        public string Color { get; set; }
+        public string Cilindraje { get; set; }
+        public decimal Recorrido { get; set; }
+        public string UnidadDeDistancia { get; set; }
+        public string Transmision { get; set; }
+        public string TipoDeCombustible { get; set; }
+        public string Matricula { get; set; }
+        public string SerieUno { get; set; }
+        public string SerieDos { get; set; }
+        public string SerieChasis { get; set; }
+        public string SerieMotor { get; set; }
+        public string GPS { get; set; }
+        public string Comentario { get; set; }
+        public bool EsDigitadoManualmente { get; set; }
+        public decimal ValorMercado { get; set; }
+        public decimal ValorPrima { get; set; }
+        public decimal ValorFinanciado { get; set; }
+        public decimal GastosDeCierre { get; set; }
+    }
+
     #endregion
 }

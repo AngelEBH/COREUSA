@@ -110,7 +110,7 @@
             };
 
             var garantia = null;
-
+            debugger;
             if (CONSTANTES.RequiereGarantia == 1) {
 
                 garantia = {
@@ -119,11 +119,11 @@
                     TipoDeVehiculo: $("#txtTipoDeVehiculo").val(),
                     Marca: $("#txtMarca").val(),
                     Modelo: $("#txtModelo").val(),
-                    Anio: $("#txtAnio").val().replace(/,/g, ''),
+                    Anio: $("#txtAnio").val().replace(/,/g, '') ?? 0,
                     Color: $("#txtColor").val(),
                     Matricula: $("#txtMatricula").val(),
                     Cilindraje: $("#txtCilindraje").val(),
-                    Recorrido: $("#txtRecorrido").val().replace(/,/g, ''),
+                    Recorrido: $("#txtRecorrido").val().replace(/,/g, '') == '' ? 0 : $("#txtRecorrido").val().replace(/,/g, ''),
                     UnidadDeDistancia: $("#ddlUnidadDeMedida").val(),
                     Transmision: $("#txtTransmision").val(),
                     TipoDeCombustible: $("#txtTipoDeCombustible").val(),
@@ -135,14 +135,17 @@
                     Comentario: $("#txtComentario").val(),
                     NumeroPrestamo: '',
                     esDigitadoManualmente: true,
-                    GastosDeCierre: 0
+                    ValorMercado: 0,
+                    ValorPrima: 0,
+                    ValorFinanciado: 0,
+                    GastosDeCierre: 0,
                 }
             };
 
             $.ajax({
                 type: "POST",
                 url: 'SolicitudesCredito_Registrar.aspx/IngresarSolicitud',
-                data: JSON.stringify({ solicitud: solicitud, cliente: cliente, precalificado: PRECALIFICADO, esClienteNuevo: CONSTANTES.EsClienteNuevo, dataCrypt: window.location.href }),
+                data: JSON.stringify({ solicitud: solicitud, cliente: cliente, precalificado: PRECALIFICADO, garantia: garantia, esClienteNuevo: CONSTANTES.EsClienteNuevo, dataCrypt: window.location.href }),
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr, ajaxOptions, thrownError) {
                     MensajeError('No se guardó el registro, contacte al administrador');
