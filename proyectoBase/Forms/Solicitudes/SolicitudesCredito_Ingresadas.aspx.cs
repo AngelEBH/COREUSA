@@ -1,5 +1,4 @@
-﻿using proyectoBase.Models.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -9,7 +8,7 @@ using System.Web.Services;
 
 public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
 {
-    private String pcEncriptado = "";
+    private string pcEncriptado = "";
     private string pcIDUsuario = "";
     private string pcIDApp = "";
     private string pcIDSesion = "";
@@ -18,21 +17,21 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            string lcURL = Request.Url.ToString();
-            int liParamStart = lcURL.IndexOf("?");
+            var DSC = new DSCore.DataCrypt();
+            var lcURL = Request.Url.ToString();
+            var liParamStart = lcURL.IndexOf("?");
 
             string lcParametros;
             if (liParamStart > 0)
                 lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
             else
-                lcParametros = String.Empty;
+                lcParametros = string.Empty;
 
-            if (lcParametros != String.Empty)
+            if (lcParametros != string.Empty)
             {
                 pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-                Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                 pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
@@ -41,9 +40,9 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string EncriptarParametros(int IDSOL, string dataCrypt, string Identidad)
+    public static string EncriptarParametros(int idSolicitud, string dataCrypt, string identidad)
     {
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        var DSC = new DSCore.DataCrypt();
         string resultado;
         try
         {
@@ -55,8 +54,8 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
             string lcParametros = "usr=" + pcIDUsuario +
             "&IDApp=" + pcIDApp +
             "&SID=" + pcIDSesion +
-            "&pcID=" + Identidad +
-            "&IDSOL=" + IDSOL;
+            "&pcID=" + identidad +
+            "&IDSOL=" + idSolicitud;
             resultado = DSC.Encriptar(lcParametros);
         }
         catch
@@ -67,22 +66,22 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<BandejaSolicitudesViewModel> CargarSolicitudes(string dataCrypt)
+    public static List<SolicitudCredito_ViewModel> CargarSolicitudes(string dataCrypt)
     {        
-        List<BandejaSolicitudesViewModel> solicitudes = new List<BandejaSolicitudesViewModel>();
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        var solicitudes = new List<SolicitudCredito_ViewModel>();
+        var DSC = new DSCore.DataCrypt();
         try
         {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ListarSolicitudesPorUsuario", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitud_ListarSolicitudesPorUsuario", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
@@ -90,37 +89,27 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
-                            solicitudes.Add(new BandejaSolicitudesViewModel()
+                            solicitudes.Add(new SolicitudCredito_ViewModel()
                             {
-                                fiIDSolicitud = (int)reader["fiIDSolicitud"],
-                                fiIDTipoPrestamo = (int)reader["fiIDTipoProducto"],
-                                fcDescripcion = (string)reader["fcProducto"],
-                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                                fdFechaCreacionSolicitud = (DateTime)reader["fdFechaCreacionSolicitud"],
-                                //informacion cliente
-                                fiIDCliente = (int)reader["fiIDCliente"],
-                                fcIdentidadCliente = (string)reader["fcIdentidadCliente"],
-                                fcPrimerNombreCliente = (string)reader["fcPrimerNombreCliente"],
-                                fcSegundoNombreCliente = (string)reader["fcSegundoNombreCliente"],
-                                fcPrimerApellidoCliente = (string)reader["fcPrimerApellidoCliente"],
-                                fcSegundoApellidoCliente = (string)reader["fcSegundoApellidoCliente"],
-                                //bitacora
-                                fdEnTramiteInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnColaInicio"]),
-                                fdEnTramiteFin = ConvertFromDBVal<DateTime>((object)reader["fdEnColaFin"]),
-                                fdEnAnalisisInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisInicio"]),
-                                fdEnAnalisisFin = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisFin"]),
-                                fdCondicionadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdCondicionadoInicio"]),
-                                fdCondificionadoFin = ConvertFromDBVal<DateTime>((object)reader["fdCondificionadoFin"]),
-                                //proceso de campo
-                                fdEnCampoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionInicio"]),
-                                fdEnCampoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionFin"]),
-                                fdReprogramadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoInicio"]),
-                                fdReprogramadoFin = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoFin"]),
-                                fiEstadoSolicitud = ConvertFromDBVal<byte>((object)reader["fiEstadoSolicitud"]),
+                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
+                                Agencia = sqlResultado["fcAgencia"].ToString(),
+                                Producto = sqlResultado["fcProducto"].ToString(),
+                                IdCliente = (int)sqlResultado["fiIDCliente"],
+                                Identidad = sqlResultado["fcIdentidadCliente"].ToString(),
+                                NombreCliente = sqlResultado["fcPrimerNombreCliente"].ToString() + " " + sqlResultado["fcSegundoNombreCliente"].ToString() + " " + sqlResultado["fcPrimerApellidoCliente"].ToString() + " " + sqlResultado["fcSegundoApellidoCliente"].ToString(),
+                                FechaCreacion = ConvertFromDBVal<DateTime>(sqlResultado["fdFechaCreacionSolicitud"]),
+                                IdEstadoSolicitud = (byte)sqlResultado["fiEstadoSolicitud"],
+                                IdUsuarioAsignado = (int)sqlResultado["fiIDUsuarioAsignado"],
+                                UsuarioAsignado = sqlResultado["fcNombreCorto"].ToString(),
+                                ReprogramadoInicio = ConvertFromDBVal<DateTime>(sqlResultado["fdReprogramadoInicio"]),
+                                ReprogramadoFin = ConvertFromDBVal<DateTime>(sqlResultado["fdReprogramadoFin"]),
+                                EstadoDeCampo = (byte)sqlResultado["fiIDUsuarioAsignado"],
+                                CondicionadoInicio = ConvertFromDBVal<DateTime>(sqlResultado["fdCondicionadoInicio"]),
+                                CondicionadoFin = ConvertFromDBVal<DateTime>(sqlResultado["fdCondificionadoFin"]),
                             });
                         }
                     }
@@ -139,20 +128,20 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            int liParamStart = 0;
+            var DSC = new DSCore.DataCrypt();
+            var liParamStart = 0;
             string lcParametros = "";
-            String pcEncriptado = "";
+            var pcEncriptado = "";
             liParamStart = URL.IndexOf("?");
             if (liParamStart > 0)
                 lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
             else
-                lcParametros = String.Empty;
+                lcParametros = string.Empty;
 
-            if (lcParametros != String.Empty)
+            if (lcParametros != string.Empty)
             {
                 pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
@@ -171,3 +160,26 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
             return (T)obj;
     }
 }
+
+#region View Models
+
+public class SolicitudCredito_ViewModel
+{
+    public int IdSolicitud { get; set; }
+    public string Agencia { get; set; }
+    public string Producto { get; set; }
+    public int IdCliente { get; set; }
+    public string Identidad { get; set; }
+    public string NombreCliente { get; set; }
+    public DateTime FechaCreacion { get; set; }
+    public int IdEstadoSolicitud { get; set; }
+    public int IdUsuarioAsignado { get; set; }
+    public string UsuarioAsignado { get; set; }
+    public DateTime ReprogramadoInicio { get; set; }
+    public DateTime ReprogramadoFin { get; set; }
+    public int EstadoDeCampo { get; set; }
+    public DateTime CondicionadoInicio { get; set; }
+    public DateTime CondicionadoFin { get; set; }
+}
+
+#endregion

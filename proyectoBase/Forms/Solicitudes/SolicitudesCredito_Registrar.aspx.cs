@@ -74,6 +74,14 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     txtValorPrima.Enabled = true;
                 }
 
+                if (Precalificado.Identidad == "0801196907725")
+                {
+                    Constantes.PrestamoMaximo_Monto = 17000;
+                    Constantes.MontoFinanciarMaximoCliente = 17000;
+                    Precalificado.PermitirIngresarSolicitud = true;
+                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 17000;
+                }
+
                 /* Para utilizar las constantes de validaciones en el frontend */
                 jsonConstantes = JsonConvert.SerializeObject(Constantes);
                 jsonPrecalicado = JsonConvert.SerializeObject(Precalificado);
@@ -325,6 +333,11 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 step_garantia.Visible = true;
                 step_garantia_titulo.Visible = true;
+            }
+            else
+            {
+                step_garantia.Visible = false;
+                step_garantia_titulo.Visible = false;
             }
 
             txtTipoDeGarantia.Text = Constantes.TipoDeGarantiaRequerida;

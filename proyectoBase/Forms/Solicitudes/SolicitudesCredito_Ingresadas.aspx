@@ -19,18 +19,18 @@
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
-        #datatable-bandeja tbody tr {
+        .dataTable tbody tr {
             cursor: pointer;
         }
 
-        #datatable-bandeja tbody td {
+        .dataTable tbody td {
             outline: none;
             padding-top: 0 !important;
             padding-bottom: 0 !important;
         }
     </style>
 </head>
-<body class="EstiloBody-Listado-W1100px">
+<body runat="server" class="EstiloBody-Listado">
     <div class="card">
         <div class="card-header">
             <div class="row">
@@ -88,11 +88,13 @@
             <table id="datatable-bandeja" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                 <thead>
                     <tr>
+                        <th>Acciones</th>
+                        <th>No</th>
+                        <th>Agencia</th>
+                        <th>Prod.</th>
                         <th>Identidad</th>
                         <th>Nombre cliente</th>
                         <th>Fecha</th>
-                        <th>Tipo de prestamo</th>
-                        <th>Detalles</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
@@ -125,8 +127,7 @@
         </div>
     </div>
     <script src="/Scripts/js/jquery.min.js"></script>
-    <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
+    <script src="/Scripts/js/bootstrap.bundle.min.js"></script>    
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <!-- datatable js -->
@@ -147,6 +148,6 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Ingresadas.js?V=202009221153"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Ingresadas.js?V=20201102111425"></script>
 </body>
 </html>

@@ -443,6 +443,8 @@ $(document).on('click', 'button#btnSolicitarGPS', function () {
 
     $("#lblIdSolicitudSolicitarGPS").text(idSolicitud);
     $("#txtVIN_SolicitarGPS").val(VIN);
+    $("#txtFechaInstalacion").val(new Date());
+    $("#txtFechaInstalacion").val(moment().format().slice(0, 19));
     $("#modalSolicitarGPS").modal();
 });
 
@@ -450,7 +452,7 @@ $("#btnSolicitarGPS_Confirmar").click(function (e) {
 
     if ($('#frmPrincipal').parsley().isValid({ group: 'InstalacionGPS_Guardar' })) {
 
-        var solicitudGPS = {            
+        var solicitudGPS = {
             IdSolicitud: idSolicitud,
             IdGarantia: idGarantia,
             VIN: VIN,
@@ -540,7 +542,7 @@ $("#btnActualizarSolicitudGPS").click(function (e) {
 
     $("#modalDetalleSolicitudGPS").modal('hide');
     $("#modalActualizarSolicitudGPS").modal();
-    
+
 });
 
 $("#btnActualizarSolicitudGPS_Confirmar").click(function (e) {

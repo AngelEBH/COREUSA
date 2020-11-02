@@ -1,4 +1,5 @@
-﻿using System;
+﻿using proyectoBase.Models.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -25,7 +26,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         if (!IsPostBack)
         {
             var lcURL = Request.Url.ToString();
-            int liParamStart = lcURL.IndexOf("?");
+            var liParamStart = lcURL.IndexOf("?");
             string lcParametros;
 
             if (liParamStart > 0)
@@ -627,4 +628,12 @@ public class GarantiaSinSolicitud_ViewModel
     public string TipoDeVehiculo { get; set; }
     public string VIN { get; set; }
     public DateTime FechaCreacion { get; set; }
+}
+
+public class Prueba_ViewModel
+{
+    public bool SeGeneroExcepcion { get; set; }
+    public string Mensaje { get; set; }
+    public string Inner { get; set; }
+    public object Excepcion { get; set; }
 }

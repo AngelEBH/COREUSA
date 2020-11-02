@@ -1,4 +1,4 @@
-﻿var FiltroActual = "";
+﻿var filtroActual = "";
 var idSolicitud = 0;
 var identidadCliente = "";
 estadoMasRelevante = '';
@@ -6,7 +6,6 @@ estadoMasRelevante = '';
 $(document).ready(function () {
 
     dtBandeja = $('#datatable-bandeja').DataTable({
-        //"responsive": true,
         "pageLength": 20,
         "aaSorting": [],
         "dom": "<'row'<'col-sm-6'><'col-sm-6'T>>" +
@@ -51,58 +50,55 @@ $(document).ready(function () {
             }
         },
         "columns": [
-            { "data": "fcIdentidadCliente" },
+            { "data": "IdSolicitud" },
+
+            { "data": "IdSolicitud" },
+            { "data": "NombreCliente" },
             {
-                "data": "fcPrimerNombreCliente",
-                "render": function (data, type, row) {
-                    return row["fcPrimerNombreCliente"] + ' ' + row["fcSegundoNombreCliente"] + ' ' + row["fcPrimerApellidoCliente"] + ' ' + row["fcSegundoApellidoCliente"]
-                }
-            },
-            {
-                "data": "fdFechaCreacionSolicitud",
+                "data": "FechaCreacion",
                 "render": function (value) {
                     if (value === '/Date(-62135575200000)/') return "";
                     return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
                 }
             },
-            { "data": "fcDescripcion" },
+            { "data": "Producto" },
             {
-                "data": "fiIDSolicitud",
+                "data": "IdSolicitud",
                 "render": function (value) {
 
                     return '<button id="btnDetalles" data-id="' + value + '" class="btn btn-sm btn-block btn-info mb-0">Detalles</button>';
                 }
             },
             {
-                "data": "fiEstadoSolicitud",
+                "data": "IdEstadoSolicitud",
                 "render": function (data, type, row) {
 
-                    if (row["fiEstadoSolicitud"] == 1) {
+                    if (row["IdEstadoSolicitud"] == 1) {
                         estadoMasRelevante = '<label class="btn btn-sm btn-block btn-warning mb-0">En recepción</label>';
                     }
 
-                    if (row["fiEstadoSolicitud"] == 2) {
+                    if (row["IdEstadoSolicitud"] == 2) {
                         estadoMasRelevante = '<label class="btn btn-sm btn-block btn-warning mb-0">En análisis</label>';
                     }
 
-                    if (row["fdReprogramadoInicio"] != '/Date(-62135575200000)/' && row["fdReprogramadoFin"] == '/Date(-62135575200000)/') {
+                    if (row["ReprogramadoInicio"] != '/Date(-62135575200000)/' && row["ReprogramadoFin"] == '/Date(-62135575200000)/') {
                         estadoMasRelevante = '<label class="btn btn-sm btn-block btn-warning mb-0">Reprogramada</label>';
                     }
 
-                    if (row["fiEstadoDeCampo"] == 1) {
+                    if (row["EstadoDeCampo"] == 1) {
                         estadoMasRelevante = '<label class="btn btn-sm btn-block btn-warning mb-0">En campo</label>';
                     }
 
-                    if (row["fiEstadoSolicitud"] == 6) {
+                    if (row["IdEstadoSolicitud"] == 6) {
                         estadoMasRelevante = '<label class="btn btn-sm btn-block btn-warning mb-0">En Validación</label>';
                     }
 
-                    if (row["fdCondicionadoInicio"] != '/Date(-62135575200000)/' && row["fdCondificionadoFin"] == '/Date(-62135575200000)/') {
+                    if (row["CondicionadoInicio"] != '/Date(-62135575200000)/' && row["CondicionadoFin"] == '/Date(-62135575200000)/') {
                         estadoMasRelevante = '<button id="btnActualizar" data-id="' + row["fiIDSolicitud"] + '" class="btn btn-sm btn-block btn-warning mb-0">Condicionada</button>';
                     }
 
-                    if (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7) {
-                        estadoMasRelevante = row["fiEstadoSolicitud"] == 7 ? '<label class="btn btn-sm btn-block btn-success mb-0">Aprobada</label>' : '<label class="btn btn-sm btn-block btn-danger mb-0">Rechazada</label>';
+                    if (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7) {
+                        estadoMasRelevante = row["IdEstadoSolicitud"] == 7 ? '<label class="btn btn-sm btn-block btn-success mb-0">Aprobada</label>' : '<label class="btn btn-sm btn-block btn-danger mb-0">Rechazada</label>';
                     }
 
                     return estadoMasRelevante;
@@ -117,27 +113,21 @@ $(document).ready(function () {
     /* busqueda por mes de ingreso */
     $('#mesIngreso').on('change', function () {
         if (this.value != '') {
-            dtBandeja.columns(2)
-                .search('/' + this.value + '/')
-                .draw();
+            dtBandeja.columns(2).search('/' + this.value + '/').draw();
         }
         else {
-            dtBandeja.columns(2)
-                .search('')
-                .draw();
+            dtBandeja.columns(2).search('').draw();
         }
     });
 
     /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
-        dtBandeja.columns(2)
-            .search(this.value + '/')
-            .draw();
+        dtBandeja.columns(2).search(this.value + '/').draw();
     });
 
     $("#min").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
@@ -145,20 +135,20 @@ $(document).ready(function () {
 
     $("#max").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
     });
 
     $("#min, #max").change(function () {
-        FiltroActual = 'rangoFechas';
+        filtroActual = 'rangoFechas';
         dtBandeja.draw();
     });
 
     /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
-        if (FiltroActual == 'rangoFechas') {
+        if (filtroActual == 'rangoFechas') {
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
                 FechaIngreso = new Date(a[2]);
@@ -182,9 +172,9 @@ $(document).ready(function () {
         var row = dtBandeja.row(this).data();
 
         idSolicitud = row.fiIDSolicitud;
-        identidadCliente = row.fcIdentidadCliente;
-        $("#lblCliente").text(row.fcPrimerNombreCliente + ' ' + row.fcSegundoNombreCliente + ' ' + row.fcPrimerApellidoCliente + ' ' + row.fcSegundoApellidoCliente + ' ');
-        $("#lblIdentidadCliente").text(row.fcIdentidadCliente);
+        identidadCliente = row.IdCliente;
+        $("#lblCliente").text(row.NombreCliente);
+        $("#lblIdentidadCliente").text(row.IdCliente);
         $("#modalAbrirSolicitud").modal();
     });
 });
@@ -198,7 +188,7 @@ $('#btnActualizar').click(function (e) {
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Ingresadas.aspx/EncriptarParametros",
-        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: idSolicitud, Identidad: identidadCliente }),
+        data: JSON.stringify({ dataCrypt: window.location.href, idSolicitud: idSolicitud, identidad: identidadCliente }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la solicitud, contacte al administrador');
@@ -213,7 +203,6 @@ $('#btnActualizar').click(function (e) {
             }
         }
     });
-
 });
 
 $(document).on('click', 'button#btnDetalles', function () {
@@ -221,7 +210,7 @@ $(document).on('click', 'button#btnDetalles', function () {
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Ingresadas.aspx/EncriptarParametros",
-        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: idSolicitud, Identidad: identidadCliente }),
+        data: JSON.stringify({ dataCrypt: window.location.href, idSolicitud: idSolicitud, identidad: identidadCliente }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la solicitud, contacte al administrador');

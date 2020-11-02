@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Garantías de solicitudes aprobadas</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -142,7 +142,7 @@
                         <table id="datatable-listado" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
-                                    <th>Acciones</th>                                    
+                                    <th>Acciones</th>
                                     <th>No</th>
                                     <th>Agencia</th>
                                     <th>Vendedor</th>
@@ -327,7 +327,6 @@
     </div>
 
 
-
     <form runat="server" id="frmPrincipal" data-parsley-excluded="[disabled]">
 
         <div id="modalSolicitarGPS" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalSolicitarGPSLabel" aria-hidden="true">
@@ -378,7 +377,8 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalDetalleSolicitudGPSLabel">Detalles de la solicitud GPS (Solicitud <span id="lblIdSolicitudDetalleSolicitudGPS"></span>)</h6> <span id="lblEstadoSolicitudGPS_Detalle" class="btn btn-sm btn-warning float-right">Pendiente</span>
+                        <h6 class="modal-title mt-0" id="modalDetalleSolicitudGPSLabel">Detalles de la solicitud GPS (Solicitud <span id="lblIdSolicitudDetalleSolicitudGPS"></span>)</h6>
+                        <span id="lblEstadoSolicitudGPS_Detalle" class="btn btn-sm btn-warning float-right">Pendiente</span>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -422,7 +422,8 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalActualizarSolicitudGPSLabel">Actualizar solicitud GPS (Solicitud <span id="lblIdSolicitudActualizarSolicitudGPS"></span>)</h6> <span id="lblEstadoSolicitudGPS_Actualizar" class="btn btn-sm btn-warning float-right">Pendiente</span>
+                        <h6 class="modal-title mt-0" id="modalActualizarSolicitudGPSLabel">Actualizar solicitud GPS (Solicitud <span id="lblIdSolicitudActualizarSolicitudGPS"></span>)</h6>
+                        <span id="lblEstadoSolicitudGPS_Actualizar" class="btn btn-sm btn-warning float-right">Pendiente</span>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -490,6 +491,6 @@
         const NOMBRE_USUARIO = '<%=pcNombreUsuario %>';
         const CORREO_USUARIO = '<%=pcBuzoCorreoUsuario%>';
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20201027082725"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=202011021609"></script>
 </body>
 </html>
