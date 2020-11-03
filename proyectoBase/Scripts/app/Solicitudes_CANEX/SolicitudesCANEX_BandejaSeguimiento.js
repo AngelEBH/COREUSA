@@ -1,14 +1,13 @@
-﻿var Identidad = '';
-var IDSol = 0;
-var FiltroActual = "";
+﻿var identidad = '';
+var idSolicitud = 0;
+var filtroActual = "";
 
 $(document).ready(function () {
-    var tablaSolicitudes = $('#tblSolicitudesCanex').DataTable(
+
+    var tablaSolicitudes = $('#datatable-solicitudesCanex').DataTable(
         {
-            //"responsive": true,
             "pageLength": 20,
             "aaSorting": [],
-            //"processing": true,
             "dom": "<'row'<'col-sm-6'><'col-sm-6'T>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-6'i><'col-sm-6'p>>",
@@ -41,7 +40,7 @@ $(document).ready(function () {
             "ajax":
             {
                 type: "POST",
-                url: "SolicitudesCANEX_BandejaSeguimiento.aspx/CargarSolicitudesCANEXSeguimiento",
+                url: "SolicitudesCANEX_BandejaSeguimiento.aspx/CargarSolicitudes",
                 contentType: 'application/json; charset=utf-8',
                 data: function (dtParms) {
                     return JSON.stringify({ dataCrypt: window.location.href });
@@ -52,13 +51,27 @@ $(document).ready(function () {
                 }
             },
             "columns": [
+                {
+                    "data": "IDSolicitudCanex",
+                    "render": function (value) {
+
+                        return '<div class="dropdown mo-mb-2">' +
+                            '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >' +
+                            '<i class="fa fa-bars"></i>' +
+                            '</button >' +
+                            '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+                            '<button type="button" class="dropdown-item" id="btnDetalles" data-id="' + value + '"><i class="fas fa-tasks"></i> Detalles</button>' +
+                            '</div>' +
+                            '</div >';
+                    }
+                },
                 { "data": "NombreSocio" },
                 { "data": "IDSolicitudCanex" },
                 {
-                    "data": "FechaIngresoSolicitud", "orderable": false,
+                    "data": "FechaIngresoSolicitud",
                     "render": function (value) {
                         if (value === null) return "";
-                        return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
+                        return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a');
                     }
                 },
                 { "data": "Identidad" },
@@ -88,49 +101,35 @@ $(document).ready(function () {
                 { "data": "NombreAgencia" },
                 { "data": "NombreUsuario" },
                 {
-                    "data": "DescripcionEstadoSolicitud",
+                    "data": "EstadoSolicitud",
                     "render": function (data, type, row) {
-                        return '<label class="btn btn-sm btn-block mb-0 btn-' + GetEstadoClass(row["IDEstadoSolicitud"]) + '">' + row["DescripcionEstadoSolicitud"] + '</label>'
-                    }
-                },
-                {
-                    "data": "IDSolicitudCanex",
-                    "render": function (value) {
-
-                        var btnDetalles = '<button type="button" id="btnDetalles" data-id="' + value + '" class="btn btn-sm btn-info mb-0">Detalles</button>';
-                        return btnDetalles;
+                        return '<label class="btn btn-sm btn-block mb-0 btn-' + GetEstadoClass(row["IDEstadoSolicitud"]) + '">' + row["EstadoSolicitud"] + '</label>'
                     }
                 }
             ],
-            "columnDefs": [
-                { "orderable": false, "targets": 0 }
+            columnDefs: [
+                { targets: [0], orderable: false }
             ]
         });
 
     /* busqueda por mes de ingreso */
     $('#mesIngreso').on('change', function () {
         if (this.value != '') {
-            tablaSolicitudes.columns(2)
-                .search('/' + this.value + '/')
-                .draw();
+            tablaSolicitudes.columns(3).search('/' + this.value + '/').draw();
         }
         else {
-            tablaSolicitudes.columns(2)
-                .search('')
-                .draw();
+            tablaSolicitudes.columns(3).search('').draw();
         }
     });
 
     /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
-        tablaSolicitudes.columns(2)
-            .search(this.value + '/')
-            .draw();
+        tablaSolicitudes.columns(3).search(this.value + '/').draw();
     });
 
     $("#min").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
@@ -138,23 +137,23 @@ $(document).ready(function () {
 
     $("#max").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
     });
 
     $("#min, #max").change(function () {
-        FiltroActual = 'rangoFechas';
+        filtroActual = 'rangoFechas';
         tablaSolicitudes.draw();
     });
 
     /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
-        if (FiltroActual == 'rangoFechas') {
+        if (filtroActual == 'rangoFechas') {
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
-                FechaIngreso = new Date(a[2]);
+                FechaIngreso = new Date(a[3]);
             return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaIngreso <= Hasta) || ("Invalid Date" == Hasta && FechaIngreso >= Desde) || (FechaIngreso <= Hasta && FechaIngreso >= Desde);
         }
         else { return true; }
@@ -166,22 +165,22 @@ $(document).ready(function () {
         minViewMode: "years"
     });
 
-    $('#tblSolicitudesCanex tbody').on('click', 'tr', function () {
+    $('#datatable-solicitudesCanex tbody').on('click', 'tr', function () {
         var data = tablaSolicitudes.row(this).data();
         if (data != undefined) {
-            Identidad = data.Identidad;
+            identidad = data.Identidad;
         }
     });
 
     $(document).on('click', 'button#btnDetalles', function () {
 
-        if (Identidad != '') {
+        if (identidad != '') {
 
-            IDSol = $(this).data('id');
+            idSolicitud = $(this).data('id');
             $.ajax({
                 type: "POST",
                 url: 'SolicitudesCANEX_BandejaSeguimiento.aspx/AbrirSolicitudSeguimientoDetalles',
-                data: JSON.stringify({ ID: IDSol, Identidad: Identidad, dataCrypt: window.location.href }),
+                data: JSON.stringify({ idSolicitud: idSolicitud, identidad: identidad, dataCrypt: window.location.href }),
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr, ajaxOptions, thrownError) {
                     MensajeError('Error al cargar detalles de la solicitud');

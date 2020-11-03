@@ -9,6 +9,7 @@
     <title>Bandeja de seguimiento de solicitudes CANEX</title>
     <!-- BOOTSTRAP -->
     <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
     <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
@@ -17,11 +18,11 @@
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
-        #tblSolicitudesCanex tbody tr {
+        #datatable-solicitudesCanex tbody tr {
             cursor: pointer;
         }
 
-        #tblSolicitudesCanex tbody td {
+        #datatable-solicitudesCanex tbody td {
             outline: none;
             padding-top: 0 !important;
             padding-bottom: 0 !important;
@@ -34,7 +35,7 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-8">
-                        <h6 class="">Solicitudes CANEX</h6>
+                        <h6 class="">Solicitudes de canalex externos</h6>
                     </div>
                     <div class="col-4">
                         <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
@@ -83,23 +84,13 @@
                         </div>
                     </div>
                 </div>
-
-            <%--<div class="form-group row">
-                    <label class="col-sm-2">Nombre cliente</label>
-                    <div class="col-sm-4">
-                        <input id="nombreCliente" class="form-control form-control-sm" type="text" />
-                    </div>
-                    <label class="col-sm-2">Identidad cliente</label>
-                    <div class="col-sm-4">
-                        <input id="identidadCliente" class="form-control form-control-sm" type="text" />
-                    </div>
-                </div>--%>
                 <div class="table-responsive">
-                    <table id="tblSolicitudesCanex" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                    <table id="datatable-solicitudesCanex" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                         <thead>
                             <tr>
+                                <th>Acciones</th>
                                 <th>Socio</th>
-                                <th>No. Sol</th>
+                                <th>No</th>
                                 <th>Fecha de ingreso</th>
                                 <th>Identidad</th>
                                 <th>Nombre cliente</th>
@@ -109,8 +100,7 @@
                                 <th>Préstamo</th>
                                 <th>Agencia</th>
                                 <th>Usuario</th>
-                                <th>Estado</th>
-                                <th></th>
+                                <th>Estado</th>                                
                             </tr>
                         </thead>
                         <tbody>
@@ -132,6 +122,6 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="/Scripts/app/Solicitudes_CANEX/SolicitudesCANEX_BandejaSeguimiento.js?v=1.1"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/SolicitudesCANEX_BandejaSeguimiento.js?v=202011031623265"></script>
 </body>
 </html>

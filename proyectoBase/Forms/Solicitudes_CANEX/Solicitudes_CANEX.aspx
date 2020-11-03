@@ -8,8 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Solicitudes CANEX</title>
     <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -17,11 +18,11 @@
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
-        #tblSolicitudesCanex tbody tr {
+        #datatable-solicitudesCanex tbody tr {
             cursor: pointer;
         }
 
-        #tblSolicitudesCanex tbody td {
+        #datatable-solicitudesCanex tbody td {
             outline: none;
             padding-top: 0 !important;
             padding-bottom: 0 !important;
@@ -34,7 +35,7 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-8">
-                        <h6 class="">Solicitudes CANEX</h6>
+                        <h6 class="">Solicitudes de canalex externos</h6>
                     </div>
                     <div class="col-4">
                         <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
@@ -85,22 +86,22 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table id="tblSolicitudesCanex" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                    <table id="datatable-solicitudesCanex" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                         <thead>
                             <tr>
+                                <th>Acciones</th>
                                 <th>Socio</th>
-                                <th>No. Sol</th>
+                                <th>No</th>
                                 <th>Fecha de ingreso</th>
                                 <th>Identidad</th>
-                                <th>Nombre cliente</th>
+                                <th>Cliente</th>
                                 <th>Producto</th>
                                 <th>Valor global</th>
                                 <th>Prima</th>
                                 <th>Préstamo</th>
                                 <th>Agencia</th>
                                 <th>Usuario</th>
-                                <th>Estado</th>
-                                <th></th>
+                                <th>Estado</th>                                
                             </tr>
                         </thead>
                         <tbody>
@@ -123,6 +124,6 @@
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX.js?v=1.1"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX.js?v=20201103155625"></script>
 </body>
 </html>

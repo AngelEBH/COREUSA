@@ -81,14 +81,12 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDSolicitud_ListarSolicitudesPorUsuario", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Ingresadas", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         while (sqlResultado.Read())
@@ -101,15 +99,15 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
                                 IdCliente = (int)sqlResultado["fiIDCliente"],
                                 Identidad = sqlResultado["fcIdentidadCliente"].ToString(),
                                 NombreCliente = sqlResultado["fcPrimerNombreCliente"].ToString() + " " + sqlResultado["fcSegundoNombreCliente"].ToString() + " " + sqlResultado["fcPrimerApellidoCliente"].ToString() + " " + sqlResultado["fcSegundoApellidoCliente"].ToString(),
-                                FechaCreacion = ConvertFromDBVal<DateTime>(sqlResultado["fdFechaCreacionSolicitud"]),
+                                FechaCreacion = (DateTime)sqlResultado["fdFechaCreacionSolicitud"],
                                 IdEstadoSolicitud = (byte)sqlResultado["fiEstadoSolicitud"],
                                 IdUsuarioAsignado = (int)sqlResultado["fiIDUsuarioAsignado"],
                                 UsuarioAsignado = sqlResultado["fcNombreCorto"].ToString(),
-                                ReprogramadoInicio = ConvertFromDBVal<DateTime>(sqlResultado["fdReprogramadoInicio"]),
-                                ReprogramadoFin = ConvertFromDBVal<DateTime>(sqlResultado["fdReprogramadoFin"]),
-                                EstadoDeCampo = (byte)sqlResultado["fiIDUsuarioAsignado"],
-                                CondicionadoInicio = ConvertFromDBVal<DateTime>(sqlResultado["fdCondicionadoInicio"]),
-                                CondicionadoFin = ConvertFromDBVal<DateTime>(sqlResultado["fdCondificionadoFin"]),
+                                ReprogramadoInicio = (DateTime?)(DBNull.Value == sqlResultado["fdReprogramadoInicio"] ? null : sqlResultado["fdReprogramadoInicio"]),
+                                ReprogramadoFin = (DateTime?)(DBNull.Value == sqlResultado["fdReprogramadoFin"] ? null : sqlResultado["fdReprogramadoFin"]),
+                                EstadoDeCampo = (byte)sqlResultado["fiEstadoDeCampo"],
+                                CondicionadoInicio = (DateTime?)(DBNull.Value == sqlResultado["fdCondicionadoInicio"] ? null : sqlResultado["fdCondicionadoInicio"]),
+                                CondicionadoFin = (DateTime?)(DBNull.Value == sqlResultado["fdCondificionadoFin"] ? null : sqlResultado["fdCondificionadoFin"])
                             });
                         }
                     }
@@ -151,14 +149,6 @@ public partial class SolicitudesCredito_Ingresadas : System.Web.UI.Page
         }
         return lURLDesencriptado;
     }
-
-    public static T ConvertFromDBVal<T>(object obj)
-    {
-        if (obj == null || obj == DBNull.Value)
-            return default(T);
-        else
-            return (T)obj;
-    }
 }
 
 #region View Models
@@ -175,11 +165,11 @@ public class SolicitudCredito_ViewModel
     public int IdEstadoSolicitud { get; set; }
     public int IdUsuarioAsignado { get; set; }
     public string UsuarioAsignado { get; set; }
-    public DateTime ReprogramadoInicio { get; set; }
-    public DateTime ReprogramadoFin { get; set; }
+    public DateTime? ReprogramadoInicio { get; set; }
+    public DateTime? ReprogramadoFin { get; set; }
     public int EstadoDeCampo { get; set; }
-    public DateTime CondicionadoInicio { get; set; }
-    public DateTime CondicionadoFin { get; set; }
+    public DateTime? CondicionadoInicio { get; set; }
+    public DateTime? CondicionadoFin { get; set; }
 }
 
 #endregion

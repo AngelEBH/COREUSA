@@ -10,25 +10,25 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        string lcURL = Request.Url.ToString();
-        int liParamStart = lcURL.IndexOf("?");
+        var DSC = new DSCore.DataCrypt();
+        var lcURL = Request.Url.ToString();
+        var liParamStart = lcURL.IndexOf("?");
 
         string lcParametros;
         if (liParamStart > 0)
             lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
         else
-            lcParametros = String.Empty;
+            lcParametros = string.Empty;
 
-        if (lcParametros != String.Empty)
+        if (lcParametros != string.Empty)
         {
-            string lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+            var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
             lcEncriptado = lcEncriptado.Replace("%2f", "/");
-            string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-            Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+            var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             /* Hacer aqui las validaciones que se lleguen a necesitar */
         }
     }
@@ -36,39 +36,39 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
     [WebMethod]
     public static List<SolcitudesCanexViewModel> CargarSolicitudes(string dataCrypt)
     {
-        List<SolcitudesCanexViewModel> ListadoSolicitudes = new List<SolcitudesCanexViewModel>();
+        var listadoSolicitudes = new List<SolcitudesCanexViewModel>();
         try
         {
             /* Filtros pendientes */
-            int IDSocioComercial = 0; int IDEstadoSolicitud = 0;
+            var idSocioComercial = 0;
+            var idEstadoSolicitud = 0;
 
             /* Desencriptar parametros */
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var DSC = new DSCore.DataCrypt();
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
 
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("dbo.sp_CANEX_Solicitudes", sqlConexion))
+                using (var sqlComando = new SqlCommand("dbo.sp_CANEX_Solicitudes", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDSocioComercial", IDSocioComercial);
-                    sqlComando.Parameters.AddWithValue("@piIDEstadoSolicitud", IDEstadoSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSocioComercial", idSocioComercial);
+                    sqlComando.Parameters.AddWithValue("@piIDEstadoSolicitud", idEstadoSolicitud);
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var reader = sqlComando.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            var x = reader["fiEstadoSolicitud"].GetType();
-                            ListadoSolicitudes.Add(new SolcitudesCanexViewModel()
+                            listadoSolicitudes.Add(new SolcitudesCanexViewModel()
                             {
                                 NombreSocio = (string)reader["fcNombreSocio"],
                                 NombreAgencia = (string)reader["fcNombreAgencia"],
@@ -94,27 +94,26 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
         {
             ex.Message.ToString();
         }
-        return ListadoSolicitudes;
+        return listadoSolicitudes;
     }
 
     [WebMethod]
-    public static string AbrirSolicitudDetalles(int ID, string Identidad, string dataCrypt)
+    public static string AbrirSolicitudDetalles(int idSolicitud, string identidad, string dataCrypt)
     {
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        var DSC = new DSCore.DataCrypt();
         string resultado;
         try
         {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            DateTime fechaActual = DateTime.Now;
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             string lcParametros = "usr=" + pcIDUsuario +
             "&IDApp=" + pcIDApp +
-            "&IDSOL=" + ID +
+            "&IDSOL=" + idSolicitud +
             "&SID=" + pcIDSesion +
-            "&pcID=" + Identidad;
+            "&pcID=" + identidad;
             resultado = DSC.Encriptar(lcParametros);
         }
         catch
@@ -129,20 +128,20 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            int liParamStart = 0;
-            string lcParametros = "";
-            String pcEncriptado = "";
+            var DSC = new DSCore.DataCrypt();
+            var liParamStart = 0;
+            var lcParametros = "";
+            var pcEncriptado = string.Empty;
             liParamStart = URL.IndexOf("?");
             if (liParamStart > 0)
                 lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
             else
-                lcParametros = String.Empty;
+                lcParametros = string.Empty;
 
-            if (lcParametros != String.Empty)
+            if (lcParametros != string.Empty)
             {
                 pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }

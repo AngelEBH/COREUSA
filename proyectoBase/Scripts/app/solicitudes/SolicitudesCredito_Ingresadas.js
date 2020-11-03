@@ -50,23 +50,31 @@ $(document).ready(function () {
             }
         },
         "columns": [
-            { "data": "IdSolicitud" },
+            {
+                "data": "IdSolicitud", "className": "text-center",
+                "render": function (data, type, row) {
 
+                    return '<div class="dropdown mo-mb-2">' +
+                        '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >' +
+                        '<i class="fa fa-bars"></i>' +
+                        '</button >' +
+                        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+                        '<button type="button" class="dropdown-item" id="btnDetalles" data-id="' + row["IdSolicitud"] + '"><i class="fas fa-tasks"></i> Detalles</button>' +
+                        ((row["CondicionadoInicio"] != null && row["CondicionadoFin"] == null && row["IdEstadoSolicitud"] != 4 && row["IdEstadoSolicitud"] != 5 && row["IdEstadoSolicitud"] != 7) ? '<button type="button" class="dropdown-item" id="btnActualizar" data-id="' + row["IdSolicitud"] + '"><i class="far fa-edit"></i> Actualizar condiciones</button>' : '') +
+                        '</div>' +
+                        '</div >';
+                }
+            },
             { "data": "IdSolicitud" },
+            { "data": "Agencia" },
+            { "data": "Producto" },
+            { "data": "Identidad" },
             { "data": "NombreCliente" },
             {
                 "data": "FechaCreacion",
                 "render": function (value) {
                     if (value === '/Date(-62135575200000)/') return "";
-                    return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
-                }
-            },
-            { "data": "Producto" },
-            {
-                "data": "IdSolicitud",
-                "render": function (value) {
-
-                    return '<button id="btnDetalles" data-id="' + value + '" class="btn btn-sm btn-block btn-info mb-0">Detalles</button>';
+                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a');
                 }
             },
             {
@@ -81,7 +89,7 @@ $(document).ready(function () {
                         estadoMasRelevante = '<label class="btn btn-sm btn-block btn-warning mb-0">En análisis</label>';
                     }
 
-                    if (row["ReprogramadoInicio"] != '/Date(-62135575200000)/' && row["ReprogramadoFin"] == '/Date(-62135575200000)/') {
+                    if (row["ReprogramadoInicio"] != null && row["ReprogramadoFin"] == null) {
                         estadoMasRelevante = '<label class="btn btn-sm btn-block btn-warning mb-0">Reprogramada</label>';
                     }
 
@@ -93,8 +101,8 @@ $(document).ready(function () {
                         estadoMasRelevante = '<label class="btn btn-sm btn-block btn-warning mb-0">En Validación</label>';
                     }
 
-                    if (row["CondicionadoInicio"] != '/Date(-62135575200000)/' && row["CondicionadoFin"] == '/Date(-62135575200000)/') {
-                        estadoMasRelevante = '<button id="btnActualizar" data-id="' + row["fiIDSolicitud"] + '" class="btn btn-sm btn-block btn-warning mb-0">Condicionada</button>';
+                    if (row["CondicionadoInicio"] != null && row["CondicionadoFin"] == null) {
+                        estadoMasRelevante = '<label class="btn btn-sm btn-block btn-warning mb-0">Condicionada</label>';
                     }
 
                     if (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7) {
@@ -110,19 +118,28 @@ $(document).ready(function () {
         ]
     });
 
+    /* Mostrar mensaje de actualización a los usuarios durante los próximos 2 días*/
+    if (moment().isBefore('2020-11-05T23:50:00-06:00')) {
+
+        iziToast.info({
+            title: 'Info',
+            message: 'Estimado usuario, ahora las opciones "Detalles" y "Actualizar condiciones" se encuentran en la primera columna con titulo "Acciones".'
+        });
+    }
+
     /* busqueda por mes de ingreso */
     $('#mesIngreso').on('change', function () {
         if (this.value != '') {
-            dtBandeja.columns(2).search('/' + this.value + '/').draw();
+            dtBandeja.columns(6).search('/' + this.value + '/').draw();
         }
         else {
-            dtBandeja.columns(2).search('').draw();
+            dtBandeja.columns(6).search('').draw();
         }
     });
 
     /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
-        dtBandeja.columns(2).search(this.value + '/').draw();
+        dtBandeja.columns(6).search(this.value + '/').draw();
     });
 
     $("#min").datepicker({
@@ -151,7 +168,7 @@ $(document).ready(function () {
         if (filtroActual == 'rangoFechas') {
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
-                FechaIngreso = new Date(a[2]);
+                FechaIngreso = new Date(a[6]);
             return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaIngreso <= Hasta) || ("Invalid Date" == Hasta && FechaIngreso >= Desde) || (FechaIngreso <= Hasta && FechaIngreso >= Desde);
         }
         else { return true; }
@@ -171,7 +188,7 @@ $(document).ready(function () {
     $("#datatable-bandeja tbody").on("click", "tr", function () {
         var row = dtBandeja.row(this).data();
 
-        idSolicitud = row.fiIDSolicitud;
+        idSolicitud = row.IdSolicitud;
         identidadCliente = row.IdCliente;
         $("#lblCliente").text(row.NombreCliente);
         $("#lblIdentidadCliente").text(row.IdCliente);
@@ -194,7 +211,6 @@ $('#btnActualizar').click(function (e) {
             MensajeError('No se pudo cargar la solicitud, contacte al administrador');
         },
         success: function (data) {
-
             if (data.d != "-1") {
                 window.location = "SolicitudesCredito_ActualizarSolicitud.aspx?" + data.d;
             }
