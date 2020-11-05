@@ -886,6 +886,7 @@
     <Content Include="Forms\PreSolicitudes\PreSolicitud_Guardar.aspx" />
     <Content Include="Forms\PreSolicitudes\PreSolicitud_Listado.aspx" />
     <Content Include="Forms\Solicitudes\Garantia_Detalles.aspx" />
+    <Content Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ImprimirDocumentacion.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx" />
@@ -1799,6 +1800,13 @@
     </Compile>
     <Compile Include="Forms\Solicitudes\Garantia_Detalles.aspx.designer.cs">
       <DependentUpon>Garantia_Detalles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx.cs">
+      <DependentUpon>SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx.designer.cs">
+      <DependentUpon>SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_ImprimirDocumentacion.aspx.cs">
       <DependentUpon>SolicitudesCredito_ImprimirDocumentacion.aspx</DependentUpon>

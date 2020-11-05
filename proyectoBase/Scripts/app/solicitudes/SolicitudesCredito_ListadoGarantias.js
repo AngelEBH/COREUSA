@@ -12,6 +12,7 @@ var nombreCliente = ''; /* Nombre del cliente seleccionado del listado de garant
 /* Iconos de estado para el listado de garantias de solicitudes aprobadas */
 var iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">estadoListo</label></i>';
 var iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">estadoPendiente</label></i>';
+var iconoWarning = '<i class="mdi mdi-check-circle mdi-24px text-warning p-0"><label style="display:none;">estadoPendiente</label></i>';
 
 /* Para realizar filtros en ambas listas*/
 var filtroActual = '';
@@ -76,9 +77,9 @@ $(document).ready(function () {
                         '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
                         (row["IdGarantia"] == 0 ? '<button type="button" class="dropdown-item" id="btnGuardar"><i class="fas fa-plus"></i> Agregar</button>' : '') +
                         (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnDetalles"><i class="fas fa-tasks"></i> Detalles</button>') +
-                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnActualizar"><i class="far fa-edit"></i> Actualizar</button>') +
+                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnActualizar"><i class="far fa-edit"></i> ' + (row["VIN"] != '' ? 'Actualizar' : 'Completar información')+'</button>') +
                         //(row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion"><i class="far fa-file-alt"></i> Imprimir Doc.</button>') +
-                        ((row["IdAutoGPSInstalacion"] == 0 && row["IdGarantia"] != 0) ? '<button type="button" class="dropdown-item" id="btnSolicitarGPS"><i class="fas fa-map-marker-alt"></i> Solicitar GPS</button>' : '') +
+                        ((row["IdAutoGPSInstalacion"] == 0 && row["IdGarantia"] != 0 && row["VIN"] != '') ? '<button type="button" class="dropdown-item" id="btnSolicitarGPS"><i class="fas fa-map-marker-alt"></i> Solicitar GPS</button>' : '') +
                         ((row["IdAutoGPSInstalacion"] != 0) ? '<button type="button" class="dropdown-item" id="btnDetalleSolicitudGPS"><i class="fas fa-map-marker-alt"></i> Detalles solicitud GPS</button>' : '') +
                         '</div>' +
                         '</div >';
@@ -111,7 +112,7 @@ $(document).ready(function () {
                 "data": "IdGarantia", "className": "text-center",
                 "render": function (data, type, row) {
 
-                    return row["IdGarantia"] != 0 ? iconoExito : iconoPendiente;
+                    return (row["IdGarantia"] != 0 ? row["VIN"] != '' ? iconoExito : iconoWarning : iconoPendiente);
                 }
             }
         ],

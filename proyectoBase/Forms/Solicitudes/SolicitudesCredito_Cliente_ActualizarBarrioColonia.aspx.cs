@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Web;
 using System.Web.Services;
 
-public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
+public partial class SolicitudesCredito_Cliente_ActualizarBarrioColonia : System.Web.UI.Page
 {
     private string pcEncriptado = "";
     private string pcIDUsuario = "";
@@ -16,31 +16,31 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        //if (!IsPostBack)
-        //{
-        //    var DSC = new DSCore.DataCrypt();
-        //    var lcURL = Request.Url.ToString();
-        //    int liParamStart = lcURL.IndexOf("?");
-        //    string lcParametros;
+        if (!IsPostBack)
+        {
+            var DSC = new DSCore.DataCrypt();
+            var lcURL = Request.Url.ToString();
+            int liParamStart = lcURL.IndexOf("?");
+            string lcParametros;
 
-        //    if (liParamStart > 0)
-        //        lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-        //    else
-        //        lcParametros = string.Empty;
+            if (liParamStart > 0)
+                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
+            else
+                lcParametros = string.Empty;
 
-        //    if (lcParametros != string.Empty)
-        //    {
-        //        pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-        //        var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-        //        Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-        //        pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
-        //        pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-        //        pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            if (lcParametros != string.Empty)
+            {
+                pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
 
-        //        if (pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "146")
-        //            btnAbrirSolicitud.Visible = true;
-        //    }
-        //}
+                if (pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "146")
+                    btnAbrirSolicitud.Visible = true;
+            }
+        }
     }
 
     [WebMethod]
