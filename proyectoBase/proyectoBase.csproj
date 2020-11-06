@@ -1235,6 +1235,7 @@
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Ingresar.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_IngresarAval.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_RegistradaDetalles.js" />
+    <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Registrar.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_RegistrarAval.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Registrar_CoreFinanciero.js" />

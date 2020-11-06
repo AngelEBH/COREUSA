@@ -13,40 +13,40 @@ public partial class SolicitudesCredito_Detalles
 {
 
     /// <summary>
-    /// Control LogoPrestamo.
+    /// Control imgLogo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Image LogoPrestamo;
+    protected global::System.Web.UI.WebControls.Image imgLogo;
 
     /// <summary>
-    /// Control lblTipoPrestamo.
+    /// Control lblProducto.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblTipoPrestamo;
+    protected global::System.Web.UI.WebControls.Label lblProducto;
 
     /// <summary>
-    /// Control spanNombreCliente.
+    /// Control lblNombreCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label spanNombreCliente;
+    protected global::System.Web.UI.WebControls.Label lblNombreCliente;
 
     /// <summary>
-    /// Control spanIdentidadCliente.
+    /// Control lblIdentidadCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label spanIdentidadCliente;
+    protected global::System.Web.UI.WebControls.Label lblIdentidadCliente;
 
     /// <summary>
     /// Control lblNoSolicitud.
@@ -713,31 +713,4 @@ public partial class SolicitudesCredito_Detalles
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblObservacionesCampoTrabajo;
-
-    /// <summary>
-    /// Control txtObservacionesReferencia.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesReferencia;
-
-    /// <summary>
-    /// Control btnReferenciaSinComunicacion.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlButton btnReferenciaSinComunicacion;
-
-    /// <summary>
-    /// Control btnComentarioReferenciaConfirmar.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlButton btnComentarioReferenciaConfirmar;
 }

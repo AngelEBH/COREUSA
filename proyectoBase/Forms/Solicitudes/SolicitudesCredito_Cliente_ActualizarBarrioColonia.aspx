@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Bandeja.aspx.cs" Inherits="SolicitudesCredito_Bandeja" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx.cs" Inherits="SolicitudesCredito_Cliente_ActualizarBarrioColonia" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
-    <title>Bandeja de solicitudes</title>
+    <title>Actualizar barrio/colonia</title>
     <!-- BOOTSTRAP -->
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
@@ -111,13 +111,11 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
                                         <label class="col-form-label">Dirección detallada del domicilio</label>
-                                        <textarea id="txtDireccionDetalladaDomicilio" runat="server" required="required" class="form-control form-control-sm" data-parsley-group="informacionDomicilio"></textarea>
+                                        <textarea id="txtDireccionDetalladaDomicilio" runat="server" readonly="readonly" class="form-control form-control-sm" data-parsley-group="informacionDomicilio"></textarea>
                                     </div>
-                                </div>
-                                <div class="form-group row">
                                     <div class="col-12">
                                         <label class="col-form-label">Referencias del domicilio</label>
-                                        <textarea id="txtReferenciasDelDomicilio" runat="server" required="required" class="form-control form-control-sm" data-parsley-group="informacionDomicilio"></textarea>
+                                        <textarea id="txtReferenciasDelDomicilio" runat="server" readonly="readonly" class="form-control form-control-sm" data-parsley-group="informacionDomicilio"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -149,13 +147,11 @@
                                 <div class="form-group row">
                                     <div class="col-12">
                                         <label class="col-form-label">Dirección detallada del trabajo</label>
-                                        <textarea id="txtDireccionDetalladaEmpresa" runat="server" required="required" class="form-control form-control-sm" data-parsley-group="informacionLaboral"></textarea>
+                                        <textarea id="txtDireccionDetalladaEmpresa" runat="server" readonly="readonly" class="form-control form-control-sm" data-parsley-group="informacionLaboral"></textarea>
                                     </div>
-                                </div>
-                                <div class="form-group row">
                                     <div class="col-12">
                                         <label class="col-form-label">Referencias de la ubicación del trabajo</label>
-                                        <textarea id="txtReferenciasEmpresa" runat="server" required="required" class="form-control form-control-sm" data-parsley-group="informacionLaboral"></textarea>
+                                        <textarea id="txtReferenciasEmpresa" runat="server" readonly="readonly" class="form-control form-control-sm" data-parsley-group="informacionLaboral"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -191,6 +187,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <%--<script src="/Scripts/app/solicitudes/SolicitudesCredito_Cliente_ActualizarBarrioColonia.js?v=20201105151325"></script>--%>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Cliente_ActualizarBarrioColonia.js"></script>
 </body>
 </html>

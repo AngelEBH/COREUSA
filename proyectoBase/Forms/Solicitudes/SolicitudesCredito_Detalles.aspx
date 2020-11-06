@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Detalles.aspx.cs" Inherits="SolicitudesCredito_Detalles" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Detalles.aspx.cs" Inherits="SolicitudesCredito_Detalles" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -7,19 +7,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles de la solicitud</title>
-    <!-- BOOTSTRAP -->
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
-    <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
+    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
-    <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <link href="/Scripts/plugins/imgBox/style.css" rel="stylesheet" />
+    <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
+        html {
+            background-color: rgb(255,255,255) !important;
+        }
+
+        .card {
+            border: none;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+        }
+
         .card-header {
-            background-color: #ffffff;
+            background-color: rgb(255,255,255) !important;
         }
 
         .seccion-header {
@@ -29,98 +35,91 @@
         }
     </style>
 </head>
-<body class="EstiloBody">
+<body>
     <div class="card">
         <div class="card-header">
-            <div class="row">
-                <!-- Información del producto -->
-                <div class="col-md-6 form-inline p-0">
-                    <div class="spinner-border" role="status" id="divCargandoAnalisis">
-                        <span class="sr-only">Cargando</span>
-                    </div>
-                    <asp:Image runat="server" ID="LogoPrestamo" class="float-left LogoPrestamo" alt="Logo del Producto" Style="display: none;" />
-                    <asp:Label runat="server" ID="lblTipoPrestamo" CssClass="h4 EliminarEspacios"></asp:Label>
-                </div>
-                <!-- Acciones generales -->
-                <div class="col-md-6 form-inline justify-content-end pr-0">
-                    <div class="button-items">
-                        <button id="btnHistorialInterno" disabled="disabled" type="button" class="btn btn-success btn-sm waves-effect waves-light">
-                            Historial interno
-                        </button>
-                        <button id="btnHistorialExterno" disabled="disabled" type="button" class="btn btn-success btn-sm waves-effect waves-light">
-                            Buro externo
-                        </button>
-
-                        <button id="btnValidoDocumentacionModal" type="button" class="btn btn-success btn-sm waves-effect waves-light">
-                            <small>Ver docs</small>
-                        </button>
+            <div class="row justify-content-between align-items-end">
+                <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
+                    <div class="form-inline p-0">
+                        <div class="spinner-border" role="status" id="divCargandoAnalisis">
+                            <span class="sr-only">Cargando</span>
+                        </div>
+                        <asp:Image runat="server" ID="imgLogo" class="LogoPrestamo align-self-center d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block" alt="Logo del Producto" Style="display: none;" />
+                        <asp:Label runat="server" ID="lblProducto" CssClass="h6 font-weight-bold"></asp:Label>
                     </div>
                 </div>
-                <!-- Información del cliente -->
-                <div class="col-md-6 seccion-header border-bottom">
+                <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
+                    <div class="form-inline">
+                        <div class="button-items pb-2">
+                            <button id="btnHistorialInterno" disabled="disabled" type="button" class="btn btn-success btn-sm">
+                                Historial interno
+                            </button>
+                            <button id="btnHistorialExterno" disabled="disabled" type="button" class="btn btn-success btn-sm">
+                                Buro externo
+                            </button>
+                            <button id="btnValidoDocumentacionModal" type="button" class="btn btn-success btn-sm">
+                                <small>Ver docs</small>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-between bg-light">
+                <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
                     <i class="mdi mdi-account mdi-24px mt-1"></i>
-                    <asp:Label ID="spanNombreCliente" CssClass="col-form-label-lg EliminarEspacios mt-1" runat="server"></asp:Label>
+                    <asp:Label ID="lblNombreCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label>
                 </div>
-                <div class="col-md-6 seccion-header border-bottom text-right">
-                    <label class="col-form-label-lg EliminarEspacios mt-1">Identidad:&nbsp;</label>
-                    <asp:Label ID="spanIdentidadCliente" CssClass="col-form-label-lg EliminarEspacios mt-1" runat="server"></asp:Label>
+                <div class="col-lg-auto col-md-auto col-sm-auto col-auto align-self-end">
+                    <asp:Label runat="server" class="h6 font-weight-bold">Identidad:</asp:Label>
+                    <asp:Label ID="lblIdentidadCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label>
                 </div>
-
-                <table class="table table-condensed m-0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th class="text-center">No. Solicitud:</th>
-                            <th class="text-center">
-                                <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
-                            </th>
-                            <th class="text-center">Tipo Solicitud:</th>
-                            <th class="text-center">
-                                <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
-                            </th>
-                            <th class="text-center">Agente de Ventas:</th>
-                            <th class="text-center">
-                                <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
-                            </th>
-                            <th class="text-center">Agencia:</th>
-                            <th class="text-center">
-                                <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
-                            </th>
-                            <th class="text-center">Gestor:</th>
-                            <th class="text-center">
-                                <asp:Label ID="lblNombreGestor" CssClass="col-form-label" runat="server"></asp:Label>
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
-
-                <!-- Información del procesamiento de la solicitud -->
-                <div class="table-responsive">
-                    <table class="table table-condensed m-0" id="tblEstadoSolicitud">
-                        <thead class="thead-light">
+                <div class="col-lg-12">
+                    <table class="table table-condensed mb-0">
+                        <tbody>
                             <tr>
-                                <th class="text-center">Ingreso</th>
-                                <th class="text-center">Recepción</th>
-                                <th class="text-center">Analisis</th>
-                                <th class="text-center">Campo</th>
-                                <th class="text-center">Condic.</th>
-                                <th class="text-center">Reprog.</th>
-                                <th class="text-center">Validación</th>
-                                <th class="text-center">Resolución</th>
+                                <th class="text-center pt-1 pb-1">No. Solicitud:
+                                    <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                <th class="text-center pt-1 pb-1">Tipo Solicitud:
+                                    <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                <th class="text-center pt-1 pb-1">Agente de Ventas:
+                                    <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                <th class="text-center pt-1 pb-1">Agencia:
+                                    <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                <th class="text-center pt-1 pb-1">Gestor:
+                                    <asp:Label ID="lblNombreGestor" CssClass="col-form-label" runat="server"></asp:Label></th>
                             </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot></tfoot>
+                        </tbody>
                     </table>
+                </div>
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-condensed m-0" id="tblEstadoSolicitud">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Ingreso</th>
+                                    <th class="text-center">Recepción</th>
+                                    <th class="text-center">Analisis</th>
+                                    <th class="text-center">Campo</th>
+                                    <th class="text-center">Condic.</th>
+                                    <th class="text-center">Reprog.</th>
+                                    <th class="text-center">Validación</th>
+                                    <th class="text-center">Resolución</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class="card-body">
             <div class="row">
                 <div class="col-12 p-0">
                     <div class="collapse-group">
                         <!-- INFORMACION PERSONAL -->
                         <div class="panel panel-default">
-                            <div class="panel-heading p-1 seccion-header" role="tab" id="headingOne">
+                            <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingOne">
                                 <h6 class="panel-title m-0 font-14">
                                     <a role="button" data-toggle="collapse" href="#collapseInformacionPersonal" class="text-dark h5 trigger collapsed"
                                         aria-expanded="true"
@@ -175,7 +174,7 @@
                         </div>
                         <!-- INFORMACION DOMICILIO -->
                         <div class="panel panel-default">
-                            <div class="panel-heading p-1 seccion-header" role="tab" id="headingTwo">
+                            <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingTwo">
                                 <h6 class="panel-title m-0 font-14">
                                     <a href="#collapseInformacionDomiciliar" class="text-dark collapsed h5 collapsed" data-toggle="collapse"
                                         aria-expanded="false"
@@ -228,7 +227,7 @@
                         </div>
                         <!-- INFORMACION CONYUGAL -->
                         <div class="panel panel-default" id="divConyugueCliente">
-                            <div class="panel-heading p-1 seccion-header" role="tab" id="headingThree">
+                            <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingThree">
                                 <h6 class="panel-title m-0 font-14">
                                     <a href="#collapseThree" class="text-dark collapsed h5" data-toggle="collapse"
                                         aria-expanded="false"
@@ -273,7 +272,7 @@
                         </div>
                         <!-- INFORMACION LABORAL -->
                         <div class="panel panel-default">
-                            <div class="panel-heading p-1 seccion-header" role="tab" id="headingFour">
+                            <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingFour">
                                 <h6 class="panel-title m-0 font-14">
                                     <a href="#collapseInformacionLaboral" class="text-dark collapsed h5" data-toggle="collapse"
                                         aria-expanded="false"
@@ -350,7 +349,7 @@
                         </div>
                         <!-- INFORMACION DEL PRESTAMO Y EL CALCULO DEL MISMO -->
                         <div class="panel panel-default">
-                            <div class="panel-heading p-1 seccion-header" role="tab" id="headingSix">
+                            <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingSix">
                                 <h6 class="panel-title m-0 font-14">
                                     <a href="#collapsePrestamoRequerido" class="text-dark collapsed h5" data-toggle="collapse"
                                         aria-expanded="false"
@@ -436,9 +435,9 @@
                                                 </div>
                                             </div>
                                             <!--
-                                                EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-                                                MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
-                                            -->
+EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+-->
                                             <div class="col-md-6 border" id="divRecalculoReal" style="display: none;">
                                                 <div class="form-group row">
                                                     <label class="col-sm-12 h6 text-center p-t-10">Recalculo de Capacidad de Pago - Ingresos Reales</label>
@@ -512,7 +511,7 @@
                         </div>
                         <!-- INFORMACION DE ANALISIS -->
                         <div class="panel panel-default">
-                            <div class="panel-heading p-1 seccion-header" role="tab" id="headingSeven">
+                            <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingSeven">
                                 <h6 class="m-0 font-14">
                                     <a href="#collapseInformacionAnalisis" class="text-dark collapsed h5" data-toggle="collapse"
                                         aria-expanded="false"
@@ -578,7 +577,7 @@
                         </div>
                         <!-- REFERENCIAS PERSONALES DEL CLIENTE -->
                         <div class="panel panel-default">
-                            <div class="panel-heading p-1 seccion-header" role="tab" id="headingFive">
+                            <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingFive">
                                 <h6 class="m-0 font-14">
                                     <a href="#collapseReferenciasPersonales" class="text-dark collapsed h5" data-toggle="collapse"
                                         aria-expanded="false"
@@ -632,7 +631,7 @@
                             </div>
                         </div>
                         <div class="panel panel-default" id="divInformaciondeCampo" style="display: none;">
-                            <div class="panel-heading p-1 seccion-header" role="tab" id="headingEight">
+                            <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingEight">
                                 <h6 class="m-0 font-14">
                                     <a href="#collapseInformaciondeCampo" class="text-dark collapsed h5" data-toggle="collapse"
                                         aria-expanded="false"
@@ -830,7 +829,7 @@
                     <h5 class="modal-title mt-0" id="modalComentarioReferenciaLabel">Observaciones de referencia personal</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
-                <div class="modal-body">                    
+                <div class="modal-body">
                     <strong>
                         <label id="lblNombreReferenciaModal"></label>
                     </strong>?
@@ -849,7 +848,6 @@
         </div>
     </div>
 
-    <!-- modal validar documentacion -->
     <div id="modalFinalizarValidarDocumentacion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarValidarDocumentacionLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -899,14 +897,12 @@
             </div>
         </div>
     </div>
+    
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/plugins/imgBox/jquery-rotate.min.js"></script>
     <script src="/Scripts/plugins/imgBox/jquery.imgbox.js?v=20200903161022"></script>
-    <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Detalles.js?v=202008211455"></script>
 </body>

@@ -144,14 +144,14 @@ function cargarInformacionSolicitud() {
             }
 
             $('#tblEstadoSolicitud tbody').append('<tr>' +
-                '<td class="text-center">' + statusIngreso + '</td>' +
-                '<td class="text-center">' + statusTramite + '</td>' +
-                '<td class="text-center">' + statusAnalisis + '</td>' +
-                '<td class="text-center">' + statusCampo + '</td>' +
-                '<td class="text-center">' + statusCondicionada + '</td>' +
-                '<td class="text-center">' + statusReprogramado + '</td>' +
-                '<td class="text-center">' + statusValidacion + '</td>' +
-                '<td class="text-center">' + resolucionFinal + '</td>' +
+                '<td class="text-center pb-1 pt-1">' + statusIngreso + '</td>' +
+                '<td class="text-center pb-1 pt-1">' + statusTramite + '</td>' +
+                '<td class="text-center pb-1 pt-1">' + statusAnalisis + '</td>' +
+                '<td class="text-center pb-1 pt-1">' + statusCampo + '</td>' +
+                '<td class="text-center pb-1 pt-1">' + statusCondicionada + '</td>' +
+                '<td class="text-center pb-1 pt-1">' + statusReprogramado + '</td>' +
+                '<td class="text-center pb-1 pt-1">' + statusValidacion + '</td>' +
+                '<td class="text-center pb-1 pt-1">' + resolucionFinal + '</td>' +
                 '</tr>');
 
             /* Informacion principal de la solicitud */
@@ -160,11 +160,9 @@ function cargarInformacionSolicitud() {
             $('#lblNombreGestor').text(rowDataSolicitud.NombreGestor);
             var nombreCompletoCliente = rowDataCliente.clientesMaster.fcPrimerNombreCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoNombreCliente + ' ' + rowDataCliente.clientesMaster.fcPrimerApellidoCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoApellidoCliente;
             $('#lblNombreCliente').text(nombreCompletoCliente);
-            $("#spanNombreCliente").text(nombreCompletoCliente);
             $('#lblIdentidadCliente').text(rowDataCliente.clientesMaster.fcIdentidadCliente);
-            $("#spanIdentidadCliente").text(rowDataCliente.clientesMaster.fcIdentidadCliente);
-            $('#lblTipoPrestamo').text(rowDataSolicitud.fcDescripcion);
-            $('#lblTipoPrestamo').css('display', '');
+            $("#lblIdentidadCliente").text(rowDataCliente.clientesMaster.fcIdentidadCliente);
+            $('#lblProducto').text(rowDataSolicitud.fcDescripcion);
             $('#lblTipoSolicitud').text(rowDataSolicitud.fiTipoSolicitud == 1 ? 'NUEVO' : rowDataSolicitud.fiTipoSolicitud == 2 ? 'REFINANCIAMIENTO' : rowDataSolicitud.fiTipoSolicitud == 3 ? 'RECOMPRA' : '');
             $('#lblAgenteDeVentas').text(rowDataSolicitud.fcNombreCortoVendedor);
             $('#lblAgencia').text(rowDataSolicitud.fcAgencia);
@@ -865,61 +863,6 @@ $(document).on('click', 'button#btnComentarioReferencia', function () {
     $("#modalComentarioReferencia").modal();
 });
 
-$("#btnComentarioReferenciaConfirmar").click(function () {
-
-    if ($($("#frmObservacionReferencia")).parsley().isValid()) {
-
-        $("#frmObservacionReferencia").submit(function (e) { e.preventDefault(); });
-        comentarioActual = $('#txtObservacionesReferencia').val();
-
-        $.ajax({
-            type: "POST",
-            url: 'SolicitudesCredito_Detalles.aspx/ComentarioReferenciaPersonal',
-            data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Error al actualizar estado de la referencia personal');
-            },
-            success: function (data) {
-                if (data.d == true) {
-                    $("#modalComentarioReferencia").modal('hide');
-                    MensajeExito('Observaciones de la referencia personal actualizadas correctamente');
-                    btnReferenciaSeleccionada.data('comment', comentarioActual);
-                    btnReferenciaSeleccionada.closest('tr').removeClass('text-danger').addClass('tr-exito');
-                    btnReferenciaSeleccionada.removeClass('mdi mdi-comment').removeClass('mdi mdi-call-missed text-danger').addClass('mdi mdi-check-circle-outline tr-exito');
-                }
-                else { MensajeError('Error al actualizar observaciones de la referencia personal'); }
-            }
-        });
-    }
-    else { $($("#frmObservacionReferencia")).parsley().validate(); }
-});
-
-$("#btnReferenciaSinComunicacion").click(function () {
-
-    comentarioActual = 'Sin comunicacion';
-
-    $.ajax({
-        type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/ComentarioReferenciaPersonal',
-        data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al actualizar estado de la referencia personal');
-        },
-        success: function (data) {
-            if (data.d == true) {
-                $("#modalComentarioReferencia").modal('hide');
-                MensajeExito('Estado de la referencia personal actualizado correctamente');
-                btnReferenciaSeleccionada.data('comment', comentarioActual);
-                btnReferenciaSeleccionada.removeClass('mdi mdi-check-circle-outline tr-exito').removeClass('mdi mdi-comment').addClass('mdi mdi-call-missed text-danger');
-                btnReferenciaSeleccionada.closest('tr').addClass('text-danger');
-            }
-            else { MensajeError('Error al actualizar estado de la referencia personal'); }
-        }
-    });
-});
-
 function MensajeError(mensaje) {
     iziToast.error({
         title: 'Error',
@@ -941,27 +884,17 @@ function diferenciasEntreDosFechas(fechaInicio, fechaFin) {
     var tiempoResta = (fin.getTime() - inicio.getTime()) / 1000;
     /* Calcular dias */
     var dias = Math.floor(tiempoResta / 86400);
-    //tiempoResta = tiempoResta >= 86400 ? dias * 86400 : tiempoResta;
 
     /* Calcular horas */
     var horas = Math.floor(tiempoResta / 3600) % 24;
-    //tiempoResta = tiempoResta >= 3600 ? horas * 3600 : tiempoResta;
 
     /* Calcular minutos */
     var minutos = Math.floor(tiempoResta / 60) % 60;
-    //tiempoResta = tiempoResta >= 3600 ? minutos * 3600 : tiempoResta;
 
     /* Calcular segundos */
     var segundos = tiempoResta % 60;
     var diferencia = pad2(dias) + ':' + pad2(horas) + ':' + pad2(minutos) + ':' + pad2(segundos);
     return diferencia;
-
-    //var now = moment(fechaInicio);
-    //var then = moment(fechaFin);
-
-    //var ms = moment(now, "DD/MM/YYYY HH:mm:ss").diff(moment(then, "DD/MM/YYYY HH:mm:ss"));
-    //var d = moment.duration(ms);
-    //var s = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
 }
 
 function addComasFormatoNumerico(nStr) {

@@ -9,7 +9,7 @@ using System.Web.Services;
 
 public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
 {
-    private String pcEncriptado = "";
+    private string pcEncriptado = "";
     private string pcIDUsuario = "";
     private string pcIDApp = "";
     private string pcIDSesion = "";
@@ -20,32 +20,32 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         {
             try
             {
-                DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-                string lcURL = "";
-                int liParamStart = 0;
-                string lcParametros = "";
-                string lcParametroDesencriptado = "";
+                var DSC = new DSCore.DataCrypt();
+                var lcURL = string.Empty;
+                var liParamStart = 0;
+                var lcParametros = string.Empty;
+                var lcParametroDesencriptado = string.Empty;
                 Uri lURLDesencriptado = null;
-                string IDSOL = "0";
+                var idSolicitud = "0";
                 lcURL = Request.Url.ToString();
                 liParamStart = lcURL.IndexOf("?");
 
                 if (liParamStart > 0)
                     lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
                 else
-                    lcParametros = String.Empty;
+                    lcParametros = string.Empty;
 
-                if (lcParametros != String.Empty)
+                if (lcParametros != string.Empty)
                 {
                     pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                    IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    //pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                     pcIDSesion = "1";
-                    bool AccesoAlAnalisis = CargarInformacion(IDSOL);
+                    bool AccesoAlAnalisis = CargarInformacion(idSolicitud);
                 }
                 else
                 {
@@ -67,8 +67,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
 
     public bool CargarInformacion(string IDSolicitud)
     {
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        BandejaSolicitudesViewModel solicitudes = new BandejaSolicitudesViewModel();
+        var DSC = new DSCore.DataCrypt();
+        var solicitudes = new BandejaSolicitudesViewModel();
         int idProducto = 0;
         bool resultado;
         try
@@ -102,7 +102,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             } // using connection
 
             string NombreLogo = idProducto == 101 ? "iconoRecibirDinero48.png" : idProducto == 201 ? "iconoMoto48.png" : idProducto == 202 ? "iconoAuto48.png" : idProducto == 301 ? "iconoConsumo48.png" : "iconoConsumo48.png";
-            LogoPrestamo.ImageUrl = "http://172.20.3.140/Imagenes/" + NombreLogo;
+            imgLogo.ImageUrl = "http://172.20.3.140/Imagenes/" + NombreLogo;
 
             if (solicitudes.fiIDAnalista == Convert.ToInt32(pcIDUsuario))
                 resultado = true;
