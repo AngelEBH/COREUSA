@@ -318,84 +318,76 @@ function cargarInformacionSolicitud() {
             var img = '';
             var imgModal = '';
 
-            for (var i = 0; i < rowDataDocumentos.length; i++) {
+            //for (var i = 0; i < rowDataDocumentos.length; i++) {
 
-                ruta = rowDataDocumentos[i].URLArchivo;
+            //    ruta = rowDataDocumentos[i].URLArchivo;
 
-                img = '<img class="img" class="img-responsive" src="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />'
-                imgModal = '<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '">' +
-                    '<div class="img-responsive">' +
-                    '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-                    '</div>' +
-                    '</a>'
+            //    img = '<img alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" src="' + ruta + '" data-image="' + ruta + '" data-description="' + rowDataDocumentos[i].DescripcionTipoDocumento + '"/>';
+            //    imgModal = '<img alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" src="' + ruta + '" data-image="' + ruta + '" data-description="' + rowDataDocumentos[i].DescripcionTipoDocumento + '"/>';
 
-                if (rowDataDocumentos[i].fiTipoDocumento == 1 || rowDataDocumentos[i].fiTipoDocumento == 2 || rowDataDocumentos[i].fiTipoDocumento == 18 || rowDataDocumentos[i].fiTipoDocumento == 19) {
+            //    if (rowDataDocumentos[i].fiTipoDocumento == 1 || rowDataDocumentos[i].fiTipoDocumento == 2 || rowDataDocumentos[i].fiTipoDocumento == 18 || rowDataDocumentos[i].fiTipoDocumento == 19) {
 
-                    if (contador < 2) {
-                        divDocumentacionCedula.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '">' +
-                            '<div class="img-responsive">' +
-                            '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 100%; height: auto; float: left; cursor: zoom-in;" />' +
-                            '</div>' +
-                            '</a>');
-                    }
-                    divDocumentacionCedulaModal.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '">' +
-                        '<div class="img-responsive">' +
-                        '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-                        '</div>' +
-                        '</a>');
-                    contador = contador + 1;
+            //        if (contador < 2) {
+            //            divDocumentacionCedula.append(img);
+            //        }
+            //        divDocumentacionCedulaModal.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '">' +
+            //            '<div class="img-responsive">' +
+            //            '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
+            //            '</div>' +
+            //            '</a>');
+            //        contador = contador + 1;
 
-                }
-                else if (rowDataDocumentos[i].fiTipoDocumento == 3) {
+            //    }
+            //    else if (rowDataDocumentos[i].fiTipoDocumento == 3) {
 
-                    divDocumentacionDomicilio.append(img);
-                    divDocumentacionDomicilioModal.append();
+            //        divDocumentacionDomicilio.append(img);
+            //        divDocumentacionDomicilioModal.append(imgModal);
 
-                }
-                else if (rowDataDocumentos[i].fiTipoDocumento == 5) {
+            //    }
+            //    else if (rowDataDocumentos[i].fiTipoDocumento == 5) {
 
-                    divDocumentacionDomicilio.append(img);
-                    divDocumentacionDomicilioModal.append(imgModal);
+            //        divDocumentacionDomicilio.append(img);
+            //        divDocumentacionDomicilioModal.append(imgModal);
 
-                }
-                else if (rowDataDocumentos[i].fiTipoDocumento == 4) {
+            //    }
+            //    else if (rowDataDocumentos[i].fiTipoDocumento == 4) {
 
-                    divDocumentacionLaboral.append(img);
-                    divDocumentacionLaboralModal.append(imgModal);
-                }
-                else if (rowDataDocumentos[i].fiTipoDocumento == 6) {
+            //        divDocumentacionLaboral.append(img);
+            //        divDocumentacionLaboralModal.append(imgModal);
+            //    }
+            //    else if (rowDataDocumentos[i].fiTipoDocumento == 6) {
 
-                    divDocumentacionLaboral.append(img);
-                    divDocumentacionLaboralModal.append(imgModal);
+            //        divDocumentacionLaboral.append(img);
+            //        divDocumentacionLaboralModal.append(imgModal);
 
-                }
-                else if (rowDataDocumentos[i].fiTipoDocumento == 7) {
-                    divDocumentacionLaboral.append(img);
-                    divDocumentacionFisicaModal.append(imgModal);
-                }
+            //    }
+            //    else if (rowDataDocumentos[i].fiTipoDocumento == 7) {
+            //        divDocumentacionLaboral.append(img);
+            //        divDocumentacionFisicaModal.append(imgModal);
+            //    }
 
-                else if (rowDataDocumentos[i].fiTipoDocumento == 8) {
-                    divDocumentacionCampoDomicilio.append('<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />');
-                    divDocumentacionCampoDomicilioModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de casa">' +
-                        '<div class="img-responsive">' +
-                        '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-                        '</div>' +
-                        '</a>');
-                }
-                else if (rowDataDocumentos[i].fiTipoDocumento == 9) {
+            //    else if (rowDataDocumentos[i].fiTipoDocumento == 8) {
+            //        divDocumentacionCampoDomicilio.append('<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />');
+            //        divDocumentacionCampoDomicilioModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de casa">' +
+            //            '<div class="img-responsive">' +
+            //            '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
+            //            '</div>' +
+            //            '</a>');
+            //    }
+            //    else if (rowDataDocumentos[i].fiTipoDocumento == 9) {
 
-                    divDocumentacionCampoTrabajo.append('<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />');
-                    divDocumentacionCampoTrabajoModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de trabajo">' +
-                        '<div class="img-responsive">' +
-                        '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-                        '</div>' +
-                        '</a>');
-                }
-            }
-            $(".img").imgbox({
-                zoom: true,
-                drag: true
-            });
+            //        divDocumentacionCampoTrabajo.append('<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />');
+            //        divDocumentacionCampoTrabajoModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de trabajo">' +
+            //            '<div class="img-responsive">' +
+            //            '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
+            //            '</div>' +
+            //            '</a>');
+            //    }
+            //}
+            //$(".img").imgbox({
+            //    zoom: true,
+            //    drag: true
+            //});
 
             /* Informacion del prestamo REQUERIDO */
             $('#lblValorPmoSugeridoSeleccionado').text(addComasFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado));
