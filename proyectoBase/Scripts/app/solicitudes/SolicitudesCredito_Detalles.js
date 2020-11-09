@@ -156,7 +156,6 @@ function cargarInformacionSolicitud() {
 
             /* Informacion principal de la solicitud */
             $('#lblNoSolicitud').text(rowDataSolicitud.fiIDSolicitud);
-            //$('#lblNoCliente').text(rowDataSolicitud.fiIDCliente);
             $('#lblNombreGestor').text(rowDataSolicitud.NombreGestor);
             var nombreCompletoCliente = rowDataCliente.clientesMaster.fcPrimerNombreCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoNombreCliente + ' ' + rowDataCliente.clientesMaster.fcPrimerApellidoCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoApellidoCliente;
             $('#lblNombreCliente').text(nombreCompletoCliente);
@@ -244,14 +243,14 @@ function cargarInformacionSolicitud() {
             }
             else {
                 $("#titleConyugal").css('display', 'none');
-                $("#divConyugueCliente").css('display', 'none');
+                $("#divPanelInformacionConyugal").css('display', 'none');
             }
             /* Referencias personales del cliente */
             if (rowDataCliente.ClientesReferenciasPersonales != null) {
                 if (rowDataCliente.ClientesReferenciasPersonales.length > 0) {
                     var tblReferencias = $('#tblReferencias tbody');
                     for (var i = 0; i < rowDataCliente.ClientesReferenciasPersonales.length; i++) {
-                        var btnAgregarComentarioReferencia = '<button id="btnComentarioReferencia" data-id="' + rowDataCliente.ClientesReferenciasPersonales[i].fiIDReferencia + '" data-comment="' + rowDataCliente.ClientesReferenciasPersonales[i].fcComentarioDeptoCredito + '" data-nombreref="' + rowDataCliente.ClientesReferenciasPersonales[i].fcNombreCompletoReferencia + '" class="btn mdi mdi-comment" title="Ver observaciones del depto. de crédito"></button>';
+                        var btnAgregarComentarioReferencia = '<button type="button" id="btnComentarioReferencia" data-id="' + rowDataCliente.ClientesReferenciasPersonales[i].fiIDReferencia + '" data-comment="' + rowDataCliente.ClientesReferenciasPersonales[i].fcComentarioDeptoCredito + '" data-nombreref="' + rowDataCliente.ClientesReferenciasPersonales[i].fcNombreCompletoReferencia + '" class="btn mdi mdi-comment" title="Ver observaciones del depto. de crédito"></button>';
                         var tiempoConocerRef = rowDataCliente.ClientesReferenciasPersonales[i].fiTiempoConocerReferencia <= 2 ? rowDataCliente.ClientesReferenciasPersonales[i].fiTiempoConocerReferencia + ' años' : 'Más de 2 años'
                         tblReferencias.append('<tr>' +
                             '<td class="FilaCondensada">' + rowDataCliente.ClientesReferenciasPersonales[i].fcNombreCompletoReferencia + '</td>' +
@@ -762,7 +761,7 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo',
-        data: JSON.stringify({ MontoFinanciar: valorDelAuto, PlazoFinanciar: plazoMensual, ValorPrima: ValorPrima, dataCrypt: window.location.href}),
+        data: JSON.stringify({ MontoFinanciar: valorDelAuto, PlazoFinanciar: plazoMensual, ValorPrima: ValorPrima, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al realizar calculo del préstamo');

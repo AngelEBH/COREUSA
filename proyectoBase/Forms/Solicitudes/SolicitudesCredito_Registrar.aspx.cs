@@ -74,12 +74,12 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     txtValorPrima.Enabled = true;
                 }
 
-                if (Precalificado.Identidad == "0801196907725")
+                if (Precalificado.Identidad == "0413198800720")
                 {
-                    Constantes.PrestamoMaximo_Monto = 17000;
-                    Constantes.MontoFinanciarMaximoCliente = 17000;
+                    Constantes.PrestamoMaximo_Monto = 8000;
+                    Constantes.MontoFinanciarMaximoCliente = 8000;
                     Precalificado.PermitirIngresarSolicitud = true;
-                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 17000;
+                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 8000;
                 }
 
                 /* Para utilizar las constantes de validaciones en el frontend */
