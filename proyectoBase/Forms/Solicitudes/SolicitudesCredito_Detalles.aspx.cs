@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 using System.Web;
 using System.Web.Services;
+using System.Web.UI.HtmlControls;
 
 public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
 {
@@ -43,7 +45,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                     pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDSesion = "1";
                     CargarInformacionClienteSolicitud();
                 }
@@ -70,10 +72,14 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         try
         {
             var logo = string.Empty;
+            var idProducto = string.Empty;
+            var idEstadoSolicitud = string.Empty;
+            var estadoSolicitud = string.Empty;
+            var iconoRojo = "<i class='mdi mdi-close-circle-outline mdi-18px text-danger'></i>";
             var iconoExito = "<i class='mdi mdi-check-circle-outline mdi-18px text-success'></i>";
             var iconoPendiente = "<i class='mdi mdi-check-circle-outline mdi-18px text-warning'></i>";
-            var iconoRojo = "<i class='mdi mdi-close-circle-outline mdi-18px text-danger'></i>";
-            var procesoPendiente = default(DateTime);
+            var iconoCancelado = "<i class='mdi mdi-check-circle-outline mdi-18px text-secondary'></i>";
+            var procesoPendiente = DateTime.Parse("1900-01-01 00:00:00.000");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -91,48 +97,344 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            /* Informacion de la solicitud */
-                            lblNoSolicitud.Text = sqlResultado["fiIDSolicitud"].ToString();
-                            lblNombreGestor.Text = sqlResultado["fcNombreGestor"].ToString();
+                            /****** Informacion de la solicitud ******/
+                            idEstadoSolicitud = sqlResultado["fiEstadoSolicitud"].ToString();
+                            estadoSolicitud = sqlResultado["fcEstadoSolicitud"].ToString();
+
+                            /* Estado del procesamiento */
+                            var estadoIngreso = string.Empty;
+                            var estadoEnCola = string.Empty;
+                            var estadoAnalisis = string.Empty;
+                            var estadoCampo = string.Empty;
+                            var estadoCondicionado = string.Empty;
+                            var estadoReprogramado = string.Empty;
+                            var estadoPasoFinal = string.Empty;
+                            var estadoResolucion = string.Empty;
+
+                            if (DateTime.Parse(sqlResultado["fdEnIngresoInicio"].ToString()) != procesoPendiente)
+                            {
+                                estadoIngreso = DateTime.Parse(sqlResultado["fdEnIngresoFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
+                            }
+
+                            if (DateTime.Parse(sqlResultado["fdEnColaInicio"].ToString()) != procesoPendiente)
+                            {
+                                estadoEnCola = DateTime.Parse(sqlResultado["fdEnColaFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
+
+                                if (DateTime.Parse(sqlResultado["fdEnColaFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == "4" || idEstadoSolicitud == "5" || idEstadoSolicitud == "7"))
+                                {
+                                    estadoEnCola = idEstadoSolicitud == "7" ? iconoExito : iconoCancelado;
+                                }
+                            }
+
+                            if (DateTime.Parse(sqlResultado["fdEnAnalisisInicio"].ToString()) != procesoPendiente)
+                            {
+                                estadoAnalisis = DateTime.Parse(sqlResultado["fdEnAnalisisFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
+
+                                if (DateTime.Parse(sqlResultado["fdEnAnalisisFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == "4" || idEstadoSolicitud == "5" || idEstadoSolicitud == "7"))
+                                {
+                                    estadoAnalisis = idEstadoSolicitud == "7" ? iconoExito : iconoCancelado;
+                                }
+
+                                if (idEstadoSolicitud == "4")
+                                {
+                                    estadoAnalisis = iconoRojo;
+                                }
+                            }
+
+                            if (DateTime.Parse(sqlResultado["fdEnvioARutaAnalista"].ToString()) != procesoPendiente)
+                            {
+                                estadoCampo = DateTime.Parse(sqlResultado["fdEnRutaDeInvestigacionFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
+
+                                if (DateTime.Parse(sqlResultado["fdEnRutaDeInvestigacionFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == "4" || idEstadoSolicitud == "5" || idEstadoSolicitud == "7"))
+                                {
+                                    estadoCampo = idEstadoSolicitud == "7" ? iconoExito : iconoCancelado;
+                                }
+
+                                if (idEstadoSolicitud == "5")
+                                {
+                                    estadoCampo = iconoRojo;
+                                }
+                            }
+
+                            if (DateTime.Parse(sqlResultado["fdCondicionadoInicio"].ToString()) != procesoPendiente)
+                            {
+                                estadoCondicionado = DateTime.Parse(sqlResultado["fdCondificionadoFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
+
+                                if (DateTime.Parse(sqlResultado["fdCondificionadoFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == "4" || idEstadoSolicitud == "5" || idEstadoSolicitud == "7"))
+                                {
+                                    estadoCondicionado = idEstadoSolicitud == "7" ? iconoExito : iconoCancelado;
+                                }
+                            }
+
+                            if (DateTime.Parse(sqlResultado["fdReprogramadoInicio"].ToString()) != procesoPendiente)
+                            {
+                                estadoReprogramado = DateTime.Parse(sqlResultado["fdReprogramadoFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
+
+                                if (DateTime.Parse(sqlResultado["fdReprogramadoFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == "4" || idEstadoSolicitud == "5" || idEstadoSolicitud == "7"))
+                                {
+                                    estadoReprogramado = idEstadoSolicitud == "7" ? iconoExito : iconoCancelado;
+                                }
+                            }
+
+                            if (DateTime.Parse(sqlResultado["fdPasoFinalInicio"].ToString()) != procesoPendiente)
+                            {
+                                estadoPasoFinal = DateTime.Parse(sqlResultado["fdPasoFinalFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
+
+                                if (DateTime.Parse(sqlResultado["fdPasoFinalFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == "4" || idEstadoSolicitud == "5" || idEstadoSolicitud == "7"))
+                                {
+                                    estadoPasoFinal = idEstadoSolicitud == "7" ? iconoExito : iconoCancelado;
+                                }
+                            }
+
+                            if (idEstadoSolicitud == "4" || idEstadoSolicitud == "5" || idEstadoSolicitud == "7")
+                            {
+                                estadoResolucion = idEstadoSolicitud == "7" ? iconoExito : iconoRojo;
+                            }
+                            else if(DateTime.Parse(sqlResultado["fdPasoFinalInicio"].ToString()) != procesoPendiente)
+                            {
+                                estadoResolucion = iconoPendiente;
+                            }
+
+                            HtmlTableRow tRowEstadoProcesamiento = null;
+                            tRowEstadoProcesamiento = new HtmlTableRow();
+                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoIngreso });
+                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoEnCola });
+                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoAnalisis });
+                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoCampo });
+                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoCondicionado });
+                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoReprogramado });
+                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoPasoFinal });
+                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoResolucion });
+                            tblEstadoSolicitud.Rows.Add(tRowEstadoProcesamiento);
+
+                            idProducto = sqlResultado["fiIDProducto"].ToString();
                             lblProducto.Text = sqlResultado["fcProducto"].ToString();
+                            lblNoSolicitud.Text = sqlResultado["fiIDSolicitud"].ToString();
                             lblTipoSolicitud.Text = sqlResultado["fcTipoSolicitud"].ToString();
-                            lblAgenteDeVentas.Text = sqlResultado["fcTipoSolicitud"].ToString();
+                            lblAgenteDeVentas.Text = sqlResultado["fcNombreUsuarioAsignado"].ToString();
                             lblAgencia.Text = sqlResultado["fcProducto"].ToString();
+                            lblNombreGestor.Text = sqlResultado["fcNombreGestor"].ToString();
+
+                            txtIngresosPrecalificado.Text = sqlResultado["fnIngresoPrecalificado"].ToString();
+                            txtObligacionesPrecalificado.Text = sqlResultado["fnObligacionesPrecalificado"].ToString();
+                            txtDisponiblePrecalificado.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            txtCapacidadDePagoMensual.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            txtCapacidadDePagoQuincenal.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            
+                            txtMontoFinanciarSeleccionado.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            txtPlazoSeleccionado.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            txtValorGarantia.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            txtValorPrima.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+
+                            /*** Calculo del prestamo solicitado ***/
+                            txtCalculoMontoFinanciar.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            txtCalculoPlazo.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            txtCalculoCuota.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            txtCalculoCuotaGPS.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            txtCalculoCuotaSeguro.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            txtCalculoCostoAparatoGPS.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            txtCalculoGastosDeCiere.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+
+                            /*** Prestamo Final aprobado ***/
+                            if (idEstadoSolicitud == "7")// el id estado 7 es aprobado
+                            {
+                                divPrestamoFinalAprobado.Visible = true;
+                                txtMontoFinanciarAprobado.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                                txtPlazoAprobado.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                                txtValorCuotaAprobado.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                                txtCuotaGPSAprobado.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                                txtCuotaSeguroAprobado.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                                txtCostoAparatoGPSAprobado.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                                txtGastosDeCierreAprobado.Text = sqlResultado["fnDisponiblePrecalificado"].ToString();
+                            }
+                            else
+                            {
+                                divPrestamoFinalAprobado.Visible = false;
+                            }
+
+                            /*** Recalculo capacidad de pago cuando los ingresos son diferentes ***/
+                            // PENDIENTE
+
                             txtTipoDeEmpresa.Text = sqlResultado["fcProducto"].ToString();
                             txtTipoDePerfil.Text = sqlResultado["fcProducto"].ToString();
                             txtTipoDeEmpleo.Text = sqlResultado["fcProducto"].ToString();
                             txtBuroActual.Text = sqlResultado["fcProducto"].ToString();
+
+                            /****** Documentos de la solicitud ******/
+                            sqlResultado.NextResult();
+                            var documentacionIdentidad = new StringBuilder();
+                            var documentacionDomicilio = new StringBuilder();
+                            var documentacionLaboral = new StringBuilder();
+                            var documentacionSolicitudFisica = new StringBuilder();
+                            var documentacionCampoDomicilio = new StringBuilder();
+                            var documentacionCampoTrabajo = new StringBuilder();
+                            var documentacionOtros = new StringBuilder();
+                            var idTipoDocumento = string.Empty;
+
+                            while (sqlResultado.Read())
+                            {
+                                idTipoDocumento = sqlResultado["fiTipoDocumento"].ToString();
+
+                                switch (idTipoDocumento)
+                                {
+                                    case "1":
+                                    case "2":
+                                    case "18":
+                                    case "19":                                        
+                                        documentacionIdentidad.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
+                                        break;
+                                    case "3":
+                                    case "5":
+                                        documentacionDomicilio.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
+                                        break;
+                                    case "4":
+                                    case "6":
+                                        documentacionLaboral.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
+                                        break;
+                                    case "7":
+                                        documentacionSolicitudFisica.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
+                                        break;
+                                    case "8":
+                                        documentacionCampoDomicilio.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] +".jpg" + "' data-image='" + sqlResultado["fcURL"] + ".jpg" + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
+                                        break;
+                                    case "9":
+                                        documentacionCampoTrabajo.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + ".jpg" + "' data-image='" + sqlResultado["fcURL"] + ".jpg" + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
+                                        break;
+                                    default:
+                                        break;
+                                    
+                                }
+                            }
+
+                            divDocumentacionCedula.InnerHtml = documentacionIdentidad.ToString();
+                            divDocumentacionCedulaModal.InnerHtml = documentacionIdentidad.ToString();
+                            divDocumentacionDomicilio.InnerHtml = documentacionDomicilio.ToString();
+                            divDocumentacionDomicilioModal.InnerHtml = documentacionDomicilio.ToString();
+                            divDocumentacionLaboral.InnerHtml = documentacionLaboral.ToString();
+                            divDocumentacionLaboral.InnerHtml += documentacionSolicitudFisica.ToString();
+                            divDocumentacionLaboralModal.InnerHtml = documentacionLaboral.ToString();
+                            divDocumentacionSoliFisicaModal.InnerHtml = documentacionSolicitudFisica.ToString();
+
+                            if (documentacionCampoDomicilio.ToString() != string.Empty)
+                            {
+                                divDocumentacionCampoDomicilio.InnerHtml = documentacionCampoDomicilio.ToString();
+                                divDocumentacionCampoDomicilioModal.InnerHtml = documentacionCampoDomicilio.ToString();
+                                divContenedorCampoDomicilioModal.Visible = true;
+                            }
+
+                            if (documentacionCampoTrabajo.ToString() != string.Empty)
+                            {
+                                divDocumentacionCampoTrabajo.InnerHtml = documentacionCampoTrabajo.ToString();
+                                divDocumentacionCampoTrabajoModal.InnerHtml = documentacionCampoTrabajo.ToString();
+                                divContenedorCampoTrabajoModal.Visible = true;
+                            }
+
+                            /****** Condicionamientos de la solicitud ******/
+                            sqlResultado.NextResult();
+
+                            if (sqlResultado.HasRows)
+                            {
+                                pestanaListaSolicitudCondiciones.Style.Add("display", "");
+
+                                HtmlTableRow tRowSolicitudCondiciones = null;
+                                var EstadoCondicion = string.Empty;
+                                while (sqlResultado.Read())
+                                {
+                                    EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"] == false ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-danger mb-0'>Pendiente</label>";
+                                    tRowSolicitudCondiciones = new HtmlTableRow();
+                                    tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcCondicion"].ToString() });
+                                    tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionCondicion"].ToString() });
+                                    tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcComentarioAdicional"].ToString() });
+                                    tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerHtml = EstadoCondicion });
+                                    tblListaSolicitudCondiciones.Rows.Add(tRowSolicitudCondiciones);
+                                }
+                            }
+
+                            /****** Información del cliente ******/
+                            sqlResultado.NextResult();
+                            sqlResultado.Read();
+                            lblNombreCliente.Text = sqlResultado["fcPrimerNombreCliente"].ToString() + " " + sqlResultado["fcSegundoNombreCliente"].ToString() + " " + sqlResultado["fcPrimerApellidoCliente"].ToString() + " " + sqlResultado["fcSegundoApellidoCliente"].ToString();
+                            lblIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
+                            txtRTNCliente.Text = sqlResultado["fcRTN"].ToString();
+                            txtTelefonoCliente.Text = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
+                            txtNacionalidadCliente.Text = sqlResultado["fcDescripcionNacionalidad"].ToString();
+                            txtEdadCliente.Text = sqlResultado["fcDescripcionNacionalidad"].ToString();
+                            txtCorreoCliente.Text = sqlResultado["fcDescripcionNacionalidad"].ToString();
+                            txtProfesionOficioCliente.Text = sqlResultado["fcDescripcionNacionalidad"].ToString();
+                            txtSexoCliente.Text = sqlResultado["fcDescripcionNacionalidad"].ToString();
+                            txtEstadoCivilCliente.Text = sqlResultado["fcDescripcionNacionalidad"].ToString();
+
+                            /****** Información laboral ******/
+                            sqlResultado.NextResult();
+                            sqlResultado.Read();
+                            txtNombreDelTrabajo.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtPuestoAsignado.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtIngresosMensuales.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtFechaIngreso.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtArraigoLaboral.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtTelefonoEmpresa.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtExtensionCliente.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtExtensionRecursosHumanos.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtDepartamentoEmpresa.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtMunicipioEmpresa.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtCiudadPobladoEmpresa.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtBarrioColoniaEmpresa.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtDireccionDetalladaEmpresa.InnerText = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtReferenciaDetalladaEmpresa.InnerText = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtFuenteDeOtrosIngresos.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                            txtValorDeOtrosIngresos.Text = sqlResultado["fcNombreTrabajo"].ToString();
+
+                            /****** Informacion domicilio ******/
+                            sqlResultado.NextResult();
+                            sqlResultado.Read();
+                            txtVivienda.Text = sqlResultado["fcBarrio"].ToString();
+                            txtTiempoDeResidir.Text = sqlResultado["fcBarrio"].ToString();
+                            txtDepartamentoDomicilio.Text = sqlResultado["fcBarrio"].ToString();
+                            txtMunicipioDomicilio.Text = sqlResultado["fcBarrio"].ToString();
+                            txtCiudadPobladoDomicilio.Text = sqlResultado["fcBarrio"].ToString();
+                            txtBarrioColoniaDomicilio.Text = sqlResultado["fcBarrio"].ToString();
+                            txtDireccionDetalladaDomicilio.InnerText = sqlResultado["fcBarrio"].ToString();
+                            txtReferenciasDomicilio.InnerText = sqlResultado["fcBarrio"].ToString();
+
+                            /****** Informacion del conyugue ******/
+                            sqlResultado.NextResult();
+                            sqlResultado.Read();
+                            if (!sqlResultado.HasRows)
+                            {
+                                divPanelInformacionConyugal.Visible = false;
+                            }
+                            else
+                            {
+                                txtNombreDelConyugue.Text = sqlResultado["fcNombreCompletoConyugue"].ToString();
+                                txtIdentidadConyugue.Text = sqlResultado["fcNombreCompletoConyugue"].ToString();
+                                txtFechaNacimientoConyugue.Text = sqlResultado["fcNombreCompletoConyugue"].ToString();
+                                txtTelefonoConyugue.Text = sqlResultado["fcNombreCompletoConyugue"].ToString();
+                                txtLugarDeTrabajoConyugue.Text = sqlResultado["fcNombreCompletoConyugue"].ToString();
+                                txtTelefonoTrabajoConyugue.Text = sqlResultado["fcNombreCompletoConyugue"].ToString();
+                                txtIngresosMensualesConyugue.Text = sqlResultado["fcNombreCompletoConyugue"].ToString();
+                            }
+
+                            /****** Referencias de la solicitud ******/
+                            sqlResultado.NextResult();
                             
-                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
-                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
-                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
-                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
-                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
-                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
-                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
-                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
-                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
-                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
-
-                            /* Documentos de la solicitud */
-
-                            /* Condicionamientos de la solicitud */
-
-                            /* Información del cliente */
-
-                            /* Información laboral */
-
-                            /* Informacion domicilio */
-
-                            /* Informacion del conyugue */
-
-                            /* Referencias de la solicitud */
+                            HtmlTableRow tRowReferencias = null;
+                            while (sqlResultado.Read())
+                            {
+                                tRowReferencias = new HtmlTableRow();
+                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcNombreCompletoReferencia"].ToString() });
+                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcLugarTrabajoReferencia"].ToString() });
+                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTiempoDeConocer"].ToString() });
+                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTelefonoReferencia"].ToString() });
+                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionParentesco"].ToString() });
+                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionParentesco"].ToString() });
+                                tblReferencias.Rows.Add(tRowReferencias);
+                            }
                         }
                     }
                 }
             }
 
-            //string NombreLogo = idProducto == 101 ? "iconoRecibirDinero48.png" : idProducto == 201 ? "iconoMoto48.png" : idProducto == 202 ? "iconoAuto48.png" : idProducto == 301 ? "iconoConsumo48.png" : "iconoConsumo48.png";
+            logo = idProducto == "101" ? "iconoRecibirDinero48.png" : idProducto == "201" ? "iconoMoto48.png" : idProducto == "202" ? "iconoAuto48.png" : idProducto == "301" ? "iconoConsumo48.png" : "iconoConsumo48.png";
             imgLogo.ImageUrl = "/Imagenes/" + logo;
         }
         catch (Exception ex)
@@ -152,7 +454,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             var IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             pcIDSesion = "1";
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
@@ -632,8 +934,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
         var pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
         var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp").ToString();
-        var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString();
-        pcIDSesion = "1";
+        var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString() ?? "1";
 
         var parametrosEncriptados = DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
         return parametrosEncriptados;
@@ -703,7 +1004,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             var IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             pcIDSesion = "1";
             int idProducto = 0;
 

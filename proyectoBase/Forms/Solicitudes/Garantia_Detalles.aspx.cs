@@ -122,7 +122,7 @@ public partial class Garantia_Detalles : System.Web.UI.Page
                                 while (sqlResultado.Read())
                                 {
                                     var VIN = sqlResultado["fcVin"].ToString();
-                                    var tipoDeGarantia = sqlResultado["fcVin"].ToString();
+                                    var tipoDeGarantia = sqlResultado["fcTipoGarantia"].ToString();
                                     var tipoDeVehiculo = sqlResultado["fcTipoVehiculo"].ToString();
                                     var marca = sqlResultado["fcMarca"].ToString();
                                     var modelo = sqlResultado["fcModelo"].ToString();

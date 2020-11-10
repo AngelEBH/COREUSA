@@ -6,13 +6,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
-    <title>Detalles de la solicitud</title>
+    <title>Detalles de la solicitud</title>    
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />    
-    <link href="/Scripts/plugins/imgBox/style.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/imgBox/style.css" rel="stylesheet" />
+    
     <style>
         html {
             background-color: rgb(255,255,255) !important;
@@ -33,6 +36,11 @@
             border-bottom: 1px solid rgba(0,0,0,.125);
             font-weight: 500;
         }
+
+        .table-condensed tbody tr td, .table-condensed thead tr td, .table-condensed tbody tr th, .table-condensed thead tr th {
+            padding-bottom: .25rem !important;
+            padding-top: .25rem !important;
+        }
     </style>
 </head>
 <body>
@@ -42,7 +50,7 @@
                 <div class="row justify-content-between align-items-end">
                     <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
                         <div class="form-inline p-0">
-                            <div class="spinner-border" role="status" id="divCargandoAnalisis">
+                            <div class="spinner-border" role="status" id="divCargandoAnalisis" style="display: none;">
                                 <span class="sr-only">Cargando</span>
                             </div>
                             <asp:Image runat="server" ID="imgLogo" class="LogoPrestamo align-self-center d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block" alt="Logo del Producto" Style="display: none;" />
@@ -94,17 +102,17 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="table-responsive">
-                            <table class="table table-condensed m-0" id="tblEstadoSolicitud">
+                            <table class="table table-condensed m-0 text-center" id="tblEstadoSolicitud" runat="server">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">Ingreso</th>
-                                        <th class="text-center">Recepción</th>
-                                        <th class="text-center">Analisis</th>
-                                        <th class="text-center">Campo</th>
-                                        <th class="text-center">Condic.</th>
-                                        <th class="text-center">Reprog.</th>
-                                        <th class="text-center">Validación</th>
-                                        <th class="text-center">Resolución</th>
+                                        <th>Ingreso</th>
+                                        <th>Recepción</th>
+                                        <th>Analisis</th>
+                                        <th>Campo</th>
+                                        <th>Condic.</th>
+                                        <th>Reprog.</th>
+                                        <th>Validación</th>
+                                        <th>Resolución</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white"></tbody>
@@ -173,44 +181,12 @@
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de informacion personal -->
-                                                <div class="align-self-center" id="divDocumentacionCedula" runat="server" style="/*display: none; */">
+                                                <div class="align-self-center" id="divDocumentacionCedula" runat="server" style="display: none; ">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <%-- <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group row">
-                                            <label class="col-sm-6">RTN Cliente</label>
-                                            <asp:Label ID="lblRtnCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                            <label class="col-sm-6">Numero de telefono</label>
-                                            <asp:HyperLink ID="lblNumeroTelefono" NavigateUrl="tel:+55599999999" CssClass="col-sm-6" runat="server"></asp:HyperLink>
-
-                                            <label class="col-sm-6">Nacionalidad</label>
-                                            <asp:Label ID="lblNacionalidad" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                            <label class="col-sm-6">Fecha de nacimiento</label>
-                                            <asp:Label ID="lblFechaNacimientoCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                            <label class="col-sm-6">Edad</label>
-                                            <asp:Label ID="lblEdadCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                            <label class="col-sm-6">Correo electrónico</label>
-                                            <asp:HyperLink ID="lblCorreoCliente" CssClass="col-sm-6" NavigateUrl="mailto:correo@gmail.com" runat="server"></asp:HyperLink>
-
-                                            <label class="col-sm-6">Profesion u oficio</label>
-                                            <asp:Label ID="lblProfesionCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                            <label class="col-sm-6">Sexo</label>
-                                            <asp:Label ID="lblSexoCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                            <label class="col-sm-6">Estado civil</label>
-                                            <asp:Label ID="lblEstadoCivilCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-                                        </div>
-                                    </div>
-                                </div>--%>
                             </div>
                         </div>
                     </div>
@@ -271,7 +247,7 @@
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de informacion domicilio -->
-                                                <div class="align-self-center" id="divDocumentacionDomicilio" runat="server" style="/*display: none; */">
+                                                <div class="align-self-center" id="divDocumentacionDomicilio" runat="server" style="display: none; ">
                                                 </div>
                                             </div>
                                         </div>
@@ -327,29 +303,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <%-- <div class="form-group row">
-<label class="col-sm-4">Nombre del conyugue</label>
-<asp:Label ID="lblNombreConyugue" CssClass="col-sm-8" runat="server"></asp:Label>
-
-<label class="col-sm-4">Identidad del conyugue</label>
-<asp:Label ID="lblIdentidadConyuge" CssClass="col-sm-8" runat="server"></asp:Label>
-
-<label class="col-sm-4">Fecha de nacimiento</label>
-<asp:Label ID="lblFechaNacimientoConygue" CssClass="col-sm-8" runat="server"></asp:Label>
-
-<label class="col-sm-4"> conyugue</label>
-<asp:HyperLink ID="lblTelefonoConyugue" CssClass="col-sm-8" NavigateUrl="tel:55599999999" runat="server"></asp:HyperLink>
-
-<label class="col-sm-4">Lugar de trabajo conyugue</label>
-<asp:Label ID="lblLugarTrabajoConyugue" CssClass="col-sm-8" runat="server"></asp:Label>
-
-<label class="col-sm-4">Telefono trabajo conyugue</label>
-<asp:Label ID="lblTelefonoTrabajoConyugue" CssClass="col-sm-8" runat="server"></asp:Label>
-
-<label class="col-sm-4">Ingresos mensuales conyugue</label>
-<asp:Label ID="lblIngresosConyugue" CssClass="col-sm-8" runat="server"></asp:Label>
-</div>--%>
                             </div>
                         </div>
                     </div>
@@ -366,58 +319,6 @@
                         </div>
                         <div id="collapseInformacionLaboral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
                             <div class="panel-body">
-
-                                <%--<div class="form-group row">
-<label class="col-sm-6">Nombre del trabajo</label>
-<asp:Label ID="lblNombreTrabajoCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Ingresos mensuales</label>
-<asp:Label ID="lblIngresosMensualesCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Puesto asigando</label>
-<asp:Label ID="lblPuestoAsignadoCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Fecha de ingreso</label>
-<asp:Label ID="lblFechaIngresoCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Arraigo laboral</label>
-<asp:Label ID="lblArraigoLaboral" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Teléfono empresa</label>
-<asp:Label ID="lblTelefonoEmpresaCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Extensión RRHH</label>
-<asp:Label ID="lblExtensionRecursosHumanos" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Extensión cliente</label>
-<asp:Label ID="lblExtensionCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Departamento empresa</label>
-<asp:Label ID="lblDeptoEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Municipio empresa</label>
-<asp:Label ID="lblMunicipioEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Ciudad empresa</label>
-<asp:Label ID="lblCiudadEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Barrio/colonia empresa</label>
-<asp:Label ID="lblBarrioColoniaEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Direccion detallada empresa</label>
-<asp:Label ID="lblDireccionDetalladaEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Referencias ubicación</label>
-<asp:Label ID="lblReferenciaUbicacionEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Fuente de otros Ingresos</label>
-<asp:Label ID="lblDescripcionOtrosIngresos" CssClass="col-sm-6" runat="server"></asp:Label>
-
-<label class="col-sm-6">Valor otros ingresos</label>
-<asp:Label ID="lblValorOtrosIngresos" CssClass="col-sm-6" runat="server"></asp:Label>
-</div>--%>
-
-
                                 <div class="row mb-0" id="divInformacionLaboral" runat="server">
                                     <div class="col-lg-6 col-md-6">
                                         <div class="form-group row">
@@ -477,6 +378,14 @@
                                                 <label class="col-form-label">Referencias la dirección</label>
                                                 <textarea id="txtReferenciaDetalladaEmpresa" runat="server" readonly="readonly" class="form-control form-control-sm"></textarea>
                                             </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Fuente de otros ingresos</label>
+                                                <asp:TextBox ID="txtFuenteDeOtrosIngresos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Valor de otros ingresos</label>
+                                                <asp:TextBox ID="txtValorDeOtrosIngresos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 border-left border-gray">
@@ -484,7 +393,7 @@
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de informacion laboral -->
-                                                <div class="align-self-center" id="divDocumentacionLaboral" runat="server" style="/*display: none; */">
+                                                <div class="align-self-center" id="divDocumentacionLaboral" runat="server" style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
@@ -572,7 +481,7 @@
                                             </div>
                                             <div class="col-6">
                                                 <label class="col-form-label">Cuota GPS</label>
-                                                <asp:TextBox ID="TextBox15" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtCalculoCuotaGPS" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
                                                 <label class="col-form-label">Cuota seguro</label>
@@ -628,27 +537,6 @@
                                 </div>
 
                                 <%--<div class="row">
-                                    <!-- INFORMACION DEL PRECALIFICADO -->
-                                    <div class="col-md-6 border">
-                                        <div class="form-group row">
-                                            <label class="col-sm-12 h6 text-center p-t-10">Capacidad de Pago - Precalificado</label>
-
-                                            <label class="col-sm-6 col-form-label">Ingresos precalificado</label>
-                                            <asp:Label ID="lblIngresosPrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                            <label class="col-sm-6 col-form-label">Obligaciones precalificado</label>
-                                            <asp:Label ID="lblObligacionesPrecalificado" CssClass="col-sm-6 text-danger" runat="server"></asp:Label>
-
-                                            <label class="col-sm-6 col-form-label">Disponible precalificado</label>
-                                            <asp:Label ID="lblDisponiblePrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                            <label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
-                                            <asp:Label ID="lblCapacidadPagoMensual" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                            <label class="col-sm-6 col-form-label">Capacidad de quincenal</label>
-                                            <asp:Label ID="lblCapacidadPagoQuincenal" CssClass="col-sm-6" runat="server"></asp:Label>
-                                        </div>
-                                    </div>
                                     <!-- INFORMACION DEL PRESTAMO CON LOS DATOS DEL PRECALIFICADO-->
                                     <div class="col-md-6 border">
                                         <div class="form-group row">
@@ -788,74 +676,26 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                             <div class="panel-body">
                                 <div class="row mb-0" id="div1" runat="server">
                                     <div class="col-lg-6 col-md-6 col-6">
-                                        <form id="frmInfoAnalisis">
-                                            <div class="form-group row">
-                                                <div class="col-12">
-                                                    <label class="col-form-label">Tipo de empresa</label>
-                                                    <asp:TextBox ID="txtTipoDeEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                                </div>
-                                                <div class="col-12">
-                                                    <label class="col-form-label">Tipo de perfil</label>
-                                                    <asp:TextBox ID="txtTipoDePerfil" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                                </div>
-                                                <div class="col-12">
-                                                    <label class="col-form-label">Tipo de empleo</label>
-                                                    <asp:TextBox ID="txtTipoDeEmpleo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                                </div>
-                                                <div class="col-12">
-                                                    <label class="col-form-label">Buro actual</label>
-                                                    <asp:TextBox ID="txtBuroActual" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                                </div>
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <label class="col-form-label">Tipo de empresa</label>
+                                                <asp:TextBox ID="txtTipoDeEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                        </form>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Tipo de perfil</label>
+                                                <asp:TextBox ID="txtTipoDePerfil" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Tipo de empleo</label>
+                                                <asp:TextBox ID="txtTipoDeEmpleo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Buro actual</label>
+                                                <asp:TextBox ID="txtBuroActual" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <%--<div class="row">
-<div class="col-md-12">
-<div class="form-group row">
-<label class="col-sm-3 col-form-label">Tipo de empresa</label>
-<div class="col-sm-3">
-<select id="tipoEmpresa" required="required" class="form-control">
-<option value="" selected="selected">Seleccionar</option>
-<option value="Privada">Privada</option>
-<option value="Publica">Publica</option>
-<option value="Propia">Propia</option>
-</select>
-</div>
-</div>
-<div class="form-group row">
-<label class="col-sm-3 col-form-label">Tipo de perfil</label>
-<div class="col-sm-3">
-<select id="tipoPerfil" required="required" class="form-control">
-<option value="" selected="selected">Seleccionar</option>
-<option value="Formal">Formal</option>
-<option value="Informa">Informal</option>
-</select>
-</div>
-</div>
-<div class="form-group row">
-<label class="col-sm-3 col-form-label">Tipo de empleo</label>
-<div class="col-sm-3">
-<select id="tipoEmpleo" required="required" class="form-control">
-<option value="" selected="selected">Seleccionar</option>
-<option value="Asalariado">Asalariado</option>
-<option value="Comerciante">Comerciante</option>
-</select>
-</div>
-</div>
-<div class="form-group row">
-<label class="col-sm-3 col-form-label">Buro actual</label>
-<div class="col-sm-3">
-<select id="buroActual" required="required" class="form-control">
-<option value="" selected="selected">Seleccionar</option>
-<option value="Con Historial">Con Historial</option>
-<option value="Sin Historial">Sin Historial</option>
-</select>
-</div>
-</div>
-</div>
-</div>--%>
                             </div>
                         </div>
                     </div>
@@ -874,8 +714,8 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                             <div class="panel-body">
                                 <h6>Referencias personales</h6>
                                 <div class="table-responsive">
-                                    <table class="table table-condensed" id="tblReferencias">
-                                        <thead class="thead-light">
+                                    <table class="table table-condensed table-striped" id="tblReferencias" runat="server">
+                                        <thead class="bg-light">
                                             <tr>
                                                 <th>Nombre completo</th>
                                                 <th>Lugar de trabajo</th>
@@ -885,10 +725,10 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="table-condensed"></tbody>
+                                        <tbody></tbody>
                                     </table>
                                 </div>
-                                <div id="divAval">
+                                <div id="divAval" runat="server" visible="false">
                                     <h4>Aval</h4>
                                     <div class="table-responsive">
                                         <table class="table table-condensed" id="tblAvales">
@@ -951,7 +791,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de informacion de campo del domicilio -->
-                                                <div class="align-self-center" id="divDocumentacionCampoDomicilio" runat="server" style="/*display: none; */">
+                                                <div class="align-self-center" id="divDocumentacionCampoDomicilio" runat="server" style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
@@ -1009,7 +849,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de informacion de campo del trabajo -->
-                                                <div class="align-self-center" id="divDocumentacionCampoTrabajo" runat="server" style="/*display: none; */">
+                                                <div class="align-self-center" id="divDocumentacionCampoTrabajo" runat="server" style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
@@ -1071,6 +911,11 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 <span class="d-none d-sm-block">Más detalles</span>
                             </a>
                         </li>
+                        <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones" style="display: none;">
+                            <a class="nav-link" data-toggle="tab" href="#listaCondiciones" role="tab">
+                                <span class="d-none d-sm-block">Condiciones de la solictud</span>
+                            </a>
+                        </li>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content">
@@ -1079,7 +924,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 <h6 class="text-danger">Solicitud Inactiva</h6>
                             </div>
                             <div class="table-responsive">
-                                <table class="table mb-0" id="tblDetalleEstado">
+                                <table class="table mb-0 table-striped" id="tblDetalleEstado">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Proceso</th>
@@ -1207,6 +1052,20 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 </div>
                             </div>--%>
                         </div>
+                        <div class="tab-pane p-3" id="listaCondiciones" role="tabpanel">
+                            <table id="tblListaSolicitudCondiciones" runat="server" class="table table-condensed table-striped">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Tipo Condición</th>
+                                        <th>Descripción</th>
+                                        <th>Comentario Adicional</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <!-- termina tab -->
                 </div>
@@ -1253,32 +1112,32 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                     <div class="row">
                         <div class="col-md-12">
                             <label class="mt-0 header-title text-center">Documentación identidad</label>
-                            <div class="popup-gallery" id="divDocumentacionCedulaModal">
+                            <div class="align-self-center" id="divDocumentacionCedulaModal" runat="server">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <label class="mt-0 header-title text-center">Documentación domicilio</label>
-                            <div class="popup-gallery" id="divDocumentacionDomicilioModal">
+                            <div class="align-self-center" id="divDocumentacionDomicilioModal" runat="server">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <label class="mt-0 header-title text-center">Documentación laboral</label>
-                            <div class="popup-gallery" id="divDocumentacionLaboralModal">
+                            <div class="align-self-center" id="divDocumentacionLaboralModal" runat="server">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <label class="mt-0 header-title text-center">Solicitud fisica</label>
-                            <div class="popup-gallery" id="divDocumentacionSoliFisicaModal">
+                            <div class="align-self-center" id="divDocumentacionSoliFisicaModal" runat="server">
                             </div>
                         </div>
-                        <div class="col-sm-12" id="tituloCampoDomicilioModal" style="display: none;">
+                        <div class="col-sm-12" id="divContenedorCampoDomicilioModal" runat="server" visible="false">
                             <label class="mt-0 header-title text-center">Documentación de campo (Domicilio)</label>
-                            <div class="popup-gallery" id="divDocumentacionCampoDomicilioModal">
+                            <div class="align-self-center" id="divDocumentacionCampoDomicilioModal" runat="server">
                             </div>
                         </div>
-                        <div class="col-sm-12" id="tituloCampoTrabajoModal" style="display: none;">
+                        <div class="col-sm-12" id="divContenedorCampoTrabajoModal" runat="server" visible="false">
                             <label class="mt-0 header-title text-center">Documentación de campo (Trabajo)</label>
-                            <div class="popup-gallery" id="divDocumentacionCampoTrabajoModal">
+                            <div class="align-self-center" id="divDocumentacionCampoTrabajoModal" runat="server">
                             </div>
                         </div>
                     </div>
@@ -1291,13 +1150,102 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
             </div>
         </div>
     </div>
+
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <%--<script src="/Scripts/plugins/imgBox/jquery-rotate.min.js"></script>
-    <script src="/Scripts/plugins/imgBox/jquery.imgbox.js?v=20200903161022"></script>--%>
-    
+    <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
+    <script src="/Scripts/plugins/imgBox/jquery-rotate.min.js"></script>    
+    <script src="/Scripts/plugins/imgBox/jquery.imgbox.js?v=20200903161022"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Detalles.js?v=202008211455"></script>
+
+    <script>
+        //$("#divDocumentacionCedula").unitegallery({
+        //    gallery_theme: "tilesgrid",
+        //    tile_width: 150,
+        //    tile_height: 97,
+        //    grid_num_rows: 15
+        //});
+
+        $("#divDocumentacionDomicilio").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            grid_num_rows: 15
+        });
+
+        $("#divDocumentacionLaboral").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            grid_num_rows: 15
+        });
+
+        $("#divDocumentacionCampoDomicilio").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            grid_num_rows: 15
+        });
+
+        $("#divDocumentacionCampoTrabajo").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            grid_num_rows: 15
+        });
+
+        var btnRotarImagenes = $('<button class="check-original-image btn btn-hover"><i class="mdi mdi-rotate-right"></i></button>').on('click', function () {
+            RotarImagenes();
+        });
+
+        $("#divDocumentacionCedula").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 150,
+            tile_height: 97,
+            grid_num_rows: 15
+        });
+
+        $(document).on('click', 'div.ug-thumb-overlay', function () {
+            alert('enter full screen');
+            $('html').append(btnRotarImagenes);
+        });
+    </script>
+
+    <script>
+        angle = 90;
+
+        function RotarImagenes() {
+            var image = $('.ug-item-wrapper').children('img');            
+            $(image).rotate(angle);
+            angle += 90;
+        }
+
+        function ReiniciarAnguloRotacion() {
+            angle = 0;
+        }
+    </script>
+
+
+    <script type="text/javascript">
+
+        var api;
+
+        jQuery(document).ready(function () {
+            api = jQuery("#divDocumentacionCedula").unitegallery();
+
+            api.on("enter_fullscreen", function () {	//on enter fullscreen
+                alert('enter full screen');
+            });
+
+            api.on("exit_fullscreen", function () {	//on exit fulscreen
+                alert('enter full screen');
+            });
+        });
+		</script>
 </body>
 </html>

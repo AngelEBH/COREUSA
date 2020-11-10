@@ -300,89 +300,7 @@ function cargarInformacionSolicitud() {
             }
 
             /* Cargar documentación de la solicitud */
-            var divDocumentacionCedula = $("#divDocumentacionCedula");
-            var divDocumentacionCedulaModal = $("#divDocumentacionCedulaModal");
-            var divDocumentacionDomicilio = $("#divDocumentacionDomicilio");
-            var divDocumentacionDomicilioModal = $("#divDocumentacionDomicilioModal");
-            var divDocumentacionLaboral = $("#divDocumentacionLaboral");
-            var divDocumentacionLaboralModal = $("#divDocumentacionLaboralModal");
-            var divDocumentacionFisicaModal = $("#divDocumentacionSoliFisicaModal");
-            var divDocumentacionCampoDomicilio = $("#divDocumentacionCampoDomicilio");
-            var divDocumentacionCampoDomicilioModal = $("#divDocumentacionCampoDomicilioModal");
-            var divDocumentacionCampoTrabajo = $("#divDocumentacionCampoTrabajo");
-            var divDocumentacionCampoTrabajoModal = $("#divDocumentacionCampoTrabajoModal");
 
-            var contador = 0;
-            var ruta = '';
-            var img = '';
-            var imgModal = '';
-
-            //for (var i = 0; i < rowDataDocumentos.length; i++) {
-
-            //    ruta = rowDataDocumentos[i].URLArchivo;
-
-            //    img = '<img alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" src="' + ruta + '" data-image="' + ruta + '" data-description="' + rowDataDocumentos[i].DescripcionTipoDocumento + '"/>';
-            //    imgModal = '<img alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" src="' + ruta + '" data-image="' + ruta + '" data-description="' + rowDataDocumentos[i].DescripcionTipoDocumento + '"/>';
-
-            //    if (rowDataDocumentos[i].fiTipoDocumento == 1 || rowDataDocumentos[i].fiTipoDocumento == 2 || rowDataDocumentos[i].fiTipoDocumento == 18 || rowDataDocumentos[i].fiTipoDocumento == 19) {
-
-            //        if (contador < 2) {
-            //            divDocumentacionCedula.append(img);
-            //        }
-            //        divDocumentacionCedulaModal.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '">' +
-            //            '<div class="img-responsive">' +
-            //            '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-            //            '</div>' +
-            //            '</a>');
-            //        contador = contador + 1;
-
-            //    }
-            //    else if (rowDataDocumentos[i].fiTipoDocumento == 3) {
-
-            //        divDocumentacionDomicilio.append(img);
-            //        divDocumentacionDomicilioModal.append(imgModal);
-
-            //    }
-            //    else if (rowDataDocumentos[i].fiTipoDocumento == 5) {
-
-            //        divDocumentacionDomicilio.append(img);
-            //        divDocumentacionDomicilioModal.append(imgModal);
-
-            //    }
-            //    else if (rowDataDocumentos[i].fiTipoDocumento == 4) {
-
-            //        divDocumentacionLaboral.append(img);
-            //        divDocumentacionLaboralModal.append(imgModal);
-            //    }
-            //    else if (rowDataDocumentos[i].fiTipoDocumento == 6) {
-
-            //        divDocumentacionLaboral.append(img);
-            //        divDocumentacionLaboralModal.append(imgModal);
-
-            //    }
-            //    else if (rowDataDocumentos[i].fiTipoDocumento == 7) {
-            //        divDocumentacionLaboral.append(img);
-            //        divDocumentacionFisicaModal.append(imgModal);
-            //    }
-
-            //    else if (rowDataDocumentos[i].fiTipoDocumento == 8) {
-            //        divDocumentacionCampoDomicilio.append('<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />');
-            //        divDocumentacionCampoDomicilioModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de casa">' +
-            //            '<div class="img-responsive">' +
-            //            '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-            //            '</div>' +
-            //            '</a>');
-            //    }
-            //    else if (rowDataDocumentos[i].fiTipoDocumento == 9) {
-
-            //        divDocumentacionCampoTrabajo.append('<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />');
-            //        divDocumentacionCampoTrabajoModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de trabajo">' +
-            //            '<div class="img-responsive">' +
-            //            '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
-            //            '</div>' +
-            //            '</a>');
-            //    }
-            //}
             //$(".img").imgbox({
             //    zoom: true,
             //    drag: true
@@ -868,26 +786,6 @@ function MensajeInformacion(mensaje) {
     });
 }
 
-function diferenciasEntreDosFechas(fechaInicio, fechaFin) {
-
-    var inicio = new Date(FechaFormatoGuiones(fechaInicio));
-    var fin = new Date(FechaFormatoGuiones(fechaFin));
-    var tiempoResta = (fin.getTime() - inicio.getTime()) / 1000;
-    /* Calcular dias */
-    var dias = Math.floor(tiempoResta / 86400);
-
-    /* Calcular horas */
-    var horas = Math.floor(tiempoResta / 3600) % 24;
-
-    /* Calcular minutos */
-    var minutos = Math.floor(tiempoResta / 60) % 60;
-
-    /* Calcular segundos */
-    var segundos = tiempoResta % 60;
-    var diferencia = pad2(dias) + ':' + pad2(horas) + ':' + pad2(minutos) + ':' + pad2(segundos);
-    return diferencia;
-}
-
 function addComasFormatoNumerico(nStr) {
     nStr += '';
     x = nStr.split('.');
@@ -898,40 +796,6 @@ function addComasFormatoNumerico(nStr) {
         x1 = x1.replace(rgx, '$1' + ',' + '$2');
     }
     return x1 + x2;
-}
-
-function pad2(number) {
-    return (number < 10 ? '0' : '') + number
-}
-
-function FechaFormato(pFecha) {
-    if (!pFecha)
-        return "Sin modificaciones";
-    var fechaString = pFecha.substr(6, 19);
-    var fechaActual = new Date(parseInt(fechaString));
-    var mes = pad2(fechaActual.getMonth() + 1);
-    var dia = pad2(fechaActual.getDate());
-    var anio = fechaActual.getFullYear();
-    var hora = pad2(fechaActual.getHours());
-    var minutos = pad2(fechaActual.getMinutes());
-    var segundos = pad2(fechaActual.getSeconds().toString());
-    var FechaFinal = dia + "/" + mes + "/" + anio + " " + hora + ":" + minutos + ":" + segundos;
-    return FechaFinal;
-}
-
-function FechaFormatoGuiones(pFecha) {
-    if (!pFecha)
-        return "Sin modificaciones";
-    var fechaString = pFecha.substr(6, 19);
-    var fechaActual = new Date(parseInt(fechaString));
-    var mes = pad2(fechaActual.getMonth() + 1);
-    var dia = pad2(fechaActual.getDate());
-    var anio = fechaActual.getFullYear();
-    var hora = pad2(fechaActual.getHours());
-    var minutos = pad2(fechaActual.getMinutes());
-    var segundos = pad2(fechaActual.getSeconds().toString());
-    var FechaFinal = anio + "/" + mes + "/" + dia + " " + hora + ":" + minutos + ":" + segundos;
-    return FechaFinal;
 }
 
 $(window).on('hide.bs.modal', function () {

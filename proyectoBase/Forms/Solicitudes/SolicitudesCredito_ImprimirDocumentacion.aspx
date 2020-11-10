@@ -865,7 +865,6 @@
     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
-
     <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
     <script>
