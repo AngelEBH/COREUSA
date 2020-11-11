@@ -202,10 +202,6 @@ $("#btnAsignar_Confirmar").click(function (e) {
     }
 });
 
-jQuery("#date-range").datepicker({
-    toggleActive: !0
-});
-
 function MensajeError(mensaje) {
     iziToast.error({
         title: 'Error',

@@ -35,12 +35,7 @@
             background-color: #e9ecef;
             border-bottom: 1px solid rgba(0,0,0,.125);
             font-weight: 500;
-        }
-
-        .table-condensed tbody tr td, .table-condensed thead tr td, .table-condensed tbody tr th, .table-condensed thead tr th {
-            padding-bottom: .25rem !important;
-            padding-top: .25rem !important;
-        }
+        }        
     </style>
 </head>
 <body>
@@ -1086,6 +1081,14 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
+
+
+
+                    <div class="ug-thumb-wrapper ug-tile ug-tile-clickable" style="z-index: 3; opacity: 1; background-color: rgb(240, 240, 240); border-width: 3px; border-style: solid; border-color: rgb(240, 240, 240); border-radius: 2px; box-shadow: rgb(139, 139, 139) 1px 1px 3px 2px; width: 150px; height: 99px; position: absolute; margin: 0px; left: 350px; top: 10px;">
+                        <img src="http://172.20.3.140/Documentos/Solicitudes/Solicitud490/CTES490D18-20201405T091432-1.png" alt="Segunda ID frontal (Licencia, RTN, etc)" class="ug-thumb-image ug-trans-enabled" style="opacity: 1; width: 144px; height: 231px; left: 0px; top: -69px;">
+                    </div>
+
+
                     <label>Referencia personal: <span class="font-weight-bold" id="lblNombreReferenciaModal"></span></label>
                     <div class="form-group">
                         <label class="col-form-label">Observaciones/Comentarios <span class="font-weight-bold">(Keyla Hernandez)</span></label>
@@ -1171,52 +1174,57 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
         //    grid_num_rows: 15
         //});
 
-        $("#divDocumentacionDomicilio").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            grid_num_rows: 15
-        });
+        //$("#divDocumentacionDomicilio").unitegallery({
+        //    gallery_theme: "tilesgrid",
+        //    tile_width: 180,
+        //    tile_height: 120,
+        //    grid_num_rows: 15
+        //});
 
-        $("#divDocumentacionLaboral").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            grid_num_rows: 15
-        });
+        //$("#divDocumentacionLaboral").unitegallery({
+        //    gallery_theme: "tilesgrid",
+        //    tile_width: 180,
+        //    tile_height: 120,
+        //    grid_num_rows: 15
+        //});
 
-        $("#divDocumentacionCampoDomicilio").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            grid_num_rows: 15
-        });
+        //$("#divDocumentacionCampoDomicilio").unitegallery({
+        //    gallery_theme: "tilesgrid",
+        //    tile_width: 180,
+        //    tile_height: 120,
+        //    grid_num_rows: 15
+        //});
 
-        $("#divDocumentacionCampoTrabajo").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            grid_num_rows: 15
-        });
+        //$("#divDocumentacionCampoTrabajo").unitegallery({
+        //    gallery_theme: "tilesgrid",
+        //    tile_width: 180,
+        //    tile_height: 120,
+        //    grid_num_rows: 15
+        //});
+
+        //$("#divDocumentacionCedula").unitegallery({
+        //    gallery_theme: "tilesgrid",
+        //    tile_width: 150,
+        //    tile_height: 97,
+        //    grid_num_rows: 15
+        //});
+
+        //$(document).on('click', 'div.ug-thumb-overlay', function () {
+        //    alert('enter full screen');
+        //    $('html').append(btnRotarImagenes);
+        //});
+
+        //$(document).on('click', 'img', function () {
+        //    alert('clickkkkk en imagen');
+        //});
+    </script>
+
+    <%--<script>
 
         var btnRotarImagenes = $('<button class="check-original-image btn btn-hover"><i class="mdi mdi-rotate-right"></i></button>').on('click', function () {
             RotarImagenes();
         });
 
-        $("#divDocumentacionCedula").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 150,
-            tile_height: 97,
-            grid_num_rows: 15
-        });
-
-        $(document).on('click', 'div.ug-thumb-overlay', function () {
-            alert('enter full screen');
-            $('html').append(btnRotarImagenes);
-        });
-    </script>
-
-    <script>
         angle = 90;
 
         function RotarImagenes() {
@@ -1228,24 +1236,41 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
         function ReiniciarAnguloRotacion() {
             angle = 0;
         }
-    </script>
-
+    </script>--%>
 
     <script type="text/javascript">
 
-        var api;
+        var btnRotarImagenes = $('<button class="check-original-image btn btn-hover"><i class="mdi mdi-rotate-right"></i></button>').on('click', function () {
+            RotarImagenes();
+        });
 
+
+        var api;
         jQuery(document).ready(function () {
             api = jQuery("#divDocumentacionCedula").unitegallery();
 
-            api.on("enter_fullscreen", function () {	//on enter fullscreen
-                alert('enter full screen');
+            api.on("enter_fullscreen", function () {
+                alert('enter_fullscreen');
+                $('html').append(btnRotarImagenes);
             });
 
-            api.on("exit_fullscreen", function () {	//on exit fulscreen
-                alert('enter full screen');
+            api.on("exit_fullscreen", function () {
+                alert('exit_fullscreen');
+                btnRotarImagenes.remove();
             });
+            
         });
+
+        function RotarImagenes() {
+            var image = $('.ug-item-wrapper').children('img');
+            $(image).rotate(angle);
+            angle += 90;
+        }
+
+        function ReiniciarAnguloRotacion() {
+            angle = 0;
+        }
 		</script>
+
 </body>
 </html>

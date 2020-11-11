@@ -1104,5 +1104,4 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
             return default(T);
         else
             return (T)obj;
-    }
-}
+    }}
