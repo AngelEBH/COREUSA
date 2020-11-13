@@ -43,6 +43,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                    ValidarPuesto();
                     CargarListados();
                 }
             }
@@ -50,6 +51,86 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
             {
                 ex.Message.ToString();
             }
+        }
+    }
+
+    public void ValidarPuesto()
+    {
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreSeguridad.dbo.sp_InformacionUsuario", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            var idPuesto = sqlResultado["fiIDPuesto"].ToString();
+
+                            switch (idPuesto)
+                            {
+                                case "113":
+                                    btnReiniciarResolucion.Visible = false;
+                                    btnReiniciarAnalisis.Visible = false;
+                                    btnSolicitudDocumentos.Visible = false;
+                                    btnReasignarVendedor.Visible = false;
+                                    btnCondiciones.Visible = false;
+                                    btnReiniciarValidacion.Visible = false;
+                                    btnReiniciarCampo.Visible = false;
+                                    btnResolucionCampo.Visible = false;
+                                    btnReiniciarReprogramacion.Visible = false;
+                                    btnReasignarGestor.Visible = false;
+                                    break;
+
+                                case "104":
+                                    btnReasignarGestor.Visible = false;
+                                    btnReiniciarReprogramacion.Visible = false;
+                                    btnResolucionCampo.Visible = false;
+                                    btnReiniciarCampo.Visible = false;
+                                    break;
+
+                                case "103":
+                                    btnReiniciarResolucion.Visible = false;
+                                    btnReiniciarAnalisis.Visible = false;
+                                    btnReasignarVendedor.Visible = false;
+                                    btnCondiciones.Visible = false;
+                                    btnReiniciarValidacion.Visible = false;
+                                    btnReferenciasPersonales.Visible = false;
+                                    break;
+
+                                case "101":
+
+                                    break;
+                                default:
+                                    btnReiniciarResolucion.Visible = false;
+                                    btnReiniciarAnalisis.Visible = false;
+                                    btnSolicitudDocumentos.Visible = false;
+                                    btnReasignarVendedor.Visible = false;
+                                    btnCondiciones.Visible = false;
+                                    btnReiniciarValidacion.Visible = false;
+                                    btnReiniciarCampo.Visible = false;
+                                    btnResolucionCampo.Visible = false;
+                                    btnReiniciarReprogramacion.Visible = false;
+                                    btnReasignarGestor.Visible = false;
+                                    btnReferenciasPersonales.Visible = false;
+                                    break;
+                            } // switch (idPuesto)
+                        }
+                    }
+                } // using command listado gestores
+            } // using connection
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
         }
     }
 
@@ -126,6 +207,59 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                         }
                     }
                 } // using cammnd catalogo estados solicitudes
+
+                using (var sqlComando = new SqlCommand("sp_CREDCatalogo_Parentescos_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDParentesco", 0);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlParentescos.Items.Clear();
+                        ddlParentescos.Items.Add(new ListItem("Seleccionar", ""));
+
+                        ddlParentesco_Editar.Items.Clear();
+                        ddlParentesco_Editar.Items.Add(new ListItem("Seleccionar", ""));
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlParentescos.Items.Add(new ListItem(sqlResultado["fcDescripcionParentesco"].ToString(), sqlResultado["fiIDParentesco"].ToString()));
+                                ddlParentesco_Editar.Items.Add(new ListItem(sqlResultado["fcDescripcionParentesco"].ToString(), sqlResultado["fiIDParentesco"].ToString()));
+                            }
+                        }
+                    }
+                } // using cammnd catalogo parentescos
+
+                using (var sqlComando = new SqlCommand("sp_CREDCatalogo_TiempoDeConocer_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlTiempoDeConocerReferencia.Items.Clear();
+                        ddlTiempoDeConocerReferencia.Items.Add(new ListItem("Seleccionar", ""));
+
+                        ddlTiempoDeConocerReferencia_Editar.Items.Clear();
+                        ddlTiempoDeConocerReferencia_Editar.Items.Add(new ListItem("Seleccionar", ""));
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlTiempoDeConocerReferencia.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
+                                ddlTiempoDeConocerReferencia_Editar.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
+                            }
+                        }
+                    }
+                } // using cammnd catalogo tiempo de conocer
             } // using connection
         }
         catch (Exception ex)
@@ -246,6 +380,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                     NombreCompleto = sqlResultado["fcNombreCompletoReferencia"].ToString(),
                                     LugarTrabajo = sqlResultado["fcLugarTrabajoReferencia"].ToString(),
                                     TiempoDeConocer = sqlResultado["fcTiempoDeConocer"].ToString(),
+                                    IdTiempoDeConocer = (short)sqlResultado["fiTiempoConocerReferencia"],
                                     TelefonoReferencia = sqlResultado["fcTelefonoReferencia"].ToString(),
                                     IdParentescoReferencia = (int)sqlResultado["fiIDParentescoReferencia"],
                                     DescripcionParentesco = sqlResultado["fcDescripcionParentesco"].ToString(),
@@ -567,7 +702,6 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
         return resultado;
     }
 
-
     [WebMethod]
     public static bool ReiniciarCampo(int idSolicitud, bool reiniciarInvestigacionDomicilio, bool reiniciarInvestigacionTrabajo, string observaciones, string dataCrypt)
     {
@@ -708,7 +842,6 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
         return resultado;
     }
 
-
     [WebMethod]
     public static bool ReiniciarAnalisis(int idSolicitud, bool reiniciarInfoPersonal, bool reiniciarInfoLaboral, bool reiniciarReferencias, bool reiniciarDocumentacion, string observaciones, string dataCrypt)
     {
@@ -734,6 +867,159 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piReiniciarReferenciasPersonales", reiniciarReferencias);
                     sqlComando.Parameters.AddWithValue("@piReiniciarDocumentacion", reiniciarDocumentacion);
                     sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool RegistrarReferenciaPersonal(int idSolicitud, int idCliente, SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_AgregarReferencia", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDCliente", idCliente);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pcNombreCompletoReferencia", referenciaPersonal.NombreCompleto.Trim());
+                    sqlComando.Parameters.AddWithValue("@pcLugarTrabajoReferencia", referenciaPersonal.LugarTrabajo.Trim());
+                    sqlComando.Parameters.AddWithValue("@piTiempoConocerReferencia", referenciaPersonal.IdTiempoDeConocer);
+                    sqlComando.Parameters.AddWithValue("@pcTelefonoReferencia", referenciaPersonal.TelefonoReferencia.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDParentescoReferencia", referenciaPersonal.IdParentescoReferencia);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool EliminarReferenciaPersonal(int idSolicitud, int idCliente, int idReferenciaPersonal, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_EliminarReferencia", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDCliente", idCliente);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDReferenciaPersonal", idReferenciaPersonal);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool ActualizarReferenciaPersonal(int idSolicitud, int idCliente, SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ActualizarReferencia", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDReferenciaPersonal", referenciaPersonal.IdReferencia);
+                    sqlComando.Parameters.AddWithValue("@piIDCliente", idCliente);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pcNombreCompletoReferencia", referenciaPersonal.NombreCompleto.Trim());
+                    sqlComando.Parameters.AddWithValue("@pcLugarTrabajoReferencia", referenciaPersonal.LugarTrabajo.Trim());
+                    sqlComando.Parameters.AddWithValue("@piTiempoConocerReferencia", referenciaPersonal.IdTiempoDeConocer);
+                    sqlComando.Parameters.AddWithValue("@pcTelefonoReferencia", referenciaPersonal.TelefonoReferencia.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDParentescoReferencia", referenciaPersonal.IdParentescoReferencia);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -862,6 +1148,7 @@ public class SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewMod
     public int IdSolicitud { get; set; }
     public string NombreCompleto { get; set; }
     public string LugarTrabajo { get; set; }
+    public int IdTiempoDeConocer { get; set; }
     public string TiempoDeConocer { get; set; }
     public string TelefonoReferencia { get; set; }
     public int IdParentescoReferencia { get; set; }

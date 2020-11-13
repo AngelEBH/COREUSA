@@ -1,4 +1,5 @@
 ﻿var idSolicitud = 0;
+var idCliente = 0;
 var idEstadoSolicitud = 0;
 
 $(document).ready(function () {
@@ -303,7 +304,7 @@ $("#btnCambiarResolucionConfirmar").click(function (e) {
 /* Reiniciar investigacion de campo */
 $("#btnReiniciarCampo").on('click', function () {
 
-    $("#cbReiniciarCampoDomicilio").prop("checked",false);
+    $("#cbReiniciarCampoDomicilio").prop("checked", false);
     $("#cbReiniciarCampoTrabajo").prop("checked", false);
     $("#txtObservacionesReiniciarCampo").val('');
     $("#modalReiniciarCampo").modal();
@@ -314,8 +315,7 @@ $("#btnReiniciarInvestigacionDeCampo").click(function (e) {
 
     if ($("#txtObservacionesReiniciarCampo").parsley().isValid()) {
 
-        if ($("#cbReiniciarCampoDomicilio").prop("checked") == true || $("#cbReiniciarCampoTrabajo").prop("checked") == true)
-        {
+        if ($("#cbReiniciarCampoDomicilio").prop("checked") == true || $("#cbReiniciarCampoTrabajo").prop("checked") == true) {
             let reiniciarInvestigacionDomicilio = $("#cbReiniciarCampoDomicilio").prop("checked");
             let reiniciarInvestigacionTrabajo = $("#cbReiniciarCampoTrabajo").prop("checked");
             let observaciones = $("#txtObservacionesReiniciarCampo").val();
@@ -389,7 +389,7 @@ $("#btnReiniciarReprogramacionConfirmar").click(function (e) {
 
                 $("#modalReiniciarReprogramacion").modal('hide');
             }
-        });        
+        });
     }
     else {
         $("#txtObservacionesReiniciarReprogramacion").parsley().validate();
@@ -493,6 +493,182 @@ $("#btnReiniciarAnalisisConfirmar").click(function (e) {
     }
 });
 
+/* Manejo de referencias personales */
+$("#btnAgregarReferencia").click(function () {
+
+    $("#txtNombreReferencia,#txtTelefonoReferencia,#ddlTiempoDeConocerReferencia, #ddlParentescos, #txtLugarTrabajoReferencia, #txtObservacionesNuevaReferencia").val('');
+    $('#modalAgregarReferenciaPersonal').parsley().reset();
+    $("#modalReferenciasPersonales").modal('hide');
+    $("#modalAgregarReferenciaPersonal").modal();
+});
+
+$("#btnAgregarReferenciaConfirmar").click(function () {
+
+    /* Validar formulario de agregar referencia personal */
+    if ($('#frmPrincipal').parsley().isValid({ group: 'referenciasPersonales' })) {
+
+        var NombreCompletoReferencia = $("#txtNombreReferencia").val();
+        var TelefonoReferencia = $("#txtTelefonoReferencia").val();
+        var LugarTrabajoReferencia = $("#txtLugarTrabajoReferencia").val();
+        var IdTiempoConocerReferencia = $("#ddlTiempoDeConocerReferencia :selected").val();
+        var IdParentescoReferencia = $("#ddlParentescos :selected").val();
+
+        /* Objeto referencia */
+        var referenciaPersonal = {
+            NombreCompleto: NombreCompletoReferencia,
+            TelefonoReferencia: TelefonoReferencia,
+            LugarTrabajo: LugarTrabajoReferencia,
+            IdTiempoDeConocer: IdTiempoConocerReferencia,
+            IdParentescoReferencia: IdParentescoReferencia,
+        }
+
+        var observaciones = $("#txtObservacionesNuevaReferencia").val();
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Mantenimiento.aspx/RegistrarReferenciaPersonal",
+            data: JSON.stringify({ idSolicitud: idSolicitud, idCliente: idCliente, referenciaPersonal: referenciaPersonal, observaciones: observaciones, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError("No se pudo agregar la referencia personal, contacte al administrador.");
+            },
+            success: function (data) {
+
+                if (data.d == true) {
+
+                    MensajeExito('La referencia personal se agregó correctamente.');
+                    BuscarSolicitud();
+                }
+                else {
+                    MensajeError("No se pudo agregar la referencia personal, contacte al administrador.");
+                }
+
+                $("#modalAgregarReferenciaPersonal").modal('hide');
+            }
+        });
+    }
+    else {
+        $('#frmPrincipal').parsley().validate({ group: 'referenciasPersonales', force: true });
+    }
+
+});
+
+/* Eliminar referencia personal */
+var idReferenciaPersonalSeleccionada = 0;
+$(document).on('click', 'button#btnEliminarReferencia', function () {
+
+    $("#modalReferenciasPersonales").modal('hide');
+
+    $("#txtObservacionesEliminarReferenciaPersonal").val('');
+    idReferenciaPersonalSeleccionada = $(this).data('id');
+
+    $("#modalEliminarReferenciaPersonal").modal();
+});
+
+$("#btnEliminarReferenciaPersonalConfirmar").click(function (e) {
+
+    if ($("#txtObservacionesEliminarReferenciaPersonal").parsley().isValid() && idReferenciaPersonalSeleccionada != 0) {
+
+        let observaciones = $("#txtObservacionesEliminarReferenciaPersonal").val();
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Mantenimiento.aspx/EliminarReferenciaPersonal",
+            data: JSON.stringify({ idSolicitud: idSolicitud, idCliente: idCliente, idReferenciaPersonal: idReferenciaPersonalSeleccionada, observaciones: observaciones, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError("No se pudo eliminar la referencia personal, contacte al administrador.");
+            },
+            success: function (data) {
+
+                if (data.d == true) {
+
+                    MensajeExito('La referencia personal fue eliminada correctamente.');
+                    BuscarSolicitud();
+                }
+                else {
+                    MensajeError("No se pudo eliminar la referencia personal, contacte al administrador.");
+                }
+                $("#modalEliminarReferenciaPersonal").modal('hide');
+            }
+        });
+    }
+    else {
+        $("#txtObservacionesEliminarReferenciaPersonal").parsley().validate();
+    }
+});
+
+
+/* Actualizar referencia personal */
+$(document).on('click', 'button#btnEditarReferencia', function () {
+
+    $("#modalReferenciasPersonales").modal('hide');
+
+    idReferenciaPersonalSeleccionada = $(this).data('id');
+
+    $("#txtNombreReferenciaPersonal_Editar").val($(this).data('nombre'));
+    $("#txtTelefonoReferenciaPersonal_Editar").val($(this).data('telefono'));
+    $("#ddlTiempoDeConocerReferencia_Editar").val($(this).data('idtiempodeconocer'));
+    $("#ddlParentesco_Editar").val($(this).data('idparentesco'));
+    $("#txtLugarDeTrabajoReferencia_Editar").val($(this).data('trabajo'));
+
+    $("#txtObservacionesEditarReferenciaPersonal").val('');
+
+    $("#modalEditarReferenciaPersonal").modal();
+});
+
+$("#btnEditarReferenciaConfirmar").click(function (e) {
+
+    /* Validar formulario de agregar referencia personal */
+    if ($('#frmPrincipal').parsley().isValid({ group: 'referenciasPersonalesEditar' })) {
+
+        var NombreCompletoReferencia = $("#txtNombreReferenciaPersonal_Editar").val();
+        var TelefonoReferencia = $("#txtTelefonoReferenciaPersonal_Editar").val();
+        var LugarTrabajoReferencia = $("#txtLugarDeTrabajoReferencia_Editar").val();
+        var IdTiempoConocerReferencia = $("#ddlTiempoDeConocerReferencia_Editar :selected").val();
+        var IdParentescoReferencia = $("#ddlParentesco_Editar :selected").val();
+
+        /* Objeto referencia */
+        var referenciaPersonal = {
+            IdReferencia: idReferenciaPersonalSeleccionada,
+            NombreCompleto: NombreCompletoReferencia,
+            TelefonoReferencia: TelefonoReferencia,
+            LugarTrabajo: LugarTrabajoReferencia,
+            IdTiempoDeConocer: IdTiempoConocerReferencia,
+            IdParentescoReferencia: IdParentescoReferencia
+        }
+
+        var observaciones = $("#txtObservacionesEditarReferenciaPersonal").val();
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Mantenimiento.aspx/ActualizarReferenciaPersonal",
+            data: JSON.stringify({ idSolicitud: idSolicitud, idCliente: idCliente, referenciaPersonal: referenciaPersonal, observaciones: observaciones, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError("No se pudo editar la referencia personal, contacte al administrador.");
+            },
+            success: function (data) {
+
+                if (data.d == true) {
+
+                    MensajeExito('La referencia personal se editó correctamente.');
+                    BuscarSolicitud();
+                }
+                else {
+                    MensajeError("No se pudo editar la referencia personal, contacte al administrador.");
+                }
+
+                $("#modalEditarReferenciaPersonal").modal('hide');
+            }
+        });
+    }
+    else {
+        $('#frmPrincipal').parsley().validate({ group: 'referenciasPersonalesEditar', force: true });
+    }
+});
+
+
 function BuscarSolicitud() {
 
     if ($('#txtNoSolicitud').val() != '') {
@@ -520,6 +696,8 @@ function BuscarSolicitud() {
                 if (data.d != null) {
 
                     var resultado = data.d;
+
+                    idCliente = resultado.IdCliente;
 
                     $('#lblIdSolicitud').text('No. ' + idSolicitud);
                     $('#lblIdSolicitud').css('display', '');
@@ -561,7 +739,6 @@ function BuscarSolicitud() {
                         }
                     }
 
-
                     /* Documentación de la solicitud */
                     var tblDocumentos = $("#tblDocumenacionSolicitud tbody");
                     tblDocumentos.empty();
@@ -593,6 +770,7 @@ function BuscarSolicitud() {
                     tblReferenciasPersonales.append('<tr><td class="text-center" colspan="6">No hay registros disponibles...</td></tr>');
 
                     if (resultado.ReferenciasPersonales != null) {
+
                         if (resultado.ReferenciasPersonales.length > 0) {
 
                             var referenciasPersonales = resultado.ReferenciasPersonales;
@@ -604,10 +782,10 @@ function BuscarSolicitud() {
 
                             for (var i = 0; i < referenciasPersonales.length; i++) {
 
-                                btnEliminarReferencia = '<button id="btnEliminarReferencia" disabled="disabled" data-id="' + referenciasPersonales[i].IdReferencia + '" class="btn btn-sm btn-danger mb-0" type="button" title="Opción no disponible"><i class="far fa-trash-alt"></i></button>';
-                                btnEditarReferencia = '<button id="btnEditarReferencia" disabled="disabled" data-id="' + referenciasPersonales[i].IdReferencia + '" class="btn btn-sm btn-info mb-0" type="button" title="Opción no disponible"><i class="far fa-edit"></i></button>';
+                                btnEliminarReferencia = '<button id="btnEliminarReferencia" data-id="' + referenciasPersonales[i].IdReferencia + '" class="btn btn-sm btn-danger mb-0" type="button" title="Eliminar referencia personal"><i class="far fa-trash-alt"></i></button>';
+                                btnEditarReferencia = '<button id="btnEditarReferencia" data-id="' + referenciasPersonales[i].IdReferencia + '" data-nombre="' + referenciasPersonales[i].NombreCompleto + '" data-trabajo="' + referenciasPersonales[i].LugarTrabajo + '" data-telefono="' + referenciasPersonales[i].TelefonoReferencia + '" data-idtiempodeconocer="' + referenciasPersonales[i].IdTiempoDeConocer + '" data-idparentesco="' + referenciasPersonales[i].IdParentescoReferencia + '" class="btn btn-sm btn-info mb-0" type="button" title="Editar referencia personal"><i class="far fa-edit"></i></button>';
 
-                                templateReferenciasPersonales += '<tr><td><small>' + referenciasPersonales[i].NombreCompleto + '</small></td><td><small>' + referenciasPersonales[i].LugarTrabajo + '</small></td><td><small>' + referenciasPersonales[i].TelefonoReferencia + '</small></td><td><small>' + referenciasPersonales[i].TiempoDeConocer + '</small></td><td><small>' + referenciasPersonales[i].DescripcionParentesco + '</small></td><td class="text-center">' + btnEliminarReferencia + btnEditarReferencia + '</td></tr>';
+                                templateReferenciasPersonales += '<tr><td class="pt-0 pb-0"><small>' + referenciasPersonales[i].NombreCompleto + '</small></td><td class="pt-0 pb-0"><small>' + referenciasPersonales[i].LugarTrabajo + '</small></td><td class="pt-0 pb-0 text-center"><small>' + referenciasPersonales[i].TelefonoReferencia + '</small></td><td class="pt-0 pb-0 text-center"><small>' + referenciasPersonales[i].TiempoDeConocer + '</small></td><td class="pt-0 pb-0"><small>' + referenciasPersonales[i].DescripcionParentesco + '</small></td><td class="text-center pt-0 pb-0">' + btnEliminarReferencia + btnEditarReferencia + '</td></tr>';
                             }
 
                             tblReferenciasPersonales.append(templateReferenciasPersonales);
@@ -658,8 +836,6 @@ function BuscarSolicitud() {
         $("#txtNoSolicitud").focus();
     }
 }
-
-
 
 
 function MensajeError(mensaje) {

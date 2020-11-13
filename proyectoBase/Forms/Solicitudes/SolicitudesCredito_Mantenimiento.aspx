@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Mantenimiento de solicitud</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <link href="/CSS/Estilos.css" rel="stylesheet" />
@@ -24,7 +24,7 @@
     </style>
 </head>
 <body>
-    <form runat="server">
+    <form id="frmPrincipal" runat="server" data-parsley-excluded="[disabled]">
         <div class="card h-100">
             <div class="card-header">
                 <div class="float-right p-1" id="Loader" style="display: none;">
@@ -103,37 +103,37 @@
                         <div class="tab-pane active bg-light" id="tabOpcionesCreditos" role="tabpanel">
                             <div class="form-group row justify-content-center mb-0">
                                 <div class="col-auto mt-2 mb-2 justify-content-center">
-                                    <button type="button" id="btnReiniciarResolucion" class="FormatoBotonesIconoCuadrado40 disabled" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
+                                    <button type="button" id="btnReiniciarResolucion" runat="server" class="FormatoBotonesIconoCuadrado40 disabled" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
                                         Cambiar Resolución
                                     </button>
-                                    <button type="button" id="btnReiniciarAnalisis" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
+                                    <button type="button" id="btnReiniciarAnalisis" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
                                         Reiniciar Analisis
                                     </button>
-                                    <button type="button" id="btnSolicitudDocumentos" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/delete_file_40px.png');">
+                                    <button type="button" id="btnSolicitudDocumentos" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/delete_file_40px.png');">
                                         Eliminar Docs
                                     </button>
-                                    <button type="button" id="btnReasignarVendedor" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/exchange_40px.png');">
+                                    <button type="button" id="btnReasignarVendedor" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/exchange_40px.png');">
                                         Reasignar Solicitud
                                     </button>
-                                    <button type="button" id="btnCondiciones" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/delete_document_40px.png');">
+                                    <button type="button" id="btnCondiciones" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/delete_document_40px.png');">
                                         Anular Condicion
                                     </button>
-                                    <button type="button" id="btnReiniciarValidacion" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
+                                    <button type="button" id="btnReiniciarValidacion" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
                                         Reiniciar Validación
                                     </button>
-                                    <button type="button" id="btnReferenciasPersonales" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/crowd_40px.png');">
+                                    <button type="button" id="btnReferenciasPersonales" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/crowd_40px.png');">
                                         Referencias Personales
                                     </button>
-                                    <button type="button" id="btnReiniciarCampo" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
+                                    <button type="button" id="btnReiniciarCampo" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
                                         Reiniciar Campo
                                     </button>
-                                    <button type="button" id="btnResolucionCampo" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/motorcycle_40px.png');">
+                                    <button type="button" id="btnResolucionCampo" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/motorcycle_40px.png');">
                                         Resolución Campo
                                     </button>
-                                    <button type="button" id="btnReiniciarReprogramacion" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
+                                    <button type="button" id="btnReiniciarReprogramacion" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
                                         Reiniciar Reprog.
                                     </button>
-                                    <button type="button" id="btnReasignarGestor" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/exchange_40px.png');">
+                                    <button type="button" id="btnReasignarGestor" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/exchange_40px.png');">
                                         Reasignar Gestor
                                     </button>
                                 </div>
@@ -434,7 +434,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <button type="button" id="btnAgregarReferencia" class="btn btn-info mb-1" disabled="disabled" title="Opción no disponible">Nuevo</button>
+                            <button type="button" id="btnAgregarReferencia" class="btn btn-info mb-1">Nuevo</button>
                             <div class="table-responsive">
                                 <table id="tblReferneciasPersonales" class="table table-condensed table-striped table-bordered">
                                     <thead>
@@ -508,13 +508,13 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoDomicilio"/>
+                            <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoDomicilio" />
                             <label class="form-check-label" for="defaultCheck1">
                                 Investigación del domicilio
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoTrabajo"/>
+                            <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoTrabajo" />
                             <label class="form-check-label" for="defaultCheck1">
                                 Investigación del trabajo
                             </label>
@@ -601,25 +601,25 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="cbValidacionInformacionPersonal"/>
+                            <input class="form-check-input" type="checkbox" value="" id="cbValidacionInformacionPersonal" />
                             <label class="form-check-label">
                                 Validación de información personal
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="cbValidacionInformacionLaboral"/>
+                            <input class="form-check-input" type="checkbox" value="" id="cbValidacionInformacionLaboral" />
                             <label class="form-check-label">
                                 Validación de información laboral
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="cbValidacionReferenciasPersonales"/>
+                            <input class="form-check-input" type="checkbox" value="" id="cbValidacionReferenciasPersonales" />
                             <label class="form-check-label">
                                 Validacion de referencias personales
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="cbValidacionDocumentos"/>
+                            <input class="form-check-input" type="checkbox" value="" id="cbValidacionDocumentos" />
                             <label class="form-check-label">
                                 Validación de documentación
                             </label>
@@ -627,12 +627,155 @@
                         <div class="form-group row">
                             <div class="col-12">
                                 <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesReiniciarAnalisis" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                                <textarea id="txtObservacionesReiniciarAnalisis" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="500" data-parsley-minlength="15" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button id="btnReiniciarAnalisisConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalAgregarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarReferenciaPersonalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header pb-1 pt-1">
+                        <h6 class="modal-title" id="modalAgregarReferenciaPersonalLabel">Agregar referencia personal</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Nombre completo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtNombreReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Telefono</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtTelefonoReferencia" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Tiempo de conocer</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlTiempoDeConocerReferencia" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" data-parsley-errors-container="#error-ddlTiempoDeConocerReferencia"></asp:DropDownList>
+                                <div id="error-ddlTiempoDeConocerReferencia"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Parentesco</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlParentescos" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" data-parsley-errors-container="#error-ddlParentescos"></asp:DropDownList>
+                                <div id="error-ddlParentescos"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtLugarTrabajoReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Observaciones</label>
+                                <textarea id="txtObservacionesNuevaReferencia" runat="server" class="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer pt-2 pb-2">
+                        <button id="btnAgregarReferenciaConfirmar" type="button" class="btn btn-primary waves-effect waves-light mr-1">
+                            Agregar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalEliminarReferenciaPersonal" class="modal fade" role="dialog" aria-labelledby="modalEliminarReferenciaPersonalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalEliminarReferenciaPersonalLabel">Eliminar referencia personal</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Observaciones</label>
+                                <textarea id="txtObservacionesEliminarReferenciaPersonal" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnEliminarReferenciaPersonalConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalEditarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalEditarReferenciaPersonalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header pb-1 pt-1">
+                        <h6 class="modal-title" id="modalEditarReferenciaPersonalLabel">Editar referencia personal</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Nombre completo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtNombreReferenciaPersonal_Editar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Telefono</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtTelefonoReferenciaPersonal_Editar" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Tiempo de conocer</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlTiempoDeConocerReferencia_Editar" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-errors-container="#error-ddlTiempoDeConocerReferencia_Editar"></asp:DropDownList>
+                                <div id="error-ddlTiempoDeConocerReferencia_Editar"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Parentesco</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlParentesco_Editar" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-errors-container="#error-ddlParentesco_Editar"></asp:DropDownList>
+                                <div id="error-ddlParentesco_Editar"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtLugarDeTrabajoReferencia_Editar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Observaciones</label>
+                                <textarea id="txtObservacionesEditarReferenciaPersonal" runat="server" class="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer pt-2 pb-2">
+                        <button id="btnEditarReferenciaConfirmar" type="button" class="btn btn-primary waves-effect waves-light mr-1">
                             Confirmar
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -651,7 +794,7 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Mantenimiento.js?202011121806235"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Mantenimiento.js?202011130949"></script>
     <script>
         $(document).ready(function () {
             $(".mascara-enteros").inputmask("decimal", {
