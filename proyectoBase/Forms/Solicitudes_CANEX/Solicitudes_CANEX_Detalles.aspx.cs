@@ -93,10 +93,10 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     if (estadoSolicitud == 2)
                                         CambiarEstadoAEnRevision(idSolicitudCanex);
 
-                                    lblTipoPrestamo.Text = sqlResultado["fcNombreProducto"].ToString();
-                                    LogoPrestamo.ImageUrl = "/Imagenes/" + logo;
-                                    spanNombreCliente.Text = sqlResultado["fcNombreCliente"].ToString();
-                                    spanIdentidadCliente.Text = identidadCliente;
+                                    lblProducto.Text = sqlResultado["fcNombreProducto"].ToString();
+                                    imgLogo.ImageUrl = "/Imagenes/" + logo;
+                                    lblNombreCliente.Text = sqlResultado["fcNombreCliente"].ToString();
+                                    lblIdentidadCliente.Text = identidadCliente;
                                     lblNoSolicitud.Text = sqlResultado["fiIDSolicitudCANEX"].ToString();
                                     lblNoCliente.Text = sqlResultado["fiIDCliente"].ToString();
                                     lblTipoSolicitud.Text = "Solicitud CANEX";
@@ -104,77 +104,74 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     lblAgencia.Text = sqlResultado["fcNombreAgencia"].ToString();
                                     lblEstadoSolicitud.Text = sqlResultado["fcEstadoSolicitud"].ToString();
                                     lblEstadoSolicitudModal.Text = sqlResultado["fcEstadoSolicitud"].ToString();
-                                    lblRtnCliente.Text = sqlResultado["fcRTN"].ToString();
-                                    lblNumeroTelefono.NavigateUrl = "tel:" + sqlResultado["fcTelefonoPrimario"].ToString();
-                                    lblNumeroTelefono.Text = sqlResultado["fcTelefonoPrimario"].ToString();
-                                    lblNumeroTelefonoAlternativo.NavigateUrl = "tel:" + sqlResultado["fcTelefonoAlternativo"].ToString();
-                                    lblNumeroTelefonoAlternativo.Text = sqlResultado["fcTelefonoAlternativo"].ToString();
-                                    lblNacionalidad.Text = sqlResultado["fcNacionalidadCliente"].ToString();
+                                    txtRTNCliente.Text = sqlResultado["fcRTN"].ToString();
+                                    txtTelefonoCliente.Text = sqlResultado["fcTelefonoPrimario"].ToString();
+                                    txtNumeroTelefonoAlternativo.Text = sqlResultado["fcTelefonoAlternativo"].ToString();
+                                    txtNacionalidad.Text = sqlResultado["fcNacionalidadCliente"].ToString();
 
                                     /* Calcular edad del cliente */
                                     var hoy = DateTime.Today;
                                     var edad = hoy.Year - fechaNacimientoCliente.Year;
 
                                     if (fechaNacimientoCliente.Date > hoy.AddYears(-edad)) edad--;
-                                    lblFechaNacimientoCliente.Text = fechaNacimientoCliente.ToString("MM/dd/yyyy");
+                                    txtFechaNacimientoCliente.Text = fechaNacimientoCliente.ToString("MM/dd/yyyy");
 
-                                    lblEdadCliente.Text = edad.ToString();
-                                    lblProfesionCliente.Text = sqlResultado["fcProfesionuOficio"].ToString();
-                                    lblSexoCliente.Text = sqlResultado["fcSexoCliente"].ToString();
-                                    lblEstadoCivilCliente.Text = sqlResultado["fcEstadoCivilCliente"].ToString();
-                                    lblViviendaCliente.Text = sqlResultado["fcTipoResidenciaCliente"].ToString();
-                                    lblTiempoResidirCliente.Text = "N/A";
-                                    lblDeptoCliente.Text = sqlResultado["fcDepartamentoDomicilio"].ToString();
-                                    lblMunicipioCliente.Text = sqlResultado["fcMunicipioDomicilio"].ToString();
-                                    lblCiudadCliente.Text = sqlResultado["fcCiudadDomicilio"].ToString();
-                                    lblBarrioColoniaCliente.Text = sqlResultado["fcBarrioColoniaDomicilio"].ToString();
-                                    lblDireccionDetalladaCliente.Text = sqlResultado["fcDireccionDetallada"].ToString();
-                                    lblReferenciaDomicilioCliente.Text = sqlResultado["fcDireccionReferencias"].ToString();
+                                    txtEdadCliente.Text = edad.ToString();
+                                    txtProfesionCliente.Text = sqlResultado["fcProfesionuOficio"].ToString();
+                                    txtSexoCliente.Text = sqlResultado["fcSexoCliente"].ToString();
+                                    txtEstadoCivilCliente.Text = sqlResultado["fcEstadoCivilCliente"].ToString();
+                                    txtVivienda.Text = sqlResultado["fcTipoResidenciaCliente"].ToString();
+                                    txtTiempoDeResidir.Text = sqlResultado["fcTiempoDeResidir"].ToString();
+                                    //txtTiempoDeResidir.Text = "N/A";
+                                    txtDepartamentoDomicilio.Text = sqlResultado["fcDepartamentoDomicilio"].ToString();
+                                    txtMunicipioDomicilio.Text = sqlResultado["fcMunicipioDomicilio"].ToString();
+                                    txtCiudadPobladoDomicilio.Text = sqlResultado["fcCiudadDomicilio"].ToString();
+                                    txtBarrioColoniaDomicilio.Text = sqlResultado["fcBarrioColoniaDomicilio"].ToString();
+                                    txtDireccionDetalladaDomicilio.InnerText = sqlResultado["fcDireccionDetallada"].ToString();
+                                    txtDireccionDetalladaDomicilio.InnerText = sqlResultado["fcDireccionReferencias"].ToString();
                                     string nombreCompletoConyugue = sqlResultado["fcPrimerNombreConyugue"].ToString() + sqlResultado["fcSegundoNombreConyugue"].ToString() + sqlResultado["fcPrimerApellidoConyugue"].ToString() + sqlResultado["fcSegundoApellidoConyugue"].ToString();
                                     if (string.IsNullOrEmpty(sqlResultado["fcPrimerNombreConyugue"].ToString()))
                                     {
-                                        divConyugueCliente.Visible = false;
+                                        divPanelInformacionConyugal.Visible = false;
                                     }
                                     else
                                     {
-                                        lblNombreConyugue.Text = nombreCompletoConyugue.Replace(" ", " ");
+                                        txtNombreDelConyugue.Text = nombreCompletoConyugue.Replace("  ", " ");
                                         var fechaNacimientoConyugue = (DateTime)sqlResultado["fdFechaNacimientoConyugue"];
-                                        lblFechaNacimientoConygue.Text = fechaNacimientoConyugue.ToString("MM/dd/yyyy");
-                                        lblTelefonoConyugue.NavigateUrl = "tel:" + sqlResultado["fcTelefonoConyugue"].ToString();
-                                        lblTelefonoConyugue.Text = sqlResultado["fcTelefonoConyugue"].ToString();
-                                        lblOcupacionConyugue.Text = sqlResultado["fcOcupacionConyugue"].ToString();
-                                        lblProfesionOficioConyugue.Text = sqlResultado["fcProfesionuOficioConyugue"].ToString();
-                                        lblPuestoAsignadoConyugue.Text = sqlResultado["fcPuestoConyugue"].ToString();
-                                        lblLugarTrabajoConyugue.Text = sqlResultado["fcNombreEmpresaConyugue"].ToString();
+                                        txtFechaNacimientoConyugue.Text = fechaNacimientoConyugue.ToString("MM/dd/yyyy");
+                                        txtTelefonoConyugue.Text = sqlResultado["fcTelefonoConyugue"].ToString();
+                                        txtOcupacionConyugue.Text = sqlResultado["fcOcupacionConyugue"].ToString();
+                                        txtProfesionOficioConyugue.Text = sqlResultado["fcProfesionuOficioConyugue"].ToString();
+                                        txtPuestoAsignadoConyugue.Text = sqlResultado["fcPuestoConyugue"].ToString();
+                                        txtLugarTrabajoConyugue.Text = sqlResultado["fcNombreEmpresaConyugue"].ToString();
                                     }
 
-                                    lblNombreTrabajoCliente.Text = sqlResultado["fcNombreEmpresa"].ToString();
-                                    lblIngresosMensualesCliente.Text = sqlResultado["fnIngresoMensualBase"].ToString();
+                                    txtNombreTrabajoCliente.Text = sqlResultado["fcNombreEmpresa"].ToString();
+                                    txtIngresosMensuales.Text = sqlResultado["fnIngresoMensualBase"].ToString();
 
                                     if (esComisionista == 0)
                                     {
-                                        lblComisionesClienteTitulo.Visible = false;
-                                        lblComisionesCliente.Visible = false;
+                                        divComisionesCliente.Visible = false;
                                     }
                                     else
-                                        lblComisionesCliente.Text = sqlResultado["fnIngresoMensualComisiones"].ToString();
-                                    lblPuestoAsignadoCliente.Text = sqlResultado["fcPuesto"].ToString();
-                                    lblTelefonoEmpresaCliente.NavigateUrl = "tel:" + sqlResultado["fcTelefonoEmpresa"].ToString();
-                                    lblTelefonoEmpresaCliente.Text = sqlResultado["fcTelefonoEmpresa"].ToString();
-                                    lblExtension.Text = sqlResultado["fcExtension"].ToString();
-                                    lblDeptoEmpresa.Text = sqlResultado["fcDepartamentoEmpresa"].ToString();
-                                    lblMunicipioEmpresa.Text = sqlResultado["fcMunicipioEmpresa"].ToString();
-                                    lblCiudadEmpresa.Text = sqlResultado["fcCiudadEmpresa"].ToString();
-                                    lblBarrioColoniaEmpresa.Text = sqlResultado["fcBarrioColoniaEmpresa"].ToString();
-                                    lblDireccionDetalladaEmpresa.Text = sqlResultado["fcDireccionDetalladaEmpresa"].ToString();
-                                    lblReferenciaUbicacionEmpresa.Text = sqlResultado["fcDireccionReferenciasEmpresa"].ToString();
+                                        txtComisionesCliente.Text = sqlResultado["fnIngresoMensualComisiones"].ToString();
+                                    txtPuestoAsignado.Text = sqlResultado["fcPuesto"].ToString();
+                                    txtTelefonoEmpresa.Text = sqlResultado["fcTelefonoEmpresa"].ToString();
+                                    txtExtensionCliente.Text = sqlResultado["fcExtension"].ToString();
+                                    txtExtensionRecursosHumanos.Text = sqlResultado["fcExtension"].ToString();
+                                    txtDepartamentoEmpresa.Text = sqlResultado["fcDepartamentoEmpresa"].ToString();
+                                    txtMunicipioEmpresa.Text = sqlResultado["fcMunicipioEmpresa"].ToString();
+                                    txtCiudadPobladoEmpresa.Text = sqlResultado["fcCiudadEmpresa"].ToString();
+                                    txtBarrioColoniaEmpresa.Text = sqlResultado["fcBarrioColoniaEmpresa"].ToString();
+                                    txtDireccionDetalladaEmpresa.InnerText = sqlResultado["fcDireccionDetalladaEmpresa"].ToString();
+                                    txtReferenciasDomicilio.InnerText = sqlResultado["fcDireccionReferenciasEmpresa"].ToString();
 
                                     /* Informacion del préstamo requerido */
-                                    lblValorGlobal.Text = ((decimal)sqlResultado["fnValorGlobal"]).ToString("N");
-                                    lblValorPrima.Text = ((decimal)sqlResultado["fnValorPrima"]).ToString("N");
-                                    lblPlazoTitulo.Text = "Plazo " + sqlResultado["fcTipodeCuota"].ToString();
-                                    lblPlazo.Text = sqlResultado["fcPlazo"].ToString();
-                                    lblMontoFinanciar.Text = ((decimal)sqlResultado["fnValorPrestamo"]).ToString("N");
+                                    txtValorGlobal.Text = ((decimal)sqlResultado["fnValorGlobal"]).ToString("N");
+                                    txtValorPrima.Text = ((decimal)sqlResultado["fnValorPrima"]).ToString("N");
+                                    lblPlazoTitulo.InnerText = "Plazo " + sqlResultado["fcTipodeCuota"].ToString();
+                                    txtPlazoSeleccionado.Text = sqlResultado["fcPlazo"].ToString();
+                                    txtMontoAFinanciar.Text = ((decimal)sqlResultado["fnValorPrestamo"]).ToString("N");
 
                                     /* Habilitar/Inhabilitar botones de acciones */
                                     var estadoRechazada = 5;
@@ -273,11 +270,11 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     var IngresosReales = (decimal)sqlResultado["fnIngresos"];
                                     var CapacidadPagoMensual = decimal.Parse(sqlResultado["fnCapacidadDisponible"].ToString());
 
-                                    lblIngresosPrecalificado.Text = IngresosReales.ToString("N");
-                                    lblObligacionesPrecalificado.Text = ObligacionesPrecalificado.ToString("N");
-                                    lblDisponiblePrecalificado.Text = CapacidadPagoMensual.ToString("N");
-                                    lblCapacidadPagoMensual.Text = CapacidadPagoMensual.ToString("N");
-                                    lblCapacidadPagoQuincenal.Text = (CapacidadPagoMensual / 2).ToString("N");
+                                    txtIngresosPrecalificado.Text = IngresosReales.ToString("N");
+                                    txtObligacionesPrecalificado.Text = ObligacionesPrecalificado.ToString("N");
+                                    txtDisponiblePrecalificado.Text = CapacidadPagoMensual.ToString("N");
+                                    txtCapacidadDePagoMensual.Text = CapacidadPagoMensual.ToString("N");
+                                    txtCapacidadDePagoQuincenal.Text = (CapacidadPagoMensual / 2).ToString("N");
                                 }
                             }
                         }

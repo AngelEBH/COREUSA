@@ -517,10 +517,12 @@
                                 en las oficinas, agencias, sucursales y ventanillas de <b>PRESTADITO S.A. de C.V.</b>.
 
                                 La cantidad consignada en este PAGARE devengará, a partir de esta fecha, una tasa de interés fluctuante del
-                                <asp:Label runat="server" ID="lblPorcentajeInteresFluctuante_Pagare"></asp:Label>% PORCIENTO MENSUAL,
+                                <asp:Label runat="server" ID="lblPorcentajeInteresFluctuante_Pagare"></asp:Label>%
+                                PORCIENTO MENSUAL,
                                 sobre el saldo total de la deuda, a pagar mensualmente. En caso de mora, que se producirá por la falta de pago al vencimiento tanto del capital o de los intereses,
                                 dará derecho a <b>PRESTADITO S.A. de C.V.</b> a exigir el pago de intereses moratorios del
-                                <asp:Label runat="server" ID="lblInteresesMoratorios_Pagare"></asp:Label>% PORCIENTO MENSUAL;
+                                <asp:Label runat="server" ID="lblInteresesMoratorios_Pagare"></asp:Label>%
+                                PORCIENTO MENSUAL;
                                 a su vez, en caso de ejecución legal de la presente obligación, me someto a la jurisdicción que establezca <b>PRESTADITO S.A. de C.V.</b>,
                                 quedando incorporadas en este documento todas las disposiciones del Código de Comercio.
                                 En fe de lo cual, firmo (amos) en la ciudad de 
