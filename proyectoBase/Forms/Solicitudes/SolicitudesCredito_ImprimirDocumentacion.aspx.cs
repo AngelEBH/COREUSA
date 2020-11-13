@@ -13,11 +13,15 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     public string pcIDSolicitud = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
-    public string Departamento_Firma { get; set; }
-    public string Ciudad_Firma { get; set; }
-    public string Dias_Firma { get; set; }
-    public string Mes_Firma { get; set; }
-    public string Anio_Firma { get; set; }
+    public string DepartamentoFirma { get; set; }
+    public string CiudadFirma { get; set; }
+    public string DiasFirma { get; set; }
+    public string MesFirma { get; set; }
+    public string AnioFirma { get; set; }
+
+    public string DiaPrimerPago { get; set; }
+    public string MesPrimerPago { get; set; }
+    public string AnioPrimerPago { get; set; }
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -27,9 +31,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             {
                 /* Captura de parametros y desencriptado de cadena */
                 var lcURL = Request.Url.ToString();
-                int liParamStart = lcURL.IndexOf("?");
+                var liParamStart = lcURL.IndexOf("?");
+                var lcParametros = string.Empty;
 
-                string lcParametros;
                 if (liParamStart > 0)
                 {
                     lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
@@ -49,15 +53,32 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL") ?? "";
-                    CargarInformacion();
 
                     var hoy = DateTime.Today;
 
-                    Departamento_Firma = "CORTES";
-                    Ciudad_Firma = "SAN PEDRO SULA";
-                    Dias_Firma = hoy.Day.ToString();
-                    Mes_Firma = hoy.ToString("MMMM");
-                    Anio_Firma = hoy.Year.ToString();
+                    DepartamentoFirma = "CORTES";
+                    CiudadFirma = "SAN PEDRO SULA";
+                    DiasFirma = hoy.Day.ToString();
+                    MesFirma = hoy.ToString("MMMM");
+                    AnioFirma = hoy.Year.ToString();
+
+                    /* Determinar fecha del primer pago */
+                    MesPrimerPago = hoy.AddMonths(1).ToString("MMMM");
+                    AnioPrimerPago = hoy.AddMonths(1).Year.ToString();
+
+                    if (hoy.Day >= 6 && hoy.Day <= 25)
+                    {
+                        DiaPrimerPago = "15";
+                    }
+                    else if (hoy.Day >= 6 && hoy.Day <= 25)
+                    {
+                        var fechaPrimerPago = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
+                        var ultimoDiaDelMes = fechaPrimerPago.Day;
+
+                        DiaPrimerPago = ultimoDiaDelMes.ToString();
+                    }
+
+                    CargarInformacion();
                 }
             }
             catch (Exception ex)
@@ -112,7 +133,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var valorCuota = sqlResultado["fiCuotaFinal"].ToString();
                             var varloGarantia = sqlResultado["fnValorGarantia"].ToString();
                             var valorPrima = sqlResultado["fnValorPrima"].ToString();
-
 
                             lblIdSolicitud.InnerText = pcIDSolicitud;
                             txtNombreCliente.Text = nombreCliente;
@@ -212,6 +232,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblFrecuenciaPago_Contrato.Text = tipoDePlazo;
                                         lblValorCuotaPalabras_Contrato.Text = ConvertirCantidadALetras("0"); // pendiente
                                         lblValorCuota_Contrato.Text = string.Format("{0:#,###0.00}", Convert.ToDecimal("0"));
+                                        lblNombreFirma_Contrato.Text = nombreCliente;
+                                        lblIdentidadFirma_Contrato.Text = identidad;
 
                                         /* Pagare */
                                         lblMontoTitulo_Pagare.Text = "L. " + string.Format("{0:#,###0.00}", Convert.ToDecimal(montoFinalFinanciar));
@@ -225,6 +247,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblInteresesMoratorios_Pagare.Text = "4.52";
                                         lblNombreFirma_Pagare.Text = nombreCliente;
                                         lblIdentidadFirma_Pagare.Text = identidad;
+                                        lblDiaPrimerPago_Pagare.Text = DiaPrimerPago;
+                                        lblMesPrimerPago_Pagare.Text = MesPrimerPago;
+                                        lblAnioPrimerPago_Pagare.Text = AnioPrimerPago;
 
                                         /* Compromiso legal */
                                         lblNombreCliente_CompromisoLegal.Text = nombreCliente;
@@ -273,7 +298,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblColor_Traspaso.Text = color;
                                         lblSerieChasis_Traspaso.Text = serieChasis;
                                         lblMatricula_Traspaso.Text = matricula;
-                                        lblGarantiaUsada_Traspaso.Text = Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" : "usado";
+                                        lblGarantiaUsada_Traspaso.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
                                     }
 
                                     sqlResultado.NextResult();

@@ -144,7 +144,7 @@
                             <h6 class="font-weight-bold pl-3">Historial de mantenimientos</h6>
 
                             <div class="col-12 justify-content-center table-responsive">
-                                <table class="table table-condensed table-striped mb-0" id="tblHistorialMantenimiento">
+                                <table class="table tabla-compacta table-striped mb-0" id="tblHistorialMantenimiento">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Fecha</th>
@@ -311,7 +311,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <table id="tblCondiciones" class="table table-condensed table-striped table-bordered">
+                            <table id="tblCondiciones" class="table tabla-compacta table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Tipo Condición</th>
@@ -374,7 +374,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <table id="tblDocumenacionSolicitud" class="table table-condensed table-striped table-bordered">
+                            <table id="tblDocumenacionSolicitud" class="table tabla-compacta table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Tipo de documento</th>
@@ -436,7 +436,7 @@
                         <div class="form-group">
                             <button type="button" id="btnAgregarReferencia" class="btn btn-info mb-1">Nuevo</button>
                             <div class="table-responsive">
-                                <table id="tblReferneciasPersonales" class="table table-condensed table-striped table-bordered">
+                                <table id="tblReferneciasPersonales" class="table tabla-compacta table-striped table-bordered">
                                     <thead>
                                         <tr>
                                             <th>Nombre completo</th>

@@ -757,7 +757,7 @@ function BuscarSolicitud() {
 
                                 btnEliminarDocumento = '<button id="btnEliminarDocumento" data-id="' + documentos[i].IdSolicitudDocumento + '" class="btn btn-sm btn-danger mb-0" type="button" title="Eliminar documento"><i class="far fa-trash-alt"></i></button>';
 
-                                templateDocumentos += '<tr><td>' + documentos[i].DescripcionTipoDocumento + '</td><td>' + documentos[i].NombreArchivo + '</td><td><a href="' + documentos[i].URLArchivo + '" target="_blank"> Abrir</a></td><td class="text-center">' + btnEliminarDocumento + '</td></tr>';
+                                templateDocumentos += '<tr><td>' + documentos[i].DescripcionTipoDocumento + '</td><td>' + documentos[i].NombreArchivo + '</td><td class="text-center"><a href="' + documentos[i].URLArchivo + '" target="_blank">Abrir</a></td><td class="text-center">' + btnEliminarDocumento + '</td></tr>';
                             }
 
                             tblDocumentos.append(templateDocumentos);

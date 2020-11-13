@@ -751,6 +751,33 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblMontoDigitos_Pagare;
 
     /// <summary>
+    /// Control lblDiaPrimerPago_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblDiaPrimerPago_Pagare;
+
+    /// <summary>
+    /// Control lblMesPrimerPago_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMesPrimerPago_Pagare;
+
+    /// <summary>
+    /// Control lblAnioPrimerPago_Pagare.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblAnioPrimerPago_Pagare;
+
+    /// <summary>
     /// Control lblPorcentajeInteresFluctuante_Pagare.
     /// </summary>
     /// <remarks>
