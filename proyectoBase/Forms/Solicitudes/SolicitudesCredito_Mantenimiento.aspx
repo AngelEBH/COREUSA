@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Mantenimiento de solicitud</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <link href="/CSS/Estilos.css" rel="stylesheet" />
@@ -651,7 +651,7 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Mantenimiento.js"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Mantenimiento.js?202011121806235"></script>
     <script>
         $(document).ready(function () {
             $(".mascara-enteros").inputmask("decimal", {
