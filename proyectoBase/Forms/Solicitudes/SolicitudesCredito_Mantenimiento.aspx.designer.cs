@@ -130,6 +130,15 @@ public partial class SolicitudesCredito_Mantenimiento
     protected global::System.Web.UI.WebControls.Label lblMensaje;
 
     /// <summary>
+    /// Control txtObservacionesReiniciarResolucionSolicitud.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesReiniciarResolucionSolicitud;
+
+    /// <summary>
     /// Control ddlResolucionCampo.
     /// </summary>
     /// <remarks>
@@ -146,4 +155,112 @@ public partial class SolicitudesCredito_Mantenimiento
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacioneResolucionCampo;
+
+    /// <summary>
+    /// Control ddlGestores.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlGestores;
+
+    /// <summary>
+    /// Control txtObservacionAsignarGestor.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionAsignarGestor;
+
+    /// <summary>
+    /// Control ddlVendedores.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlVendedores;
+
+    /// <summary>
+    /// Control txtObservacionesReasignarVendedor.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesReasignarVendedor;
+
+    /// <summary>
+    /// Control txtObservacionesAnularCondicion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesAnularCondicion;
+
+    /// <summary>
+    /// Control txtObservacionesEliminarDocumento.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesEliminarDocumento;
+
+    /// <summary>
+    /// Control ddlCatalogoResoluciones.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlCatalogoResoluciones;
+
+    /// <summary>
+    /// Control txtObservacionesCambiarResolucionSolicitud.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesCambiarResolucionSolicitud;
+
+    /// <summary>
+    /// Control txtObservacionesReiniciarCampo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesReiniciarCampo;
+
+    /// <summary>
+    /// Control txtObservacionesReiniciarReprogramacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesReiniciarReprogramacion;
+
+    /// <summary>
+    /// Control txtObservacionesReiniciarValidacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesReiniciarValidacion;
+
+    /// <summary>
+    /// Control txtObservacionesReiniciarAnalisis.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesReiniciarAnalisis;
 }

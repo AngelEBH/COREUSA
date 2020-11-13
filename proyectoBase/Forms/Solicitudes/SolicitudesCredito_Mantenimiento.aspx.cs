@@ -5,12 +5,13 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web;
 using System.Web.Services;
+using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
 {
     public string pcIDUsuario = "";
     public string pcIDApp = "";
-    public string pcSesionID = "";
+    public string pcIDSesion = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
@@ -39,16 +40,97 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    pcSesionID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                    CargarListados();
                 }
             }
             catch (Exception ex)
             {
                 ex.Message.ToString();
             }
+        }
+    }
+
+    public void CargarListados()
+    {
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitudes_ListadoGestores", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlGestores.Items.Clear();
+                        ddlGestores.Items.Add(new ListItem("Seleccionar", ""));
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlGestores.Items.Add(new ListItem(sqlResultado["fcNombreCorto"].ToString(), sqlResultado["fiIDUsuario"].ToString()));
+                            }
+                        }
+                    }
+                } // using command listado gestores
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_ListadoVendedores", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlVendedores.Items.Clear();
+                        ddlVendedores.Items.Add(new ListItem("Seleccionar", ""));
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlVendedores.Items.Add(new ListItem(sqlResultado["fcNombreCorto"].ToString(), sqlResultado["fiIDUsuario"].ToString()));
+                            }
+                        }
+                    }
+                } // using commnado listado de vendedores
+
+                using (var sqlComando = new SqlCommand("sp_CredCatalogo_SolicitudEstados", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlCatalogoResoluciones.Items.Clear();
+                        ddlCatalogoResoluciones.Items.Add(new ListItem("Seleccionar", ""));
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlCatalogoResoluciones.Items.Add(new ListItem(sqlResultado["fcEstadoSolicitud"].ToString(), sqlResultado["fiIDEstadoSolicitud"].ToString()));
+                            }
+                        }
+                    }
+                } // using cammnd catalogo estados solicitudes
+            } // using connection
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
         }
     }
 
@@ -251,7 +333,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static bool AsignarSolicitud(int idSolicitud, int idGestor, string dataCrypt)
+    public static bool AsignarGestorSolicitud(int idSolicitud, int idGestor, string observaciones, string dataCrypt)
     {
         var DSC = new DSCore.DataCrypt();
         var resultado = false;
@@ -266,11 +348,200 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_AsignarGestor", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ReasignarGestor", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                     sqlComando.Parameters.AddWithValue("@piIDGestor", idGestor);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool ReasignarVendedorSolicitud(int idSolicitud, int idUsuarioAsignado, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ReasignarSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuarioAsignado", idUsuarioAsignado);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool AnularCondicion(int idSolicitud, int idSolicitudCondicion, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_AnularCondicion", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitudCondicion", idSolicitudCondicion);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool EliminarDocumento(int idSolicitud, int idSolicitudDocumento, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_EliminarDocumento", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitudDocumento", idSolicitudDocumento);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool CambiarResolucionSolicitud(int idSolicitud, int idNuevaResolucion, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_CambiarResolucion", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piNuevaResolucion", idNuevaResolucion);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -297,6 +568,196 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     }
 
 
+    [WebMethod]
+    public static bool ReiniciarCampo(int idSolicitud, bool reiniciarInvestigacionDomicilio, bool reiniciarInvestigacionTrabajo, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ReiniciarCampo", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piReiniciarDomicilio", reiniciarInvestigacionDomicilio);
+                    sqlComando.Parameters.AddWithValue("@piReiniciarTrabajo", reiniciarInvestigacionTrabajo);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool ReiniciarReprogramacion(int idSolicitud, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ReiniciarReprogramacion", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool ReiniciarValidacion(int idSolicitud, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ReiniciarPasoFinal", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+
+    [WebMethod]
+    public static bool ReiniciarAnalisis(int idSolicitud, bool reiniciarInfoPersonal, bool reiniciarInfoLaboral, bool reiniciarReferencias, bool reiniciarDocumentacion, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ReiniciarAnalisis", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piReiniciarInformacionPersonal", reiniciarInfoPersonal);
+                    sqlComando.Parameters.AddWithValue("@piReiniciarInformacionLaboral", reiniciarInfoLaboral);
+                    sqlComando.Parameters.AddWithValue("@piReiniciarReferenciasPersonales", reiniciarReferencias);
+                    sqlComando.Parameters.AddWithValue("@piReiniciarDocumentacion", reiniciarDocumentacion);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
 
     public static Uri DesencriptarURL(string URL)
     {

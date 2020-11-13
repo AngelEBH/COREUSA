@@ -363,7 +363,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                     resultado.ResultadoExitoso = true;
                     resultado.MensajeResultado = "La información de la garantía se actualizó correctamente";
 
-                    tran.Commit();
+                    //tran.Commit();
                 }
                 catch (Exception ex)
                 {
