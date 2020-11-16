@@ -334,12 +334,12 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             sqlResultado.NextResult();
                             sqlResultado.Read();
 
-                            txtIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
-                            txtRtnCliente.Text = sqlResultado["fcRTN"].ToString();
-                            txtPrimerNombre.Text = sqlResultado["fcPrimerNombreCliente"].ToString();
-                            txtSegundoNombre.Text = sqlResultado["fcSegundoNombreCliente"].ToString();
-                            txtPrimerApellido.Text = sqlResultado["fcPrimerApellidoCliente"].ToString();
-                            txtSegundoApellido.Text = sqlResultado["fcSegundoApellidoCliente"].ToString();
+                            //txtIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
+                            //txtRtnCliente.Text = sqlResultado["fcRTN"].ToString();
+                            //txtPrimerNombre.Text = sqlResultado["fcPrimerNombreCliente"].ToString();
+                            //txtSegundoNombre.Text = sqlResultado["fcSegundoNombreCliente"].ToString();
+                            //txtPrimerApellido.Text = sqlResultado["fcPrimerApellidoCliente"].ToString();
+                            //txtSegundoApellido.Text = sqlResultado["fcSegundoApellidoCliente"].ToString();
                             ddlNacionalidad.SelectedValue = sqlResultado["fiNacionalidadCliente"].ToString();
                             txtCorreoElectronico.Text = sqlResultado["fcCorreoElectronicoCliente"].ToString();
                             txtProfesion.Text = sqlResultado["fcProfesionOficioCliente"].ToString();
@@ -432,7 +432,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_ObtenerInformacionPorIdentidad", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", pcID);
+                    //sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", pcID);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -446,12 +446,12 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         while (reader.Read())
                         {
 
-                            txtIdentidadCliente.Text = reader["fcIdentidadCliente"].ToString();
-                            txtRtnCliente.Text = reader["fcRTN"].ToString();
-                            txtPrimerNombre.Text = reader["fcPrimerNombreCliente"].ToString();
-                            txtSegundoNombre.Text = reader["fcSegundoNombreCliente"].ToString();
-                            txtPrimerApellido.Text = reader["fcPrimerApellidoCliente"].ToString();
-                            txtSegundoApellido.Text = reader["fcSegundoApellidoCliente"].ToString();
+                            //txtIdentidadCliente.Text = reader["fcIdentidadCliente"].ToString();
+                            //txtRtnCliente.Text = reader["fcRTN"].ToString();
+                            //txtPrimerNombre.Text = reader["fcPrimerNombreCliente"].ToString();
+                            //txtSegundoNombre.Text = reader["fcSegundoNombreCliente"].ToString();
+                            //txtPrimerApellido.Text = reader["fcPrimerApellidoCliente"].ToString();
+                            //txtSegundoApellido.Text = reader["fcSegundoApellidoCliente"].ToString();
                             ddlNacionalidad.SelectedValue = reader["fiNacionalidadCliente"].ToString();
                             txtCorreoElectronico.Text = reader["fcCorreoElectronicoCliente"].ToString();
                             txtProfesion.Text = reader["fcProfesionOficioCliente"].ToString();
