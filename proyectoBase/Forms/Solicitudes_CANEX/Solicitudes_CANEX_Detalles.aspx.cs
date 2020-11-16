@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.HtmlControls;
@@ -16,8 +17,9 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 {
     string pcEncriptado = "";
     string pcIDUsuario = "";
-    string pcIDSesion = "1";
+    string pcIDSesion = "";
     string pcIDApp = "";
+
     public short IdPais = 0;
     public short IdSocio = 0;
     public short IdAgencia = 0;
@@ -51,10 +53,12 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                    idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                    idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+
                     var idProducto = 0;
                     var estadoSolicitud = 0m;
                     var identidadCliente = string.Empty;
@@ -68,9 +72,10 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 while (sqlResultado.Read())
@@ -91,10 +96,13 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 
                                     /* Verificar si la solicitud estaba en estado "enviada" y hay que pasarla a estatus "en revision" */
                                     if (estadoSolicitud == 2)
+                                    {
                                         CambiarEstadoAEnRevision(idSolicitudCanex);
+                                    }
 
-                                    lblProducto.Text = sqlResultado["fcNombreProducto"].ToString();
+                                    /* Información principal */
                                     imgLogo.ImageUrl = "/Imagenes/" + logo;
+                                    lblProducto.Text = sqlResultado["fcNombreProducto"].ToString();
                                     lblNombreCliente.Text = sqlResultado["fcNombreCliente"].ToString();
                                     lblIdentidadCliente.Text = identidadCliente;
                                     lblNoSolicitud.Text = sqlResultado["fiIDSolicitudCANEX"].ToString();
@@ -104,10 +112,11 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     lblAgencia.Text = sqlResultado["fcNombreAgencia"].ToString();
                                     lblEstadoSolicitud.Text = sqlResultado["fcEstadoSolicitud"].ToString();
                                     lblEstadoSolicitudModal.Text = sqlResultado["fcEstadoSolicitud"].ToString();
+
+                                    /* Información personal */
                                     txtRTNCliente.Text = sqlResultado["fcRTN"].ToString();
                                     txtTelefonoCliente.Text = sqlResultado["fcTelefonoPrimario"].ToString();
                                     txtNumeroTelefonoAlternativo.Text = sqlResultado["fcTelefonoAlternativo"].ToString();
-                                    txtNacionalidad.Text = sqlResultado["fcNacionalidadCliente"].ToString();
 
                                     /* Calcular edad del cliente */
                                     var hoy = DateTime.Today;
@@ -116,37 +125,46 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     if (fechaNacimientoCliente.Date > hoy.AddYears(-edad)) edad--;
                                     txtFechaNacimientoCliente.Text = fechaNacimientoCliente.ToString("MM/dd/yyyy");
 
-                                    txtEdadCliente.Text = edad.ToString();
+                                    txtEdadCliente.Text = edad.ToString() + " " + "años";
+                                    txtNacionalidad.Text = sqlResultado["fcNacionalidadCliente"].ToString();
                                     txtProfesionCliente.Text = sqlResultado["fcProfesionuOficio"].ToString();
                                     txtSexoCliente.Text = sqlResultado["fcSexoCliente"].ToString();
                                     txtEstadoCivilCliente.Text = sqlResultado["fcEstadoCivilCliente"].ToString();
+
+                                    /* Información del domicilio */
                                     txtVivienda.Text = sqlResultado["fcTipoResidenciaCliente"].ToString();
                                     txtTiempoDeResidir.Text = sqlResultado["fcTiempoDeResidir"].ToString();
-                                    //txtTiempoDeResidir.Text = "N/A";
                                     txtDepartamentoDomicilio.Text = sqlResultado["fcDepartamentoDomicilio"].ToString();
                                     txtMunicipioDomicilio.Text = sqlResultado["fcMunicipioDomicilio"].ToString();
                                     txtCiudadPobladoDomicilio.Text = sqlResultado["fcCiudadDomicilio"].ToString();
                                     txtBarrioColoniaDomicilio.Text = sqlResultado["fcBarrioColoniaDomicilio"].ToString();
                                     txtDireccionDetalladaDomicilio.InnerText = sqlResultado["fcDireccionDetallada"].ToString();
-                                    txtDireccionDetalladaDomicilio.InnerText = sqlResultado["fcDireccionReferencias"].ToString();
+                                    txtReferenciasDomicilio.InnerText = sqlResultado["fcDireccionReferencias"].ToString();
+
+                                    /* Información conyugal */
                                     string nombreCompletoConyugue = sqlResultado["fcPrimerNombreConyugue"].ToString() + sqlResultado["fcSegundoNombreConyugue"].ToString() + sqlResultado["fcPrimerApellidoConyugue"].ToString() + sqlResultado["fcSegundoApellidoConyugue"].ToString();
+
                                     if (string.IsNullOrEmpty(sqlResultado["fcPrimerNombreConyugue"].ToString()))
                                     {
                                         divPanelInformacionConyugal.Visible = false;
                                     }
                                     else
                                     {
-                                        txtNombreDelConyugue.Text = nombreCompletoConyugue.Replace("  ", " ");
                                         var fechaNacimientoConyugue = (DateTime)sqlResultado["fdFechaNacimientoConyugue"];
+
+                                        txtNombreDelConyugue.Text = nombreCompletoConyugue.Replace("  ", " ");
+                                        txtIdentidadConyugue.Text = sqlResultado["fcIdentidadConyugue"].ToString();
                                         txtFechaNacimientoConyugue.Text = fechaNacimientoConyugue.ToString("MM/dd/yyyy");
                                         txtTelefonoConyugue.Text = sqlResultado["fcTelefonoConyugue"].ToString();
-                                        txtOcupacionConyugue.Text = sqlResultado["fcOcupacionConyugue"].ToString();
                                         txtProfesionOficioConyugue.Text = sqlResultado["fcProfesionuOficioConyugue"].ToString();
-                                        txtPuestoAsignadoConyugue.Text = sqlResultado["fcPuestoConyugue"].ToString();
+                                        txtOcupacionConyugue.Text = sqlResultado["fcOcupacionConyugue"].ToString();
                                         txtLugarTrabajoConyugue.Text = sqlResultado["fcNombreEmpresaConyugue"].ToString();
+                                        txtPuestoAsignadoConyugue.Text = sqlResultado["fcPuestoConyugue"].ToString();
                                     }
 
+                                    /* Información laboral */
                                     txtNombreTrabajoCliente.Text = sqlResultado["fcNombreEmpresa"].ToString();
+                                    txtPuestoAsignado.Text = sqlResultado["fcPuesto"].ToString();
                                     txtIngresosMensuales.Text = sqlResultado["fnIngresoMensualBase"].ToString();
 
                                     if (esComisionista == 0)
@@ -154,17 +172,25 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                         divComisionesCliente.Visible = false;
                                     }
                                     else
+                                    {
                                         txtComisionesCliente.Text = sqlResultado["fnIngresoMensualComisiones"].ToString();
-                                    txtPuestoAsignado.Text = sqlResultado["fcPuesto"].ToString();
+                                    }
+
+                                    int arraigoLaboralMeses = GetMonthDifference(hoy, DateTime.Parse(sqlResultado["fdFechaIngresoEmpresa"].ToString()));
+
+                                    txtFechaIngreso.Text = DateTime.Parse(sqlResultado["fdFechaIngresoEmpresa"].ToString()).ToString("MM/dd/yyyy");
+                                    txtArraigoLaboral.Text = arraigoLaboralMeses.ToString() + " meses";
                                     txtTelefonoEmpresa.Text = sqlResultado["fcTelefonoEmpresa"].ToString();
                                     txtExtensionCliente.Text = sqlResultado["fcExtension"].ToString();
-                                    txtExtensionRecursosHumanos.Text = sqlResultado["fcExtension"].ToString();
+                                    txtExtensionRecursosHumanos.Text = sqlResultado["fcExtensionRRHH"].ToString();
                                     txtDepartamentoEmpresa.Text = sqlResultado["fcDepartamentoEmpresa"].ToString();
                                     txtMunicipioEmpresa.Text = sqlResultado["fcMunicipioEmpresa"].ToString();
                                     txtCiudadPobladoEmpresa.Text = sqlResultado["fcCiudadEmpresa"].ToString();
                                     txtBarrioColoniaEmpresa.Text = sqlResultado["fcBarrioColoniaEmpresa"].ToString();
                                     txtDireccionDetalladaEmpresa.InnerText = sqlResultado["fcDireccionDetalladaEmpresa"].ToString();
-                                    txtReferenciasDomicilio.InnerText = sqlResultado["fcDireccionReferenciasEmpresa"].ToString();
+                                    txtReferenciaDetalladaEmpresa.InnerText = sqlResultado["fcDireccionReferenciasEmpresa"].ToString();
+                                    txtFuenteDeOtrosIngresos.Text = sqlResultado["fcDescripcionOtrosIngresos"].ToString();
+                                    txtValorDeOtrosIngresos.Text = decimal.Parse(sqlResultado["fnOtrosIngresos"].ToString()).ToString("N");
 
                                     /* Informacion del préstamo requerido */
                                     txtValorGlobal.Text = ((decimal)sqlResultado["fnValorGlobal"]).ToString("N");
@@ -236,9 +262,10 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 /* Llenar table de referencias */
@@ -255,6 +282,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                 }
                             }
                         }
+
                         /* Informacion del precalificado */
                         using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
                         {
@@ -262,6 +290,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcIdentidad", identidadCliente);
+
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 while (sqlResultado.Read())
@@ -278,12 +307,13 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                 }
                             }
                         }
+
                         /* Verficar si la solicitud tiene condicionamientos pendientes */
                         using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Condiciones", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);                            
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                             using (var sqlResultado = sqlComando.ExecuteReader())
@@ -293,8 +323,8 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     pestanaListaSolicitudCondiciones.Style.Add("display", "");
 
                                     HtmlTableRow tRowSolicitudCondiciones = null;
-                                    string EstadoCondicion = String.Empty;
-                                    int contadorCondiciones = 1;
+                                    var EstadoCondicion = string.Empty;
+                                    var contadorCondiciones = 1;
                                     while (sqlResultado.Read())
                                     {
                                         EstadoCondicion = (short)sqlResultado["fiEstadoCondicion"] != 0 ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-danger mb-0'>Pendiente</label>";
@@ -309,22 +339,101 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                 }
                             }
                         }
+
                         /* Catalogo de condiciones */
-                        string Comando = "EXEC sp_CANEX_Catalogo_Condiciones " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
-                        using (var AdapterDDLCondiciones = new SqlDataAdapter(Comando, sqlConexion))
+                        using (var sqlComando = new SqlCommand("sp_CANEX_Catalogo_Condiciones", sqlConexion))
                         {
-                            var dtCondiciones = new DataTable();
-                            AdapterDDLCondiciones.Fill(dtCondiciones);
-                            ddlCondiciones.DataSource = dtCondiciones;
-                            ddlCondiciones.DataBind();
-                            ddlCondiciones.DataTextField = "fcDescripcion";
-                            ddlCondiciones.DataValueField = "fiID";
-                            ddlCondiciones.DataBind();
-                            dtCondiciones.Dispose();
-                            AdapterDDLCondiciones.Dispose();
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                            using (var AdapterDDLCondiciones = new SqlDataAdapter(sqlComando))
+                            {
+                                var dtCondiciones = new DataTable();
+
+                                AdapterDDLCondiciones.Fill(dtCondiciones);
+                                ddlCondiciones.DataSource = dtCondiciones;
+                                ddlCondiciones.DataBind();
+
+                                ddlCondiciones.DataTextField = "fcDescripcion";
+                                ddlCondiciones.DataValueField = "fiID";
+                                ddlCondiciones.DataBind();
+                            }
                         }
-                    }
-                }
+
+                        /* Documentos de la solicitud */
+                        using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+
+                            using (var sqlResultado = sqlComando.ExecuteReader())
+                            {
+                                var fcNombreSocio = string.Empty;
+                                var fcNombreImagen = string.Empty;
+
+                                var documentacionIdentidad = new StringBuilder();
+                                var documentacionDomicilio = new StringBuilder();
+                                var documentacionLaboral = new StringBuilder();
+                                var documentacionSolicitudFisica = new StringBuilder();
+                                var documentacionCampoDomicilio = new StringBuilder();
+                                var documentacionCampoTrabajo = new StringBuilder();
+                                var documentacionOtros = new StringBuilder();
+                                var idTipoDocumento = string.Empty;
+
+                                while (sqlResultado.Read())
+                                {
+                                    idTipoDocumento = sqlResultado["fiIDImagen"].ToString();
+                                    fcNombreSocio = sqlResultado["fcNombreSocio"].ToString();
+                                    fcNombreImagen = sqlResultado["fcNombreImagen"].ToString();
+
+                                    switch (idTipoDocumento)
+                                    {
+                                        case "1":
+                                        case "2":
+                                        case "18":
+                                        case "19":
+                                            documentacionIdentidad.Append("<img alt='" + sqlResultado["fcNombreImagen"] + "' src='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + "' data-image='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + "' data-description='" + sqlResultado["fcNombreImagen"] + "' data-identificador='" + sqlResultado["fcNombreImagen"] + "'/>");
+                                            break;
+                                        case "3":
+                                        case "5":
+                                            documentacionDomicilio.Append("<img alt='" + sqlResultado["fcNombreImagen"] + "' src='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + "' data-image='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + "' data-description='" + sqlResultado["fcNombreImagen"] + "' data-identificador='" + sqlResultado["fcNombreImagen"] + "'/>");
+                                            break;
+                                        case "4":
+                                        case "6":
+                                            documentacionLaboral.Append("<img alt='" + sqlResultado["fcNombreImagen"] + "' src='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + "' data-image='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + "' data-description='" + sqlResultado["fcNombreImagen"] + "' data-identificador='" + sqlResultado["fcNombreImagen"] + "'/>");
+                                            break;
+                                        case "7":
+                                            documentacionSolicitudFisica.Append("<img alt='" + sqlResultado["fcNombreImagen"] + "' src='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + "' data-image='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + "' data-description='" + sqlResultado["fcNombreImagen"] + "' data-identificador='" + sqlResultado["fcNombreImagen"] + "'/>");
+                                            break;
+                                        case "8":
+                                            documentacionCampoDomicilio.Append("<img alt='" + sqlResultado["fcNombreImagen"] + "' src='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + ".jpg" + "' data-image='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + ".jpg" + "' data-description='" + sqlResultado["fcNombreImagen"] + "' data-identificador='" + sqlResultado["fcNombreImagen"] + "'/>");
+                                            break;
+                                        case "9":
+                                            documentacionCampoTrabajo.Append("<img alt='" + sqlResultado["fcNombreImagen"] + "' src='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + ".jpg" + "' data-image='" + "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen + ".jpg" + "' data-description='" + sqlResultado["fcNombreImagen"] + "' data-identificador='" + sqlResultado["fcNombreImagen"] + "'/>");
+                                            break;
+                                        default:
+                                            break;
+
+                                    }
+                                }
+
+                                divDocumentacionCedula.InnerHtml = documentacionIdentidad.ToString();
+                                divDocumentacionCedulaModal.InnerHtml = documentacionIdentidad.ToString();
+                                divDocumentacionDomicilio.InnerHtml = documentacionDomicilio.ToString();
+                                divDocumentacionDomicilioModal.InnerHtml = documentacionDomicilio.ToString();
+                                divDocumentacionLaboral.InnerHtml = documentacionLaboral.ToString();
+                                divDocumentacionLaboral.InnerHtml += documentacionSolicitudFisica.ToString();
+                                divDocumentacionLaboralModal.InnerHtml = documentacionLaboral.ToString();
+                                divDocumentacionSoliFisicaModal.InnerHtml = documentacionSolicitudFisica.ToString();
+                            }
+                        }// using command documentos
+                    } // using connection
+                } // if parametros != string.empty
             }
             catch (Exception ex)
             {
@@ -364,73 +473,20 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<SolicitudesDocumentosViewModel> CargarDocumentos(string dataCrypt)
-    {
-        var ListadoDocumentos = new List<SolicitudesDocumentosViewModel>();
-        var DSC = new DSCore.DataCrypt();
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        string fcNombreSocio = "";
-                        string fcNombreImagen = "";
-                        while (sqlResultado.Read())
-                        {
-                            fcNombreSocio = sqlResultado["fcNombreSocio"].ToString();
-                            fcNombreImagen = sqlResultado["fcNombreImagen"].ToString();
-
-                            ListadoDocumentos.Add(new SolicitudesDocumentosViewModel()
-                            {
-                                fiIDSolicitudDocs = (short)sqlResultado["fiIDImagen"],
-                                fcNombreArchivo = (string)sqlResultado["fcNombreImagen"],
-                                URLArchivo = "http://canex.miprestadito.com/documentos/" + fcNombreSocio + "/SOL_" + idSolicitud + "/" + fcNombreImagen,
-                                fiTipoDocumento = (short)sqlResultado["fiIDImagen"]
-                            });
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return ListadoDocumentos;
-    }
-
-    [WebMethod]
     public static bool CondicionarSolicitud(List<SolicitudesCondicionamientosViewModel> solicitudCondiciones, int idPais, int idSocio, int idAgencia, string dataCrypt)
     {
         var resultadoProceso = false;
         var DSC = new DSCore.DataCrypt();
 
-        using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+        using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
         {
             sqlConexion.Open();
 
-            using (SqlTransaction transaccion = sqlConexion.BeginTransaction("insercionSolicitudCondiciones"))
+            using (var transaccion = sqlConexion.BeginTransaction("insercionSolicitudCondiciones"))
             {
                 try
                 {
-                    Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+                    var lURLDesencriptado = DesencriptarURL(dataCrypt);
                     var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
                     var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
@@ -772,7 +828,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         try
         {
             var DSC = new DSCore.DataCrypt();
-            int liParamStart = 0;
+            var liParamStart = 0;
             var lcParametros = string.Empty;
             var pcEncriptado = string.Empty;
             liParamStart = URL.IndexOf("?");
@@ -816,16 +872,16 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 
                 foreach (SolicitudesDocumentosViewModel Documento in listaDocumentos)
                 {
-                    string viejoDirectorio = Documento.URLAntiguoArchivo;
-                    string nuevoNombreDocumento = Documento.fcNombreArchivo;
-                    string nuevoDirectorio = directorioDocumentosSolicitud + nuevoNombreDocumento + ".png";
+                    var viejoDirectorio = Documento.URLAntiguoArchivo;
+                    var nuevoNombreDocumento = Documento.fcNombreArchivo;
+                    var nuevoDirectorio = directorioDocumentosSolicitud + nuevoNombreDocumento + ".png";
 
                     if (File.Exists(nuevoDirectorio))
                         File.Delete(nuevoDirectorio);
 
                     if (!File.Exists(nuevoDirectorio))
                     {
-                        string lcURL = Documento.URLAntiguoArchivo;
+                        var lcURL = Documento.URLAntiguoArchivo;
 
                         client.DownloadFile(new Uri(lcURL), nuevoDirectorio);
                         client.Dispose();
@@ -842,5 +898,11 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             result = false;
         }
         return result;
+    }
+
+    public static int GetMonthDifference(DateTime startDate, DateTime endDate)
+    {
+        int monthsApart = 12 * (startDate.Year - endDate.Year) + startDate.Month - endDate.Month;
+        return Math.Abs(monthsApart);
     }
 }

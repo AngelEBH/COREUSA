@@ -13,31 +13,31 @@ public partial class SolicitudesCANEX_SeguimientoDetalles
 {
 
     /// <summary>
-    /// Control form1.
+    /// Control frmPrincipal.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+    protected global::System.Web.UI.HtmlControls.HtmlForm frmPrincipal;
 
     /// <summary>
-    /// Control LogoPrestamo.
+    /// Control imgLogo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Image LogoPrestamo;
+    protected global::System.Web.UI.WebControls.Image imgLogo;
 
     /// <summary>
-    /// Control lblTipoPrestamo.
+    /// Control lblProducto.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblTipoPrestamo;
+    protected global::System.Web.UI.WebControls.Label lblProducto;
 
     /// <summary>
     /// Control btnListaCondiciones.
@@ -58,22 +58,22 @@ public partial class SolicitudesCANEX_SeguimientoDetalles
     protected global::System.Web.UI.HtmlControls.HtmlButton btnDetallesResolucion;
 
     /// <summary>
-    /// Control spanNombreCliente.
+    /// Control lblNombreCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label spanNombreCliente;
+    protected global::System.Web.UI.WebControls.Label lblNombreCliente;
 
     /// <summary>
-    /// Control spanIdentidadCliente.
+    /// Control lblIdentidadCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label spanIdentidadCliente;
+    protected global::System.Web.UI.WebControls.Label lblIdentidadCliente;
 
     /// <summary>
     /// Control lblNoSolicitud.
@@ -130,85 +130,94 @@ public partial class SolicitudesCANEX_SeguimientoDetalles
     protected global::System.Web.UI.WebControls.Label lblEstadoSolicitud;
 
     /// <summary>
-    /// Control lblRtnCliente.
+    /// Control divInformacionPersonal.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblRtnCliente;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInformacionPersonal;
 
     /// <summary>
-    /// Control lblNumeroTelefono.
+    /// Control txtRTNCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.HyperLink lblNumeroTelefono;
+    protected global::System.Web.UI.WebControls.TextBox txtRTNCliente;
 
     /// <summary>
-    /// Control lblNumeroTelefonoAlternativo.
+    /// Control txtTelefonoCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.HyperLink lblNumeroTelefonoAlternativo;
+    protected global::System.Web.UI.WebControls.TextBox txtTelefonoCliente;
 
     /// <summary>
-    /// Control lblNacionalidad.
+    /// Control txtNumeroTelefonoAlternativo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblNacionalidad;
+    protected global::System.Web.UI.WebControls.TextBox txtNumeroTelefonoAlternativo;
 
     /// <summary>
-    /// Control lblFechaNacimientoCliente.
+    /// Control txtFechaNacimientoCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblFechaNacimientoCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtFechaNacimientoCliente;
 
     /// <summary>
-    /// Control lblEdadCliente.
+    /// Control txtEdadCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblEdadCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtEdadCliente;
 
     /// <summary>
-    /// Control lblProfesionCliente.
+    /// Control txtNacionalidad.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblProfesionCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtNacionalidad;
 
     /// <summary>
-    /// Control lblSexoCliente.
+    /// Control txtProfesionCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblSexoCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtProfesionCliente;
 
     /// <summary>
-    /// Control lblEstadoCivilCliente.
+    /// Control txtSexoCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblEstadoCivilCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtSexoCliente;
+
+    /// <summary>
+    /// Control txtEstadoCivilCliente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtEstadoCivilCliente;
 
     /// <summary>
     /// Control divDocumentacionCedula.
@@ -220,76 +229,85 @@ public partial class SolicitudesCANEX_SeguimientoDetalles
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDocumentacionCedula;
 
     /// <summary>
-    /// Control lblViviendaCliente.
+    /// Control divInformacionDomicilio.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblViviendaCliente;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInformacionDomicilio;
 
     /// <summary>
-    /// Control lblTiempoResidirCliente.
+    /// Control txtVivienda.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblTiempoResidirCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtVivienda;
 
     /// <summary>
-    /// Control lblDeptoCliente.
+    /// Control txtTiempoDeResidir.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblDeptoCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtTiempoDeResidir;
 
     /// <summary>
-    /// Control lblMunicipioCliente.
+    /// Control txtDepartamentoDomicilio.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMunicipioCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtDepartamentoDomicilio;
 
     /// <summary>
-    /// Control lblCiudadCliente.
+    /// Control txtMunicipioDomicilio.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblCiudadCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtMunicipioDomicilio;
 
     /// <summary>
-    /// Control lblBarrioColoniaCliente.
+    /// Control txtCiudadPobladoDomicilio.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblBarrioColoniaCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtCiudadPobladoDomicilio;
 
     /// <summary>
-    /// Control lblDireccionDetalladaCliente.
+    /// Control txtBarrioColoniaDomicilio.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblDireccionDetalladaCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtBarrioColoniaDomicilio;
 
     /// <summary>
-    /// Control lblReferenciaDomicilioCliente.
+    /// Control txtDireccionDetalladaDomicilio.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblReferenciaDomicilioCliente;
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtDireccionDetalladaDomicilio;
+
+    /// <summary>
+    /// Control txtReferenciasDomicilio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtReferenciasDomicilio;
 
     /// <summary>
     /// Control divDocumentacionDomicilio.
@@ -301,193 +319,265 @@ public partial class SolicitudesCANEX_SeguimientoDetalles
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDocumentacionDomicilio;
 
     /// <summary>
-    /// Control divConyugueCliente.
+    /// Control divPanelInformacionConyugal.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divConyugueCliente;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPanelInformacionConyugal;
 
     /// <summary>
-    /// Control lblNombreConyugue.
+    /// Control divInformacionConyugal.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblNombreConyugue;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInformacionConyugal;
 
     /// <summary>
-    /// Control lblFechaNacimientoConygue.
+    /// Control txtNombreDelConyugue.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblFechaNacimientoConygue;
+    protected global::System.Web.UI.WebControls.TextBox txtNombreDelConyugue;
 
     /// <summary>
-    /// Control lblTelefonoConyugue.
+    /// Control txtIdentidadConyugue.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.HyperLink lblTelefonoConyugue;
+    protected global::System.Web.UI.WebControls.TextBox txtIdentidadConyugue;
 
     /// <summary>
-    /// Control lblProfesionOficioConyugue.
+    /// Control txtFechaNacimientoConyugue.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblProfesionOficioConyugue;
+    protected global::System.Web.UI.WebControls.TextBox txtFechaNacimientoConyugue;
 
     /// <summary>
-    /// Control lblOcupacionConyugue.
+    /// Control txtTelefonoConyugue.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblOcupacionConyugue;
+    protected global::System.Web.UI.WebControls.TextBox txtTelefonoConyugue;
 
     /// <summary>
-    /// Control lblLugarTrabajoConyugue.
+    /// Control txtProfesionOficioConyugue.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblLugarTrabajoConyugue;
+    protected global::System.Web.UI.WebControls.TextBox txtProfesionOficioConyugue;
 
     /// <summary>
-    /// Control lblPuestoAsignadoConyugue.
+    /// Control txtOcupacionConyugue.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblPuestoAsignadoConyugue;
+    protected global::System.Web.UI.WebControls.TextBox txtOcupacionConyugue;
 
     /// <summary>
-    /// Control lblNombreTrabajoCliente.
+    /// Control txtLugarTrabajoConyugue.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblNombreTrabajoCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtLugarTrabajoConyugue;
 
     /// <summary>
-    /// Control lblIngresosMensualesCliente.
+    /// Control txtPuestoAsignadoConyugue.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblIngresosMensualesCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtPuestoAsignadoConyugue;
 
     /// <summary>
-    /// Control lblComisionesClienteTitulo.
+    /// Control divInformacionLaboral.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblComisionesClienteTitulo;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInformacionLaboral;
 
     /// <summary>
-    /// Control lblComisionesCliente.
+    /// Control txtNombreTrabajoCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblComisionesCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtNombreTrabajoCliente;
 
     /// <summary>
-    /// Control lblPuestoAsignadoCliente.
+    /// Control txtPuestoAsignado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblPuestoAsignadoCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtPuestoAsignado;
 
     /// <summary>
-    /// Control lblTelefonoEmpresaCliente.
+    /// Control txtIngresosMensuales.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.HyperLink lblTelefonoEmpresaCliente;
+    protected global::System.Web.UI.WebControls.TextBox txtIngresosMensuales;
 
     /// <summary>
-    /// Control lblExtension.
+    /// Control divComisionesCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblExtension;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divComisionesCliente;
 
     /// <summary>
-    /// Control lblDeptoEmpresa.
+    /// Control txtComisionesCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblDeptoEmpresa;
+    protected global::System.Web.UI.WebControls.TextBox txtComisionesCliente;
 
     /// <summary>
-    /// Control lblMunicipioEmpresa.
+    /// Control txtFechaIngreso.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMunicipioEmpresa;
+    protected global::System.Web.UI.WebControls.TextBox txtFechaIngreso;
 
     /// <summary>
-    /// Control lblCiudadEmpresa.
+    /// Control txtArraigoLaboral.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblCiudadEmpresa;
+    protected global::System.Web.UI.WebControls.TextBox txtArraigoLaboral;
 
     /// <summary>
-    /// Control lblBarrioColoniaEmpresa.
+    /// Control txtTelefonoEmpresa.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblBarrioColoniaEmpresa;
+    protected global::System.Web.UI.WebControls.TextBox txtTelefonoEmpresa;
 
     /// <summary>
-    /// Control lblDireccionDetalladaEmpresa.
+    /// Control txtExtensionCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblDireccionDetalladaEmpresa;
+    protected global::System.Web.UI.WebControls.TextBox txtExtensionCliente;
 
     /// <summary>
-    /// Control lblReferenciaUbicacionEmpresa.
+    /// Control txtExtensionRecursosHumanos.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblReferenciaUbicacionEmpresa;
+    protected global::System.Web.UI.WebControls.TextBox txtExtensionRecursosHumanos;
+
+    /// <summary>
+    /// Control txtDepartamentoEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtDepartamentoEmpresa;
+
+    /// <summary>
+    /// Control txtMunicipioEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtMunicipioEmpresa;
+
+    /// <summary>
+    /// Control txtCiudadPobladoEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCiudadPobladoEmpresa;
+
+    /// <summary>
+    /// Control txtBarrioColoniaEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtBarrioColoniaEmpresa;
+
+    /// <summary>
+    /// Control txtDireccionDetalladaEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtDireccionDetalladaEmpresa;
+
+    /// <summary>
+    /// Control txtReferenciaDetalladaEmpresa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtReferenciaDetalladaEmpresa;
+
+    /// <summary>
+    /// Control txtFuenteDeOtrosIngresos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtFuenteDeOtrosIngresos;
+
+    /// <summary>
+    /// Control txtValorDeOtrosIngresos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtValorDeOtrosIngresos;
 
     /// <summary>
     /// Control divDocumentacionLaboral.
@@ -499,6 +589,15 @@ public partial class SolicitudesCANEX_SeguimientoDetalles
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDocumentacionLaboral;
 
     /// <summary>
+    /// Control divReferenciasPersonales.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divReferenciasPersonales;
+
+    /// <summary>
     /// Control tblReferencias.
     /// </summary>
     /// <remarks>
@@ -508,67 +607,76 @@ public partial class SolicitudesCANEX_SeguimientoDetalles
     protected global::System.Web.UI.HtmlControls.HtmlTable tblReferencias;
 
     /// <summary>
-    /// Control lblIngresosPrecalificado.
+    /// Control divCapacidadDePagoPrecalificado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblIngresosPrecalificado;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divCapacidadDePagoPrecalificado;
 
     /// <summary>
-    /// Control lblObligacionesPrecalificado.
+    /// Control txtIngresosPrecalificado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblObligacionesPrecalificado;
+    protected global::System.Web.UI.WebControls.TextBox txtIngresosPrecalificado;
 
     /// <summary>
-    /// Control lblDisponiblePrecalificado.
+    /// Control txtObligacionesPrecalificado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblDisponiblePrecalificado;
+    protected global::System.Web.UI.WebControls.TextBox txtObligacionesPrecalificado;
 
     /// <summary>
-    /// Control lblCapacidadPagoMensual.
+    /// Control txtDisponiblePrecalificado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblCapacidadPagoMensual;
+    protected global::System.Web.UI.WebControls.TextBox txtDisponiblePrecalificado;
 
     /// <summary>
-    /// Control lblCapacidadPagoQuincenal.
+    /// Control txtCapacidadDePagoMensual.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblCapacidadPagoQuincenal;
+    protected global::System.Web.UI.WebControls.TextBox txtCapacidadDePagoMensual;
 
     /// <summary>
-    /// Control lblValorGlobal.
+    /// Control txtCapacidadDePagoQuincenal.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblValorGlobal;
+    protected global::System.Web.UI.WebControls.TextBox txtCapacidadDePagoQuincenal;
 
     /// <summary>
-    /// Control lblValorPrima.
+    /// Control txtValorGlobal.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblValorPrima;
+    protected global::System.Web.UI.WebControls.TextBox txtValorGlobal;
+
+    /// <summary>
+    /// Control txtValorPrima.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtValorPrima;
 
     /// <summary>
     /// Control lblPlazoTitulo.
@@ -577,25 +685,25 @@ public partial class SolicitudesCANEX_SeguimientoDetalles
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblPlazoTitulo;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblPlazoTitulo;
 
     /// <summary>
-    /// Control lblPlazo.
+    /// Control txtPlazoSeleccionado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblPlazo;
+    protected global::System.Web.UI.WebControls.TextBox txtPlazoSeleccionado;
 
     /// <summary>
-    /// Control lblMontoFinanciar.
+    /// Control txtMontoAFinanciar.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoFinanciar;
+    protected global::System.Web.UI.WebControls.TextBox txtMontoAFinanciar;
 
     /// <summary>
     /// Control divDocumentacionCedulaModal.

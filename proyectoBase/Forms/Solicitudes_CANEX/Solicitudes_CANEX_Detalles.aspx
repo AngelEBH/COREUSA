@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Solicitudes_CANEX_Detalles.aspx.cs" Inherits="Solicitudes_CANEX_Detalles" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Solicitudes_CANEX_Detalles.aspx.cs" Inherits="Solicitudes_CANEX_Detalles" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -161,7 +161,7 @@
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de informacion personal -->
-                                                <div class="align-self-center" id="divDocumentacionCedula" runat="server" style="display: none;">
+                                                <div id="divDocumentacionCedula" runat="server" style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
@@ -175,9 +175,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingTwo">
                             <h6 class="panel-title m-0 font-14">
-                                <a href="#collapseInformacionDomiciliar" class="text-dark collapsed h6 collapsed font-weight-bold" data-toggle="collapse"
-                                    aria-expanded="false"
-                                    aria-controls="collapseTwo">
+                                <a href="#collapseInformacionDomiciliar" class="text-dark collapsed h6 collapsed font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo">
                                     <i class="mdi mdi-home-variant mdi-24px"></i>
                                     Informacion Domicilio
                                 </a>
@@ -316,11 +314,11 @@
                                             </div>
                                             <div class="col-6">
                                                 <label class="col-form-label">Ingresos mensuales</label>
-                                                <asp:TextBox ID="txtIngresosMensuales" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtIngresosMensuales" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-12" id="divComisionesCliente" runat="server">
                                                 <label class="col-form-label">Ingresos mensuales por comisiones</label>
-                                                <asp:TextBox ID="txtComisionesCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtComisionesCliente" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
                                                 <label class="col-form-label">Fecha de ingreso</label>
@@ -373,7 +371,7 @@
                                             </div>
                                             <div class="col-6">
                                                 <label class="col-form-label">Valor de otros ingresos</label>
-                                                <asp:TextBox ID="txtValorDeOtrosIngresos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtValorDeOtrosIngresos" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                         </div>
                                     </div>
@@ -404,45 +402,51 @@
                         </div>
                         <div id="collapseReferenciasPersonales" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
                             <div class="panel-body">
-                                <div class="form-group row">
-                                    <h6>Referencias personales</h6>
-                                    <div class="table-responsive">
-                                        <table class="table table-condensed table-striped" id="tblReferencias" runat="server">
-                                            <thead class="bg-light">
-                                                <tr>
-                                                    <th>Nombre referencia</th>
-                                                    <th>Lugar de trabajo</th>
-                                                    <th>Tiempo de conocer ref</th>
-                                                    <th>Telefono ref</th>
-                                                    <th>Parentesco ref</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-condensed">
-                                            </tbody>
-                                        </table>
+                                <div class="row mb-0" id="divReferenciasPersonales" runat="server">
+                                    <div class="col-12">
+
+                                        <h6>Referencias personales</h6>
+
+                                        <div class="form-group row mr-1 ml-1">
+                                            <div class="table-responsive">
+                                                <table class="table tabla-compacta table-striped" id="tblReferencias" runat="server">
+                                                    <thead class="bg-light">
+                                                        <tr>
+                                                            <th>Nombre referencia</th>
+                                                            <th>Lugar de trabajo</th>
+                                                            <th>Tiempo de conocer ref</th>
+                                                            <th>Telefono ref</th>
+                                                            <th>Parentesco ref</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <%--<div class="form-group row" id="divAval">
+                                            <h4>Aval</h4>
+                                            <div class="table-responsive">
+                                                <table runat="server" class="table table-condensed" id="tblAvales">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>Nombre completo</th>
+                                                            <th>Identidad</th>
+                                                            <th>Telefono</th>
+                                                            <th>Lugar de trabajo</th>
+                                                            <th>Puesto asignado</th>
+                                                            <th>Ingresos</th>
+                                                            <th>Estado</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>--%>
                                     </div>
                                 </div>
-                                <%--<div class="form-group row" id="divAval">
-                                    <h4>Aval</h4>
-                                    <div class="table-responsive">
-                                        <table runat="server" class="table table-condensed" id="tblAvales">
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th>Nombre completo</th>
-                                                    <th>Identidad</th>
-                                                    <th>Telefono</th>
-                                                    <th>Lugar de trabajo</th>
-                                                    <th>Puesto asignado</th>
-                                                    <th>Ingresos</th>
-                                                    <th>Estado</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>--%>
                             </div>
                         </div>
                     </div>
@@ -468,23 +472,23 @@
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <label class="col-form-label">Ingresos (Precalificado)</label>
-                                                <asp:TextBox ID="txtIngresosPrecalificado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtIngresosPrecalificado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-12">
                                                 <label class="col-form-label">Obligaciones (Precalificado)</label>
-                                                <asp:TextBox ID="txtObligacionesPrecalificado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtObligacionesPrecalificado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-12">
                                                 <label class="col-form-label">Disponible (Precalificado)</label>
-                                                <asp:TextBox ID="txtDisponiblePrecalificado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtDisponiblePrecalificado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
                                                 <label class="col-form-label">Capacidad de pago (Mensual)</label>
-                                                <asp:TextBox ID="txtCapacidadDePagoMensual" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtCapacidadDePagoMensual" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
                                                 <label class="col-form-label">Capacidad de pago (Quincenal)</label>
-                                                <asp:TextBox ID="txtCapacidadDePagoQuincenal" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtCapacidadDePagoQuincenal" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                         </div>
                                     </div>
@@ -496,11 +500,11 @@
                                         <div class="form-group row">
                                             <div class="col-6">
                                                 <label class="col-form-label">Valor Global</label>
-                                                <asp:TextBox ID="txtValorGlobal" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtValorGlobal" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
                                                 <label class="col-form-label">Valor prima</label>
-                                                <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
                                                 <label class="col-form-label" id="lblPlazoTitulo" runat="server">Plazo seleccionado</label>
@@ -508,8 +512,8 @@
                                             </div>
                                             <div class="col-6">
                                                 <label class="col-form-label">Monto Financiar</label>
-                                                <asp:TextBox ID="txtMontoAFinanciar" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>                                            
+                                                <asp:TextBox ID="txtMontoAFinanciar" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -687,7 +691,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        ¿Está seguro de que desea <strong>ACEPTAR</strong> esta solicitud ?<br />
+                        ¿Está seguro de que desea <strong>ACEPTAR</strong> esta solicitud?<br />
                         *Se importará a la bandeja de solicitudes*<br />
                         <br />
                         <div class="form-group">
@@ -730,7 +734,7 @@
                             <div class="mt-1">
                                 <label class="col-form-label">Detalles</label>
 
-                                <textarea id="lblDetalleEstado" runat="server" readonly="true" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
+                                <textarea id="lblDetalleEstado" runat="server" readonly="readonly" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -746,10 +750,12 @@
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
+    <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
-    <script src="/Scripts/plugins/imgBox/jquery.imgbox.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script>
         const idPais = <%=this.IdPais%>;
@@ -759,5 +765,63 @@
         const idSolicitudImportada = <%=this.IdSolicitudPrestadito%>;
     </script>
     <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=20201027154785"></script>
+
+    <script>
+        $("#divDocumentacionCedula").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 150,
+            tile_height: 97,
+            lightbox_type: "compact",
+            grid_num_rows: 15
+        });
+
+        $("#divDocumentacionCedulaModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15
+        });
+
+        $("#divDocumentacionDomicilio").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15
+        });
+
+        $("#divDocumentacionDomicilioModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15
+        });
+
+        $("#divDocumentacionLaboral").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15
+        });
+
+        $("#divDocumentacionLaboralModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15
+        });
+
+        $("#divDocumentacionSoliFisicaModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15
+        });
+    </script>
 </body>
 </html>

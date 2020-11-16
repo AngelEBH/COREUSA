@@ -453,6 +453,8 @@ $("#btnSolicitarGPS_Confirmar").click(function (e) {
 
     if ($('#frmPrincipal').parsley().isValid({ group: 'InstalacionGPS_Guardar' })) {
 
+        $("#btnSolicitarGPS_Confirmar").css('disabled', true);
+
         var solicitudGPS = {
             IdSolicitud: idSolicitud,
             IdGarantia: idGarantia,
@@ -477,6 +479,7 @@ $("#btnSolicitarGPS_Confirmar").click(function (e) {
             contentType: "application/json; charset=utf-8",
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('No se pudo guardar la solicitud de GPS, contacte al administrador.');
+                $("#btnSolicitarGPS_Confirmar").css('disabled', false);
             },
             success: function (data) {
 
@@ -488,6 +491,7 @@ $("#btnSolicitarGPS_Confirmar").click(function (e) {
 
                 $(btnSolicitarGPS).replaceWith('<button type="button" class="dropdown-item" id="btnDetalleSolicitudGPS"><i class="fas fa-map-marker-alt"></i> Detalles solicitud GPS</button>');
 
+                $("#btnSolicitarGPS_Confirmar").css('disabled', false);
             }
         });
     }
