@@ -722,7 +722,7 @@ $("#btnTerminarCondicionFinalizar").click(function () {
                 fiIDMunicipio: $("#municipio :selected").val(),
                 fiIDCiudad: $("#ciudad :selected").val(),
                 fiIDBarrioColonia: $("#barrioColonia :selected").val(),
-                
+
                 fcTelefonoCasa: $("#telefonoCasa").val(),
                 fcTelefonoMovil: $("#telefonoMovil").val(),
                 fcDireccionDetallada: $("#direccionDetallada").val(),
@@ -1071,7 +1071,7 @@ function cargarInformacionCompletaDelCliente(informacionCliente) {
     //DROPDOWNLISTS DE INFORMACION UBICACION DE LA EMPRESA DONDE LABORA EL CLIENTE
 
     var infoLaboral = rowData.ClientesInformacionLaboral;
-    
+
     $('#departamentoEmpresa').val(infoLaboral.fiIDDepto);
     $('#departamentoEmpresa').select2().trigger('change');
     //cargar municipios

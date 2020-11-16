@@ -307,6 +307,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     if (!sqlResultado.HasRows)
                                     {
                                         divGaleriaGarantia.InnerHtml = "<img alt='No hay fotografías disponibles' src='/Imagenes/Imagen_no_disponible.png' data-image='/Imagenes/Imagen_no_disponible.png' data-description='No hay fotografías disponibles'/>";
+                                        divContenedorInspeccionSeguro.Visible = false;
                                     }
                                     else
                                     {

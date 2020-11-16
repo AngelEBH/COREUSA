@@ -406,9 +406,9 @@
                                                         <tr>
                                                             <th>Nombre referencia</th>
                                                             <th>Lugar de trabajo</th>
-                                                            <th>Tiempo de conocer ref</th>
-                                                            <th>Telefono ref</th>
-                                                            <th>Parentesco ref</th>
+                                                            <th>Tiempo de conocer</th>
+                                                            <th>Telefono</th>
+                                                            <th>Parentesco</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
