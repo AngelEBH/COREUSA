@@ -498,7 +498,6 @@
             </div>
         </div>
 
-
         <div id="modalReiniciarCampo" class="modal fade" role="dialog" aria-labelledby="modalReiniciarCampoLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -509,13 +508,13 @@
                     <div class="modal-body">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoDomicilio" />
-                            <label class="form-check-label" for="defaultCheck1">
+                            <label class="form-check-label">
                                 Investigación del domicilio
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoTrabajo" />
-                            <label class="form-check-label" for="defaultCheck1">
+                            <label class="form-check-label">
                                 Investigación del trabajo
                             </label>
                         </div>

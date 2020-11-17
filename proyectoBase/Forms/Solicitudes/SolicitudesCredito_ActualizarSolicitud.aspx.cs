@@ -11,6 +11,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
@@ -21,7 +22,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     private string pcIDSesion = "";
     private string pcIDApp = "";
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-    public List<TipoDocumento_ViewModel> DocumentosRequeridos;
+    public List<TipoDocumento_ViewModel> DocumentosRequeridos = new List<TipoDocumento_ViewModel>();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -54,7 +55,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 Session.Timeout = 10080;
 
                 CargarListas();
-                ObtenerInformacionCliente();
+                CargarInformacion();
             }
             else
             {
@@ -147,7 +148,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                         /**** Viviendas ****/
                         sqlResultado.NextResult();
-                        
+
                         ddlTipoDeVivienda.Items.Clear();
                         ddlTipoDeVivienda.Items.Add(new ListItem("Seleccionar", ""));
                         while (sqlResultado.Read())
@@ -157,7 +158,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                         /**** Estados civiles ****/
                         sqlResultado.NextResult();
-                        
+
                         ddlEstadoCivil.Items.Clear();
                         ddlEstadoCivil.Items.Add(new ListItem("Seleccionar", ""));
                         while (sqlResultado.Read())
@@ -169,7 +170,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                         /**** Nacionalidades ****/
                         sqlResultado.NextResult();
-                        
+
                         ddlNacionalidad.Items.Clear();
                         ddlNacionalidad.Items.Add(new ListItem("Seleccionar", ""));
                         while (sqlResultado.Read())
@@ -179,7 +180,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                         /**** Tipos de documentos ****/
                         sqlResultado.NextResult();
-                        
+
                         while (sqlResultado.Read())
                         {
                             DocumentosRequeridos.Add(new TipoDocumento_ViewModel()
@@ -194,7 +195,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                         /**** Parentescos ****/
                         sqlResultado.NextResult();
-                        
+
                         ddlParentescos.Items.Clear();
                         ddlParentescos.Items.Add(new ListItem("Seleccionar", ""));
                         while (sqlResultado.Read())
@@ -204,7 +205,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                         /**** Tiempo de residir ****/
                         sqlResultado.NextResult();
-                        
+
                         ddlTiempoDeResidir.Items.Clear();
                         ddlTiempoDeResidir.Items.Add(new ListItem("Seleccionar", ""));
                         while (sqlResultado.Read())
@@ -214,7 +215,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                         /**** Tiempo de conocer referencia ****/
                         sqlResultado.NextResult();
-                        
+
                         ddlTiempoDeConocerReferencia.Items.Clear();
                         ddlTiempoDeConocerReferencia.Items.Add(new ListItem("Seleccionar", ""));
                         while (sqlResultado.Read())
@@ -236,7 +237,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                         /**** Tipo de cliente ****/
                         sqlResultado.NextResult();
-                        
+
                         ddlTipoDeCliente.Items.Clear();
                         ddlTipoDeCliente.Items.Add(new ListItem("Seleccionar", ""));
                         while (sqlResultado.Read())
@@ -274,59 +275,32 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         while (sqlResultado.Read())
                         {
                             /****** Informacion de la solicitud ******/
-                            /*
-                            informacionDeClienteSolicitud.IdSolicitud = (int)sqlResultado["fiIDSolicitud"];
-                            informacionDeClienteSolicitud.IdCliente = (int)sqlResultado["fiIDCliente"];
-                            informacionDeClienteSolicitud.IdEstadoSolicitud = (byte)sqlResultado["fiEstadoSolicitud"];
-                            informacionDeClienteSolicitud.EstadoSolicitud = sqlResultado["fcEstadoSolicitud"].ToString();
-                            informacionDeClienteSolicitud.Producto = sqlResultado["fcProducto"].ToString();
-                            informacionDeClienteSolicitud.TipoDeSolicitud = sqlResultado["fcTipoSolicitud"].ToString();
-                            informacionDeClienteSolicitud.IdUsuarioAsignado = (int)sqlResultado["fiIDUsuarioAsignado"];
-                            informacionDeClienteSolicitud.UsuarioAsignado = sqlResultado["fcNombreUsuarioAsignado"].ToString();
-                            informacionDeClienteSolicitud.IdGestorAsignado = (int)sqlResultado["fiIDGestor"];
-                            informacionDeClienteSolicitud.GestorAsignado = sqlResultado["fcNombreGestor"].ToString();
-                            informacionDeClienteSolicitud.Agencia = sqlResultado["fcNombreAgencia"].ToString();
-                            */
 
                             /****** Documentos de la solicitud ******/
                             sqlResultado.NextResult();
-
-                            /*
-                            while (sqlResultado.Read())
-                            {
-                                informacionDeClienteSolicitud.Documentos.Add(new SolicitudesCredito_Mantenimiento_Documentos_Solicitud_ViewModel()
-                                {
-                                    IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                    IdSolicitudDocumento = (int)sqlResultado["fiIDSolicitudDocs"],
-                                    NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
-                                    Extension = sqlResultado["fcTipoArchivo"].ToString(),
-                                    RutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),
-                                    URLArchivo = sqlResultado["fcURL"].ToString(),
-                                    IdTipoDocumento = (int)sqlResultado["fiTipoDocumento"],
-                                    DescripcionTipoDocumento = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
-                                    ArchivoActivo = (byte)sqlResultado["fiArchivoActivo"]
-                                });
-                            }
-                            */
 
                             /****** Condicionamientos de la solicitud ******/
                             sqlResultado.NextResult();
 
                             if (sqlResultado.HasRows)
                             {
+                                HtmlTableRow tRowCondicion;
+                                var btnFinalizarCondicion = string.Empty;
+                                var lblEstadoCondicion = string.Empty;
+
+                                /* Llenar table de referencias */
                                 while (sqlResultado.Read())
                                 {
-                                    //informacionDeClienteSolicitud.Condiciones.Add(new SolicitudesCredito_Mantenimiento_Solicitud_Condicion_ViewModel()
-                                    //{
+                                    btnFinalizarCondicion = "<button id='btnFinalizarCondicion' data-id='" + sqlResultado["fiIDCondicion"].ToString() + "' class='btn btn-sm btn-warning mb-0' type='button' title='Finalizar condicion'><i class='far fa-check-circle'></i> Finalizar</button>";
+                                    lblEstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"] == true ? "<label class='btn btn-sm btn-warning mb-0'>Pendiente<label>" : "<label class='btn btn-sm btn-success mb-0'>Completada<label>";
 
-                                    //    IdSolicitudCondicion = (int)sqlResultado["fiIDSolicitudCondicion"],
-                                    //    IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                    //    IdCondicion = (int)sqlResultado["fiIDCondicion"],
-                                    //    Condicion = sqlResultado["fcCondicion"].ToString(),
-                                    //    DescripcionCondicion = sqlResultado["fcDescripcionCondicion"].ToString(),
-                                    //    ComentarioAdicional = sqlResultado["fcComentarioAdicional"].ToString(),
-                                    //    EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"]
-                                    //});
+                                    tRowCondicion = new HtmlTableRow();
+                                    tRowCondicion.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcCondicion"].ToString() });
+                                    tRowCondicion.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionCondicion"].ToString() });
+                                    tRowCondicion.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcComentarioAdicional"].ToString() });
+                                    tRowCondicion.Cells.Add(new HtmlTableCell() { InnerHtml = lblEstadoCondicion });
+                                    tRowCondicion.Cells.Add(new HtmlTableCell() { InnerHtml = btnFinalizarCondicion });
+                                    tblCondiciones.Rows.Add(tRowCondicion);
                                 }
                             }
 
@@ -334,24 +308,21 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             sqlResultado.NextResult();
                             sqlResultado.Read();
 
-                            //txtIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
-                            //txtRtnCliente.Text = sqlResultado["fcRTN"].ToString();
-                            //txtPrimerNombre.Text = sqlResultado["fcPrimerNombreCliente"].ToString();
-                            //txtSegundoNombre.Text = sqlResultado["fcSegundoNombreCliente"].ToString();
-                            //txtPrimerApellido.Text = sqlResultado["fcPrimerApellidoCliente"].ToString();
-                            //txtSegundoApellido.Text = sqlResultado["fcSegundoApellidoCliente"].ToString();
+                            txtIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
+                            txtRtnCliente.Text = sqlResultado["fcRTN"].ToString();
+                            txtPrimerNombre.Text = sqlResultado["fcPrimerNombreCliente"].ToString();
+                            txtSegundoNombre.Text = sqlResultado["fcSegundoNombreCliente"].ToString();
+                            txtPrimerApellido.Text = sqlResultado["fcPrimerApellidoCliente"].ToString();
+                            txtSegundoApellido.Text = sqlResultado["fcSegundoApellidoCliente"].ToString();
                             ddlNacionalidad.SelectedValue = sqlResultado["fiNacionalidadCliente"].ToString();
                             txtCorreoElectronico.Text = sqlResultado["fcCorreoElectronicoCliente"].ToString();
                             txtProfesion.Text = sqlResultado["fcProfesionOficioCliente"].ToString();
 
                             if (sqlResultado["fcSexoCliente"].ToString() == "F")
-                            {
                                 rbSexoFemenino.Checked = true;
-                            }
                             else
-                            {
                                 rbSexoMasculino.Checked = true;
-                            }
+
                             ddlEstadoCivil.Text = sqlResultado["fiIDEstadoCivil"].ToString();
                             ddlTipoDeVivienda.Text = sqlResultado["fiIDVivienda"].ToString();
                             ddlTiempoDeResidir.Text = sqlResultado["fiTiempoResidir"].ToString();
@@ -359,245 +330,168 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             /****** Información laboral ******/
                             sqlResultado.NextResult();
 
+                            while (sqlResultado.Read())
+                            {
+                                txtNombreDelTrabajo.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                                txtFechaDeIngreso.Text = DateTime.Parse(sqlResultado["fdFechaIngreso"].ToString()).ToString("MM/dd/yyyy");
+                                txtPuestoAsignado.Text = sqlResultado["fcPuestoAsignado"].ToString();
+                                txtIngresosMensuales.Text = sqlResultado["fnIngresosMensuales"].ToString();
+                                txtTelefonoEmpresa.Text = sqlResultado["fcTelefonoEmpresa"].ToString();
+                                txtExtensionRecursosHumanos.Text = sqlResultado["fcExtensionRecursosHumanos"].ToString();
+                                txtExtensionCliente.Text = sqlResultado["fcExtensionCliente"].ToString();
+                                txtFuenteDeOtrosIngresos.Text = sqlResultado["fcFuenteOtrosIngresos"].ToString();
+                                txtValorOtrosIngresos.Text = sqlResultado["fnValorOtrosIngresosMensuales"].ToString();
+                                txtDireccionDetalladaEmpresa.Text = sqlResultado["fcDireccionDetalladaEmpresa"].ToString();
+                                txtReferenciasEmpresa.Value = sqlResultado["fcReferenciasDireccionDetalladaEmpresa"].ToString();
+
+                                /* Departamento de la empresa */
+                                ddlDepartamentoEmpresa.SelectedValue = sqlResultado["fiIDDepartamento"].ToString();
+
+                                /* Municipio de la empresa */
+                                var municipiosDeDepartamento = CargarMunicipios(int.Parse(sqlResultado["fiIDDepartamento"].ToString()));
+
+                                ddlMunicipioEmpresa.Items.Clear();
+                                ddlMunicipioEmpresa.Items.Add(new ListItem("Seleccionar", ""));
+
+                                municipiosDeDepartamento.ForEach(municipio =>
+                                {
+                                    ddlMunicipioEmpresa.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
+                                });
+                                ddlMunicipioEmpresa.SelectedValue = sqlResultado["fiIDMunicipio"].ToString();
+                                ddlMunicipioEmpresa.Enabled = true;
+
+                                /* Ciudad o Poblado de la empresa */
+                                var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()));
+
+                                ddlCiudadPobladoEmpresa.Items.Clear();
+                                ddlCiudadPobladoEmpresa.Items.Add(new ListItem("Seleccionar", ""));
+
+                                ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
+                                {
+                                    ddlCiudadPobladoEmpresa.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
+                                });
+                                ddlCiudadPobladoEmpresa.SelectedValue = sqlResultado["fiIDCiudad"].ToString();
+                                ddlCiudadPobladoEmpresa.Enabled = true;
+
+                                /* Barrio o colonia de la empresa */
+                                var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()), int.Parse(sqlResultado["fiIDCiudad"].ToString()));
+
+                                ddlBarrioColoniaEmpresa.Items.Clear();
+                                ddlBarrioColoniaEmpresa.Items.Add(new ListItem("Seleccionar", ""));
+
+                                barriosColoniasDelPoblado.ForEach(barrioColonia =>
+                                {
+                                    ddlBarrioColoniaEmpresa.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
+                                });
+                                ddlBarrioColoniaEmpresa.SelectedValue = sqlResultado["fiIDBarrioColonia"].ToString();
+                                ddlBarrioColoniaEmpresa.Enabled = true;
+                            }
+
                             /****** Informacion domicilio ******/
                             sqlResultado.NextResult();
+
+                            while (sqlResultado.Read())
+                            {
+                                txtTelefonoCasa.Text = sqlResultado["fcTelefonoCasa"].ToString();
+                                txtDireccionDetalladaDomicilio.Text = sqlResultado["fcDireccionDetalladaDomicilio"].ToString();
+                                txtReferenciasDelDomicilio.Value = sqlResultado["fcReferenciasDireccionDetalladaDomicilio"].ToString();
+
+                                /* Departamento */
+                                ddlDepartamentoDomicilio.SelectedValue = sqlResultado["fiCodDepartamento"].ToString();
+
+                                /* Municipio del domicilio */
+                                var municipiosDeDepartamento = CargarMunicipios(int.Parse(sqlResultado["fiCodDepartamento"].ToString()));
+
+                                ddlMunicipioDomicilio.Items.Clear();
+                                ddlMunicipioDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+                                municipiosDeDepartamento.ForEach(municipio =>
+                                {
+                                    ddlMunicipioDomicilio.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
+                                });
+                                ddlMunicipioDomicilio.SelectedValue = sqlResultado["fiCodMunicipio"].ToString();
+                                ddlMunicipioDomicilio.Enabled = true;
+
+                                /* Ciudad o Poblado del domicilio */
+                                var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(sqlResultado["fiCodDepartamento"].ToString()), int.Parse(sqlResultado["fiCodMunicipio"].ToString()));
+
+                                ddlCiudadPobladoDomicilio.Items.Clear();
+                                ddlCiudadPobladoDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+                                ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
+                                {
+                                    ddlCiudadPobladoDomicilio.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
+                                });
+                                ddlCiudadPobladoDomicilio.SelectedValue = sqlResultado["fiCodPoblado"].ToString();
+                                ddlCiudadPobladoDomicilio.Enabled = true;
+
+                                /* Barrio o colonia del domicilio */
+                                var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(sqlResultado["fiCodDepartamento"].ToString()), int.Parse(sqlResultado["fiCodMunicipio"].ToString()), int.Parse(sqlResultado["fiCodPoblado"].ToString()));
+
+                                ddlBarrioColoniaDomicilio.Items.Clear();
+                                ddlBarrioColoniaDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+                                barriosColoniasDelPoblado.ForEach(barrioColonia =>
+                                {
+                                    ddlBarrioColoniaDomicilio.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
+                                });
+                                ddlBarrioColoniaDomicilio.SelectedValue = sqlResultado["fiCodBarrio"].ToString();
+                                ddlBarrioColoniaDomicilio.Enabled = true;
+                            }
 
                             /****** Informacion del conyugue ******/
                             sqlResultado.NextResult();
 
+                            if (sqlResultado.HasRows)
+                            {
+                                while (sqlResultado.Read())
+                                {
+                                    txtIdentidadConyugue.Text = sqlResultado["fcIndentidadConyugue"].ToString();
+                                    txtNombresConyugue.Text = sqlResultado["fcNombreCompletoConyugue"].ToString();
+                                    txtFechaNacimientoConyugue.Text = DateTime.Parse(sqlResultado["fdFechaNacimientoConyugue"].ToString()).ToString("yyyy-MM-dd");
+                                    txtTelefonoConyugue.Text = sqlResultado["fcTelefonoConyugue"].ToString();
+                                    txtLugarDeTrabajoConyuge.Text = sqlResultado["fcLugarTrabajoConyugue"].ToString();
+                                    txtIngresosMensualesConyugue.Text = sqlResultado["fnIngresosMensualesConyugue"].ToString();
+                                    txtTelefonoTrabajoConyugue.Text = sqlResultado["fcTelefonoTrabajoConyugue"].ToString();
+                                }
+                            }
+                            else
+                            {
+                                liInformacionConyugal.Visible = false;
+                            }
+
                             /****** Referencias de la solicitud ******/
                             sqlResultado.NextResult();
 
-                            while (sqlResultado.Read())
+                            if (sqlResultado.HasRows)
                             {
-                                /*
-                                informacionDeClienteSolicitud.ReferenciasPersonales.Add(new SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewModel()
+                                HtmlTableRow tRowReferencias;
+                                var btnEditarReferencia = string.Empty;
+                                var btnEliminarReferencia = string.Empty;
+
+                                /* Llenar table de referencias */
+                                while (sqlResultado.Read())
                                 {
-                                    IdReferencia = (int)sqlResultado["fiIDReferencia"],
-                                    IdCliente = (int)sqlResultado["fiIDCliente"],
-                                    IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                    NombreCompleto = sqlResultado["fcNombreCompletoReferencia"].ToString(),
-                                    LugarTrabajo = sqlResultado["fcLugarTrabajoReferencia"].ToString(),
-                                    TiempoDeConocer = sqlResultado["fcTiempoDeConocer"].ToString(),
-                                    IdTiempoDeConocer = (short)sqlResultado["fiTiempoConocerReferencia"],
-                                    TelefonoReferencia = sqlResultado["fcTelefonoReferencia"].ToString(),
-                                    IdParentescoReferencia = (int)sqlResultado["fiIDParentescoReferencia"],
-                                    DescripcionParentesco = sqlResultado["fcDescripcionParentesco"].ToString(),
-                                    ReferenciaActivo = (bool)sqlResultado["fbReferenciaActivo"],
-                                    RazonInactivo = sqlResultado["fcRazonInactivo"].ToString(),
-                                    ComentarioDeptoCredito = sqlResultado["fcComentarioDeptoCredito"].ToString(),
-                                    AnalistaComentario = (int)sqlResultado["fiAnalistaComentario"]
-                                });
-                                */
+                                    btnEliminarReferencia = "<button id='btnEliminarReferencia' data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' class='btn btn-sm btn-danger mb-0 align-self-center' type='button' title='Eliminar referencia personal'><i class='far fa-trash-alt'></i></button>";
+                                    btnEditarReferencia = "<button id='btnEditarReferencia' data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-nombre='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-trabajo='" + sqlResultado["fcLugarTrabajoReferencia"].ToString() + "' data-telefono='" + sqlResultado["fcTelefonoReferencia"].ToString() + "' data-idtiempodeconocer='" + sqlResultado["fiTiempoConocerReferencia"].ToString() + "' data-idparentesco='" + sqlResultado["fiIDParentescoReferencia"] + "' class='btn btn-sm btn-info mb-0 align-self-center' type='button' title='Editar referencia personal'><i class='far fa-edit'></i></button>";
+
+                                    tRowReferencias = new HtmlTableRow();
+                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcNombreCompletoReferencia"].ToString() });
+                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTelefonoReferencia"].ToString() });
+                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcLugarTrabajoReferencia"].ToString() });
+                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTiempoDeConocer"].ToString() });
+                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionParentesco"].ToString() });
+                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerHtml = btnEditarReferencia + btnEliminarReferencia });
+                                    tblReferenciasPersonales.Rows.Add(tRowReferencias);
+                                }
                             }
 
                             /****** Historial de mantenimientos de la solicitud ******/
                             sqlResultado.NextResult();
-
-                            while (sqlResultado.Read())
-                            {
-                                /*
-                                informacionDeClienteSolicitud.HistorialMantenimientos.Add(new SolicitudesCredito_Mantenimiento_HistorialMantenimiento_ViewModel()
-                                {
-                                    IdHistorialMantenimiento = (int)sqlResultado["fiIDHistorialMantenimiento"],
-                                    IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                    IdUsuario = (int)sqlResultado["fiIDUsuario"],
-                                    NombreUsuario = sqlResultado["fcNombreCorto"].ToString(),
-                                    AgenciaUsuario = sqlResultado["fcNombreAgencia"].ToString(),
-                                    FechaMantenimiento = (DateTime)sqlResultado["fdFechaMantenimiento"],
-                                    Observaciones = sqlResultado["fcObservaciones"].ToString(),
-                                    EstadoMantenimiento = (int)sqlResultado["fiEstadoMantenimiento"]
-                                });
-                                */
-                            }
                         }
                     }
                 } // using command
             }// using connection
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-    }
-
-    public void ObtenerInformacionCliente()
-    {
-        try
-        {
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
-            {
-                sqlConexion.Open();
-
-                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_ObtenerInformacionPorIdentidad", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    //sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", pcID);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        if (!reader.HasRows)
-                            return;
-
-                        /* Clientes Maestro */
-                        while (reader.Read())
-                        {
-
-                            //txtIdentidadCliente.Text = reader["fcIdentidadCliente"].ToString();
-                            //txtRtnCliente.Text = reader["fcRTN"].ToString();
-                            //txtPrimerNombre.Text = reader["fcPrimerNombreCliente"].ToString();
-                            //txtSegundoNombre.Text = reader["fcSegundoNombreCliente"].ToString();
-                            //txtPrimerApellido.Text = reader["fcPrimerApellidoCliente"].ToString();
-                            //txtSegundoApellido.Text = reader["fcSegundoApellidoCliente"].ToString();
-                            ddlNacionalidad.SelectedValue = reader["fiNacionalidadCliente"].ToString();
-                            txtCorreoElectronico.Text = reader["fcCorreoElectronicoCliente"].ToString();
-                            txtProfesion.Text = reader["fcProfesionOficioCliente"].ToString();
-
-                            if (reader["fcSexoCliente"].ToString() == "F")
-                            {
-                                rbSexoFemenino.Checked = true;
-                            }
-                            else
-                            {
-                                rbSexoMasculino.Checked = true;
-                            }
-                            ddlEstadoCivil.Text = reader["fiIDEstadoCivil"].ToString();
-                            ddlTipoDeVivienda.Text = reader["fiIDVivienda"].ToString();
-                            ddlTiempoDeResidir.Text = reader["fiTiempoResidir"].ToString();
-                        }
-
-                        reader.NextResult();
-
-                        /* Información de domicilio */
-                        while (reader.Read())
-                        {
-                            txtTelefonoCasa.Text = reader["fcTelefonoCasa"].ToString();
-                            txtDireccionDetalladaDomicilio.Text = reader["fcDireccionDetalladaDomicilio"].ToString();
-                            txtReferenciasDelDomicilio.Value = reader["fcReferenciasDireccionDetalladaDomicilio"].ToString();
-
-                            /* Departamento */
-                            ddlDepartamentoDomicilio.SelectedValue = reader["fiCodDepartamento"].ToString();
-
-                            /* Municipio del domicilio */
-                            var municipiosDeDepartamento = CargarMunicipios(int.Parse(reader["fiCodDepartamento"].ToString()));
-
-                            ddlMunicipioDomicilio.Items.Clear();
-                            ddlMunicipioDomicilio.Items.Add(new ListItem("Seleccionar", ""));
-
-                            municipiosDeDepartamento.ForEach(municipio =>
-                            {
-                                ddlMunicipioDomicilio.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
-                            });
-                            ddlMunicipioDomicilio.SelectedValue = reader["fiCodMunicipio"].ToString();
-                            ddlMunicipioDomicilio.Enabled = true;
-
-                            /* Ciudad o Poblado del domicilio */
-                            var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(reader["fiCodDepartamento"].ToString()), int.Parse(reader["fiCodMunicipio"].ToString()));
-
-                            ddlCiudadPobladoDomicilio.Items.Clear();
-                            ddlCiudadPobladoDomicilio.Items.Add(new ListItem("Seleccionar", ""));
-
-                            ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
-                            {
-                                ddlCiudadPobladoDomicilio.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
-                            });
-                            ddlCiudadPobladoDomicilio.SelectedValue = reader["fiCodPoblado"].ToString();
-                            ddlCiudadPobladoDomicilio.Enabled = true;
-
-                            /* Barrio o colonia del domicilio */
-                            var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(reader["fiCodDepartamento"].ToString()), int.Parse(reader["fiCodMunicipio"].ToString()), int.Parse(reader["fiCodPoblado"].ToString()));
-
-                            ddlBarrioColoniaDomicilio.Items.Clear();
-                            ddlBarrioColoniaDomicilio.Items.Add(new ListItem("Seleccionar", ""));
-
-                            barriosColoniasDelPoblado.ForEach(barrioColonia =>
-                            {
-                                ddlBarrioColoniaDomicilio.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
-                            });
-                            ddlBarrioColoniaDomicilio.SelectedValue = reader["fiCodBarrio"].ToString();
-                            ddlBarrioColoniaDomicilio.Enabled = true;
-                        }
-
-                        reader.NextResult();
-
-                        /* Información laboral */
-                        while (reader.Read())
-                        {
-                            txtNombreDelTrabajo.Text = reader["fcNombreTrabajo"].ToString();
-                            txtFechaDeIngreso.Text = DateTime.Parse(reader["fdFechaIngreso"].ToString()).ToString("MM/dd/yyyy");
-                            txtPuestoAsignado.Text = reader["fcPuestoAsignado"].ToString();
-                            txtIngresosMensuales.Text = reader["fnIngresosMensuales"].ToString();
-
-                            txtTelefonoEmpresa.Text = reader["fcTelefonoEmpresa"].ToString();
-                            txtExtensionRecursosHumanos.Text = reader["fcExtensionRecursosHumanos"].ToString();
-                            txtExtensionCliente.Text = reader["fcExtensionCliente"].ToString();
-                            txtFuenteDeOtrosIngresos.Text = reader["fcFuenteOtrosIngresos"].ToString();
-                            txtValorOtrosIngresos.Text = reader["fnValorOtrosIngresosMensuales"].ToString();
-                            txtDireccionDetalladaEmpresa.Text = reader["fcDireccionDetalladaEmpresa"].ToString();
-                            txtReferenciasEmpresa.Value = reader["fcReferenciasDireccionDetalladaEmpresa"].ToString();
-
-                            /* Departamento de la empresa */
-                            ddlDepartamentoEmpresa.SelectedValue = reader["fiIDDepartamento"].ToString();
-
-                            /* Municipio de la empresa */
-                            var municipiosDeDepartamento = CargarMunicipios(int.Parse(reader["fiIDDepartamento"].ToString()));
-
-                            ddlMunicipioEmpresa.Items.Clear();
-                            ddlMunicipioEmpresa.Items.Add(new ListItem("Seleccionar", ""));
-
-                            municipiosDeDepartamento.ForEach(municipio =>
-                            {
-                                ddlMunicipioEmpresa.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
-                            });
-                            ddlMunicipioEmpresa.SelectedValue = reader["fiIDMunicipio"].ToString();
-                            ddlMunicipioEmpresa.Enabled = true;
-
-                            /* Ciudad o Poblado de la empresa */
-                            var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(reader["fiIDDepartamento"].ToString()), int.Parse(reader["fiIDMunicipio"].ToString()));
-
-                            ddlCiudadPobladoEmpresa.Items.Clear();
-                            ddlCiudadPobladoEmpresa.Items.Add(new ListItem("Seleccionar", ""));
-
-                            ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
-                            {
-                                ddlCiudadPobladoEmpresa.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
-                            });
-                            ddlCiudadPobladoEmpresa.SelectedValue = reader["fiIDCiudad"].ToString();
-                            ddlCiudadPobladoEmpresa.Enabled = true;
-
-                            /* Barrio o colonia de la empresa */
-                            var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(reader["fiIDDepartamento"].ToString()), int.Parse(reader["fiIDMunicipio"].ToString()), int.Parse(reader["fiIDCiudad"].ToString()));
-
-                            ddlBarrioColoniaEmpresa.Items.Clear();
-                            ddlBarrioColoniaEmpresa.Items.Add(new ListItem("Seleccionar", ""));
-
-                            barriosColoniasDelPoblado.ForEach(barrioColonia =>
-                            {
-                                ddlBarrioColoniaEmpresa.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
-                            });
-                            ddlBarrioColoniaEmpresa.SelectedValue = reader["fiIDBarrioColonia"].ToString();
-                            ddlBarrioColoniaEmpresa.Enabled = true;
-                        }
-
-                        reader.NextResult();
-
-                        /* Información del conyugue */
-                        while (reader.Read())
-                        {
-                            txtIdentidadConyugue.Text = reader["fcIndentidadConyugue"].ToString();
-                            txtNombresConyugue.Text = reader["fcNombreCompletoConyugue"].ToString();
-                            txtFechaNacimientoConyugue.Text = DateTime.Parse(reader["fdFechaNacimientoConyugue"].ToString()).ToString("yyyy-MM-dd");
-                            txtTelefonoConyugue.Text = reader["fcTelefonoConyugue"].ToString();
-                            txtLugarDeTrabajoConyuge.Text = reader["fcLugarTrabajoConyugue"].ToString();
-                            txtIngresosMensualesConyugue.Text = reader["fnIngresosMensualesConyugue"].ToString();
-                            txtTelefonoTrabajoConyugue.Text = reader["fcTelefonoTrabajoConyugue"].ToString();
-                        }
-                    }
-                }
-            }
         }
         catch (Exception ex)
         {

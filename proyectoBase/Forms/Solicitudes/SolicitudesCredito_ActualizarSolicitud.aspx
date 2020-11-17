@@ -7,15 +7,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Actualizar solicitud de crédito</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
         html {
             background-color: rgb(255,255,255) !important;
@@ -61,16 +62,17 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-0">
+                            <div class="form-group row">
                                 <div class="col-12">
-                                    <div class="form-group row">
-                                        <table id="tblCondiciones" class="table tabla-compacta table-striped">
+                                    <div class="table-responsive">
+                                        <table id="tblCondiciones" class="table tabla-compacta table-striped table-bordered" runat="server">
                                             <thead>
                                                 <tr>
-                                                    <th>Condición</th>
+                                                    <th>Tipo de condición</th>
                                                     <th>Descripción</th>
-                                                    <th>Comentario departamento de crédito</th>
-                                                    <th></th>
+                                                    <th>Comentario adicional</th>
+                                                    <th>Estado</th>
+                                                    <th>Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -101,24 +103,53 @@
                                     <h6 class="mt-3 mb-1">Información básica</h6>
 
                                     <div class="form-group row">
-                                        <div class="col-md-3">
+                                        <div class="col-6">
+                                            <label class="col-form-label">No. Identidad</label>
+                                            <asp:TextBox ID="txtIdentidadCliente" CssClass="form-control form-control-sm mascara-identidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="col-form-label">RTN numérico</label>
+                                            <asp:TextBox ID="txtRtnCliente" CssClass="form-control form-control-sm mascara-rtn" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Primer nombre</label>
+                                            <asp:TextBox ID="txtPrimerNombre" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Segundo nombre</label>
+                                            <asp:TextBox ID="txtSegundoNombre" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Primer apellido</label>
+                                            <asp:TextBox ID="txtPrimerApellido" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Segundo apellido</label>
+                                            <asp:TextBox ID="txtSegundoApellido" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-6">
                                             <label class="col-form-label">Nacionalidad</label>
                                             <asp:DropDownList ID="ddlNacionalidad" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlNacionalidad"></asp:DropDownList>
                                             <div id="error-ddlNacionalidad"></div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label class="col-form-label">Profesión</label>
-                                            <asp:TextBox ID="txtProfesion" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="col-form-label">Estado civil</label>
-                                            <asp:DropDownList ID="ddlEstadoCivil" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlEstadoCivil"></asp:DropDownList>
-                                            <div id="error-ddlEstadoCivil"></div>
-                                        </div>
-                                        <div class="col-md-3">
+                                        <div class="col-sm-6">
                                             <label class="col-form-label">Tipo de cliente</label>
                                             <asp:DropDownList ID="ddlTipoDeCliente" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlTipoDeCliente"></asp:DropDownList>
                                             <div id="error-ddlTipoDeCliente"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mt-3 mb-1">Información de contacto</h6>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Email</label>
+                                            <asp:TextBox ID="txtCorreoElectronico" CssClass="form-control form-control-sm" type="email" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Télefono</label>
+                                            <asp:TextBox ID="txtNumeroTelefono" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -145,18 +176,15 @@
                                             <div id="error-sexo"></div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6 class="mt-3 mb-1">Información de contacto</h6>
-
                                     <div class="form-group row">
                                         <div class="col-sm-6">
-                                            <label class="col-form-label">Email</label>
-                                            <asp:TextBox ID="txtCorreoElectronico" CssClass="form-control form-control-sm" type="email" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                            <label class="col-form-label">Estado civil</label>
+                                            <asp:DropDownList ID="ddlEstadoCivil" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlEstadoCivil"></asp:DropDownList>
+                                            <div id="error-ddlEstadoCivil"></div>
                                         </div>
                                         <div class="col-sm-6">
-                                            <label class="col-form-label">Télefono</label>
-                                            <asp:TextBox ID="txtNumeroTelefono" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                            <label class="col-form-label">Profesión</label>
+                                            <asp:TextBox ID="txtProfesion" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
@@ -174,22 +202,22 @@
                             <div class="row">
                                 <div class="col-sm-7 border-right border-gray">
                                     <div class="form-group row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-6">
                                             <label class="col-form-label">Departamento</label>
                                             <asp:DropDownList ID="ddlDepartamentoDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlDepartamentoDomicilio"></asp:DropDownList>
                                             <div id="error-ddlDepartamentoDomicilio"></div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-6">
                                             <label class="col-form-label">Municipio</label>
                                             <asp:DropDownList ID="ddlMunicipioDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlMunicipioDomicilio"></asp:DropDownList>
                                             <div id="error-ddlMunicipioDomicilio"></div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-6">
                                             <label class="col-form-label">Ciudad/Poblado</label>
                                             <asp:DropDownList ID="ddlCiudadPobladoDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlCiudadPobladoDomicilio"></asp:DropDownList>
                                             <div id="error-ddlCiudadPobladoDomicilio"></div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-6">
                                             <label class="col-form-label">Barrio/Colonia</label>
                                             <asp:DropDownList ID="ddlBarrioColoniaDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlBarrioColoniaDomicilio"></asp:DropDownList>
                                             <div id="error-ddlBarrioColoniaDomicilio"></div>
@@ -386,14 +414,11 @@
                                     <h6 class="mt-1">Referencias personales del cliente</h6>
                                 </div>
                             </div>
-                            <div class="mt-2 header-title">
-                                <label class="col-form-label">Mínimo 4 referencias personales. Entre ellas 2 familiares. <small class="text-info">(Consejo: Si te equivocas en el dato de una referencia, quítala y vuleve a agregarla.)</small></label>
-                                <button id="btnNuevaReferencia" type="button" class="btn btn-info waves-effect waves-light float-right">
-                                    Agregar referencia
-                                </button>
-                            </div>
+
+                            <button type="button" id="btnAgregarReferencia" class="btn btn-info mb-1 mt-1">Nuevo</button>
+
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered dt-responsive nowrap table table-condensed" id="tblReferenciasPersonales">
+                                <table class="table tabla-compacta table-striped table-bordered" id="tblReferenciasPersonales" runat="server">
                                     <thead>
                                         <tr>
                                             <th>Nombre completo</th>
@@ -401,7 +426,7 @@
                                             <th>Lugar de trabajo</th>
                                             <th>Tiempo de conocer</th>
                                             <th>Parentesco</th>
-                                            <th>Quitar</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -426,6 +451,50 @@
             </div>
         </div>
 
+        <div id="modalDetallesCondicion" class="modal fade" role="dialog" aria-labelledby="modalDetallesCondicionLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalDetallesCondicionLabel">Detalles de la condición</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Observaciones</label>
+                                <textarea id="txtComentarioAdicionalCondicion" runat="server" class="form-control form-control-sm" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalFinalizarCondicionLista" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarCondicionListaLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-1 pt-1">
+                        <h6 class="modal-title" id="modalFinalizarCondicionListaLabel">Finalizar condición</h6>
+                    </div>
+                    <div class="modal-body">
+                        <label class="font-weight-bold text-center">¿Está seguro de finalizar esta condición?</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnTerminarCondicionFinalizar" data-dismiss="modal" class="btn btn-primary waves-effect">
+                            Confirmar
+                        </button>
+                        <button data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!--modal de agregar nueva referencia -->
         <div class="modal fade" id="modalAgregarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarReferenciaPersonalLabel" aria-hidden="true">
@@ -480,21 +549,85 @@
             </div>
         </div>
 
-        <div id="modalFinalizarCondicionLista" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarCondicionListaLabel" aria-hidden="true">
+        <div id="modalEliminarReferenciaPersonal" class="modal fade" role="dialog" aria-labelledby="modalEliminarReferenciaPersonalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header pb-1 pt-1">
-                        <h6 class="modal-title" id="modalFinalizarCondicionListaLabel">Finalizar condición</h6>
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalEliminarReferenciaPersonalLabel">Eliminar referencia personal</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        <label class="font-weight-bold text-center">¿Está seguro de finalizar esta condición?</label>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Observaciones</label>
+                                <textarea id="txtObservacionesEliminarReferenciaPersonal" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnTerminarCondicionFinalizar" data-dismiss="modal" class="btn btn-primary waves-effect">
+                        <button id="btnEliminarReferenciaPersonalConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
                             Confirmar
                         </button>
-                        <button data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cerrar
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalEditarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalEditarReferenciaPersonalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header pb-1 pt-1">
+                        <h6 class="modal-title" id="modalEditarReferenciaPersonalLabel">Editar referencia personal</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Nombre completo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtNombreReferenciaPersonal_Editar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Telefono</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtTelefonoReferenciaPersonal_Editar" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Tiempo de conocer</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlTiempoDeConocerReferencia_Editar" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-errors-container="#error-ddlTiempoDeConocerReferencia_Editar"></asp:DropDownList>
+                                <div id="error-ddlTiempoDeConocerReferencia_Editar"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Parentesco</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlParentesco_Editar" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-errors-container="#error-ddlParentesco_Editar"></asp:DropDownList>
+                                <div id="error-ddlParentesco_Editar"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtLugarDeTrabajoReferencia_Editar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Observaciones</label>
+                                <textarea id="txtObservacionesEditarReferenciaPersonal" runat="server" class="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer pt-2 pb-2">
+                        <button id="btnEditarReferenciaConfirmar" type="button" class="btn btn-primary waves-effect waves-light mr-1">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
                         </button>
                     </div>
                 </div>
@@ -540,6 +673,6 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="../../Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=202000930092758"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=202000930092758"></script>
 </body>
 </html>
