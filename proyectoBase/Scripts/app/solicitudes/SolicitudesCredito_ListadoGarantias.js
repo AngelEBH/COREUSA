@@ -79,7 +79,7 @@ $(document).ready(function () {
                         (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnDetalles"><i class="fas fa-tasks"></i> Detalles</button>') +
                         (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnActualizar"><i class="far fa-edit"></i> ' + (row["VIN"] != '' ? 'Actualizar' : 'Completar información')+'</button>') +
                         ((row["IdGarantia"] == 0 && row["VIN"] != '') ? '' : '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion"><i class="far fa-file-alt"></i> Imprimir Doc.</button>') +
-                        ((row["IdAutoGPSInstalacion"] == 0 && row["IdGarantia"] != 0 && row["VIN"] != '') ? '<button type="button" class="dropdown-item" id="btnSolicitarGPS"><i class="fas fa-map-marker-alt"></i> Solicitar GPS</button>' : '') +
+                        ((row["IdGarantia"] != 0 && row["VIN"] != '') ? '<button type="button" class="dropdown-item" id="btnSolicitarGPS"><i class="fas fa-map-marker-alt"></i> Solicitar GPS</button>' : '') +
                         ((row["IdAutoGPSInstalacion"] != 0) ? '<button type="button" class="dropdown-item" id="btnDetalleSolicitudGPS"><i class="fas fa-map-marker-alt"></i> Detalles solicitud GPS</button>' : '') +
                         '</div>' +
                         '</div >';
@@ -108,6 +108,7 @@ $(document).ready(function () {
                     return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a');
                 }
             },
+            { "data": "VIN" },
             {
                 "data": "IdGarantia", "className": "text-center",
                 "render": function (data, type, row) {
@@ -117,7 +118,7 @@ $(document).ready(function () {
             }
         ],
         columnDefs: [
-            { targets: [0, 8], orderable: false },
+            { targets: [0, 9], orderable: false },
             { "width": "1%", "targets": 1 }
         ]
     });
@@ -209,16 +210,16 @@ $(document).ready(function () {
 
         switch (filtro) {
             case "0":
-                dtListado.columns(8).search("").draw();
+                dtListado.columns(9).search("").draw();
                 break;
             case "1":
-                dtListado.columns(8).search("estadoPendiente").draw();
+                dtListado.columns(9).search("estadoPendiente").draw();
                 break;
             case "2":
-                dtListado.columns(8).search("estadoListo").draw();
+                dtListado.columns(9).search("estadoListo").draw();
                 break;
             default:
-                dtListado.columns(8).search("").draw();
+                dtListado.columns(9).search("").draw();
         }
     });
 

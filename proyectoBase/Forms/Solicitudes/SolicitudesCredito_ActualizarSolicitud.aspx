@@ -39,12 +39,12 @@
                 <div id="smartwizard" class="h-100">
                     <ul>
                         <li runat="server" id="liInformacionPrestamo"><a href="#step-1" class="pt-3 pb-2 font-12">Condicionamientos</a></li>
-                        <li runat="server" id="liInformacionPersonal"><a href="#step-2" class="pt-3 pb-2 font-12">Información personal</a></li>
-                        <li runat="server" id="liInformacionDomicilio"><a href="#step-3" class="pt-3 pb-2 font-12">Información domicilio</a></li>
-                        <li runat="server" id="liInformacionLaboral"><a href="#step-4" class="pt-3 pb-2 font-12">Información laboral</a></li>
-                        <li runat="server" id="liInformacionConyugal"><a href="#step-5" class="pt-3 pb-2 font-12">Información conyugal</a></li>
-                        <li runat="server" id="liReferenciasPersonales"><a href="#step-6" class="pt-3 pb-2 font-12">Referencias personales</a></li>
-                        <li runat="server" id="liDocumentacion"><a href="#step-7" class="pt-3 pb-2 font-12">Documentación</a></li>
+                        <li runat="server" visible="true" id="liInformacionPersonal"><a href="#step-2" class="pt-3 pb-2 font-12">Información personal</a></li>
+                        <li runat="server" visible="true" id="liInformacionDomicilio"><a href="#step-3" class="pt-3 pb-2 font-12">Información domicilio</a></li>
+                        <li runat="server" visible="true" id="liInformacionLaboral"><a href="#step-4" class="pt-3 pb-2 font-12">Información laboral</a></li>
+                        <li runat="server" visible="true" id="liInformacionConyugal"><a href="#step-5" class="pt-3 pb-2 font-12">Información conyugal</a></li>
+                        <li runat="server" visible="true" id="liReferenciasPersonales"><a href="#step-6" class="pt-3 pb-2 font-12">Referencias personales</a></li>
+                        <li runat="server" visible="true" id="liDocumentacion"><a href="#step-7" class="pt-3 pb-2 font-12">Documentación</a></li>
                     </ul>
                     <div>
                         <!-- Listado de condiciones de la solicitud -->
@@ -72,7 +72,7 @@
                                                     <th>Descripción</th>
                                                     <th>Comentario adicional</th>
                                                     <th>Estado</th>
-                                                    <th>Acciones</th>
+                                                    <%--<th>Acciones</th>--%>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -82,7 +82,7 @@
                                     <div class="form-group row">
                                         <div class="col-12">
                                             <label class="col-form-label">Otras</label>
-                                            <asp:TextBox ID="txtOtrasCondiciones" CssClass="form-control form-control-sm" type="text" ReadOnly="true" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtOtrasCondiciones" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
@@ -92,40 +92,44 @@
                         <!-- Información personal del cliente -->
                         <div id="step-2" class="form-section">
 
-                            <div class="form-group row m-0 border-bottom border-gray">
-                                <div class="col-12 p-0">
+                            <div class="form-group row m-0 border-bottom border-gray justify-content-between">
+                                <div class="col-auto p-0">
                                     <h6 class="mt-1">Actualizar información personal</h6>
+                                </div>
+                                <div class="col-auto p-0 mb-1">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoPersonal">
+                                        <i class="far fa-check-square"></i>
+                                        Finalizar condiciones
+                                    </button>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 border-right border-gray">
-                                    <h6 class="mt-3 mb-1">Información básica</h6>
-
                                     <div class="form-group row">
                                         <div class="col-6">
                                             <label class="col-form-label">No. Identidad</label>
-                                            <asp:TextBox ID="txtIdentidadCliente" CssClass="form-control form-control-sm mascara-identidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtIdentidadCliente" CssClass="form-control form-control-sm mascara-identidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-6">
                                             <label class="col-form-label">RTN numérico</label>
-                                            <asp:TextBox ID="txtRtnCliente" CssClass="form-control form-control-sm mascara-rtn" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtRtnCliente" CssClass="form-control form-control-sm mascara-rtn" type="text" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Primer nombre</label>
-                                            <asp:TextBox ID="txtPrimerNombre" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtPrimerNombre" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Segundo nombre</label>
-                                            <asp:TextBox ID="txtSegundoNombre" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtSegundoNombre" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Primer apellido</label>
-                                            <asp:TextBox ID="txtPrimerApellido" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtPrimerApellido" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Segundo apellido</label>
-                                            <asp:TextBox ID="txtSegundoApellido" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtSegundoApellido" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Nacionalidad</label>
@@ -138,30 +142,16 @@
                                             <div id="error-ddlTipoDeCliente"></div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6 class="mt-3 mb-1">Información de contacto</h6>
-
                                     <div class="form-group row">
-                                        <div class="col-sm-6">
-                                            <label class="col-form-label">Email</label>
-                                            <asp:TextBox ID="txtCorreoElectronico" CssClass="form-control form-control-sm" type="email" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="col-form-label">Télefono</label>
-                                            <asp:TextBox ID="txtNumeroTelefono" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <label class="col-form-label">Fecha de nacimiento</label>
-                                            <asp:TextBox ID="txtFechaDeNacimiento" CssClass="form-control form-control-sm" type="date" Enabled="false" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtFechaDeNacimiento" CssClass="form-control form-control-sm" type="date" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <label class="col-form-label">Edad del cliente</label>
                                             <asp:TextBox ID="txtEdadDelCliente" CssClass="form-control form-control-sm" Enabled="false" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label class="col-form-label">Sexo</label>
                                             <div>
                                                 <div class="form-check form-check-inline">
@@ -174,6 +164,31 @@
                                                 </div>
                                             </div>
                                             <div id="error-sexo"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Email</label>
+                                            <asp:TextBox ID="txtCorreoElectronico" CssClass="form-control form-control-sm" type="email" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Télefono</label>
+                                            <asp:TextBox ID="txtNumeroTelefono" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Tipo de Vivienda</label>
+                                            <asp:DropDownList ID="ddlTipoDeVivienda" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlTipoDeVivienda"></asp:DropDownList>
+                                            <div id="error-ddlTipoDeVivienda"></div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Tiempo de residir</label>
+                                            <asp:DropDownList ID="ddlTiempoDeResidir" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlTiempoDeResidir"></asp:DropDownList>
+                                            <div id="error-ddlTiempoDeResidir"></div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -194,48 +209,39 @@
                         <!-- Información del domicilio del cliente -->
                         <div id="step-3" class="form-section">
 
-                            <div class="form-group row m-0 border-bottom border-gray">
-                                <div class="col-12 p-0">
+                            <div class="form-group row m-0 border-bottom border-gray justify-content-between">
+                                <div class="col-auto p-0">
                                     <h6 class="mt-1">Actualizar información del domicilio</h6>
+                                </div>
+                                <div class="col-auto p-0 mb-1">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoDomicilio">
+                                        <i class="far fa-check-square"></i>
+                                        Finalizar condiciones
+                                    </button>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-7 border-right border-gray">
+                                <div class="col-12">
                                     <div class="form-group row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-3">
                                             <label class="col-form-label">Departamento</label>
                                             <asp:DropDownList ID="ddlDepartamentoDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlDepartamentoDomicilio"></asp:DropDownList>
                                             <div id="error-ddlDepartamentoDomicilio"></div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-3">
                                             <label class="col-form-label">Municipio</label>
                                             <asp:DropDownList ID="ddlMunicipioDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlMunicipioDomicilio"></asp:DropDownList>
                                             <div id="error-ddlMunicipioDomicilio"></div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-3">
                                             <label class="col-form-label">Ciudad/Poblado</label>
                                             <asp:DropDownList ID="ddlCiudadPobladoDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlCiudadPobladoDomicilio"></asp:DropDownList>
                                             <div id="error-ddlCiudadPobladoDomicilio"></div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-3">
                                             <label class="col-form-label">Barrio/Colonia</label>
                                             <asp:DropDownList ID="ddlBarrioColoniaDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlBarrioColoniaDomicilio"></asp:DropDownList>
                                             <div id="error-ddlBarrioColoniaDomicilio"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-5">
-                                    <h6 class="mb-1 pt-0">Información de la vivienda</h6>
-                                    <div class="form-group row">
-                                        <div class="col-sm-6">
-                                            <label class="col-form-label">Tipo de Vivienda</label>
-                                            <asp:DropDownList ID="ddlTipoDeVivienda" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlTipoDeVivienda"></asp:DropDownList>
-                                            <div id="error-ddlTipoDeVivienda"></div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="col-form-label">Tiempo de residir</label>
-                                            <asp:DropDownList ID="ddlTiempoDeResidir" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlTiempoDeResidir"></asp:DropDownList>
-                                            <div id="error-ddlTiempoDeResidir"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -263,10 +269,15 @@
 
                         <!-- Información laboral del cliente -->
                         <div id="step-4" class="form-section">
-
-                            <div class="form-group row m-0 border-bottom border-gray">
-                                <div class="col-12 p-0">
+                            <div class="form-group row m-0 border-bottom border-gray justify-content-between">
+                                <div class="col-auto p-0">
                                     <h6 class="mt-1">Actualizar información laboral</h6>
+                                </div>
+                                <div class="col-auto p-0 mb-1">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoLaboral">
+                                        <i class="far fa-check-square"></i>
+                                        Finalizar condiciones
+                                    </button>
                                 </div>
                             </div>
                             <div class="row">
@@ -361,12 +372,17 @@
 
                         <!-- Información del conyugue -->
                         <div id="step-5" class="form-section">
-                            <div class="form-group row m-0 border-bottom border-gray">
-                                <div class="col-12 p-0">
+                            <div class="form-group row m-0 border-bottom border-gray justify-content-between">
+                                <div class="col-auto p-0">
                                     <h6 class="mt-1">Información del cónyugue</h6>
                                 </div>
+                                <div class="col-auto p-0 mb-1">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoConyugue">
+                                        <i class="far fa-check-square"></i>
+                                        Finalizar condiciones
+                                    </button>
+                                </div>
                             </div>
-
                             <div class="form-group row">
                                 <div class="col-sm-4">
                                     <label class="col-form-label">Identidad</label>
@@ -409,9 +425,15 @@
 
                         <!-- Referencias personales del cliente -->
                         <div id="step-6" class="form-section">
-                            <div class="form-group row m-0 border-bottom border-gray">
-                                <div class="col-12 p-0">
+                            <div class="form-group row m-0 border-bottom border-gray justify-content-between">
+                                <div class="col-auto p-0">
                                     <h6 class="mt-1">Referencias personales del cliente</h6>
+                                </div>
+                                <div class="col-auto p-0 mb-1">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_Referencias">
+                                        <i class="far fa-check-square"></i>
+                                        Finalizar condiciones
+                                    </button>
                                 </div>
                             </div>
 
@@ -437,9 +459,15 @@
 
                         <!-- Documentación de la solicitud -->
                         <div id="step-7" class="form-section">
-                            <div class="form-group row m-0 border-bottom border-gray">
-                                <div class="col-12 p-0">
+                            <div class="form-group row m-0 border-bottom border-gray justify-content-between">
+                                <div class="col-auto p-0">
                                     <h6 class="mt-1">Documentación de la solicitud <small class="text-info">(Estimado usuario, recuerda subir toda la documentación hasta que ya vayas a guardar la solicitud)</small></h6>
+                                </div>
+                                <div class="col-auto p-0 mb-1">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_Documentacion">
+                                        <i class="far fa-check-square"></i>
+                                        Finalizar condiciones
+                                    </button>
                                 </div>
                             </div>
                             <!-- Div donde se generan dinamicamente los inputs para la documentación -->
@@ -475,21 +503,21 @@
             </div>
         </div>
 
-        <div id="modalFinalizarCondicionLista" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarCondicionListaLabel" aria-hidden="true">
+        <div id="modalFinalizarCondicion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarCondicionListaLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header pb-1 pt-1">
-                        <h6 class="modal-title" id="modalFinalizarCondicionListaLabel">Finalizar condición</h6>
+                    <div class="modal-header pt-2 pb-2">
+                        <h6 class="modal-title" id="modalFinalizarCondicionListaLabel">Finalizar condicionamientos (<b id="lblSeccion"></b>)</h6>
                     </div>
                     <div class="modal-body">
-                        <label class="font-weight-bold text-center">¿Está seguro de finalizar esta condición?</label>
+                        <label>¿Está seguro de finalizar <b>TODAS</b> las condiciones de esta sección?</label>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnTerminarCondicionFinalizar" data-dismiss="modal" class="btn btn-primary waves-effect">
+                        <button id="btnTerminarCondicionConfirmar" data-dismiss="modal" class="btn btn-primary waves-effect">
                             Confirmar
                         </button>
                         <button data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cerrar
+                            Cancelar
                         </button>
                     </div>
                 </div>
@@ -667,6 +695,9 @@
                 min: 0.0,
             });
         });
+
+        const ID_SOLICITUD = <%=this.IdSolicitud%>;
+        const ID_CLIENTE = <%=this.IdCliente%>;
     </script>
     <script src="/Scripts/plugins/steps/js/jquery.smartWizard.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>

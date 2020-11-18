@@ -18,7 +18,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     private string pcIDApp = "";
     private string pcIDSesion = "";
     private string pcIDUsuario = "";
-    private static DSCore.DataCrypt DSC;
+    private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
     public Precalificado_ViewModel Precalificado;
     public List<TipoDocumento_ViewModel> DocumentosRequeridos;
     public SolicitudesCredito_Registrar_Constantes Constantes;
@@ -34,7 +34,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         {
             var lcURL = Request.Url.ToString();
             var liParamStart = lcURL.IndexOf("?");
-            DSC = new DSCore.DataCrypt();
             Precalificado = new Precalificado_ViewModel();
             Constantes = new SolicitudesCredito_Registrar_Constantes();
             DocumentosRequeridos = new List<TipoDocumento_ViewModel>();

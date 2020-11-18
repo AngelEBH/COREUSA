@@ -1,53 +1,29 @@
-﻿var idSolicitud = 0;
-var idCliente = 0;
+﻿var botonFinalizarCondiciones_DOM = '';
+var objSeccion = '';
 
-var btnFinalizar = $('<button id="btnActualizarSolicitud" type="button">Finalizar</button>').addClass('btn btn-info')
-    .on('click', function () {
-
-        $.ajax({
-            type: "POST",
-            url: 'SolicitudesCredito_ActualizarSolicitud.aspx/FinalizarCondicionamientoSolicitud' + qString,
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({ dataCrypt: window.location.href }),
-            error: function (xhr, ajaxOptions, thrownError) {
-
-                MensajeError('No se guardó el registro, contacte al administrador');
-            },
-            success: function (data) {
-
-                if (data.d == "Solicitud actualizada correctamente") {
-                    window.location = "SolicitudesCredito_Ingresadas.aspx" + qString;
-                }
-                else {
-                    MensajeError(data.d);
-                }
-            }
-        });
-    });
+$('#smartwizard').smartWizard({
+    selected: 0,
+    theme: 'default',
+    transitionEffect: 'fade',
+    showStepURLhash: false,
+    autoAdjustHeight: false,
+    toolbarSettings: {
+        toolbarPosition: 'bottom',
+        toolbarButtonPosition: 'end'
+    },
+    lang: {
+        next: 'Siguiente',
+        previous: 'Anterior'
+    }
+});
 
 $(document).ready(function () {
-
-    $('#smartwizard').smartWizard({
-        selected: 0,
-        theme: 'default',
-        transitionEffect: 'fade',
-        showStepURLhash: false,
-        autoAdjustHeight: false,
-        toolbarSettings: {
-            toolbarPosition: 'bottom',
-            toolbarButtonPosition: 'end',
-            toolbarExtraButtons: [btnFinalizar]
-        },
-        lang: {
-            next: 'Siguiente',
-            previous: 'Anterior'
-        }
-    });
 
     /* Cuando se muestre un step */
     $("#smartwizard").on("showStep", function (e, anchorObject, stepNumber, stepDirection, stepPosition) {
 
-        if (stepPosition === 'first') { /* si es el primer paso, deshabilitar el boton "anterior" */
+        /* si es el primer paso, deshabilitar el boton "anterior" */
+        if (stepPosition === 'first') {
             $("#prev-btn").addClass('disabled').css('display', 'none');
         }
         else if (stepPosition === 'final') { /* si es el ultimo paso, deshabilitar el boton siguiente */
@@ -57,9 +33,6 @@ $(document).ready(function () {
             $("#prev-btn").removeClass('disabled');
             $("#next-btn").removeClass('disabled');
         }
-        if (stepNumber == 4) { /* Inicializar validaciones de los formularios */
-            $('#frmSolicitud').parsley().reset();
-        }
     });
 
     /* Habilitar boton siguiente al reiniciar steps */
@@ -67,84 +40,7 @@ $(document).ready(function () {
         $("#next-btn").removeClass('disabled');
     });
 
-    /* Cuando se deja un paso (realizar validaciones) */
-    $("#smartwizard").on("leaveStep", function (e, anchorObject, stepNumber, stepDirection) {
-
-        if ($("#ddlEstadoCivil :selected").data('info') == false) { /* si no requere informacion personal, saltarse esa pestaña */
-            $('#smartwizard').smartWizard("stepState", [4], "hide");
-        }
-
-        /* validar solo si se quiere ir hacia el siguiente paso */
-        if (stepDirection == 'forward') {
-
-            if (stepNumber == 0) {
-
-            }
-
-            if (stepNumber == 1) { /* validar informacion personal */
-
-                var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionPersonal' });
-
-                if (state == false) { /* si no es valido, mostrar validaciones al usuario */
-
-                    $('#frmSolicitud').parsley().validate({ group: 'informacionPersonal', force: true });
-                }
-                return state;
-            }
-
-            if (stepNumber == 2) { /* validar informacion domiciliar */
-
-                var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionDomiciliar' });
-
-                if (state == false) {
-                    $('#frmSolicitud').parsley().validate({ group: 'informacionDomiciliar', force: true });
-                }
-                return state;
-            }
-
-            if (stepNumber == 3) { /* validar informacion laboral */
-
-                var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionLaboral' });
-
-                if (state == false) {
-                    $('#frmSolicitud').parsley().validate({ group: 'informacionLaboral', force: true });
-                }
-                return state;
-            }
-
-            if (stepNumber == 4) { /* validar informacion conyugal */
-
-                if ($("input[name='estadoCivil']:checked").data('info') == true) {
-
-                    var state = $('#frmSolicitud').parsley().isValid({ group: 'informacionConyugal' });
-
-                    if (state == false) {
-                        $('#frmSolicitud').parsley().validate({ group: 'informacionConyugal', force: true });
-                    }
-                    return state;
-                }
-            }
-
-            if (stepNumber == 5) { /* validar referencias personales */
-
-                var state = false;
-
-                if (listaClientesReferencias != null) {
-                    if (listaClientesReferencias.length > 0) {
-                        state = true;
-                    }
-                }
-                if (cantidadReferencias > 0) {
-                    state = true;
-                } else {
-                    MensajeError('Las referencias personales son requeridas');
-                }
-                return state;
-            }
-
-        }
-    });
-
+    CargarDocumentosRequeridos();
 
     $(".buscadorddl").select2({
         language: {
@@ -160,42 +56,228 @@ $(document).ready(function () {
     });
 });
 
-//finalizar condicion
-var prestamoSeleccionado = [];
-var idCondicion = 0;
-var button = [];
-var seccionFormulario = '';
+/* Cargar los inputs de los documentos requeridos */
+function CargarDocumentosRequeridos() {
 
-$(document).on('click', 'button#btnTerminarCondicion', function () {
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_ActualizarSolicitud.aspx/CargarDocumentosRequeridos",
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo cargar la información, contacte al administrador');
+        },
+        success: function (data) {
 
-    idCondicion = $(this).data('id');
-    button = $(this);
-    seccionFormulario = $(this).data('tipo') != 'Documentacion' ? $(this).data('seccion') : 'Documentacion';
-    $("#modalDetails").modal('hide');
-    $("#modalFinalizarCondicionLista").modal();
+            var LenguajeEspanol = {
+                feedback: 'Arrastra y suelta los archivos aqui',
+                feedback2: 'Arrastra y suelta los archivos aqui',
+                drop: 'Arrastra y suelta los archivos aqui',
+                button: 'Buscar archivos',
+                confirm: 'Confirmar',
+                cancel: 'Cancelar'
+            }
+
+            var Input = '<div class="bootstrap-filestyle input-group">' +
+                '<span class="group-span-filestyle w-100" tabindex="0">' +
+                '<label for="filestyle-1" class="btn btn-secondary btn-block">' +
+                '<span class="icon-span-filestyle fas fa-folder-open">' +
+                '</span>' +
+                '<span class="buttonText">Subir archivos</span>' +
+                '</label>' +
+                '</span>' +
+                '</div > ';
+
+            var divDocumentacion = $("#DivDocumentacion");
+
+            $.each(data.d, function (i, iter) {
+
+                var IdInput = 'Documento' + iter.IdTipoDocumento;
+
+                divDocumentacion.append("<div class='col-sm-2 mt-3 pr-1 pl-1'>" +
+                    "<label class='form-label mb-1'>" + iter.DescripcionTipoDocumento + "</label>" +
+                    "<form action='SolicitudesCredito_ActualizarSolicitud.aspx?type=upload&doc=" + iter.IdTipoDocumento + "' method='post' enctype='multipart/form-data'>" +
+                    "<input id='" + IdInput + "' type='file' name='files' data-tipo='" + iter.IdTipoDocumento + "' />" +
+                    "</form>" +
+                    "</div");
+
+                $('#' + IdInput + '').fileuploader({
+                    inputNameBrackets: false,
+                    changeInput: Input,
+                    theme: 'dragdrop',
+                    limit: iter.CantidadMaximaDoucmentos, // Limite de archivos a subir
+                    maxSize: 10, // Peso máximo de todos los archivos seleccionado en megas (MB)
+                    fileMaxSize: 2, // Peso máximo de un archivo
+                    extensions: ['jpg', 'png'],// Extensiones/formatos permitidos
+                    upload: {
+                        url: 'SolicitudesCredito_ActualizarSolicitud.aspx?type=upload&doc=' + iter.IdTipoDocumento,
+                        data: null,
+                        type: 'POST',
+                        enctype: 'multipart/form-data',
+                        start: true,
+                        synchron: true,
+                        beforeSend: null,
+                        onSuccess: function (result, item) {
+                            var data = {};
+                            try {
+                                data = JSON.parse(result);
+                            } catch (e) {
+                                data.hasWarnings = true;
+                            }
+
+                            /* Validar exito */
+                            if (data.isSuccess && data.files[0]) {
+                                item.name = data.files[0].name;
+                                item.html.find('.column-title > div:first-child').text(data.files[0].name).attr('title', data.files[0].name);
+                            }
+
+                            /* Validar si se produjo un error */
+                            if (data.hasWarnings) {
+                                for (var warning in data.warnings) {
+                                    alert(data.warnings);
+                                }
+                                item.html.removeClass('upload-successful').addClass('upload-failed');
+                                return this.onError ? this.onError(item) : null;
+                            }
+
+                            item.html.find('.fileuploader-action-remove').addClass('fileuploader-action-success');
+                            setTimeout(function () {
+                                item.html.find('.progress-bar2').fadeOut(400);
+                            }, 400);
+                        },
+                        onError: function (item) {
+                            var progressBar = item.html.find('.progress-bar2');
+
+                            if (progressBar.length) {
+                                progressBar.find('span').html(0 + "%");
+                                progressBar.find('.fileuploader-progressbar .bar').width(0 + "%");
+                                item.html.find('.progress-bar2').fadeOut(400);
+                            }
+
+                            item.upload.status != 'cancelled' && item.html.find('.fileuploader-action-retry').length == 0 ? item.html.find('.column-actions').prepend(
+                                '<button type="button" class="fileuploader-action fileuploader-action-retry" title="Retry"><i class="fileuploader-icon-retry"></i></button>'
+                            ) : null;
+                        },
+                        onProgress: function (data, item) {
+                            var progressBar = item.html.find('.progress-bar2');
+
+                            if (progressBar.length > 0) {
+                                progressBar.show();
+                                progressBar.find('span').html(data.percentage + "%");
+                                progressBar.find('.fileuploader-progressbar .bar').width(data.percentage + "%");
+                            }
+                        },
+                        onComplete: null,
+                    },
+                    onRemove: function (item) {
+                        $.post('SolicitudesCredito_ActualizarSolicitud.aspx?type=remove', { file: item.name });
+                    },
+                    dialogs: {
+                        alert: function (text) {
+                            return iziToast.warning({
+                                title: 'Atencion',
+                                message: text
+                            });
+                        },
+                        confirm: function (text, callback) {
+                            confirm(text) ? callback() : null;
+                        }
+                    },
+                    captions: $.extend(true, {}, $.fn.fileuploader.languages['es'], LenguajeEspanol)
+
+                }); /* Termina fileUploader*/
+
+            }); /* Termina .Each*/
+        }
+    }); /* Termina Ajax */
+}
+
+/* Cargar municipios del departamento seleccionado del domicilio */
+$("#ddlDepartamentoDomicilio").change(function () {
+
+    $(this).parsley().validate();
+
+    var idDepartamento = $("#ddlDepartamentoDomicilio option:selected").val();
+    CargarMunicipios(idDepartamento, 'Domicilio', true, 0);
 });
 
-//confirmar actualizacion de los ingresos del cliente
-$("#btnTerminarCondicionFinalizar").click(function () {
+/* Cargar ciudades del Municipio seleccionado del domicilio */
+$("#ddlMunicipioDomicilio").change(function () {
+
+    $(this).parsley().validate();
+
+    var idDepartamento = $("#ddlDepartamentoDomicilio option:selected").val();
+    var idMunicipio = $("#ddlMunicipioDomicilio option:selected").val();
+    CargarCiudadesPoblados(idDepartamento, idMunicipio, 'Domicilio', true, 0);
+});
+
+/* Cargar barrios y colonias de la ciudad/poblado seleccionada del domicilio */
+$("#ddlCiudadPobladoDomicilio").change(function () {
+
+    $(this).parsley().validate();
+
+    var idDepartamento = $("#ddlDepartamentoDomicilio option:selected").val();
+    var idMunicipio = $("#ddlMunicipioDomicilio option:selected").val();
+    var idCiudadPoblado = $("#ddlCiudadPobladoDomicilio option:selected").val();
+    CargarBarriosColonias(idDepartamento, idMunicipio, idCiudadPoblado, 'Domicilio', 0);
+});
+
+/* Cargar municipios del departamento seleccionado de la empresa */
+$("#ddlDepartamentoEmpresa").change(function () {
+
+    $(this).parsley().validate();
+
+    var idDepartamentoEmpresa = $("#ddlDepartamentoEmpresa option:selected").val();
+    CargarMunicipios(idDepartamentoEmpresa, 'Empresa', true, 0);
+});
+
+/* Cargar ciudades del Municipio seleccionado de la empresa */
+$("#ddlMunicipioEmpresa").change(function () {
+
+    $(this).parsley().validate();
+
+    var idDepartamentoEmpresa = $("#ddlDepartamentoEmpresa option:selected").val();
+    var idMunicipioEmpresa = $("#ddlMunicipioEmpresa option:selected").val();
+    CargarCiudadesPoblados(idDepartamentoEmpresa, idMunicipioEmpresa, 'Empresa', true, 0);
+});
+
+/* Cargar barrios y colonias de la ciudad/poblado seleccionada de la empresa */
+$("#ddlCiudadPobladoEmpresa").change(function () {
+
+    $(this).parsley().validate();
+
+    var idDepartamentoEmpresa = $("#ddlDepartamentoEmpresa option:selected").val();
+    var idMunicipioEmpresa = $("#ddlMunicipioEmpresa option:selected").val();
+    var idCiudadPobladoEmpresa = $("#ddlCiudadPobladoEmpresa option:selected").val();
+    CargarBarriosColonias(idDepartamentoEmpresa, idMunicipioEmpresa, idCiudadPobladoEmpresa, 'Empresa', 0);
+});
+
+/* Validar listas desplegables */
+$("select").on('change', function () {
+    $(this).parsley().validate();
+});
+
+$("#btnTerminarCondicionConfirmar").click(function () {
 
     var objSeccion = {};
 
     switch (seccionFormulario) {
+
         case "Correccion Informacion de la Solicitud":
             objSeccion = {
-                fiIDSolicitud: idSolicitud,
-                fiIDCliente: clienteID,
+                fiIDSolicitud: ID_SOLICITUD,
+                IdCliente: ID_CLIENTE,
                 fnPrima: $("#txtPrima").val().replace(/,/g, ''),
                 fnValorGarantia: $("#txtValorVehiculo").val().replace(/,/g, '')
             }
             break;
+
         case "Correccion Informacion Personal":
             objSeccion = {
-                fiIDCliente: clienteID,
-                fcIdentidadCliente: $("#identidadCliente").val(),
-                RTNCliente: $("#rtnCliente").val(),
-                fcTelefonoCliente: $("#numeroTelefono").val(),
-                fiNacionalidadCliente: $("#nacionalidad").val(),
+                IdCliente: ID_CLIENTE,
+                IdentidadCliente: $("#identidadCliente").val(),
+                RtnCliente: $("#rtnCliente").val(),
+                TelefonoCliente: $("#numeroTelefono").val(),
+                IdNacionalidad: $("#nacionalidad").val(),
                 fdFechaNacimientoCliente: $("#fechaNacimiento").val(),
                 fcCorreoElectronicoCliente: $("#correoElectronico").val(),
                 fcProfesionOficioCliente: $("#profesion").val(),
@@ -209,9 +291,10 @@ $("#btnTerminarCondicionFinalizar").click(function () {
                 fcSegundoApellidoCliente: $("#segundoApellidoCliente").val()
             }
             break;
+
         case "Correccion Informacion Domiciliar":
             objSeccion = {
-                fiIDCliente: clienteID,
+                IdCliente: ID_CLIENTE,
                 fiIDDepto: $("#departamento :selected").val(),
                 fiIDMunicipio: $("#municipio :selected").val(),
                 fiIDCiudad: $("#ciudad :selected").val(),
@@ -223,9 +306,10 @@ $("#btnTerminarCondicionFinalizar").click(function () {
                 fcReferenciasDireccionDetallada: $("#referenciaDireccionDetallada").val()
             }
             break;
+
         case "Correccion Informacion Laboral":
             objSeccion = {
-                fiIDCliente: clienteID,
+                IdCliente: ID_CLIENTE,
                 fcNombreTrabajo: $("#nombreDelTrabajo").val(),
                 fiIngresosMensuales: $("#ingresosMensuales").val().replace(/,/g, ''),
                 fcPuestoAsignado: $("#puestoAsignado").val(),
@@ -243,9 +327,10 @@ $("#btnTerminarCondicionFinalizar").click(function () {
                 fiValorOtrosIngresosMensuales: $("#valorOtrosIngresos").val().replace(/,/g, '') == '' ? 0 : $("#valorOtrosIngresos").val().replace(/,/g, '')
             }
             break;
+
         case "Correccion Informacion Conyugal":
             objSeccion = {
-                fiIDCliente: clienteID,
+                IdCliente: ID_CLIENTE,
                 fcNombreCompletoConyugue: $("#nombresConyugue").val() + ' ' + $("#apellidosConyugue").val(),
                 fcIndentidadConyugue: $("#identidadConyugue").val(),
                 fdFechaNacimientoConyugue: $("#fechaNacimientoConyugue").val(),
@@ -255,21 +340,67 @@ $("#btnTerminarCondicionFinalizar").click(function () {
                 fcTelefonoTrabajoConyugue: $("#telefonoTrabajoConyugue").val()
             }
             break;
+
         case "Correccion Referencias":
             objSeccion = listaClientesReferencias;
             break;
+
         case "Documentacion":
             objSeccion = {};
             break;
     }
-    objSeccion = JSON.stringify(objSeccion);
 
-    var qString = "?" + window.location.href.split("?")[1];
+    objSeccion = JSON.stringify(objSeccion);
+});
+
+/* Terminar condiciones de la sección de información personal */
+$("#btnFinalizarCondiciones_InfoPersonal").click(function () {
+
+    if ($('#frmSolicitud').parsley().isValid({ group: 'informacionPersonal' })) {
+
+        botonFinalizarCondiciones_DOM = $(this);
+
+        objSeccion = {
+            IdCliente: ID_CLIENTE,
+            IdentidadCliente: $("#txtIdentidadCliente").val(),
+            RtnCliente: $("#txtRtnCliente").val(),
+            PrimerNombre: $("#txtPrimerNombre").val(),
+            SegundoNombre: $("#txtSegundoNombre").val(),
+            PrimerApellido: $("#txtPrimerApellido").val(),
+            SegundoApellido: $("#txtSegundoApellido").val(),
+            TelefonoCliente: $("#txtNumeroTelefono").val(),
+            IdNacionalidad: $("#ddlNacionalidad :selected").val(),
+            FechaNacimiento: $("#txtFechaDeNacimiento").val(),
+            Correo: $("#txtCorreoElectronico").val(),
+            ProfesionOficio: $("#txtProfesion").val(),
+            Sexo: $("input[name='sexoCliente']:checked").val(),
+            IdEstadoCivil: $("#ddlEstadoCivil :selected").val(),
+            IdVivienda: $("#ddlTipoDeVivienda :selected").val(),
+            IdTiempoResidir: $("ddlTiempoDeResidir :selected").val()
+        }
+
+        $("#lblSeccion").text('Información personal');
+
+        $("#modalFinalizarCondicion").modal();
+    }
+    else {
+        $('#frmSolicitud').parsley().validate({ group: 'informacionPersonal', force: true });
+    }
+});
+
+$("#btnTerminarCondicionConfirmar").click(function () {
+
+
+    FinalizarSeccionCondicionamientos();
+});
+
+/* Finalizar condicionamientos de una seccion del formulario */
+function FinalizarSeccionCondicionamientos(idCondicion, seccionFormulario, objSeccion) {
 
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_ActualizarSolicitud.aspx/ActualizarCondicionamiento' + qString,
-        data: JSON.stringify({ ID: idCondicion, seccionFormulario: seccionFormulario, objSeccion: objSeccion, idCliente: clienteID }),
+        url: 'SolicitudesCredito_ActualizarSolicitud.aspx/ActualizarCondicionamiento',
+        data: JSON.stringify({ idCondicion: idCondicion, idCliente: ID_CLIENTE, seccionFormulario: seccionFormulario, objSeccion: objSeccion, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al finalizar condicionamiento');
@@ -278,12 +409,14 @@ $("#btnTerminarCondicionFinalizar").click(function () {
 
             if (data.d == true) {
 
-                ObtenerDetalles();
+                CargarListadoCondiciones();
 
-                $("#modalFinalizarCondicionLista,#modalDetails").modal('hide');
-                MensajeExito('Condición finalizada correctamente');
+                $("#modalFinalizarCondicion").modal('hide');
+
                 button.removeClass('text-warning').addClass('text-info');
                 button.on('click', function () { return false; });
+
+                MensajeExito('Condición finalizada correctamente');
             }
             else {
                 MensajeError('Error al finalizar condicionamiento');
@@ -291,7 +424,156 @@ $("#btnTerminarCondicionFinalizar").click(function () {
             }
         }
     });
-});
+}
+
+function CargarMunicipios(idDepartamento, tipoLista, desabilitarListasDependientes, idMunicipioSeleccionar) {
+
+    var ddlMunicipio = $('#ddlMunicipio' + tipoLista + '');
+    var ddlCiudadPoblado = $('#ddlCiudadPoblado' + tipoLista + '');
+    var ddlBarrioColonia = $('#ddlBarrioColonia' + tipoLista + '');
+
+    if (idDepartamento != '') {
+
+        ddlMunicipio.empty();
+        ddlMunicipio.append("<option value=''>Seleccione una opción</option>");
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Registrar.aspx/CargarListaMunicipios",
+            data: JSON.stringify({ idDepartamento: idDepartamento }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('Error al cargar municipios de este departamento');
+            },
+            success: function (data) {
+
+                var listaMunicipios = data.d;
+                $.each(listaMunicipios, function (i, iter) {
+                    ddlMunicipio.append("<option value='" + iter.IdMunicipio + "'>" + iter.NombreMunicipio + "</option>"); /* Agregar municipios del departamento seleccionado */
+                });
+                ddlMunicipio.attr('disabled', false);
+
+                if (idMunicipioSeleccionar != 0) {
+                    ddlMunicipio.val(idMunicipioSeleccionar);
+                }
+
+                if (desabilitarListasDependientes == true) {
+                    ddlCiudadPoblado.empty();
+                    ddlCiudadPoblado.append("<option value=''>Seleccione un municipio</option>");
+                    ddlCiudadPoblado.attr('disabled', true);
+
+                    ddlBarrioColonia.empty();
+                    ddlBarrioColonia.append("<option value=''>Seleccione una ciudad/poblado</option>");
+                    ddlBarrioColonia.attr('disabled', true);
+                }
+            }
+        });
+    }
+    else {
+        ddlMunicipio.empty();
+        ddlMunicipio.append("<option value=''>Seleccione un depto.</option>");
+        ddlMunicipio.attr('disabled', true);
+
+        ddlCiudadPoblado.empty();
+        ddlCiudadPoblado.append("<option value=''>Seleccione un municipio</option>");
+        ddlCiudadPoblado.attr('disabled', true);
+
+        ddlBarrioColonia.empty();
+        ddlBarrioColonia.append("<option value=''>Seleccione una ciudad/poblado</option>");
+        ddlBarrioColonia.attr('disabled', true);
+    }
+}
+
+function CargarCiudadesPoblados(idDepartamento, idMunicipio, tipoLista, desabilitarListasDependientes, idCiudadPobladoSeleccionar) {
+
+    var ddlCiudadPoblado = $('#ddlCiudadPoblado' + tipoLista + '');
+    var ddlBarrioColonia = $('#ddlBarrioColonia' + tipoLista + '');
+
+    if (idMunicipio != '') {
+
+        ddlCiudadPoblado.empty();
+        ddlCiudadPoblado.append("<option value=''>Seleccione una opción</option>");
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Registrar.aspx/CargarListaCiudadesPoblados",
+            data: JSON.stringify({ idDepartamento: idDepartamento, idMunicipio: idMunicipio }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+
+                MensajeError('Error al cargar ciudades de este municipio');
+            },
+            success: function (data) {
+
+                var listaCiudades = data.d;
+
+                $.each(listaCiudades, function (i, iter) {
+                    ddlCiudadPoblado.append("<option value='" + iter.IdCiudadPoblado + "'>" + iter.NombreCiudadPoblado + "</option>"); // Agregar ciudades/poblados del municipio
+                });
+                ddlCiudadPoblado.attr('disabled', false);
+
+                if (idCiudadPobladoSeleccionar != 0) {
+                    ddlCiudadPoblado.val(idCiudadPobladoSeleccionar);
+                }
+
+                if (desabilitarListasDependientes == true) {
+                    ddlBarrioColonia.empty();
+                    ddlBarrioColonia.append("<option value=''>Seleccione una ciudad/poblado</option>");
+                    ddlBarrioColonia.attr('disabled', true);
+                }
+            }
+        });
+    }
+    else {
+        ddlCiudadPoblado.empty();
+        ddlCiudadPoblado.append("<option value=''>Seleccione un municipio</option>");
+        ddlCiudadPoblado.attr('disabled', true);
+
+        ddlBarrioColonia.empty();
+        ddlBarrioColonia.append("<option value=''>Seleccione una ciudad/poblado</option>");
+        ddlBarrioColonia.attr('disabled', true);
+    }
+}
+
+function CargarBarriosColonias(idDepartamento, idMunicipio, idCiudadPoblado, tipoLista, idBarrioColoniaSeleccionar) {
+
+    var ddlBarrioColonia = $('#ddlBarrioColonia' + tipoLista + '');
+
+    if (idCiudadPoblado != '') {
+
+        ddlBarrioColonia.empty();
+        ddlBarrioColonia.append("<option value=''>Seleccione una opción</option>");
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Registrar.aspx/CargarListaBarriosColonias",
+            data: JSON.stringify({ idDepartamento: idDepartamento, idMunicipio: idMunicipio, idCiudadPoblado: idCiudadPoblado }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+
+                MensajeError('Error al cargar los barrios y colonias de esta ciudad/poblado');
+            },
+            success: function (data) {
+
+                var listaBarriosColonias = data.d;
+
+                $.each(listaBarriosColonias, function (i, iter) {
+                    ddlBarrioColonia.append("<option value='" + iter.IdBarrioColonia + "'>" + iter.NombreBarrioColonia + "</option>"); // Agregar barrios/colonias de la ciudad seleccionada
+                });
+                ddlBarrioColonia.attr('disabled', false);
+
+                if (idBarrioColoniaSeleccionar != 0) {
+                    ddlBarrioColonia.val(idBarrioColoniaSeleccionar);
+                }
+            }
+        });
+    }
+    else {
+        ddlBarrioColonia.empty();
+        ddlBarrioColonia.append("<option value=''>Seleccione una ciudad/poblado</option>");
+        ddlBarrioColonia.attr('disabled', true);
+    }
+}
 
 function MensajeExito(mensaje) {
     iziToast.success({
@@ -307,14 +589,23 @@ function MensajeError(mensaje) {
     });
 }
 
-function MensajeInformacion(mensaje) {
-    iziToast.info({
-        title: 'Info',
-        message: mensaje
-    });
+function ConvertirFechaJavaScriptAFechaCsharp(fecha) {
+    var date = new Date(fecha);
+    var milliseconds = date.getTime();
+    var dt = new Date(parseInt(milliseconds));
+    var fechaConvertida = `${
+        dt.getFullYear().toString().padStart(4, '0')}-${
+        (dt.getMonth() + 1).toString().padStart(2, '0')}-${
+        dt.getDate().toString().padStart(2, '0')} ${
+        dt.getHours().toString().padStart(2, '0')}:${
+        dt.getMinutes().toString().padStart(2, '0')}:${
+        dt.getSeconds().toString().padStart(2, '0')}`;
+
+    return fechaConvertida
 }
 
-function resetForm($form) {
+function ResetForm($form) {
     $form.find('input:text, input:password, input:file,input[type="date"],input[type="email"], select, textarea').val('');
-    $form.find('input:radio, input:checkbox').prop('checked', false).removeAttr('selected');
+    $form.find('input:radio, input:checkbox')
+        .removeAttr('checked').removeAttr('selected');
 }

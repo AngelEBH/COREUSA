@@ -193,24 +193,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud
     protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeCliente;
 
     /// <summary>
-    /// Control txtCorreoElectronico.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtCorreoElectronico;
-
-    /// <summary>
-    /// Control txtNumeroTelefono.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtNumeroTelefono;
-
-    /// <summary>
     /// Control txtFechaDeNacimiento.
     /// </summary>
     /// <remarks>
@@ -245,6 +227,42 @@ public partial class SolicitudesCredito_ActualizarSolicitud
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton rbSexoFemenino;
+
+    /// <summary>
+    /// Control txtCorreoElectronico.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCorreoElectronico;
+
+    /// <summary>
+    /// Control txtNumeroTelefono.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtNumeroTelefono;
+
+    /// <summary>
+    /// Control ddlTipoDeVivienda.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeVivienda;
+
+    /// <summary>
+    /// Control ddlTiempoDeResidir.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlTiempoDeResidir;
 
     /// <summary>
     /// Control ddlEstadoCivil.
@@ -299,24 +317,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlBarrioColoniaDomicilio;
-
-    /// <summary>
-    /// Control ddlTipoDeVivienda.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeVivienda;
-
-    /// <summary>
-    /// Control ddlTiempoDeResidir.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlTiempoDeResidir;
 
     /// <summary>
     /// Control txtTelefonoCasa.

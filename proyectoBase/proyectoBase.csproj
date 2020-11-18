@@ -894,6 +894,7 @@
     <Content Include="Forms\Aval\Aval_Detalles.aspx" />
     <Content Include="Forms\Aval\Aval_Precalificar.aspx" />
     <Content Include="Forms\Aval\Aval_Registrar.aspx" />
+    <Content Include="Forms\Clientes\GestionCobranzaClienteDocumentos.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
     <Content Include="Forms\CoreFinancieroMovil\CotizadorCarros.aspx" />
     <Content Include="Forms\Solicitudes\Garantia_Actualizar.aspx" />
@@ -1700,6 +1701,13 @@
     </Compile>
     <Compile Include="Forms\Aval\Aval_Registrar.aspx.designer.cs">
       <DependentUpon>Aval_Registrar.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Clientes\GestionCobranzaClienteDocumentos.aspx.cs">
+      <DependentUpon>GestionCobranzaClienteDocumentos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Clientes\GestionCobranzaClienteDocumentos.aspx.designer.cs">
+      <DependentUpon>GestionCobranzaClienteDocumentos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Clientes\Precalificado_Resolucion.aspx.cs">
       <DependentUpon>Precalificado_Resolucion.aspx</DependentUpon>
