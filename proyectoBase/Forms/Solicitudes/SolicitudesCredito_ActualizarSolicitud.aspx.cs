@@ -288,6 +288,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             {
                                 var listaCondiciones = new List<int>();
 
+                                var listaCondicionesDeDocumentacion = new int[] { 1, 2, 3, 4, 5, 6 };
+
                                 HtmlTableRow tRowCondicion;
                                 var btnFinalizarCondicion = string.Empty;
                                 var lblEstadoCondicion = string.Empty;
@@ -307,6 +309,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     tblCondiciones.Rows.Add(tRowCondicion);
 
                                     listaCondiciones.Add((int)sqlResultado["fiIDCondicion"]);
+
+
+
+
                                 }
 
                                 ValidarFormularioCondiciones(listaCondiciones);

@@ -16,6 +16,7 @@
     <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
     <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style>
         html {
             background-color: rgb(255,255,255) !important;
@@ -38,7 +39,7 @@
 
                 <div id="smartwizard" class="h-100">
                     <ul>
-                        <li><a href="#step-1" class="pt-3 pb-2 font-12">Información del préstamo</a></li>
+                        <li><a href="#step-1" class="pt-3 pb-2 font-12">(1) Información del préstamo</a></li>
                         <li><a href="#step_garantia" class="pt-3 pb-2 font-12" runat="server" visible="true" id="step_garantia_titulo">Características garantía</a></li>
                         <li><a href="#step-2" class="pt-3 pb-2 font-12">Información personal</a></li>
                         <li><a href="#step-3" class="pt-3 pb-2 font-12">Información domicilio</a></li>
@@ -737,6 +738,7 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_CoreFinanciero.js?v=20201116102152"></script>
+    <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_CoreFinanciero.js?v=20201119161525"></script>
 </body>
 </html>

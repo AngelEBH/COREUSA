@@ -503,27 +503,6 @@
             </div>
         </div>
 
-        <div id="modalFinalizarCondicion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarCondicionListaLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header pt-2 pb-2">
-                        <h6 class="modal-title" id="modalFinalizarCondicionListaLabel">Finalizar condicionamientos (<b id="lblSeccion"></b>)</h6>
-                    </div>
-                    <div class="modal-body">
-                        <label>¿Está seguro de finalizar <b>TODAS</b> las condiciones de esta sección?</label>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="btnTerminarCondicionConfirmar" data-dismiss="modal" class="btn btn-primary waves-effect">
-                            Confirmar
-                        </button>
-                        <button data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!--modal de agregar nueva referencia -->
         <div class="modal fade" id="modalAgregarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarReferenciaPersonalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -661,6 +640,188 @@
                 </div>
             </div>
         </div>
+
+        <div id="modalFinalizarCondicion_InfoPersonal" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicionListaLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header pt-2 pb-2">
+                        <h6 class="modal-title" id="modalFinalizarCondicionListaLabel">Finalizar condicionamientos (<b>Información personal</b>)</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table id="tblCondicionesInformacionPersonal" class="table tabla-compacta table-striped table-bordered" runat="server">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de condición</th>
+                                                <th>Descripción</th>
+                                                <th>Comentario adicional</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalFinalizarCondicion_InfoDomicilio" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicion_InfoDomicilioLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header pt-2 pb-2">
+                        <h6 class="modal-title" id="modalFinalizarCondicion_InfoDomicilioLabel">Finalizar condicionamientos (<b>Información del domicilio</b>)</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table id="tblCondicionesDomicilio" class="table tabla-compacta table-striped table-bordered" runat="server">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de condición</th>
+                                                <th>Descripción</th>
+                                                <th>Comentario adicional</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="modalFinalizarCondicion_InfoLaboral" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicion_InfoLaboralLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header pt-2 pb-2">
+                        <h6 class="modal-title" id="modalFinalizarCondicion_InfoLaboralLabel">Finalizar condicionamientos (<b>Información laboral</b>)</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table id="tblCondicionesLaboral" class="table tabla-compacta table-striped table-bordered" runat="server">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de condición</th>
+                                                <th>Descripción</th>
+                                                <th>Comentario adicional</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalFinalizarCondicion_ReferenciasPersonales" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicion_ReferenciasPersonalesLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header pt-2 pb-2">
+                        <h6 class="modal-title" id="modalFinalizarCondicion_ReferenciasPersonalesLabel">Finalizar condicionamientos (<b>Referencias personales</b>)</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table id="tblCondicionesReferenciasPersonales" class="table tabla-compacta table-striped table-bordered" runat="server">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de condición</th>
+                                                <th>Descripción</th>
+                                                <th>Comentario adicional</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalFinalizarCondicion_Documentacion" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicion_DocumentacionLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header pt-2 pb-2">
+                        <h6 class="modal-title" id="modalFinalizarCondicion_DocumentacionLabel">Finalizar condicionamientos (<b>Documentación</b>)</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table id="tblCondicionesDocumentacion" class="table tabla-compacta table-striped table-bordered" runat="server">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de condición</th>
+                                                <th>Descripción</th>
+                                                <th>Comentario adicional</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>

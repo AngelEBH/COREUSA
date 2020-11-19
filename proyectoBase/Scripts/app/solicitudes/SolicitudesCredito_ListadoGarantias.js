@@ -77,9 +77,9 @@ $(document).ready(function () {
                         '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
                         (row["IdGarantia"] == 0 ? '<button type="button" class="dropdown-item" id="btnGuardar"><i class="fas fa-plus"></i> Agregar</button>' : '') +
                         (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnDetalles"><i class="fas fa-tasks"></i> Detalles</button>') +
-                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnActualizar"><i class="far fa-edit"></i> ' + (row["VIN"] != '' ? 'Actualizar' : 'Completar información')+'</button>') +
-                        ((row["IdGarantia"] == 0 && row["VIN"] != '') ? '' : '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion"><i class="far fa-file-alt"></i> Imprimir Doc.</button>') +
-                        ((row["IdGarantia"] != 0 && row["VIN"] != '') ? '<button type="button" class="dropdown-item" id="btnSolicitarGPS"><i class="fas fa-map-marker-alt"></i> Solicitar GPS</button>' : '') +
+                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnActualizar"><i class="far fa-edit"></i> ' + (row["VIN"] != '' ? 'Actualizar' : 'Completar información') + '</button>') +
+                        ((row["IdGarantia"] != 0 && row["VIN"] != '') ? '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion"><i class="far fa-file-alt"></i> Imprimir Doc.</button>' : '') +
+                        ((row["IdGarantia"] != 0 && row["VIN"] != '' && row["IdAutoGPSInstalacion"] == 0) ? '<button type="button" class="dropdown-item" id="btnSolicitarGPS"><i class="fas fa-map-marker-alt"></i> Solicitar GPS</button>' : '') +
                         ((row["IdAutoGPSInstalacion"] != 0) ? '<button type="button" class="dropdown-item" id="btnDetalleSolicitudGPS"><i class="fas fa-map-marker-alt"></i> Detalles solicitud GPS</button>' : '') +
                         '</div>' +
                         '</div >';

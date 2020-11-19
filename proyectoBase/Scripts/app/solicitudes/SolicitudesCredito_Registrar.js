@@ -1,4 +1,17 @@
-﻿var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>').text('Finalizar').addClass('btn btn-info').css('display', 'none')
+﻿if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+    Swal.fire(
+        {
+            title: '¡Oh no!',
+            text: PRECALIFICADO.MensajePermitirIngresarSolicitud,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: "#58db83",
+            confirmButtonText: "OK"
+        }
+    )
+}
+
+var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>').text('Finalizar').addClass('btn btn-info').css('display', 'none')
     .on('click', function () {
 
         var modelStateInformacionPrestamo = $('#frmSolicitud').parsley().isValid({ group: 'informacionPrestamo' });
@@ -79,6 +92,7 @@
                 IdEstadoCivil: $("#ddlEstadoCivil :selected").val(),
                 IdVivienda: $("#ddlTipoDeVivienda :selected").val(),
                 IdTiempoResidir: $("#ddlTiempoDeResidir :selected").val(),
+                TelefonoCliente: $("#txtNumeroTelefono").val(),
 
                 InformacionDomicilio: {
                     TelefonoCasa: $("#txtTelefonoCasa").val(),
@@ -321,7 +335,7 @@ $(document).ready(function () {
                 //}
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                    MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     state = false;
                 }
 
@@ -355,7 +369,7 @@ $(document).ready(function () {
                 }
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                    MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     state = false;
                 }
 
@@ -375,7 +389,7 @@ $(document).ready(function () {
                 }
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                    MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     state = false;
                 }
 
@@ -395,7 +409,7 @@ $(document).ready(function () {
                 }
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                    MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     state = false;
                 }
 
@@ -417,7 +431,7 @@ $(document).ready(function () {
                     }
 
                     if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                        MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                        MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                         state = false;
                     }
 
@@ -450,7 +464,7 @@ $(document).ready(function () {
                 }
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
+                    MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     state = false;
                 }
 

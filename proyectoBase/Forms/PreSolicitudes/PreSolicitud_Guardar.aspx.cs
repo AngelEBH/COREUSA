@@ -8,11 +8,13 @@ using System.Web.UI.WebControls;
 
 public partial class PreSolicitud_Guardar : System.Web.UI.Page
 {
-    private static string pcIDUsuario = "";
-    private static string pcIDApp = "";
-    private static string pcIDSesion = "";
-    public static string pcID = "";
-    private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public string pcIDUsuario;
+    public string pcIDApp;
+    public string pcIDSesion;
+    public string pcID;
+    public string pcIDProducto;
+    public string pcIDTipoDeSolicitud;
+    public DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -32,15 +34,16 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                 }
                 else
                 {
-                    lcParametros = String.Empty;
+                    lcParametros = string.Empty;
                 }
 
-                if (lcParametros != String.Empty)
+                if (lcParametros != string.Empty)
                 {
                     var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcEncriptado = lcEncriptado.Replace("%2f", "/");
                     var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
@@ -49,6 +52,9 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     if (!string.IsNullOrWhiteSpace(pcID))
                     {
                         CargarPrecalificado(pcID);
+
+                        HttpContext.Current.Session["idTipoDeSolicitud"] = pcIDTipoDeSolicitud;
+                        Session.Timeout = 10080;
                     }
 
                     LlenarListas();
@@ -79,7 +85,6 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        // catalogo de marcas
                         ddlMunicipio.Items.Clear();
                         ddlMunicipio.Items.Add(new ListItem("Seleccione un departamento", "0"));
                         ddlMunicipio.Enabled = false;
@@ -104,7 +109,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            MostrarMensaje("Error al cargar información del formulario de negociación: " + ex.Message.ToString());
+            MostrarMensaje("Error al cargar información del formulario de presolicitud: " + ex.Message.ToString());
         }
     }
 
@@ -140,6 +145,8 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                             txtIdentidadCliente.Text = sqlResultado["fcIdentidad"].ToString();
                             txtNombreCliente.Text = sqlResultado["fcPrimerNombre"].ToString() + " " + sqlResultado["fcSegundoNombre"].ToString() + " " + sqlResultado["fcPrimerApellido"].ToString() + " " + sqlResultado["fcSegundoApellido"].ToString();
                             txtTelefonoCliente.Text = sqlResultado["fcTelefono"].ToString();
+                            pcIDProducto = sqlResultado["fiIDProducto"].ToString();
+                            pcIDTipoDeSolicitud = sqlResultado["fiTipoSolicitudCliente"].ToString();
                         }
                     }
                 }
@@ -338,9 +345,41 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
         {
             try
             {
+
+                /* Captura de parametros y desencriptado de cadena */
+                var lcURL = Request.Url.ToString();
+                int liParamStart = lcURL.IndexOf("?");
+
+                string lcParametros;
+
+                if (liParamStart > 0)
+                {
+                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
+                }
+                else
+                {
+                    lcParametros = string.Empty;
+                }
+
+                if (lcParametros != string.Empty)
+                {
+                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                    lcEncriptado = lcEncriptado.Replace("%2f", "/");
+                    var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                    pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID") ?? "";
+                }
+
+
                 using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
                 {
                     sqlConexion.Open();
+
+                    var idTipoDeSolicitud = (string)HttpContext.Current.Session["idTipoDeSolicitud"];
 
                     using (var sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_Guardar", sqlConexion))
                     {
@@ -348,7 +387,8 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@piIDPais", 1);
                         sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
                         sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
-                        sqlComando.Parameters.AddWithValue("@pcTelefonoCasa", txtTelefonoCasa.Text.Trim().Replace("_","").Replace("-",""));
+                        sqlComando.Parameters.AddWithValue("@piIDTipoDeSolicitud", idTipoDeSolicitud);
+                        sqlComando.Parameters.AddWithValue("@pcTelefonoCasa", txtTelefonoCasa.Text.Trim().Replace("_", "").Replace("-", ""));
                         sqlComando.Parameters.AddWithValue("@piIDDepartamento", ddlDepartamento.SelectedValue);
                         sqlComando.Parameters.AddWithValue("@piIDMunicipio", ddlMunicipio.SelectedValue);
                         sqlComando.Parameters.AddWithValue("@piIDCiudad", ddlCiudad.SelectedValue);

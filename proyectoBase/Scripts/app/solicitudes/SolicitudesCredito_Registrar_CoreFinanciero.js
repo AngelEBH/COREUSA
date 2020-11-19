@@ -1,4 +1,17 @@
-﻿var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>').text('Finalizar').addClass('btn btn-info').css('display', 'none')
+﻿if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+    Swal.fire(
+        {
+            title: '¡Oh no!',
+            text: PRECALIFICADO.MensajePermitirIngresarSolicitud,
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: "#58db83",
+            confirmButtonText: "OMITIR"
+        }
+    )
+}
+
+var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>').text('Finalizar').addClass('btn btn-info').css('display', 'none')
     .on('click', function () {
 
         var modelStateInformacionPrestamo = $('#frmSolicitud').parsley().isValid({ group: 'informacionPrestamo' });
@@ -79,6 +92,7 @@
                 IdVivienda: $("#ddlTipoDeVivienda :selected").val(),
                 IdTiempoResidir: $("#ddlTiempoDeResidir :selected").val(),
                 IdTipoCliente: $("#ddlTipoDeCliente :selected").val(),
+                TelefonoCliente: $("#txtNumeroTelefono").val(),
 
                 InformacionDomicilio: {
                     TelefonoCasa: $("#txtTelefonoCasa").val(),

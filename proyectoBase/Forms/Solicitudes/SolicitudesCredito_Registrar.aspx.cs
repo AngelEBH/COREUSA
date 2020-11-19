@@ -18,7 +18,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     private string pcIDApp = "";
     private string pcIDSesion = "";
     private string pcIDUsuario = "";
-    private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    private static DSCore.DataCrypt DSC;
     public Precalificado_ViewModel Precalificado;
     public List<TipoDocumento_ViewModel> DocumentosRequeridos;
     public SolicitudesCredito_Registrar_Constantes Constantes;
@@ -34,6 +34,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         {
             var lcURL = Request.Url.ToString();
             var liParamStart = lcURL.IndexOf("?");
+            DSC = new DSCore.DataCrypt();
             Precalificado = new Precalificado_ViewModel();
             Constantes = new SolicitudesCredito_Registrar_Constantes();
             DocumentosRequeridos = new List<TipoDocumento_ViewModel>();
@@ -49,6 +50,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 var pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                
                 pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                 pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
@@ -59,6 +61,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 ValidarClienteSolicitudesActivas();
                 CargarListas();
                 ObtenerInformacionCliente();
+                ValidarPreSolicitud();
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 Session.Timeout = 10080;
@@ -71,13 +74,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 if (Constantes.RequierePrima == 1)
                 {
                     txtValorPrima.Enabled = true;
-                }
-
-                if (Precalificado.Identidad == "0423196600085")
-                {
-                    Precalificado.PermitirIngresarSolicitud = true;
-                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 8000;
-                    Constantes.PrestamoMaximo_Monto = 8000;
                 }
 
                 /* Para utilizar las constantes de validaciones en el frontend */
@@ -380,6 +376,123 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+    }
+
+    public void ValidarPreSolicitud()
+    {
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                /* Validar si este cliente tiene solicitudes de crédito activas */
+                using (var sqlComando = new SqlCommand("dbo.sp_CREDPreSolicitudes_Maestro_ObtenerPorIdentidad", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        if (sqlResultado.HasRows)
+                        {
+                            sqlResultado.Read();
+
+                            var estadoPreSolicitud = sqlResultado["fiEstadoPreSolicitud"].ToString();
+
+                            txtTelefonoCasa.Text = sqlResultado["fcTelefonoCasa"].ToString();
+                            txtTelefonoCasa.Enabled = false;
+
+                            txtDireccionDetalladaDomicilio.Text = sqlResultado["fcDireccionDetalladaDomicilio"].ToString();
+                            txtDireccionDetalladaDomicilio.Enabled = false;
+
+                            txtReferenciasDelDomicilio.Value = sqlResultado["fcReferenciasDireccionDetalladaDomicilio"].ToString();
+                            txtReferenciasDelDomicilio.Disabled = true;
+
+                            /* Departamento */
+                            ddlDepartamentoDomicilio.SelectedValue = sqlResultado["fiIDDepartamento"].ToString();
+                            ddlDepartamentoDomicilio.Enabled = false;
+
+                            /* Municipio del domicilio */
+                            var municipiosDeDepartamento = CargarMunicipios(int.Parse(sqlResultado["fiIDDepartamento"].ToString()));
+
+                            ddlMunicipioDomicilio.Items.Clear();
+                            ddlMunicipioDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+                            municipiosDeDepartamento.ForEach(municipio =>
+                            {
+                                ddlMunicipioDomicilio.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
+                            });
+                            ddlMunicipioDomicilio.SelectedValue = sqlResultado["fiIDMunicipio"].ToString();
+                            ddlMunicipioDomicilio.Enabled = false;
+
+                            /* Ciudad o Poblado del domicilio */
+                            var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()));
+
+                            ddlCiudadPobladoDomicilio.Items.Clear();
+                            ddlCiudadPobladoDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+                            ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
+                            {
+                                ddlCiudadPobladoDomicilio.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
+                            });
+                            ddlCiudadPobladoDomicilio.SelectedValue = sqlResultado["fiIDCiudad"].ToString();
+                            ddlCiudadPobladoDomicilio.Enabled = false;
+
+                            /* Barrio o colonia del domicilio */
+                            var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()), int.Parse(sqlResultado["fiIDCiudad"].ToString()));
+
+                            ddlBarrioColoniaDomicilio.Items.Clear();
+                            ddlBarrioColoniaDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+                            barriosColoniasDelPoblado.ForEach(barrioColonia =>
+                            {
+                                ddlBarrioColoniaDomicilio.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
+                            });
+                            ddlBarrioColoniaDomicilio.SelectedValue = sqlResultado["fiIDBarrioColonia"].ToString();
+                            ddlBarrioColoniaDomicilio.Enabled = false;
+
+                            switch (estadoPreSolicitud)
+                            {
+                                case "1":
+
+                                    Precalificado.PermitirIngresarSolicitud = false;
+                                    Precalificado.MensajePermitirIngresarSolicitud += "Esta solicitud no puede ser ingresada porque hay una Pre Solicitud pendiente asociada a este cliente, comunicarse con el departamento de gestoría.";
+                                    lblMensaje.InnerText = "(Esta solicitud no puede ser ingresada porque hay una Pre Solicitud pendiente asociada a este cliente, comunicarse con el departamento de gestoría)";
+                                    lblMensaje.Visible = true;
+                                    break;
+
+                                case "2":
+                                    break;
+
+                                case "3":
+                                    Precalificado.PermitirIngresarSolicitud = false;
+                                    Precalificado.MensajePermitirIngresarSolicitud += "Esta solicitud no puede ser ingresada porque hay una Pre Solicitud rechazada asociada a este cliente, comunicarse con el departamento de gestoría.";
+                                    lblMensaje.InnerText = "(Esta solicitud no puede ser ingresada porque hay una Pre Solicitud rechazada asociada a este cliente, comunicarse con el departamento de gestoría)";
+                                    lblMensaje.Visible = true;
+                                    break;
+
+                                default:
+
+                                    Precalificado.PermitirIngresarSolicitud = false;
+                                    Precalificado.MensajePermitirIngresarSolicitud += "Esta solicitud no puede ser ingresada porque hay una Pre Solicitud con estado indefinido asociada a este cliente, contacte con el administrador.";
+                                    lblMensaje.InnerText = "(Esta solicitud no puede ser ingresada porque hay una Pre Solicitud con estado indefinido asociada a este cliente, contacte con el administrador)";
+                                    lblMensaje.Visible = true;
+                                    break;
+                            }
+
+                        } // if sqlResultado.HasRows                      
+                    } // sqlComando.ExecuteReader()
+                } // using command
+            } // using connection
         }
         catch (Exception ex)
         {
@@ -1043,7 +1156,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@fcSegundoNombreCliente", precalificado.SegundoNombre);
                             sqlComando.Parameters.AddWithValue("@fcPrimerApellidoCliente", precalificado.PrimerApellido);
                             sqlComando.Parameters.AddWithValue("@fcSegundoApellidoCliente", precalificado.SegundoApellido);
-                            sqlComando.Parameters.AddWithValue("@fcTelefonoCliente", precalificado.Telefono);
+                            sqlComando.Parameters.AddWithValue("@fcTelefonoCliente", cliente.TelefonoCliente);
                             sqlComando.Parameters.AddWithValue("@fiNacionalidadCliente", cliente.IdNacionalidad);
                             sqlComando.Parameters.AddWithValue("@fdFechaNacimientoCliente", precalificado.FechaNacimiento);
                             sqlComando.Parameters.AddWithValue("@fcCorreoElectronicoCliente", cliente.Correo);
@@ -1544,6 +1657,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public string IdClienteSAF { get; set; }
         public string TipoDeClienteSAF { get; set; }
         public bool PermitirIngresarSolicitud { get; set; }
+        public string MensajePermitirIngresarSolicitud { get; set; }
         public string Identidad { get; set; }
         public string Rtn { get; set; }
         public string PrimerNombre { get; set; }
