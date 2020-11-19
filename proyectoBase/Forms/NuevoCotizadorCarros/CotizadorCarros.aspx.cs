@@ -29,8 +29,8 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         if (lcParametros != string.Empty)
         {
             string lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-            string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-            lcEncriptado = lcEncriptado.Replace("%2f", "");
+            lcEncriptado = lcEncriptado.Replace("%2f", "/");
+            string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);            
             Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
             pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
