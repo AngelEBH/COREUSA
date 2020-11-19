@@ -337,6 +337,24 @@ public partial class Clientes_CotizadorCarros
     protected global::System.Web.UI.WebControls.Button btnNuevoCalculo;
 
     /// <summary>
+    /// Control PanelMensajeErrores.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl PanelMensajeErrores;
+
+    /// <summary>
+    /// Control Label2.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label2;
+
+    /// <summary>
     /// Control Panel20.
     /// </summary>
     /// <remarks>
