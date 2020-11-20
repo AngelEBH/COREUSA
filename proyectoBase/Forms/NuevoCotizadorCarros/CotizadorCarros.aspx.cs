@@ -3,12 +3,19 @@ using System.Web;
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Web.UI.WebControls;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
 
-public partial class Clientes_CotizadorCarros : System.Web.UI.Page
+public partial class CotizadorCarros : System.Web.UI.Page
 {
     private string pcIDApp = "";
     private string pcIDUsuario = "";
     private DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+
+    public string NombreUsuario = "";    
+    public string CorreoElectronico = "";
+    public string Telefono = "";
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -30,7 +37,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         {
             string lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
             lcEncriptado = lcEncriptado.Replace("%2f", "/");
-            string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);            
+            string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
             Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
             pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
@@ -40,20 +47,20 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
         if (ddlProducto.Items.Count == 0)
         {
-            ddlGastosdeCierre.Items.Add("");
+            ddlGastosdeCierre.Items.Add(new ListItem("Seleccionar", ""));
             ddlGastosdeCierre.Items.Add("Financiado");
             ddlGastosdeCierre.Items.Add("Sin financiar");
 
-            ddlProducto.Items.Add("");
+            ddlProducto.Items.Add(new ListItem("Seleccionar", ""));
             ddlProducto.Items.Add("Finaciamiento");
             ddlProducto.Items.Add("Empeño");
 
-            ddlGPS.Items.Add("");
+            ddlGPS.Items.Add(new ListItem("Seleccionar", ""));
             ddlGPS.Items.Add("No");
             ddlGPS.Items.Add("Si - CPI");
             ddlGPS.Items.Add("Si - CableColor");
 
-            ddlSeguro.Items.Add("");
+            ddlSeguro.Items.Add(new ListItem("Seleccionar", ""));
             ddlSeguro.Items.Add("A - Full Cover");
             ddlSeguro.Items.Add("B - Basico");
         }
@@ -61,6 +68,9 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
     protected void btnCalcular_Click(object sender, EventArgs e)
     {
+        txtValorVehiculo.Text = txtValorVehiculo.Text.Replace(",", "");
+        txtValorPrima.Text = txtValorPrima.Text.Replace(",", "");
+
         if (string.IsNullOrEmpty(txtScorePromedio.Text))
         {
             txtScorePromedio.Text = "0";
@@ -68,7 +78,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
         if (string.IsNullOrEmpty(ddlProducto.SelectedValue.Trim()))
         {
-            PanelErrores.Visible = true;
+            PanelMensajeErrores.Visible = true;
             lblMensaje.Text = "Seleccione un producto";
             return;
         }
@@ -87,7 +97,7 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
         if (string.IsNullOrEmpty(txtValorVehiculo.Text) || string.IsNullOrEmpty(txtValorPrima.Text))
         {
-            PanelErrores.Visible = true;
+            PanelMensajeErrores.Visible = true;
             lblMensaje.Text = "Debe ingresar todos los valores para calcular.";
             return;
         }
@@ -97,8 +107,8 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
         if (!lbEsNumerico)
         {
-            PanelErrores.Visible = true;
-            lblMensaje.Text = "Ingrese valoes numericos.";
+            PanelMensajeErrores.Visible = true;
+            lblMensaje.Text = "Ingrese valores numéricos.";
             return;
         }
 
@@ -106,58 +116,57 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
         if (!lbEsNumerico)
         {
-            PanelErrores.Visible = true;
+            PanelMensajeErrores.Visible = true;
             lblMensaje.Text = "Ingrese valoes numericos.";
             return;
         }
 
         if (Convert.ToDouble(txtValorPrima.Text) < (Convert.ToDouble(txtValorVehiculo.Text) * (0.20)))
         {
-            PanelErrores.Visible = true;
+            PanelMensajeErrores.Visible = true;
             lblMensaje.Text = "Valor de la prima debe ser mayor o igual al 20%.";
             return;
         }
 
         if (Convert.ToDouble(txtScorePromedio.Text) < 0 || Convert.ToDouble(txtScorePromedio.Text) > 999)
         {
-            PanelErrores.Visible = true;
+            PanelMensajeErrores.Visible = true;
             lblMensaje.Text = "El score solo puede ser entre 0 y 999.";
             return;
         }
 
         if ((Convert.ToDouble(txtValorPrima.Text) < (Convert.ToDouble(txtValorVehiculo.Text) * (0.45))) && lcProducto == "203")
         {
-            PanelErrores.Visible = true;
+            PanelMensajeErrores.Visible = true;
             lblMensaje.Text = "Valor de a financiar no puede ser mayor al 55%.";
-            lblPorcenajedePrima.Text = "Maximo L " + string.Format("{0:N2}", Convert.ToString(Math.Round(Convert.ToDouble(txtValorVehiculo.Text) * (0.55), 2)));
+            lblPorcenajedePrima.InnerText = "Maximo L " + string.Format("{0:N2}", Convert.ToString(Math.Round(Convert.ToDouble(txtValorVehiculo.Text) * (0.55), 2)));
             lblPorcenajedePrima.Visible = true;
             return;
         }
 
         if (string.IsNullOrEmpty(ddlGPS.SelectedValue.Trim()))
         {
-            PanelErrores.Visible = true;
+            PanelMensajeErrores.Visible = true;
             lblMensaje.Text = "Seleccione el tipo de GPS";
             return;
         }
 
         if (string.IsNullOrEmpty(ddlSeguro.SelectedValue.Trim()))
         {
-            PanelErrores.Visible = true;
+            PanelMensajeErrores.Visible = true;
             lblMensaje.Text = "Seleccione el tipo de seguro";
             return;
         }
 
         if (string.IsNullOrEmpty(ddlGastosdeCierre.SelectedValue.Trim()))
         {
-            PanelErrores.Visible = true;
+            PanelMensajeErrores.Visible = true;
             lblMensaje.Text = "Seleccione el metodo de pago de los gastos de cierre";
             return;
         }
 
-        lblPorcenajedePrima.Text = string.Format("{0:N2}", Convert.ToString(Math.Round((Convert.ToDouble(txtValorPrima.Text) * 100.00) / Convert.ToDouble(txtValorVehiculo.Text), 2))) + "%";
-        PanelErrores.Visible = false;
-        PanelCotizadorResultado.Visible = true;
+        lblPorcenajedePrima.InnerText = string.Format("{0:N2}", Convert.ToString(Math.Round((Convert.ToDouble(txtValorPrima.Text) * 100.00) / Convert.ToDouble(txtValorVehiculo.Text), 2))) + "%";
+        PanelMensajeErrores.Visible = false;
 
         try
         {
@@ -196,29 +205,90 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
 
                     using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
                     {
-                        gvCotizador.DataSource = sqlResultado;
-                        gvCotizador.DataBind();
+                        HtmlTableRow tRowCotizacion;
+                        HtmlTableRow tRowCotizacionPDF;
+
+                        while (sqlResultado.Read())
+                        {
+                            tRowCotizacion = new HtmlTableRow();
+                            tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fiIDPlazo"].ToString() });
+                            tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotadelPrestamo"].ToString()).ToString("N") });
+                            tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()).ToString("N") });
+                            tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()).ToString("N") });
+                            tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnTotalCuota"].ToString()).ToString("N") });
+                            tblCotizacionPorPlazos.Rows.Add(tRowCotizacion);
+
+                            tRowCotizacionPDF = new HtmlTableRow();
+                            tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fiIDPlazo"].ToString() });
+                            tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotadelPrestamo"].ToString()).ToString("N") });
+                            tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()).ToString("N") });
+                            tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()).ToString("N") });
+                            tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnTotalCuota"].ToString()).ToString("N") });
+
+                            tblCotizacionPorPlazosPDF.Rows.Add(tRowCotizacionPDF);
+
+                            lblFechaNegociacion.Text = DateTime.Now.ToString("MM/dd/yyyy");
+                            lblOficialNegociosNegociacion.Text = "Oficial de negocios: " + sqlResultado["fcNombreCorto"].ToString();
+                            lblTelefonoVendedorNegociacion.Text = "Teléfono: " + sqlResultado["fcTelefonoUsuario"].ToString();
+                            lblCorreoVendedorNegociacion.Text = "Correo: " + sqlResultado["fcCorreoElectronico"].ToString();
+
+                            if (sqlResultado["fcTelefonoUsuario"].ToString().Trim() == string.Empty)
+                            {
+                                trTelefonoVendedor.Visible = false;
+                            }
+                        }
+
+                        lblValorVehiculo.Text = "L " + decimal.Parse(txtValorVehiculo.Text).ToString("N");
+                        lblPrima.Text = "L " +  decimal.Parse(txtValorPrima.Text).ToString("N");
+                        lblMontoAFinanciar.Text = "L " +  decimal.Parse(txtMonto.Text).ToString("N");
+                        lblScore.Text = txtScorePromedio.Text;
+
+                        lblGPS.Text = ddlGPS.SelectedValue;
+                        lblSeguro.Text = ddlSeguro.SelectedValue;
+                        lblMontoGastosDeCierre.Text = ddlGastosdeCierre.SelectedValue;
                     }
                 }
+
+
+                /* Inhabilitar campos de cotizacion */
+                ddlProducto.Enabled = false;
+                txtValorVehiculo.Enabled = false;
+                txtValorPrima.Enabled = false;
+                txtMonto.Enabled = false;
+                txtScorePromedio.Enabled = false;
+                ddlGastosdeCierre.Enabled = false;
+                ddlSeguro.Enabled = false;
+                ddlGPS.Enabled = false;
+
+                lblMensaje.Visible = false;
+                btnCalcular.Visible = false;
+                divResultados.Visible = true;
+                btnNuevoCalculo.Visible = true;
             }
         }
         catch (Exception ex)
         {
-            PanelErrores.Visible = true;
+            PanelMensajeErrores.Visible = true;
             lblMensaje.Text = ex.Message;
             return;
+        }
+        finally
+        {
+            CargarScripts();
         }
     }
 
     protected void rbEmpeno_CheckedChanged(object sender, EventArgs e)
     {
         txtMonto.Enabled = true;
+        CargarScripts();
 
     }
 
     protected void rbFinanciamiento_CheckedChanged(object sender, EventArgs e)
     {
         txtMonto.Enabled = false;
+        CargarScripts();
     }
 
     protected void ddlProducto_SelectedIndexChanged(object sender, EventArgs e)
@@ -226,16 +296,99 @@ public partial class Clientes_CotizadorCarros : System.Web.UI.Page
         if (ddlProducto.SelectedValue == "Finaciamiento")
         {
             txtMonto.Enabled = false;
+            divValorDelVehiculo.Attributes.Add("class", "col-6");
             txtValorPrima.Visible = true;
-            lblPrima.Visible = true;
+            divPrima.Visible = true;
             lblMonto.Text = "Valor a financiar del vehiculo:";
         }
         else
         {
+            divValorDelVehiculo.Attributes.Add("class", "col-12");
             txtMonto.Enabled = true;
             txtValorPrima.Visible = false;
-            lblPrima.Visible = false;
+            divPrima.Visible = false;
             lblMonto.Text = "Valor del empeño:";
         }
+
+        CargarScripts();
+    }
+
+    protected void btnNuevoCalculo_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            txtValorVehiculo.Text = string.Empty;
+            txtValorPrima.Text = string.Empty;
+            lblPorcenajedePrima.InnerText = string.Empty;
+            txtMonto.Text = string.Empty;
+            txtScorePromedio.Text = string.Empty;
+            ddlGastosdeCierre.SelectedValue = string.Empty;
+            ddlGPS.SelectedValue = string.Empty;
+            ddlProducto.SelectedValue = string.Empty;
+            ddlSeguro.SelectedValue = string.Empty;
+
+            /* Habilitar campos de cotizacion */
+            ddlProducto.Enabled = true;
+            txtValorVehiculo.Enabled = true;
+            txtValorPrima.Enabled = true;
+            txtMonto.Enabled = true;
+            txtScorePromedio.Enabled = true;
+            ddlGastosdeCierre.Enabled = true;
+            ddlSeguro.Enabled = true;
+            ddlGPS.Enabled = true;
+
+            btnCalcular.Visible = true;
+            btnNuevoCalculo.Visible = false;
+            divResultados.Visible = false;
+            CargarScripts();
+        }
+        catch (Exception ex)
+        {
+            lblMensaje.Visible = true;
+            lblMensaje.Text = ex.Message;
+        }
+    }
+
+    private void CargarScripts()
+    {
+        try
+        {
+            string scriptMascarasDeEntrada =
+            "<script>$('.MascaraCantidad').inputmask('decimal', { " +
+            "alias: 'numeric', " +
+                    "groupSeparator: ',', " +
+                    "digits: 2, " +
+                    "integerDigits: 11, " +
+                    "digitsOptional: false, " +
+                    "placeholder: '0', " +
+                    "radixPoint: '.', " +
+                    "autoGroup: true, " +
+                    "min: 0.0, " +
+                "}); " +
+                "$('.MascaraNumerica').inputmask('decimal', { " +
+            "alias: 'numeric', " +
+                    "groupSeparator: ',', " +
+                    "digits: 0, " +
+                    "integerDigits: 3," +
+                    "digitsOptional: false, " +
+                    "placeholder: '0', " +
+                    "radixPoint: '.', " +
+                    "autoGroup: true, " +
+                    "min: 0.0, " +
+                "}); " +
+            "$('.identidad').inputmask('9999999999999'); </script>";
+
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "none", scriptMascarasDeEntrada, false);
+        }
+        catch (Exception ex)
+        {
+            lblMensaje.Visible = true;
+            lblMensaje.Text = ex.Message;
+        }
+    }
+
+    private string RespuestaLogica(decimal cantidad)
+    {
+        return cantidad > 0 ? "SI" : "NO";
     }
 }

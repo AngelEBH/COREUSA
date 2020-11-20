@@ -291,13 +291,16 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                 var listaCondicionesDeDocumentacion = new int[] { 1, 2, 3, 4, 5, 6 };
 
                                 HtmlTableRow tRowCondicion;
+
+                                HtmlTableRow tRowCondicionAcciones;
+
                                 var btnFinalizarCondicion = string.Empty;
                                 var lblEstadoCondicion = string.Empty;
 
                                 /* Llenar table de referencias */
                                 while (sqlResultado.Read())
                                 {
-                                    btnFinalizarCondicion = "<button id='btnFinalizarCondicion' data-id='" + sqlResultado["fiIDSolicitudCondicion"].ToString() + "' class='btn btn-sm btn-warning mb-0' type='button' title='Finalizar condicion'><i class='far fa-check-circle'></i> Finalizar</button>";
+                                    btnFinalizarCondicion = (bool)sqlResultado["fbEstadoCondicion"] == true ? "<button id='btnFinalizarCondicionModal' data-id='" + sqlResultado["fiIDSolicitudCondicion"].ToString() + "' class='btn btn-sm btn-warning mb-0' type='button' title='Finalizar condicion'><i class='far fa-check-circle'></i> Finalizar</button>" : "";
                                     lblEstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"] == true ? "<label class='btn btn-sm btn-warning mb-0'>Pendiente<label>" : "<label class='btn btn-sm btn-success mb-0'>Completada<label>";
 
                                     tRowCondicion = new HtmlTableRow();
@@ -306,13 +309,17 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     tRowCondicion.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcComentarioAdicional"].ToString() });
                                     tRowCondicion.Cells.Add(new HtmlTableCell() { InnerHtml = lblEstadoCondicion });
                                     //tRowCondicion.Cells.Add(new HtmlTableCell() { InnerHtml = btnFinalizarCondicion });
+
                                     tblCondiciones.Rows.Add(tRowCondicion);
 
+                                    tRowCondicionAcciones = new HtmlTableRow();
+                                    tRowCondicionAcciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcCondicion"].ToString() });
+                                    tRowCondicionAcciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionCondicion"].ToString() });
+                                    tRowCondicionAcciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcComentarioAdicional"].ToString() });
+                                    tRowCondicionAcciones.Cells.Add(new HtmlTableCell() { InnerHtml = lblEstadoCondicion });
+                                    tRowCondicionAcciones.Cells.Add(new HtmlTableCell() { InnerHtml = btnFinalizarCondicion });
+
                                     listaCondiciones.Add((int)sqlResultado["fiIDCondicion"]);
-
-
-
-
                                 }
 
                                 ValidarFormularioCondiciones(listaCondiciones);
@@ -481,7 +488,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             }
                             else
                             {
-                                liInformacionConyugal.Visible = false;
+                                //liInformacionConyugal.Visible = false;
                             }
 
                             /****** Referencias de la solicitud ******/

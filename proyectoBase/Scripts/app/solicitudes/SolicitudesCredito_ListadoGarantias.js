@@ -109,6 +109,7 @@ $(document).ready(function () {
                 }
             },
             { "data": "VIN" },
+            { "data": "DocumentosSubidos" },
             {
                 "data": "IdGarantia", "className": "text-center",
                 "render": function (data, type, row) {
@@ -118,7 +119,7 @@ $(document).ready(function () {
             }
         ],
         columnDefs: [
-            { targets: [0, 9], orderable: false },
+            { targets: [0, 10], orderable: false },
             { "width": "1%", "targets": 1 }
         ]
     });
@@ -210,16 +211,16 @@ $(document).ready(function () {
 
         switch (filtro) {
             case "0":
-                dtListado.columns(9).search("").draw();
+                dtListado.columns(10).search("").draw();
                 break;
             case "1":
-                dtListado.columns(9).search("estadoPendiente").draw();
+                dtListado.columns(10).search("estadoPendiente").draw();
                 break;
             case "2":
-                dtListado.columns(9).search("estadoListo").draw();
+                dtListado.columns(10).search("estadoListo").draw();
                 break;
             default:
-                dtListado.columns(9).search("").draw();
+                dtListado.columns(10).search("").draw();
         }
     });
 

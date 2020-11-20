@@ -1599,7 +1599,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    tran.Commit();
+                    //tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";

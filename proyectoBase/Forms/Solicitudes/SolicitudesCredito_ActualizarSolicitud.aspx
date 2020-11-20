@@ -72,7 +72,6 @@
                                                     <th>Descripción</th>
                                                     <th>Comentario adicional</th>
                                                     <th>Estado</th>
-                                                    <%--<th>Acciones</th>--%>
                                                 </tr>
                                             </thead>
                                             <tbody>

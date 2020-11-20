@@ -174,6 +174,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 Marca = sqlResultado["fcMarca"].ToString(),
                                 Modelo = sqlResultado["fcModelo"].ToString(),
                                 Anio = sqlResultado["fiAnio"].ToString(),
+                                DocumentosSubidos = sqlResultado["fcDocumentos"].ToString(),
                                 /* Solicitud de instalacion de GPS */
                                 IdAutoGPSInstalacion = (int)sqlResultado["fiIDAutoGPSInstalacion"],
                                 IDAgenciaInstalacion = (int)sqlResultado["fiIDAgenciaInstalacion"],
@@ -584,6 +585,8 @@ public class SolicitudesCredito_ListadoGarantias_ViewModel
     public string Marca { get; set; }
     public string Modelo { get; set; }
     public string Anio { get; set; }
+
+    public string DocumentosSubidos { get; set; }
 
     /* Solicitud de instalacion de GPS */
     public int IdAutoGPSInstalacion { get; set; }
