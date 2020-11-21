@@ -300,7 +300,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                 /* Llenar table de referencias */
                                 while (sqlResultado.Read())
                                 {
-                                    btnFinalizarCondicion = (bool)sqlResultado["fbEstadoCondicion"] == true ? "<button id='btnFinalizarCondicionModal' data-id='" + sqlResultado["fiIDSolicitudCondicion"].ToString() + "' class='btn btn-sm btn-warning mb-0' type='button' title='Finalizar condicion'><i class='far fa-check-circle'></i> Finalizar</button>" : "";
+                                    btnFinalizarCondicion = (bool)sqlResultado["fbEstadoCondicion"] == true ? "<button id='btnFinalizarCondicion' data-id='" + sqlResultado["fiIDSolicitudCondicion"].ToString() + "' data-idtipocondicion='" + sqlResultado["fiIDCondicion"].ToString() + "' class='btn btn-sm btn-warning mb-0' type='button' title='Finalizar condicion'>Finalizar</button>" : "";
                                     lblEstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"] == true ? "<label class='btn btn-sm btn-warning mb-0'>Pendiente<label>" : "<label class='btn btn-sm btn-success mb-0'>Completada<label>";
 
                                     tRowCondicion = new HtmlTableRow();
@@ -308,7 +308,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     tRowCondicion.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionCondicion"].ToString() });
                                     tRowCondicion.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcComentarioAdicional"].ToString() });
                                     tRowCondicion.Cells.Add(new HtmlTableCell() { InnerHtml = lblEstadoCondicion });
-                                    //tRowCondicion.Cells.Add(new HtmlTableCell() { InnerHtml = btnFinalizarCondicion });
 
                                     tblCondiciones.Rows.Add(tRowCondicion);
 
@@ -320,9 +319,58 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     tRowCondicionAcciones.Cells.Add(new HtmlTableCell() { InnerHtml = btnFinalizarCondicion });
 
                                     listaCondiciones.Add((int)sqlResultado["fiIDCondicion"]);
-                                }
 
-                                ValidarFormularioCondiciones(listaCondiciones);
+
+                                    /* validar si hay condiciones de documentación */
+                                    if (listaCondicionesDeDocumentacion.Contains((int)sqlResultado["fiIDCondicion"]))
+                                    {
+                                        liDocumentacion.Visible = true;
+                                        tblCondicionesDocumentacion.Rows.Add(tRowCondicionAcciones);
+                                    }
+
+                                    /* validar si hay condiciones de referencias personales */
+                                    if (sqlResultado["fiIDCondicion"].ToString() == "8" || sqlResultado["fiIDCondicion"].ToString() == "14")
+                                    {
+                                        liReferenciasPersonales.Visible = true;
+                                        tblCondicionesReferenciasPersonales.Rows.Add(tRowCondicionAcciones);
+                                    }
+
+                                    /* condiciones de la información de la solicitud
+                                    if (listaCondiciones.Contains(9))
+                                    {
+                                    liInformacionDeLaSolicitud.Visible = true;
+                                    tblCondicionesInformacionDeLaSolicitud.Rows.Add(tRowCondicionAcciones);
+                                    }
+                                    */
+
+                                    /* condiciones de informacion personal */
+                                    if (sqlResultado["fiIDCondicion"].ToString() == "10")
+                                    {
+                                        liInformacionPersonal.Visible = true;
+                                        tblCondicionesInformacionPersonal.Rows.Add(tRowCondicionAcciones);
+                                    }
+
+                                    /* condiciones de la información del domicilio */
+                                    if (sqlResultado["fiIDCondicion"].ToString() == "11")
+                                    {
+                                        liInformacionDomicilio.Visible = true;
+                                        tblCondicionesDomicilio.Rows.Add(tRowCondicionAcciones);
+                                    }
+
+                                    /* condiciones de la informacion laboral */
+                                    if (sqlResultado["fiIDCondicion"].ToString() == "12")
+                                    {
+                                        liInformacionLaboral.Visible = true;
+                                        tblCondicionesLaboral.Rows.Add(tRowCondicionAcciones);
+                                    }
+
+                                    /* condiciones de la informacion conyugal */
+                                    if (sqlResultado["fiIDCondicion"].ToString() == "13")
+                                    {
+                                        liInformacionConyugal.Visible = true;
+                                        tblCondicionesInformacionConyugal.Rows.Add(tRowCondicionAcciones);
+                                    }
+                                }
                             }
 
                             /****** Información del cliente ******/
@@ -992,7 +1040,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     {
                                         IdReferencia = (int)sqlResultado["fiIDReferencia"],
                                         IdCliente = (int)sqlResultado["fiIDCliente"],
-                                        NombreCompletoReferencia = (string)sqlResultado["fcNombreCompletoReferencia"],
+                                        NombreCompleto = (string)sqlResultado["fcNombreCompletoReferencia"],
                                     });
                                 }
                             }
@@ -1007,9 +1055,9 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             {
                                 referenciasInsertar.Add(new Cliente_ReferenciaPersonal_ViewModel()
                                 {
-                                    NombreCompletoReferencia = item.NombreCompletoReferencia,
-                                    LugarTrabajoReferencia = item.LugarTrabajoReferencia,
-                                    IdTiempoConocerReferencia = item.IdTiempoConocerReferencia,
+                                    NombreCompleto = item.NombreCompleto,
+                                    LugarTrabajo = item.LugarTrabajo,
+                                    IdTiempoDeConocer = item.IdTiempoDeConocer,
                                     TelefonoReferencia = item.TelefonoReferencia,
                                     IdParentescoReferencia = item.IdParentescoReferencia,
                                 });
@@ -1026,9 +1074,9 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     sqlComando.CommandType = CommandType.StoredProcedure;
                                     sqlComando.Parameters.AddWithValue("@fiIDCliente", idCliente);
                                     sqlComando.Parameters.AddWithValue("@fiIDSolicitud", idSolicitud);
-                                    sqlComando.Parameters.AddWithValue("@fcNombreCompletoReferencia", referencia.NombreCompletoReferencia);
-                                    sqlComando.Parameters.AddWithValue("@fcLugarTrabajoReferencia", referencia.LugarTrabajoReferencia);
-                                    sqlComando.Parameters.AddWithValue("@fiTiempoConocerReferencia", referencia.IdTiempoConocerReferencia);
+                                    sqlComando.Parameters.AddWithValue("@fcNombreCompletoReferencia", referencia.NombreCompleto);
+                                    sqlComando.Parameters.AddWithValue("@fcLugarTrabajoReferencia", referencia.LugarTrabajo);
+                                    sqlComando.Parameters.AddWithValue("@fiTiempoConocerReferencia", referencia.IdTiempoDeConocer);
                                     sqlComando.Parameters.AddWithValue("@fcTelefonoReferencia", referencia.TelefonoReferencia);
                                     sqlComando.Parameters.AddWithValue("@fiIDParentescoReferencia", referencia.IdParentescoReferencia);
                                     sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
@@ -1103,9 +1151,9 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                 referenciasEditar.Add(new Cliente_ReferenciaPersonal_ViewModel()
                                 {
                                     IdReferencia = item.IdReferencia,
-                                    NombreCompletoReferencia = item.NombreCompletoReferencia,
-                                    LugarTrabajoReferencia = item.LugarTrabajoReferencia,
-                                    IdTiempoConocerReferencia = item.IdTiempoConocerReferencia,
+                                    NombreCompleto = item.NombreCompleto,
+                                    LugarTrabajo = item.LugarTrabajo,
+                                    IdTiempoDeConocer = item.IdTiempoDeConocer,
                                     TelefonoReferencia = item.TelefonoReferencia,
                                     IdParentescoReferencia = item.IdParentescoReferencia,
                                 });
@@ -1120,9 +1168,9 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                 {
                                     sqlComando.CommandType = CommandType.StoredProcedure;
                                     sqlComando.Parameters.AddWithValue("@fiIDReferencia", referencia.IdParentescoReferencia);
-                                    sqlComando.Parameters.AddWithValue("@fcNombreCompletoReferencia", referencia.NombreCompletoReferencia);
-                                    sqlComando.Parameters.AddWithValue("@fcLugarTrabajoReferencia", referencia.LugarTrabajoReferencia);
-                                    sqlComando.Parameters.AddWithValue("@fiTiempoConocerReferencia", referencia.IdTiempoConocerReferencia);
+                                    sqlComando.Parameters.AddWithValue("@fcNombreCompletoReferencia", referencia.NombreCompleto);
+                                    sqlComando.Parameters.AddWithValue("@fcLugarTrabajoReferencia", referencia.LugarTrabajo);
+                                    sqlComando.Parameters.AddWithValue("@fiTiempoConocerReferencia", referencia.IdTiempoDeConocer);
                                     sqlComando.Parameters.AddWithValue("@fcTelefonoReferencia", referencia.TelefonoReferencia);
                                     sqlComando.Parameters.AddWithValue("@fiIDParentescoReferencia", referencia.IdParentescoReferencia);
                                     sqlComando.Parameters.AddWithValue("@fiIDUsuarioModifica", pcIDUsuario);
@@ -1288,6 +1336,159 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     }
 
     [WebMethod]
+    public static bool RegistrarReferenciaPersonal(int idSolicitud, int idCliente, SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_AgregarReferencia", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDCliente", idCliente);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pcNombreCompletoReferencia", referenciaPersonal.NombreCompleto.Trim());
+                    sqlComando.Parameters.AddWithValue("@pcLugarTrabajoReferencia", referenciaPersonal.LugarTrabajo.Trim());
+                    sqlComando.Parameters.AddWithValue("@piTiempoConocerReferencia", referenciaPersonal.IdTiempoDeConocer);
+                    sqlComando.Parameters.AddWithValue("@pcTelefonoReferencia", referenciaPersonal.TelefonoReferencia.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDParentescoReferencia", referenciaPersonal.IdParentescoReferencia);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool EliminarReferenciaPersonal(int idSolicitud, int idCliente, int idReferenciaPersonal, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_EliminarReferencia", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDCliente", idCliente);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDReferenciaPersonal", idReferenciaPersonal);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool ActualizarReferenciaPersonal(int idSolicitud, int idCliente, SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string observaciones, string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ActualizarReferencia", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDReferenciaPersonal", referenciaPersonal.IdReferencia);
+                    sqlComando.Parameters.AddWithValue("@piIDCliente", idCliente);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pcNombreCompletoReferencia", referenciaPersonal.NombreCompleto.Trim());
+                    sqlComando.Parameters.AddWithValue("@pcLugarTrabajoReferencia", referenciaPersonal.LugarTrabajo.Trim());
+                    sqlComando.Parameters.AddWithValue("@piTiempoConocerReferencia", referenciaPersonal.IdTiempoDeConocer);
+                    sqlComando.Parameters.AddWithValue("@pcTelefonoReferencia", referenciaPersonal.TelefonoReferencia.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDParentescoReferencia", referenciaPersonal.IdParentescoReferencia);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
     public static string ObtenerUrlEncriptado(int idCliente, string dataCrypt)
     {
         var lUrlDesencriptado = DesencriptarURL(dataCrypt);
@@ -1297,54 +1498,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         var pcIDSesion = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("SID");
 
         return DSC.Encriptar("usr=" + idUsuario + "&IDSOL=" + idSolicitud + "&cltID=" + idCliente + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
-    }
-
-    public void ValidarFormularioCondiciones(List<int> listaCondiciones)
-    {
-        var listaCondicionesDeDocumentacion = new int[] { 1, 2, 3, 4, 5, 6 };
-
-        /* validar si hay condiciones de documentación */
-        if (listaCondiciones.Intersect(listaCondicionesDeDocumentacion).Any())
-        {
-            liDocumentacion.Visible = true;
-        }
-
-        /* validar si hay condiciones de referencias personales */
-        if (listaCondiciones.Contains(8) || listaCondiciones.Contains(14))
-        {
-            liReferenciasPersonales.Visible = true;
-        }
-
-        /* condiciones de la información de la solicitud
-        if (listaCondiciones.Contains(9))
-        {
-        liInformacionDeLaSolicitud.Visible = true;
-        }
-        */
-
-        /* condiciones de informacion personal */
-        if (listaCondiciones.Contains(10))
-        {
-            liInformacionPersonal.Visible = true;
-        }
-
-        /* condiciones de la información del domicilio */
-        if (listaCondiciones.Contains(11))
-        {
-            liInformacionDomicilio.Visible = true;
-        }
-
-        /* condiciones de la informacion laboral */
-        if (listaCondiciones.Contains(12))
-        {
-            liInformacionLaboral.Visible = true;
-        }
-
-        /* condiciones de la informacion conyugal */
-        if (listaCondiciones.Contains(13))
-        {
-            liInformacionConyugal.Visible = true;
-        }
     }
 
     public static Uri DesencriptarURL(string URL)
@@ -1459,6 +1612,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     {
         public int IdInformacionDomicilio { get; set; }
         public int IdCliente { get; set; }
+        public int IdSolicitud { get; set; }
         public string TelefonoCasa { get; set; }
         public int IdDepartamento { get; set; }
         public int IdMunicipio { get; set; }
@@ -1472,6 +1626,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     {
         public int IdInformacionLaboral { get; set; }
         public int IdCliente { get; set; }
+        public int IdSolicitud { get; set; }
         public string NombreTrabajo { get; set; }
         public decimal IngresosMensuales { get; set; }
         public string PuestoAsignado { get; set; }
@@ -1493,12 +1648,13 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     {
         public int IdInformacionConyugal { get; set; }
         public int IdCliente { get; set; }
+        public int IdSolicitud { get; set; }
         public string IdentidadConyugue { get; set; }
         public string NombreCompletoConyugue { get; set; }
-        public string TelefonoTrabajoConyugue { get; set; }
-        public DateTime FechaNacimientoConyugue { get; set; }
         public string TelefonoConyugue { get; set; }
+        public DateTime FechaNacimientoConyugue { get; set; }
         public string LugarTrabajoConyugue { get; set; }
+        public string TelefonoTrabajoConyugue { get; set; }
         public decimal IngresosMensualesConyugue { get; set; }
     }
 
@@ -1506,11 +1662,18 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     {
         public int IdReferencia { get; set; }
         public int IdCliente { get; set; }
-        public string NombreCompletoReferencia { get; set; }
+        public int IdSolicitud { get; set; }
+        public string NombreCompleto { get; set; }
+        public string LugarTrabajo { get; set; }
+        public int IdTiempoDeConocer { get; set; }
+        public string TiempoDeConocer { get; set; }
         public string TelefonoReferencia { get; set; }
-        public string LugarTrabajoReferencia { get; set; }
-        public short IdTiempoConocerReferencia { get; set; }
         public int IdParentescoReferencia { get; set; }
+        public string DescripcionParentesco { get; set; }
+        public bool ReferenciaActivo { get; set; }
+        public string RazonInactivo { get; set; }
+        public string ComentarioDeptoCredito { get; set; }
+        public int AnalistaComentario { get; set; }
     }
     #endregion
 }

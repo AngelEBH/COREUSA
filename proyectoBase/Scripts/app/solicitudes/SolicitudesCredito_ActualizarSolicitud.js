@@ -256,151 +256,354 @@ $("select").on('change', function () {
     $(this).parsley().validate();
 });
 
-$("#btnTerminarCondicionConfirmar").click(function () {
 
-    var objSeccion = {};
+/* Manejo de referencias personales */
+$("#btnAgregarReferencia").click(function () {
 
-    switch (seccionFormulario) {
+    $("#txtNombreReferencia,#txtTelefonoReferencia,#ddlTiempoDeConocerReferencia, #ddlParentescos, #txtLugarTrabajoReferencia, #txtObservacionesNuevaReferencia").val('');
+    $('#modalAgregarReferenciaPersonal').parsley().reset();
+    $("#modalReferenciasPersonales").modal('hide');
+    $("#modalAgregarReferenciaPersonal").modal();
+});
 
-        case "Correccion Informacion de la Solicitud":
-            objSeccion = {
-                fiIDSolicitud: ID_SOLICITUD,
-                IdCliente: ID_CLIENTE,
-                fnPrima: $("#txtPrima").val().replace(/,/g, ''),
-                fnValorGarantia: $("#txtValorVehiculo").val().replace(/,/g, '')
+$("#btnAgregarReferenciaConfirmar").click(function () {
+
+    /* Validar formulario de agregar referencia personal */
+    if ($('#frmPrincipal').parsley().isValid({ group: 'referenciasPersonales' })) {
+
+        var NombreCompletoReferencia = $("#txtNombreReferencia").val();
+        var TelefonoReferencia = $("#txtTelefonoReferencia").val();
+        var LugarTrabajoReferencia = $("#txtLugarTrabajoReferencia").val();
+        var IdTiempoConocerReferencia = $("#ddlTiempoDeConocerReferencia :selected").val();
+        var IdParentescoReferencia = $("#ddlParentescos :selected").val();
+
+        /* Objeto referencia */
+        var referenciaPersonal = {
+            NombreCompleto: NombreCompletoReferencia,
+            TelefonoReferencia: TelefonoReferencia,
+            LugarTrabajo: LugarTrabajoReferencia,
+            IdTiempoDeConocer: IdTiempoConocerReferencia,
+            IdParentescoReferencia: IdParentescoReferencia,
+        }
+
+        var observaciones = $("#txtObservacionesNuevaReferencia").val();
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Mantenimiento.aspx/RegistrarReferenciaPersonal",
+            data: JSON.stringify({ idSolicitud: idSolicitud, idCliente: idCliente, referenciaPersonal: referenciaPersonal, observaciones: observaciones, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError("No se pudo agregar la referencia personal, contacte al administrador.");
+            },
+            success: function (data) {
+
+                if (data.d == true) {
+
+                    MensajeExito('La referencia personal se agregó correctamente.');
+                    BuscarSolicitud();
+                }
+                else {
+                    MensajeError("No se pudo agregar la referencia personal, contacte al administrador.");
+                }
+
+                $("#modalAgregarReferenciaPersonal").modal('hide');
             }
-            break;
+        });
+    }
+    else {
+        $('#frmPrincipal').parsley().validate({ group: 'referenciasPersonales', force: true });
+    }
 
-        case "Correccion Informacion Personal":
+});
+
+/* Eliminar referencia personal */
+var idReferenciaPersonalSeleccionada = 0;
+$(document).on('click', 'button#btnEliminarReferencia', function () {
+
+    $("#modalReferenciasPersonales").modal('hide');
+
+    $("#txtObservacionesEliminarReferenciaPersonal").val('');
+    idReferenciaPersonalSeleccionada = $(this).data('id');
+
+    $("#modalEliminarReferenciaPersonal").modal();
+});
+
+$("#btnEliminarReferenciaPersonalConfirmar").click(function (e) {
+
+    if ($("#txtObservacionesEliminarReferenciaPersonal").parsley().isValid() && idReferenciaPersonalSeleccionada != 0) {
+
+        let observaciones = $("#txtObservacionesEliminarReferenciaPersonal").val();
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Mantenimiento.aspx/EliminarReferenciaPersonal",
+            data: JSON.stringify({ idSolicitud: idSolicitud, idCliente: idCliente, idReferenciaPersonal: idReferenciaPersonalSeleccionada, observaciones: observaciones, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError("No se pudo eliminar la referencia personal, contacte al administrador.");
+            },
+            success: function (data) {
+
+                if (data.d == true) {
+
+                    MensajeExito('La referencia personal fue eliminada correctamente.');
+                    BuscarSolicitud();
+                }
+                else {
+                    MensajeError("No se pudo eliminar la referencia personal, contacte al administrador.");
+                }
+                $("#modalEliminarReferenciaPersonal").modal('hide');
+            }
+        });
+    }
+    else {
+        $("#txtObservacionesEliminarReferenciaPersonal").parsley().validate();
+    }
+});
+
+
+/* Actualizar referencia personal */
+$(document).on('click', 'button#btnEditarReferencia', function () {
+
+    $("#modalReferenciasPersonales").modal('hide');
+
+    idReferenciaPersonalSeleccionada = $(this).data('id');
+
+    $("#txtNombreReferenciaPersonal_Editar").val($(this).data('nombre'));
+    $("#txtTelefonoReferenciaPersonal_Editar").val($(this).data('telefono'));
+    $("#ddlTiempoDeConocerReferencia_Editar").val($(this).data('idtiempodeconocer'));
+    $("#ddlParentesco_Editar").val($(this).data('idparentesco'));
+    $("#txtLugarDeTrabajoReferencia_Editar").val($(this).data('trabajo'));
+
+    $("#txtObservacionesEditarReferenciaPersonal").val('');
+
+    $("#modalEditarReferenciaPersonal").modal();
+});
+
+$("#btnEditarReferenciaConfirmar").click(function (e) {
+
+    /* Validar formulario de agregar referencia personal */
+    if ($('#frmPrincipal').parsley().isValid({ group: 'referenciasPersonalesEditar' })) {
+
+        var NombreCompletoReferencia = $("#txtNombreReferenciaPersonal_Editar").val();
+        var TelefonoReferencia = $("#txtTelefonoReferenciaPersonal_Editar").val();
+        var LugarTrabajoReferencia = $("#txtLugarDeTrabajoReferencia_Editar").val();
+        var IdTiempoConocerReferencia = $("#ddlTiempoDeConocerReferencia_Editar :selected").val();
+        var IdParentescoReferencia = $("#ddlParentesco_Editar :selected").val();
+
+        /* Objeto referencia */
+        var referenciaPersonal = {
+            IdReferencia: idReferenciaPersonalSeleccionada,
+            NombreCompleto: NombreCompletoReferencia,
+            TelefonoReferencia: TelefonoReferencia,
+            LugarTrabajo: LugarTrabajoReferencia,
+            IdTiempoDeConocer: IdTiempoConocerReferencia,
+            IdParentescoReferencia: IdParentescoReferencia
+        }
+
+        var observaciones = $("#txtObservacionesEditarReferenciaPersonal").val();
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Mantenimiento.aspx/ActualizarReferenciaPersonal",
+            data: JSON.stringify({ idSolicitud: idSolicitud, idCliente: idCliente, referenciaPersonal: referenciaPersonal, observaciones: observaciones, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError("No se pudo editar la referencia personal, contacte al administrador.");
+            },
+            success: function (data) {
+
+                if (data.d == true) {
+
+                    MensajeExito('La referencia personal se editó correctamente.');
+                    BuscarSolicitud();
+                }
+                else {
+                    MensajeError("No se pudo editar la referencia personal, contacte al administrador.");
+                }
+
+                $("#modalEditarReferenciaPersonal").modal('hide');
+            }
+        });
+    }
+    else {
+        $('#frmPrincipal').parsley().validate({ group: 'referenciasPersonalesEditar', force: true });
+    }
+});
+
+
+/* Finalizar condicionamientos */
+$(document).on('click', 'button#btnFinalizarCondicion', function () {
+
+    let idSolicitudCondicion = $(this).data('id');
+    let idTipoDeCondicion = $(this).data('idtipocondicion');
+    let objSeccion = {};
+
+    var listaCondicionesDeDocumentacion = [1, 2, 3, 4, 5, 6];
+
+    /* Documentacion */
+    if (jQuery.inArray(idTipoDeCondicion, listaCondicionesDeDocumentacion) > 0) {
+
+        objSeccion = {};
+
+    }
+    /* Referencias personales */
+    else if (idTipoDeCondicion == '8' || idTipoDeCondicion == '14') {
+
+        if (listaClientesReferencias != null) {
+            if (listaClientesReferencias.length > 0) {
+
+                objSeccion = listaClientesReferencias;
+
+            }
+            else {
+                MensajeError('La cantidad minima de referencias personales es: 4. Entre ellas 2 familiares.');
+                $("#modalFinalizarCondicion_ReferenciasPersonales").modal('hide');
+                return false;
+            }
+        }
+        else {
+            MensajeError('No se detectó ningún cambio en la referencias personalels.');
+            $("#modalFinalizarCondicion_ReferenciasPersonales").modal('hide');
+            return false;
+        }
+    }
+    /* Informacion de la solicitud */
+    else if (idTipoDeCondicion == '9') {
+
+        /*objSeccion = {
+            fiIDSolicitud: ID_SOLICITUD,
+            IdCliente: ID_CLIENTE,
+            fnPrima: $("#txtPrima").val().replace(/,/g, ''),
+            fnValorGarantia: $("#txtValorVehiculo").val().replace(/,/g, '')
+        }*/
+
+    }
+    /* Informacion personal */
+    else if (idTipoDeCondicion == '10') {
+
+        if ($('#frmSolicitud').parsley().isValid({ group: 'informacionPersonal' })) {
+
             objSeccion = {
                 IdCliente: ID_CLIENTE,
-                IdentidadCliente: $("#identidadCliente").val(),
-                RtnCliente: $("#rtnCliente").val(),
-                TelefonoCliente: $("#numeroTelefono").val(),
-                IdNacionalidad: $("#nacionalidad").val(),
-                fdFechaNacimientoCliente: $("#fechaNacimiento").val(),
-                fcCorreoElectronicoCliente: $("#correoElectronico").val(),
-                fcProfesionOficioCliente: $("#profesion").val(),
-                fcSexoCliente: $("input[name='sexo']:checked").val(),
-                fiIDEstadoCivil: $("input[name='estadoCivil']:checked").val(),
-                fiIDVivienda: $("#vivivenda").val(),
-                fiTiempoResidir: $("input[name='tiempoResidir']:checked").val(),
-                fcPrimerNombreCliente: $("#primerNombreCliente").val(),
-                fcSegundoNombreCliente: $("#SegundoNombreCliente").val(),
-                fcPrimerApellidoCliente: $("#primerApellidoCliente").val(),
-                fcSegundoApellidoCliente: $("#segundoApellidoCliente").val()
+                IdTipoCliente: $("#ddlTipoDeCliente :selected").val(),
+                IdentidadCliente: $("#txtIdentidadCliente").val(),
+                RtnCliente: $("#txtIdentidadCliente").val(),
+                PrimerNombre: $("#txtPrimerNombre").val(),
+                SegundoNombre: $("#txtSegundoNombre").val(),
+                PrimerApellido: $("#txtPrimerApellido").val(),
+                SegundoApellido: $("#txtSegundoApellido").val(),                
+                TelefonoCliente: $("#txtNumeroTelefono").val(),
+                IdNacionalidad: $("#ddlNacionalidad :selected").val(),
+                FechaNacimiento: $("#txtFechaDeNacimiento").val(),
+                Correo: $("#txtCorreoElectronico").val(),
+                ProfesionOficio: $("#txtProfesion").val(),
+                Sexo: $("input[name='sexoCliente']:checked").val(),
+                IdEstadoCivil: $("#ddlEstadoCivil :selected").val(),
+                IdVivienda: $("#ddlTipoDeVivienda :selected").val(),
+                IdTiempoResidir: $("#ddlTiempoDeResidir :selected").val()                
             }
-            break;
+        }
+        else {
+            $('#frmSolicitud').parsley().validate({ group: 'informacionPersonal', force: true });            
+            $("#modalFinalizarCondicion_InfoPersonal").modal('hide');
+            return false;
+        }
+    }
+    /* Informacion del domicilio */
+    else if (idTipoDeCondicion == '11') {
 
-        case "Correccion Informacion Domiciliar":
+        if ($('#frmSolicitud').parsley().isValid({ group: 'informacionDomicilio' })) {
+
             objSeccion = {
                 IdCliente: ID_CLIENTE,
-                fiIDDepto: $("#departamento :selected").val(),
-                fiIDMunicipio: $("#municipio :selected").val(),
-                fiIDCiudad: $("#ciudad :selected").val(),
-                fiIDBarrioColonia: $("#barrioColonia :selected").val(),
-
-                fcTelefonoCasa: $("#telefonoCasa").val(),
-                fcTelefonoMovil: $("#telefonoMovil").val(),
-                fcDireccionDetallada: $("#direccionDetallada").val(),
-                fcReferenciasDireccionDetallada: $("#referenciaDireccionDetallada").val()
+                IdSolicitud: ID_SOLICITUD,
+                TelefonoCasa: $("#txtTelefonoCasa").val(),
+                IdDepartamento: $("#ddlDepartamentoDomicilio :selected").val(),
+                IdMunicipio: $("#ddlMunicipioDomicilio :selected").val(),
+                IdCiudadPoblado: $("#ddlCiudadPobladoDomicilio :selected").val(),
+                IdBarrioColonia: $("#ddlBarrioColoniaDomicilio :selected").val(),
+                DireccionDetallada: $("#txtDireccionDetalladaDomicilio").val(),
+                ReferenciasDireccionDetallada: $("#txtReferenciasDelDomicilio").val()
             }
-            break;
 
-        case "Correccion Informacion Laboral":
+        }
+        else {
+            $('#frmSolicitud').parsley().validate({ group: 'informacionDomicilio', force: true });
+            $("#modalFinalizarCondicion_InfoDomicilio").modal('hide');
+            return false;
+        }
+    }
+    /* Informacion laboral */
+    else if (idTipoDeCondicion == '12') {
+
+        if ($('#frmSolicitud').parsley().isValid({ group: 'informacionLaboral' })) {
+
             objSeccion = {
                 IdCliente: ID_CLIENTE,
-                fcNombreTrabajo: $("#nombreDelTrabajo").val(),
-                fiIngresosMensuales: $("#ingresosMensuales").val().replace(/,/g, ''),
-                fcPuestoAsignado: $("#puestoAsignado").val(),
-                fcFechaIngreso: $("#fechaIngreso").val(),
-                fdTelefonoEmpresa: $("#telefonoEmpresa").val(),
-                fcExtensionRecursosHumanos: $("#extensionRRHH").val(),
-                fcExtensionCliente: $("#extensionCliente").val(),
-                fiIDDepto: $("#departamentoEmpresa :selected").val(),
-                fiIDMunicipio: $("#municipioEmpresa :selected").val(),
-                fiIDCiudad: $("#ciudadEmpresa :selected").val(),
-                fiIDBarrioColonia: $("#barrioColoniaEmpresa :selected").val(),
-                fcDireccionDetalladaEmpresa: $("#direccionDetalladaEmpresa").val(),
-                fcReferenciasDireccionDetallada: $("#referenciaDireccionDetalladaEmpresa").val(),
-                fcFuenteOtrosIngresos: $("#fuenteOtrosIngresos").val(),
-                fiValorOtrosIngresosMensuales: $("#valorOtrosIngresos").val().replace(/,/g, '') == '' ? 0 : $("#valorOtrosIngresos").val().replace(/,/g, '')
+                IdSolicitud: ID_SOLICITUD,
+                NombreTrabajo: $("#txtNombreDelTrabajo").val(),
+                IngresosMensuales: $("#txtIngresosMensuales").val().replace(/,/g, ''),
+                PuestoAsignado: $("#txtPuestoAsignado").val(),
+                FechaIngreso: $("#txtFechaDeIngreso").val(),
+                TelefonoEmpresa: $("#txtTelefonoEmpresa").val(),
+                ExtensionRecursosHumanos: $("#txtExtensionRecursosHumanos").val(),
+                ExtensionCliente: $("#txtExtensionCliente").val(),
+                IdDepartamento: $("#ddlDepartamentoEmpresa :selected").val(),
+                IdMunicipio: $("#ddlMunicipioEmpresa :selected").val(),
+                IdCiudadPoblado: $("#ddlCiudadPobladoEmpresa :selected").val(),
+                IdBarrioColonia: $("#ddlBarrioColoniaEmpresa :selected").val(),
+                DireccionDetalladaEmpresa: $("#txtDireccionDetalladaEmpresa").val(),
+                ReferenciasDireccionDetallada: $("#txtReferenciasEmpresa").val(),
+                FuenteOtrosIngresos: $("#txtFuenteDeOtrosIngresos").val(),
+                ValorOtrosIngresos: $("#txtValorOtrosIngresos").val().replace(/,/g, '') == '' ? 0 : $("#txtValorOtrosIngresos").val().replace(/,/g, '')
             }
-            break;
+        }
+        else {
+            $('#frmSolicitud').parsley().validate({ group: 'informacionLaboral', force: true });
+            $("#modalFinalizarCondicion_InfoLaboral").modal('hide');
+            return false;
+        }
 
-        case "Correccion Informacion Conyugal":
+    }
+    /* Informacion conyugal */
+    else if (idTipoDeCondicion == '13') {
+
+        if ($('#frmSolicitud').parsley().isValid({ group: 'informacionConyugal' })) {
+
             objSeccion = {
                 IdCliente: ID_CLIENTE,
-                fcNombreCompletoConyugue: $("#nombresConyugue").val() + ' ' + $("#apellidosConyugue").val(),
-                fcIndentidadConyugue: $("#identidadConyugue").val(),
-                fdFechaNacimientoConyugue: $("#fechaNacimientoConyugue").val(),
-                fcTelefonoConyugue: $("#telefonoConyugue").val(),
-                fcLugarTrabajoConyugue: $("#lugarTrabajoConyugue").val(),
-                fcIngresosMensualesConyugue: $("#ingresoMensualesConyugue").val().replace(/,/g, ''),
-                fcTelefonoTrabajoConyugue: $("#telefonoTrabajoConyugue").val()
+                IdSolicitud: ID_SOLICITUD,
+                IdentidadConyugue: $("#identidadConyugue").val(),
+                NombreCompletoConyugue: $("#nombresConyugue").val() + ' ' + $("#apellidosConyugue").val(),
+                TelefonoConyugue: $("#telefonoConyugue").val(),
+                FechaNacimientoConyugue: $("#fechaNacimientoConyugue").val(),
+                LugarTrabajoConyugue: $("#lugarTrabajoConyugue").val(),
+                IngresosMensualesConyugue: $("#ingresoMensualesConyugue").val().replace(/,/g, ''),
+                TelefonoTrabajoConyugue: $("#telefonoTrabajoConyugue").val()
             }
-            break;
-
-        case "Correccion Referencias":
-            objSeccion = listaClientesReferencias;
-            break;
-
-        case "Documentacion":
-            objSeccion = {};
-            break;
+        }
+        else {
+            $('#frmSolicitud').parsley().validate({ group: 'informacionConyugal', force: true });            
+            $("#modalFinalizarCondicion_InfoConyugal").modal('hide');
+            return false;
+        }
     }
 
     objSeccion = JSON.stringify(objSeccion);
-});
 
-/* Terminar condiciones de la sección de información personal */
-$("#btnFinalizarCondiciones_InfoPersonal").click(function () {
+    FinalizarSeccionCondicionamientos(idSolicitudCondicion, idTipoDeCondicion, objSeccion);
 
-    if ($('#frmSolicitud').parsley().isValid({ group: 'informacionPersonal' })) {
-
-        botonFinalizarCondiciones_DOM = $(this);
-
-        objSeccion = {
-            IdCliente: ID_CLIENTE,
-            IdentidadCliente: $("#txtIdentidadCliente").val(),
-            RtnCliente: $("#txtRtnCliente").val(),
-            PrimerNombre: $("#txtPrimerNombre").val(),
-            SegundoNombre: $("#txtSegundoNombre").val(),
-            PrimerApellido: $("#txtPrimerApellido").val(),
-            SegundoApellido: $("#txtSegundoApellido").val(),
-            TelefonoCliente: $("#txtNumeroTelefono").val(),
-            IdNacionalidad: $("#ddlNacionalidad :selected").val(),
-            FechaNacimiento: $("#txtFechaDeNacimiento").val(),
-            Correo: $("#txtCorreoElectronico").val(),
-            ProfesionOficio: $("#txtProfesion").val(),
-            Sexo: $("input[name='sexoCliente']:checked").val(),
-            IdEstadoCivil: $("#ddlEstadoCivil :selected").val(),
-            IdVivienda: $("#ddlTipoDeVivienda :selected").val(),
-            IdTiempoResidir: $("ddlTiempoDeResidir :selected").val()
-        }
-
-        $("#lblSeccion").text('Información personal');
-
-        $("#modalFinalizarCondicion").modal();
-    }
-    else {
-        $('#frmSolicitud').parsley().validate({ group: 'informacionPersonal', force: true });
-    }
-});
-
-$("#btnTerminarCondicionConfirmar").click(function () {
-
-
-    FinalizarSeccionCondicionamientos();
 });
 
 /* Finalizar condicionamientos de una seccion del formulario */
-function FinalizarSeccionCondicionamientos(idCondicion, seccionFormulario, objSeccion) {
+function FinalizarSeccionCondicionamientos(idSolicitudCondicion, idTipoDeCondicion, objSeccion) {
 
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_ActualizarSolicitud.aspx/ActualizarCondicionamiento',
-        data: JSON.stringify({ idCondicion: idCondicion, idCliente: ID_CLIENTE, seccionFormulario: seccionFormulario, objSeccion: objSeccion, dataCrypt: window.location.href }),
+        data: JSON.stringify({ idSolicitudCondicion: idSolicitudCondicion, idCliente: ID_CLIENTE, idTipoDeCondicion: idTipoDeCondicion, objSeccion: objSeccion, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al finalizar condicionamiento');
@@ -409,18 +612,14 @@ function FinalizarSeccionCondicionamientos(idCondicion, seccionFormulario, objSe
 
             if (data.d == true) {
 
-                CargarListadoCondiciones();
+                CargarInformacionCondiciones();
 
                 $("#modalFinalizarCondicion").modal('hide');
-
-                button.removeClass('text-warning').addClass('text-info');
-                button.on('click', function () { return false; });
 
                 MensajeExito('Condición finalizada correctamente');
             }
             else {
                 MensajeError('Error al finalizar condicionamiento');
-                button.addClass('text-warning');
             }
         }
     });

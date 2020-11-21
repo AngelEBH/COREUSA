@@ -336,8 +336,8 @@ $(document).ready(function () {
                 //}
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
-                    state = false;
+                    MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                    //state = false;
                 }
 
                 return state;
@@ -370,8 +370,8 @@ $(document).ready(function () {
                 }
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
-                    state = false;
+                    MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                    //state = false;
                 }
                 return state;
             }
@@ -389,8 +389,8 @@ $(document).ready(function () {
                 }
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
-                    state = false;
+                    MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                    //state = false;
                 }
                 return state;
             }
@@ -408,8 +408,8 @@ $(document).ready(function () {
                 }
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
-                    state = false;
+                    MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                    //state = false;
                 }
                 return state;
             }
@@ -429,8 +429,8 @@ $(document).ready(function () {
                     }
 
                     if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                        MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
-                        state = false;
+                        MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                        //state = false;
                     }
                     return state;
                 }
@@ -461,8 +461,8 @@ $(document).ready(function () {
                 }
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError("No se ingresar la solicitud debido al tipo de cliente: " + PRECALIFICADO.TipoDeClienteSAF + ". Solo se permiten A - Excelente y B - Muy bueno");
-                    state = false;
+                    MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                    //state = false;
                 }
 
                 return state;

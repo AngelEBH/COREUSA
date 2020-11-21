@@ -96,7 +96,7 @@
                                     <h6 class="mt-1">Actualizar información personal</h6>
                                 </div>
                                 <div class="col-auto p-0 mb-1">
-                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoPersonal">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoPersonal" data-toggle="modal" data-target="#modalFinalizarCondicion_InfoPersonal">
                                         <i class="far fa-check-square"></i>
                                         Finalizar condiciones
                                     </button>
@@ -213,7 +213,7 @@
                                     <h6 class="mt-1">Actualizar información del domicilio</h6>
                                 </div>
                                 <div class="col-auto p-0 mb-1">
-                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoDomicilio">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoDomicilio" data-toggle="modal" data-target="#modalFinalizarCondicion_InfoDomicilio">
                                         <i class="far fa-check-square"></i>
                                         Finalizar condiciones
                                     </button>
@@ -273,7 +273,7 @@
                                     <h6 class="mt-1">Actualizar información laboral</h6>
                                 </div>
                                 <div class="col-auto p-0 mb-1">
-                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoLaboral">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoLaboral" data-toggle="modal" data-target="#modalFinalizarCondicion_InfoLaboral">
                                         <i class="far fa-check-square"></i>
                                         Finalizar condiciones
                                     </button>
@@ -376,7 +376,7 @@
                                     <h6 class="mt-1">Información del cónyugue</h6>
                                 </div>
                                 <div class="col-auto p-0 mb-1">
-                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoConyugue">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoConyugue" data-toggle="modal" data-target="#modalFinalizarCondicion_InfoConyugal">
                                         <i class="far fa-check-square"></i>
                                         Finalizar condiciones
                                     </button>
@@ -429,7 +429,7 @@
                                     <h6 class="mt-1">Referencias personales del cliente</h6>
                                 </div>
                                 <div class="col-auto p-0 mb-1">
-                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_Referencias">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_Referencias" data-toggle="modal" data-target="#modalFinalizarCondicion_ReferenciasPersonales">
                                         <i class="far fa-check-square"></i>
                                         Finalizar condiciones
                                     </button>
@@ -463,7 +463,7 @@
                                     <h6 class="mt-1">Documentación de la solicitud <small class="text-info">(Estimado usuario, recuerda subir toda la documentación hasta que ya vayas a guardar la solicitud)</small></h6>
                                 </div>
                                 <div class="col-auto p-0 mb-1">
-                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_Documentacion">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_Documentacion" data-toggle="modal" data-target="#modalFinalizarCondicion_Documentacion">
                                         <i class="far fa-check-square"></i>
                                         Finalizar condiciones
                                     </button>
@@ -796,6 +796,42 @@
                             <div class="col-12">
                                 <div class="table-responsive">
                                     <table id="tblCondicionesDocumentacion" class="table tabla-compacta table-striped table-bordered" runat="server">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de condición</th>
+                                                <th>Descripción</th>
+                                                <th>Comentario adicional</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalFinalizarCondicion_InfoConyugal" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicion_InfoConyugalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header pt-2 pb-2">
+                        <h6 class="modal-title" id="modalFinalizarCondicion_InfoConyugalLabel">Finalizar condicionamientos (<b>Información conyugal</b>)</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table id="tblCondicionesInformacionConyugal" class="table tabla-compacta table-striped table-bordered" runat="server">
                                         <thead>
                                             <tr>
                                                 <th>Tipo de condición</th>

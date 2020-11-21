@@ -18,7 +18,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     private string pcIDApp = "";
     private string pcIDSesion = "";
     private string pcIDUsuario = "";
-    private static DSCore.DataCrypt DSC;
+    private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
     public Precalificado_ViewModel Precalificado;
     public List<TipoDocumento_ViewModel> DocumentosRequeridos;
     public SolicitudesCredito_Registrar_Constantes Constantes;
@@ -1599,7 +1599,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    //tran.Commit();
+                    tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
