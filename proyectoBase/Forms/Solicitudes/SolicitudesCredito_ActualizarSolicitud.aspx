@@ -39,12 +39,12 @@
                 <div id="smartwizard" class="h-100">
                     <ul>
                         <li runat="server" id="liInformacionPrestamo"><a href="#step-1" class="pt-3 pb-2 font-12">Condicionamientos</a></li>
-                        <li runat="server" visible="true" id="liInformacionPersonal"><a href="#step-2" class="pt-3 pb-2 font-12">Información personal</a></li>
-                        <li runat="server" visible="true" id="liInformacionDomicilio"><a href="#step-3" class="pt-3 pb-2 font-12">Información domicilio</a></li>
-                        <li runat="server" visible="true" id="liInformacionLaboral"><a href="#step-4" class="pt-3 pb-2 font-12">Información laboral</a></li>
-                        <li runat="server" visible="true" id="liInformacionConyugal"><a href="#step-5" class="pt-3 pb-2 font-12">Información conyugal</a></li>
-                        <li runat="server" visible="true" id="liReferenciasPersonales"><a href="#step-6" class="pt-3 pb-2 font-12">Referencias personales</a></li>
-                        <li runat="server" visible="true" id="liDocumentacion"><a href="#step-7" class="pt-3 pb-2 font-12">Documentación</a></li>
+                        <li runat="server" visible="false" id="liInformacionPersonal"><a href="#step-2" class="pt-3 pb-2 font-12">Información personal</a></li>
+                        <li runat="server" visible="false" id="liInformacionDomicilio"><a href="#step-3" class="pt-3 pb-2 font-12">Información domicilio</a></li>
+                        <li runat="server" visible="false" id="liInformacionLaboral"><a href="#step-4" class="pt-3 pb-2 font-12">Información laboral</a></li>
+                        <li runat="server" visible="false" id="liInformacionConyugal"><a href="#step-5" class="pt-3 pb-2 font-12">Información conyugal</a></li>
+                        <li runat="server" visible="false" id="liReferenciasPersonales"><a href="#step-6" class="pt-3 pb-2 font-12">Referencias personales</a></li>
+                        <li runat="server" visible="false" id="liDocumentacion"><a href="#step-7" class="pt-3 pb-2 font-12">Documentación</a></li>
                     </ul>
                     <div>
                         <!-- Listado de condiciones de la solicitud -->
@@ -544,8 +544,8 @@
                         </div>
                     </div>
                     <div class="modal-footer pt-2 pb-2">
-                        <button id="btnAgregarReferenciaTabla" type="button" class="btn btn-primary waves-effect waves-light mr-1">
-                            Agregar
+                        <button id="btnAgregarReferenciaConfirmar" type="button" class="btn btn-primary waves-effect waves-light mr-1">
+                            Guardar
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
                             Cancelar
@@ -563,12 +563,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group row">
-                            <div class="col-12">
-                                <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesEliminarReferenciaPersonal" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
-                            </div>
-                        </div>
+                        <label class="col-form-label font-weight-bold">¿Está seguro de eliminar esta referencia personal?</label>
                     </div>
                     <div class="modal-footer">
                         <button id="btnEliminarReferenciaPersonalConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
@@ -611,20 +606,14 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Parentesco</label>
                             <div class="col-sm-8">
-                                <asp:DropDownList ID="ddlParentesco_Editar" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-errors-container="#error-ddlParentesco_Editar"></asp:DropDownList>
-                                <div id="error-ddlParentesco_Editar"></div>
+                                <asp:DropDownList ID="ddlParentescos_Editar" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-errors-container="#error-ddlParentesco_Editar"></asp:DropDownList>
+                                <div id="error-ddlParentescos_Editar"></div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
                             <div class="col-sm-8">
                                 <asp:TextBox ID="txtLugarDeTrabajoReferencia_Editar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-12">
-                                <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesEditarReferenciaPersonal" runat="server" class="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -851,6 +840,28 @@
                     <div class="modal-footer">
                         <button data-dismiss="modal" class="btn btn-secondary waves-effect">
                             Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalFinalizarCondicion_Confirmar" class="modal fade" role="dialog" aria-labelledby="modalFinalizarCondicion_ConfirmarLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalFinalizarCondicion_ConfirmarLabel">Finalizar condición</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <label class="col-form-label font-weight-bold">¿Está seguro de finalizar esta condición?</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnFinalizarCondicion_Confirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
                         </button>
                     </div>
                 </div>

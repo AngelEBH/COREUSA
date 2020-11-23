@@ -1331,21 +1331,20 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                     foreach (SolicitudesDocumentosViewModel documento in solicitudesDocumentos)
                     {
-                        using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_Documentos_Insert", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Documentos_Guardar", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IdSolicitudInsertada);
-                            sqlComando.Parameters.AddWithValue("@fcNombreArchivo", documento.fcNombreArchivo);
-                            sqlComando.Parameters.AddWithValue("@fcTipoArchivo", ".png");
-                            sqlComando.Parameters.AddWithValue("@fcRutaArchivo", documento.fcRutaArchivo);
-                            sqlComando.Parameters.AddWithValue("@fcURL", documento.URLArchivo);
-                            sqlComando.Parameters.AddWithValue("@fiTipoDocumento", documento.fiTipoDocumento);
-                            sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", IdSolicitudInsertada);
+                            sqlComando.Parameters.AddWithValue("@pcNombreArchivo", documento.fcNombreArchivo);
+                            sqlComando.Parameters.AddWithValue("@pcTipoArchivo", ".png");
+                            sqlComando.Parameters.AddWithValue("@pcRutaArchivo", documento.fcRutaArchivo);
+                            sqlComando.Parameters.AddWithValue("@pcURL", documento.URLArchivo);
+                            sqlComando.Parameters.AddWithValue("@piTipoDocumento", documento.fiTipoDocumento);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                            sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
-                            sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
+                            sqlComando.CommandTimeout = 120;
+
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 while (sqlResultado.Read())

@@ -607,15 +607,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud
     protected global::System.Web.UI.WebControls.TextBox txtLugarTrabajoReferencia;
 
     /// <summary>
-    /// Control txtObservacionesEliminarReferenciaPersonal.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesEliminarReferenciaPersonal;
-
-    /// <summary>
     /// Control txtNombreReferenciaPersonal_Editar.
     /// </summary>
     /// <remarks>
@@ -643,13 +634,13 @@ public partial class SolicitudesCredito_ActualizarSolicitud
     protected global::System.Web.UI.WebControls.DropDownList ddlTiempoDeConocerReferencia_Editar;
 
     /// <summary>
-    /// Control ddlParentesco_Editar.
+    /// Control ddlParentescos_Editar.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlParentesco_Editar;
+    protected global::System.Web.UI.WebControls.DropDownList ddlParentescos_Editar;
 
     /// <summary>
     /// Control txtLugarDeTrabajoReferencia_Editar.
@@ -659,15 +650,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtLugarDeTrabajoReferencia_Editar;
-
-    /// <summary>
-    /// Control txtObservacionesEditarReferenciaPersonal.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesEditarReferenciaPersonal;
 
     /// <summary>
     /// Control tblCondicionesInformacionPersonal.
