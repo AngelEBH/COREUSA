@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="CotizadorCarros" CodeFile="CotizadorCarros.aspx.cs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="CotizadorCarros" CodeBehind="CotizadorCarros.aspx.cs" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -76,66 +76,6 @@
             height: 2.5rem;
         }
 
-        /* Force table to not be like tables anymore */
-        .tabla-responsiva-movil, .tabla-responsiva-movil thead, .tabla-responsiva-movil tbody, .tabla-responsiva-movil th, .tabla-responsiva-movil td, .tabla-responsiva-movil tr {
-            display: block;
-        }
-
-            /* Hide table headers (but not display: none;, for accessibility) */
-            .tabla-responsiva-movil thead tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-
-            .tabla-responsiva-movil tr {
-                margin: 0 0 1rem 0;
-            }
-
-                .tabla-responsiva-movil tr:nth-child(odd) {
-                    background: #ccc;
-                }
-
-            .tabla-responsiva-movil td {
-                /* Behave  like a "row" */
-                border: none;
-                border-bottom: 1px solid #eee;
-                position: relative;
-                padding-left: 50%;
-            }
-
-                .tabla-responsiva-movil td:before {
-                    /* Now like a table header */
-                    position: absolute;
-                    /* Top/left values mimic padding */
-                    top: 0;
-                    left: 6px;
-                    width: 45%;
-                    padding-right: 10px;
-                    white-space: nowrap;
-                }
-
-                /* Label the data */
-                .tabla-responsiva-movil td:nth-of-type(1):before {
-                    content: "Plazo";
-                }
-
-                .tabla-responsiva-movil td:nth-of-type(2):before {
-                    content: "Cuota préstamo";
-                }
-
-                .tabla-responsiva-movil td:nth-of-type(3):before {
-                    content: "Cuota seguro";
-                }
-
-                .tabla-responsiva-movil td:nth-of-type(4):before {
-                    content: "Cuota GPS";
-                }
-
-                .tabla-responsiva-movil td:nth-of-type(5):before {
-                    content: "Total cuota";
-                }
-
         #divCotizacionPDF {
             color: black;
         }
@@ -158,15 +98,15 @@
                             <div class="form-group form-row">
                                 <div class="col-6" runat="server" id="divValorDelVehiculo">
                                     <label class="col-form-label">Valor del vehículo</label>
-                                    <asp:TextBox ID="txtValorVehiculo" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="txtValorVehiculo" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server" OnTextChanged="CalcularPrima_TextChanged" AutoPostBack="True"></asp:TextBox>
                                 </div>
                                 <div class="col-6" id="divPrima" runat="server" visible="true">
-                                    <label class="col-form-label">Valor de la Prima <span id="lblPorcenajedePrima" runat="server" class="font-weight-bold"></span></label>
-                                    <asp:TextBox ID="txtValorPrima" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server"></asp:TextBox>
+                                    <label class="col-form-label">Valor de la Prima <span id="lblPorcentajedePrima" runat="server" class="font-weight-bold"></span></label>
+                                    <asp:TextBox ID="txtValorPrima" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server" OnTextChanged="CalcularPrima_TextChanged" AutoPostBack="True"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="form-group" runat="server" id="divMontoFinanciarVehiculo" visible="true">
-                                <asp:Label runat="server" ID="lblMonto" class="col-form-label">Valor a financiar del vehiculo</asp:Label>
+                                <asp:Label runat="server" ID="lblMonto" class="col-form-label">Valor a financiar del vehiculo <span id="lblPorcentajeMonto" runat="server" class="font-weight-bold"></span></asp:Label>
                                 <asp:TextBox ID="txtMonto" Enabled="false" type="tel" CssClass="form-control form-control-sm col-form-label MascaraCantidad" required="required" runat="server"></asp:TextBox>
                             </div>
                             <div class="form-group">
@@ -197,6 +137,11 @@
 
                         <!-- Resultados de la cotización -->
                         <div runat="server" id="divResultados" visible="false">
+
+
+                            <%--tabs aqui--%>
+
+
                             <div class="row justify-content-between">
                                 <div class="col-auto">
                                     <h6 class="font-weight-bold text-center">Cotización por plazos</h6>
@@ -207,7 +152,7 @@
                             </div>
 
                             <table class="tabla-responsiva-movil" runat="server" id="tblCotizacionPorPlazos">
-                                <%--<thead>
+                            <%--<thead>
                                     <tr>
                                         <th>Plazo</th>
                                         <th>Cuota del préstamo</th>
@@ -407,12 +352,12 @@
                             </div>
                         </div>
                         <!--<footer>
-                        <div class="row h-100">
-                            <div class="col-12 justify-content-end">
-                                <asp:Label runat="server" ID="lblUsuarioImprime" CssClass="font-weight-bold"></asp:Label>
-                            </div>
-                        </div>
-                    </footer>-->
+<div class="row h-100">
+<div class="col-12 justify-content-end">
+<asp:Label runat="server" ID="lblUsuarioImprime" CssClass="font-weight-bold"></asp:Label>
+</div>
+</div>
+</footer>-->
                     </div>
                 </div>
             </ContentTemplate>

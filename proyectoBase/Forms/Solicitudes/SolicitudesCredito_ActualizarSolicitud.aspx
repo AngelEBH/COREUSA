@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_ActualizarSolicitud.aspx.cs" Inherits="SolicitudesCredito_ActualizarSolicitud" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_ActualizarSolicitud.aspx.cs" Inherits="SolicitudesCredito_ActualizarSolicitud" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -7,16 +7,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Actualizar solicitud de crédito</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style>
         html {
             background-color: rgb(255,255,255) !important;
@@ -31,8 +32,17 @@
 </head>
 <body>
     <form runat="server" id="frmSolicitud" class="" action="#" data-parsley-excluded="[disabled]">
+
         <div class="card mb-0">
             <div class="card-header pb-1 pt-1">
+
+                <!-- loader -->
+                <div class="float-right" id="divLoader" runat="server" visible="false">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+
                 <h5>Actualizar solicitud de crédito <small><span runat="server" id="lblMensaje" class="text-danger" visible="false"></span></small></h5>
             </div>
             <div class="card-body">
@@ -50,15 +60,17 @@
                         <!-- Listado de condiciones de la solicitud -->
                         <div id="step-1" class="form-section">
 
-                            <!-- loader -->
-                            <div class="float-right" id="divLoader" runat="server" visible="false">
-                                <div class="spinner-border" role="status">
-                                    <span class="sr-only"></span>
-                                </div>
-                            </div>
-                            <div class="form-group row m-0 border-bottom border-gray">
-                                <div class="col-12 p-0">
+                            <div class="row justify-content-between m-0 border-bottom border-gray">
+                                <div class="col-auto pl-0">
                                     <h6 class="mt-1">Condiciones de la solcitud</h6>
+                                </div>
+                                <div class="col-auto pr-0 align-items-center">
+                                    <div class="m-0 p-0">
+                                        <div class="alert alert-info bg-info text-white mb-0 pt-1 pb-1" role="alert">
+                                            <i class="fas fa-download text-white"></i>
+                                            <a href="/Documentos/Recursos/MANUAL_DE ACTUALIZACION_DE_SOLICITUD_PDF.pdf" download class="text-white"><strong>Descargar manual de usuario</strong></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -439,7 +451,7 @@
                             <button type="button" id="btnAgregarReferencia" class="btn btn-info mb-1 mt-1">Nuevo</button>
 
                             <div class="table-responsive">
-                                <table class="table tabla-compacta table-striped table-bordered" id="tblReferenciasPersonales" runat="server">
+                                <table class="table tabla-compacta table-striped table-bordered table-hover" id="tblReferenciasPersonales" runat="server">
                                     <thead>
                                         <tr>
                                             <th>Nombre completo</th>
@@ -478,31 +490,8 @@
             </div>
         </div>
 
-        <div id="modalDetallesCondicion" class="modal fade" role="dialog" aria-labelledby="modalDetallesCondicionLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalDetallesCondicionLabel">Detalles de la condición</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <div class="col-12">
-                                <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtComentarioAdicionalCondicion" runat="server" class="form-control form-control-sm" rows="3"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cerrar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!--modal de agregar nueva referencia -->
+        <!--modal de agregar nueva referencia personal -->
         <div class="modal fade" id="modalAgregarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarReferenciaPersonalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -555,6 +544,7 @@
             </div>
         </div>
 
+        <!--modal de eliminar referencia personal -->
         <div id="modalEliminarReferenciaPersonal" class="modal fade" role="dialog" aria-labelledby="modalEliminarReferenciaPersonalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -577,6 +567,7 @@
             </div>
         </div>
 
+        <!--modal de editar referencia personal-->
         <div class="modal fade" id="modalEditarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalEditarReferenciaPersonalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -629,6 +620,7 @@
             </div>
         </div>
 
+        <!--modal de finalizar condiciones de informacion personal -->
         <div id="modalFinalizarCondicion_InfoPersonal" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicionListaLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -665,6 +657,7 @@
             </div>
         </div>
 
+        <!--modal de finalizar condiciones de informacion del domicilio -->
         <div id="modalFinalizarCondicion_InfoDomicilio" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicion_InfoDomicilioLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -701,7 +694,7 @@
             </div>
         </div>
 
-
+        <!--modal de finalizar condiciones de informacion laboral -->
         <div id="modalFinalizarCondicion_InfoLaboral" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicion_InfoLaboralLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -738,6 +731,7 @@
             </div>
         </div>
 
+        <!--modal de finalizar condiciones de referencias personales -->
         <div id="modalFinalizarCondicion_ReferenciasPersonales" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicion_ReferenciasPersonalesLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -774,6 +768,7 @@
             </div>
         </div>
 
+        <!--modal de finalizar condiciones de documentación -->
         <div id="modalFinalizarCondicion_Documentacion" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicion_DocumentacionLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -810,6 +805,7 @@
             </div>
         </div>
 
+        <!--modal de finalizar condiciones de informacion conyugal -->
         <div id="modalFinalizarCondicion_InfoConyugal" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicion_InfoConyugalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -846,6 +842,7 @@
             </div>
         </div>
 
+        <!--modal de confirmacion de finalizacion de condiciones  -->
         <div id="modalFinalizarCondicion_Confirmar" class="modal fade" role="dialog" aria-labelledby="modalFinalizarCondicion_ConfirmarLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -873,36 +870,6 @@
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script>
-        $(document).ready(function () {
-
-            $(".mascara-cantidad").inputmask("decimal", {
-                alias: 'numeric',
-                groupSeparator: ',',
-                digits: 2,
-                integerDigits: 11,
-                digitsOptional: false,
-                placeholder: '0',
-                radixPoint: ".",
-                autoGroup: true,
-                min: 0.00
-            });
-            $(".mascara-telefono").inputmask("9999-9999");
-            $(".mascara-extension").inputmask("999999");
-            $(".mascara-identidad").inputmask("9999999999999");
-            $(".mascara-rtn").inputmask("99999999999999");
-            $(".mascara-enteros").inputmask("decimal", {
-                alias: "numeric",
-                groupSeparator: ",",
-                digits: 0,
-                integerDigits: 4,
-                digitsOptional: false,
-                placeholder: "0",
-                radixPoint: ".",
-                autoGroup: true,
-                min: 0.0,
-            });
-        });
-
         const ID_SOLICITUD = <%=this.IdSolicitud%>;
         const ID_CLIENTE = <%=this.IdCliente%>;
     </script>
@@ -911,6 +878,7 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=202000930092758"></script>
+    <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=20201124130225"></script>
 </body>
 </html>

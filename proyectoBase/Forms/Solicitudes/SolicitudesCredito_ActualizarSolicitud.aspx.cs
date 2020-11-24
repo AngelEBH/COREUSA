@@ -1152,6 +1152,66 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return resultado;
     }
 
+
+    /* Administracion de referencias personales */
+    [WebMethod]
+    public static List<Cliente_ReferenciaPersonal_ViewModel> ListadoReferenciasPersonalesPorIdSolicitud(string dataCrypt)
+    {
+        var DSC = new DSCore.DataCrypt();
+        var listadoReferenciasPersonales = new List<Cliente_ReferenciaPersonal_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_ObtenerPorIdSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            listadoReferenciasPersonales.Add(new Cliente_ReferenciaPersonal_ViewModel()
+                            {
+                                IdReferencia = (int)sqlResultado["fiIDReferencia"],
+                                IdCliente = (int)sqlResultado["fiIDCliente"],
+                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
+                                NombreCompleto = sqlResultado["fcNombreCompletoReferencia"].ToString(),
+                                LugarTrabajo = sqlResultado["fcLugarTrabajoReferencia"].ToString(),
+                                IdTiempoDeConocer = (short)sqlResultado["fiTiempoConocerReferencia"],
+                                TiempoDeConocer = sqlResultado["fcTiempoDeConocer"].ToString(),
+                                TelefonoReferencia = sqlResultado["fcTelefonoReferencia"].ToString(),
+                                IdParentescoReferencia = (int)sqlResultado["fiIDParentescoReferencia"],
+                                DescripcionParentesco = sqlResultado["fcDescripcionParentesco"].ToString(),
+                                ReferenciaActivo = (bool)sqlResultado["fbReferenciaActivo"],
+                                RazonInactivo = sqlResultado["fcRazonInactivo"].ToString(),
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            listadoReferenciasPersonales = null;
+        }
+        return listadoReferenciasPersonales;
+    }
+
     [WebMethod]
     public static bool RegistrarReferenciaPersonal(Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string dataCrypt)
     {
@@ -1160,7 +1220,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -1211,7 +1271,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -1256,7 +1316,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -1299,6 +1359,339 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return resultado;
     }
 
+    //[WebMethod]
+    //public SolicitudesCredito_ActualizarSolicitud_Cliente_ViewModel ObtenerInformacionClienteSolicitudPorIdSolicitud(string dataCrypt)
+    //{
+    //    var informacion = new SolicitudesCredito_ActualizarSolicitud_Cliente_ViewModel();
+
+    //    try
+    //    {
+    //        var DSC = new DSCore.DataCrypt();
+
+    //        var lURLDesencriptado = DesencriptarURL(dataCrypt);
+    //        var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+    //        var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+    //        var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+    //        var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+
+    //        using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+    //        {
+    //            sqlConexion.Open();
+
+    //            using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_SolicitudClientePorIdSolicitud", sqlConexion))
+    //            {
+    //                sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+    //                sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+    //                sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+    //                sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+    //                sqlComando.CommandType = CommandType.StoredProcedure;
+
+    //                using (var sqlResultado = sqlComando.ExecuteReader())
+    //                {
+    //                    while (sqlResultado.Read())
+    //                    {
+    //                        /****** Informacion de la solicitud ******/
+    //                        IdCliente = sqlResultado["fiIDCliente"].ToString();
+
+    //                        /****** Documentos de la solicitud ******/
+    //                        sqlResultado.NextResult();
+
+    //                        /****** Condicionamientos de la solicitud ******/
+    //                        sqlResultado.NextResult();
+
+    //                        if (sqlResultado.HasRows)
+    //                        {
+    //                            var listaCondiciones = new List<int>();
+
+    //                            var listaCondicionesDeDocumentacion = new int[] { 1, 2, 3, 4, 5, 6 };
+
+    //                            HtmlTableRow tRowCondicion;
+
+    //                            HtmlTableRow tRowCondicionAcciones;
+
+    //                            var btnFinalizarCondicion = string.Empty;
+    //                            var lblEstadoCondicion = string.Empty;
+    //                            bool estadoCondicion;
+
+    //                            /* Llenar table de referencias */
+    //                            while (sqlResultado.Read())
+    //                            {
+    //                                estadoCondicion = (bool)sqlResultado["fbEstadoCondicion"];
+    //                                btnFinalizarCondicion = (bool)sqlResultado["fbEstadoCondicion"] == true ? "<button id='btnFinalizarCondicion' data-id='" + sqlResultado["fiIDSolicitudCondicion"].ToString() + "' data-idtipocondicion='" + sqlResultado["fiIDCondicion"].ToString() + "' class='btn btn-sm btn-warning mb-0' type='button' title='Finalizar condicion'>Finalizar</button>" : "";
+    //                                lblEstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"] == true ? "<label class='btn btn-sm btn-warning mb-0'>Pendiente<label>" : "<label class='btn btn-sm btn-success mb-0'>Completada<label>";
+
+    //                                tRowCondicion = new HtmlTableRow();
+    //                                tRowCondicion.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcCondicion"].ToString() });
+    //                                tRowCondicion.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionCondicion"].ToString() });
+    //                                tRowCondicion.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcComentarioAdicional"].ToString() });
+    //                                tRowCondicion.Cells.Add(new HtmlTableCell() { InnerHtml = lblEstadoCondicion });
+
+    //                                tblCondiciones.Rows.Add(tRowCondicion);
+
+    //                                tRowCondicionAcciones = new HtmlTableRow();
+    //                                tRowCondicionAcciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcCondicion"].ToString() });
+    //                                tRowCondicionAcciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionCondicion"].ToString() });
+    //                                tRowCondicionAcciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcComentarioAdicional"].ToString() });
+    //                                tRowCondicionAcciones.Cells.Add(new HtmlTableCell() { InnerHtml = lblEstadoCondicion });
+    //                                tRowCondicionAcciones.Cells.Add(new HtmlTableCell() { InnerHtml = btnFinalizarCondicion });
+
+    //                                listaCondiciones.Add((int)sqlResultado["fiIDCondicion"]);
+
+
+    //                                /* validar si hay condiciones de documentación */
+    //                                if (listaCondicionesDeDocumentacion.Contains((int)sqlResultado["fiIDCondicion"]) && estadoCondicion == true)
+    //                                {
+    //                                    liDocumentacion.Visible = true;
+    //                                    tblCondicionesDocumentacion.Rows.Add(tRowCondicionAcciones);
+    //                                }
+    //                                /* validar si hay condiciones de referencias personales */
+    //                                else if ((sqlResultado["fiIDCondicion"].ToString() == "8" || sqlResultado["fiIDCondicion"].ToString() == "14") && estadoCondicion == true)
+    //                                {
+    //                                    liReferenciasPersonales.Visible = true;
+    //                                    tblCondicionesReferenciasPersonales.Rows.Add(tRowCondicionAcciones);
+    //                                }
+    //                                /* condiciones de la información de la solicitud
+    //                                else if (listaCondiciones.Contains(9))
+    //                                {
+    //                                liInformacionDeLaSolicitud.Visible = true;
+    //                                tblCondicionesInformacionDeLaSolicitud.Rows.Add(tRowCondicionAcciones);
+    //                                }
+    //                                */
+    //                                /* condiciones de informacion personal */
+    //                                else if (sqlResultado["fiIDCondicion"].ToString() == "10" && estadoCondicion == true)
+    //                                {
+    //                                    liInformacionPersonal.Visible = true;
+    //                                    tblCondicionesInformacionPersonal.Rows.Add(tRowCondicionAcciones);
+    //                                }
+    //                                /* condiciones de la información del domicilio */
+    //                                else if (sqlResultado["fiIDCondicion"].ToString() == "11" && estadoCondicion == true)
+    //                                {
+    //                                    liInformacionDomicilio.Visible = true;
+    //                                    tblCondicionesDomicilio.Rows.Add(tRowCondicionAcciones);
+    //                                }
+    //                                /* condiciones de la informacion laboral */
+    //                                else if (sqlResultado["fiIDCondicion"].ToString() == "12" && estadoCondicion == true)
+    //                                {
+    //                                    liInformacionLaboral.Visible = true;
+    //                                    tblCondicionesLaboral.Rows.Add(tRowCondicionAcciones);
+    //                                }
+    //                                /* condiciones de la informacion conyugal */
+    //                                else if (sqlResultado["fiIDCondicion"].ToString() == "13" && estadoCondicion == true)
+    //                                {
+    //                                    liInformacionConyugal.Visible = true;
+    //                                    tblCondicionesInformacionConyugal.Rows.Add(tRowCondicionAcciones);
+    //                                }
+    //                            }
+    //                        }
+
+    //                        /****** Información del cliente ******/
+    //                        sqlResultado.NextResult();
+    //                        sqlResultado.Read();
+
+    //                        var fechaNacimiento = DateTime.Parse(sqlResultado["fdFechaNacimientoCliente"].ToString());
+    //                        var hoy = DateTime.Today;
+    //                        var edad = hoy.Year - fechaNacimiento.Year;
+    //                        if (fechaNacimiento.Date > hoy.AddYears(-edad)) edad--;
+
+    //                        txtIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
+    //                        txtRtnCliente.Text = sqlResultado["fcRTN"].ToString();
+    //                        txtPrimerNombre.Text = sqlResultado["fcPrimerNombreCliente"].ToString();
+    //                        txtSegundoNombre.Text = sqlResultado["fcSegundoNombreCliente"].ToString();
+    //                        txtPrimerApellido.Text = sqlResultado["fcPrimerApellidoCliente"].ToString();
+    //                        txtSegundoApellido.Text = sqlResultado["fcSegundoApellidoCliente"].ToString();
+    //                        ddlNacionalidad.SelectedValue = sqlResultado["fiNacionalidadCliente"].ToString();
+    //                        ddlTipoDeCliente.SelectedValue = sqlResultado["fiTipoCliente"].ToString();
+    //                        txtCorreoElectronico.Text = sqlResultado["fcCorreoElectronicoCliente"].ToString();
+    //                        txtNumeroTelefono.Text = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
+    //                        txtFechaDeNacimiento.Text = fechaNacimiento.ToString("yyyy-MM-dd");
+
+    //                        txtEdadDelCliente.Text = edad + " años";
+    //                        if (sqlResultado["fcSexoCliente"].ToString() == "F")
+    //                            rbSexoFemenino.Checked = true;
+    //                        else
+    //                            rbSexoMasculino.Checked = true;
+
+    //                        ddlEstadoCivil.Text = sqlResultado["fiIDEstadoCivil"].ToString();
+    //                        txtProfesion.Text = sqlResultado["fcProfesionOficioCliente"].ToString();
+
+    //                        ddlTipoDeVivienda.Text = sqlResultado["fiIDVivienda"].ToString();
+    //                        ddlTiempoDeResidir.Text = sqlResultado["fiTiempoResidir"].ToString();
+
+    //                        /****** Información laboral ******/
+    //                        sqlResultado.NextResult();
+
+    //                        while (sqlResultado.Read())
+    //                        {
+    //                            txtNombreDelTrabajo.Text = sqlResultado["fcNombreTrabajo"].ToString();
+    //                            txtFechaDeIngreso.Text = DateTime.Parse(sqlResultado["fdFechaIngreso"].ToString()).ToString("yyyy-MM-dd");
+    //                            txtPuestoAsignado.Text = sqlResultado["fcPuestoAsignado"].ToString();
+    //                            txtIngresosMensuales.Text = sqlResultado["fnIngresosMensuales"].ToString();
+    //                            txtTelefonoEmpresa.Text = sqlResultado["fcTelefonoEmpresa"].ToString();
+    //                            txtExtensionRecursosHumanos.Text = sqlResultado["fcExtensionRecursosHumanos"].ToString();
+    //                            txtExtensionCliente.Text = sqlResultado["fcExtensionCliente"].ToString();
+    //                            txtFuenteDeOtrosIngresos.Text = sqlResultado["fcFuenteOtrosIngresos"].ToString();
+    //                            txtValorOtrosIngresos.Text = sqlResultado["fnValorOtrosIngresosMensuales"].ToString();
+    //                            txtDireccionDetalladaEmpresa.Text = sqlResultado["fcDireccionDetalladaEmpresa"].ToString();
+    //                            txtReferenciasEmpresa.Value = sqlResultado["fcReferenciasDireccionDetalladaEmpresa"].ToString();
+
+    //                            /* Departamento de la empresa */
+    //                            ddlDepartamentoEmpresa.SelectedValue = sqlResultado["fiIDDepartamento"].ToString();
+
+    //                            /* Municipio de la empresa */
+    //                            var municipiosDeDepartamento = CargarMunicipios(int.Parse(sqlResultado["fiIDDepartamento"].ToString()));
+
+    //                            ddlMunicipioEmpresa.Items.Clear();
+    //                            ddlMunicipioEmpresa.Items.Add(new ListItem("Seleccionar", ""));
+
+    //                            municipiosDeDepartamento.ForEach(municipio =>
+    //                            {
+    //                                ddlMunicipioEmpresa.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
+    //                            });
+    //                            ddlMunicipioEmpresa.SelectedValue = sqlResultado["fiIDMunicipio"].ToString();
+    //                            ddlMunicipioEmpresa.Enabled = true;
+
+    //                            /* Ciudad o Poblado de la empresa */
+    //                            var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()));
+
+    //                            ddlCiudadPobladoEmpresa.Items.Clear();
+    //                            ddlCiudadPobladoEmpresa.Items.Add(new ListItem("Seleccionar", ""));
+
+    //                            ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
+    //                            {
+    //                                ddlCiudadPobladoEmpresa.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
+    //                            });
+    //                            ddlCiudadPobladoEmpresa.SelectedValue = sqlResultado["fiIDCiudad"].ToString();
+    //                            ddlCiudadPobladoEmpresa.Enabled = true;
+
+    //                            /* Barrio o colonia de la empresa */
+    //                            var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()), int.Parse(sqlResultado["fiIDCiudad"].ToString()));
+
+    //                            ddlBarrioColoniaEmpresa.Items.Clear();
+    //                            ddlBarrioColoniaEmpresa.Items.Add(new ListItem("Seleccionar", ""));
+
+    //                            barriosColoniasDelPoblado.ForEach(barrioColonia =>
+    //                            {
+    //                                ddlBarrioColoniaEmpresa.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
+    //                            });
+    //                            ddlBarrioColoniaEmpresa.SelectedValue = sqlResultado["fiIDBarrioColonia"].ToString();
+    //                            ddlBarrioColoniaEmpresa.Enabled = true;
+    //                        }
+
+    //                        /****** Informacion domicilio ******/
+    //                        sqlResultado.NextResult();
+
+    //                        while (sqlResultado.Read())
+    //                        {
+    //                            txtTelefonoCasa.Text = sqlResultado["fcTelefonoCasa"].ToString();
+    //                            txtDireccionDetalladaDomicilio.Text = sqlResultado["fcDireccionDetalladaDomicilio"].ToString();
+    //                            txtReferenciasDelDomicilio.Value = sqlResultado["fcReferenciasDireccionDetalladaDomicilio"].ToString();
+
+    //                            /* Departamento */
+    //                            ddlDepartamentoDomicilio.SelectedValue = sqlResultado["fiCodDepartamento"].ToString();
+
+    //                            /* Municipio del domicilio */
+    //                            var municipiosDeDepartamento = CargarMunicipios(int.Parse(sqlResultado["fiCodDepartamento"].ToString()));
+
+    //                            ddlMunicipioDomicilio.Items.Clear();
+    //                            ddlMunicipioDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+    //                            municipiosDeDepartamento.ForEach(municipio =>
+    //                            {
+    //                                ddlMunicipioDomicilio.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
+    //                            });
+    //                            ddlMunicipioDomicilio.SelectedValue = sqlResultado["fiCodMunicipio"].ToString();
+    //                            ddlMunicipioDomicilio.Enabled = true;
+
+    //                            /* Ciudad o Poblado del domicilio */
+    //                            var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(sqlResultado["fiCodDepartamento"].ToString()), int.Parse(sqlResultado["fiCodMunicipio"].ToString()));
+
+    //                            ddlCiudadPobladoDomicilio.Items.Clear();
+    //                            ddlCiudadPobladoDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+    //                            ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
+    //                            {
+    //                                ddlCiudadPobladoDomicilio.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
+    //                            });
+    //                            ddlCiudadPobladoDomicilio.SelectedValue = sqlResultado["fiCodPoblado"].ToString();
+    //                            ddlCiudadPobladoDomicilio.Enabled = true;
+
+    //                            /* Barrio o colonia del domicilio */
+    //                            var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(sqlResultado["fiCodDepartamento"].ToString()), int.Parse(sqlResultado["fiCodMunicipio"].ToString()), int.Parse(sqlResultado["fiCodPoblado"].ToString()));
+
+    //                            ddlBarrioColoniaDomicilio.Items.Clear();
+    //                            ddlBarrioColoniaDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+    //                            barriosColoniasDelPoblado.ForEach(barrioColonia =>
+    //                            {
+    //                                ddlBarrioColoniaDomicilio.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
+    //                            });
+    //                            ddlBarrioColoniaDomicilio.SelectedValue = sqlResultado["fiCodBarrio"].ToString();
+    //                            ddlBarrioColoniaDomicilio.Enabled = true;
+    //                        }
+
+    //                        /****** Informacion del conyugue ******/
+    //                        sqlResultado.NextResult();
+
+    //                        if (sqlResultado.HasRows)
+    //                        {
+    //                            while (sqlResultado.Read())
+    //                            {
+    //                                txtIdentidadConyugue.Text = sqlResultado["fcIndentidadConyugue"].ToString();
+    //                                txtNombresConyugue.Text = sqlResultado["fcNombreCompletoConyugue"].ToString();
+    //                                txtFechaNacimientoConyugue.Text = DateTime.Parse(sqlResultado["fdFechaNacimientoConyugue"].ToString()).ToString("yyyy-MM-dd");
+    //                                txtTelefonoConyugue.Text = sqlResultado["fcTelefonoConyugue"].ToString();
+    //                                txtLugarDeTrabajoConyuge.Text = sqlResultado["fcLugarTrabajoConyugue"].ToString();
+    //                                txtIngresosMensualesConyugue.Text = sqlResultado["fnIngresosMensualesConyugue"].ToString();
+    //                                txtTelefonoTrabajoConyugue.Text = sqlResultado["fcTelefonoTrabajoConyugue"].ToString();
+    //                            }
+    //                        }
+    //                        else
+    //                        {
+    //                            //liInformacionConyugal.Visible = false;
+    //                        }
+
+    //                        /****** Referencias de la solicitud ******/
+    //                        sqlResultado.NextResult();
+
+    //                        if (sqlResultado.HasRows)
+    //                        {
+    //                            HtmlTableRow tRowReferencias;
+    //                            var btnEditarReferencia = string.Empty;
+    //                            var btnEliminarReferencia = string.Empty;
+
+    //                            /* Llenar table de referencias */
+    //                            while (sqlResultado.Read())
+    //                            {
+    //                                btnEliminarReferencia = "<button id='btnEliminarReferencia' data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' class='btn btn-sm btn-danger mb-0 align-self-center' type='button' title='Eliminar referencia personal'><i class='far fa-trash-alt'></i></button>";
+    //                                btnEditarReferencia = "<button id='btnEditarReferencia' data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-nombre='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-trabajo='" + sqlResultado["fcLugarTrabajoReferencia"].ToString() + "' data-telefono='" + sqlResultado["fcTelefonoReferencia"].ToString() + "' data-idtiempodeconocer='" + sqlResultado["fiTiempoConocerReferencia"].ToString() + "' data-idparentesco='" + sqlResultado["fiIDParentescoReferencia"] + "' class='btn btn-sm btn-info mb-0 align-self-center' type='button' title='Editar referencia personal'><i class='far fa-edit'></i></button>";
+
+    //                                tRowReferencias = new HtmlTableRow();
+    //                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcNombreCompletoReferencia"].ToString() });
+    //                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTelefonoReferencia"].ToString() });
+    //                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcLugarTrabajoReferencia"].ToString() });
+    //                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTiempoDeConocer"].ToString() });
+    //                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionParentesco"].ToString() });
+    //                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerHtml = btnEditarReferencia + btnEliminarReferencia });
+    //                                tblReferenciasPersonales.Rows.Add(tRowReferencias);
+    //                            }
+    //                        }
+
+    //                        /****** Historial de mantenimientos de la solicitud ******/
+    //                        sqlResultado.NextResult();
+    //                    }
+    //                }
+    //            } // using command
+    //        }// using connection
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        informacion = null;
+    //        ex.Message.ToString();
+    //    }
+
+    //    return informacion;
+    //}
+
     [WebMethod]
     public static string ObtenerUrlEncriptado(int idCliente, string dataCrypt)
     {
@@ -1340,6 +1733,21 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     }
 
     #region View Models
+
+
+    public class SolicitudesCredito_ActualizarSolicitud_Cliente_ViewModel
+    {
+        public int IdSolicitud { get; set; }
+        public int IdCliente { get; set; }
+        public Cliente_ViewModel Cliente { get; set; }
+        public List<Condicion_ViewModel> Condiciones { get; set; }
+
+        public SolicitudesCredito_ActualizarSolicitud_Cliente_ViewModel()
+        {
+            Condiciones = new List<Condicion_ViewModel>();
+            Cliente = new Cliente_ViewModel();
+        }
+    }
 
     public class Condicion_ViewModel
     {
