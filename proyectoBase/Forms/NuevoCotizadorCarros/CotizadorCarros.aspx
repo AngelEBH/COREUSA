@@ -139,15 +139,116 @@
                         <div runat="server" id="divResultados" visible="false">
 
 
-                            <%--tabs aqui--%>
-
-
                             <div class="row justify-content-between">
                                 <div class="col-auto">
                                     <h6 class="font-weight-bold text-center">Cotización por plazos</h6>
                                 </div>
                                 <div class="col-auto">
                                     <button id="btnDescargarCotizacion" type="button" onclick="ExportToPDF('Cotizacion')" class="btn btn-lg float-right"><i class="fas fa-print"></i></button>
+                                </div>
+                            </div>
+
+
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist" runat="server" id="navTabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#GastosDeCierreEfectivo" role="tab" aria-selected="false">
+                                        <span class="d-block d-sm-none">Gastos de cierre
+                                            <br />
+                                            efectivo</span>
+                                        <span class="d-none d-sm-block"><small>Gastos de cierre efectivo</small></span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#GastosDeCierreFinanciados" role="tab" aria-selected="false">
+                                        <span class="d-block d-sm-none">Gastos de cierre
+                                            <br />
+                                            financiados</span>
+                                        <span class="d-none d-sm-block"><small>Gastos de cierre financiados</small></span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content" runat="server" id="tabContent" visible="true">
+                                <!-- Gastos de cierre en efectivo -->
+                                <div class="tab-pane active" id="GastosDeCierreEfectivo" role="tabpanel">
+                                    <div class="form-group row">
+                                        <div class="col-10 align-self-end">
+                                            <label class="col-form-label">Valor del prestamo (<span class="text-xs"><asp:Label CssClass="col-form-label p-0 font-weight-bold align-self-center" ID="lblEtiqueta1" runat="server" Text="" /></span>)</label>
+                                        </div>
+                                        <div class="col-2 justify-content-end">
+                                            <asp:Button ID="Button1" runat="server" OnClick="btnDescargarCotizacion_Click" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
+                                        </div>
+                                        <div class="col-12">
+                                            <asp:TextBox ID="txtValorPrestamo1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="col-form-label">Cuota del PMO</label>
+                                            <asp:TextBox ID="txtCuotaPrestamo1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-row">
+                                        <div class="col">
+                                            <label class="col-form-label text-xs">Cuota del seguro</label>
+                                            <asp:TextBox ID="txtValorSeguro1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col">
+                                            <label class="col-form-label text-xs">Cuota servic. GPS</label>
+                                            <asp:TextBox ID="txtServicioGPS1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-12 col-form-label">Cuota total mensual</label>
+                                        <div class="col-12">
+                                            <asp:TextBox ID="txtCuotaTotal1" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-12 col-form-label">Gastos de cierre <span class="text-xs">(Pago en efectivo)</span></label>
+                                        <div class="col-12">
+                                            <asp:TextBox ID="txtGastosdeCierreEfectivo" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Gastos de cierre financiados -->
+                                <div class="tab-pane" id="GastosDeCierreFinanciados" role="tabpanel">
+                                    <div class="form-group row">
+                                        <div class="col-10 align-self-end">
+                                            <label class="col-form-label">Valor del prestamo (<span class="text-xs"><asp:Label CssClass="col-form-label p-0 font-weight-bold align-self-center" ID="lblEtiqueta2" runat="server" Text="" /></span>)</label>
+                                        </div>
+                                        <div class="col-2">
+                                            <asp:Button ID="btnDescargarCotizacion2" runat="server" OnClick="btnDescargarCotizacion2_Click" CssClass="btn btn-lg float-right" Style="background-image: url(/Imagenes/export_pdf_80px.png); background-size: contain !important; background-repeat: no-repeat;" />
+                                        </div>
+                                        <div class="col-12">
+                                            <asp:TextBox ID="txtValorPrestamo2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="col-form-label">Cuota del PMO</label>
+                                            <asp:TextBox ID="txtCuotaPrestamo2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-row">
+                                        <div class="col">
+                                            <label class="col-form-label text-xs">Cuota del seguro</label>
+                                            <asp:TextBox ID="txtValorSeguro2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col">
+                                            <label class="col-form-label text-xs">Cuota servic. GPS</label>
+                                            <asp:TextBox ID="txtServicioGPS2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-12 col-form-label">Cuota total mensual</label>
+                                        <div class="col-12">
+                                            <asp:TextBox ID="txtCuotaTotal2" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" runat="server" visible="false">
+                                        <label class="col-12 col-form-label">Cuota total mensual <span class="text-xs">(Gastos de cierre)</span></label>
+                                        <div class="col-12">
+                                            <asp:TextBox ID="txtCuotaTotalGastosDeCierreFinanciados" CssClass="form-control form-control-sm col-form-label text-right FormatotxtMonedaRO" ReadOnly="true" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
