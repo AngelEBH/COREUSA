@@ -228,16 +228,28 @@ public partial class CotizadorCarros : System.Web.UI.Page
 
                         while (sqlResultado.Read())
                         {
+                            /* Agregar fila a la tabla que se muestra en la pestaña "Cotización por plazos" */
                             tRowCotizacion = new HtmlTableRow();
                             tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fiIDPlazo"].ToString() });
+                            tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fiInteresAnual"].ToString()).ToString("N") });
+                            tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnValorVehiculo"].ToString()).ToString("N") });
+                            tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()).ToString("N") });
+                            tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCostoGPS"].ToString()).ToString("N") });
+                            tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnTotalaFinanciar"].ToString()).ToString("N") });
                             tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotadelPrestamo"].ToString()).ToString("N") });
                             tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()).ToString("N") });
                             tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()).ToString("N") });
                             tRowCotizacion.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnTotalCuota"].ToString()).ToString("N") });
                             tblCotizacionPorPlazos.Rows.Add(tRowCotizacion);
 
+                            /* Agregar fila a la tabla que se muestra en la cotización que se imprime */
                             tRowCotizacionPDF = new HtmlTableRow();
                             tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fiIDPlazo"].ToString() });
+                            tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fiInteresAnual"].ToString()).ToString("N") });
+                            tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnValorVehiculo"].ToString()).ToString("N") });
+                            tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()).ToString("N") });
+                            tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCostoGPS"].ToString()).ToString("N") });
+                            tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnTotalaFinanciar"].ToString()).ToString("N") });
                             tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotadelPrestamo"].ToString()).ToString("N") });
                             tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()).ToString("N") });
                             tRowCotizacionPDF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()).ToString("N") });
@@ -254,6 +266,25 @@ public partial class CotizadorCarros : System.Web.UI.Page
                             {
                                 trTelefonoVendedor.Visible = false;
                             }
+                        }
+
+
+                        /* Llenar tabla de datos para SAF */
+                        sqlResultado.NextResult();
+
+                        HtmlTableRow tRowDatosParaSAF;
+
+                        while (sqlResultado.Read())
+                        {
+                            tRowDatosParaSAF = new HtmlTableRow();
+                            tRowDatosParaSAF.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fiIDPlazo"].ToString() });
+                            tRowDatosParaSAF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnGastosLegales"].ToString()).ToString("N") });
+                            tRowDatosParaSAF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnValorProvision"].ToString()).ToString("N") });
+                            tRowDatosParaSAF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnSeguroContinental"].ToString()).ToString("N") });
+                            tRowDatosParaSAF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnTotal"].ToString()).ToString("N") });
+                            tRowDatosParaSAF.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcNombrePolizadeSeguro"].ToString()});
+
+                            tblDatosParaSAF.Rows.Add(tRowDatosParaSAF);
                         }
 
                         lblValorVehiculo.Text = "L " + decimal.Parse(txtValorVehiculo.Text).ToString("N");

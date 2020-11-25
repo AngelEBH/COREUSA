@@ -1,33 +1,44 @@
-﻿using System;
+﻿using adminfiles;
+using Newtonsoft.Json;
+using proyectoBase.Models.ViewModel;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Web;
-using System.Web.UI;
+using System.Web.Services;
 using System.Web.UI.WebControls;
 
 public partial class PreSolicitud_Guardar : System.Web.UI.Page
 {
-    public string pcIDUsuario;
+    public string pcID;
     public string pcIDApp;
     public string pcIDSesion;
-    public string pcID;
+    public string pcIDUsuario;
     public string pcIDProducto;
     public string pcIDTipoDeSolicitud;
-    public DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public List<PreSolicitud_Guardar_DocumentosRequeridos_ViewModel> ListaDocumentosRequeridos;
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        var type = Request.QueryString["type"];
+
+        try
         {
-            try
+            if (!IsPostBack && type == null)
             {
                 /* Captura de parametros y desencriptado de cadena */
                 var lcURL = Request.Url.ToString();
                 int liParamStart = lcURL.IndexOf("?");
+
                 pcID = "";
+                ListaDocumentosRequeridos = new List<PreSolicitud_Guardar_DocumentosRequeridos_ViewModel>();
 
                 string lcParametros;
+
                 if (liParamStart > 0)
                 {
                     lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
@@ -41,33 +52,84 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                 {
                     var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcEncriptado = lcEncriptado.Replace("%2f", "/");
+
                     var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+                    pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID") ?? "";
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-                    pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID") ?? "";
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+
+                    HttpContext.Current.Session["ListaDocumentosPreSolicitud"] = null;
+                    HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
+                    Session.Timeout = 10080;
 
                     if (!string.IsNullOrWhiteSpace(pcID))
                     {
                         CargarPrecalificado(pcID);
 
                         HttpContext.Current.Session["idTipoDeSolicitud"] = pcIDTipoDeSolicitud;
-                        Session.Timeout = 10080;
                     }
 
                     LlenarListas();
                 }
             }
-            catch (Exception ex)
+
+            /* Guardar documentos de la solicitud */
+            if (type != null || Request.HttpMethod == "POST")
             {
-                MostrarMensaje("Ocurrió un error al cargar la información: " + ex.Message.ToString());
+                Session["tipoDoc"] = Convert.ToInt32(Request.QueryString["doc"]);
+                var uploadDir = @"C:\inetpub\wwwroot\Documentos\PreSolicitudes\Temp\";
+
+                var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
+                    { "limit", 1 },
+                    { "title", "auto" },
+                    { "uploadDir", uploadDir },
+                    { "extensions", new string[] { "jpg", "png", "jpeg"} },
+                    { "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
+                    { "fileMaxSize", 20 }, /* Peso máximo por archivo */
+                });
+
+                switch (type)
+                {
+                    case "upload":
+                        /* Proceso de carga */
+                        var data = fileUploader.Upload();
+
+                        /* Resultado */
+                        if (data["files"].Count == 1)
+                            data["files"][0].Remove("file");
+                        Response.Write(JsonConvert.SerializeObject(data));
+
+                        /* Al subirse los archivos se guardan en este objeto de sesion general del helper fileuploader */
+                        var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
+
+                        /* Guardar listado de documentos en una session propia de esta pantalla */
+                        Session["ListaDocumentosPreSolicitud"] = list;
+
+                        break;
+
+                    case "remove":
+                        string file = Request.Form["file"];
+
+                        if (file != null)
+                        {
+                            file = FileUploader.FullDirectory(uploadDir) + file;
+                            if (File.Exists(file))
+                                File.Delete(file);
+                        }
+                        break;
+                }
+                Response.End();
             }
+        }
+        catch (Exception ex)
+        {
+            MostrarMensaje("Ocurrió un error al cargar la información: " + ex.Message.ToString());
         }
     }
 
-    /* Llenar listas desplegables */
     protected void LlenarListas()
     {
         try
@@ -86,25 +148,75 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         ddlMunicipio.Items.Clear();
-                        ddlMunicipio.Items.Add(new ListItem("Seleccione un departamento", "0"));
+                        ddlMunicipio.Items.Add(new ListItem("Seleccione un departamento", ""));
                         ddlMunicipio.Enabled = false;
 
-                        ddlCiudad.Items.Clear();
-                        ddlCiudad.Items.Add(new ListItem("Seleccione un municipio", "0"));
-                        ddlCiudad.Enabled = false;
+                        ddlCiudadPoblado.Items.Clear();
+                        ddlCiudadPoblado.Items.Add(new ListItem("Seleccione un municipio", ""));
+                        ddlCiudadPoblado.Enabled = false;
 
                         ddlBarrioColonia.Items.Clear();
-                        ddlBarrioColonia.Items.Add(new ListItem("Seleccione una ciudad", "0"));
+                        ddlBarrioColonia.Items.Add(new ListItem("Seleccione una ciudad", ""));
                         ddlBarrioColonia.Enabled = false;
 
                         ddlDepartamento.Items.Clear();
-                        ddlDepartamento.Items.Add(new ListItem("Seleccionar", "0"));
+                        ddlDepartamento.Items.Add(new ListItem("Seleccionar", ""));
                         while (sqlResultado.Read())
                         {
                             ddlDepartamento.Items.Add(new ListItem(sqlResultado["fcDepartamento"].ToString(), sqlResultado["fiCodDepartamento"].ToString()));
                         }
                     }
                 }
+
+                using (var sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Guardar_DocumentosRequeridos", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            ListaDocumentosRequeridos.Add(new PreSolicitud_Guardar_DocumentosRequeridos_ViewModel()
+                            {
+                                IdTipoDocumento = int.Parse(sqlResultado["fiIDTipoDocumento"].ToString()),
+                                DescripcionTipoDocumento = (string)sqlResultado["fcDescripcionTipoDocumento"],
+                                CantidadMaxima = int.Parse(sqlResultado["fiCantidadDocumentos"].ToString())
+                            });
+                        }
+
+                        Session["ListaDocumentosPreSolicitud"] = ListaDocumentosRequeridos;
+                    }
+                }
+
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitudes_ListadoGestores", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlGestores.Items.Clear();
+                        ddlGestores.Items.Add(new ListItem("Seleccionar", ""));
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlGestores.Items.Add(new ListItem(sqlResultado["fcNombreCorto"].ToString(), sqlResultado["fiIDUsuario"].ToString()));
+                            }
+                        }
+                    }
+                }
+
+                ddlTipoInvestigacionDeCampo.Items.Add(new ListItem("Seleccionar", ""));
+                ddlTipoInvestigacionDeCampo.Items.Add(new ListItem("Domicilio", "1"));
+                ddlTipoInvestigacionDeCampo.Items.Add(new ListItem("Trabajo", "2"));
             }
         }
         catch (Exception ex)
@@ -113,7 +225,6 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
         }
     }
 
-    /* Cargar informacion del precalificado del cliente o redirigirlo a precalificar si todavia no lo esta */
     private void CargarPrecalificado(string pcID)
     {
         try
@@ -158,243 +269,194 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
         }
     }
 
-    protected void MostrarMensaje(string mensaje)
+    public static List<PreSolicitud_Guardar_Municipios_ViewModel> CargarMunicipios(int idDepartamento)
     {
-        PanelMensajeErrores.Visible = true;
-        lblMensaje.Visible = true;
-        lblMensaje.Text = mensaje;
-    }
-
-    protected void ddlDepartamento_SelectedIndexChanged(object sender, EventArgs e)
-    {
+        var municipios = new List<PreSolicitud_Guardar_Municipios_ViewModel>();
         try
         {
-            var idDepartamento = ddlDepartamento.SelectedValue;
-
-            if (idDepartamento != "0" && !string.IsNullOrWhiteSpace(idDepartamento))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
             {
-                using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoMunicipio", sqlConexion))
                 {
-                    sqlConexion.Open();
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piPais", 1);
+                    sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
+                    sqlComando.Parameters.AddWithValue("@piMunicipio", 0);
 
-                    using (var sqlComando = new SqlCommand("sp_GeoMunicipio", sqlConexion))
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@piPais", 1);
-                        sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
-                        sqlComando.Parameters.AddWithValue("@piMunicipio", 0);
-                        sqlComando.CommandTimeout = 120;
-
-                        using (var sqlResultado = sqlComando.ExecuteReader())
+                        while (sqlResultado.Read())
                         {
-                            ddlMunicipio.Items.Clear();
-                            ddlMunicipio.Items.Add(new ListItem("Seleccionar", "0"));
-                            ddlMunicipio.Enabled = true;
-
-                            ddlCiudad.Items.Clear();
-                            ddlCiudad.Items.Add(new ListItem("Seleccione un municipio", "0"));
-                            ddlCiudad.Enabled = false;
-
-                            ddlBarrioColonia.Items.Clear();
-                            ddlBarrioColonia.Items.Add(new ListItem("Seleccione una ciudad", "0"));
-                            ddlBarrioColonia.Enabled = false;
-
-                            while (sqlResultado.Read())
+                            municipios.Add(new PreSolicitud_Guardar_Municipios_ViewModel()
                             {
-                                ddlMunicipio.Items.Add(new ListItem(sqlResultado["fcMunicipio"].ToString(), sqlResultado["fiCodMunicipio"].ToString()));
-                            }
-                            ddlMunicipio.Focus();
+                                IdDepartamento = (short)sqlResultado["fiCodDepartamento"],
+                                IdMunicipio = (short)sqlResultado["fiCodMunicipio"],
+                                NombreMunicipio = sqlResultado["fcMunicipio"].ToString(),
+                            });
                         }
                     }
                 }
             }
-            else
-            {
-                ddlMunicipio.Items.Clear();
-                ddlMunicipio.Items.Add(new ListItem("Seleccione un departamento", "0"));
-                ddlMunicipio.Enabled = false;
-
-                ddlCiudad.Items.Clear();
-                ddlCiudad.Items.Add(new ListItem("Seleccione un municipio", "0"));
-                ddlCiudad.Enabled = false;
-
-                ddlBarrioColonia.Items.Clear();
-                ddlBarrioColonia.Items.Add(new ListItem("Seleccione una ciudad", "0"));
-                ddlBarrioColonia.Enabled = false;
-            }
         }
         catch (Exception ex)
         {
-            MostrarMensaje("Error al cargar municipios del departamento seleccionado: " + ex.Message.ToString());
+            ex.Message.ToString();
+            municipios = null;
         }
+        return municipios;
     }
 
-    protected void ddlMunicipio_SelectedIndexChanged(object sender, EventArgs e)
+    public static List<PreSolicitud_Guardar_Ciudades_ViewModel> CargarCiudadesPoblados(int idDepartamento, int idMunicipio)
     {
+        var ciudades = new List<PreSolicitud_Guardar_Ciudades_ViewModel>();
         try
         {
-            var idDepartamento = ddlDepartamento.SelectedValue;
-            var idMunicipio = ddlMunicipio.SelectedValue;
-
-            if ((idMunicipio != "0" && !string.IsNullOrWhiteSpace(idMunicipio)) && (idDepartamento != "0" && !string.IsNullOrWhiteSpace(idDepartamento)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
             {
-                using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoPoblado", sqlConexion))
                 {
-                    sqlConexion.Open();
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piPais", 1);
+                    sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
+                    sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
+                    sqlComando.Parameters.AddWithValue("@piPoblado", 0);
 
-                    using (var sqlComando = new SqlCommand("sp_GeoPoblado", sqlConexion))
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@piPais", 1);
-                        sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
-                        sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
-                        sqlComando.Parameters.AddWithValue("@piPoblado", 0);
-                        sqlComando.CommandTimeout = 120;
-
-                        using (var sqlResultado = sqlComando.ExecuteReader())
+                        while (sqlResultado.Read())
                         {
-                            ddlCiudad.Items.Clear();
-                            ddlCiudad.Items.Add(new ListItem("Seleccionar", "0"));
-                            ddlCiudad.Enabled = true;
-
-                            ddlBarrioColonia.Items.Clear();
-                            ddlBarrioColonia.Items.Add(new ListItem("Seleccione una ciudad", "0"));
-                            ddlBarrioColonia.Enabled = false;
-
-                            while (sqlResultado.Read())
+                            ciudades.Add(new PreSolicitud_Guardar_Ciudades_ViewModel()
                             {
-                                ddlCiudad.Items.Add(new ListItem(sqlResultado["fcPoblado"].ToString(), sqlResultado["fiCodPoblado"].ToString()));
-                            }
-                            ddlCiudad.Focus();
+                                IdDepartamento = (short)sqlResultado["fiCodDepartamento"],
+                                IdMunicipio = (short)sqlResultado["fiCodMunicipio"],
+                                IdCiudadPoblado = (short)sqlResultado["fiCodPoblado"],
+                                NombreCiudadPoblado = sqlResultado["fcPoblado"].ToString(),
+                            });
                         }
                     }
                 }
             }
-            else
-            {
-                ddlCiudad.Items.Clear();
-                ddlCiudad.Items.Add(new ListItem("Seleccione un municipio", "0"));
-                ddlCiudad.Enabled = false;
-
-                ddlBarrioColonia.Items.Clear();
-                ddlBarrioColonia.Items.Add(new ListItem("Seleccione una ciudad", "0"));
-                ddlBarrioColonia.Enabled = false;
-            }
         }
         catch (Exception ex)
         {
-            MostrarMensaje("Error al cargar ciudades/poblado del municipio seleccionado: " + ex.Message.ToString());
+            ex.Message.ToString();
+            ciudades = null;
         }
+        return ciudades;
     }
 
-    protected void ddlCiudad_SelectedIndexChanged(object sender, EventArgs e)
+    public static List<PreSolicitud_Guardar_BarriosColonias_ViewModel> CargarBarriosColonias(int idDepartamento, int idMunicipio, int idCiudadPoblado)
     {
+        var BarriosColonias = new List<PreSolicitud_Guardar_BarriosColonias_ViewModel>();
         try
         {
-            var idDepartamento = ddlDepartamento.SelectedValue;
-            var idMunicipio = ddlMunicipio.SelectedValue;
-            var idCiudad = ddlCiudad.SelectedValue;
-
-            if ((idCiudad != "0" && !string.IsNullOrWhiteSpace(idCiudad)) && (idMunicipio != "0" && !string.IsNullOrWhiteSpace(idMunicipio)) && (idDepartamento != "0" && !string.IsNullOrWhiteSpace(idDepartamento)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
             {
-                using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoBarrios", sqlConexion))
                 {
-                    sqlConexion.Open();
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piPais", 1);
+                    sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
+                    sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
+                    sqlComando.Parameters.AddWithValue("@piPoblado", idCiudadPoblado);
+                    sqlComando.Parameters.AddWithValue("@piBarrio", 0);
 
-                    using (var sqlComando = new SqlCommand("sp_GeoBarrios", sqlConexion))
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@piPais", 1);
-                        sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
-                        sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
-                        sqlComando.Parameters.AddWithValue("@piPoblado", idCiudad);
-                        sqlComando.Parameters.AddWithValue("@piBarrio", 0);
-                        sqlComando.CommandTimeout = 120;
-
-                        using (var sqlResultado = sqlComando.ExecuteReader())
+                        while (sqlResultado.Read())
                         {
-                            ddlBarrioColonia.Items.Clear();
-                            ddlBarrioColonia.Items.Add(new ListItem("Seleccionar", "0"));
-                            ddlBarrioColonia.Enabled = true;
-
-                            while (sqlResultado.Read())
+                            BarriosColonias.Add(new PreSolicitud_Guardar_BarriosColonias_ViewModel()
                             {
-                                ddlBarrioColonia.Items.Add(new ListItem(sqlResultado["fcBarrioColonia"].ToString(), sqlResultado["fiCodBarrio"].ToString()));
-                            }
-                            ddlBarrioColonia.Focus();
+                                IdDepartamento = (short)sqlResultado["fiCodDepartamento"],
+                                IdMunicipio = (short)sqlResultado["fiCodMunicipio"],
+                                IdCiudadPoblado = (short)sqlResultado["fiCodPoblado"],
+                                IdBarrioColonia = (short)sqlResultado["fiCodBarrio"],
+                                NombreBarrioColonia = sqlResultado["fcBarrioColonia"].ToString()
+                            });
                         }
                     }
                 }
             }
-            else
-            {
-                ddlBarrioColonia.Items.Clear();
-                ddlBarrioColonia.Items.Add(new ListItem("Seleccione una ciudad", "0"));
-                ddlBarrioColonia.Enabled = false;
-            }
         }
         catch (Exception ex)
         {
-            MostrarMensaje("Error al cargar barrios/colonias de la ciudad/poblado seleccionado: " + ex.Message.ToString());
+            ex.Message.ToString();
+            BarriosColonias = null;
         }
+        return BarriosColonias;
     }
 
-    protected void btnGuardarPreSolicitud_Click(object sender, EventArgs e)
+    [WebMethod]
+    public static List<PreSolicitud_Guardar_Municipios_ViewModel> CargarListaMunicipios(int idDepartamento)
     {
-        if (Validaciones())
+        return CargarMunicipios(idDepartamento);
+    }
+
+    [WebMethod]
+    public static List<PreSolicitud_Guardar_Ciudades_ViewModel> CargarListaCiudadesPoblados(int idDepartamento, int idMunicipio)
+    {
+        return CargarCiudadesPoblados(idDepartamento, idMunicipio);
+    }
+
+    [WebMethod]
+    public static List<PreSolicitud_Guardar_BarriosColonias_ViewModel> CargarListaBarriosColonias(int idDepartamento, int idMunicipio, int idCiudadPoblado)
+    {
+        return CargarBarriosColonias(idDepartamento, idMunicipio, idCiudadPoblado);
+    }
+
+    [WebMethod]
+    public static List<PreSolicitud_Guardar_DocumentosRequeridos_ViewModel> CargarDocumentosRequeridos()
+    {
+        return (List<PreSolicitud_Guardar_DocumentosRequeridos_ViewModel>)HttpContext.Current.Session["ListaDocumentosPreSolicitud"];
+    }
+
+    [WebMethod]
+    public static Resultado_ViewModel GuardarPreSolicitud(PreSolicitud_Guardar_PreSolicitud_ViewModel preSolicitud, string dataCrypt)
+    {
+        var resultado = new Resultado_ViewModel() { ResultadoExitoso = false };
+
+        using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["conexionEncriptada"].ToString())))
         {
-            try
+            sqlConexion.Open();
+
+            using (var tran = sqlConexion.BeginTransaction())
             {
-
-                /* Captura de parametros y desencriptado de cadena */
-                var lcURL = Request.Url.ToString();
-                int liParamStart = lcURL.IndexOf("?");
-
-                string lcParametros;
-
-                if (liParamStart > 0)
+                try
                 {
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                }
-                else
-                {
-                    lcParametros = string.Empty;
-                }
+                    var urlDesencriptado = DesencriptarURL(dataCrypt);
+                    var pcID = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("ID") ?? "0";
+                    var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp") ?? "0";
+                    var pcIDSesion = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("SID") ?? "0";
+                    var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr") ?? "0";
 
-                if (lcParametros != string.Empty)
-                {
-                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                    lcEncriptado = lcEncriptado.Replace("%2f", "/");
-                    var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
-                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-                    pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID") ?? "";
-                }
-
-
-                using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-                {
-                    sqlConexion.Open();
+                    string idPreSolicitudGuardada = "0";
 
                     var idTipoDeSolicitud = (string)HttpContext.Current.Session["idTipoDeSolicitud"];
 
-                    using (var sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_Guardar", sqlConexion))
+                    using (var sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_Guardar", sqlConexion, tran))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@piIDPais", 1);
                         sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
-                        sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                        sqlComando.Parameters.AddWithValue("@piIDTipoDeUbicacion", preSolicitud.IdTipoDeUbicacion);
                         sqlComando.Parameters.AddWithValue("@piIDTipoDeSolicitud", idTipoDeSolicitud);
-                        sqlComando.Parameters.AddWithValue("@pcTelefonoCasa", txtTelefonoCasa.Text.Trim().Replace("_", "").Replace("-", ""));
-                        sqlComando.Parameters.AddWithValue("@piIDDepartamento", ddlDepartamento.SelectedValue);
-                        sqlComando.Parameters.AddWithValue("@piIDMunicipio", ddlMunicipio.SelectedValue);
-                        sqlComando.Parameters.AddWithValue("@piIDCiudad", ddlCiudad.SelectedValue);
-                        sqlComando.Parameters.AddWithValue("@piIDBarrioColonia", ddlBarrioColonia.SelectedValue);
-                        sqlComando.Parameters.AddWithValue("@pcDireccionDetallada", txtDireccionDetallada.Text.Trim());
-                        sqlComando.Parameters.AddWithValue("@pcReferenciasDireccionDetallada", txtReferenciasDomicilio.Value.Trim());
+                        sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                        sqlComando.Parameters.AddWithValue("@pcTelefonoAdicional", preSolicitud.TelefonoAdicional.Trim());
+                        sqlComando.Parameters.AddWithValue("@pcExtensionRecursosHumanos", preSolicitud.ExtensionRecursosHumanos.Replace("_", ""));
+                        sqlComando.Parameters.AddWithValue("@pcExtensionCliente", preSolicitud.ExtensionCliente.Replace("_", ""));
+                        sqlComando.Parameters.AddWithValue("@piIDDepartamento", preSolicitud.IdDepartamento);
+                        sqlComando.Parameters.AddWithValue("@piIDMunicipio", preSolicitud.IdMunicipio);
+                        sqlComando.Parameters.AddWithValue("@piIDCiudad", preSolicitud.IdCiudadPoblado);
+                        sqlComando.Parameters.AddWithValue("@piIDBarrioColonia", preSolicitud.IdBarrioColonia);
+                        sqlComando.Parameters.AddWithValue("@pcDireccionDetallada", preSolicitud.DireccionDetallada.Trim());
+                        sqlComando.Parameters.AddWithValue("@pcReferenciasDireccionDetallada", preSolicitud.ReferenciasDireccionDetallada.Trim());
+                        sqlComando.Parameters.AddWithValue("@piIDGestorValidador", preSolicitud.IdGestorValidador);
                         sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -407,88 +469,275 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                             {
                                 if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                 {
-                                    string lcScript = "window.open('PreSolicitud_Listado.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')";
-                                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "_self", lcScript, true);
+                                    idPreSolicitudGuardada = sqlResultado["MensajeError"].ToString();
                                 }
                                 else
                                 {
-                                    MostrarMensaje("No se pudo guardar la pre-solicitud: " + sqlResultado["MensajeError"].ToString());
+                                    tran.Rollback();
+                                    resultado.ResultadoExitoso = false;
+                                    resultado.MensajeResultado = "No se pudo guardar la pre solicitud, contacte al administrador.";
+                                    resultado.DebugString = "Error en CREDPreSolicitudes_Maestro_Guardar";
+                                    return resultado;
                                 }
                             }
                         }
                     }
+
+                    /* Registrar documentacion de la pre solicitud */
+
+                    /* Lista de documentos que se va ingresar en la base de datos y se va mover al nuevo directorio */
+                    var documentosPreSolicitud = new List<SolicitudesDocumentosViewModel>();
+
+                    if (HttpContext.Current.Session["ListaDocumentosPreSolicitud"] != null)
+                    {
+                        /* lista de documentos adjuntados por el usuario */
+                        var listaDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaDocumentosPreSolicitud"];
+
+                        if (listaDocumentos != null)
+                        {
+                            string NombreCarpetaDocumentos = "PreSolicitud" + idPreSolicitudGuardada;
+                            string NuevoNombreDocumento = "";
+
+                            foreach (SolicitudesDocumentosViewModel file in listaDocumentos)
+                            {
+                                if (File.Exists(file.fcRutaArchivo + @"\" + file.NombreAntiguo)) /* si el archivo existe, que se agregue a la lista */
+                                {
+                                    NuevoNombreDocumento = GenerarNombreDocumento(idPreSolicitudGuardada.ToString(), file.fiTipoDocumento.ToString());
+
+                                    documentosPreSolicitud.Add(new SolicitudesDocumentosViewModel()
+                                    {
+                                        fcNombreArchivo = NuevoNombreDocumento,
+                                        NombreAntiguo = file.NombreAntiguo,
+                                        fcTipoArchivo = file.fcTipoArchivo,
+                                        fcRutaArchivo = file.fcRutaArchivo.Replace("Temp", "") + NombreCarpetaDocumentos,
+                                        URLArchivo = "/Documentos/PreSolicitudes/" + NombreCarpetaDocumentos + "/" + NuevoNombreDocumento + ".png",
+                                        fiTipoDocumento = file.fiTipoDocumento
+                                    });
+                                }
+                            }
+                        }
+                    }
+
+                    /* Guardar los documentos de la pre solicitud en la base de datos*/
+                    int contadorErrores = 0;
+                    foreach (SolicitudesDocumentosViewModel documento in documentosPreSolicitud)
+                    {
+                        using (var sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Documentos_Guardar", sqlConexion, tran))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piIDPreSolicitud", idPreSolicitudGuardada);
+                            sqlComando.Parameters.AddWithValue("@pcNombreArchivo", documento.fcNombreArchivo);
+                            sqlComando.Parameters.AddWithValue("@pcTipoArchivo", ".png");
+                            sqlComando.Parameters.AddWithValue("@pcRutaArchivo", documento.fcRutaArchivo);
+                            sqlComando.Parameters.AddWithValue("@pcURL", documento.URLArchivo);
+                            sqlComando.Parameters.AddWithValue("@piTipoDocumento", documento.fiTipoDocumento);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            using (var sqlResultado = sqlComando.ExecuteReader())
+                            {
+                                while (sqlResultado.Read())
+                                {
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                    {
+                                        contadorErrores++;
+                                    }
+                                }
+                            }
+                        }
+                        if (contadorErrores > 0)
+                        {
+                            resultado.ResultadoExitoso = false;
+                            resultado.MensajeResultado = "No se pudo registrar la documentación de la pre solicitud, contacte al administrador.";
+                            resultado.DebugString = "sp_CREDPreSolicitudes_Documentos_Guardar";
+                            return resultado;
+                        }
+                    }
+
+                    if (!GuardarDocumentos(documentosPreSolicitud, idPreSolicitudGuardada))
+                    {
+                        resultado.ResultadoExitoso = false;
+                        resultado.MensajeResultado = "No se pudo guardar la documentación de la pre solicitud, contacte al administrador..";
+                        resultado.DebugString = "GuardarDocumentos()";
+                        return resultado;
+                    }
+
+                    tran.Commit();
+
+                    resultado.ResultadoExitoso = true;
+                    resultado.MensajeResultado = "La pre solicitud se registró exitosamente";
+                    resultado.DebugString = "";
+
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    resultado.ResultadoExitoso = false;
+                    resultado.MensajeResultado = "No se pudo guardar la pre solicitud, contacte al administrador.";
+                    resultado.DebugString = ex.Message.ToString();
                 }
             }
-            catch (Exception ex)
-            {
-                MostrarMensaje("Error al cargar precalificado " + pcID + ": " + ex.Message.ToString());
-            }
         }
+        return resultado;
     }
 
-    private bool Validaciones()
+    private static string GenerarNombreDocumento(string idPreSolicitud, string piIDCatalogoDocumento)
     {
+        string lcBloqueFechaHora = DateTime.Now.ToString("yyyy-mm-dd hh:mm:ss");
+
+        lcBloqueFechaHora = lcBloqueFechaHora.Replace("-", "");
+        lcBloqueFechaHora = lcBloqueFechaHora.Replace(":", "");
+        lcBloqueFechaHora = lcBloqueFechaHora.Replace(" ", "T");
+
+        return ("CTEPS" + idPreSolicitud.Trim() + "D" + piIDCatalogoDocumento.ToString().Trim() + "-" + lcBloqueFechaHora);
+    }
+
+    public static bool GuardarDocumentos(List<SolicitudesDocumentosViewModel> listaDocumentos, string idPreSolicitud)
+    {
+        bool result;
         try
         {
-            var idDepartamento = ddlDepartamento.SelectedValue;
-            var idMunicipio = ddlMunicipio.SelectedValue;
-            var idCiudad = ddlCiudad.SelectedValue;
-            var idBarrio = ddlBarrioColonia.SelectedValue;
-
-            if (string.IsNullOrEmpty(txtIdentidadCliente.Text) || (txtIdentidadCliente.Text.Length < 13))
+            if (listaDocumentos != null)
             {
-                MostrarMensaje("El número de identidad del cliente no es válido.");
-                return false;
-            }
+                /* Crear el nuevo directorio para los documentos de la garantia */
+                var directorioTemporal = @"C:\inetpub\wwwroot\Documentos\PreSolicitudes\Temp\";
+                var nombreCarpetaDocumentos = "PreSolicitud" + idPreSolicitud;
+                var directorioDocumentos = @"C:\inetpub\wwwroot\Documentos\PreSolicitudes\" + nombreCarpetaDocumentos + "\\";
+                bool carpetaExistente = Directory.Exists(directorioDocumentos);
 
-            if (string.IsNullOrEmpty(txtTelefonoCliente.Text))
-            {
-                MostrarMensaje("El número de teléfono del cliente no es válido.");
-                return false;
-            }
+                if (!carpetaExistente)
+                    Directory.CreateDirectory(directorioDocumentos);
 
-            if (idDepartamento == "0" && string.IsNullOrWhiteSpace(idDepartamento))
-            {
-                MostrarMensaje("Seleccione un departamento.");
-                return false;
-            }
+                listaDocumentos.ForEach(documento =>
+                {
+                    string ViejoDirectorio = directorioTemporal + documento.NombreAntiguo;
+                    string NuevoNombreDocumento = documento.fcNombreArchivo;
+                    string NuevoDirectorio = directorioDocumentos + NuevoNombreDocumento + ".png";
 
-            if (idMunicipio == "0" && string.IsNullOrWhiteSpace(idMunicipio))
-            {
-                MostrarMensaje("Seleccione un municipio.");
-                return false;
+                    if (File.Exists(ViejoDirectorio))
+                        File.Move(ViejoDirectorio, NuevoDirectorio);
+                });
             }
-
-            if (idCiudad == "0" && string.IsNullOrWhiteSpace(idCiudad))
-            {
-                MostrarMensaje("Seleccione una ciudad.");
-                return false;
-            }
-
-            if (idBarrio == "0" && string.IsNullOrWhiteSpace(idBarrio))
-            {
-                MostrarMensaje("Seleccione un barrio/colonia.");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(txtDireccionDetallada.Text) || (txtIdentidadCliente.Text.Length < 10))
-            {
-                MostrarMensaje("La dirección detallada debe tener 10 o más caracteres.");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(txtReferenciasDomicilio.Value) || (txtReferenciasDomicilio.Value.Length < 15))
-            {
-                MostrarMensaje("La dirección detallada debe tener 15 o más caracteres.");
-                return false;
-            }
-
-            return true;
+            result = true;
         }
         catch (Exception ex)
         {
-            MostrarMensaje("Ocurrió un error al validar la información: " + ex.Message.ToString());
-            return false;
+            ex.Message.ToString();
+            result = false;
         }
+        return result;
     }
+
+    public static Uri DesencriptarURL(string Url)
+    {
+        Uri lURLDesencriptado = null;
+        try
+        {
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
+            var liParamStart = Url.IndexOf("?");
+
+            if (liParamStart > 0)
+                lcParametros = Url.Substring(liParamStart, Url.Length - liParamStart);
+            else
+                lcParametros = string.Empty;
+
+            if (lcParametros != string.Empty)
+            {
+                pcEncriptado = Url.Substring((liParamStart + 1), Url.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return lURLDesencriptado;
+    }
+
+    public void MostrarMensaje(string mensaje)
+    {
+        lblMensajeError.Visible = true;
+        lblMensajeError.InnerText = mensaje;
+    }
+
+    #region View Models
+
+    public class PreSolicitud_Guardar_BarriosColonias_ViewModel
+    {
+        public int IdCiudadPoblado { get; set; }
+        public int IdMunicipio { get; set; }
+        public int IdDepartamento { get; set; }
+        public int IdBarrioColonia { get; set; }
+        public string NombreBarrioColonia { get; set; }
+    }
+
+    public class PreSolicitud_Guardar_Ciudades_ViewModel
+    {
+        public int IdDepartamento { get; set; }
+        public int IdMunicipio { get; set; }
+        public int IdCiudadPoblado { get; set; }
+        public string NombreCiudadPoblado { get; set; }
+    }
+
+    public class PreSolicitud_Guardar_Municipios_ViewModel
+    {
+        public int IdDepartamento { get; set; }
+        public int IdMunicipio { get; set; }
+        public string NombreMunicipio { get; set; }
+    }
+
+    public class PreSolicitud_Guardar_DocumentosRequeridos_ViewModel
+    {
+        public int IdTipoDocumento { get; set; }
+        public string DescripcionTipoDocumento { get; set; }
+        public int CantidadMaxima { get; set; }
+    }
+
+    public class PreSolicitud_Guardar_PreSolicitud_ViewModel
+    {
+        public int IdPreSolicitud { get; set; }
+        public int IdPais { get; set; }
+        public int IdCanal { get; set; }
+        public string CentroDeCosto { get; set; }
+        public int IdTipoDeUbicacion { get; set; }
+        public int IdTipoDeSolicitud { get; set; }
+        public string Identidad { get; set; }
+        public string TelefonoAdicional { get; set; }
+        public string ExtensionRecursosHumanos { get; set; }
+        public string ExtensionCliente { get; set; }
+        public int IdDepartamento { get; set; }
+        public int IdMunicipio { get; set; }
+        public int IdCiudadPoblado { get; set; }
+        public int IdBarrioColonia { get; set; }
+        public string DireccionDetallada { get; set; }
+        public string ReferenciasDireccionDetallada { get; set; }
+        public int IdGestorValidador { get; set; }
+    }
+
+    public class PreSolicitud_Guardar_Documentos_ViewModel
+    {
+        public string NombreAntiguo { get; set; }
+        public string NombreArchivo { get; set; }
+        public string Extension { get; set; }
+        public string RutaArchivo { get; set; }
+        public string URL { get; set; }
+        public int IdTipoDocumento { get; set; }
+    }
+
+    public class PreSolicitud_Guardar_Resultado_ViewModel
+    {
+        public bool ResultadoExitoso { get; set; }
+        public string MensajeResultado { get; set; }
+        public string DebugString { get; set; }
+    }
+
+    public class Resultado_ViewModel
+    {
+        public bool ResultadoExitoso { get; set; }
+        public string MensajeResultado { get; set; }
+        public string DebugString { get; set; }
+    }
+    #endregion
 }

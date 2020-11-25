@@ -30,23 +30,25 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                 }
                 else
                 {
-                    lcParametros = String.Empty;
+                    lcParametros = string.Empty;
                 }
 
-                if (lcParametros != String.Empty)
+                if (lcParametros != string.Empty)
                 {
                     var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcEncriptado = lcEncriptado.Replace("%2f", "/");
+
                     var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
                 }
             }
             catch (Exception ex)
             {
-                //MostrarMensaje("Ocurrió un error al cargar la información: " + ex.Message.ToString());
+                ex.Message.ToString();
             }
         }
     }
@@ -84,11 +86,11 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                                 IdGestorValidador = int.Parse(reader["fiIDGestorValidador"].ToString()),
                                 GestorValidador = reader["fcGestorValidador"].ToString(),
 
-                                IdUsuarioCra = int.Parse(reader["fiIDUsuarioCrea"].ToString()),
+                                IdUsuarioCra = int.Parse(reader["fiIDUsuarioCreador"].ToString()),
                                 UsuarioCrea = reader["fcUsuarioCrea"].ToString(),
-                                FechaCreacion = DateTime.Parse(reader["fdFechaCrea"].ToString()),
+                                FechaCreacion = DateTime.Parse(reader["fdFechaCreado"].ToString()),
 
-                                IdUsuarioUltimaModificacion = int.Parse(reader["fiIDUsuarioModificacion"].ToString()),
+                                IdUsuarioUltimaModificacion = int.Parse(reader["fiIDUsuarioUltimaModificacion"].ToString()),
                                 UsuarioUltimaMoficiacion = reader["fcUsuarioModifica"].ToString(),
                                 FechaUltimaModificacion = DateTime.Parse(reader["fdFechaUltimaModificacion"].ToString()),
 
@@ -139,7 +141,7 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                                 Agencia = reader["fcNombreAgencia"].ToString(),
                                 IdentidadCliente = reader["fcIdentidad"].ToString(),
                                 NombreCliente = reader["fcNombreCliente"].ToString(),
-                                TelefonoCasa = reader["fcTelefonoCasa"].ToString(),
+                                TelefonoCasa = reader["fcTelefonoAdicional"].ToString(),
                                 Telefono = reader["fcTelefono"].ToString(),
                                 IdDepartamento = int.Parse(reader["fiIDDepartamento"].ToString()),
                                 Departamento = reader["fcDepartamento"].ToString(),
@@ -149,16 +151,16 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                                 CiudadPoblado = reader["fcPoblado"].ToString(),
                                 IdBarrioColonia = int.Parse(reader["fiIDBarrioColonia"].ToString()),
                                 BarrioColonia = reader["fcBarrio"].ToString(),
-                                DireccionDetallada = reader["fcDireccionDetalladaDomicilio"].ToString(),
-                                ReferenciasDireccionDetallada = reader["fcReferenciasDireccionDetalladaDomicilio"].ToString(),
+                                DireccionDetallada = reader["fcDireccionDetallada"].ToString(),
+                                ReferenciasDireccionDetallada = reader["fcReferenciasDireccionDetallada"].ToString(),
 
                                 // usuario crea
-                                IdUsuarioCra = int.Parse(reader["fiIDUsuarioCrea"].ToString()),
-                                UsuarioCrea = reader["fcUsuarioCrea"].ToString(),
-                                FechaCreacion = DateTime.Parse(reader["fdFechaCrea"].ToString()),
+                                IdUsuarioCra = int.Parse(reader["fiIDUsuarioCreador"].ToString()),
+                                UsuarioCrea = reader["fcUsuarioCreador"].ToString(),
+                                FechaCreacion = DateTime.Parse(reader["fdFechaCreado"].ToString()),
                                 // usuario modifica
-                                IdUsuarioUltimaModificacion = int.Parse(reader["fiIDUsuarioModificacion"].ToString()),
-                                UsuarioUltimaMoficiacion = reader["fcUsuarioModifica"].ToString(),
+                                IdUsuarioUltimaModificacion = int.Parse(reader["fiIDUsuarioUltimaModificacion"].ToString()),
+                                UsuarioUltimaMoficiacion = reader["fcUsuarioUltimaModificacion"].ToString(),
                                 FechaUltimaModificacion = DateTime.Parse(reader["fdFechaUltimaModificacion"].ToString()),
 
                                 // gestor
@@ -197,19 +199,23 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            int liParamStart = 0;
-            string lcParametros = "";
-            String pcEncriptado = "";
+            var liParamStart = 0;
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
+
             liParamStart = URL.IndexOf("?");
+
             if (liParamStart > 0)
                 lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
             else
-                lcParametros = String.Empty;
+                lcParametros = string.Empty;
 
-            if (lcParametros != String.Empty)
+            if (lcParametros != string.Empty)
             {
                 pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
+
                 string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }

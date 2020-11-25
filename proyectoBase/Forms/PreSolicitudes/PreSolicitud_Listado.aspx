@@ -8,11 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Pre Solicitudes</title>
-    <!-- BOOTSTRAP -->
     <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
     <link href="/CSS/Content/css/style.css" rel="stylesheet" />
-    <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
@@ -31,7 +29,7 @@
         }
     </style>
 </head>
-<body class="EstiloBody-Listado-W1100px">
+<body class="EstiloBody-Listado">
     <div class="card">
         <div class="card-header">
             <div class="row">
@@ -189,11 +187,11 @@
                     </div>
                     <div class="form-group form-row">
                         <div class="col-6">
-                            <label class="col-form-label">Usuario creación</label>
+                            <label class="col-form-label">Usuario creador</label>
                             <input type="text" id="txtUsuarioCreacion" disabled="disabled" class="form-control form-control-sm col-form-label" />
                         </div>
                         <div class="col-6">
-                            <label class="col-form-label">Fecha creación</label>
+                            <label class="col-form-label">Fecha de creación</label>
                             <input type="text" id="txtFechaCreacion" disabled="disabled" class="form-control form-control-sm col-form-label" />
                         </div>
 
@@ -240,6 +238,6 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="/Scripts/app/solicitudes/PreSolicitud_Listado.js?V=202009221153"></script>
+    <script src="/Scripts/app/Solicitudes/PreSolicitud_Listado.js?V=202011251718"></script>
 </body>
 </html>

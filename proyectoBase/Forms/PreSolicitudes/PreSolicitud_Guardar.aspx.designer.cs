@@ -13,40 +13,31 @@ public partial class PreSolicitud_Guardar
 {
 
     /// <summary>
-    /// Control frmGuardarPreSolicitud.
+    /// Control frmPreSolicitud.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlForm frmGuardarPreSolicitud;
+    protected global::System.Web.UI.HtmlControls.HtmlForm frmPreSolicitud;
 
     /// <summary>
-    /// Control smMultiview.
+    /// Control lblMensajeError.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.ScriptManager smMultiview;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMensajeError;
 
     /// <summary>
-    /// Control upCotizador.
+    /// Control spinnerCargando.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.UpdatePanel upCotizador;
-
-    /// <summary>
-    /// Control divInformacionDomicilio.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Panel divInformacionDomicilio;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl spinnerCargando;
 
     /// <summary>
     /// Control txtNombreCliente.
@@ -94,13 +85,13 @@ public partial class PreSolicitud_Guardar
     protected global::System.Web.UI.WebControls.DropDownList ddlMunicipio;
 
     /// <summary>
-    /// Control ddlCiudad.
+    /// Control ddlCiudadPoblado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlCiudad;
+    protected global::System.Web.UI.WebControls.DropDownList ddlCiudadPoblado;
 
     /// <summary>
     /// Control ddlBarrioColonia.
@@ -112,15 +103,6 @@ public partial class PreSolicitud_Guardar
     protected global::System.Web.UI.WebControls.DropDownList ddlBarrioColonia;
 
     /// <summary>
-    /// Control txtDireccionDetallada.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtDireccionDetallada;
-
-    /// <summary>
     /// Control txtTelefonoCasa.
     /// </summary>
     /// <remarks>
@@ -130,47 +112,56 @@ public partial class PreSolicitud_Guardar
     protected global::System.Web.UI.WebControls.TextBox txtTelefonoCasa;
 
     /// <summary>
-    /// Control txtReferenciasDomicilio.
+    /// Control txtExtensionCliente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtReferenciasDomicilio;
+    protected global::System.Web.UI.WebControls.TextBox txtExtensionCliente;
 
     /// <summary>
-    /// Control PanelMensajeErrores.
+    /// Control txtExtensionRecursosHumanos.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl PanelMensajeErrores;
+    protected global::System.Web.UI.WebControls.TextBox txtExtensionRecursosHumanos;
 
     /// <summary>
-    /// Control lblMensaje.
+    /// Control ddlTipoInvestigacionDeCampo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMensaje;
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoInvestigacionDeCampo;
 
     /// <summary>
-    /// Control btnGuardarPreSolicitud.
+    /// Control ddlGestores.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Button btnGuardarPreSolicitud;
+    protected global::System.Web.UI.WebControls.DropDownList ddlGestores;
 
     /// <summary>
-    /// Control updateProgressCotizador.
+    /// Control txtDireccionDetallada.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.UpdateProgress updateProgressCotizador;
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtDireccionDetallada;
+
+    /// <summary>
+    /// Control txtReferenciasDireccionDetallada.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtReferenciasDireccionDetallada;
 }

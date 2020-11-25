@@ -8,71 +8,56 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Nueva Pre Solicitud</title>
-    <!-- BOOTSTRAP -->
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <style>
-        html, body {
-            background-color: #fff;
+        html {
+            background-color: rgb(255,255,255) !important;
         }
 
         .card {
-            box-shadow: none;
-        }
-
-        /* Loader */
-        .loading {
-            position: fixed;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background-color: transparent;
-        }
-
-        .loader {
-            left: 50%;
-            margin-left: -4em;
-            font-size: 10px;
-            border: .8em solid rgba(218, 219, 223, 1);
-            border-left: .8em solid rgba(58, 166, 165, 1);
-            animation: spin 1.1s infinite linear;
-        }
-
-            .loader, .loader:after {
-                border-radius: 50%;
-                width: 8em;
-                height: 8em;
-                display: block;
-                position: absolute;
-                top: 50%;
-                margin-top: -4.05em;
-            }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(360deg);
-            }
-
-            100% {
-                transform: rotate(0deg);
-            }
+            border: none;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
         }
     </style>
 </head>
-<body class="EstiloBody">
-    <form id="frmGuardarPreSolicitud" runat="server">
-        <asp:ScriptManager runat="server" ID="smMultiview"></asp:ScriptManager>
+<body>
+    <form id="frmPreSolicitud" runat="server" class="" action="#" data-parsley-excluded="[disabled]">
         <div class="card m-0">
-            <div class="card-body pt-0">
-                <asp:UpdatePanel runat="server" ID="upCotizador" UpdateMode="Always" ChildrenAsTriggers="True">
-                    <ContentTemplate>
-                        <asp:Panel ID="divInformacionDomicilio" runat="server" Visible="true">
+            <div class="card-header pb-1 pt-1">
+                <!-- loader -->
+                <div class="float-right p-1" id="Loader" style="display: none;">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <h6>Guardar nueva Pre Solicitud <small><span runat="server" id="lblMensajeError" class="text-danger" visible="false"></span></small></h6>
+            </div>
+            <div class="card-body">
 
-                            <h5 class="border-bottom pb-2">Guardar nueva Pre-Solicitud</h5>
+                <div id="smartwizard" class="h-100">
+                    <ul>
+                        <li><a href="#step-1" class="pt-3 pb-2 font-12">Informacion del cliente</a></li>
+                        <li><a href="#step-2" class="pt-3 pb-2 font-12">Documentación</a></li>
+                    </ul>
+                    <div>
+                        <!-- Información principal -->
+                        <div id="step-1" class="form-section">
 
-                            <!-- INFORMACION DEL CLIENTE -->
+                            <!-- loader -->
+                            <div class="float-right" id="spinnerCargando" runat="server" visible="false">
+                                <div class="spinner-border" role="status">
+                                    <span class="sr-only"></span>
+                                </div>
+                            </div>
                             <div class="form-group form-row">
                                 <div class="col-12">
                                     <label class="col-form-label">Cliente</label>
@@ -87,85 +72,89 @@
                                     <asp:TextBox ID="txtTelefonoCliente" type="tel" Enabled="false" CssClass="form-control form-control-sm col-form-label mascara-telefono" Text="" runat="server"></asp:TextBox>
                                 </div>
                             </div>
-
                             <div class="form-group form-row">
-                                <div class="col-sm-3">
+                                <div class="col-md-3 col-sm-6">
                                     <label class="col-form-label">Departamento</label>
-                                    <asp:DropDownList ID="ddlDepartamento" runat="server" CssClass="form-control form-control-sm col-form-label" OnSelectedIndexChanged="ddlDepartamento_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlDepartamento" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required"></asp:DropDownList>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-md-3 col-sm-6">
                                     <label class="col-form-label">Municipio</label>
-                                    <asp:DropDownList ID="ddlMunicipio" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label" OnSelectedIndexChanged="ddlMunicipio_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlMunicipio" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required"></asp:DropDownList>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-md-3 col-sm-6">
                                     <label class="col-form-label">Ciudad/Poblado</label>
-                                    <asp:DropDownList ID="ddlCiudad" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label" OnSelectedIndexChanged="ddlCiudad_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlCiudadPoblado" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required"></asp:DropDownList>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-md-3 col-sm-6">
                                     <label class="col-form-label">Barrio/Colonia</label>
-                                    <asp:DropDownList ID="ddlBarrioColonia" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlBarrioColonia" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required"></asp:DropDownList>
                                 </div>
                             </div>
-
                             <div class="form-group form-row">
-                                <div class="col-sm-6">
-                                    <label class="col-form-label">Detalle dirección</label>
-                                    <asp:TextBox ID="txtDireccionDetallada" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
+                                <div class="col-sm-2 col-12">
+                                    <label class="col-form-label">Teléfono (Trabajo/Domicilio)</label>
+                                    <asp:TextBox ID="txtTelefonoCasa" type="tel" CssClass="form-control form-control-sm col-form-label mascara-telefono" Text="" runat="server" required="required"></asp:TextBox>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label class="col-form-label">Teléfono casa</label>
-                                    <asp:TextBox ID="txtTelefonoCasa" type="tel" CssClass="form-control form-control-sm col-form-label mascara-telefono" Text="" runat="server"></asp:TextBox>
+                                <div class="col-sm-2 col-6">
+                                    <label class="col-form-label">Extensión cliente</label>
+                                    <asp:TextBox ID="txtExtensionCliente" type="tel" CssClass="form-control form-control-sm col-form-label mascara-extension" Text="" runat="server" required="required"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-2 col-6">
+                                    <label class="col-form-label">Extensión RRHH</label>
+                                    <asp:TextBox ID="txtExtensionRecursosHumanos" type="tel" CssClass="form-control form-control-sm col-form-label mascara-extension" Text="" runat="server" required="required"></asp:TextBox>
+                                </div>
+
+                                <div class="col-sm-3 col-6">
+                                    <label class="col-form-label">Tipo de investigación</label>
+                                    <asp:DropDownList ID="ddlTipoInvestigacionDeCampo" runat="server" CssClass="form-control form-control-sm" required="required"></asp:DropDownList>
+                                </div>
+                                <div class="col-sm-3 col-6">
+                                    <label class="col-form-label">Gestor de campo</label>
+                                    <asp:DropDownList ID="ddlGestores" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required"></asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="form-group form-row">
+                                <div class="col-sm-12">
+                                    <label class="col-form-label">Dirección detallada</label>
+                                    <textarea id="txtDireccionDetallada" runat="server" class="form-control" data-parsley-maxlength="256" data-parsley-minlength="15" rows="2" required="required"></textarea>
                                 </div>
                                 <div class="col-12">
-                                    <label class="col-form-label">Referencias del domicilio</label>
-                                    <textarea id="txtReferenciasDomicilio" runat="server" class="form-control" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2"></textarea>
+                                    <label class="col-form-label">Referencias de la dirección</label>
+                                    <textarea id="txtReferenciasDireccionDetallada" runat="server" class="form-control" data-parsley-maxlength="256" data-parsley-minlength="15" rows="2" required="required"></textarea>
                                 </div>
                             </div>
-
-                        </asp:Panel>
-                        <!-- Label para mensajes y advertencias -->
-                        <div class="form-group row mr-0 ml-0 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="false">
-                            <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server"></asp:Label>
                         </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="button-items col-sm-12">
-                                <asp:Button ID="btnGuardarPreSolicitud" Text="Guardar Pre-Solicitud" CssClass="btn btn-primary btn-lg waves-effect waves-light" UseSubmitBehavior="false" OnClick="btnGuardarPreSolicitud_Click" runat="server" />
+                        <!-- Documentación -->
+                        <div id="step-2" class="form-section">
+                            <div class="form-group row m-0 border-bottom border-gray">
+                                <div class="col-12 p-0">
+                                    <h6 class="mt-1">Documentación <small class="text-info">(Estimado usuario, recuerda subir toda la documentación hasta que ya vayas a guardar la pre solicitud)</small></h6>
+                                </div>
+                            </div>
+                            <!-- Div donde se generan dinamicamente los inputs para la documentación -->
+                            <div class="row pr-1 pl-1 text-center" id="DivDocumentacion">
                             </div>
                         </div>
-
-                        <script type="text/javascript">
-
-                            function CargarMascarasDeEntrada() {
-                                $(".mascara-telefono").inputmask("9999-9999");
-                            }
-
-                            Sys.Application.add_load(CargarMascarasDeEntrada);
-                        </script>
-                        <script type="text/javascript">
-                            Sys.WebForms.PageRequestManager.getInstance().add_beginRequest(BeginRequestHandler);
-                            function BeginRequestHandler(sender, args) { var oControl = args.get_postBackElement(); oControl.disabled = true; }
-                        </script>
-                    </ContentTemplate>
-                </asp:UpdatePanel>
-                <asp:UpdateProgress ID="updateProgressCotizador" runat="server">
-                    <ProgressTemplate>
-                        <div class="loading">
-                            <div class="loader"></div>
-                        </div>
-                    </ProgressTemplate>
-                </asp:UpdateProgress>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script>
         $(document).ready(function () {
-            CargarMascarasDeEntrada();
+            
+            $(".mascara-telefono").inputmask("9999-9999");
+            $(".mascara-extension").inputmask("999999");
         });
     </script>
+    <script src="/Scripts/plugins/steps/js/jquery.smartWizard.js"></script>
+    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
+    <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
+    <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
+    <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/Scripts/app/solicitudes/PreSolicitud_Guardar.js?v=20201023130420"></script>
 </body>
 </html>

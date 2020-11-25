@@ -758,6 +758,7 @@
     <Content Include="Content\images\logo_prestadito.png" />
     <Content Include="CSS\Estilos.css" />
     <Content Include="CSS\Estilos_Azul.css" />
+    <Content Include="CSS\Estilos_CotizadorMovil.css" />
     <Content Include="CSS\Estilos_CSS.css" />
     <Content Include="CSS\Imprimir.css" />
     <Content Include="CSS\ImprimirTickets.css" />
@@ -1255,7 +1256,9 @@
     <Content Include="Scripts\app\Aval\Aval_Registrar.js" />
     <Content Include="Scripts\app\CoreMovil\BandejaMisSolicitudes.js" />
     <Content Include="Scripts\app\CoreMovil\Clientes_BandejaPrecalificados.js" />
+    <Content Include="Scripts\app\CoreMovil\CotizadorMovil.js" />
     <Content Include="Scripts\app\solicitudes\Garantia_Actualizar.js" />
+    <Content Include="Scripts\app\solicitudes\PreSolicitud_Guardar.js" />
     <Content Include="Scripts\app\solicitudes\Garantia_Registrar.js" />
     <Content Include="Scripts\app\Negociaciones\Negociaciones_Registrar.js" />
     <Content Include="Scripts\app\PreSolicitudes\PreSolicitud_Listado.js" />

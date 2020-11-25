@@ -29,20 +29,27 @@ public partial class Garantia_Registrar : System.Web.UI.Page
         {
             var lcURL = Request.Url.ToString();
             var liParamStart = lcURL.IndexOf("?");
+
             DSC = new DSCore.DataCrypt();
             Documentos_Secciones_Garantia = new List<SeccionGarantia_ViewModel>();
 
             string lcParametros;
-            if (liParamStart > 0)
-                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-            else
-                lcParametros = String.Empty;
 
-            if (lcParametros != String.Empty)
+            if (liParamStart > 0)
+            {
+                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
+            }
+            else
+            {
+                lcParametros = string.Empty;
+            }
+
+            if (lcParametros != string.Empty)
             {
                 var pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                 pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
@@ -51,7 +58,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 HttpContext.Current.Session["ListaDocumentosGarantia"] = null;
-                Session.Timeout = 1440;
+                Session.Timeout = 10080;
             }
             LlenarListas();
         }
@@ -253,7 +260,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@pnValorGarantia", garantia.ValorMercado);
                         sqlComando.Parameters.AddWithValue("@pnValorPrima", garantia.ValorPrima);
                         sqlComando.Parameters.AddWithValue("@pnValorFinanciado", garantia.ValorFinanciado);
-                        sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", garantia.GastosDeCierre);                        
+                        sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", garantia.GastosDeCierre);
                         sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
                         sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.esDigitadoManualmente);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -479,7 +486,7 @@ public partial class Garantia_Registrar : System.Web.UI.Page
         public string SerieDos { get; set; }
         public string SerieChasis { get; set; }
         public string SerieMotor { get; set; }
-        public string GPS { get; set; }        
+        public string GPS { get; set; }
         public string Comentario { get; set; }
         public bool esDigitadoManualmente { get; set; }
 
