@@ -50,7 +50,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 var pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                
+
                 pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                 pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
@@ -406,74 +406,23 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             sqlResultado.Read();
 
+                            var idTipoInvestigacion = sqlResultado["fiIDTipoDeUbicacion"].ToString(); // 1 = Domicilio, 2 = Trabajo
                             var estadoPreSolicitud = sqlResultado["fiEstadoPreSolicitud"].ToString();
-
-                            txtTelefonoCasa.Text = sqlResultado["fcTelefonoCasa"].ToString();
-                            txtTelefonoCasa.Enabled = false;
-
-                            txtDireccionDetalladaDomicilio.Text = sqlResultado["fcDireccionDetalladaDomicilio"].ToString();
-                            txtDireccionDetalladaDomicilio.Enabled = false;
-
-                            txtReferenciasDelDomicilio.Value = sqlResultado["fcReferenciasDireccionDetalladaDomicilio"].ToString();
-                            txtReferenciasDelDomicilio.Disabled = true;
-
-                            /* Departamento */
-                            ddlDepartamentoDomicilio.SelectedValue = sqlResultado["fiIDDepartamento"].ToString();
-                            ddlDepartamentoDomicilio.Enabled = false;
-
-                            /* Municipio del domicilio */
-                            var municipiosDeDepartamento = CargarMunicipios(int.Parse(sqlResultado["fiIDDepartamento"].ToString()));
-
-                            ddlMunicipioDomicilio.Items.Clear();
-                            ddlMunicipioDomicilio.Items.Add(new ListItem("Seleccionar", ""));
-
-                            municipiosDeDepartamento.ForEach(municipio =>
-                            {
-                                ddlMunicipioDomicilio.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
-                            });
-                            ddlMunicipioDomicilio.SelectedValue = sqlResultado["fiIDMunicipio"].ToString();
-                            ddlMunicipioDomicilio.Enabled = false;
-
-                            /* Ciudad o Poblado del domicilio */
-                            var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()));
-
-                            ddlCiudadPobladoDomicilio.Items.Clear();
-                            ddlCiudadPobladoDomicilio.Items.Add(new ListItem("Seleccionar", ""));
-
-                            ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
-                            {
-                                ddlCiudadPobladoDomicilio.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
-                            });
-                            ddlCiudadPobladoDomicilio.SelectedValue = sqlResultado["fiIDCiudad"].ToString();
-                            ddlCiudadPobladoDomicilio.Enabled = false;
-
-                            /* Barrio o colonia del domicilio */
-                            var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()), int.Parse(sqlResultado["fiIDCiudad"].ToString()));
-
-                            ddlBarrioColoniaDomicilio.Items.Clear();
-                            ddlBarrioColoniaDomicilio.Items.Add(new ListItem("Seleccionar", ""));
-
-                            barriosColoniasDelPoblado.ForEach(barrioColonia =>
-                            {
-                                ddlBarrioColoniaDomicilio.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
-                            });
-                            ddlBarrioColoniaDomicilio.SelectedValue = sqlResultado["fiIDBarrioColonia"].ToString();
-                            ddlBarrioColoniaDomicilio.Enabled = false;
 
                             switch (estadoPreSolicitud)
                             {
                                 case "1":
-
+                                case "2":
                                     Precalificado.PermitirIngresarSolicitud = false;
                                     Precalificado.MensajePermitirIngresarSolicitud += "Esta solicitud no puede ser ingresada porque hay una Pre Solicitud pendiente asociada a este cliente, comunicarse con el departamento de gestoría.";
                                     lblMensaje.InnerText = "(Esta solicitud no puede ser ingresada porque hay una Pre Solicitud pendiente asociada a este cliente, comunicarse con el departamento de gestoría)";
                                     lblMensaje.Visible = true;
                                     break;
 
-                                case "2":
+                                case "3":
                                     break;
 
-                                case "3":
+                                case "4":
                                     Precalificado.PermitirIngresarSolicitud = false;
                                     Precalificado.MensajePermitirIngresarSolicitud += "Esta solicitud no puede ser ingresada porque hay una Pre Solicitud rechazada asociada a este cliente, comunicarse con el departamento de gestoría.";
                                     lblMensaje.InnerText = "(Esta solicitud no puede ser ingresada porque hay una Pre Solicitud rechazada asociada a este cliente, comunicarse con el departamento de gestoría)";
@@ -489,6 +438,127 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                     break;
                             }
 
+                            if (idTipoInvestigacion == "1" && estadoPreSolicitud == "3") // Investigacion de domicilio y que haya sido aprobada
+                            {
+                                divInformacionPreSolicitud_Domicilio.Visible = true;
+
+                                txtTelefonoCasa.Text = sqlResultado["fcTelefonoAdicional"].ToString();
+                                txtTelefonoCasa.ReadOnly = true;
+
+                                txtDireccionDetalladaDomicilio.Text = sqlResultado["fcDireccionDetallada"].ToString();
+                                txtDireccionDetalladaDomicilio.ReadOnly = true;
+
+                                txtReferenciasDelDomicilio.Value = sqlResultado["fcReferenciasDireccionDetallada"].ToString();
+                                txtReferenciasDelDomicilio.Disabled = true;
+
+                                /* Departamento */
+                                ddlDepartamentoDomicilio.SelectedValue = sqlResultado["fiIDDepartamento"].ToString();
+                                ddlDepartamentoDomicilio.Enabled = false;
+
+                                /* Municipio del domicilio */
+                                var municipiosDeDepartamento = CargarMunicipios(int.Parse(sqlResultado["fiIDDepartamento"].ToString()));
+
+                                ddlMunicipioDomicilio.Items.Clear();
+                                ddlMunicipioDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+                                municipiosDeDepartamento.ForEach(municipio =>
+                                {
+                                    ddlMunicipioDomicilio.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
+                                });
+                                ddlMunicipioDomicilio.SelectedValue = sqlResultado["fiIDMunicipio"].ToString();
+                                ddlMunicipioDomicilio.Enabled = false;
+
+                                /* Ciudad o Poblado del domicilio */
+                                var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()));
+
+                                ddlCiudadPobladoDomicilio.Items.Clear();
+                                ddlCiudadPobladoDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+                                ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
+                                {
+                                    ddlCiudadPobladoDomicilio.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
+                                });
+                                ddlCiudadPobladoDomicilio.SelectedValue = sqlResultado["fiIDCiudad"].ToString();
+                                ddlCiudadPobladoDomicilio.Enabled = false;
+
+                                /* Barrio o colonia del domicilio */
+                                var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()), int.Parse(sqlResultado["fiIDCiudad"].ToString()));
+
+                                ddlBarrioColoniaDomicilio.Items.Clear();
+                                ddlBarrioColoniaDomicilio.Items.Add(new ListItem("Seleccionar", ""));
+
+                                barriosColoniasDelPoblado.ForEach(barrioColonia =>
+                                {
+                                    ddlBarrioColoniaDomicilio.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
+                                });
+                                ddlBarrioColoniaDomicilio.SelectedValue = sqlResultado["fiIDBarrioColonia"].ToString();
+                                ddlBarrioColoniaDomicilio.Enabled = false;
+                            }
+                            else if (idTipoInvestigacion == "2" && estadoPreSolicitud == "3") // Investigacion de trabajo y que haya sido aprobada
+                            {
+                                divInformacionPreSolicitud_Trabajo.Visible = true;
+
+                                txtNombreDelTrabajo.Text = sqlResultado["fcNombreTrabajo"].ToString();
+                                txtNombreDelTrabajo.ReadOnly = true;
+
+                                txtTelefonoEmpresa.Text = sqlResultado["fcTelefonoAdicional"].ToString();
+                                txtTelefonoEmpresa.ReadOnly = true;
+
+                                txtExtensionRecursosHumanos.Text = sqlResultado["fcExtensionRecursosHumanos"].ToString();
+                                txtExtensionRecursosHumanos.ReadOnly = true;
+
+                                txtExtensionCliente.Text = sqlResultado["fcExtensionCliente"].ToString();
+                                txtExtensionCliente.ReadOnly = true;
+
+                                txtDireccionDetalladaEmpresa.Text = sqlResultado["fcDireccionDetallada"].ToString();
+                                txtDireccionDetalladaEmpresa.ReadOnly = true;
+
+                                txtReferenciasEmpresa.Value = sqlResultado["fcReferenciasDireccionDetallada"].ToString();
+                                txtReferenciasEmpresa.Disabled = true;
+
+                                /* Departamento */
+                                ddlDepartamentoEmpresa.SelectedValue = sqlResultado["fiIDDepartamento"].ToString();
+                                ddlDepartamentoEmpresa.Enabled = false;
+
+                                /* Municipio */
+                                var municipiosDeDepartamento = CargarMunicipios(int.Parse(sqlResultado["fiIDDepartamento"].ToString()));
+
+                                ddlMunicipioEmpresa.Items.Clear();
+                                ddlMunicipioEmpresa.Items.Add(new ListItem("Seleccionar", ""));
+
+                                municipiosDeDepartamento.ForEach(municipio =>
+                                {
+                                    ddlMunicipioEmpresa.Items.Add(new ListItem(municipio.NombreMunicipio, municipio.IdMunicipio.ToString()));
+                                });
+                                ddlMunicipioEmpresa.SelectedValue = sqlResultado["fiIDMunicipio"].ToString();
+                                ddlMunicipioEmpresa.Enabled = false;
+
+                                /* Ciudad o Poblado */
+                                var ciudadesPobladosDelMunicipio = CargarCiudadesPoblados(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()));
+
+                                ddlCiudadPobladoEmpresa.Items.Clear();
+                                ddlCiudadPobladoEmpresa.Items.Add(new ListItem("Seleccionar", ""));
+
+                                ciudadesPobladosDelMunicipio.ForEach(ciudadPoblado =>
+                                {
+                                    ddlCiudadPobladoEmpresa.Items.Add(new ListItem(ciudadPoblado.NombreCiudadPoblado, ciudadPoblado.IdCiudadPoblado.ToString()));
+                                });
+                                ddlCiudadPobladoEmpresa.SelectedValue = sqlResultado["fiIDCiudad"].ToString();
+                                ddlCiudadPobladoEmpresa.Enabled = false;
+
+                                /* Barrio o colonia */
+                                var barriosColoniasDelPoblado = CargarBarriosColonias(int.Parse(sqlResultado["fiIDDepartamento"].ToString()), int.Parse(sqlResultado["fiIDMunicipio"].ToString()), int.Parse(sqlResultado["fiIDCiudad"].ToString()));
+
+                                ddlBarrioColoniaEmpresa.Items.Clear();
+                                ddlBarrioColoniaEmpresa.Items.Add(new ListItem("Seleccionar", ""));
+
+                                barriosColoniasDelPoblado.ForEach(barrioColonia =>
+                                {
+                                    ddlBarrioColoniaEmpresa.Items.Add(new ListItem(barrioColonia.NombreBarrioColonia, barrioColonia.IdBarrioColonia.ToString()));
+                                });
+                                ddlBarrioColoniaEmpresa.SelectedValue = sqlResultado["fiIDBarrioColonia"].ToString();
+                                ddlBarrioColoniaEmpresa.Enabled = false;
+                            }
                         } // if sqlResultado.HasRows                      
                     } // sqlComando.ExecuteReader()
                 } // using command
@@ -1620,8 +1690,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var lcParametros = "";
-            var pcEncriptado = "";
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
             var liParamStart = Url.IndexOf("?");
 
             if (liParamStart > 0)

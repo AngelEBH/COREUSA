@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Ingresar solicitud de crédito</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style>
@@ -310,7 +310,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6 border-right border-gray">
+                                <div class="col-md-8 border-right border-gray">
                                     <h6 class="mt-3 mb-1">Información básica</h6>
 
                                     <div class="form-group row">
@@ -359,7 +359,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <h6 class="mt-3 mb-1">Información de contacto</h6>
 
                                     <div class="form-group row">
@@ -378,9 +378,20 @@
 
                         <!-- Información del domicilio del cliente -->
                         <div id="step-3" class="form-section">
-                            <div class="form-group row m-0 border-bottom border-gray">
-                                <div class="col-12 p-0">
-                                    <h6 class="mt-1">Información del domicilio</h6>
+
+                            <div class="row justify-content-between m-0 border-bottom border-gray">
+                                <div class="col-auto">
+                                    <div class="form-group row align-items-center mb-1">
+                                        <h6 class="mt-1">Información del domicilio</h6>
+                                    </div>
+                                </div>
+                                <div class="col-auto pr-0 align-items-center" runat="server" id="divInformacionPreSolicitud_Domicilio" visible="false">
+                                    <div class="m-0 p-0">
+                                        <div class="alert alert-info bg-info text-white mb-0 pt-1 pb-1" role="alert">
+                                            <i class="fas fa-exclamation-circle text-white"></i>
+                                            Parte de la información <strong>ha sido extraída de la presolicitud</strong>.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -450,9 +461,19 @@
                         <!-- Información laboral del cliente -->
                         <div id="step-4" class="form-section">
 
-                            <div class="form-group row m-0 border-bottom border-gray">
-                                <div class="col-12 p-0">
-                                    <h6 class="mt-1">Información laboral</h6>
+                            <div class="row justify-content-between m-0 border-bottom border-gray">
+                                <div class="col-auto">
+                                    <div class="form-group row align-items-center mb-0">
+                                        <h6 class="mt-1">Información laboral</h6>
+                                    </div>
+                                </div>
+                                <div class="col-auto pr-0 align-items-center" runat="server" id="divInformacionPreSolicitud_Trabajo" visible="false">
+                                    <div class="m-0 p-0">
+                                        <div class="alert alert-info bg-info text-white mb-0 pt-1 pb-1" role="alert">
+                                            <i class="fas fa-exclamation-circle text-white"></i>
+                                            Parte de la información <strong>ha sido extraída de la presolicitud</strong>.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -739,6 +760,6 @@
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_CoreFinanciero.js?v=20201119161525"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_CoreFinanciero.js?v=20201126144925"></script>
 </body>
 </html>

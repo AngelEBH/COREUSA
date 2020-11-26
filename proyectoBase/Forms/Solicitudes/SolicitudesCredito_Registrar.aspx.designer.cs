@@ -571,22 +571,13 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtNumeroTelefono;
 
     /// <summary>
-    /// Control ddlTipoDeVivienda.
+    /// Control divInformacionPreSolicitud_Domicilio.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeVivienda;
-
-    /// <summary>
-    /// Control ddlTiempoDeResidir.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlTiempoDeResidir;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInformacionPreSolicitud_Domicilio;
 
     /// <summary>
     /// Control ddlDepartamentoDomicilio.
@@ -625,6 +616,24 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.DropDownList ddlBarrioColoniaDomicilio;
 
     /// <summary>
+    /// Control ddlTipoDeVivienda.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeVivienda;
+
+    /// <summary>
+    /// Control ddlTiempoDeResidir.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlTiempoDeResidir;
+
+    /// <summary>
     /// Control txtTelefonoCasa.
     /// </summary>
     /// <remarks>
@@ -650,6 +659,15 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtReferenciasDelDomicilio;
+
+    /// <summary>
+    /// Control divInformacionPreSolicitud_Trabajo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInformacionPreSolicitud_Trabajo;
 
     /// <summary>
     /// Control txtNombreDelTrabajo.
