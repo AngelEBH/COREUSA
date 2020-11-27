@@ -61,7 +61,8 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
 
-                    HttpContext.Current.Session["ListaDocumentosPreSolicitud"] = null;
+                    HttpContext.Current.Session["ListaDocumentosRequeridosPreSolicitud"] = null;
+                    HttpContext.Current.Session["ListaDocumentosAdjuntadosPreSolicitud"] = null;
                     HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                     Session.Timeout = 10080;
 
@@ -106,7 +107,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                         var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
 
                         /* Guardar listado de documentos en una session propia de esta pantalla */
-                        Session["ListaDocumentosPreSolicitud"] = list;
+                        Session["ListaDocumentosAdjuntadosPreSolicitud"] = list;
 
                         break;
 
@@ -188,7 +189,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                             });
                         }
 
-                        Session["ListaDocumentosPreSolicitud"] = ListaDocumentosRequeridos;
+                        Session["ListaDocumentosRequeridosPreSolicitud"] = ListaDocumentosRequeridos;
                     }
                 }
 
@@ -413,7 +414,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
     [WebMethod]
     public static List<PreSolicitud_Guardar_DocumentosRequeridos_ViewModel> CargarDocumentosRequeridos()
     {
-        return (List<PreSolicitud_Guardar_DocumentosRequeridos_ViewModel>)HttpContext.Current.Session["ListaDocumentosPreSolicitud"];
+        return (List<PreSolicitud_Guardar_DocumentosRequeridos_ViewModel>)HttpContext.Current.Session["ListaDocumentosRequeridosPreSolicitud"];
     }
 
     [WebMethod]
@@ -447,6 +448,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@piIDTipoDeUbicacion", preSolicitud.IdTipoDeUbicacion);
                         sqlComando.Parameters.AddWithValue("@piIDTipoDeSolicitud", idTipoDeSolicitud);
                         sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                        sqlComando.Parameters.AddWithValue("@pcNombreTrabajo", preSolicitud.NombreTrabajo.Trim());
                         sqlComando.Parameters.AddWithValue("@pcTelefonoAdicional", preSolicitud.TelefonoAdicional.Trim());
                         sqlComando.Parameters.AddWithValue("@pcExtensionRecursosHumanos", preSolicitud.ExtensionRecursosHumanos.Replace("_", ""));
                         sqlComando.Parameters.AddWithValue("@pcExtensionCliente", preSolicitud.ExtensionCliente.Replace("_", ""));
@@ -488,10 +490,10 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     /* Lista de documentos que se va ingresar en la base de datos y se va mover al nuevo directorio */
                     var documentosPreSolicitud = new List<SolicitudesDocumentosViewModel>();
 
-                    if (HttpContext.Current.Session["ListaDocumentosPreSolicitud"] != null)
+                    if (HttpContext.Current.Session["ListaDocumentosAdjuntadosPreSolicitud"] != null)
                     {
                         /* lista de documentos adjuntados por el usuario */
-                        var listaDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaDocumentosPreSolicitud"];
+                        var listaDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaDocumentosAdjuntadosPreSolicitud"];
 
                         if (listaDocumentos != null)
                         {
@@ -704,6 +706,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
         public int IdTipoDeUbicacion { get; set; }
         public int IdTipoDeSolicitud { get; set; }
         public string Identidad { get; set; }
+        public string NombreTrabajo { get; set; }
         public string TelefonoAdicional { get; set; }
         public string ExtensionRecursosHumanos { get; set; }
         public string ExtensionCliente { get; set; }

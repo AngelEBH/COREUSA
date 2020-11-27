@@ -137,12 +137,19 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                                 IdPreSolicitud = int.Parse(reader["fiIDPreSolicitud"].ToString()),
                                 IdPais = int.Parse(reader["fiIDPais"].ToString()),
                                 IdCanal = int.Parse(reader["fiIDCanal"].ToString()),
+                                IdTipoDeUbicacion = int.Parse(reader["fiIDTipoDeUbicacion"].ToString()),
                                 CentroDeCosto = reader["fcCentrodeCosto"].ToString(),
                                 Agencia = reader["fcNombreAgencia"].ToString(),
                                 IdentidadCliente = reader["fcIdentidad"].ToString(),
                                 NombreCliente = reader["fcNombreCliente"].ToString(),
-                                TelefonoCasa = reader["fcTelefonoAdicional"].ToString(),
                                 Telefono = reader["fcTelefono"].ToString(),
+                                NombreTrabajo = reader["fcNombreTrabajo"].ToString(),
+                                TelefonoAdicional = reader["fcTelefonoAdicional"].ToString(),
+                                ExtensionRecursosHumanos = reader["fcExtensionRecursosHumanos"].ToString(),
+                                ExtensionCliente = reader["fcExtensionCliente"].ToString(),
+
+
+
                                 IdDepartamento = int.Parse(reader["fiIDDepartamento"].ToString()),
                                 Departamento = reader["fcDepartamento"].ToString(),
                                 IdMunicipio = int.Parse(reader["fiIDMunicipio"].ToString()),
@@ -172,9 +179,9 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                                 IdInvestigacionDeCampo = byte.Parse(reader["fiIDInvestigacionDeCampo"].ToString()),
 
                                 TipoResultadoDeCampo = int.Parse(reader["fiTipodeResultado"].ToString()), // para poner clase text danger, success, warining, etc
-                                ResultadoDeCampo = reader["fcResultadodeCampo"].ToString(), // Aprobado, Rechazado, Pendiente
                                 GestionDeCampo = reader["fcGestion"].ToString(), // Del Catalogo de investigaciones
                                 FechaValidacion = (DateTime)reader["fdFechaValidacion"],
+                                FechaDescargadoPorGestor = (DateTime)reader["fdFechaDescargadaPorGestor"],
                                 ObservacionesDeCampo = reader["fcObservacionesCampo"].ToString(),
 
                                 IdEstadoDeGestion = byte.Parse(reader["fiIDEstadoDeGestion"].ToString()), // para cuestiones internas de la bbdd
@@ -254,12 +261,17 @@ public class PreSolicitud_Detalles_ViewModel
     public int IdPreSolicitud { get; set; }
     public int IdPais { get; set; }
     public int IdCanal { get; set; }
+    public int IdTipoDeSolicitud { get; set; }
+    public int IdTipoDeUbicacion { get; set; }
     public string CentroDeCosto { get; set; }
     public string Agencia { get; set; }
     public string IdentidadCliente { get; set; }
     public string NombreCliente { get; set; }
     public string Telefono { get; set; }
-    public string TelefonoCasa { get; set; }
+    public string TelefonoAdicional { get; set; }
+    public string NombreTrabajo { get; set; }
+    public string ExtensionRecursosHumanos { get; set; }
+    public string ExtensionCliente { get; set; }
     public int IdDepartamento { get; set; }
     public string Departamento { get; set; }
     public int IdMunicipio { get; set; }
@@ -288,6 +300,7 @@ public class PreSolicitud_Detalles_ViewModel
     public int TipoResultadoDeCampo { get; set; }
     public string ResultadoDeCampo { get; set; }
     public string GestionDeCampo { get; set; }
+    public DateTime FechaDescargadoPorGestor { get; set; }
     public DateTime FechaValidacion { get; set; }
     public string ObservacionesDeCampo { get; set; }
     public int IdEstadoDeGestion { get; set; }

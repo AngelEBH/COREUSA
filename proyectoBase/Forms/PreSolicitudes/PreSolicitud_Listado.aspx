@@ -108,7 +108,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <h6 class="modal-title w-100 mt-0" id="modalDetallesLabel" style="text-align: center">Detalles Pre Solicitud &nbsp; <span id="lblEstadoPreSolicitud" class="btn"></span></h6>
+                    <h6 class="modal-title w-100 mt-0" id="modalDetallesLabel" style="text-align: center">Detalles Pre Solicitud <small class="font-weight-bold">(<span id="lblTipoDeUbicacion"></span>)</small></h6>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
@@ -125,6 +125,24 @@
                         <div class="col-6">
                             <label class="col-form-label">Teléfono</label>
                             <input type="tel" id="txtTelefonoCliente" disabled="disabled" class="form-control form-control-sm col-form-label mascara-telefono" />
+                        </div>
+                    </div>
+                    <div class="form-group form-row">
+                        <div class="col-lg-3 col-sm-6">
+                            <label class="col-form-label">Nombre del trabajo</label>
+                            <input type="tel" id="txtNombreTrabajo" disabled="disabled" class="form-control form-control-sm col-form-label" />
+                        </div>
+                        <div class="col-lg-3 col-sm-6">
+                            <label class="col-form-label">Teléfono <span id="lblTipoNumeroAdicional">del domicilio</span></label>
+                            <input type="tel" id="txtTelefonoAdicional" disabled="disabled" class="form-control form-control-sm col-form-label mascara-telefono" />
+                        </div>
+                        <div class="col-lg-3 col-sm-6">
+                            <label class="col-form-label">Extensión RRHH</label>
+                            <input type="tel" id="txtExtensionRecursosHumanos" disabled="disabled" class="form-control form-control-sm col-form-label mascara-telefono" />
+                        </div>
+                        <div class="col-lg-3 col-sm-6">
+                            <label class="col-form-label">Extensión cliente</label>
+                            <input type="tel" id="txtExtensionCliente" disabled="disabled" class="form-control form-control-sm col-form-label mascara-telefono" />
                         </div>
                     </div>
                     <div class="form-group form-row">
@@ -146,34 +164,34 @@
                         </div>
                     </div>
                     <div class="form-group form-row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <label class="col-form-label">Detalle dirección</label>
-                            <input type="text" id="txtDireccionDetallada" disabled="disabled" class="form-control form-control-sm col-form-label" />
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Teléfono casa</label>
-                            <input type="tel" id="txtTelefonoCasa" disabled="disabled" class="form-control form-control-sm col-form-label mascara-telefono" />
+                            <textarea id="txtDireccionDetallada" disabled="disabled" class="form-control" rows="2"></textarea>
                         </div>
                         <div class="col-12">
                             <label class="col-form-label">Referencias del domicilio</label>
-                            <textarea id="txtReferenciasDomicilio" disabled="disabled" class="form-control" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2"></textarea>
+                            <textarea id="txtReferenciasDireccionDetallada" disabled="disabled" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <h6 class="border-bottom pb-1">Información de gestoría &nbsp; <span id="lblResultadoGestoria" class="btn"></span></h6>
+                        <h6 class="border-bottom pb-1">Información de gestoría &nbsp; <span id="lblEstadoPreSolicitud" class="btn"></span></h6>
                     </div>
                     <div class="form-group form-row">
                         <div class="col-sm-12">
                             <label class="col-form-label">Gestor asignado</label>
                             <input type="text" id="txtGestorAsignado" disabled="disabled" class="form-control form-control-sm col-form-label" />
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-lg-6 col-12">
                             <label class="col-form-label">Gestión</label>
                             <input type="text" id="txtGestion" disabled="disabled" class="form-control form-control-sm col-form-label" />
                         </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Fecha Validación</label>
+                        <div class="col-lg-3 col-6">
+                            <label class="col-form-label">Fecha Recibida</label>
+                            <input type="text" id="txtFechaDescargadoPorGestor" disabled="disabled" class="form-control form-control-sm col-form-label" />
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <label class="col-form-label">Fecha Validado</label>
                             <input type="text" id="txtFechaValidacion" disabled="disabled" class="form-control form-control-sm col-form-label" />
                         </div>
                         <div class="col-12">
@@ -238,6 +256,6 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="/Scripts/app/Solicitudes/PreSolicitud_Listado.js?V=202011251718"></script>
+    <script src="/Scripts/app/Solicitudes/PreSolicitud_Listado.js?V=202026115484185"></script>
 </body>
 </html>

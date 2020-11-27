@@ -14,9 +14,10 @@ var btnFinalizar = $('<button type="button" id="btnGuardarPreSolicitud"></button
             var preSolicitud = {
                 IdTipoDeUbicacion: $("#ddlTipoInvestigacionDeCampo :selected").val(),
                 IdGestorValidador: $("#ddlGestores :selected").val(),
-                TelefonoAdicional: $("#txtTelefonoCasa").val(),
-                ExtensionRecursosHumanos: $("#txtTelefonoCasa").val(),
-                ExtensionCliente: $("#txtTelefonoCasa").val(),                
+                NombreTrabajo: $("#txtNombreTrabajo").val(),
+                TelefonoAdicional: $("#txtTelefonoAdicional").val(),
+                ExtensionRecursosHumanos: $("#txtExtensionRecursosHumanos").val(),
+                ExtensionCliente: $("#txtExtensionCliente").val(),
                 IdDepartamento: $("#ddlDepartamento :selected").val(),
                 IdMunicipio: $("#ddlMunicipio :selected").val(),
                 IdCiudadPoblado: $("#ddlCiudadPoblado :selected").val(),
@@ -122,6 +123,7 @@ $(document).ready(function () {
     });
 
     CargarDocumentosRequeridos();
+    
 });
 
 
@@ -293,6 +295,25 @@ $("#ddlCiudadPoblado").change(function () {
     var idMunicipio = $("#ddlMunicipio option:selected").val();
     var idCiudadPoblado = $("#ddlCiudadPoblado option:selected").val();
     CargarBarriosColonias(idDepartamento, idMunicipio, idCiudadPoblado, '', 0);
+});
+
+
+$("#ddlTipoInvestigacionDeCampo").on('change', function () {
+
+    debugger;
+
+    let tipoDeInvestigacion = $("#ddlTipoInvestigacionDeCampo :selected").val();
+
+    if (tipoDeInvestigacion == 1) {
+
+        $("#txtNombreTrabajo,#txtExtensionCliente,#txtExtensionRecursosHumanos").val('').prop('disabled', true);
+        $("#lblTipoDeNumeroDeTelefono").text(' del domicilio');
+    }
+    else if (tipoDeInvestigacion == 2){
+
+        $("#txtNombreTrabajo,#txtExtensionCliente,#txtExtensionRecursosHumanos").val('').prop('disabled', false);
+        $("#lblTipoDeNumeroDeTelefono").text(' del trabajo');
+    }
 });
 
 

@@ -73,44 +73,53 @@
                                 </div>
                             </div>
                             <div class="form-group form-row">
-                                <div class="col-md-3 col-sm-6">
-                                    <label class="col-form-label">Departamento</label>
-                                    <asp:DropDownList ID="ddlDepartamento" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required"></asp:DropDownList>
+                                <div class="col-md-4 col-sm-4 col-6">
+                                    <label class="col-form-label">Tipo de investigación</label>
+                                    <asp:DropDownList ID="ddlTipoInvestigacionDeCampo" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-errors-container="#error-ddlTipoInvestigacionDeCampo"></asp:DropDownList>
+                                    <div id="error-ddlTipoInvestigacionDeCampo"></div>
                                 </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <label class="col-form-label">Municipio</label>
-                                    <asp:DropDownList ID="ddlMunicipio" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required"></asp:DropDownList>
+                                <div class="col-md-4 col-sm-4 col-6">
+                                    <label class="col-form-label">Gestor de campo</label>
+                                    <asp:DropDownList ID="ddlGestores" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-errors-container="#error-ddlGestores"></asp:DropDownList>
+                                    <div id="error-ddlGestores"></div>
                                 </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <label class="col-form-label">Ciudad/Poblado</label>
-                                    <asp:DropDownList ID="ddlCiudadPoblado" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required"></asp:DropDownList>
+                                <div class="col-md-4 col-sm-4 col-12">
+                                    <label class="col-form-label">Nombre del trabajo</label>
+                                    <asp:TextBox ID="txtNombreTrabajo" type="tel" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
                                 </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <label class="col-form-label">Barrio/Colonia</label>
-                                    <asp:DropDownList ID="ddlBarrioColonia" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required"></asp:DropDownList>
+                                <div class="col-md-4 col-sm-4 col-12">
+                                    <label class="col-form-label">Teléfono <span class="font-weight-bold" id="lblTipoDeNumeroDeTelefono"></span></label>
+                                    <asp:TextBox ID="txtTelefonoAdicional" type="tel" CssClass="form-control form-control-sm col-form-label mascara-telefono" Text="" runat="server" required="required"></asp:TextBox>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-6">
+                                    <label class="col-form-label">Extensión cliente</label>
+                                    <asp:TextBox ID="txtExtensionCliente" type="tel" CssClass="form-control form-control-sm col-form-label mascara-extension" Text="" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-6">
+                                    <label class="col-form-label">Extensión RRHH</label>
+                                    <asp:TextBox ID="txtExtensionRecursosHumanos" type="tel" CssClass="form-control form-control-sm col-form-label mascara-extension" Text="" runat="server"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="form-group form-row">
-                                <div class="col-sm-2 col-12">
-                                    <label class="col-form-label">Teléfono (Trabajo/Domicilio)</label>
-                                    <asp:TextBox ID="txtTelefonoCasa" type="tel" CssClass="form-control form-control-sm col-form-label mascara-telefono" Text="" runat="server" required="required"></asp:TextBox>
+                                <div class="col-md-3 col-sm-6">
+                                    <label class="col-form-label">Departamento</label>
+                                    <asp:DropDownList ID="ddlDepartamento" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required" data-parsley-errors-container="#error-ddlDepartamento"></asp:DropDownList>
+                                    <div id="error-ddlDepartamento"></div>
                                 </div>
-                                <div class="col-sm-2 col-6">
-                                    <label class="col-form-label">Extensión cliente</label>
-                                    <asp:TextBox ID="txtExtensionCliente" type="tel" CssClass="form-control form-control-sm col-form-label mascara-extension" Text="" runat="server" required="required"></asp:TextBox>
+                                <div class="col-md-3 col-sm-6">
+                                    <label class="col-form-label">Municipio</label>
+                                    <asp:DropDownList ID="ddlMunicipio" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required" data-parsley-errors-container="#error-ddlMunicipio"></asp:DropDownList>
+                                    <div id="error-ddlMunicipio"></div>
                                 </div>
-                                <div class="col-sm-2 col-6">
-                                    <label class="col-form-label">Extensión RRHH</label>
-                                    <asp:TextBox ID="txtExtensionRecursosHumanos" type="tel" CssClass="form-control form-control-sm col-form-label mascara-extension" Text="" runat="server" required="required"></asp:TextBox>
+                                <div class="col-md-3 col-sm-6">
+                                    <label class="col-form-label">Ciudad/Poblado</label>
+                                    <asp:DropDownList ID="ddlCiudadPoblado" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required" data-parsley-errors-container="#error-ddlCiudadPoblado"></asp:DropDownList>
+                                    <div id="error-ddlCiudadPoblado"></div>
                                 </div>
-
-                                <div class="col-sm-3 col-6">
-                                    <label class="col-form-label">Tipo de investigación</label>
-                                    <asp:DropDownList ID="ddlTipoInvestigacionDeCampo" runat="server" CssClass="form-control form-control-sm" required="required"></asp:DropDownList>
-                                </div>
-                                <div class="col-sm-3 col-6">
-                                    <label class="col-form-label">Gestor de campo</label>
-                                    <asp:DropDownList ID="ddlGestores" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required"></asp:DropDownList>
+                                <div class="col-md-3 col-sm-6">
+                                    <label class="col-form-label">Barrio/Colonia</label>
+                                    <asp:DropDownList ID="ddlBarrioColonia" Enabled="false" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required" data-parsley-errors-container="#error-ddlBarrioColonia"></asp:DropDownList>
+                                    <div id="error-ddlBarrioColonia"></div>
                                 </div>
                             </div>
                             <div class="form-group form-row">
@@ -145,7 +154,7 @@
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script>
         $(document).ready(function () {
-            
+
             $(".mascara-telefono").inputmask("9999-9999");
             $(".mascara-extension").inputmask("999999");
         });
@@ -155,6 +164,6 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/PreSolicitud_Guardar.js?v=20201023130420"></script>
+    <script src="/Scripts/app/solicitudes/PreSolicitud_Guardar.js?v=20201126132785"></script>
 </body>
 </html>

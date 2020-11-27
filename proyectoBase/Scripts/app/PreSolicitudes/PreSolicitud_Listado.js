@@ -184,16 +184,29 @@ $(document).on('click', 'button#btnDetalles', function () {
                 $("#txtCiudadPoblado").val(preSolicitud.CiudadPoblado);
                 $("#txtBarrioColonia").val(preSolicitud.BarrioColonia);
                 $("#txtDireccionDetallada").val(preSolicitud.DireccionDetallada);
-                $("#txtTelefonoCasa").val(preSolicitud.TelefonoCasa);
-                $("#txtReferenciasDomicilio").val(preSolicitud.ReferenciasDireccionDetallada);
+                $("#txtReferenciasDireccionDetallada").val(preSolicitud.ReferenciasDireccionDetallada);
+
+                $("#txtNombreTrabajo").val(preSolicitud.NombreTrabajo);
+                $("#txtTelefonoAdicional").val(preSolicitud.TelefonoAdicional);
+                $("#txtExtensionRecursosHumanos").val(preSolicitud.ExtensionRecursosHumanos);
+                $("#txtExtensionCliente").val(preSolicitud.ExtensionCliente);
+
+                if (preSolicitud.IdTipoDeUbicacion == 1) {
+
+                    $("#lblTipoDeUbicacion").text('Investigación de domicilio');
+                }
+                else if (preSolicitud.IdTipoDeUbicacion == 2){
+                    $("#lblTipoDeUbicacion").text('Investigación de trabajo');
+                }
+
+                console.log(preSolicitud.FechaDescargadoPorGestor);
+                
 
                 // gestoria
-                var classEstadoCampo = preSolicitud.TipoResultadoDeCampo == 0 ? 'warning' : preSolicitud.TipoResultadoDeCampo == 1 ? 'success' : preSolicitud.TipoResultadoDeCampo == 2 ? 'danger' : 'warning';
-                $("#lblResultadoGestoria").text(preSolicitud.ResultadoDeCampo);
-                $("#lblResultadoGestoria").removeClass('btn-danger').removeClass('btn-success').removeClass('btn-warning').addClass('btn-' + classEstadoCampo);
                 $("#txtGestorAsignado").val(preSolicitud.IdGestorValidador == 0 ? 'No Asignado' : preSolicitud.GestorValidador);
                 $("#txtGestion").val(preSolicitud.GestionDeCampo);
-                $("#txtFechaValidacion").val(preSolicitud.FechaValidacion == '/Date(-2208967200000)/' ? 'No Validado' : moment(preSolicitud.FechaValidacion).locale('es').format('YYYY/MM/DD h:mm:ss a'));
+                $("#txtFechaDescargadoPorGestor").val(preSolicitud.FechaDescargadoPorGestor == '/Date(-2208967200000)/' ? 'Aún no recibido' : moment(preSolicitud.FechaValidacion).locale('es').format('YYYY/MM/DD h:mm:ss a'));
+                $("#txtFechaValidacion").val(preSolicitud.FechaValidacion == '/Date(-2208967200000)/' ? 'Áún no validado' : moment(preSolicitud.FechaValidacion).locale('es').format('YYYY/MM/DD h:mm:ss a'));
                 $("#txtObservacionesGestoria").val(preSolicitud.ObservacionesDeCampo);
 
                 // auditoria
