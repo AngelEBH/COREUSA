@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_RegistradaDetalles.aspx.cs" Inherits="SolicitudesCredito_RegistradaDetalles" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_RegistradaDetalles.aspx.cs" Inherits="SolicitudesCredito_RegistradaDetalles" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -29,682 +29,833 @@
         .card-header {
             background-color: rgb(255,255,255) !important;
         }
+
+        .tr-exito {
+            color: #00a803;
+        }
     </style>
 </head>
 <body>
     <form id="frmPrincipal" runat="server">
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header" style="background-color: #fff">
-                        <div class="row EliminarEspacios">
-                            <!-- ICONO REPRESENTATIVO DEL TIPO DE PRESTAMO -->
-                            <div class="col-md-6">
-                                <div class="spinner-border" role="status" id="divCargandoAnalisis">
-                                    <span class="sr-only">Cargando</span>
-                                </div>
-                                <asp:Image runat="server" ID="LogoPrestamo" class="float-left LogoPrestamo" alt="Logo del Producto" Style="display: none;" />
-                                <asp:Label runat="server" ID="lblTipoPrestamo" CssClass="h3"></asp:Label>
+        <div class="card">
+            <div class="card-header">
+                <div class="row justify-content-between align-items-end">
+                    <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
+                        <div class="form-inline p-0">
+                            <div class="spinner-border" role="status" id="divCargandoAnalisis" style="display: none;">
+                                <span class="sr-only">Cargando</span>
                             </div>
-                            <!-- Botones de acceso directo al historial interno del cliente, buro externo y boton para condicionar la solicitud -->
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <div class="col-sm-9"></div>
-                                    <div class="col-sm-3">
-                                        <button id="btnDocumentacionModal" type="button" class="btn btn-sm btn-success btn-block waves-effect waves-light float-right">
-                                            <small>Ver docs</small>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Tabla estado del procesamiento de la solicitud -->
-                            <div class="col-12">
-                                <div class="table-responsive">
-                                    <table class="table table-condensed m-0">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>
-                                                    <i class="mdi mdi-account mdi-24px"></i>
-                                                    <asp:Label ID="spanNombreCliente" CssClass="h4" runat="server"></asp:Label>
-                                                </th>
-                                                <th class="text-right">
-                                                    <label class="h4 EliminarEspacios">Identidad:&nbsp;</label>
-                                                    <asp:Label ID="spanIdentidadCliente" CssClass=" h4 EliminarEspacios" runat="server"></asp:Label>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="table-responsive">
-                                    <table class="table table-condensed table-borderless m-0">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th class="text-center">No. Solicitud:
-                                                <asp:Label ID="lblNoSolicitud" runat="server"></asp:Label>
-                                                </th>
-                                                <th class="text-center">No. Cliente:
-                                                <asp:Label ID="lblNoCliente" runat="server"></asp:Label>
-                                                </th>
-                                                <th class="text-center">Tipo Solicitud:
-                                                <asp:Label ID="lblTipoSolicitud" runat="server"></asp:Label>
-                                                </th>
-                                                <th class="text-center">Agente Ventas:
-                                                <asp:Label ID="lblAgenteDeVentas" runat="server"></asp:Label>
-                                                </th>
-                                                <th class="text-center">Agencia:
-                                                <asp:Label ID="lblAgencia" runat="server"></asp:Label>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="table-responsive">
-                                    <table class="table table-condensed m-0" id="tblEstadoSolicitud">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th class="text-center">Ingreso</th>
-                                                <th class="text-center">Recepción</th>
-                                                <th class="text-center">Analisis</th>
-                                                <th class="text-center">Campo</th>
-                                                <th class="text-center">Condic.</th>
-                                                <th class="text-center">Reprog.</th>
-                                                <th class="text-center">Validación</th>
-                                                <th class="text-center">Resolución</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                            <asp:Image runat="server" ID="imgLogo" class="LogoPrestamo align-self-center d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block" alt="Logo del Producto" Style="display: none;" />
+                            <asp:Label runat="server" ID="lblProducto" CssClass="h6 font-weight-bold align-self-end"></asp:Label>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="collapse-group">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading card-header p-1 container-fluid" role="tab" id="headingOne">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <h6 class="panel-title m-0 font-14">
-                                                        <a role="button" data-toggle="collapse" href="#collapseInformacionPersonal" class="text-dark h5 trigger collapsed"
-                                                            aria-expanded="true"
-                                                            aria-controls="collapseOne">
-                                                            <i class="mdi mdi-account-circle mdi-24px"></i>&nbsp;Informacion Personal
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="collapseInformacionPersonal" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                            <div class="panel-body">
-                                                <div class="card-body">
-                                                    <div class="container-fluid">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-group row">
-                                                                    <label class="col-sm-6">RTN Cliente</label>
-                                                                    <asp:Label ID="lblRtnCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Numero de telefono</label>
-                                                                    <asp:HyperLink ID="lblNumeroTelefono" NavigateUrl="tel:+55599999999" CssClass="col-sm-6" runat="server"></asp:HyperLink>
-
-                                                                    <label class="col-sm-6">Nacionalidad</label>
-                                                                    <asp:Label ID="lblNacionalidad" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Fecha de nacimiento</label>
-                                                                    <asp:Label ID="lblFechaNacimientoCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Edad</label>
-                                                                    <asp:Label ID="lblEdadCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Correo electrónico</label>
-                                                                    <asp:HyperLink ID="lblCorreoCliente" CssClass="col-sm-6" NavigateUrl="mailto:correo@gmail.com" runat="server"></asp:HyperLink>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group row">
-                                                                    <label class="col-sm-6">Profesion u oficio</label>
-                                                                    <asp:Label ID="lblProfesionCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Sexo</label>
-                                                                    <asp:Label ID="lblSexoCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Estado civil</label>
-                                                                    <asp:Label ID="lblEstadoCivilCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Vivienda</label>
-                                                                    <asp:Label ID="lblViviendaCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Tiempo de residir</label>
-                                                                    <asp:Label ID="lblTiempoResidirCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading card-header p-1 container-fluid" role="tab" id="headingTwo">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <h6 class="panel-title m-0 font-14">
-                                                        <a href="#collapseInformacionDomiciliar" class="text-dark collapsed h5 collapsed" data-toggle="collapse"
-                                                            aria-expanded="false"
-                                                            aria-controls="collapseTwo">
-                                                            <i class="mdi mdi-home-variant mdi-24px"></i>
-                                                            Informacion Domicilio
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="collapseInformacionDomiciliar" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                            <div class="panel-body">
-                                                <div class="card-body">
-                                                    <div class="container-fluid">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="form-group row">
-                                                                    <label class="col-sm-3">Departamento</label>
-                                                                    <asp:Label ID="lblDeptoCliente" CssClass="col-sm-3" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-3">Municipio</label>
-                                                                    <asp:Label ID="lblMunicipioCliente" CssClass="col-sm-3" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-3">Ciudad</label>
-                                                                    <asp:Label ID="lblCiudadCliente" CssClass="col-sm-3" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-3">Barrio/colonia</label>
-                                                                    <asp:Label ID="lblBarrioColoniaCliente" CssClass="col-sm-3" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-3">Dirección detallada</label>
-                                                                    <asp:Label ID="lblDireccionDetalladaCliente" CssClass="col-sm-9" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-3">Referencias del domicilio</label>
-                                                                    <asp:Label ID="lblReferenciaDomicilioCliente" CssClass="col-sm-9" runat="server"></asp:Label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="panel panel-default" id="divConyugueCliente">
-                                        <div class="panel-heading card-header p-1 container-fluid" role="tab" id="headingThree">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <h6 class="m-0 font-14">
-                                                        <a href="#collapseThree" class="text-dark collapsed h5" data-toggle="collapse"
-                                                            aria-expanded="false"
-                                                            aria-controls="collapseThree">
-                                                            <i class="mdi mdi-account-multiple mdi-24px"></i>
-                                                            Informacion Conyugal
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                                            <div class="panel-body">
-                                                <div class="card-body">
-                                                    <div class="container-fluid">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="form-group row">
-                                                                    <label class="col-sm-6">Nombre del conyugue</label>
-                                                                    <asp:Label ID="lblNombreConyugue" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Identidad del conyugue</label>
-                                                                    <asp:Label ID="lblIdentidadConyuge" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Fecha de nacimiento</label>
-                                                                    <asp:Label ID="lblFechaNacimientoConygue" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Telefono conyugue</label>
-                                                                    <asp:HyperLink ID="lblTelefonoConyugue" CssClass="col-sm-6" NavigateUrl="tel:55599999999" runat="server"></asp:HyperLink>
-
-                                                                    <label class="col-sm-6">Lugar de trabajo conyugue</label>
-                                                                    <asp:Label ID="lblLugarTrabajoConyugue" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Telefono trabajo conyugue</label>
-                                                                    <asp:Label ID="lblTelefonoTrabajoConyugue" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Ingresos mensuales conyugue</label>
-                                                                    <asp:Label ID="lblIngresosConyugue" CssClass="col-sm-6" runat="server"></asp:Label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading card-header p-1 container-fluid" role="tab" id="headingFour">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <h6 class="m-0 font-14">
-                                                        <a href="#collapseInformacionLaboral" class="text-dark collapsed h5" data-toggle="collapse"
-                                                            aria-expanded="false"
-                                                            aria-controls="collapseThree">
-                                                            <i class="mdi mdi-briefcase-check mdi-24px"></i>
-                                                            Informacion Laboral
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="collapseInformacionLaboral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-                                            <div class="panel-body">
-                                                <div class="card-body">
-                                                    <div class="container-fluid">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-group row">
-                                                                    <label class="col-sm-6">Nombre del trabajo</label>
-                                                                    <asp:Label ID="lblNombreTrabajoCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Ingresos mensuales</label>
-                                                                    <asp:Label ID="lblIngresosMensualesCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Puesto asigando</label>
-                                                                    <asp:Label ID="lblPuestoAsignadoCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Fecha de ingreso</label>
-                                                                    <asp:Label ID="lblFechaIngresoCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Arraigo laboral</label>
-                                                                    <asp:Label ID="lblArraigoLaboral" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Teléfono empresa</label>
-                                                                    <asp:Label ID="lblTelefonoEmpresaCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Extensión RRHH</label>
-                                                                    <asp:Label ID="lblExtensionRecursosHumanos" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Extensión cliente</label>
-                                                                    <asp:Label ID="lblExtensionCliente" CssClass="col-sm-6" runat="server"></asp:Label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group row">
-
-                                                                    <label class="col-sm-6">Departamento empresa</label>
-                                                                    <asp:Label ID="lblDeptoEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Municipio empresa</label>
-                                                                    <asp:Label ID="lblMunicipioEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Ciudad empresa</label>
-                                                                    <asp:Label ID="lblCiudadEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Barrio/colonia empresa</label>
-                                                                    <asp:Label ID="lblBarrioColoniaEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Direccion detallada empresa</label>
-                                                                    <asp:Label ID="lblDireccionDetalladaEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6">Referencias ubicación</label>
-                                                                    <asp:Label ID="lblReferenciaUbicacionEmpresa" CssClass="col-sm-6" runat="server"></asp:Label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading card-header p-1 container-fluid" role="tab" id="headingFive">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <h6 class="m-0 font-14">
-                                                        <a href="#collapseReferenciasPersonales" class="text-dark collapsed h5" data-toggle="collapse"
-                                                            aria-expanded="false"
-                                                            aria-controls="collapseFive">
-                                                            <i class="mdi mdi-phone-log mdi-24px"></i>
-                                                            Referencias Personales del Cliente
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="collapseReferenciasPersonales" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-                                            <div class="panel-body">
-                                                <div class="card-body">
-                                                    <div class="form-group row">
-                                                        <h4>Referencias personales</h4>
-                                                        <div class="table-responsive">
-                                                            <table class="table table-condensed" id="tblReferencias">
-                                                                <thead class="thead-light">
-                                                                    <tr>
-                                                                        <th>Nombre referencia</th>
-                                                                        <th>Lugar de trabajo</th>
-                                                                        <th>Tiempo de conocer ref</th>
-                                                                        <th>Telefono ref</th>
-                                                                        <th>Parentesco ref</th>
-                                                                        <th></th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody class="table-condensed">
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row" id="divAval" style="display: none;">
-                                                        <h4>Aval</h4>
-                                                        <div class="table-responsive">
-                                                            <table class="table table-condensed" id="tblAvales">
-                                                                <thead class="thead-light">
-                                                                    <tr>
-                                                                        <th>Nombre completo</th>
-                                                                        <th>Identidad</th>
-                                                                        <th>Telefono</th>
-                                                                        <th>Lugar de trabajo</th>
-                                                                        <th>Puesto asignado</th>
-                                                                        <th>Ingresos</th>
-                                                                        <th>Estado</th>
-                                                                        <th></th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Informacion del prestamo requerido y el calculo del mismo -->
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading card-header p-1 container-fluid" role="tab" id="headingSix">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <h6 class="m-0 font-14">
-                                                        <a href="#collapsePrestamoRequerido" class="text-dark collapsed h5" data-toggle="collapse"
-                                                            aria-expanded="false"
-                                                            aria-controls="collapseSix">
-                                                            <i class="mdi mdi-cash-multiple mdi-24px"></i>
-                                                            Información del Préstamo Requerido
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="collapsePrestamoRequerido" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
-                                            <div class="panel-body">
-                                                <div class="card-body">
-                                                    <div class="container-fluid">
-                                                        <div class="row">
-                                                            <!-- INFORMACION DEL PRECALIFICADO -->
-                                                            <div class="col-md-6 border">
-                                                                <div class="form-group row">
-                                                                    <label class="col-sm-12 h6 text-center p-t-10">Capacidad de Pago - Precalificado</label>
-
-                                                                    <label class="col-sm-6 col-form-label">Ingresos precalificado</label>
-                                                                    <asp:Label ID="lblIngresosPrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6 col-form-label">Obligaciones precalificado</label>
-                                                                    <asp:Label ID="lblObligacionesPrecalificado" CssClass="col-sm-6 text-danger" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6 col-form-label">Disponible precalificado</label>
-                                                                    <asp:Label ID="lblDisponiblePrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
-                                                                    <asp:Label ID="lblCapacidadPagoMensual" CssClass="col-sm-6" runat="server"></asp:Label>
-                                                                </div>
-                                                            </div>
-                                                            <!-- INFORMACION DEL PRESTAMO CON LOS DATOS DEL PRECALIFICADO-->
-                                                            <div class="col-md-6 border">
-                                                                <div class="form-group row">
-                                                                    <label class="col-sm-12 h6 text-center p-t-10">Préstamo Sugerido - Precalificado</label>
-
-                                                                    <label class="col-sm-6 col-form-label" id="lblTituloValorPMO">PRESTAMO APROBADO</label>
-                                                                    <asp:Label ID="lblValorPmoSugeridoSeleccionado" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label id="lblValorVehiculo" class="col-sm-6 col-form-label" style="display: none;">Valor del vehiculo</label>
-                                                                    <asp:Label ID="lblMontoValorVehiculo" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label id="lblPrima" class="col-sm-6 col-form-label">Prima</label>
-                                                                    <asp:Label ID="lblMontoPrima" CssClass="col-sm-6" runat="server"></asp:Label>
-                                                                </div>
-                                                                <div class="form-group row" id="divCargando">
-                                                                    <div class="col-sm-12 text-center p-t-10">
-                                                                        <div class="spinner-border" role="status">
-                                                                            <span class="sr-only">Calculando...</span>
-                                                                        </div>
-                                                                        <br />
-                                                                        Calculando...
-                                                                    </div>
-                                                                </div>
-                                                                <!-- DIV CALCULO PRESTAMO EFECTIVO-->
-                                                                <div class="form-group row" id="divPrestamoEfectivo" style="display: none;">
-
-                                                                    <strong class="col-sm-6 col-form-label">Monto a financiar</></strong>
-                                                                    <strong>
-                                                                        <asp:Label ID="lblMontoFinanciarEfectivo" CssClass="col-sm-6" runat="server"></asp:Label></strong>
-
-                                                                    <label class="col-sm-6 col-form-label" id="lblTituloCuotaEfectivo">Cuota</label>
-                                                                    <strong>
-                                                                        <asp:Label ID="lblMontoCuotaEfectivo" CssClass="col-sm-6" runat="server"></asp:Label></strong>
-                                                                </div>
-                                                                <!-- DIV CALCULO PRESTAMO VEHICULO MOTO -->
-                                                                <div class="form-group row" id="divPrestamoMoto" style="display: none;">
-                                                                    <label class="col-sm-6 col-form-label"><strong>Monto a financiar</strong></label>
-                                                                    <strong>
-                                                                        <asp:Label ID="lblMontoFinanciarMoto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
-
-                                                                    <label class="col-sm-6 col-form-label" id="lblTituloCuotaMoto">Cuota</label>
-                                                                    <strong>
-                                                                        <asp:Label ID="lblMontoCuotaMoto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
-                                                                </div>
-                                                                <!-- DIV CALCULO PRESTAMO VEHICULO AUTO -->
-                                                                <div class="form-group row" id="divPrestamoAuto" style="display: none;">
-                                                                    <label class="col-sm-6 col-form-label"><strong>Monto a financiar</strong></label>
-                                                                    <strong>
-                                                                        <asp:Label ID="lblMontoFinanciarAuto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
-
-                                                                    <label class="col-sm-6 col-form-label" id="lblTituloCuotaAuto">Cuota</label>
-                                                                    <strong>
-                                                                        <asp:Label ID="lblMontoCuotaTotalAuto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
-                                                                </div>
-                                                            </div>
-                                                            <!--
-                                                            EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-                                                            MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
-                                                        -->
-                                                            <div class="col-md-6 border" id="divRecalculoReal" style="display: none;">
-                                                                <div class="form-group row">
-
-                                                                    <label class="col-sm-12 h6 text-center p-t-10">Recalculo de Capacidad de Pago - Ingresos Reales</label>
-
-                                                                    <label class="col-sm-6 col-form-label">Ingresos reales</label>
-                                                                    <asp:Label ID="lblIngresosReales" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6 col-form-label">Obligaciones</label>
-                                                                    <asp:Label ID="lblObligacionesReales" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6 col-form-label">Disponible real</label>
-                                                                    <asp:Label ID="lblDisponibleReal" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
-                                                                    <asp:Label ID="lblCapacidadPagoMensualReal" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6 col-form-label">Capacidad de pago quincenal</label>
-                                                                    <asp:Label ID="lblCapacidadPagoQuincenalReal" CssClass="col-sm-6" runat="server"></asp:Label>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- PRESTAMOS SUGERIDOS CON LOS INGRESOS REALES-->
-                                                            <div class="col-md-6 border border-success" id="divPmoSugeridoReal">
-                                                                <div class="form-group row" id="divPrestamoElegido" style="display: none;">
-                                                                    <label class="col-sm-12 h6 text-center p-t-10">Monto a Financiar Actual</label>
-
-                                                                    <label class="col-sm-6 col-form-label">Monto final a financiar</label>
-                                                                    <asp:Label ID="lblMontoPrestamoEscogido" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                    <label class="col-sm-6 col-form-label">Plazo final aprobado</label>
-                                                                    <asp:Label ID="lblPlazoEscogido" CssClass="col-sm-6" runat="server"></asp:Label>
-                                                                </div>
-                                                                <div class="form-group row" id="cargandoPrestamosSugeridosReales" style="display: none;">
-                                                                    <div class="col-sm-12 text-center p-t-10">
-                                                                        <div class="spinner-border" role="status">
-                                                                            <span class="sr-only">Cargando..</span>
-                                                                        </div>
-                                                                        <br />
-                                                                        Cargando Préstamos Sugeridos...
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row" id="divPrestamosSugeridosReales" style="display: none;">
-                                                                    <label class="col-sm-12 h6 text-center p-t-10" id="lbldivPrestamosSugeridosReales">Préstamos Sugeridos - Real</label>
-                                                                    <div class="col-sm-12">
-                                                                        <table class="table table-condensed table-striped" id="tblPMOSugeridosReales">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>Monto a financiar</th>
-                                                                                    <th>Plazo</th>
-                                                                                    <th>Cutoa</th>
-                                                                                    <th></th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row" id="divSinCapacidadPago" style="display: none;">
-                                                                    <label class="col-sm-12 h6 text-center p-t-10" id="lbldivSinCapacidadPago">Incapacidad de pago</label>
-                                                                    <br />
-                                                                    <div class="col-sm-12">
-                                                                        <label>
-                                                                            No hay prestamos sugeridos para esta capacidad de pago.<br />
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="panel panel-default" id="divInformaciondeCampo" style="display: none;">
-                                        <div class="panel-heading p-1 seccion-header" role="tab" id="headingEight">
-                                            <h6 class="m-0 font-14">
-                                                <a href="#collapseInformaciondeCampo" class="text-dark collapsed h5" data-toggle="collapse"
-                                                    aria-expanded="false"
-                                                    aria-controls="collapseThree">
-                                                    <i class="mdi mdi-account-check mdi-24px"></i>
-                                                    Informacion de Campo
-                                                </a>
-                                            </h6>
-                                        </div>
-                                        <div id="collapseInformaciondeCampo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
-                                            <div class="panel-body">
-                                                <div class="card-body">
-                                                    <div class="row" id="divResolucionDomicilio" style="display: none;">
-                                                        <div class="col-md-8">
-                                                            <h5>Resolución del Domicilio <small id="lblResolucionCampoDomicilio"></small></h5>
-                                                            <div class="form-group row">
-                                                                <label class="col-sm-6">Gestor validador</label>
-                                                                <asp:Label ID="lblGestorValidadorDomicilio" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                <label class="col-sm-6">Resolucion</label>
-                                                                <asp:Label ID="lblResolucionDomicilio" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                <label class="col-sm-6">Fecha de validacion</label>
-                                                                <asp:Label ID="lblFechaValidacionDomicilio" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                <label class="col-sm-6">Observaciones</label>
-                                                                <asp:Label ID="lblObservacionesCampoDomicilio" CssClass="col-sm-6" runat="server"></asp:Label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label class="header-title tituloDocumentacionCampoDomicilio">Documentación</label>
-                                                            <div class="container" id="divDocumentacionCampoDomicilio">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" id="divResolucionTrabajo" style="display: none;">
-                                                        <div class="col-md-8">
-                                                            <h5>Resolución del Trabajo <small id="lblResolucionCampoTrabajo"></small></h5>
-                                                            <div class="form-group row">
-                                                                <label class="col-sm-6">Gestor validador</label>
-                                                                <asp:Label ID="lblGestorValidadorTrabajo" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                <label class="col-sm-6">Resolucion</label>
-                                                                <asp:Label ID="lblResolucionTrabajo" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                <label class="col-sm-6">Fecha de validacion</label>
-                                                                <asp:Label ID="lblFechaValidacionTrabajo" CssClass="col-sm-6" runat="server"></asp:Label>
-
-                                                                <label class="col-sm-6">Observaciones</label>
-                                                                <asp:Label ID="lblObservacionesCampoTrabajo" CssClass="col-sm-6" runat="server"></asp:Label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <label class="header-title tituloDocumentacionCampoLaboral">Documentación</label>
-                                                            <div class="container" id="divDocumentacionCampoTrabajo">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
+                        <div class="form-inline">
+                            <div class="button-items pb-2">
+                                <button id="btnDetallesResolucion" runat="server" visible="false" data-toggle="modal" data-target="#modalEstado" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
+                                    Detalles del estado
+                                </button>
+                                <button runat="server" id="btnDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-success btn-sm waves-effect waves-light">
+                                    Documentos
+                                </button>
+                                <button runat="server" id="btnMasDetalles" type="button" data-toggle="modal" data-target="#modalMasDetalles" class="btn btn-success btn-sm waves-effect waves-light">
+                                    Más detalles
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="row justify-content-between bg-light">
+                    <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
+                        <i class="mdi mdi-account mdi-24px mt-1"></i>
+                        <asp:Label ID="lblNombreCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label>
+                    </div>
+                    <div class="col-lg-auto col-md-auto col-sm-auto col-auto align-self-end">
+                        <asp:Label runat="server" class="h6 font-weight-bold">Identidad:</asp:Label>
+                        <asp:Label ID="lblIdentidadCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label>
+                    </div>
+                    <div class="col-lg-12">
+                        <table class="table table-condensed mb-0">
+                            <tbody>
+                                <tr>
+                                    <th class="text-center pt-1 pb-1">No. Solicitud:
+                                        <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                    <th class="text-center pt-1 pb-1">Tipo Solicitud:
+                                        <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                    <th class="text-center pt-1 pb-1">Agente de Ventas:
+                                        <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                    <th class="text-center pt-1 pb-1">Agencia:
+                                        <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                    <th class="text-center pt-1 pb-1">Gestor:
+                                        <asp:Label ID="lblNombreGestor" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-sm m-0 text-center" id="tblEstadoSolicitud" runat="server">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Ingreso</th>
+                                        <th class="text-center">Recepción</th>
+                                        <th class="text-center">Analisis</th>
+                                        <th class="text-center">Campo</th>
+                                        <th class="text-center">Condic.</th>
+                                        <th class="text-center">Reprog.</th>
+                                        <th class="text-center">Validación</th>
+                                        <th class="text-center">Resolución</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="card-body">
+                <div class="collapse-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingOne">
+                            <h6 class="panel-title m-0 font-14">
+                                <a role="button" data-toggle="collapse" href="#collapseInformacionPersonal" class="text-dark h6 trigger collapsed font-weight-bold" aria-expanded="true" aria-controls="collapseOne">
+                                    <i class="mdi mdi-account-circle mdi-24px"></i>
+                                    Informacion Personal
+                                </a>
+                            </h6>
+                        </div>
+                        <div id="collapseInformacionPersonal" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <div class="row mb-0" id="divInformacionPersonal" runat="server">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <label class="col-form-label">RTN numérico</label>
+                                                <asp:TextBox ID="txtRTNCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Número de teléfono</label>
+                                                <asp:TextBox ID="txtTelefonoCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Nacionalidad</label>
+                                                <asp:TextBox ID="txtNacionalidad" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Fecha de nacimiento</label>
+                                                <asp:TextBox ID="txtFechaNacimientoCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Edad</label>
+                                                <asp:TextBox ID="txtEdadCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Correo Electrónico</label>
+                                                <asp:TextBox ID="txtCorreoCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Profesion u oficio</label>
+                                                <asp:TextBox ID="txtProfesionCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Sexo</label>
+                                                <asp:TextBox ID="txtSexoCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Estado civil</label>
+                                                <asp:TextBox ID="txtEstadoCivilCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 border-left border-gray">
+                                        <h6 class="font-weight-bold">Documentación</h6>
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <!-- Div donde se muestran las imágenes de informacion personal -->
+                                                <div id="divDocumentacionCedula" runat="server" style="display: none;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingTwo">
+                            <h6 class="panel-title m-0 font-14">
+                                <a href="#collapseInformacionDomiciliar" class="text-dark collapsed h6 collapsed font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo">
+                                    <i class="mdi mdi-home-variant mdi-24px"></i>
+                                    Informacion Domicilio
+                                </a>
+                            </h6>
+                        </div>
+                        <div id="collapseInformacionDomiciliar" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                            <div class="panel-body">
+                                <div class="row mb-0" id="divInformacionDomicilio" runat="server">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-group row">
+                                            <div class="col-6">
+                                                <label class="col-form-label">Tipo de vivienda</label>
+                                                <asp:TextBox ID="txtTipoDeVivienda" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Tiempo de residir</label>
+                                                <asp:TextBox ID="txtTiempoDeResidir" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Departamento</label>
+                                                <asp:TextBox ID="txtDepartamentoDomicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Municipio</label>
+                                                <asp:TextBox ID="txtMunicipioDomicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Ciudad/Poblado</label>
+                                                <asp:TextBox ID="txtCiudadPobladoDomicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Barrio/colonia</label>
+                                                <asp:TextBox ID="txtBarrioColoniaDomicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Dirección detallada</label>
+                                                <textarea id="txtDireccionDetalladaDomicilio" runat="server" readonly="readonly" class="form-control form-control-sm"></textarea>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Referencias del domicilio</label>
+                                                <textarea id="txtReferenciasDomicilio" runat="server" readonly="readonly" class="form-control form-control-sm"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 border-left border-gray">
+                                        <h6 class="font-weight-bold">Documentación</h6>
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <!-- Div donde se muestran las imágenes de informacion domicilio -->
+                                                <div class="align-self-center" id="divDocumentacionDomicilio" runat="server" style="display: none;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default" id="divPanelInformacionConyugal" runat="server">
+                        <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingThree">
+                            <h6 class="panel-title m-0 font-14">
+                                <a href="#collapseThree" class="text-dark collapsed h6 font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseThree">
+                                    <i class="mdi mdi-account-multiple mdi-24px"></i>
+                                    Informacion Conyugal
+                                </a>
+                            </h6>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                            <div class="panel-body">
+                                <div class="row mb-0" id="divInformacionConyugal" runat="server">
+                                    <div class="col-lg-6 col-md-12 border-right border-gray">
+                                        <div class="form-group row">
+
+                                            <div class="col-12">
+                                                <label class="col-form-label">Nombre completo</label>
+                                                <asp:TextBox ID="txtNombreDelConyugue" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Identidad</label>
+                                                <asp:TextBox ID="txtIdentidadConyugue" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Telefono</label>
+                                                <asp:TextBox ID="txtTelefonoConyugue" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Fecha de nacimiento</label>
+                                                <asp:TextBox ID="txtFechaNacimientoConyugue" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Lugar de trabajo</label>
+                                                <asp:TextBox ID="txtLugarDeTrabajoConyugue" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Ingreso mensual</label>
+                                                <asp:TextBox ID="txtIngresosMensualesConyugue" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="col-form-label">Teléfono del trabajo</label>
+                                                <asp:TextBox ID="txtTelefonoTrabajoConyugue" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingFour">
+                            <h6 class="panel-title m-0 font-14">
+                                <a href="#collapseInformacionLaboral" class="text-dark collapsed h6 font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseThree">
+                                    <i class="mdi mdi-briefcase-check mdi-24px"></i>
+                                    Informacion Laboral
+                                </a>
+                            </h6>
+                        </div>
+                        <div id="collapseInformacionLaboral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                            <div class="panel-body">
+                                <div class="row mb-0" id="divInformacionLaboral" runat="server">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <label class="col-form-label">Nombre del trabajo</label>
+                                                <asp:TextBox ID="txtNombreTrabajoCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Puesto asignado</label>
+                                                <asp:TextBox ID="txtPuestoAsignado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Ingresos mensuales</label>
+                                                <asp:TextBox ID="txtIngresosMensuales" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Fecha de ingreso</label>
+                                                <asp:TextBox ID="txtFechaIngreso" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Arraigo Laboral</label>
+                                                <asp:TextBox ID="txtArraigoLaboral" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                                                <label class="col-form-label">Teléfono empresa</label>
+                                                <asp:TextBox ID="txtTelefonoEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-6">
+                                                <label class="col-form-label">Extensión cliente</label>
+                                                <asp:TextBox ID="txtExtensionCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-6">
+                                                <label class="col-form-label">Extensión RRHH</label>
+                                                <asp:TextBox ID="txtExtensionRecursosHumanos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Departamento</label>
+                                                <asp:TextBox ID="txtDepartamentoEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Municipio</label>
+                                                <asp:TextBox ID="txtMunicipioEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Ciudad/Poblado</label>
+                                                <asp:TextBox ID="txtCiudadPobladoEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Barrio/colonia</label>
+                                                <asp:TextBox ID="txtBarrioColoniaEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Dirección detallada</label>
+                                                <textarea id="txtDireccionDetalladaEmpresa" runat="server" readonly="readonly" class="form-control form-control-sm"></textarea>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Referencias la dirección</label>
+                                                <textarea id="txtReferenciaDetalladaEmpresa" runat="server" readonly="readonly" class="form-control form-control-sm"></textarea>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Fuente de otros ingresos</label>
+                                                <asp:TextBox ID="txtFuenteDeOtrosIngresos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Valor de otros ingresos</label>
+                                                <asp:TextBox ID="txtValorDeOtrosIngresos" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 border-left border-gray">
+                                        <h6 class="font-weight-bold">Documentación</h6>
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <!-- Div donde se muestran las imágenes de informacion laboral -->
+                                                <div class="align-self-center" id="divDocumentacionLaboral" runat="server" style="display: none;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingFive">
+                            <h6 class="m-0 font-14">
+                                <a href="#collapseReferenciasPersonales" class="text-dark collapsed h6 font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseFive">
+                                    <i class="mdi mdi-phone-log mdi-24px"></i>
+                                    Referencias Personales del Cliente
+                                </a>
+                            </h6>
+                        </div>
+                        <div id="collapseReferenciasPersonales" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                            <div class="panel-body">
+                                <div class="row mb-0" id="divReferenciasPersonales" runat="server">
+                                    <div class="col-12">
+
+                                        <h6>Referencias personales</h6>
+                                        <div class="form-group row mr-1 ml-1">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm  table-hover cursor-pointer" id="tblReferencias" runat="server">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nombre referencia</th>
+                                                            <th>Lugar de trabajo</th>
+                                                            <th>Tiempo de conocer</th>
+                                                            <th>Telefono</th>
+                                                            <th>Parentesco</th>
+                                                            <th></th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="table-condensed">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <%--<div class="form-group row" id="divAval" style="display: none;">
+                                        <h4>Aval</h4>
+                                        <div class="table-responsive">
+                                            <table class="table table-condensed" id="tblAvales">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Nombre completo</th>
+                                                        <th>Identidad</th>
+                                                        <th>Telefono</th>
+                                                        <th>Lugar de trabajo</th>
+                                                        <th>Puesto asignado</th>
+                                                        <th>Ingresos</th>
+                                                        <th>Estado</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>--%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informacion del prestamo requerido y el calculo del mismo -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingSix">
+                            <h6 class="panel-title m-0 font-14">
+                                <a href="#collapsePrestamoRequerido" class="text-dark collapsed h6 font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseSix">
+                                    <i class="mdi mdi-cash-multiple mdi-24px"></i>
+                                    Información del Préstamo Requerido
+                                </a>
+                            </h6>
+                        </div>
+                        <div id="collapsePrestamoRequerido" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+                            <div class="panel-body">
+                                <div class="row mb-0">
+
+                                    <!-- Capacidad de pago del cliente -->
+                                    <div class="col-lg-6 col-md-6 col-12" id="divCapacidadDePagoPrecalificado" runat="server">
+
+                                        <h6 class="font-weight-bold">Capacidad de Pago - Precalificado</h6>
+
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <label class="col-form-label">Ingresos</label>
+                                                <asp:TextBox ID="txtIngresosPrecalificado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Obligaciones</label>
+                                                <asp:TextBox ID="txtObligacionesPrecalificado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Disponible</label>
+                                                <asp:TextBox ID="txtDisponiblePrecalificado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Capacidad de pago (Mensual)</label>
+                                                <asp:TextBox ID="txtCapacidadDePagoMensual" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Capacidad de pago (Quincenal)</label>
+                                                <asp:TextBox ID="txtCapacidadDePagoQuincenal" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <!-- Recalculo de capacidad de pago cuando se modifiquen los ingresos -->
+
+                                        <div runat="server" id="divRecalculoCapacidadDePago" visible="false">
+
+                                            <label class="font-weight-bold">Recalculo capacidad de pago - Ingresos reales</label>
+
+                                            <div class="form-group row">
+                                                <div class="col-12">
+                                                    <label class="col-form-label">Ingresos</label>
+                                                    <asp:TextBox ID="txtIngresos_Recalculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Obligaciones</label>
+                                                    <asp:TextBox ID="txtObligaciones_Recalculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Disponible</label>
+                                                    <asp:TextBox ID="txtDisponible_Recalculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Capacidad de pago (Mensual)</label>
+                                                    <asp:TextBox ID="txtCapacidadDePagoMensual_Recalculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Capacidad de pago (Quincenal)</label>
+                                                    <asp:TextBox ID="txtCapacidadDePagoQuicenal_Recalculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="divPrestamosSueridos_CapacidadDePagoReal" runat="server" visible="false">
+
+                                            <h6 class="font-weight-bold">Préstamos sugeridos - Capacidad de pago real</h6>
+
+                                            <div class="form-group row">
+                                                <div class="col-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-condensed table-striped table-hover cursor-pointer" id="tblPMOSugeridosReales">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Monto a financiar</th>
+                                                                    <th>Plazo</th>
+                                                                    <th>Cutoa</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="table-condensed">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12" runat="server" id="divSinCapacidadDePago" visible="true">
+                                                    <label class="font-weight-bold text-danger d-block">El cliente no tiene capacidad de pago</label>
+                                                    No hay préstamos seguridos para la capacidad de pago del cliente.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Préstamo solicitado -->
+                                    <div class="col-lg-6 col-md-6 col-12 border-left border-gray" id="divPrestamoSolicitado" runat="server">
+
+                                        <h6 class="font-weight-bold">Préstamo inicial solicitado</h6>
+
+                                        <div class="form-group row">
+                                            <div class="col-6">
+                                                <label class="col-form-label">Valor a financiar</label>
+                                                <asp:TextBox ID="txtValorAFinanciarSeleccionado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Moneda</label>
+                                                <asp:TextBox ID="txtMonedaSolicitada" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Valor de la garantía</label>
+                                                <asp:TextBox ID="txtValorGarantia" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Valor de la prima</label>
+                                                <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="col-form-label">Plazo <span id="lblTipoDePlazo_Solicitado" class="font-weight-bold" runat="server"></span></label>
+                                                <asp:TextBox ID="txtPlazoSeleccionado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Origen</label>
+                                                <asp:TextBox ID="txtOrigen" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <label class="font-weight-bold">Cálculo del préstamo solicitado</label>
+
+                                        <!-- Calculo del prestamo -->
+
+                                        <!--
+                                            EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+                                            MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+                                        -->
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <label class="col-form-label">Monto total a financiar</label>
+                                                <asp:TextBox ID="txtMontoTotalAFinanciar_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-form-label">Couta del préstamo</label>
+                                                <asp:TextBox ID="txtCuotaDelPrestamo_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-form-label">Couta del seguro</label>
+                                                <asp:TextBox ID="txtCuotaDelSeguro_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-form-label">Cuota del GPS</label>
+                                                <asp:TextBox ID="txtCuotaGPS_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Cuota total</label>
+                                                <asp:TextBox ID="txtCuotaTotal_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Costo aparato GPS</label>
+                                                <asp:TextBox ID="txtCostoAparatoGPS_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Gastos de cierre</label>
+                                                <asp:TextBox ID="txtGastosDeCierre_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-lg-6 col-md-6 col-12 border-left border-gray" id="divPrestamoFinalAprobado" runat="server">
+
+                                        <h6 class="font-weight-bold">Monto final a financiar  <span class="font-weight-bold text-danger">(En análisis)</span></h6>
+
+                                        <div class="form-group row">
+                                            <div class="col-4">
+                                                <label class="col-form-label">Monto total a financiar</label>
+                                                <asp:TextBox ID="txtMontoTotalAFinanciar_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="col-form-label">Plazo <span id="lblTipoDePlazo_FinalAprobado" class="font-weight-bold" runat="server">Quincenal</span></label>
+                                                <asp:TextBox ID="txtPlazoFinal_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="col-form-label">Couta del préstamo</label>
+                                                <asp:TextBox ID="txtCuotaDelPrestamo_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="col-form-label">Couta del seguro</label>
+                                                <asp:TextBox ID="txtCuotaDelSeguro_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="col-form-label">Cuota del GPS</label>
+                                                <asp:TextBox ID="txtCuotaGPS_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="col-form-label">Cuota total</label>
+                                                <asp:TextBox ID="txtCuotaTotal_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Costo aparato GPS</label>
+                                                <asp:TextBox ID="txtCostoAparatoGPS_FinalAprobado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Gastos de cierre</label>
+                                                <asp:TextBox ID="txtGastosDeCierre_FinalAprobado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingSeven">
+                            <h6 class="m-0 font-14">
+                                <a href="#collapseInformacionAnalisis" class="text-dark collapsed h6 font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseSeven">
+                                    <i class="mdi mdi-account-search mdi-24px"></i>
+                                    Información de Perfil
+                                </a>
+                            </h6>
+                        </div>
+                        <div id="collapseInformacionAnalisis" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+                            <div class="panel-body">
+                                <div class="row mb-0" id="div1" runat="server">
+                                    <div class="col-lg-6 col-md-6 col-6 border-right border-gray">
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <label class="col-form-label">Tipo de empresa</label>
+                                                <asp:TextBox ID="txtTipoDeEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Tipo de perfil</label>
+                                                <asp:TextBox ID="txtTipoDePerfil" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Tipo de empleo</label>
+                                                <asp:TextBox ID="txtTipoDeEmpleo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Buro actual</label>
+                                                <asp:TextBox ID="txtBuroActual" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default" id="divInformaciondeCampo" runat="server" visible="true">
+                        <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingEight">
+                            <h6 class="panel-title m-0 font-14">
+                                <a href="#collapseInformaciondeCampo" class="text-dark collapsed h6 collapsed font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo">
+                                    <i class="mdi mdi-home-variant mdi-24px"></i>
+                                    Investigación de campo
+                                </a>
+                            </h6>
+                        </div>
+                        <div id="collapseInformaciondeCampo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
+                            <div class="panel-body">
+                                <div class="row mb-0" id="divResolucionDomicilio" runat="server" visible="true">
+                                    <div class="col-lg-6 col-md-6">
+
+                                        <h6>Resolución del Domicilio <small>(<span id="lblResolucionCampoDomicilio" runat="server" class="font-weight-bold"></span>)</small></h6>
+
+                                        <div class="form-group row">
+
+                                            <div class="col-6">
+                                                <label class="col-form-label">Gestor validador</label>
+                                                <asp:TextBox ID="txtGestorValidador_Domicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Resultado de la investigación</label>
+                                                <asp:TextBox ID="txtResultadoInvestigacionCampo_Domicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="col-form-label">Fecha recibida</label>
+                                                <asp:TextBox ID="txtFechaRecibida_Domicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Fecha rendida</label>
+                                                <asp:TextBox ID="txtFechaValidacion_Domicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Observaciones del gestor</label>
+                                                <textarea id="txtObservacionesDeCampo_Domicilio" runat="server" readonly="readonly" class="form-control form-control-sm"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 border-left border-gray">
+                                        <h6 class="font-weight-bold">Fotografías de la investigación</h6>
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <!-- Div donde se muestran las imágenes de informacion domicilio -->
+                                                <div class="align-self-center" id="divDocumentacionCampoDomicilio" runat="server" style="display: none;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-0 mt-1 border-top border-gray" id="divResolucionTrabajo" runat="server" visible="true">
+                                    <div class="col-lg-6 col-md-6">
+
+                                        <h6>Resolución del Trabajo <small>(<span id="lblResolucionCampoTrabajo" runat="server" class="font-weight-bold"></span>)</small></h6>
+
+                                        <div class="form-group row">
+
+                                            <div class="col-6">
+                                                <label class="col-form-label">Gestor validador</label>
+                                                <asp:TextBox ID="txtGestorValidador_Trabajo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Resultado de la investigación</label>
+                                                <asp:TextBox ID="txtResultadoInvestigacion_Trabajo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="col-form-label">Fecha recibida</label>
+                                                <asp:TextBox ID="txtFechaRecibida_Trabajo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Fecha rendida</label>
+                                                <asp:TextBox ID="txtFechaRendida_Trabajo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Observaciones del gestor</label>
+                                                <textarea id="txtObservacionesDeCampo_Trabajo" runat="server" readonly="readonly" class="form-control form-control-sm"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 border-left border-gray">
+                                        <h6 class="font-weight-bold">Fotografías de la investigación</h6>
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <!-- Div donde se muestran las imágenes de informacion domicilio -->
+                                                <div class="align-self-center" id="divDocumentacionCampoTrabajo" runat="server" style="display: none;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/ panel body -->
+                        </div>
+                        <!--/ panel-collapse collapse -->
+                    </div>
+                    <!--/ panel investigacion de campo-->
+                </div>
+                <!--/ collapse-group -->
+            </div>
+            <!--/ card-header -->
         </div>
+        <!--/ card -->
 
         <!-- modal estado del procesamiento de la solicitud -->
         <div id="modalEstadoSolicitud" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalEstadoSolicitudLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalEstadoSolicitudLabel">Estado del procesamiento de la solicitud</h5>
+                        <h6 class="modal-title mt-0" id="modalEstadoSolicitudLabel">Estado del procesamiento de la solicitud</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body pb-0">
                         <!-- tab -->
                         <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#PestanaTimers" role="tab">
-                                    <span class="d-block d-sm-none"><i class="fas fa-clock"></i></span>
+                                <a class="nav-link active" data-toggle="tab" href="#tabTiempos" role="tab">
+                                    <span class="d-block d-sm-none"><i class="fa fa-clock"></i></span>
                                     <span class="d-none d-sm-block">Procesos</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#PestanaComentarios" role="tab">
-                                    <span class="d-block d-sm-none"><i class="far fa-comment-alt"></i></span>
+                                <a class="nav-link" data-toggle="tab" href="#tabDetalles" role="tab">
+                                    <span class="d-block d-sm-none"><i class="far fa-comments"></i></span>
                                     <span class="d-none d-sm-block">Más detalles</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones" style="display: none;">
+                                <a class="nav-link" data-toggle="tab" href="#listaCondiciones" role="tab">
+                                    <span class="d-none d-sm-block">Condiciones de la solictud</span>
                                 </a>
                             </li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div class="tab-pane active p-3" id="PestanaTimers" role="tabpanel">
+                            <div class="tab-pane active p-3" id="tabTiempos" role="tabpanel">
+                                <div class="form-group row justify-content-center" id="divSolicitudInactiva" style="display: none;">
+                                    <h6 class="text-danger">Solicitud Inactiva</h6>
+                                </div>
                                 <div class="table-responsive">
-                                    <table class="table mb-0" id="tblDetalleEstado">
+                                    <table class="table mb-0 table-striped" id="tblDetalleEstado">
                                         <thead class="thead-light">
                                             <tr>
                                                 <th>Proceso</th>
@@ -713,76 +864,138 @@
                                                 <th>Tiempo (D:H:M:S)</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                        </tbody>
+                                        <tbody></tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="tab-pane p-3" id="PestanaComentarios" role="tabpanel">
-                                <div class="form-group row" id="divDetalleResolucion">
-                                    <div class="col-sm-12 text-center">
-                                        <label id="lblResolucion" class="col-form-label text-warning">En recepción</label>
+                            <div class="tab-pane p-3" id="tabDetalles" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5 class="text-danger text-center font-weight-bold">Rechazado por analistas</h5>
+                                        <ul class="timeline pl-3 mb-0">
+                                            <li>
+                                                <label class="mb-0">Razón de reprogramación <span class="font-weight-bold">(Wilmer Zavala)</span></label>
+                                                <label class="float-right">09 Noviembre, 2020</label>
+                                                <p>No se presentó comprobante de domicilio</p>
+                                            </li>
+                                            <li>
+                                                <label class="mb-0">Observaciones información personal <span class="font-weight-bold">(Willian Díaz)</span></label>
+                                                <label class="float-right">09 Noviembre, 2020</label>
+                                                <p>Se validaron documentos adjuntados por vendedores.</p>
+                                            </li>
+                                            <li>
+                                                <label class="mb-0">Observaciones información laboral <span class="font-weight-bold">(Willian Díaz)</span></label>
+                                                <label class="float-right">09 Noviembre, 2020</label>
+                                                <p>Se validaron documentos adjuntados por vendedores.</p>
+                                            </li>
+                                            <li>
+                                                <label class="mb-0">Observaciones de referencias personales <span class="font-weight-bold">(Keyla Hernandez)</span></label>
+                                                <label class="float-right">09 Noviembre, 2020</label>
+                                                <p>No se presentó comprobante de pago</p>
+                                            </li>
+                                            <li>
+                                                <label class="mb-0">Observaciones de la documentación <span class="font-weight-bold">(Keyla Hernandez)</span></label>
+                                                <label class="float-right">09 Noviembre, 2020</label>
+                                                <p>No se presentó comprobante de pago</p>
+                                            </li>
+                                            <li>
+                                                <label class="mb-0">Observaciones para gestoría <span class="font-weight-bold">(Willian Díaz)</span></label>
+                                                <label class="float-right">09 Noviembre, 2020</label>
+                                                <p>Validar campo trabajo y domicilio, cliente recompra formal y buro activo.</p>
+                                            </li>
+                                            <li>
+                                                <label class="mb-0">Observaciones de gestoría <span class="font-weight-bold">(Wilmer Zavala)</span></label>
+                                                <label class="float-right">09 Noviembre, 2020</label>
+                                                <p>Se validaron documentos adjuntados por vendedores.</p>
+                                            </li>
+                                            <li>
+                                                <label class="mb-0">Comentarios de la resolución <span class="font-weight-bold">(Keyla Hernandez)</span></label>
+                                                <label class="float-right">09 Noviembre, 2020</label>
+                                                <p class="mb-0">Se validaron documentos adjuntados por vendedores.</p>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="form-group row" id="divNoHayMasDetalles" style="display: none;">
-                                    <div class="col-sm-12 text-center">
-                                        <label class="col-form-label">No hay más detalles de esta solicitud</label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" id="divReprogramado" style="display: none;">
-                                    <label class="col-sm-5 col-form-label"><strong>Razón reprogramado:</strong></label>
-                                    <div class="col-sm-7">
-                                        <label id="lblReprogramado" class="col-form-label"></label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" id="divCondicionado" style="display: none;">
-                                    <label class="col-sm-5 col-form-label"><strong>Razón condicionado:</strong></label>
-                                    <div class="col-sm-7">
-                                        <label id="lblCondicionado" class="col-form-label"></label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" id="divDocumentacionComentario" style="display: none;">
-                                    <label class="col-sm-5 col-form-label"><strong>Observaciones documentación:</strong></label>
-                                    <div class="col-sm-7">
-                                        <label id="lblDocumentacionComentario" class="col-form-label"></label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" id="divInfoPersonal" style="display: none;">
-                                    <label class="col-sm-5 col-form-label"><strong>Observaciones info. personal:</strong></label>
-                                    <div class="col-sm-7">
-                                        <label id="lblInfoPersonalComentario" class="col-form-label"></label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" id="divInfoLaboral" style="display: none;">
-                                    <label class="col-sm-5 col-form-label"><strong>Observaciones info. laboral:</strong></label>
-                                    <div class="col-sm-7">
-                                        <label id="lblInfoLaboralComentario" class="col-form-label"></label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" id="divReferencias" style="display: none;">
-                                    <label class="col-sm-5 col-form-label"><strong>Observaciones referencias:</strong></label>
-                                    <div class="col-sm-7">
-                                        <label id="lblReferenciasComentario" class="col-form-label"></label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" id="divCampo" style="display: none;">
-                                    <label class="col-sm-5 col-form-label"><strong>Observaciones para campo:</strong></label>
-                                    <div class="col-sm-7">
-                                        <label id="lblCampoComentario" class="col-form-label"></label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" id="divGestoria" style="display: none;">
-                                    <label class="col-sm-5 col-form-label"><strong>Observaciones de gestoria:</strong></label>
-                                    <div class="col-sm-7">
-                                        <label id="lblGestoriaComentario" class="col-form-label"></label>
-                                    </div>
-                                </div>
-                                <div class="form-group row" id="divComentarioResolucion" style="display: none;">
-                                    <label class="col-sm-5 col-form-label"><strong>Comentario resolución:</strong></label>
-                                    <div class="col-sm-7">
-                                        <label id="lblResolucionComentario" class="col-form-label"></label>
-                                    </div>
-                                </div>
+
+
+                                <%--<div class="form-group row" id="divDetalleResolucion">
+<div class="col-sm-12 text-center">
+<label id="lblResolucion" class="col-form-label text-warning">En recepción</label>
+</div>
+</div>
+<div class="form-group row" id="divNoHayMasDetalles" style="display: none;">
+<div class="col-sm-12 text-center">
+<label class="col-form-label">No hay más detalles de esta solicitud</label>
+</div>
+</div>
+<div class="form-group row" id="divReprogramado" style="display: none;">
+<label class="col-sm-5 col-form-label"><strong>Razón reprogramado:</strong></label>
+<div class="col-sm-7">
+<label id="lblReprogramado" class="col-form-label">No se presentó comprobante de ingresos</label>
+</div>
+</div>
+<div class="form-group row" id="divCondicionado" style="display: none;">
+<label class="col-sm-5 col-form-label"><strong>Razón condicionado:</strong></label>
+<div class="col-sm-7">
+<label id="lblCondicionado" class="col-form-label">No se presentó comprobante de ingresos</label>
+</div>
+</div>
+<div class="form-group row" id="divDocumentacionComentario" style="display: none;">
+<label class="col-sm-5 col-form-label"><strong>Observaciones documentación:</strong></label>
+<div class="col-sm-7">
+<label id="lblDocumentacionComentario" class="col-form-label">No se presentó comprobante de ingresos ni croquis de domicilio</label>
+</div>
+</div>
+<div class="form-group row" id="divInfoPersonal" style="display: none;">
+<label class="col-sm-5 col-form-label"><strong>Observaciones info. personal:</strong></label>
+<div class="col-sm-7">
+<label id="lblInfoPersonalComentario" class="col-form-label">No se presentó comprobante de ingresos</label>
+</div>
+</div>
+<div class="form-group row" id="divInfoLaboral" style="display: none;">
+<label class="col-sm-5 col-form-label"><strong>Observaciones info. laboral:</strong></label>
+<div class="col-sm-7">
+<label id="lblInfoLaboralComentario" class="col-form-label">No se presentó comprobante de ingresos</label>
+</div>
+</div>
+<div class="form-group row" id="divReferencias" style="display: none;">
+<label class="col-sm-5 col-form-label"><strong>Observaciones referencias:</strong></label>
+<div class="col-sm-7">
+<label id="lblReferenciasComentario" class="col-form-label">No se presentó comprobante de ingresos</label>
+</div>
+</div>
+<div class="form-group row" id="divCampo" style="display: none;">
+<label class="col-sm-5 col-form-label"><strong>Observaciones para campo:</strong></label>
+<div class="col-sm-7">
+<label id="lblCampoComentario" class="col-form-label">No se presentó comprobante de ingresos</label>
+</div>
+</div>
+<div class="form-group row" id="divGestoria" style="display: none;">
+<label class="col-sm-5 col-form-label"><strong>Observaciones de gestoria:</strong></label>
+<div class="col-sm-7">
+<label id="lblGestoriaComentario" class="col-form-label">No se presentó comprobante de ingresos</label>
+</div>
+</div>
+<div class="form-group row" id="divComentarioResolucion" style="display: none;">
+<label class="col-sm-5 col-form-label"><strong>Comentario resolución:</strong></label>
+<div class="col-sm-7">
+<label id="lblResolucionComentario" class="col-form-label">El cliente se arrepintió</label>
+</div>
+</div>--%>
+                            </div>
+                            <div class="tab-pane p-3" id="listaCondiciones" role="tabpanel">
+                                <table id="tblListaSolicitudCondiciones" runat="server" class="table table-condensed table-striped">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Tipo Condición</th>
+                                            <th>Descripción</th>
+                                            <th>Comentario Adicional</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <!-- termina tab -->
@@ -800,27 +1013,19 @@
         <div id="modalComentarioReferencia" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalComentarioReferenciaLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalComentarioReferenciaLabel">Observaciones de referencia personal</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <div class="modal-header pt-3 pb-2">
+                        <h6 class="modal-title mt-0" id="modalComentarioReferenciaLabel">Observaciones de referencia personal</h6>
                     </div>
                     <form action="#" id="frmObservacionReferencia">
                         <div class="modal-body">
-                            ¿Está seguro de actualizar las observaciones de la referencia personal <strong>
-                                <label id="lblNombreReferenciaModal"></label>
-                            </strong>?
-                        <br />
                             <div class="form-group">
-                                <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesReferencia" required="required" class="form-control" maxlength="225" rows="2" data-parsley-group="informacionLaboral"></textarea>
+                                <label class="col-form-label">Observaciones del departamento de crédito</label>
+                                <textarea id="txtObservacionesReferencia" required="required" class="form-control" rows="2"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="btnComentarioReferenciaConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
-                                Confirmar
-                            </button>
                             <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                                Cancelar
+                                Cerrar
                             </button>
                         </div>
                     </form>
@@ -828,22 +1033,46 @@
             </div>
         </div>
 
-        <!-- modal documentacion -->
-        <div id="modalDocumentacion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDocumentacionDocumentacionLabel" aria-hidden="true">
+        <div id="modalDocumentacion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDocumentacionLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalDocumentacionLabel">Toda la documentación</h5>
+                        <h6 class="modal-title mt-0" id="modalDocumentacionLabel">Documentación de la solicitud</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        Documentos adjuntados en la solcitud
-
-                    <div class="container-fluid">
-                        <div class="form-group row">
-                            <ul id="listaDocumentosAdjuntados"></ul>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="mt-0 header-title text-center">Documentación identidad</label>
+                                <div class="align-self-center" id="divDocumentacionCedulaModal" runat="server">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="mt-0 header-title text-center">Documentación domicilio</label>
+                                <div class="align-self-center" id="divDocumentacionDomicilioModal" runat="server">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="mt-0 header-title text-center">Documentación laboral</label>
+                                <div class="align-self-center" id="divDocumentacionLaboralModal" runat="server">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="mt-0 header-title text-center">Solicitud fisica</label>
+                                <div class="align-self-center" id="divDocumentacionSoliFisicaModal" runat="server">
+                                </div>
+                            </div>
+                            <div class="col-sm-12" id="divContenedorCampoDomicilioModal" runat="server" visible="false">
+                                <label class="mt-0 header-title text-center">Documentación de campo (Domicilio)</label>
+                                <div class="align-self-center" id="divDocumentacionCampoDomicilioModal" runat="server">
+                                </div>
+                            </div>
+                            <div class="col-sm-12" id="divContenedorCampoTrabajoModal" runat="server" visible="false">
+                                <label class="mt-0 header-title text-center">Documentación de campo (Trabajo)</label>
+                                <div class="align-self-center" id="divDocumentacionCampoTrabajoModal" runat="server">
+                                </div>
+                            </div>
                         </div>
-                    </div>
                     </div>
                     <div class="modal-footer">
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -853,7 +1082,6 @@
                 </div>
             </div>
         </div>
-
     </form>
 
     <script src="/Scripts/js/jquery.min.js"></script>
@@ -865,15 +1093,16 @@
     <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_RegistradaDetalles.js?v=20200902095555"></script>
     <script>
         $("#divDocumentacionCedula").unitegallery({
             gallery_theme: "tilesgrid",
-            tile_width: 150,
-            tile_height: 97,
+            tile_width: 180,
+            tile_height: 120,
             lightbox_type: "compact",
-            grid_num_rows: 15
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
         });
 
         $("#divDocumentacionCedulaModal").unitegallery({
@@ -881,7 +1110,9 @@
             tile_width: 180,
             tile_height: 120,
             lightbox_type: "compact",
-            grid_num_rows: 15
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
         });
 
         $("#divDocumentacionDomicilio").unitegallery({
@@ -889,7 +1120,9 @@
             tile_width: 180,
             tile_height: 120,
             lightbox_type: "compact",
-            grid_num_rows: 15
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
         });
 
         $("#divDocumentacionDomicilioModal").unitegallery({
@@ -897,7 +1130,9 @@
             tile_width: 180,
             tile_height: 120,
             lightbox_type: "compact",
-            grid_num_rows: 15
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
         });
 
         $("#divDocumentacionLaboral").unitegallery({
@@ -905,7 +1140,9 @@
             tile_width: 180,
             tile_height: 120,
             lightbox_type: "compact",
-            grid_num_rows: 15
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
         });
 
         $("#divDocumentacionLaboralModal").unitegallery({
@@ -913,7 +1150,9 @@
             tile_width: 180,
             tile_height: 120,
             lightbox_type: "compact",
-            grid_num_rows: 15
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
         });
 
         $("#divDocumentacionSoliFisicaModal").unitegallery({
@@ -921,8 +1160,51 @@
             tile_width: 180,
             tile_height: 120,
             lightbox_type: "compact",
-            grid_num_rows: 15
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
         });
+
+        $("#divDocumentacionCampoDomicilio").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divDocumentacionCampoDomicilioModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divDocumentacionCampoTrabajo").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divDocumentacionCampoTrabajoModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
     </script>
 </body>
 </html>

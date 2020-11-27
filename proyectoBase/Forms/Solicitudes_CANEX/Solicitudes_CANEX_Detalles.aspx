@@ -463,9 +463,9 @@
                         </div>
                         <div id="collapsePrestamoRequerido" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
                             <div class="panel-body">
-                                <div class="row mb-0" id="divCapacidadDePagoPrecalificado" runat="server">
+                                <div class="row mb-0">
                                     <!-- INFORMACION DEL PRECALIFICADO -->
-                                    <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="col-lg-6 col-md-6 col-12" id="divCapacidadDePagoPrecalificado" runat="server">
 
                                         <h6 class="font-weight-bold">Capacidad de Pago - Precalificado</h6>
 

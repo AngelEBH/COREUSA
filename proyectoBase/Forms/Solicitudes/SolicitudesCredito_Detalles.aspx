@@ -405,7 +405,7 @@
                             <div class="panel-body">
 
                                 <div class="row mb-0" id="divCapacidadDePagoPrecalificado" runat="server">
-                                    <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="col-lg-6 col-md-6 col-12 border-right border-gray">
 
                                         <h6 class="font-weight-bold">Capacidad de Pago - Precalificado</h6>
 

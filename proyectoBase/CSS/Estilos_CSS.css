@@ -119,3 +119,7 @@ body {
     padding-bottom: .25rem !important;
     padding-top: .25rem !important;
 }
+
+.cursor-pointer{
+    cursor:pointer;
+}
