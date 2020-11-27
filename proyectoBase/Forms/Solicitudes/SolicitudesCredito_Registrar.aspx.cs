@@ -1495,6 +1495,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
                         sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
+
+
                         using (var sqlResultado = sqlComando.ExecuteReader())
                         {
                             while (sqlResultado.Read())
