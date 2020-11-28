@@ -5,12 +5,11 @@ var resolucionHabilitada = false;
 //abrir modal de detalles del estado del procesamiento de la solicitud
 $('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
 
-    var qString = "?" + window.location.href.split("?")[1];
-
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_RegistradaDetalles.aspx/CargarEstadoSolicitud" + qString,
+        url: "SolicitudesCredito_RegistradaDetalles.aspx/CargarEstadoSolicitud",
         contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({ dataCrypt: window.location.href}),
         error: function (xhr, ajaxOptions, thrownError) {
 
             //mostrar mensaje de error

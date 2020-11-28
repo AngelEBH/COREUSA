@@ -531,15 +531,14 @@
                                             <h6 class="font-weight-bold">Préstamos sugeridos - Capacidad de pago real</h6>
 
                                             <div class="form-group row">
-                                                <div class="col-12">
+                                                <div class="col-12" id="divTablaNuevosPrestamosSugeridos" runat="server" visible="false">
                                                     <div class="table-responsive">
-                                                        <table class="table table-condensed table-striped table-hover cursor-pointer" id="tblPMOSugeridosReales">
+                                                        <table class="table table-condensed table-striped table-hover cursor-pointer" id="tblPrestamosSugeridosReales" runat="server">
                                                             <thead>
                                                                 <tr>
                                                                     <th>Monto a financiar</th>
                                                                     <th>Plazo</th>
-                                                                    <th>Cutoa</th>
-                                                                    <th></th>
+                                                                    <th>Cuota</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody class="table-condensed">
@@ -547,7 +546,7 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <div class="col-12" runat="server" id="divSinCapacidadDePago" visible="true">
+                                                <div class="col-12" runat="server" id="divSinCapacidadDePago" visible="false">
                                                     <label class="font-weight-bold text-danger d-block">El cliente no tiene capacidad de pago</label>
                                                     No hay préstamos seguridos para la capacidad de pago del cliente.
                                                 </div>
@@ -597,19 +596,19 @@
                                             MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                         -->
                                         <div class="form-group row">
-                                            <div class="col-12">
+                                            <div class="col-sm-12 col-6">
                                                 <label class="col-form-label">Monto total a financiar</label>
                                                 <asp:TextBox ID="txtMontoTotalAFinanciar_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-4 col-6">
                                                 <label class="col-form-label">Couta del préstamo</label>
                                                 <asp:TextBox ID="txtCuotaDelPrestamo_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-4 col-6">
                                                 <label class="col-form-label">Couta del seguro</label>
                                                 <asp:TextBox ID="txtCuotaDelSeguro_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-4 col-6">
                                                 <label class="col-form-label">Cuota del GPS</label>
                                                 <asp:TextBox ID="txtCuotaGPS_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
@@ -626,46 +625,45 @@
                                                 <asp:TextBox ID="txtGastosDeCierre_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                         </div>
-                                    </div>
 
 
+                                        <div id="divPrestamoFinalAprobado" runat="server">
 
-                                    <div class="col-lg-6 col-md-6 col-12 border-left border-gray" id="divPrestamoFinalAprobado" runat="server">
+                                            <h6 class="font-weight-bold">Monto final a financiar  <span class="font-weight-bold" runat="server" id="lblEstadoDelMontoFinalAFinanciar">(En análisis)</span></h6>
 
-                                        <h6 class="font-weight-bold">Monto final a financiar  <span class="font-weight-bold text-danger">(En análisis)</span></h6>
-
-                                        <div class="form-group row">
-                                            <div class="col-4">
-                                                <label class="col-form-label">Monto total a financiar</label>
-                                                <asp:TextBox ID="txtMontoTotalAFinanciar_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="col-form-label">Plazo <span id="lblTipoDePlazo_FinalAprobado" class="font-weight-bold" runat="server">Quincenal</span></label>
-                                                <asp:TextBox ID="txtPlazoFinal_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="col-form-label">Couta del préstamo</label>
-                                                <asp:TextBox ID="txtCuotaDelPrestamo_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="col-form-label">Couta del seguro</label>
-                                                <asp:TextBox ID="txtCuotaDelSeguro_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="col-form-label">Cuota del GPS</label>
-                                                <asp:TextBox ID="txtCuotaGPS_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="col-form-label">Cuota total</label>
-                                                <asp:TextBox ID="txtCuotaTotal_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-6">
-                                                <label class="col-form-label">Costo aparato GPS</label>
-                                                <asp:TextBox ID="txtCostoAparatoGPS_FinalAprobado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-6">
-                                                <label class="col-form-label">Gastos de cierre</label>
-                                                <asp:TextBox ID="txtGastosDeCierre_FinalAprobado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            <div class="form-group row">
+                                                <div class="col-4">
+                                                    <label class="col-form-label">Monto total a financiar</label>
+                                                    <asp:TextBox ID="txtMontoTotalAFinanciar_FinalAprobado" CssClass="form-control form-control-sm text-right border-success" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="col-form-label">Plazo <span id="lblTipoDePlazo_FinalAprobado" class="font-weight-bold" runat="server">Quincenal</span></label>
+                                                    <asp:TextBox ID="txtPlazoFinal_FinalAprobado" CssClass="form-control form-control-sm text-right border-success" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="col-form-label">Couta del préstamo</label>
+                                                    <asp:TextBox ID="txtCuotaDelPrestamo_FinalAprobado" CssClass="form-control form-control-sm text-right border-success" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="col-form-label">Couta del seguro</label>
+                                                    <asp:TextBox ID="txtCuotaDelSeguro_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="col-form-label">Cuota del GPS</label>
+                                                    <asp:TextBox ID="txtCuotaGPS_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="col-form-label">Cuota total</label>
+                                                    <asp:TextBox ID="txtCuotaTotal_FinalAprobado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Costo aparato GPS</label>
+                                                    <asp:TextBox ID="txtCostoAparatoGPS_FinalAprobado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Gastos de cierre</label>
+                                                    <asp:TextBox ID="txtGastosDeCierre_FinalAprobado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -687,7 +685,7 @@
                         <div id="collapseInformacionAnalisis" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
                             <div class="panel-body">
                                 <div class="row mb-0" id="div1" runat="server">
-                                    <div class="col-lg-6 col-md-6 col-6 border-right border-gray">
+                                    <div class="col-lg-6 col-md-6 col-12 border-right border-gray">
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <label class="col-form-label">Tipo de empresa</label>
@@ -712,7 +710,7 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default" id="divInformaciondeCampo" runat="server" visible="true">
+                    <div class="panel panel-default" id="divInformaciondeCampo" runat="server" visible="false">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingEight">
                             <h6 class="panel-title m-0 font-14">
                                 <a href="#collapseInformaciondeCampo" class="text-dark collapsed h6 collapsed font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo">
@@ -723,7 +721,7 @@
                         </div>
                         <div id="collapseInformaciondeCampo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
                             <div class="panel-body">
-                                <div class="row mb-0" id="divResolucionDomicilio" runat="server" visible="true">
+                                <div class="row mb-0" id="divResolucionDomicilio" runat="server" visible="false">
                                     <div class="col-lg-6 col-md-6">
 
                                         <h6>Resolución del Domicilio <small>(<span id="lblResolucionCampoDomicilio" runat="server" class="font-weight-bold"></span>)</small></h6>
@@ -765,7 +763,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row mb-0 mt-1 border-top border-gray" id="divResolucionTrabajo" runat="server" visible="true">
+                                <div class="row mb-0 mt-1 border-top border-gray" id="divResolucionTrabajo" runat="server" visible="false">
                                     <div class="col-lg-6 col-md-6">
 
                                         <h6>Resolución del Trabajo <small>(<span id="lblResolucionCampoTrabajo" runat="server" class="font-weight-bold"></span>)</small></h6>
@@ -855,7 +853,7 @@
                                     <h6 class="text-danger">Solicitud Inactiva</h6>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table mb-0 table-striped" id="tblDetalleEstado">
+                                    <table class="table table-hover mb-0 cursor-pointer" id="tblDetalleEstado">
                                         <thead class="thead-light">
                                             <tr>
                                                 <th>Proceso</th>
@@ -871,120 +869,64 @@
                             <div class="tab-pane p-3" id="tabDetalles" role="tabpanel">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h5 class="text-danger text-center font-weight-bold">Rechazado por analistas</h5>
-                                        <ul class="timeline pl-3 mb-0">
-                                            <li>
-                                                <label class="mb-0">Razón de reprogramación <span class="font-weight-bold">(Wilmer Zavala)</span></label>
-                                                <label class="float-right">09 Noviembre, 2020</label>
-                                                <p>No se presentó comprobante de domicilio</p>
+                                        <h5 class="text-center font-weight-bold" id="lblEstadoSolicitud" runat="server">En Recepción</h5>
+
+                                        <div class="form-group text-center mt-4" id="divNoHayMasDetalles" runat="server" visible="true">
+                                            <label class="col-form-label font-weight-bold">No hay más detalles de esta solicitud...</label>
+                                        </div>
+
+                                        <ul class="timeline pl-3 mb-0" id="divLineaDeTiempo" runat="server" visible="false">
+                                            <li id="liObservacionesReprogramacion" runat="server" visible="false">
+                                                <label class="mb-0">Observaciones de reprogramación (<span class="font-weight-bold" id="lblUsuario_ComentarioReprogramacion" runat="server"></span>)</label>
+                                                <label class="float-right" runat="server" id="lblFecha_ComentarioReprogramacion"></label>
+                                                <p runat="server" id="lblComentario_Reprogramacion"></p>
                                             </li>
-                                            <li>
-                                                <label class="mb-0">Observaciones información personal <span class="font-weight-bold">(Willian Díaz)</span></label>
-                                                <label class="float-right">09 Noviembre, 2020</label>
-                                                <p>Se validaron documentos adjuntados por vendedores.</p>
+                                            <li id="liObservaciones_OtrosCondicionamientos" runat="server" visible="false">
+                                                <label class="mb-0">Observaciones de otros condicionamientos (<span class="font-weight-bold" id="lblUsuario_ComentarioOtrosCondicionamientos" runat="server"></span>)</label>
+                                                <label class="float-right" runat="server" id="lblFecha_OtrosCondicionamientos"></label>
+                                                <p runat="server" id="lblComentario_OtrosCondicionamientos"></p>
                                             </li>
-                                            <li>
-                                                <label class="mb-0">Observaciones información laboral <span class="font-weight-bold">(Willian Díaz)</span></label>
-                                                <label class="float-right">09 Noviembre, 2020</label>
-                                                <p>Se validaron documentos adjuntados por vendedores.</p>
+                                            <li id="liObservacionesInformacionPersonal" runat="server" visible="false">
+                                                <label class="mb-0">Observaciones información personal (<span class="font-weight-bold" id="lblUsuario_ComentarioInformacionPerosnal" runat="server"></span>)</label>
+                                                <label class="float-right" runat="server" id="lblFecha_ComentarioInformacionPersonal"></label>
+                                                <p runat="server" id="lblComentario_InformacionPersonal"></p>
                                             </li>
-                                            <li>
-                                                <label class="mb-0">Observaciones de referencias personales <span class="font-weight-bold">(Keyla Hernandez)</span></label>
-                                                <label class="float-right">09 Noviembre, 2020</label>
-                                                <p>No se presentó comprobante de pago</p>
+                                            <li id="liObservacionesInformacionLaboral" runat="server" visible="false">
+                                                <label class="mb-0">Observaciones información laboral (<span class="font-weight-bold" id="lblUsuario_ComentarioInformacionLaboral" runat="server"></span>)</label>
+                                                <label class="float-right" runat="server" id="lblFecha_ComentarioInformacionLaboral"></label>
+                                                <p runat="server" id="lblComentario_InformacionLaboral"></p>
                                             </li>
-                                            <li>
-                                                <label class="mb-0">Observaciones de la documentación <span class="font-weight-bold">(Keyla Hernandez)</span></label>
-                                                <label class="float-right">09 Noviembre, 2020</label>
-                                                <p>No se presentó comprobante de pago</p>
+                                            <li id="liObservacionesReferenciasPersonales" runat="server" visible="false">
+                                                <label class="mb-0">Observaciones de referencias personales (<span class="font-weight-bold" id="lblUsuario_ComentarioReferenciasPersonales" runat="server"></span>)</label>
+                                                <label class="float-right" runat="server" id="lblFecha_ComentarioReferenciasPersonales"></label>
+                                                <p runat="server" id="lblComentario_ReferenciasPersonales"></p>
                                             </li>
-                                            <li>
-                                                <label class="mb-0">Observaciones para gestoría <span class="font-weight-bold">(Willian Díaz)</span></label>
-                                                <label class="float-right">09 Noviembre, 2020</label>
-                                                <p>Validar campo trabajo y domicilio, cliente recompra formal y buro activo.</p>
+                                            <li id="liObservacionesDocumentacion" runat="server" visible="false">
+                                                <label class="mb-0">Observaciones de la documentación (<span class="font-weight-bold" id="lblUsuario_ComentarioDocumentacion" runat="server"></span>)</label>
+                                                <label class="float-right" runat="server" id="lblFecha_ComentarioDocumentacion"></label>
+                                                <p runat="server" id="lblComentario_Documentacion"></p>
                                             </li>
-                                            <li>
-                                                <label class="mb-0">Observaciones de gestoría <span class="font-weight-bold">(Wilmer Zavala)</span></label>
-                                                <label class="float-right">09 Noviembre, 2020</label>
-                                                <p>Se validaron documentos adjuntados por vendedores.</p>
+                                            <li id="liObservacionesParaGestoria" runat="server" visible="false">
+                                                <label class="mb-0">Observaciones para gestoría (<span class="font-weight-bold" id="lblUsuario_ComentarioParaGestoria" runat="server"></span>)</label>
+                                                <label class="float-right" runat="server" id="lblFecha_ComentarioParaGestoria"></label>
+                                                <p runat="server" id="lblComentario_ParaGestoria"></p>
                                             </li>
-                                            <li>
-                                                <label class="mb-0">Comentarios de la resolución <span class="font-weight-bold">(Keyla Hernandez)</span></label>
-                                                <label class="float-right">09 Noviembre, 2020</label>
-                                                <p class="mb-0">Se validaron documentos adjuntados por vendedores.</p>
+                                            <li id="liObservacionesDeGestoria" runat="server" visible="false">
+                                                <label class="mb-0">Observaciones de gestoría (<span class="font-weight-bold" id="lblUsuario_ComentarioDeGestoria" runat="server"></span>)</label>
+                                                <label class="float-right" runat="server" id="lblFecha_ComentarioDeGestoria"></label>
+                                                <p runat="server" id="lblComentario_DeGestoria"></p>
+                                            </li>
+                                            <li id="liComentariosDeLaResolucion" runat="server" visible="false">
+                                                <label class="mb-0">Comentarios de la resolución (<span class="font-weight-bold" id="lblUsuario_ComentarioDeLaResolucion" runat="server"></span>)</label>
+                                                <label class="float-right" runat="server" id="lblFecha_ComentarioDeLaResolucion"></label>
+                                                <p runat="server" id="lblComentario_Resolicion"></p>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
-
-
-                                <%--<div class="form-group row" id="divDetalleResolucion">
-<div class="col-sm-12 text-center">
-<label id="lblResolucion" class="col-form-label text-warning">En recepción</label>
-</div>
-</div>
-<div class="form-group row" id="divNoHayMasDetalles" style="display: none;">
-<div class="col-sm-12 text-center">
-<label class="col-form-label">No hay más detalles de esta solicitud</label>
-</div>
-</div>
-<div class="form-group row" id="divReprogramado" style="display: none;">
-<label class="col-sm-5 col-form-label"><strong>Razón reprogramado:</strong></label>
-<div class="col-sm-7">
-<label id="lblReprogramado" class="col-form-label">No se presentó comprobante de ingresos</label>
-</div>
-</div>
-<div class="form-group row" id="divCondicionado" style="display: none;">
-<label class="col-sm-5 col-form-label"><strong>Razón condicionado:</strong></label>
-<div class="col-sm-7">
-<label id="lblCondicionado" class="col-form-label">No se presentó comprobante de ingresos</label>
-</div>
-</div>
-<div class="form-group row" id="divDocumentacionComentario" style="display: none;">
-<label class="col-sm-5 col-form-label"><strong>Observaciones documentación:</strong></label>
-<div class="col-sm-7">
-<label id="lblDocumentacionComentario" class="col-form-label">No se presentó comprobante de ingresos ni croquis de domicilio</label>
-</div>
-</div>
-<div class="form-group row" id="divInfoPersonal" style="display: none;">
-<label class="col-sm-5 col-form-label"><strong>Observaciones info. personal:</strong></label>
-<div class="col-sm-7">
-<label id="lblInfoPersonalComentario" class="col-form-label">No se presentó comprobante de ingresos</label>
-</div>
-</div>
-<div class="form-group row" id="divInfoLaboral" style="display: none;">
-<label class="col-sm-5 col-form-label"><strong>Observaciones info. laboral:</strong></label>
-<div class="col-sm-7">
-<label id="lblInfoLaboralComentario" class="col-form-label">No se presentó comprobante de ingresos</label>
-</div>
-</div>
-<div class="form-group row" id="divReferencias" style="display: none;">
-<label class="col-sm-5 col-form-label"><strong>Observaciones referencias:</strong></label>
-<div class="col-sm-7">
-<label id="lblReferenciasComentario" class="col-form-label">No se presentó comprobante de ingresos</label>
-</div>
-</div>
-<div class="form-group row" id="divCampo" style="display: none;">
-<label class="col-sm-5 col-form-label"><strong>Observaciones para campo:</strong></label>
-<div class="col-sm-7">
-<label id="lblCampoComentario" class="col-form-label">No se presentó comprobante de ingresos</label>
-</div>
-</div>
-<div class="form-group row" id="divGestoria" style="display: none;">
-<label class="col-sm-5 col-form-label"><strong>Observaciones de gestoria:</strong></label>
-<div class="col-sm-7">
-<label id="lblGestoriaComentario" class="col-form-label">No se presentó comprobante de ingresos</label>
-</div>
-</div>
-<div class="form-group row" id="divComentarioResolucion" style="display: none;">
-<label class="col-sm-5 col-form-label"><strong>Comentario resolución:</strong></label>
-<div class="col-sm-7">
-<label id="lblResolucionComentario" class="col-form-label">El cliente se arrepintió</label>
-</div>
-</div>--%>
                             </div>
                             <div class="tab-pane p-3" id="listaCondiciones" role="tabpanel">
-                                <table id="tblListaSolicitudCondiciones" runat="server" class="table table-condensed table-striped">
+                                <table id="tblListaSolicitudCondiciones" runat="server" class="table table-hover mb-0 cursor-pointer">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Tipo Condición</th>

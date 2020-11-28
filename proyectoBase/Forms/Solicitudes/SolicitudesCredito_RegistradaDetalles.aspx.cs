@@ -1,6 +1,5 @@
 ﻿using proyectoBase.Models.ViewModel;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -11,6 +10,7 @@ using System.Web.UI.HtmlControls;
 
 public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
 {
+    public string pcID { get; set; }
     public string pcIDApp = "";
     public string IdProducto = "";
     public string pcIDSesion = "";
@@ -51,6 +51,7 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
 
                     pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                    pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDSesion = "1";
@@ -80,13 +81,13 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
         try
         {
             var logo = string.Empty;
-            var idEstadoSolicitud = string.Empty;
             var estadoSolicitud = string.Empty;
+            var idEstadoSolicitud = string.Empty;
+            var procesoPendiente = DateTime.Parse("1900-01-01 00:00:00.000");
             var iconoRojo = "<i class='mdi mdi-close-circle-outline mdi-18px text-danger'></i>";
             var iconoExito = "<i class='mdi mdi-check-circle-outline mdi-18px text-success'></i>";
             var iconoPendiente = "<i class='mdi mdi-check-circle-outline mdi-18px text-warning'></i>";
             var iconoCancelado = "<i class='mdi mdi-check-circle-outline mdi-18px text-secondary'></i>";
-            var procesoPendiente = DateTime.Parse("1900-01-01 00:00:00.000");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -231,12 +232,13 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                             txtCapacidadDePagoMensual.Text = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
                             txtCapacidadDePagoQuincenal.Text = (decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()) / 2).ToString("N");
 
+                            /* Informacion del prestamo solicitado */
                             txtValorAFinanciarSeleccionado.Text = decimal.Parse(sqlResultado["fnValorSeleccionado"].ToString()).ToString("N");
                             txtMonedaSolicitada.Text = sqlResultado["fcNombreMoneda"].ToString();
                             txtValorGarantia.Text = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()).ToString("N");
                             txtValorPrima.Text = decimal.Parse(sqlResultado["fnValorPrima"].ToString()).ToString("N");
                             txtPlazoSeleccionado.Text = decimal.Parse(sqlResultado["fiPlazoSeleccionado"].ToString()).ToString("N");
-                            //lblTipoDePlazo_Solicitado.InnerText = sqlResultado["TipoDePlazo"].ToString();
+                            /*lblTipoDePlazo_FinalAprobado.InnerText = decimal.Parse(sqlResultado["AquiPonerDinamicamenteElTipoDePlazo"].ToString()).ToString("N"); */
                             lblTipoDePlazo_Solicitado.InnerText = IdProducto == "202" ? "Mensual" : "Quincenal";
                             txtOrigen.Text = sqlResultado["fcOrigen"].ToString();
 
@@ -249,21 +251,29 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                             txtCostoAparatoGPS_Calculo.Text = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
                             txtGastosDeCierre_Calculo.Text = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
 
+                            var montoFinalAFinanciar = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString());
+
                             /*** Prestamo Final aprobado ***/
-                            if (idEstadoSolicitud == "7" || sqlResultado["fnMontoFinalFinanciar"].ToString() != string.Empty)// el id estado 7 es aprobado
+                            if (montoFinalAFinanciar != 0)
                             {
-                                divPrestamoFinalAprobado.Visible = true;
+                                lblEstadoDelMontoFinalAFinanciar.InnerText = idEstadoSolicitud == "7" ? "Aprobado" : "No Aprobado";
+                                lblEstadoDelMontoFinalAFinanciar.Attributes.Add("class", idEstadoSolicitud == "7" ? "font-weight-bold text-success" : "font-weight-bold text-danger");
 
                                 txtMontoTotalAFinanciar_FinalAprobado.Text = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString()).ToString("N");
                                 txtPlazoFinal_FinalAprobado.Text = decimal.Parse(sqlResultado["fiPlazoFinalAprobado"].ToString()).ToString("N");
-                                //lblTipoDePlazo_FinalAprobado.InnerText = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
+
+                                /*lblTipoDePlazo_FinalAprobado.InnerText = decimal.Parse(sqlResultado["AquiPonerDinamicamenteElTipoDePlazo"].ToString()).ToString("N"); */
                                 lblTipoDePlazo_FinalAprobado.InnerText = IdProducto == "202" ? "Mensual" : "Quincenal";
+
+                                /* Culcular préstamo final a financiar *PENDIENTE* */
                                 txtCuotaDelPrestamo_FinalAprobado.Text = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
                                 txtCuotaDelSeguro_FinalAprobado.Text = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
                                 txtCuotaGPS_FinalAprobado.Text = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
                                 txtCuotaTotal_FinalAprobado.Text = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
                                 txtCostoAparatoGPS_FinalAprobado.Text = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
                                 txtGastosDeCierre_FinalAprobado.Text = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
+
+                                divPrestamoFinalAprobado.Visible = true;
                             }
                             else
                             {
@@ -273,30 +283,160 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                             var sueldoBaseReal = decimal.Parse(sqlResultado["fnSueldoBaseReal"].ToString());
 
                             /*** Recalculo capacidad de pago cuando los ingresos son diferentes ***/
-                            if (sueldoBaseReal != 0)
+                            if (sueldoBaseReal != 0 || 1 == 1)
                             {
-                                
                                 var bonosComisiones = decimal.Parse(sqlResultado["fnBonosComisionesReal"].ToString());
                                 var ingresosReales = sueldoBaseReal + bonosComisiones;
                                 var obligacionesPrecalificado = decimal.Parse(sqlResultado["fnObligacionesPrecalificado"].ToString());
 
-
                                 txtIngresos_Recalculo.Text = ingresosReales.ToString("N");
                                 txtObligaciones_Recalculo.Text = obligacionesPrecalificado.ToString("N");
                                 txtDisponible_Recalculo.Text = (ingresosReales - obligacionesPrecalificado).ToString("N");
-                                txtCapacidadDePagoMensual.Text = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
-                                txtCapacidadDePagoQuincenal.Text = (decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()) / 2).ToString("N");
-
+                                txtCapacidadDePagoMensual_Recalculo.Text = decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()).ToString("N");
+                                txtCapacidadDePagoQuicenal_Recalculo.Text = (decimal.Parse(sqlResultado["fnDisponiblePrecalificado"].ToString()) / 2).ToString("N");
                                 divRecalculoCapacidadDePago.Visible = true;
 
-                            }
+                                if (estadoSolicitud != "7" && estadoSolicitud != "5" && estadoSolicitud != "4" || 1 == 1)
+                                {
+                                    /*** Mostrar prestamos sugeridos para la nueva capacidad de pago ***/
+                                    using (var sqlComandoCotizador = new SqlCommand("CoreFinanciero.dbo.sp_CotizadorProductos", sqlConexion))
+                                    {
+                                        sqlComandoCotizador.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                                        sqlComandoCotizador.Parameters.AddWithValue("@piIDProducto", IdProducto);
+                                        sqlComandoCotizador.Parameters.AddWithValue("@pcIdentidad", pcID);
+                                        sqlComandoCotizador.Parameters.AddWithValue("@piConObligaciones", obligacionesPrecalificado == 0 ? "0" : "1");
+                                        sqlComandoCotizador.Parameters.AddWithValue("@pnIngresosBrutos", ingresosReales);
+                                        sqlComandoCotizador.Parameters.AddWithValue("@pnIngresosDisponible", ingresosReales - obligacionesPrecalificado);
+                                        sqlComandoCotizador.CommandType = CommandType.StoredProcedure;
 
+                                        using (var sqlResultadoCotizador = sqlComandoCotizador.ExecuteReader())
+                                        {
+                                            if (sqlResultadoCotizador.HasRows)
+                                            {
+                                                divTablaNuevosPrestamosSugeridos.Visible = true;
+                                            }
+                                            else
+                                            {
+                                                divSinCapacidadDePago.Visible = true;
+                                            }
+
+                                            HtmlTableRow tRowPrestamoSugerido = null;
+
+                                            while (sqlResultadoCotizador.Read())
+                                            {
+                                                tRowPrestamoSugerido = new HtmlTableRow();
+                                                tRowPrestamoSugerido.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultadoCotizador["fnMontoOfertado"].ToString()).ToString("N") });
+                                                tRowPrestamoSugerido.Cells.Add(new HtmlTableCell() { InnerText = sqlResultadoCotizador["fiPlazo"].ToString() + " " + sqlResultadoCotizador["fcTipodeCuota"].ToString() });
+                                                tRowPrestamoSugerido.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultadoCotizador["fnCuotaQuincenal"].ToString()).ToString("N") });
+                                                tblPrestamosSugeridosReales.Rows.Add(tRowPrestamoSugerido);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
                             txtTipoDeEmpresa.Text = sqlResultado["fcTipoEmpresa"].ToString();
                             txtTipoDePerfil.Text = sqlResultado["fcTipoPerfil"].ToString();
                             txtTipoDeEmpleo.Text = sqlResultado["fcTipoEmpleado"].ToString();
                             txtBuroActual.Text = sqlResultado["fcBuroActual"].ToString();
                             txtOrigen.Text = sqlResultado["fcOrigen"].ToString();
+
+
+                            /****** Comentarios del procesamiento de la solicitud  ******/
+
+                            lblEstadoSolicitud.InnerText = estadoSolicitud;
+
+                            lblEstadoSolicitud.Attributes.Add("class", idEstadoSolicitud == "7" ? "text-center font-weight-bold text-success" : (idEstadoSolicitud == "5" || idEstadoSolicitud == "4") ? "text-center font-weight-bold text-danger" : "text-center font-weight-bold text-warning");
+
+                            var contadorComentario = 0;
+
+                            if (sqlResultado["fcReprogramadoComentario"].ToString() != string.Empty)
+                            {
+                                liObservacionesReprogramacion.Visible = true;
+                                lblUsuario_ComentarioReprogramacion.InnerText = sqlResultado["fcNombreGestor"].ToString();
+                                lblFecha_ComentarioReprogramacion.InnerText = DateTime.Parse(sqlResultado["fdReprogramadoInicio"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
+                                lblComentario_Reprogramacion.InnerText = sqlResultado["fcReprogramadoComentario"].ToString();
+                                contadorComentario++;
+                            }
+
+                            if (sqlResultado["fcCondicionadoComentario"].ToString() != string.Empty)
+                            {
+                                liObservaciones_OtrosCondicionamientos.Visible = true;
+                                lblUsuario_ComentarioOtrosCondicionamientos.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
+                                lblFecha_OtrosCondicionamientos.InnerText = DateTime.Parse(sqlResultado["fdCondicionadoInicio"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
+                                lblComentario_OtrosCondicionamientos.InnerText = sqlResultado["fcCondicionadoComentario"].ToString();
+                                contadorComentario++;
+                            }
+
+                            if (sqlResultado["fcComentarioValidacionInfoPersonal"].ToString() != string.Empty)
+                            {
+                                liObservacionesInformacionPersonal.Visible = true;
+                                lblUsuario_ComentarioInformacionPerosnal.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
+                                lblFecha_ComentarioInformacionPersonal.InnerText = DateTime.Parse(sqlResultado["fdAnalisisTiempoValidarInformacionPersonal"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
+                                lblComentario_InformacionPersonal.InnerText = sqlResultado["fcComentarioValidacionInfoPersonal"].ToString();
+                                contadorComentario++;
+                            }
+
+                            if (sqlResultado["fcComentarioValidacionInfoLaboral"].ToString() != string.Empty)
+                            {
+                                liObservacionesInformacionLaboral.Visible = true;
+                                lblUsuario_ComentarioInformacionLaboral.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
+                                lblFecha_ComentarioInformacionLaboral.InnerText = DateTime.Parse(sqlResultado["fdAnalisisTiempoValidarInformacionLaboral"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
+                                lblComentario_InformacionLaboral.InnerText = sqlResultado["fcComentarioValidacionInfoLaboral"].ToString();
+                                contadorComentario++;
+                            }
+
+                            if (sqlResultado["fcComentarioValidacionReferenciasPersonales"].ToString() != string.Empty)
+                            {
+                                liObservacionesReferenciasPersonales.Visible = true;
+                                lblUsuario_ComentarioReferenciasPersonales.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
+                                lblFecha_ComentarioReferenciasPersonales.InnerText = DateTime.Parse(sqlResultado["fdAnalisisTiempoValidacionReferenciasPersonales"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
+                                lblComentario_ReferenciasPersonales.InnerText = sqlResultado["fcComentarioValidacionReferenciasPersonales"].ToString();
+                                contadorComentario++;
+                            }
+
+                            if (sqlResultado["fcComentarioValidacionDocumentacion"].ToString() != string.Empty)
+                            {
+                                liObservacionesDocumentacion.Visible = true;
+                                lblUsuario_ComentarioDocumentacion.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
+                                lblFecha_ComentarioDocumentacion.InnerText = DateTime.Parse(sqlResultado["fdAnalisisTiempoValidarDocumentos"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
+                                lblComentario_Documentacion.InnerText = sqlResultado["fcComentarioValidacionDocumentacion"].ToString();
+                                contadorComentario++;
+                            }
+
+                            if (sqlResultado["fcObservacionesDeCredito"].ToString() != string.Empty)
+                            {
+                                liObservacionesParaGestoria.Visible = true;
+                                lblUsuario_ComentarioParaGestoria.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
+                                lblFecha_ComentarioParaGestoria.InnerText = DateTime.Parse(sqlResultado["fdEnvioARutaAnalista"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
+                                lblComentario_ParaGestoria.InnerText = sqlResultado["fcObservacionesDeCredito"].ToString();
+                                contadorComentario++;
+                            }
+
+                            if (sqlResultado["fcObservacionesDeCampo"].ToString() != string.Empty)
+                            {
+                                liObservacionesDeGestoria.Visible = true;
+                                lblUsuario_ComentarioDeGestoria.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
+                                lblFecha_ComentarioDeGestoria.InnerText = DateTime.Parse(sqlResultado["fdEnRutaDeInvestigacionFin"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
+                                lblComentario_DeGestoria.InnerText = sqlResultado["fcObservacionesDeCampo"].ToString();
+                                contadorComentario++;
+                            }
+
+                            if (sqlResultado["fcComentarioResolucion"].ToString() != string.Empty)
+                            {
+                                liComentariosDeLaResolucion.Visible = true;
+                                lblUsuario_ComentarioDeLaResolucion.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
+                                lblFecha_ComentarioDeLaResolucion.InnerText = DateTime.Parse(sqlResultado["fdTiempoTomaDecisionFinal"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
+                                lblComentario_Resolicion.InnerText = sqlResultado["fcComentarioResolucion"].ToString();
+                                contadorComentario++;
+                            }
+
+                            if (contadorComentario > 0)
+                            {
+                                divNoHayMasDetalles.Visible = false;
+                                divLineaDeTiempo.Visible = true;
+                            }
+
 
                             /****** Documentos de la solicitud ******/
                             sqlResultado.NextResult();
@@ -378,6 +518,7 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
 
                                 HtmlTableRow tRowSolicitudCondiciones = null;
                                 var EstadoCondicion = string.Empty;
+
                                 while (sqlResultado.Read())
                                 {
                                     EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"] == false ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-danger mb-0'>Pendiente</label>";
@@ -400,9 +541,9 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                             var hoy = DateTime.Today;
                             var edad = hoy.Year - fechaNacimientoCliente.Year;
 
-                            if (fechaNacimientoCliente.Date > hoy.AddYears(-edad)) 
+                            if (fechaNacimientoCliente.Date > hoy.AddYears(-edad))
                                 edad--;
-                            
+
                             lblNombreCliente.Text = sqlResultado["fcPrimerNombreCliente"].ToString() + " " + sqlResultado["fcSegundoNombreCliente"].ToString() + " " + sqlResultado["fcPrimerApellidoCliente"].ToString() + " " + sqlResultado["fcSegundoApellidoCliente"].ToString();
                             lblIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
                             txtRTNCliente.Text = sqlResultado["fcRTN"].ToString();
@@ -414,7 +555,6 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                             txtProfesionCliente.Text = sqlResultado["fcProfesionOficioCliente"].ToString();
                             txtSexoCliente.Text = sqlResultado["fcSexoCliente"].ToString() == "M" ? "Masculino" : "Femenino";
                             txtEstadoCivilCliente.Text = sqlResultado["fcDescripcionEstadoCivil"].ToString();
-
                             txtTipoDeVivienda.Text = sqlResultado["fcDescripcionViviEnda"].ToString();
                             txtTiempoDeResidir.Text = sqlResultado["fcTiempoDeResidir"].ToString();
 
@@ -423,7 +563,6 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                             sqlResultado.Read();
 
                             int arraigoLaboralMeses = GetMonthDifference(hoy, DateTime.Parse(sqlResultado["fdFechaIngreso"].ToString()));
-
 
                             txtNombreTrabajoCliente.Text = sqlResultado["fcNombreTrabajo"].ToString();
                             txtPuestoAsignado.Text = sqlResultado["fcPuestoAsignado"].ToString();
@@ -450,12 +589,15 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                                 txtFechaRecibida_Trabajo.Text = fechaEnInvestigacionInicio.ToString("MM/dd/yyyy hh:mm tt");
                                 txtFechaRendida_Trabajo.Text = DateTime.Parse(sqlResultado["fdFechaValidacion"].ToString()).ToString("MM/dd/yyyy hh:mm tt");
                                 txtObservacionesDeCampo_Trabajo.InnerText = sqlResultado["fcObservacionesCampo"].ToString();
+
+                                divResolucionTrabajo.Visible = true;
+                                divInformaciondeCampo.Visible = true;
                             }
 
                             /****** Informacion domicilio ******/
                             sqlResultado.NextResult();
                             sqlResultado.Read();
-                            
+
                             txtDepartamentoDomicilio.Text = sqlResultado["fcDepartamento"].ToString();
                             txtMunicipioDomicilio.Text = sqlResultado["fcMunicipio"].ToString();
                             txtCiudadPobladoDomicilio.Text = sqlResultado["fcPoblado"].ToString();
@@ -471,11 +613,15 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                                 txtFechaRecibida_Domicilio.Text = fechaEnInvestigacionInicio.ToString("MM/dd/yyyy hh:mm tt");
                                 txtFechaValidacion_Domicilio.Text = DateTime.Parse(sqlResultado["fdFechaValidacion"].ToString()).ToString("MM/dd/yyyy hh:mm tt");
                                 txtObservacionesDeCampo_Domicilio.InnerText = sqlResultado["fcObservacionesCampo"].ToString();
+
+                                divResolucionDomicilio.Visible = true;
+                                divInformaciondeCampo.Visible = true;
                             }
 
                             /****** Informacion del conyugue ******/
                             sqlResultado.NextResult();
                             sqlResultado.Read();
+
                             if (!sqlResultado.HasRows)
                             {
                                 divPanelInformacionConyugal.Visible = false;
@@ -513,7 +659,7 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
 
                                 colorClass = sqlResultado["fcComentarioDeptoCredito"].ToString() != "Sin comunicacion" ? "tr-exito" : "text-danger";
 
-                                tRowReferencias.Attributes.Add("class",colorClass);
+                                tRowReferencias.Attributes.Add("class", colorClass);
                                 tblReferencias.Rows.Add(tRowReferencias);
                             }
                         }
@@ -531,419 +677,17 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static SolicitudAnalisisViewModel CargarInformacionSolicitud()
-    {
-        var DSC = new DSCore.DataCrypt();
-        var ObjSolicitud = new SolicitudAnalisisViewModel();
-        try
-        {
-            var lcURL = HttpContext.Current.Request.Url.ToString();
-            var lURLDesencriptado = DesencriptarURL(lcURL);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            var IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
-            var pcIDApp = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp"));
-
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
-            {
-                sqlConexion.Open();
-
-                #region SOLICITUD MAESTRO
-                var SolicitudMaestro = new BandejaSolicitudesViewModel();
-
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            SolicitudMaestro = new BandejaSolicitudesViewModel()
-                            {
-                                fiIDSolicitud = (int)reader["fiIDSolicitud"],
-                                fiIDTipoPrestamo = (int)reader["fiIDTipoProducto"],
-                                fcDescripcion = (string)reader["fcProducto"],
-                                fiTipoSolicitud = (short)reader["fiTipoSolicitud"],
-                                TipoNegociacion = (short)reader["fiTipoNegociacion"],
-                                // informacion del precalificado
-                                fdValorPmoSugeridoSeleccionado = (decimal)reader["fnValorSeleccionado"],
-                                fiPlazoPmoSeleccionado = (int)reader["fiPlazoSeleccionado"],
-                                fdIngresoPrecalificado = (decimal)reader["fnIngresoPrecalificado"],
-                                fdObligacionesPrecalificado = (decimal)reader["fnObligacionesPrecalificado"],
-                                fdDisponiblePrecalificado = (decimal)reader["fnDisponiblePrecalificado"],
-                                fnPrima = (decimal)reader["fnValorPrima"],
-                                fnValorGarantia = (decimal)reader["fnValorGarantia"],
-                                fiEdadCliente = (short)reader["fiEdadCliente"],
-                                fnSueldoBaseReal = (decimal)reader["fnSueldoBaseReal"],
-                                fnBonosComisionesReal = (decimal)reader["fnBonosComisionesReal"],
-                                // informacion del vendedor
-                                fiIDUsuarioVendedor = (int)reader["fiIDUsuarioVendedor"],
-                                fcNombreCortoVendedor = (string)reader["fcNombreCortoVendedor"],
-                                fdFechaCreacionSolicitud = (DateTime)reader["fdFechaCreacionSolicitud"],
-                                // informacion del analista
-                                fiIDUsuarioModifica = (int)reader["fiIDAnalista"],
-                                fcNombreUsuarioModifica = (string)reader["fcNombreCortoAnalista"],
-                                fcTipoEmpresa = (string)reader["fcTipoEmpresa"],
-                                fcTipoPerfil = (string)reader["fcTipoPerfil"],
-                                fcTipoEmpleado = (string)reader["fcTipoEmpleado"],
-                                fcBuroActual = (string)reader["fcBuroActual"],
-                                fiMontoFinalSugerido = (decimal)reader["fnMontoFinalSugerido"],
-                                fiMontoFinalFinanciar = (decimal)reader["fnMontoFinalFinanciar"],
-                                fiPlazoFinalAprobado = (int)reader["fiPlazoFinalAprobado"],
-                                fiEstadoSolicitud = (byte)reader["fiEstadoSolicitud"],
-                                fiSolicitudActiva = (byte)reader["fiSolicitudActiva"],
-                                //informacion cliente
-                                fiIDCliente = (int)reader["fiIDCliente"],
-                                fcNoAgencia = (string)reader["fcCentrodeCosto"],
-                                fcAgencia = (string)reader["fcNombreAgencia"],
-                                //bitacora
-                                fdEnIngresoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnIngresoInicio"]),
-                                fdEnIngresoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnIngresoFin"]),
-                                fdEnTramiteInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnColaInicio"]),
-                                fdEnTramiteFin = ConvertFromDBVal<DateTime>((object)reader["fdEnColaFin"]),
-                                //todo el proceso de analisis
-                                fdEnAnalisisInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisInicio"]),
-                                ftAnalisisTiempoValidarInformacionPersonal = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarInformacionPersonal"]),
-                                fcComentarioValidacionInfoPersonal = (string)reader["fcComentarioValidacionInfoPersonal"],
-                                ftAnalisisTiempoValidarDocumentos = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarDocumentos"]),
-                                fcComentarioValidacionDocumentacion = (string)reader["fcComentarioValidacionDocumentacion"],
-                                fbValidacionDocumentcionIdentidades = (byte)reader["fbValidacionDocumentcionIdentidades"],
-                                fbValidacionDocumentacionDomiciliar = (byte)reader["fbValidacionDocumentacionDomiciliar"],
-                                fbValidacionDocumentacionLaboral = (byte)reader["fbValidacionDocumentacionLaboral"],
-                                fbValidacionDocumentacionSolicitudFisica = (byte)reader["fbValidacionDocumentacionSolicitudFisica"],
-                                ftAnalisisTiempoValidacionReferenciasPersonales = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidacionReferenciasPersonales"]),
-                                fcComentarioValidacionReferenciasPersonales = (string)reader["fcComentarioValidacionReferenciasPersonales"],
-                                ftAnalisisTiempoValidarInformacionLaboral = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarInformacionLaboral"]),
-                                fcComentarioValidacionInfoLaboral = (string)reader["fcComentarioValidacionInfoLaboral"],
-                                ftTiempoTomaDecisionFinal = ConvertFromDBVal<DateTime>((object)reader["fdTiempoTomaDecisionFinal"]),
-                                fcObservacionesDeCredito = (string)reader["fcObservacionesDeCredito"],
-                                fcComentarioResolucion = (string)reader["fcComentarioResolucion"],
-                                fdEnAnalisisFin = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisFin"]),
-                                //todo el proceso de analisis
-                                fdCondicionadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdCondicionadoInicio"]),
-                                fcCondicionadoComentario = (string)reader["fcCondicionadoComentario"],
-                                fdCondificionadoFin = ConvertFromDBVal<DateTime>((object)reader["fdCondificionadoFin"]),
-                                fiIDOrigen = (short)reader["fiIDOrigen"],
-                                //proceso de campo
-                                fdEnvioARutaAnalista = ConvertFromDBVal<DateTime>((object)reader["fdEnvioARutaAnalista"]),
-                                fiEstadoDeCampo = (byte)reader["fiEstadoDeCampo"],
-                                fdEnCampoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionInicio"]),
-                                fcObservacionesDeGestoria = (string)reader["fcObservacionesDeCampo"],
-                                fdEnCampoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionFin"]),
-                                fdReprogramadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoInicio"]),
-                                fcReprogramadoComentario = (string)reader["fcReprogramadoComentario"],
-                                fdReprogramadoFin = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoFin"]),
-                                PasoFinalInicio = (DateTime)reader["fdPasoFinalInicio"],
-                                IDUsuarioPasoFinal = (int)reader["fiIDUsuarioPasoFinal"],
-                                ComentarioPasoFinal = (string)reader["fcComentarioPasoFinal"],
-                                PasoFinalFin = (DateTime)reader["fdPasoFinalFin"]
-                            };
-                        }
-                    }
-                }
-                ObjSolicitud.solicitud = SolicitudMaestro;
-                #endregion
-
-                #region DOCUMENTOS DE LA SOLICITUD
-                var ListadoDocumentos = new List<SolicitudesDocumentosViewModel>();
-
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ObtenerSolicitudDocumentos", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            ListadoDocumentos.Add(new SolicitudesDocumentosViewModel()
-                            {
-                                fiIDSolicitud = (int)reader["fiIDSolicitud"],
-                                fiIDSolicitudDocs = (int)reader["fiIDSolicitudDocs"],
-                                fcNombreArchivo = (string)reader["fcNombreArchivo"],
-                                fcTipoArchivo = (string)reader["fcTipoArchivo"],
-                                fcRutaArchivo = (string)reader["fcRutaArchivo"],
-                                URLArchivo = (string)reader["fcURL"],
-                                fcArchivoActivo = (byte)reader["fiArchivoActivo"],
-                                fiTipoDocumento = (int)reader["fiTipoDocumento"],
-                                DescripcionTipoDocumento = (string)reader["fcDescripcionTipoDocumento"]
-                            });
-                        }
-                        ObjSolicitud.documentos = ListadoDocumentos;
-                    }
-                }
-                #endregion
-
-                var objCliente = new ClientesViewModel();
-
-                #region CLIENTES MASTER
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Listar", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDCliente", ObjSolicitud.solicitud.fiIDCliente);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            objCliente.clientesMaster = new ClientesMasterViewModel()
-                            {
-                                fiIDCliente = (int)reader["fiIDCliente"],
-                                fcIdentidadCliente = (string)reader["fcIdentidadCliente"],
-                                RTNCliente = (string)reader["fcRTN"],
-                                fcPrimerNombreCliente = (string)reader["fcPrimerNombreCliente"],
-                                fcSegundoNombreCliente = (string)reader["fcSegundoNombreCliente"],
-                                fcPrimerApellidoCliente = (string)reader["fcPrimerApellidoCliente"],
-                                fcSegundoApellidoCliente = (string)reader["fcSegundoApellidoCliente"],
-                                fcTelefonoCliente = (string)reader["fcTelefonoPrimarioCliente"],
-                                fiNacionalidadCliente = (int)reader["fiNacionalidadCliente"],
-                                fcDescripcionNacionalidad = (string)reader["fcDescripcionNacionalidad"],
-                                fbNacionalidadActivo = (bool)reader["fbNacionalidadActivo"],
-                                fdFechaNacimientoCliente = (DateTime)reader["fdFechaNacimientoCliente"],
-                                fcCorreoElectronicoCliente = (string)reader["fcCorreoElectronicoCliente"],
-                                fcProfesionOficioCliente = (string)reader["fcProfesionOficioCliente"],
-                                fcSexoCliente = (string)reader["fcSexoCliente"],
-                                fiIDEstadoCivil = (int)reader["fiIDEstadoCivil"],
-                                fcDescripcionEstadoCivil = (string)reader["fcDescripcionEstadoCivil"],
-                                fbEstadoCivilActivo = (bool)reader["fbEstadoCivilActivo"],
-                                fiIDVivienda = (int)reader["fiIDVivienda"],
-                                fcDescripcionVivienda = (string)reader["fcDescripcionVivienda"],
-                                fbViviendaActivo = (bool)reader["fbViviendaActivo"],
-                                fiTiempoResidir = (short)reader["fiTiempoResidir"],
-                                fbClienteActivo = (bool)reader["fbClienteActivo"],
-                                fcRazonInactivo = (string)reader["fcRazonInactivo"],
-                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
-                            };
-                        }
-                    }
-                }
-                #endregion
-
-                #region CLIENTE INFORMACION LABORAL
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Laboral_Listar", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            objCliente.ClientesInformacionLaboral = new ClientesInformacionLaboralViewModel()
-                            {
-                                fiIDCliente = (int)reader["fiIDCliente"],
-                                fiIDInformacionLaboral = (int)reader["fiIDInformacionLaboral"],
-                                fcNombreTrabajo = (string)reader["fcNombreTrabajo"],
-                                fiIngresosMensuales = (decimal)reader["fnIngresosMensuales"],
-                                fcPuestoAsignado = (string)reader["fcPuestoAsignado"],
-                                fcFechaIngreso = (DateTime)reader["fdFechaIngreso"],
-                                fdTelefonoEmpresa = (string)reader["fcTelefonoEmpresa"],
-                                fcExtensionRecursosHumanos = (string)reader["fcExtensionRecursosHumanos"],
-                                fcExtensionCliente = (string)reader["fcExtensionCliente"],
-                                fcDireccionDetalladaEmpresa = (string)reader["fcDireccionDetalladaEmpresa"],
-                                fcReferenciasDireccionDetallada = (string)reader["fcReferenciasDireccionDetalladaEmpresa"],
-                                fcFuenteOtrosIngresos = (string)reader["fcFuenteOtrosIngresos"],
-                                fiValorOtrosIngresosMensuales = (decimal)reader["fnValorOtrosIngresosMensuales"],
-                                fiIDBarrioColonia = (int)reader["fiIDBarrioColonia"],
-                                fcNombreBarrioColonia = (string)reader["fcBarrio"],
-                                fiIDCiudad = (int)reader["fiIDCiudad"],
-                                fcNombreCiudad = (string)reader["fcPoblado"],
-                                fiIDMunicipio = (int)reader["fiIDMunicipio"],
-                                fcNombreMunicipio = (string)reader["fcMunicipio"],
-                                fiIDDepto = (int)reader["fiIDDepartamento"],
-                                fcNombreDepto = (string)reader["fcDepartamento"],
-                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
-                                // proceso de campo
-                                fcLatitud = (string)reader["fcLatitud"],
-                                fcLongitud = (string)reader["fcLongitud"],
-                                fiIDGestorValidador = (int)reader["fiIDGestorValidador"],
-                                fcGestorValidadorTrabajo = (string)reader["fcGestorValidadorTrabajo"],
-                                fiIDInvestigacionDeCampo = (byte)reader["fiIDInvestigacionDeCampo"],
-                                fcGestionTrabajo = (string)reader["fcGestionTrabajo"],
-                                IDTipoResultado = (byte)reader["fiTipodeResultado"],
-                                fcResultadodeCampo = (string)reader["fcResultadodeCampo"],
-                                fdFechaValidacion = (DateTime)reader["fdFechaValidacion"],
-                                fcObservacionesCampo = (string)reader["fcObservacionesCampo"],
-                                fiIDEstadoDeGestion = (byte)reader["fiIDEstadoDeGestion"],
-                                fiEstadoLaboral = (byte)reader["fiEstadoLaboral"]
-                            };
-                        }
-
-                    }
-                }
-                #endregion
-
-                #region CLIENTE INFORMACION CONYUGAL
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionConyugal_Listar", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
-                    sqlComando.Parameters.AddWithValue("@fiIDSOlicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            objCliente.ClientesInformacionConyugal = new ClientesInformacionConyugalViewModel()
-                            {
-                                fiIDInformacionConyugal = (int)reader["fiIDInformacionConyugal"],
-                                fiIDCliente = (int)reader["fiIDCliente"],
-                                fcNombreCompletoConyugue = (string)reader["fcNombreCompletoConyugue"],
-                                fcIndentidadConyugue = (string)reader["fcIndentidadConyugue"],
-                                fdFechaNacimientoConyugue = (DateTime)reader["fdFechaNacimientoConyugue"],
-                                fcTelefonoConyugue = (string)reader["fcTelefonoConyugue"],
-                                fcLugarTrabajoConyugue = (string)reader["fcLugarTrabajoConyugue"],
-                                fcIngresosMensualesConyugue = (decimal)reader["fnIngresosMensualesConyugue"],
-                                fcTelefonoTrabajoConyugue = (string)reader["fcTelefonoTrabajoConyugue"],
-                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
-
-                            };
-                        }
-                    }
-                }
-                #endregion
-
-                #region CLIENTE INFORMACION DE DOMICILIO
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionDomiciliar_Listar", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            objCliente.ClientesInformacionDomiciliar = new ClientesInformacionDomiciliarViewModel()
-                            {
-                                fiIDInformacionDomicilio = (int)reader["fiIDInformacionDomicilio"],
-                                fiIDCliente = (int)reader["fiIDCliente"],
-                                fcTelefonoCasa = (string)reader["fcTelefonoCasa"],
-                                fcDireccionDetallada = (string)reader["fcDireccionDetalladaDomicilio"],
-                                fcReferenciasDireccionDetallada = (string)reader["fcReferenciasDireccionDetalladaDomicilio"],
-                                fiIDBarrioColonia = (short)reader["fiCodBarrio"],
-                                fcNombreBarrioColonia = (string)reader["fcBarrio"],
-                                fiIDCiudad = (short)reader["fiCodPoblado"],
-                                fcNombreCiudad = (string)reader["fcPoblado"],
-                                fiIDMunicipio = (short)reader["fiCodMunicipio"],
-                                fcNombreMunicipio = (string)reader["fcMunicipio"],
-                                fiIDDepto = (short)reader["fiCodDepartamento"],
-                                fcNombreDepto = (string)reader["fcDepartamento"],
-                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
-                                // proceso de campo
-                                fcLatitud = (string)reader["fcLatitud"],
-                                fcLongitud = (string)reader["fcLongitud"],
-                                fiIDGestorValidador = (int)reader["fiIDGestorValidador"],
-                                fcGestorValidadorDomicilio = (string)reader["fcGestorValidadorDomicilio"],
-                                fiIDInvestigacionDeCampo = (byte)reader["fiIDInvestigacionDeCampo"],
-                                fcGestionDomicilio = (string)reader["fcGestionDomicilio"],
-                                IDTipoResultado = (byte)reader["fiTipodeResultado"],
-                                fcResultadodeCampo = (string)reader["fcResultadodeCampo"],
-                                fdFechaValidacion = (DateTime)reader["fdFechaValidacion"],
-                                fcObservacionesCampo = (string)reader["fcObservacionesCampo"],
-                                fiIDEstadoDeGestion = (byte)reader["fiIDEstadoDeGestion"],
-                                fiEstadoDomicilio = (byte)reader["fiEstadoDomicilio"]
-                            };
-                        }
-                    }
-                }
-                #endregion
-
-                #region CLIENTE REFERENCIAS PERSONALES
-                objCliente.ClientesReferenciasPersonales = new List<ClientesReferenciasViewModel>();
-
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Referencias_Listar", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            objCliente.ClientesReferenciasPersonales.Add(new ClientesReferenciasViewModel()
-                            {
-                                fiIDReferencia = (int)reader["fiIDReferencia"],
-                                fiIDCliente = (int)reader["fiIDCliente"],
-                                fcNombreCompletoReferencia = (string)reader["fcNombreCompletoReferencia"],
-                                fcLugarTrabajoReferencia = (string)reader["fcLugarTrabajoReferencia"],
-                                fiTiempoConocerReferencia = (short)reader["fiTiempoConocerReferencia"],
-                                fcTelefonoReferencia = (string)reader["fcTelefonoReferencia"],
-                                fiIDParentescoReferencia = (int)reader["fiIDParentescoReferencia"],
-                                fcDescripcionParentesco = (string)reader["fcDescripcionParentesco"],
-                                fbReferenciaActivo = (bool)reader["fbReferenciaActivo"],
-                                fcRazonInactivo = (string)reader["fcRazonInactivo"],
-                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
-                                fcComentarioDeptoCredito = (string)reader["fcComentarioDeptoCredito"],
-                                fiAnalistaComentario = (int)reader["fiAnalistaComentario"]
-
-                            });
-                        }
-                    }
-                }
-                #endregion
-
-                ObjSolicitud.cliente = objCliente;
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return ObjSolicitud;
-    }
-
-    [WebMethod]
-    public static BandejaSolicitudesViewModel CargarEstadoSolicitud()
+    public static BandejaSolicitudesViewModel CargarEstadoSolicitud(string dataCrypt)
     {
         var objEstadoSolicitud = new BandejaSolicitudesViewModel();
-        var DSC = new DSCore.DataCrypt();
+
         try
         {
-            var lcURL = HttpContext.Current.Request.Url.ToString();
-            var lURLDesencriptado = DesencriptarURL(lcURL);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            var IDSOL = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
             var pcIDApp = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp"));
+            var pcIDSesion = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID"));
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDSolicitud = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
             {
@@ -952,8 +696,8 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                 using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredSolicitud_SolicitudEstadoProcesamiento", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
@@ -966,41 +710,41 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                                 fiIDSolicitud = (int)reader["fiIDSolicitud"],
                                 fiEstadoSolicitud = (byte)reader["fiEstadoSolicitud"],
                                 fiSolicitudActiva = (byte)reader["fiSolicitudActiva"],
-                                fdEnIngresoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnIngresoInicio"]),
-                                fdEnIngresoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnIngresoFin"]),
-                                fdEnTramiteInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnColaInicio"]),
-                                fdEnTramiteFin = ConvertFromDBVal<DateTime>((object)reader["fdEnColaFin"]),
-                                //todo el proceso de analisis
-                                fdEnAnalisisInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisInicio"]),
-                                ftAnalisisTiempoValidarInformacionPersonal = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarInformacionPersonal"]),
+                                fdEnIngresoInicio = ConvertFromDBVal<DateTime>(reader["fdEnIngresoInicio"]),
+                                fdEnIngresoFin = ConvertFromDBVal<DateTime>(reader["fdEnIngresoFin"]),
+                                fdEnTramiteInicio = ConvertFromDBVal<DateTime>(reader["fdEnColaInicio"]),
+                                fdEnTramiteFin = ConvertFromDBVal<DateTime>(reader["fdEnColaFin"]),
+                                /* Todo el proceso de analisis */
+                                fdEnAnalisisInicio = ConvertFromDBVal<DateTime>(reader["fdEnAnalisisInicio"]),
+                                ftAnalisisTiempoValidarInformacionPersonal = ConvertFromDBVal<DateTime>(reader["fdAnalisisTiempoValidarInformacionPersonal"]),
                                 fcComentarioValidacionInfoPersonal = (string)reader["fcComentarioValidacionInfoPersonal"],
-                                ftAnalisisTiempoValidarDocumentos = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarDocumentos"]),
+                                ftAnalisisTiempoValidarDocumentos = ConvertFromDBVal<DateTime>(reader["fdAnalisisTiempoValidarDocumentos"]),
                                 fcComentarioValidacionDocumentacion = (string)reader["fcComentarioValidacionDocumentacion"],
                                 fbValidacionDocumentcionIdentidades = (byte)reader["fbValidacionDocumentcionIdentidades"],
                                 fbValidacionDocumentacionDomiciliar = (byte)reader["fbValidacionDocumentacionDomiciliar"],
                                 fbValidacionDocumentacionLaboral = (byte)reader["fbValidacionDocumentacionLaboral"],
                                 fbValidacionDocumentacionSolicitudFisica = (byte)reader["fbValidacionDocumentacionSolicitudFisica"],
-                                ftAnalisisTiempoValidacionReferenciasPersonales = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidacionReferenciasPersonales"]),
+                                ftAnalisisTiempoValidacionReferenciasPersonales = ConvertFromDBVal<DateTime>(reader["fdAnalisisTiempoValidacionReferenciasPersonales"]),
                                 fcComentarioValidacionReferenciasPersonales = (string)reader["fcComentarioValidacionReferenciasPersonales"],
-                                ftAnalisisTiempoValidarInformacionLaboral = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarInformacionLaboral"]),
+                                ftAnalisisTiempoValidarInformacionLaboral = ConvertFromDBVal<DateTime>(reader["fdAnalisisTiempoValidarInformacionLaboral"]),
                                 fcComentarioValidacionInfoLaboral = (string)reader["fcComentarioValidacionInfoLaboral"],
-                                ftTiempoTomaDecisionFinal = ConvertFromDBVal<DateTime>((object)reader["fdTiempoTomaDecisionFinal"]),
+                                ftTiempoTomaDecisionFinal = ConvertFromDBVal<DateTime>(reader["fdTiempoTomaDecisionFinal"]),
                                 fcObservacionesDeCredito = (string)reader["fcObservacionesDeCredito"],
                                 fcComentarioResolucion = (string)reader["fcComentarioResolucion"],
-                                fdEnAnalisisFin = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisFin"]),
-                                //todo el proceso de analisis
-                                fdCondicionadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdCondicionadoInicio"]),
+                                fdEnAnalisisFin = ConvertFromDBVal<DateTime>(reader["fdEnAnalisisFin"]),
+                                /* Todo el proceso de analisis */
+                                fdCondicionadoInicio = ConvertFromDBVal<DateTime>(reader["fdCondicionadoInicio"]),
                                 fcCondicionadoComentario = (string)reader["fcCondicionadoComentario"],
-                                fdCondificionadoFin = ConvertFromDBVal<DateTime>((object)reader["fdCondificionadoFin"]),
-                                //proceso de campo
-                                fdEnvioARutaAnalista = ConvertFromDBVal<DateTime>((object)reader["fdEnvioARutaAnalista"]),
+                                fdCondificionadoFin = ConvertFromDBVal<DateTime>(reader["fdCondificionadoFin"]),
+                                /* Proceso de campo */
+                                fdEnvioARutaAnalista = ConvertFromDBVal<DateTime>(reader["fdEnvioARutaAnalista"]),
                                 fiEstadoDeCampo = (byte)reader["fiEstadoDeCampo"],
-                                fdEnCampoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionInicio"]),
+                                fdEnCampoInicio = ConvertFromDBVal<DateTime>(reader["fdEnRutaDeInvestigacionInicio"]),
                                 fcObservacionesDeGestoria = (string)reader["fcObservacionesDeCampo"],
-                                fdEnCampoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionFin"]),
-                                fdReprogramadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoInicio"]),
+                                fdEnCampoFin = ConvertFromDBVal<DateTime>(reader["fdEnRutaDeInvestigacionFin"]),
+                                fdReprogramadoInicio = ConvertFromDBVal<DateTime>(reader["fdReprogramadoInicio"]),
                                 fcReprogramadoComentario = (string)reader["fcReprogramadoComentario"],
-                                fdReprogramadoFin = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoFin"]),
+                                fdReprogramadoFin = ConvertFromDBVal<DateTime>(reader["fdReprogramadoFin"]),
                                 PasoFinalInicio = (DateTime)reader["fdPasoFinalInicio"],
                                 IDUsuarioPasoFinal = (int)reader["fiIDUsuarioPasoFinal"],
                                 ComentarioPasoFinal = (string)reader["fcComentarioPasoFinal"],
@@ -1017,77 +761,6 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
             ex.Message.ToString();
         }
         return objEstadoSolicitud;
-    }
-
-
-
-    [WebMethod]
-    public static string ObtenerUrlEncriptado(string dataCrypt)
-    {
-        var lURLDesencriptado = DesencriptarURL(dataCrypt);
-        var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-        var pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
-        var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp").ToString();
-        var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString() ?? "1";
-
-        var parametrosEncriptados = DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
-
-        return parametrosEncriptados;
-    }
-
-    [WebMethod]
-    public static PrecalificadoViewModel GetPrestamosSugeridos(decimal ingresos, decimal obligaciones, string codigoProducto)
-    {
-        var DSC = new DSCore.DataCrypt();
-        var objPrecalificado = new PrecalificadoViewModel();
-        var listaCotizadorProductos = new List<cotizadorProductosViewModel>();
-        var lcURL = HttpContext.Current.Request.Url.ToString();
-        var lURLDesencriptado = DesencriptarURL(lcURL);
-        var identidad = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
-        var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr").ToString();
-
-        try
-        {
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("EXEC CoreFinanciero.dbo.sp_CotizadorProductos @piIDUsuario, @piIDProducto, @pcIdentidad, @piConObligaciones, @pnIngresosBrutos, @pnIngresosDisponibles", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDProducto", codigoProducto);
-                    sqlComando.Parameters.AddWithValue("@pcIdentidad", identidad);
-                    sqlComando.Parameters.AddWithValue("@piConObligaciones", obligaciones == 0 ? "0" : "1");
-                    sqlComando.Parameters.AddWithValue("@pnIngresosBrutos", ingresos);
-                    sqlComando.Parameters.AddWithValue("@pnIngresosDisponibles", ingresos - obligaciones);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        int IDContador = 1;
-                        while (reader.Read())
-                        {
-                            listaCotizadorProductos.Add(new cotizadorProductosViewModel()
-                            {
-                                IDCotizacion = IDContador,
-                                IDProducto = (int)reader["fiIDProducto"],
-                                ProductoDescripcion = reader["fcProducto"].ToString(),
-                                fnMontoOfertado = decimal.Parse(reader["fnMontoOfertado"].ToString()),
-                                fiPlazo = int.Parse(reader["fiPlazo"].ToString()),
-                                fnCuotaQuincenal = decimal.Parse(reader["fnCuotaQuincenal"].ToString()),
-                                TipoCuota = (string)reader["fcTipodeCuota"]
-                            });
-                            IDContador += 1;
-                        }
-                    }
-                }
-            }
-            objPrecalificado.cotizadorProductos = listaCotizadorProductos;
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return objPrecalificado;
     }
 
     [WebMethod]
@@ -1165,12 +838,25 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
         return objCalculo;
     }
 
+    [WebMethod]
+    public static string ObtenerUrlEncriptado(string dataCrypt)
+    {
+        var lURLDesencriptado = DesencriptarURL(dataCrypt);
+        var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+        var pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
+        var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp").ToString();
+        var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString() ?? "1";
+
+        var parametrosEncriptados = DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
+
+        return parametrosEncriptados;
+    }
+
     public static Uri DesencriptarURL(string URL)
     {
         Uri lURLDesencriptado = null;
         try
         {
-            var DSC = new DSCore.DataCrypt();
             var liParamStart = 0;
             var lcParametros = string.Empty;
             var pcEncriptado = string.Empty;
