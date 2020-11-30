@@ -52,13 +52,12 @@
                     <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
                         <div class="form-inline">
                             <div class="button-items pb-2">
-                                <button id="btnDetallesResolucion" runat="server" visible="false" data-toggle="modal" data-target="#modalEstado" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
-                                    Detalles del estado
-                                </button>
-                                <button runat="server" id="btnDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-success btn-sm waves-effect waves-light">
+                                <button runat="server" id="btnDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentacion" class="btn btn-secondary waves-effect waves-light">
+                                    <i class="far fa-file-alt"></i>
                                     Documentos
                                 </button>
-                                <button runat="server" id="btnMasDetalles" type="button" data-toggle="modal" data-target="#modalMasDetalles" class="btn btn-success btn-sm waves-effect waves-light">
+                                <button runat="server" id="btnMasDetalles" type="button" class="btn btn-secondary waves-effect waves-light">
+                                    <i class="fas fa-info-circle"></i>
                                     Más detalles
                                 </button>
                             </div>
@@ -410,7 +409,7 @@
                                         <h6>Referencias personales</h6>
                                         <div class="form-group row mr-1 ml-1">
                                             <div class="table-responsive">
-                                                <table class="table table-sm  table-hover cursor-pointer" id="tblReferencias" runat="server">
+                                                <table class="table table-sm table-hover cursor-pointer" id="tblReferencias" runat="server">
                                                     <thead>
                                                         <tr>
                                                             <th>Nombre referencia</th>
@@ -429,26 +428,26 @@
                                         </div>
                                     </div>
                                     <%--<div class="form-group row" id="divAval" style="display: none;">
-                                        <h4>Aval</h4>
-                                        <div class="table-responsive">
-                                            <table class="table table-condensed" id="tblAvales">
-                                                <thead class="thead-light">
-                                                    <tr>
-                                                        <th>Nombre completo</th>
-                                                        <th>Identidad</th>
-                                                        <th>Telefono</th>
-                                                        <th>Lugar de trabajo</th>
-                                                        <th>Puesto asignado</th>
-                                                        <th>Ingresos</th>
-                                                        <th>Estado</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>--%>
+<h4>Aval</h4>
+<div class="table-responsive">
+<table class="table table-condensed" id="tblAvales">
+<thead class="thead-light">
+<tr>
+<th>Nombre completo</th>
+<th>Identidad</th>
+<th>Telefono</th>
+<th>Lugar de trabajo</th>
+<th>Puesto asignado</th>
+<th>Ingresos</th>
+<th>Estado</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>--%>
                                 </div>
                             </div>
                         </div>
@@ -547,7 +546,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-12" runat="server" id="divSinCapacidadDePago" visible="false">
-                                                    <label class="font-weight-bold text-danger d-block">El cliente no tiene capacidad de pago</label>
+                                                    <h6 class="font-weight-bold text-danger d-block">Capacidad de pago insuficiente</h6>
                                                     No hay préstamos seguridos para la capacidad de pago del cliente.
                                                 </div>
                                             </div>
@@ -592,9 +591,9 @@
                                         <!-- Calculo del prestamo -->
 
                                         <!--
-                                            EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-                                            MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
-                                        -->
+EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+-->
                                         <div class="form-group row">
                                             <div class="col-sm-12 col-6">
                                                 <label class="col-form-label">Monto total a financiar</label>
@@ -629,7 +628,7 @@
 
                                         <div id="divPrestamoFinalAprobado" runat="server">
 
-                                            <h6 class="font-weight-bold">Monto final a financiar  <span class="font-weight-bold" runat="server" id="lblEstadoDelMontoFinalAFinanciar">(En análisis)</span></h6>
+                                            <h6 class="font-weight-bold">Monto final a financiar <span class="font-weight-bold" runat="server" id="lblEstadoDelMontoFinalAFinanciar">(En análisis)</span></h6>
 
                                             <div class="form-group row">
                                                 <div class="col-4">
@@ -1035,6 +1034,9 @@
     <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/Scripts/plugins/countdownjs/countdown.min.js"></script>
+    <script src="/Scripts/plugins/moment/moment.js"></script>
+    <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_RegistradaDetalles.js?v=20200902095555"></script>
     <script>
         $("#divDocumentacionCedula").unitegallery({

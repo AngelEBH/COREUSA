@@ -1325,6 +1325,7 @@
     <Content Include="Scripts\plugins\chartist\js\chartist-plugin-tooltip.min.js" />
     <Content Include="Scripts\plugins\chartist\js\chartist.js" />
     <Content Include="Scripts\plugins\chartist\js\chartist.min.js" />
+    <Content Include="Scripts\plugins\countdownjs\countdown.min.js" />
     <Content Include="Scripts\plugins\d3\d3.js" />
     <Content Include="Scripts\plugins\d3\d3.min.js" />
     <Content Include="Scripts\plugins\datapicker\bootstrap-datepicker.js" />

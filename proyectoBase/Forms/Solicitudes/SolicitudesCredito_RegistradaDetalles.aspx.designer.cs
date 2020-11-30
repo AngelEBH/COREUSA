@@ -40,15 +40,6 @@ public partial class SolicitudesCredito_RegistradaDetalles
     protected global::System.Web.UI.WebControls.Label lblProducto;
 
     /// <summary>
-    /// Control btnDetallesResolucion.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlButton btnDetallesResolucion;
-
-    /// <summary>
     /// Control btnDocumentacionModal.
     /// </summary>
     /// <remarks>

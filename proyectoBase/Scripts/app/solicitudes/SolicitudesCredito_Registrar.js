@@ -330,8 +330,8 @@ $(document).ready(function () {
                 }
 
                 //if (plazoSeleccionado > CONSTANTES.PrestamoMaximo_Plazo) {
-                //    state = false;
-                //    MensajeError('El plazo máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Plazo + '.');
+                // state = false;
+                // MensajeError('El plazo máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Plazo + '.');
                 //}
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
