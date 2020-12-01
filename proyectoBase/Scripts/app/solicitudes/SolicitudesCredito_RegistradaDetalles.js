@@ -23,7 +23,7 @@ $("#btnMasDetalles").click(function () {
                 /* En ingreso */
                 var enIngresoInicio = ObtenerFechaFormateada(informacionSolicitud.EnIngresoInicio);
                 var enIngresoFin = ObtenerFechaFormateada(informacionSolicitud.EnIngresoFin);
-                var enIngresoUsuario = informacionSolicitud.UsuarioAnalista;
+                var enIngresoUsuario = informacionSolicitud.UsuarioEnIngreso;
 
                 if (ValidarFecha(informacionSolicitud.EnIngresoInicio) == null) {
 

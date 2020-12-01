@@ -1,579 +1,365 @@
-﻿var idSolicitud = 0;
-var objSolicitud = [];
-var resolucionHabilitada = false;
-cargarInformacionSolicitud();
-
-function cargarInformacionSolicitud() {
+﻿
+/* Abrir modal de detalles del procesamiento de la solicitud, comentarios y condiciones */
+$("#btnMasDetalles").click(function () {
 
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Detalles.aspx/CargarInformacionSolicitud",
-        data: JSON.stringify({ dataCrypt: window.location.href }),
+        url: "SolicitudesCredito_RegistradaDetalles.aspx/CargarEstadoSolicitud",
         contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudo carga la información, contacte al administrador');
-        },
-        success: function (data) {
-
-            var rowDataCliente = data.d.cliente;// Variable de informacion del cliente
-            var rowDataSolicitud = data.d.solicitud;// Variable de informacion de la solicitud
-            var rowDataDocumentos = data.d.documentos;// Variable de documentacion de la solicitud
-
-            $("#btnHistorialExterno,#btnHistorialInterno").prop('disabled', false);
-            var ProcesoPendiente = '/Date(-2208967200000)/';
-            var IconoExito = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
-            var IconoPendiente = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
-            var IconoRojo = '<i class="mdi mdi mdi-close-circle-outline mdi-18px text-danger"></i>';
-
-            objSolicitud = data.d.solicitud;
-            idSolicitud = rowDataSolicitud.fiIDSolicitud;
-
-            /* Cargar status de la solicitud */
-            var statusIngreso = '';
-            if (rowDataSolicitud.fdEnIngresoInicio != ProcesoPendiente) {
-                statusIngreso = rowDataSolicitud.fdEnIngresoFin != ProcesoPendiente ? IconoExito : IconoPendiente;
-            }
-
-            /* Estado en tramite de la solicitud */
-            var statusTramite = '';
-            if (rowDataSolicitud.fdEnTramiteInicio != ProcesoPendiente) {
-
-                if (rowDataSolicitud.fdEnTramiteFin != ProcesoPendiente) {
-                    statusTramite = IconoExito;
-                }
-                else {
-                    statusTramite = IconoPendiente;
-                }
-                if (rowDataSolicitud.fdEnTramiteFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
-                    statusTramite = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
-                }
-            }
-
-            /* Validar si ya se inició y terminó el proceso de analisis de la solicitud */
-            var statusAnalisis = '';
-            if (rowDataSolicitud.fdEnAnalisisInicio != ProcesoPendiente) {
-                if (rowDataSolicitud.fdEnAnalisisFin != ProcesoPendiente) {
-                    statusAnalisis = IconoExito;
-                }
-                else {
-                    statusAnalisis = IconoPendiente;
-                }
-                if (rowDataSolicitud.fdEnAnalisisFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
-                    statusAnalisis = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
-                }
-            }
-
-            /* Validar si ya se envió a campo y si ya se recibió respuesta de gestoria */
-            var statusCampo = '';
-            if (rowDataSolicitud.fdEnvioARutaAnalista != ProcesoPendiente) {
-
-                if (rowDataSolicitud.fdEnCampoFin != ProcesoPendiente || rowDataSolicitud.fiEstadoDeCampo == 2) {
-                    statusCampo = IconoExito;
-                }
-                else {
-                    statusCampo = IconoPendiente;
-                }
-                if (rowDataSolicitud.fdEnCampoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
-                    statusCampo = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
-                }
-                if (rowDataSolicitud.fiEstadoSolicitud == 5) {
-                    statusCampo = IconoRojo;
-                    habilitarResolucion = false;
-                }
-            }
-
-            /* Validar si la solicitud está condicionada y sigue sin recibirse actualizacion del agente de ventas */
-            var statusCondicionada = '';
-            if (rowDataSolicitud.fdCondicionadoInicio != ProcesoPendiente) {
-
-                if (rowDataSolicitud.fdCondificionadoFin != ProcesoPendiente) {
-                    statusCondicionada = IconoExito;
-                }
-                else {
-                    statusCondicionada = IconoPendiente;
-                }
-                if (rowDataSolicitud.fdCondificionadoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
-                    statusCondicionada = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
-                }
-            }
-
-            /* Validar si la solicitud está reprogramada */
-            var statusReprogramado = '';
-            if (rowDataSolicitud.fdReprogramadoInicio != ProcesoPendiente) {
-
-                if (rowDataSolicitud.fdReprogramadoFin != ProcesoPendiente) {
-                    statusReprogramado = IconoExito;
-                }
-                else {
-                    statusReprogramado = IconoPendiente;
-                }
-                if (rowDataSolicitud.fdReprogramadoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
-                    statusReprogramado = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
-                }
-            }
-
-            /* Validar proceso de validacion */
-            var statusValidacion = '';
-            if (rowDataSolicitud.PasoFinalInicio != ProcesoPendiente) {
-
-                if (rowDataSolicitud.PasoFinalFin != ProcesoPendiente) {
-                    statusValidacion = IconoExito;
-                } else {
-                    statusValidacion = IconoPendiente;
-                }
-                if (rowDataSolicitud.PasoFinalFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
-                    statusValidacion = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
-                }
-            }
-
-            /* Validar si la solicitud ya ha sido aprobada o rechazada */
-            var resolucionFinal = '';
-            if (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7) {
-
-                if (rowDataSolicitud.fiEstadoSolicitud == 7) {
-                    resolucionFinal = IconoExito;
-                }
-                else {
-                    resolucionFinal = IconoRojo;
-                }
-            }
-            else {
-                if (rowDataSolicitud.PasoFinalInicio != ProcesoPendiente) {
-                    resolucionFinal = IconoPendiente;
-                }
-            }
-
-            $('#tblEstadoSolicitud tbody').append('<tr>' +
-                '<td class="text-center pb-1 pt-1">' + statusIngreso + '</td>' +
-                '<td class="text-center pb-1 pt-1">' + statusTramite + '</td>' +
-                '<td class="text-center pb-1 pt-1">' + statusAnalisis + '</td>' +
-                '<td class="text-center pb-1 pt-1">' + statusCampo + '</td>' +
-                '<td class="text-center pb-1 pt-1">' + statusCondicionada + '</td>' +
-                '<td class="text-center pb-1 pt-1">' + statusReprogramado + '</td>' +
-                '<td class="text-center pb-1 pt-1">' + statusValidacion + '</td>' +
-                '<td class="text-center pb-1 pt-1">' + resolucionFinal + '</td>' +
-                '</tr>');
-
-            /* Informacion principal de la solicitud */
-            $('#lblNoSolicitud').text(rowDataSolicitud.fiIDSolicitud);
-            $('#lblNombreGestor').text(rowDataSolicitud.NombreGestor);
-            var nombreCompletoCliente = rowDataCliente.clientesMaster.fcPrimerNombreCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoNombreCliente + ' ' + rowDataCliente.clientesMaster.fcPrimerApellidoCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoApellidoCliente;
-            $('#lblNombreCliente').text(nombreCompletoCliente);
-            $('#lblIdentidadCliente').text(rowDataCliente.clientesMaster.fcIdentidadCliente);
-            $("#lblIdentidadCliente").text(rowDataCliente.clientesMaster.fcIdentidadCliente);
-            $('#lblProducto').text(rowDataSolicitud.fcDescripcion);
-            $('#lblTipoSolicitud').text(rowDataSolicitud.fiTipoSolicitud == 1 ? 'NUEVO' : rowDataSolicitud.fiTipoSolicitud == 2 ? 'REFINANCIAMIENTO' : rowDataSolicitud.fiTipoSolicitud == 3 ? 'RECOMPRA' : '');
-            $('#lblAgenteDeVentas').text(rowDataSolicitud.fcNombreCortoVendedor);
-            $('#lblAgencia').text(rowDataSolicitud.fcAgencia);
-            /* Informacion personal */
-            var infoPersonal = rowDataCliente.clientesMaster;
-            $('#lblRtnCliente').text(infoPersonal.RTNCliente);
-            $('#lblNumeroTelefono').text(infoPersonal.fcTelefonoCliente);
-            $('#lblNumeroTelefono').attr('href', 'tel:+' + infoPersonal.fcTelefonoCliente.replace(' ', '').replace('-', '').replace('(', '').replace(')', ''));
-            $('#lblNacionalidad').text(infoPersonal.fcDescripcionNacionalidad);
-            var fechaNacimientoCliente = FechaFormato(infoPersonal.fdFechaNacimientoCliente);
-            $('#lblFechaNacimientoCliente').text(fechaNacimientoCliente.split(' ')[0]);
-            $('#lblCorreoCliente').text(infoPersonal.fcCorreoElectronicoCliente);
-            $('#lblProfesionCliente').text(infoPersonal.fcProfesionOficioCliente);
-            $('#lblSexoCliente').text(infoPersonal.fcSexoCliente == 'M' ? 'Masculino' : 'Femenino');
-            $('#lblEstadoCivilCliente').text(infoPersonal.fcDescripcionEstadoCivil);
-            $('#lblViviendaCliente').text(infoPersonal.fcDescripcionVivienda);
-            $('#lblTiempoResidirCliente').text(infoPersonal.fiTiempoResidir > 2 ? 'Más de 2 años' : infoPersonal.fiTiempoResidir + ' años');
-            /* Informacion domicilio */
-            var infoDomiciliar = rowDataCliente.ClientesInformacionDomiciliar;
-            $('#lblDeptoCliente').text(infoDomiciliar.fcNombreDepto);
-            $('#lblMunicipioCliente').text(infoDomiciliar.fcNombreMunicipio);
-            $('#lblCiudadCliente').text(infoDomiciliar.fcNombreCiudad);
-            $('#lblBarrioColoniaCliente').text(infoDomiciliar.fcNombreBarrioColonia);
-            $('#lblDireccionDetalladaCliente').text(infoDomiciliar.fcDireccionDetallada);
-            $('#lblReferenciaDomicilioCliente').text(infoDomiciliar.fcReferenciasDireccionDetallada);
-            /* Si el proceso de campo del domicilio ya se completo, mostrarlo */
-            if (infoDomiciliar.fiIDInvestigacionDeCampo != 0) {
-                $("#divInformaciondeCampo,#divResolucionDomicilio,#tituloCampoDomicilioModal").css('display', '');
-                var ClassResultadodeCampo = infoDomiciliar.IDTipoResultado == 1 ? 'text-success' : infoDomiciliar.IDTipoResultado == 2 ? 'text-danger' : '';
-                $("#lblResolucionCampoDomicilio").text('(' + infoDomiciliar.fcResultadodeCampo + ')').addClass(ClassResultadodeCampo);
-                $("#lblGestorValidadorDomicilio").text(infoDomiciliar.fcGestorValidadorDomicilio);
-                $("#lblResolucionDomicilio").text(infoDomiciliar.fcGestionDomicilio);
-                $("#lblFechaValidacionDomicilio").text(FechaFormato(infoDomiciliar.fdFechaValidacion));
-                $("#lblObservacionesCampoDomicilio").text(infoDomiciliar.fcObservacionesCampo);
-                $("#lblResumenGestorDomicilio").text(infoDomiciliar.fcGestorValidadorDomicilio); // ficha de resumen
-            }
-            /* Informacion laboral */
-            var infoLaboral = rowDataCliente.ClientesInformacionLaboral;
-            $('#lblNombreTrabajoCliente').text(infoLaboral.fcNombreTrabajo);
-            $('#lblIngresosMensualesCliente').text(addComasFormatoNumerico(infoLaboral.fiIngresosMensuales));
-            $('#lblPuestoAsignadoCliente').text(infoLaboral.fcPuestoAsignado);
-            var fechaIngresoCliente = FechaFormato(infoLaboral.fcFechaIngreso);
-            $('#lblFechaIngresoCliente').text(fechaIngresoCliente.split(' ')[0]);
-            $('#lblTelefonoEmpresaCliente').text(infoLaboral.fdTelefonoEmpresa);
-            $('#lblTelefonoEmpresaCliente').attr('href', 'tel:+' + infoLaboral.fdTelefonoEmpresa.replace(' ', '').replace('-', '').replace('(', '').replace(')', ''));
-            $('#lblExtensionRecursosHumanos').text(infoLaboral.fcExtensionRecursosHumanos);
-            $('#lblExtensionCliente').text(infoLaboral.fcExtensionCliente);
-            $('#lblDeptoEmpresa').text(infoLaboral.fcNombreDepto);
-            $('#lblMunicipioEmpresa').text(infoLaboral.fcNombreMunicipio);
-            $('#lblCiudadEmpresa').text(infoLaboral.fcNombreCiudad);
-            $('#lblBarrioColoniaEmpresa').text(infoLaboral.fcNombreBarrioColonia);
-            $('#lblDireccionDetalladaEmpresa').text(infoLaboral.fcDireccionDetalladaEmpresa);
-            $('#lblReferenciaUbicacionEmpresa').text(infoLaboral.fcReferenciasDireccionDetallada);
-            $('#lblDescripcionOtrosIngresos').text(infoLaboral.fcFuenteOtrosIngresos == '' ? 'N/A' : infoLaboral.fcFuenteOtrosIngresos);
-            $('#lblValorOtrosIngresos').text(addComasFormatoNumerico(infoLaboral.fiValorOtrosIngresosMensuales));
-            /* Si el proceso de campo del trabajo ya se completo, mostrarlo */
-            if (infoLaboral.fiIDInvestigacionDeCampo != 0) {
-                $("#divInformaciondeCampo,#divResolucionTrabajo,#tituloCampoTrabajoModal").css('display', '');
-                var ClassResultadodeCampoLaboral = infoLaboral.IDTipoResultado == 1 ? 'text-success' : infoLaboral.IDTipoResultado == 2 ? 'text-danger' : '';
-                $("#lblResolucionCampoTrabajo").text('(' + infoLaboral.fcResultadodeCampo + ')').addClass(ClassResultadodeCampoLaboral);
-                $("#lblGestorValidadorTrabajo").text(infoLaboral.fcGestorValidadorTrabajo);
-                $("#lblResolucionTrabajo").text(infoLaboral.fcGestionTrabajo);
-                $("#lblFechaValidacionTrabajo").text(FechaFormato(infoLaboral.fdFechaValidacion));
-                $("#lblObservacionesCampoTrabajo").text(infoLaboral.fcObservacionesCampo);
-                $("#lblResumenGestorTrabajo").text(infoLaboral.fcGestorValidadorTrabajo); // ficha de resumen
-            }
-
-            /* Informacion conyugal */
-            if (rowDataCliente.ClientesInformacionConyugal != null) {
-                var infoConyugue = rowDataCliente.ClientesInformacionConyugal;
-                $('#lblNombreConyugue').text(infoConyugue.fcNombreCompletoConyugue);
-                $('#lblIdentidadConyuge').text(infoConyugue.fcIndentidadConyugue);
-                var fechaNacimientoConyuge = infoConyugue.fdFechaNacimientoConyugue != '/Date(-2208967200000)/' ? FechaFormato(infoConyugue.fdFechaNacimientoConyugue) : '';
-                $('#lblFechaNacimientoConygue').text(fechaNacimientoConyuge != '' ? fechaNacimientoConyuge.split(' ')[0] : '');
-                $('#lblTelefonoConyugue').text(infoConyugue.fcTelefonoConyugue);
-                $('#lblLugarTrabajoConyugue').text(infoConyugue.fcLugarTrabajoConyugue);
-                $('#lblTelefonoTrabajoConyugue').text(infoConyugue.fcTelefonoTrabajoConyugue);
-                $('#lblIngresosConyugue').text(addComasFormatoNumerico(infoConyugue.fcIngresosMensualesConyugue));
-            }
-            else {
-                $("#titleConyugal").css('display', 'none');
-                $("#divPanelInformacionConyugal").css('display', 'none');
-            }
-            /* Referencias personales del cliente */
-            if (rowDataCliente.ClientesReferenciasPersonales != null) {
-                if (rowDataCliente.ClientesReferenciasPersonales.length > 0) {
-                    var tblReferencias = $('#tblReferencias tbody');
-                    for (var i = 0; i < rowDataCliente.ClientesReferenciasPersonales.length; i++) {
-                        var btnAgregarComentarioReferencia = '<button type="button" id="btnComentarioReferencia" data-id="' + rowDataCliente.ClientesReferenciasPersonales[i].fiIDReferencia + '" data-comment="' + rowDataCliente.ClientesReferenciasPersonales[i].fcComentarioDeptoCredito + '" data-nombreref="' + rowDataCliente.ClientesReferenciasPersonales[i].fcNombreCompletoReferencia + '" class="btn mdi mdi-comment" title="Ver observaciones del depto. de crédito"></button>';
-                        var tiempoConocerRef = rowDataCliente.ClientesReferenciasPersonales[i].fiTiempoConocerReferencia <= 2 ? rowDataCliente.ClientesReferenciasPersonales[i].fiTiempoConocerReferencia + ' años' : 'Más de 2 años'
-                        tblReferencias.append('<tr>' +
-                            '<td class="FilaCondensada">' + rowDataCliente.ClientesReferenciasPersonales[i].fcNombreCompletoReferencia + '</td>' +
-                            '<td class="FilaCondensada">' + rowDataCliente.ClientesReferenciasPersonales[i].fcLugarTrabajoReferencia + '</td>' +
-                            '<td class="FilaCondensada">' + tiempoConocerRef + '</td>' +
-                            '<td class="FilaCondensada">' +
-                            '<a href="tel:+' + rowDataCliente.ClientesReferenciasPersonales[i].fcTelefonoReferencia.replace(' ', '').replace('-', '').replace('(', '').replace(')', '') + '" class="col-form-label">' + rowDataCliente.ClientesReferenciasPersonales[i].fcTelefonoReferencia + '</a>' +
-                            '</td>' +
-                            '<td class="FilaCondensada">' + rowDataCliente.ClientesReferenciasPersonales[i].fcDescripcionParentesco + '</td>' +
-                            '<td class="FilaCondensada">' + btnAgregarComentarioReferencia + '</td>' +
-                            '</tr>');
-                    }
-                }
-            }
-            /* Avales del cliente */
-            if (rowDataCliente.Avales != null) {
-
-                var listaAvales = rowDataCliente.Avales;
-                if (listaAvales.length > 0) {
-                    var tblReferencias = $('#tblAvales tbody');
-                    for (var i = 0; i < listaAvales.length; i++) {
-                        var estadoAval = listaAvales[i].fbAvalActivo == false ? 'Inactivo' : 'Activo';
-                        var classEstadoAval = estadoAval == false ? 'text-danger' : '';
-                        var info = JSON.stringify(listaAvales[i]);
-                        var btnDetalleAvalModal = '<button id="btnDetalleAvalModal" data-id="' + listaAvales[i].fiIDAval + '" class="btn btn-sm ' + (classEstadoAval != '' ? 'btn-danger' : 'btn-info') + '" title="Detalles del aval">Detalles</button>';
-                        var nombreCompletoAval = listaAvales[i].fcPrimerNombreAval + ' ' + listaAvales[i].fcSegundoNombreAval + ' ' + listaAvales[i].fcPrimerApellidoAval + ' ' + listaAvales[i].fcSegundoApellidoAval;
-
-                        tblReferencias.append('<tr class="' + classEstadoAval + '">' +
-                            '<td class="FilaCondensada">' + nombreCompletoAval + '</td>' +
-                            '<td class="FilaCondensada">' + listaAvales[i].fcIdentidadAval + '</td>' +
-                            '<td class="FilaCondensada">' +
-                            '<a href="tel:+' + listaAvales[i].fcTelefonoAval.replace(' ', '').replace('-', '').replace('(', '').replace(')', '') + '" class="col-form-label ' + classEstadoAval + '">' + listaAvales[i].fcTelefonoAval + '</a>' +
-                            '</td>' +
-                            '<td class="FilaCondensada">' + listaAvales[i].fcNombreTrabajo + '</td>' +
-                            '<td class="FilaCondensada">' + listaAvales[i].fcPuestoAsignado + '</td>' +
-                            '<td class="FilaCondensada">' + addComasFormatoNumerico(listaAvales[i].fiIngresosMensuales) + '</td>' +
-                            '<td class="FilaCondensada">' + estadoAval + '</td>' +
-                            '<td class="FilaCondensada">' + btnDetalleAvalModal + '</td>' +
-                            '</tr>');
-                    }
-                }
-                else {
-                    $('#divAval').css('display', 'none');
-                }
-            } else {
-                $('#divAval').css('display', 'none');
-            }
-
-            /* Cargar documentación de la solicitud */
-
-            //$(".img").imgbox({
-            //    zoom: true,
-            //    drag: true
-            //});
-
-            /* Informacion del prestamo REQUERIDO */
-            $('#lblValorPmoSugeridoSeleccionado').text(addComasFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado));
-            $('#lblPlazoSeleccionado').text(addComasFormatoNumerico(rowDataSolicitud.fiPlazoPmoSeleccionado));
-            $('#lblIngresosPrecalificado').text(addComasFormatoNumerico(rowDataSolicitud.fdIngresoPrecalificado));
-            $('#lblObligacionesPrecalificado').text(addComasFormatoNumerico(rowDataSolicitud.fdObligacionesPrecalificado));
-            $('#lblDisponiblePrecalificado').text(addComasFormatoNumerico(rowDataSolicitud.fdDisponiblePrecalificado));
-
-            /* Calcular capacidad de pago mensual */
-            var capacidadPago = calcularCapacidadPago(rowDataSolicitud.fiIDTipoPrestamo, rowDataSolicitud.fdObligacionesPrecalificado, rowDataSolicitud.fdIngresoPrecalificado);
-            $('#lblCapacidadPagoMensual').text(addComasFormatoNumerico(capacidadPago));
-            $('#lblCapacidadPagoQuincenal').text(addComasFormatoNumerico(capacidadPago / 2));
-
-            if (rowDataSolicitud.fiIDTipoPrestamo == '101') {
-                prestamoEfectivo(rowDataSolicitud.fiPlazoPmoSeleccionado, rowDataSolicitud.fdValorPmoSugeridoSeleccionado);
-            }
-            else if (rowDataSolicitud.fiIDTipoPrestamo == '201') {
-                $('#lblValorVehiculo,#lblMontoValorVehiculo').css('display', '');
-                $('#lblMontoValorVehiculo').text(addComasFormatoNumerico(rowDataSolicitud.fnValorGarantia));
-                prestamoMoto(rowDataSolicitud.fnPrima, rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fiPlazoPmoSeleccionado);
-            }
-            else if (rowDataSolicitud.fiIDTipoPrestamo == '202') {
-                $('#lblValorVehiculo,#lblMontoValorVehiculo').css('display', '');
-                $('#lblMontoValorVehiculo').text(addComasFormatoNumerico(rowDataSolicitud.fnValorGarantia));
-                prestamoAuto(rowDataSolicitud.fnPrima, rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fiPlazoPmoSeleccionado)
-            }
-            $('#lblMontoPrima').text(addComasFormatoNumerico(rowDataSolicitud.fnPrima));
-            $('#lblEdadCliente').text(rowDataSolicitud.fiEdadCliente + ' años');
-
-            /* Informacion del analisis */
-            $("#tipoEmpresa").prop('disabled', true);
-            $("#tipoPerfil").prop('disabled', true);
-            $("#tipoEmpleo").prop('disabled', true);
-            $("#buroActual").prop('disabled', true);
-            $("#montoFinalFinanciar").prop('disabled', true);
-            $("#montoFinalAprobado").prop('disabled', true);
-            $("#plazoFinalAprobado").prop('disabled', true);
-
-            /* Informacion del analisis */
-            if (rowDataSolicitud.fcTipoEmpresa != '') {
-                $("#tipoEmpresa").val(rowDataSolicitud.fcTipoEmpresa);
-            }
-            if (rowDataSolicitud.fcTipoPerfil != '') {
-                $("#tipoPerfil").val(rowDataSolicitud.fcTipoPerfil);
-            }
-            if (rowDataSolicitud.fcTipoEmpleado != '') {
-                $("#tipoEmpleo").val(rowDataSolicitud.fcTipoEmpleado);
-            }
-            if (rowDataSolicitud.fcBuroActual != '') {
-                $("#buroActual").val(rowDataSolicitud.fcBuroActual);
-            }
-            if (rowDataSolicitud.fiMontoFinalSugerido != 0) {
-                $("#montoFinalAprobado").val(rowDataSolicitud.fiMontoFinalSugerido);
-            }
-            if (rowDataSolicitud.fiMontoFinalFinanciar != 0) {
-                $("#montoFinalFinanciar").val(rowDataSolicitud.fiMontoFinalFinanciar);
-            }
-            if (rowDataSolicitud.fiPlazoFinalAprobado != 0) {
-                $("#plazoFinalAprobado").val(rowDataSolicitud.fiPlazoFinalAprobado);
-            }
-
-            /* Si se modificaron los ingresos del cliente debido a incongruencia con los comprobantes de ingreso mostrar recalculo con dicho valor */
-            if (rowDataSolicitud.fnSueldoBaseReal != 0) {
-
-                var bonosComisiones = rowDataSolicitud.fnBonosComisionesReal != 0 ? rowDataSolicitud.fnBonosComisionesReal : 0;
-                var totalIngresosReales = bonosComisiones + rowDataSolicitud.fnSueldoBaseReal;
-                $("#lblIngresosReales").text(addComasFormatoNumerico(totalIngresosReales));
-                $('#lblObligacionesReales').text(addComasFormatoNumerico(rowDataSolicitud.fdObligacionesPrecalificado));
-                $('#lblDisponibleReal').text(addComasFormatoNumerico(totalIngresosReales - rowDataSolicitud.fdObligacionesPrecalificado));
-                var capacidadPagoReal = calcularCapacidadPago(rowDataSolicitud.fcDescripcion, rowDataSolicitud.fdObligacionesPrecalificado, rowDataSolicitud.fnSueldoBaseReal + bonosComisiones);
-                $('#lblCapacidadPagoMensualReal').text(addComasFormatoNumerico(capacidadPagoReal));
-                $('#lblCapacidadPagoQuincenalReal').text(addComasFormatoNumerico(capacidadPagoReal / 2));
-                $("#divPmoSugeridoReal,#divRecalculoReal").css('display', '');
-            }
-            /* Si ya se determinó un monto a financiar, mostrarlo */
-            if (rowDataSolicitud.fiMontoFinalFinanciar != 0) {
-
-                /* Mostrar div del préstamo que se esocgió */
-                $("#lblMontoPrestamoEscogido").text(addComasFormatoNumerico(rowDataSolicitud.fiMontoFinalFinanciar));
-                $("#lblPlazoEscogido").text(rowDataSolicitud.fiPlazoFinalAprobado);
-                $("#divPrestamoElegido").css('display', '');
-            }
-            /* Si se modificaron los ingresos del cliente y no se ha definido una resolucion para la solicitud, mostrar los PMO sugeridos */
-            if (rowDataSolicitud.fiEstadoSolicitud != 4 && rowDataSolicitud.fiEstadoSolicitud != 5 && rowDataSolicitud.fiEstadoSolicitud != 7 && rowDataSolicitud.fnSueldoBaseReal != 0) {
-                cargarPrestamosSugeridos(rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fnPrima);
-            }
-        }
-    });
-}
-
-/* Cargar detalles del procesamiento de la solicitud en el modal */
-$('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
-
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Detalles.aspx/CargarEstadoSolicitud",
         data: JSON.stringify({ dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la información, contacte al administrador');
         },
         success: function (data) {
+
             if (data.d != null) {
 
-                var rowDataSolicitud = data.d;
-                var ProcesoPendiente = '/Date(-2208967200000)/';
+                var informacionSolicitud = data.d;
+
                 var tablaEstatusSolicitud = $('#tblDetalleEstado tbody');
-                tablaEstatusSolicitud.empty();//limpiar tabla de detalles del estado de la solicitud
 
-                var ingresoInicio = rowDataSolicitud.fdEnIngresoInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnIngresoInicio) : '';
-                var ingresoFin = rowDataSolicitud.fdEnIngresoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnIngresoFin) : '';
-                var tiempoIngreso = ingresoInicio != '' ? ingresoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnIngresoInicio, rowDataSolicitud.fdEnIngresoFin) : '' : '';
+                tablaEstatusSolicitud.empty();
+
+                /* En ingreso */
+                var enIngresoInicio = ObtenerFechaFormateada(informacionSolicitud.EnIngresoInicio);
+                var enIngresoFin = ObtenerFechaFormateada(informacionSolicitud.EnIngresoFin);
+                var enIngresoUsuario = informacionSolicitud.UsuarioEnIngreso;
+
+                if (ValidarFecha(informacionSolicitud.EnIngresoInicio) == null) {
+
+                    enIngresoUsuario = '-';
+                }
 
                 tablaEstatusSolicitud.append('<tr>' +
-                    '<td>Ingreso</td>' +
-                    '<td>' + ingresoInicio + '</td>' +
-                    '<td>' + ingresoFin + '</td>' +
-                    '<td>' + tiempoIngreso + '</td>' +
+                    '<td class="text-center">Ingreso</td>' +
+                    '<td class="text-center">' + enIngresoInicio + '</td>' +
+                    '<td class="text-center">' + enIngresoFin + '</td>' +
+                    '<td class="text-center"><span id="lblTiempoTranscurrido_EnIngreso"></span></td>' +
+                    '<td class="text-center">' + enIngresoUsuario + '</td>' +
                     '</tr>');
 
-                var EnTramiteInicio = rowDataSolicitud.fdEnTramiteInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnTramiteInicio) : '';
-                var EnTramiteFin = rowDataSolicitud.fdEnTramiteFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnTramiteFin) : '';
-                var tiempoTramite = EnTramiteInicio != '' ? EnTramiteFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnTramiteInicio, rowDataSolicitud.fdEnTramiteFin) : '' : '';
+                InicializarContador(informacionSolicitud.EnIngresoInicio, informacionSolicitud.EnIngresoFin, 'lblTiempoTranscurrido_EnIngreso');
+
+
+                /* En tramite */
+                var enColaInicio = ObtenerFechaFormateada(informacionSolicitud.EnColaInicio);
+                var enColaFin = ObtenerFechaFormateada(informacionSolicitud.EnColaFin);
 
                 tablaEstatusSolicitud.append('<tr>' +
-                    '<td>Recepción</td>' +
-                    '<td>' + EnTramiteInicio + '</td>' +
-                    '<td>' + EnTramiteFin + '</td>' +
-                    '<td>' + tiempoTramite + '</td>' +
+                    '<td class="text-center">Recepción</td>' +
+                    '<td class="text-center">' + enColaInicio + '</td>' +
+                    '<td class="text-center">' + enColaFin + '</td>' +
+                    '<td class="text-center"><span id="lblTiempoTranscurrido_EnCola"></span></td>' +
+                    '<td class="text-center">N/A</td>' +
                     '</tr>');
 
-                var EnAnalisisInicio = rowDataSolicitud.fdEnAnalisisInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnAnalisisInicio) : '';
-                var EnAnalisisFin = rowDataSolicitud.fdEnAnalisisFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnAnalisisFin) : '';
-                var tiempoAnalisis = EnAnalisisInicio != '' ? EnAnalisisFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnAnalisisInicio, rowDataSolicitud.fdEnAnalisisFin) : '' : '';
+                InicializarContador(informacionSolicitud.EnColaInicio, informacionSolicitud.EnColaFin, 'lblTiempoTranscurrido_EnCola');
+
+
+                /* En análisis */
+                var enAnalisisInicio = ObtenerFechaFormateada(informacionSolicitud.EnAnalisisInicio);
+                var enAnalisisFin = ObtenerFechaFormateada(informacionSolicitud.EnAnalisisFin);
+                var enAnalisisUsuario = informacionSolicitud.UsuarioAnalista;
+
+                if (ValidarFecha(informacionSolicitud.EnAnalisisInicio) == null) {
+
+                    enAnalisisUsuario = '-';
+                }
 
                 tablaEstatusSolicitud.append('<tr>' +
-                    '<td>Análisis</td>' +
-                    '<td>' + EnAnalisisInicio + '</td>' +
-                    '<td>' + EnAnalisisFin + '</td>' +
-                    '<td>' + tiempoAnalisis + '</td>' +
+                    '<td class="text-center">Análisis</td>' +
+                    '<td class="text-center">' + enAnalisisInicio + '</td>' +
+                    '<td class="text-center">' + enAnalisisFin + '</td>' +
+                    '<td class="text-center"><span id="lblTiempoTranscurrido_EnAnalisis"></span></td>' +
+                    '<td class="text-center">' + enAnalisisUsuario + '</td>' +
                     '</tr>');
 
-                var EnCampoInicio = rowDataSolicitud.fdEnvioARutaAnalista != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnvioARutaAnalista) : '';
-                var EnCampoFin = rowDataSolicitud.fdEnCampoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnCampoFin) : '';
-                var tiempoCampo = EnCampoInicio != '' ? EnCampoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnvioARutaAnalista, rowDataSolicitud.fdEnCampoFin) : '' : '';
+                InicializarContador(informacionSolicitud.EnAnalisisInicio, informacionSolicitud.EnAnalisisFin, 'lblTiempoTranscurrido_EnAnalisis');
+
+
+                /* En campo */
+                var enCampoInicio = ObtenerFechaFormateada(informacionSolicitud.EnRutaDeInvestigacionInicio);
+                var enCampoFin = ObtenerFechaFormateada(informacionSolicitud.EnRutaDeInvestigacionFin);
+                var enCampoUsuario = informacionSolicitud.UsuarioGestorAsignado;
+
+                if (ValidarFecha(informacionSolicitud.EnRutaDeInvestigacionInicio) == null) {
+
+                    enCampoUsuario = '-';
+                }
 
                 tablaEstatusSolicitud.append('<tr>' +
-                    '<td>Campo</td>' +
-                    '<td>' + EnCampoInicio + '</td>' +
-                    '<td>' + EnCampoFin + '</td>' +
-                    '<td>' + tiempoCampo + '</td>' +
+                    '<td class="text-center">Campo</td>' +
+                    '<td class="text-center">' + enCampoInicio + '</td>' +
+                    '<td class="text-center">' + enCampoFin + '</td>' +
+                    '<td class="text-center"><span id="lblTiempoTranscurrido_EnCampo"></span></td>' +
+                    '<td class="text-center">' + enCampoUsuario + '</td>' +
                     '</tr>');
 
-                var CondicionadoInicio = rowDataSolicitud.fdCondicionadoInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdCondicionadoInicio) : '';
-                var CondificionadoFin = rowDataSolicitud.fdCondificionadoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdCondificionadoFin) : '';
-                var tiempoCondicionado = CondicionadoInicio != '' ? CondificionadoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdCondicionadoInicio, rowDataSolicitud.fdCondificionadoFin) : '' : '';
+                InicializarContador(informacionSolicitud.EnRutaDeInvestigacionInicio, informacionSolicitud.EnRutaDeInvestigacionFin, 'lblTiempoTranscurrido_EnCampo');
+
+
+                /* Condicionado */
+                var condicionadoInicio = ObtenerFechaFormateada(informacionSolicitud.CondicionadoInicio);
+                var condicionadoFin = ObtenerFechaFormateada(informacionSolicitud.CondicionadoFin);
+                var condicionadoUsuario = informacionSolicitud.UsuarioCondicionado;
+
+                if (ValidarFecha(informacionSolicitud.CondicionadoInicio) == null) {
+
+                    condicionadoUsuario = '-';
+                }
 
                 tablaEstatusSolicitud.append('<tr>' +
-                    '<td>Condicionado</td>' +
-                    '<td>' + CondicionadoInicio + '</td>' +
-                    '<td>' + CondificionadoFin + '</td>' +
-                    '<td>' + tiempoCondicionado + '</td>' +
+                    '<td class="text-center">Condicionado</td>' +
+                    '<td class="text-center">' + condicionadoInicio + '</td>' +
+                    '<td class="text-center">' + condicionadoFin + '</td>' +
+                    '<td class="text-center"><span id="lblTiempoTranscurrido_Condicionado"></span></td>' +
+                    '<td class="text-center">' + condicionadoUsuario + '</td>' +
                     '</tr>');
 
-                var ReprogramadoInicio = rowDataSolicitud.fdReprogramadoInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdReprogramadoInicio) : '';
-                var ReprogramadoFin = rowDataSolicitud.fdReprogramadoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdReprogramadoFin) : '';
-                var tiempoReprogramado = ReprogramadoInicio != '' ? ReprogramadoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdReprogramadoInicio, rowDataSolicitud.fdReprogramadoFin) : '' : '';
+                InicializarContador(informacionSolicitud.CondicionadoInicio, informacionSolicitud.CondicionadoFin, 'lblTiempoTranscurrido_Condicionado');
+
+
+                /* Reprogramado */
+                var reprogramadoInicio = ObtenerFechaFormateada(informacionSolicitud.ReprogramadoInicio);
+                var reprogramadoFin = ObtenerFechaFormateada(informacionSolicitud.ReprogramadoFin);
+                var reprogramadoUsuario = informacionSolicitud.UsuarioGestorAsignado;
+
+                if (ValidarFecha(informacionSolicitud.ReprogramadoInicio) == null) {
+
+                    reprogramadoUsuario = '-';
+                }
 
                 tablaEstatusSolicitud.append('<tr>' +
-                    '<td>Reprogramado</td>' +
-                    '<td>' + ReprogramadoInicio + '</td>' +
-                    '<td>' + ReprogramadoFin + '</td>' +
-                    '<td>' + tiempoReprogramado + '</td>' +
+                    '<td class="text-center">Reprogramado</td>' +
+                    '<td class="text-center">' + reprogramadoInicio + '</td>' +
+                    '<td class="text-center">' + reprogramadoFin + '</td>' +
+                    '<td class="text-center"><span id="lblTiempoTranscurrido_Reprogramado"></span></td>' +
+                    '<td class="text-center">' + reprogramadoUsuario + '</td>' +
                     '</tr>');
 
-                var ValidacionInicio = rowDataSolicitud.PasoFinalInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.PasoFinalInicio) : '';
-                var ValidacionFin = rowDataSolicitud.PasoFinalFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.PasoFinalFin) : '';
-                var tiempoValidacion = ValidacionInicio != '' ? ValidacionFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.PasoFinalInicio, rowDataSolicitud.PasoFinalFin) : '' : '';
+                InicializarContador(informacionSolicitud.ReprogramadoInicio, informacionSolicitud.ReprogramadoFin, 'lblTiempoTranscurrido_Reprogramado');
+
+
+                /* Validación */
+                var validacionInicio = ObtenerFechaFormateada(informacionSolicitud.PasoFinalInicio);
+                var validacionFin = ObtenerFechaFormateada(informacionSolicitud.PasoFinalFin);
+                var validacionUsuario = informacionSolicitud.UsuarioPasoFinal;
+
+                if (ValidarFecha(informacionSolicitud.PasoFinalInicio) == null) {
+
+                    validacionUsuario = '-';
+                }
 
                 tablaEstatusSolicitud.append('<tr>' +
-                    '<td>Validación</td>' +
-                    '<td>' + ValidacionInicio + '</td>' +
-                    '<td>' + ValidacionFin + '</td>' +
-                    '<td>' + tiempoValidacion + '</td>' +
+                    '<td class="text-center">Validación</td>' +
+                    '<td class="text-center">' + validacionInicio + '</td>' +
+                    '<td class="text-center">' + validacionFin + '</td>' +
+                    '<td class="text-center"><span id="lblTiempoTranscurrido_Validacion"></span></td>' +
+                    '<td class="text-center">' + (validacionUsuario == '' ? '-' : validacionUsuario) + '</td>' +
                     '</tr>');
 
-                var timer = rowDataSolicitud.fcTiempoTotalTranscurrido.split(':');
+                InicializarContador(informacionSolicitud.PasoFinalInicio, informacionSolicitud.PasoFinalFin, 'lblTiempoTranscurrido_Validacion');
+
+
+                /* Tiempo total transcurrido */
                 tablaEstatusSolicitud.append('<tr>' +
-                    '<td colspan="4" class="text-center">Tiempo total transcurrido: <strong>' + timer[0] + ' horas con ' + timer[1] + ' minutos y ' + timer[2] + ' segundos </strong></td>' +
+                    '<td colspan="5" class="text-center">Tiempo total transcurrido: <span id="lblTiempoTotal"></span></td>' +
                     '</tr >');
 
-                if (rowDataSolicitud.fiEstadoSolicitud == 7) {//verificar si ya se tomó una resolución de la solicitud
-                    $("#lblResolucion").text('Aprobado');
-                    $("#lblResolucion").removeClass('text-warning');
-                    $("#lblResolucion").addClass('text-success');
-                }
-                else if (rowDataSolicitud.fiEstadoSolicitud == 4) {
-                    $("#lblResolucion").text('Rechazado por analistas');
-                    $("#lblResolucion").removeClass('text-warning');
-                    $("#lblResolucion").addClass('text-danger');
-                }
-                else if (rowDataSolicitud.fiEstadoSolicitud == 5) {
-                    $("#lblResolucion").text('Rechazado por gestores');
-                    $("#lblResolucion").removeClass('text-warning');
-                    $("#lblResolucion").addClass('text-danger');
-                }
-                else if (rowDataSolicitud.fdEnTramiteFin != '/Date(-2208967200000)/') {
-                    $("#lblResolucion").text('En análisis');
-                }
-                var contadorComentariosDetalle = 0;
+                InicializarContador(informacionSolicitud.EnColaInicio, informacionSolicitud.TiempoTomaDecisionFinal, 'lblTiempoTotal');
 
-                if (rowDataSolicitud.fcReprogramadoComentario != '') {
-                    $("#lblReprogramado").text(rowDataSolicitud.fcReprogramadoComentario);//razon reprogramado
-                    $("#divReprogramado").css('display', '');
-                    contadorComentariosDetalle += 1;
-                }
 
-                if (rowDataSolicitud.fcCondicionadoComentario != '') {
-                    $("#lblCondicionado").text(rowDataSolicitud.fcCondicionadoComentario);//razon condicionado
-                    $("#divCondicionado").css('display', '');
-                    contadorComentariosDetalle += 1;
+                /* Verificar estado de la solicitud */
+                $("#lblEstadoSolicitud").text(informacionSolicitud.EstadoSolicitud);
+
+                var estadoSolicitudColorClass = informacionSolicitud.IdEstadoSolicitud == "7" ? "success" : (informacionSolicitud.IdEstadoSolicitud == "5" || informacionSolicitud.IdEstadoSolicitud == "4") ? "danger" : "warning";
+
+                $("#lblEstadoSolicitud").removeClass('text-danger').removeClass('text-warning').removeClass('text-success').addClass('text-' + estadoSolicitudColorClass);
+
+                var contadorComentario = 0;
+
+                /* Reprogramado comentario */
+                if (informacionSolicitud.ComentarioReprogramado != '') {
+
+                    $("#lblUsuario_ComentarioReprogramacion").text(informacionSolicitud.UsuarioGestorAsignado);
+                    $("#lblFecha_ComentarioReprogramacion").text(ObtenerFechaFormateada(informacionSolicitud.ReprogramadoInicio));
+                    $("#lblComentario_Reprogramacion").text(informacionSolicitud.ComentarioReprogramado);
+                    $("#liObservacionesReprogramacion").css('display', '');
+                    contadorComentario++;
+                }
+                else {
+
+                    $("#liObservacionesReprogramacion").css('display', 'none');
                 }
 
-                if (rowDataSolicitud.fcComentarioValidacionDocumentacion != '') {
-                    $("#lblDocumentacionComentario").text(rowDataSolicitud.fcComentarioValidacionDocumentacion);//observaciones documentacion
-                    $("#divDocumentacionComentario").css('display', '');
-                    contadorComentariosDetalle += 1;
+                /* Condicionado comentario */
+                if (informacionSolicitud.ComentarioCondicionado != '') {
+
+                    $("#lblUsuario_ComentarioOtrosCondicionamientos").text(informacionSolicitud.UsuarioAnalista);
+                    $("#lblFecha_OtrosCondicionamientos").text(ObtenerFechaFormateada(informacionSolicitud.CondicionadoInicio));
+                    $("#lblComentario_OtrosCondicionamientos").text(informacionSolicitud.ComentarioCondicionado);
+                    $("#liObservaciones_OtrosCondicionamientos").css('display', '');
+                    contadorComentario++;
+                }
+                else {
+
+                    $("#liObservaciones_OtrosCondicionamientos").css('display', 'none');
                 }
 
-                if (rowDataSolicitud.fcComentarioValidacionInfoPersonal != '') {
-                    $("#lblInfoPersonalComentario").text(rowDataSolicitud.fcComentarioValidacionInfoPersonal);//observaciones info personal
-                    $("#divInfoPersonal").css('display', '');
-                    contadorComentariosDetalle += 1;
+                /* Informacion personal comentario */
+                if (informacionSolicitud.ComentarioValidacionInformacionPersonal != '') {
+
+                    $("#lblUsuario_ComentarioInformacionPerosnal").text(informacionSolicitud.UsuarioAnalista);
+                    $("#lblFecha_ComentarioInformacionPersonal").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionInformacionPersonal));
+                    $("#lblComentario_InformacionPersonal").text(informacionSolicitud.ComentarioValidacionInformacionPersonal);
+                    $("#liObservacionesInformacionPersonal").css('display', '');
+                    contadorComentario++;
+                }
+                else {
+
+                    $("#liObservacionesInformacionPersonal").css('display', 'none');
                 }
 
-                if (rowDataSolicitud.fcComentarioValidacionInfoLaboral != '') {
-                    $("#lblInfoLaboralComentario").text(rowDataSolicitud.fcComentarioValidacionInfoLaboral);//observaciones info laboral
-                    $("#divInfoLaboral").css('display', '');
-                    contadorComentariosDetalle += 1;
+                /* Informacion laboral comentario */
+                if (informacionSolicitud.ComentarioValidacionInformacionLaboral != '') {
+
+                    $("#lblUsuario_ComentarioInformacionLaboral").text(informacionSolicitud.UsuarioAnalista);
+                    $("#lblFecha_ComentarioInformacionLaboral").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionInformacionLaboral));
+                    $("#lblComentario_InformacionLaboral").text(informacionSolicitud.ComentarioValidacionInformacionLaboral);
+                    $("#liObservacionesInformacionLaboral").css('display', '');
+                    contadorComentario++;
+                }
+                else {
+
+                    $("#liObservacionesInformacionLaboral").css('display', 'none');
                 }
 
-                if (rowDataSolicitud.fcComentarioValidacionReferenciasPersonales != '') {
-                    $("#lblReferenciasComentario").text(rowDataSolicitud.fcComentarioValidacionReferenciasPersonales);//observaciones referencias
-                    $("#divReferencias").css('display', '');
-                    contadorComentariosDetalle += 1;
+                /* Referencias personales comentario */
+                if (informacionSolicitud.ComentarioValidacionReferenciasPersonales != '') {
+
+                    $("#lblUsuario_ComentarioReferenciasPersonales").text(informacionSolicitud.UsuarioAnalista);
+                    $("#lblFecha_ComentarioReferenciasPersonales").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionReferenciasPersonales));
+                    $("#lblComentario_ReferenciasPersonales").text(informacionSolicitud.ComentarioValidacionReferenciasPersonales);
+                    $("#liObservacionesReferenciasPersonales").css('display', '');
+                    contadorComentario++;
+                }
+                else {
+
+                    $("#liObservacionesReferenciasPersonales").css('display', 'none');
                 }
 
-                if (rowDataSolicitud.fcObservacionesDeCredito != '') {
-                    $("#lblCampoComentario").text(rowDataSolicitud.fcObservacionesDeCredito);//comentario para campo depto de gestoria
-                    $("#divCampo").css('display', '');
-                    contadorComentariosDetalle += 1;
+                /* Documentación comentario */
+                if (informacionSolicitud.ComentarioValidacionDocumentacion != '') {
+
+                    $("#lblUsuario_ComentarioDocumentacion").text(informacionSolicitud.UsuarioAnalista);
+                    $("#lblFecha_ComentarioDocumentacion").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionDocumentacion));
+                    $("#lblComentario_Documentacion").text(informacionSolicitud.ComentarioValidacionDocumentacion);
+                    $("#liObservacionesDocumentacion").css('display', '');
+                    contadorComentario++;
+                }
+                else {
+
+                    $("#liObservacionesDocumentacion").css('display', 'none');
                 }
 
-                if (rowDataSolicitud.fcObservacionesDeGestoria != '') {
-                    $("#lblGestoriaComentario").text(rowDataSolicitud.fcObservacionesDeGestoria);//observaciones de gestoria
-                    $("#divGestoria").css('display', '');
-                    contadorComentariosDetalle += 1;
+                /* Observaciones de crédito */
+                if (informacionSolicitud.ObservacionesDeCreditos != '') {
+
+                    $("#lblUsuario_ComentarioParaGestoria").text(informacionSolicitud.UsuarioAnalista);
+                    $("#lblFecha_ComentarioParaGestoria").text(ObtenerFechaFormateada(informacionSolicitud.FechaEnvioARuta));
+                    $("#lblComentario_ParaGestoria").text(informacionSolicitud.ObservacionesDeCreditos);
+                    $("#liObservacionesParaGestoria").css('display', '');
+                    contadorComentario++;
+                }
+                else {
+
+                    $("#liObservacionesParaGestoria").css('display', 'none');
                 }
 
-                if (rowDataSolicitud.fcComentarioResolucion != '') {
-                    $("#lblResolucionComentario").text(rowDataSolicitud.fcComentarioResolucion);//observaciones de gestoria
-                    $("#divComentarioResolucion").css('display', '');
-                    contadorComentariosDetalle += 1;
+                /* Observaciones de gestoria */
+                if (informacionSolicitud.ObservacionesDeCampo != '') {
+
+                    $("#lblUsuario_ComentarioDeGestoria").text(informacionSolicitud.UsuarioGestorAsignado);
+                    $("#lblFecha_ComentarioDeGestoria").text(ObtenerFechaFormateada(informacionSolicitud.EnRutaDeInvestigacionFin));
+                    $("#lblComentario_DeGestoria").text(informacionSolicitud.ObservacionesDeCampo);
+                    $("#liObservacionesDeGestoria").css('display', '');
+                    contadorComentario++;
+                }
+                else {
+
+                    $("#liObservacionesDeGestoria").css('display', 'none');
                 }
 
-                if (contadorComentariosDetalle == 0) { $("#divNoHayMasDetalles").css('display', ''); }//validar si no hay detalles que mostrar
-                else { $("#divNoHayMasDetalles").css('display', 'none'); }
+                /* Comentarios de la resolución */
+                if (informacionSolicitud.ComentarioResolucion != '') {
 
-                if (rowDataSolicitud.fiSolicitudActiva == 0) { $("#divSolicitudInactiva").css('display', ''); }
+                    $("#lblUsuario_ComentarioDeLaResolucion").text(informacionSolicitud.UsuarioAnalista);
+                    $("#lblFecha_ComentarioDeLaResolucion").text(ObtenerFechaFormateada(informacionSolicitud.TiempoTomaDecisionFinal));
+                    $("#lblComentario_Resolicion").text(informacionSolicitud.ComentarioResolucion);
+                    $("#liComentariosDeLaResolucion").css('display', '');
+                    contadorComentario++;
+                }
+                else {
+
+                    $("#liComentariosDeLaResolucion").css('display', 'none');
+                }
+
+                if (contadorComentario > 0) {
+
+                    $("#divNoHayMasDetalles").css('display', 'none');
+                    $("#divLineaDeTiempo").css('display', '');
+                }
+                else {
+                    $("#divNoHayMasDetalles").css('display', '');
+                    $("#divLineaDeTiempo").css('display', 'none');
+                }
+
+                if (informacionSolicitud.SolicitudActiva == 0) {
+                    $("#divSolicitudInactiva").css('display', '');
+                }
+                else {
+                    $("#divSolicitudInactiva").css('display', 'none');
+                }
+
+
+                /* Condiciones de la solicitud */
+                var tblCondiciones = $("#tblListaSolicitudCondiciones tbody");
+                tblCondiciones.empty();
+                tblCondiciones.append('<tr><td class="text-center" colspan="4">No hay registros disponibles...</td></tr>');
+
+                if (informacionSolicitud.Condiciones != null) {
+                    if (informacionSolicitud.Condiciones.length > 0) {
+
+                        var condiciones = informacionSolicitud.Condiciones;
+                        let templateCondiciones = '';
+                        let estadoCondicion = '';
+                        //let btnAnularCondicion = '';
+
+                        tblCondiciones.empty();
+
+                        for (var i = 0; i < condiciones.length; i++) {
+
+                            estadoCondicion = condiciones[i].EstadoCondicion != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>"
+
+                            //btnAnularCondicion = condiciones[i].EstadoCondicion != true ? '' : '<button id="btnAnularCondicion" data-id="' + condiciones[i].IdSolicitudCondicion + '" class="btn btn-sm btn-danger mb-0" type="button" title="Anular condición"><i class="far fa-trash-alt"></i></button>';
+
+                            templateCondiciones += '<tr><td>' + condiciones[i].TipoCondicion + '</td><td>' + condiciones[i].DescripcionCondicion + '</td><td>' + condiciones[i].ComentarioAdicional + '</td><td>' + estadoCondicion + '</td></tr>';
+                        }
+
+                        tblCondiciones.append(templateCondiciones);
+
+                        $("#pestanaListaSolicitudCondiciones").css('display', '');
+                    }
+                    else {
+
+                        $("#pestanaListaSolicitudCondiciones").css('display', 'none');
+                    }
+
+                }
+                else {
+
+                    $("#pestanaListaSolicitudCondiciones").css('display', 'none');
+                }
 
                 $("#modalEstadoSolicitud").modal();
             }
@@ -584,15 +370,11 @@ $('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
     });
 });
 
-//$(document).on('click', 'button#btnComentarioReferencia', function () {
-//    $("#txtObservacionesReferencia").val($(this).data('comment'));
-//    $("#lblNombreReferenciaModal").text($(this).data('nombreref'));
-//    $("#modalComentarioReferencia").modal();
-//});
+$(document).on('click', 'button#btnComentarioReferencia', function () {
 
-/* abrir modal de documentacion */
-$("#btnValidoDocumentacionModal").click(function () {
-    $("#modalFinalizarValidarDocumentacion").modal();
+    $("#txtObservacionesReferencia").val($(this).data('comment')).prop('disabled', true);
+    $("#lblNombreReferenciaModal").text($(this).data('nombreref'));
+    $("#modalComentarioReferencia").modal();
 });
 
 $("#btnHistorialExterno").click(function () {
@@ -601,13 +383,15 @@ $("#btnHistorialExterno").click(function () {
 
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/ObtenerUrlEncriptado',
-        data: JSON.stringify({ dataCrypt: window.location.href }),
+        url: 'SolicitudesCredito_RegistradaDetalles.aspx/ObtenerUrlEncriptado',
         contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({ dataCrypt: window.location.href }),
         error: function (xhr, ajaxOptions, thrownError) {
+
             MensajeError('Error al cargar buro externo');
         },
         success: function (data) {
+
             var parametros = data.d;
             window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + parametros, "_blank",
                 "toolbar=yes, scrollbars=yes,resizable=yes," +
@@ -615,161 +399,6 @@ $("#btnHistorialExterno").click(function () {
                 "window.screen.availWidth/2,window.screen.availHeight");
         }
     });
-});
-
-/* calculos de los prestamos */
-function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
-
-    $.ajax({
-        type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo',
-        data: JSON.stringify({ MontoFinanciar: prestamoAprobado, PlazoFinanciar: plazoQuincenal, ValorPrima: '0', dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al realizar calculo del préstamo');
-        },
-        success: function (data) {
-            var objCalculo = data.d;
-            if (objCalculo != null) {
-                $("#lblMontoFinanciarEfectivo").text(addComasFormatoNumerico(objCalculo.ValoraFinanciar));
-                $("#lblMontoCuotaEfectivo").text(addComasFormatoNumerico(objCalculo.CuotaQuincenal));
-                $("#lblTituloCuotaEfectivo").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota);
-                /* Mostrar div del calculo del prestamo efectivo */
-                $("#lblPrima").css('display', 'none');
-                $("#lblMontoPrima").css('display', 'none');
-                $("#divCargando,#divCargandoAnalisis").css('display', 'none');
-                $("#LogoPrestamo").css('display', '');
-                $("#divPrestamoEfectivo").css('display', '');
-            }
-            else { MensajeError('Error al realizar calculo del préstamo'); }
-        }
-    });
-}
-
-function prestamoMoto(ValorPrima, valorDeLaMoto, plazoQuincenal) {
-
-    $.ajax({
-        type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo',
-        data: JSON.stringify({ MontoFinanciar: valorDeLaMoto, PlazoFinanciar: plazoQuincenal, ValorPrima: ValorPrima, dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al realizar calculo del préstamo');
-        },
-        success: function (data) {
-
-            var objCalculo = data.d;
-            if (objCalculo != null) {
-                $("#lblMontoFinanciarMoto").text(addComasFormatoNumerico(objCalculo.ValoraFinanciar));
-                $("#lblTituloCuotaMoto").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota);
-                $("#lblMontoCuotaMoto").text(addComasFormatoNumerico(objCalculo.CuotaQuincenal));
-
-                /* Mostrar div del calculo del prestamo moto */
-                $("#divCargando,#divCargandoAnalisis").css('display', 'none');
-                $("#LogoPrestamo").css('display', '');
-                $("#divPrestamoMoto").css('display', '');
-            }
-            else { MensajeError('Error al realizar calculo del préstamo'); }
-        }
-    });
-}
-
-function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
-
-    $.ajax({
-        type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/CalculoPrestamo',
-        data: JSON.stringify({ MontoFinanciar: valorDelAuto, PlazoFinanciar: plazoMensual, ValorPrima: ValorPrima, dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al realizar calculo del préstamo');
-        },
-        success: function (data) {
-
-            var objCalculo = data.d;
-            if (objCalculo != null) {
-                $("#lblMontoFinanciarAuto").text(addComasFormatoNumerico(objCalculo.ValoraFinanciar));
-                $("#lblMontoCuotaTotalAuto").text(addComasFormatoNumerico(objCalculo.CuotaMensualNeta));
-                $("#lblTituloCuotaAuto").text(plazoMensual + ' Cuotas ' + objCalculo.TipoCuota);
-                /* Mostrar div del calculo del prestamo auto */
-                $("#divCargando,#divCargandoAnalisis").css('display', 'none');
-                $("#LogoPrestamo").css('display', '');
-                $("#divPrestamoAuto").css('display', '');
-            }
-            else { MensajeError('Error al realizar calculo del préstamo'); }
-        }
-    });
-}
-
-function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
-    $("#cargandoPrestamosSugeridosReales").css('display', '');
-
-    MensajeInformacion('Cargando préstamos sugeridos');
-    $.ajax({
-        type: "POST",
-        url: 'SolicitudesCredito_Detalles.aspx/GetPrestamosSugeridos',
-        data: JSON.stringify({ ValorProducto: ValorProducto, ValorPrima: ValorPrima, dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar préstamos sugeridos');
-            $("#cargandoPrestamosSugeridosReales").css('display', 'none');
-        },
-        success: function (data) {
-
-            if (data.d != null) {
-
-                var listaPmos = data.d.cotizadorProductos;
-
-                var tablaPrestamos = $("#tblPMOSugeridosReales tbody");
-                tablaPrestamos.empty();
-
-                for (var i = 0; i < listaPmos.length; i++) {
-
-                    tablaPrestamos.append('<tr>'
-                        + '<td class="FilaCondensada">' + listaPmos[i].fnMontoOfertado + '</td>'
-                        + '<td class="FilaCondensada">' + listaPmos[i].fiPlazo + '</td>'
-                        + '<td class="FilaCondensada">' + listaPmos[i].fnCuotaQuincenal + '</td>'
-                        + '</tr>');
-                }
-                $("#cargandoPrestamosSugeridosReales").css('display', 'none');
-                $("#lbldivPrestamosSugeridosReales,#tblPMOSugeridosReales,#divPrestamosSugeridosReales").css('display', '');
-            }
-            else {
-                $("#cargandoPrestamosSugeridosReales").css('display', 'none');
-            }
-        }
-    });
-}
-
-/* Actualizar comentario sobre una referencia personal radiofaro */
-var comentarioActual = '';
-var IDReferencia = '';
-var btnReferenciaSeleccionada = '';
-
-$(document).on('click', 'button#btnComentarioReferencia', function () {
-
-    btnReferenciaSeleccionada = $(this);
-    comentarioActual = $(this).data('comment');
-    IDReferencia = $(this).data('id');
-    var nombreReferencia = $(this).data('nombreref');
-
-    $("#txtObservacionesReferencia").val(comentarioActual);
-    $("#lblNombreReferenciaModal").text(nombreReferencia);
-
-    if (comentarioActual != '' && comentarioActual != 'Sin comunicacion') {
-        $("#txtObservacionesReferencia").prop('disabled', true);
-        $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', true).removeClass('btn-primary').addClass('btn-secondary');
-    }
-    else if (comentarioActual == 'Sin comunicacion') {
-        $("#txtObservacionesReferencia").prop('disabled', false);
-        $("#btnReferenciaSinComunicacion").prop('disabled', true);
-        $("#btnComentarioReferenciaConfirmar").prop('disabled', false).removeClass('btn-secondary').addClass('btn-primary');
-    }
-    else {
-        $("#txtObservacionesReferencia").prop('disabled', false);
-        $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', false);
-    }
-    $("#modalComentarioReferencia").modal();
 });
 
 function MensajeError(mensaje) {
@@ -786,20 +415,64 @@ function MensajeInformacion(mensaje) {
     });
 }
 
-function addComasFormatoNumerico(nStr) {
-    nStr += '';
-    x = nStr.split('.');
-    x1 = x[0];
-    x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+countdown.setLabels(
+    'ms | seg | min | hr | d | sem | mes |año | dec | sig | mil ',
+    'ms | seg | min | hr | d | sem | mes |año | dec | sig | mil ',
+    ' y ',
+    ' : ',
+    'ahora',
+    function (n) { return n.toString(); });
+
+
+function InicializarContador(fechaInicio, fechaFin, identificadorEtiqueta) {
+
+    var fechaInicial = fechaInicio == '/Date(-2208967200000)/' ? null : new Date(parseInt(fechaInicio.substr(6, 19)));
+
+    var fechaFinal = fechaFin == '/Date(-2208967200000)/' ? null : new Date(parseInt(fechaFin.substr(6, 19)));
+
+    /* Verificar si el proceso todavía no ha empezado */
+    if (fechaFin == '/Date(-2208967200000)/' && fechaInicio == '/Date(-2208967200000)/') {
+
+        document.getElementById('' + identificadorEtiqueta + '').innerHTML = '-';
     }
-    return x1 + x2;
+    /* Verificar si el proceso ya empezó y finalizó */
+    else if (fechaFin != '/Date(-2208967200000)/' && fechaInicio != '/Date(-2208967200000)/') {
+
+        document.getElementById('' + identificadorEtiqueta + '').innerHTML = countdown(
+            fechaInicial,
+            fechaFinal,
+            countdown.YEARS | countdown.MONTHS | countdown.WEEKS | countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS
+        ).toHTML("");
+    }
+    /* Verificar si el proceso ya empezó y todavía no ha finalizado */
+    else if (fechaInicio != '/Date(-2208967200000)/') {
+
+        countdown(
+            fechaInicial,
+            function (ts) {
+
+                document.getElementById('' + identificadorEtiqueta + '').innerHTML = ts.toHTML("");
+            },
+            fechaFinal,
+            countdown.YEARS | countdown.MONTHS | countdown.WEEKS | countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS
+        );
+    }
 }
 
+function ObtenerFechaFormateada(fecha) {
+
+    return fecha == '/Date(-2208967200000)/' ? '-' : moment(fecha).locale('es').format('YYYY/MM/DD hh:mm:ss A');
+}
+
+
+function ValidarFecha(fecha) {
+
+    return fecha == '/Date(-2208967200000)/' ? null : fecha;
+}
+
+/* cuando se abra un modal, ocultar el scroll del BODY y deja solo el del modal (en caso de que este tenga scroll) */
 $(window).on('hide.bs.modal', function () {
-    /* cuando se abra un modal, ocultar el scroll del BODY y deja solo el del modal (en caso de que este tenga scroll) */
+
     const body = document.body;
     const scrollY = body.style.top;
     body.style.position = '';
@@ -808,15 +481,16 @@ $(window).on('hide.bs.modal', function () {
     $("body").css('padding-right', '0');
 });
 
+/* cuando se cierre un modal */
 $(window).on('show.bs.modal', function () {
-    /* Cuando se cierre el modal */
+
     const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
     const body = document.body;
     body.style.position = 'fixed';
     body.style.top = `-${scrollY}`;
-    $("body").css('padding-right', '0');
 });
 
 window.addEventListener('scroll', () => {
+
     document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
 });
