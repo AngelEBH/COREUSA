@@ -847,25 +847,26 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div class="tab-pane active p-3" id="tabTiempos" role="tabpanel">
+                            <div class="tab-pane active pr-0 pl-0 pt-3" id="tabTiempos" role="tabpanel">
                                 <div class="form-group row justify-content-center" id="divSolicitudInactiva" style="display: none;">
                                     <h6 class="text-danger">Solicitud Inactiva</h6>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-hover mb-0 cursor-pointer" id="tblDetalleEstado">
+                                    <table class="table table-hover table-sm table-bordered mb-0 cursor-pointer" id="tblDetalleEstado">
                                         <thead class="thead-light">
                                             <tr>
                                                 <th>Proceso</th>
                                                 <th>Inicio</th>
                                                 <th>Fin</th>
-                                                <th>Tiempo (D:H:M:S)</th>
+                                                <th>Tiempo transcurrido</th>
+                                                <th>Usuario</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="tab-pane p-3" id="tabDetalles" role="tabpanel">
+                            <div class="tab-pane pr-0 pl-0 pt-3" id="tabDetalles" role="tabpanel">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h5 class="text-center font-weight-bold" id="lblEstadoSolicitud" runat="server">En Recepción</h5>
@@ -924,7 +925,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane p-3" id="listaCondiciones" role="tabpanel">
+                            <div class="tab-pane pr-0 pl-0 pt-3" id="listaCondiciones" role="tabpanel">
                                 <table id="tblListaSolicitudCondiciones" runat="server" class="table table-hover mb-0 cursor-pointer">
                                     <thead class="thead-light">
                                         <tr>

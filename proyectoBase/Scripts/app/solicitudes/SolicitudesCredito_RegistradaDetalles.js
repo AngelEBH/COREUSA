@@ -16,25 +16,26 @@ $('#btnMasDetalles').click(function () {
         success: function (data) {
 
             if (data.d != null) {
-                debugger;
+
                 var informacionSolicitud = data.d;
 
-                var ProcesoPendiente = '/Date(-2208967200000)/';
-
-                /* limpiar tabla de detalles del estado de la solicitud */
                 var tablaEstatusSolicitud = $('#tblDetalleEstado tbody');
                 tablaEstatusSolicitud.empty();
 
                 var enIngresoInicio = ObtenerFechaFormateada(informacionSolicitud.EnIngresoInicio);
                 var enIngresoFin = ObtenerFechaFormateada(informacionSolicitud.EnIngresoFin);
-                var tiempoEnIngreso = InicializarContador(informacionSolicitud.EnIngresoInicio, informacionSolicitud.EnIngresoFin,'');
 
                 tablaEstatusSolicitud.append('<tr>' +
                     '<td>Ingreso</td>' +
                     '<td>' + enIngresoInicio + '</td>' +
                     '<td>' + enIngresoFin + '</td>' +
-                    '<td>' + tiempoEnIngreso + '</td>' +
+                    '<td><span id="lblTiempoTranscurrido_EnIngreso"></span></td>' +
+                    '<td>' + informacionSolicitud.UsuarioEnIngreso + '</td>' +
                     '</tr>');
+
+                InicializarContador(informacionSolicitud.EnIngresoInicio, informacionSolicitud.EnIngresoFin, 'lblTiempoTranscurrido_EnIngreso');
+
+
 
                 //var EnTramiteInicio = rowDataSolicitud.fdEnTramiteInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnTramiteInicio) : '';
                 //var EnTramiteFin = rowDataSolicitud.fdEnTramiteFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnTramiteFin) : '';
@@ -106,7 +107,7 @@ $('#btnMasDetalles').click(function () {
 
                 //var timer = rowDataSolicitud.fcTiempoTotalTranscurrido.split(':');
                 //tablaEstatusSolicitud.append('<tr>' +
-                //    '<td colspan="4" class="text-center">Tiempo total transcurrido: <strong>' + timer[0] + ' horas con ' + timer[1] + ' minutos y ' + timer[2] + ' segundos </strong></td>' +
+                //    '<td colspan="4" class="text-center">Tiempo total transcurrido: <small>' + timer[0] + ' horas con ' + timer[1] + ' minutos y ' + timer[2] + ' segundos  </small></td>' +
                 //    '</tr >');
 
                 ///* Verificar si ya se tomó una resolución de la solicitud */
@@ -240,6 +241,7 @@ $("#btnHistorialExterno").click(function () {
 
 /* cuando se abra un modal, ocultar el scroll del BODY y deja solo el del modal (en caso de que este tenga scroll) */
 $(window).on('hide.bs.modal', function () {
+
     const body = document.body;
     const scrollY = body.style.top;
     body.style.position = '';
@@ -250,6 +252,7 @@ $(window).on('hide.bs.modal', function () {
 
 /* cuando se cierre un modal */
 $(window).on('show.bs.modal', function () {
+
     const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
     const body = document.body;
     body.style.position = 'fixed';
@@ -257,6 +260,7 @@ $(window).on('show.bs.modal', function () {
 });
 
 window.addEventListener('scroll', () => {
+
     document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
 });
 
@@ -274,41 +278,49 @@ function MensajeInformacion(mensaje) {
     });
 }
 
+countdown.setLabels(
+    'ms | seg | min | hr | d | sem | mes |año | dec | sig | mil ',
+    'ms | seg | min | hr | d | sem | mes |año | dec | sig | mil ',
+    ' y ',
+    ' : ',
+    'ahora',
+    function (n) { return n.toString(); });
+
+
+function InicializarContador(fechaInicio, fechaFin, identificadorEtiqueta) {
+
+    var fechaInicial = fechaInicio == '/Date(-2208967200000)/' ? null : new Date(parseInt(fechaInicio.substr(6, 19)));
+
+    var fechaFinal = fechaFin == '/Date(-2208967200000)/' ? null : new Date(parseInt(fechaFin.substr(6, 19)));
+
+    if (fechaFin != '/Date(-2208967200000)/') {
+
+        document.getElementById('' + identificadorEtiqueta + '').innerHTML = countdown(
+            fechaInicial,
+            fechaFinal,
+            countdown.YEARS | countdown.MONTHS | countdown.WEEKS | countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS
+        ).toHTML("");
+    }
+    else {
+
+        countdown(
+            fechaInicial,
+            function (ts) {
+
+                document.getElementById('' + identificadorEtiqueta + '').innerHTML = ts.toHTML("");
+            },
+            fechaFinal,
+            countdown.YEARS | countdown.MONTHS | countdown.WEEKS | countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS
+        );
+    }
+}
+
+function ObtenerFechaFormateada(fecha) {
+
+    return fecha == '/Date(-2208967200000)/' ? 'No completado' : moment(fecha).locale('es').format('YYYY/MM/DD hh:mm:ss A');
+}
+
 function ValidarFecha(fecha) {
 
     return fecha == '/Date(-2208967200000)/' ? null : fecha;
 }
-
-countdown.setLabels(
-    ' <small>ms</small>| <small>seg</small>| <small>min</small>| <small>h</small>| <small>d</small>| <small>sem</small>| <small>mes</small>| <small>año</small>| <small>dec</small>| <small>sig</small>| <small>mil</small>',
-    ' <small>ms</small>| <small>seg</small>| <small>min</small>| <small>h</small>| <small>d</small>| <small>sem</small>| <small>mes</small>| <small>año</small>| <small>dec</small>| <small>sig</small>| <small>mil</small>',
-    ':',
-    ':',
-    'ahora',
-    function (n) { return n.toString(); });
-
-InicializarContador(new Date(), new Date(), 'lblProducto');
-
-function InicializarContador(fechaInicio, fechaFin, identificadorEtiqueta) {
-    debugger;
-    var fechaInicial = moment(new Date(parseInt(fechaInicio.substr(6, 19)))).format().slice(0, 19);
-    var fechaFinal = moment(new Date(parseInt(fechaFin.substr(6, 19)))).format().slice(0, 19);
-
-    return countdown(
-        fechaInicio,
-        //function (ts) {
-
-        //    document.getElementById('' + identificadorEtiqueta + '').innerHTML = ts.toHTML("strong"); // callback de fecha de inicio
-        //},
-        fechaFin,
-        countdown.YEARS | countdown.MONTHS | countdown.WEEKS | countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS
-    );
-}
-
-
-function ObtenerFechaFormateada(fecha)
-{
-    return fecha == '/Date(-2208967200000)/' ? 'En curso' : moment(fecha).locale('es').format('YYYY/MM/DD hh:mm:ss a');
-}
-
-//InicializarContador('2014-01-01T23:28:56.782Z', '2015-01-01T23:28:56.782Z', 'lblProducto')
