@@ -1,10 +1,12 @@
 ﻿
+var ID_ESTADO_SOLICITUD = '0';
+
 /* Abrir modal de detalles del procesamiento de la solicitud, comentarios y condiciones */
 $("#btnMasDetalles").click(function () {
 
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_RegistradaDetalles.aspx/CargarEstadoSolicitud",
+        url: "SolicitudesCredito_Detalles.aspx/CargarEstadoSolicitud",
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify({ dataCrypt: window.location.href }),
         error: function (xhr, ajaxOptions, thrownError) {
@@ -15,6 +17,8 @@ $("#btnMasDetalles").click(function () {
             if (data.d != null) {
 
                 var informacionSolicitud = data.d;
+
+                ID_ESTADO_SOLICITUD = informacionSolicitud.IdEstadoSolicitud;
 
                 var tablaEstatusSolicitud = $('#tblDetalleEstado tbody');
 
@@ -383,7 +387,7 @@ $("#btnHistorialExterno").click(function () {
 
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_RegistradaDetalles.aspx/ObtenerUrlEncriptado',
+        url: 'SolicitudesCredito_Detalles.aspx/ObtenerUrlEncriptado',
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify({ dataCrypt: window.location.href }),
         error: function (xhr, ajaxOptions, thrownError) {
@@ -430,8 +434,13 @@ function InicializarContador(fechaInicio, fechaFin, identificadorEtiqueta) {
 
     var fechaFinal = fechaFin == '/Date(-2208967200000)/' ? null : new Date(parseInt(fechaFin.substr(6, 19)));
 
+    /* Verificar si ya se determinó una resolución para la solicitud y el el proceso se quedó pendiente y */
+    if (fechaInicio != '/Date(-2208967200000)/' && fechaFin == '/Date(-2208967200000)/' && (ID_ESTADO_SOLICITUD == '7' || ID_ESTADO_SOLICITUD == '5' || ID_ESTADO_SOLICITUD == '4')) {
+
+        document.getElementById('' + identificadorEtiqueta + '').innerHTML = '-';
+    }
     /* Verificar si el proceso todavía no ha empezado */
-    if (fechaFin == '/Date(-2208967200000)/' && fechaInicio == '/Date(-2208967200000)/') {
+    else if (fechaFin == '/Date(-2208967200000)/' && fechaInicio == '/Date(-2208967200000)/') {
 
         document.getElementById('' + identificadorEtiqueta + '').innerHTML = '-';
     }

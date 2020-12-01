@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles de la solicitud</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -1134,7 +1134,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
     <script src="/Scripts/plugins/countdownjs/countdown.min.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_RegistradaDetalles.js?v=20200902095555"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Detalles.js?v=20201201153352"></script>
     <script>
         $("#divDocumentacionCedula").unitegallery({
             gallery_theme: "tilesgrid",
@@ -1255,7 +1255,6 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
             tile_enable_textpanel: true,
             tile_textpanel_title_text_align: "center"
         });
-
     </script>
 </body>
 </html>
