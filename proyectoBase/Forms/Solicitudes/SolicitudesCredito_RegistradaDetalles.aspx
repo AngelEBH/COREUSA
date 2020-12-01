@@ -427,27 +427,119 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <%--<div class="form-group row" id="divAval" style="display: none;">
-<h4>Aval</h4>
-<div class="table-responsive">
-<table class="table table-condensed" id="tblAvales">
-<thead class="thead-light">
-<tr>
-<th>Nombre completo</th>
-<th>Identidad</th>
-<th>Telefono</th>
-<th>Lugar de trabajo</th>
-<th>Puesto asignado</th>
-<th>Ingresos</th>
-<th>Estado</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-</div>
-</div>--%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default" id="panelInformacionGarantia" runat="server" visible="true">
+                        <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingGarantia">
+                            <h6 class="m-0 font-14">
+                                <a href="#collapseInformacionGarantia" class="text-dark collapsed h6 font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseSeven">
+                                    <i class="mdi mdi-certificate mdi-24px"></i>
+                                    Información de la garantía
+                                </a>
+                            </h6>
+                        </div>
+                        <div id="collapseInformacionGarantia" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingGarantia">
+                            <div class="panel-body">
+                                <div class="row mb-0" id="divInformacionGarantia" runat="server">
+                                    <div class="col-lg-6">
+
+                                        <h6 class="font-weight-bold">Características físicas</h6>
+
+                                        <div class="form-group row">
+                                            <div class="col-sm-4 col-12">
+                                                <label class="col-form-label">VIN</label>
+                                                <asp:TextBox ID="txtVIN" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Tipo de garantía</label>
+                                                <asp:TextBox ID="txtTipoDeGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Tipo de vehículo</label>
+                                                <asp:TextBox ID="txtTipoDeVehiculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Marca</label>
+                                                <asp:TextBox ID="txtMarca" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Modelo</label>
+                                                <asp:TextBox ID="txtModelo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Año</label>
+                                                <asp:TextBox ID="txtAnio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Color</label>
+                                                <asp:TextBox ID="txtColor" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Matrícula</label>
+                                                <asp:TextBox ID="txtMatricula" CssClass="form-control form-control-sm" ReadOnly="true" type="text" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Serie Motor</label>
+                                                <asp:TextBox ID="txtSerieMotor" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Serie Chasis</label>
+                                                <asp:TextBox ID="txtSerieChasis" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">GPS</label>
+                                                <asp:TextBox ID="txtGPS" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+
+                                        <h6 class="font-weight-bold m-0 pt-2">Características mecánicas</h6>
+
+                                        <div class="form-group row">
+                                            <div class="col-sm-4">
+                                                <label class="col-form-label">Cilindraje</label>
+                                                <asp:TextBox ID="txtCilindraje" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-form-label">Recorrido</label>
+                                                <asp:TextBox ID="txtRecorrido" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-form-label">Transmisión</label>
+                                                <asp:TextBox ID="txtTransmision" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-form-label">Tipo de combustible</label>
+                                                <asp:TextBox ID="txtTipoDeCombustible" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-form-label">Serie 1</label>
+                                                <asp:TextBox ID="txtSerieUno" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-form-label">Serie 2</label>
+                                                <asp:TextBox ID="txtSerieDos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <label class="col-form-label">Comentario</label>
+                                                <textarea id="txtComentario" runat="server" readonly="readonly" class="form-control form-control-sm"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 border-left border-gray">
+
+                                        <h6 class="font-weight-bold">Fotografías de la garantía</h6>
+
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <!-- Div donde se muestran las imágenes de la garantía-->
+                                                <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -720,7 +812,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </div>
                         <div id="collapseInformaciondeCampo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
                             <div class="panel-body">
-                                <div class="row mb-0" id="divResolucionDomicilio" runat="server" visible="false">
+                                <div class="row mb-0 border-bottom border-gray" id="divResolucionDomicilio" runat="server" visible="false">
                                     <div class="col-lg-6 col-md-6">
 
                                         <h6>Resolución del Domicilio <small>(<span id="lblResolucionCampoDomicilio" runat="server" class="font-weight-bold"></span>)</small></h6>
@@ -762,7 +854,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                     </div>
                                 </div>
 
-                                <div class="row mb-0 mt-1 border-top border-gray" id="divResolucionTrabajo" runat="server" visible="false">
+                                <div class="row mb-0 mt-1" id="divResolucionTrabajo" runat="server" visible="false">
                                     <div class="col-lg-6 col-md-6">
 
                                         <h6>Resolución del Trabajo <small>(<span id="lblResolucionCampoTrabajo" runat="server" class="font-weight-bold"></span>)</small></h6>
@@ -847,7 +939,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div class="tab-pane active pr-0 pl-0 pt-3" id="tabTiempos" role="tabpanel">
+                            <div class="tab-pane active pr-0 pl-0 pt-3 pb-3" id="tabTiempos" role="tabpanel">
                                 <div class="form-group row justify-content-center" id="divSolicitudInactiva" style="display: none;">
                                     <h6 class="text-danger">Solicitud Inactiva</h6>
                                 </div>
@@ -875,48 +967,48 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                             <label class="col-form-label font-weight-bold">No hay más detalles de esta solicitud...</label>
                                         </div>
 
-                                        <ul class="timeline pl-3 mb-0" id="divLineaDeTiempo" runat="server" visible="false">
-                                            <li id="liObservacionesReprogramacion" runat="server" visible="false">
+                                        <ul class="timeline pl-3 mb-0" id="divLineaDeTiempo" runat="server" style="display: none">
+                                            <li id="liObservacionesReprogramacion" runat="server" visible="true">
                                                 <label class="mb-0">Observaciones de reprogramación (<span class="font-weight-bold" id="lblUsuario_ComentarioReprogramacion" runat="server"></span>)</label>
                                                 <label class="float-right" runat="server" id="lblFecha_ComentarioReprogramacion"></label>
                                                 <p runat="server" id="lblComentario_Reprogramacion"></p>
                                             </li>
-                                            <li id="liObservaciones_OtrosCondicionamientos" runat="server" visible="false">
+                                            <li id="liObservaciones_OtrosCondicionamientos" runat="server" visible="true">
                                                 <label class="mb-0">Observaciones de otros condicionamientos (<span class="font-weight-bold" id="lblUsuario_ComentarioOtrosCondicionamientos" runat="server"></span>)</label>
                                                 <label class="float-right" runat="server" id="lblFecha_OtrosCondicionamientos"></label>
                                                 <p runat="server" id="lblComentario_OtrosCondicionamientos"></p>
                                             </li>
-                                            <li id="liObservacionesInformacionPersonal" runat="server" visible="false">
+                                            <li id="liObservacionesInformacionPersonal" runat="server" visible="true">
                                                 <label class="mb-0">Observaciones información personal (<span class="font-weight-bold" id="lblUsuario_ComentarioInformacionPerosnal" runat="server"></span>)</label>
                                                 <label class="float-right" runat="server" id="lblFecha_ComentarioInformacionPersonal"></label>
                                                 <p runat="server" id="lblComentario_InformacionPersonal"></p>
                                             </li>
-                                            <li id="liObservacionesInformacionLaboral" runat="server" visible="false">
+                                            <li id="liObservacionesInformacionLaboral" runat="server" visible="true">
                                                 <label class="mb-0">Observaciones información laboral (<span class="font-weight-bold" id="lblUsuario_ComentarioInformacionLaboral" runat="server"></span>)</label>
                                                 <label class="float-right" runat="server" id="lblFecha_ComentarioInformacionLaboral"></label>
                                                 <p runat="server" id="lblComentario_InformacionLaboral"></p>
                                             </li>
-                                            <li id="liObservacionesReferenciasPersonales" runat="server" visible="false">
+                                            <li id="liObservacionesReferenciasPersonales" runat="server" visible="true">
                                                 <label class="mb-0">Observaciones de referencias personales (<span class="font-weight-bold" id="lblUsuario_ComentarioReferenciasPersonales" runat="server"></span>)</label>
                                                 <label class="float-right" runat="server" id="lblFecha_ComentarioReferenciasPersonales"></label>
                                                 <p runat="server" id="lblComentario_ReferenciasPersonales"></p>
                                             </li>
-                                            <li id="liObservacionesDocumentacion" runat="server" visible="false">
+                                            <li id="liObservacionesDocumentacion" runat="server" visible="true">
                                                 <label class="mb-0">Observaciones de la documentación (<span class="font-weight-bold" id="lblUsuario_ComentarioDocumentacion" runat="server"></span>)</label>
                                                 <label class="float-right" runat="server" id="lblFecha_ComentarioDocumentacion"></label>
                                                 <p runat="server" id="lblComentario_Documentacion"></p>
                                             </li>
-                                            <li id="liObservacionesParaGestoria" runat="server" visible="false">
+                                            <li id="liObservacionesParaGestoria" runat="server" visible="true">
                                                 <label class="mb-0">Observaciones para gestoría (<span class="font-weight-bold" id="lblUsuario_ComentarioParaGestoria" runat="server"></span>)</label>
                                                 <label class="float-right" runat="server" id="lblFecha_ComentarioParaGestoria"></label>
                                                 <p runat="server" id="lblComentario_ParaGestoria"></p>
                                             </li>
-                                            <li id="liObservacionesDeGestoria" runat="server" visible="false">
+                                            <li id="liObservacionesDeGestoria" runat="server" visible="true">
                                                 <label class="mb-0">Observaciones de gestoría (<span class="font-weight-bold" id="lblUsuario_ComentarioDeGestoria" runat="server"></span>)</label>
                                                 <label class="float-right" runat="server" id="lblFecha_ComentarioDeGestoria"></label>
                                                 <p runat="server" id="lblComentario_DeGestoria"></p>
                                             </li>
-                                            <li id="liComentariosDeLaResolucion" runat="server" visible="false">
+                                            <li id="liComentariosDeLaResolucion" runat="server" visible="true">
                                                 <label class="mb-0">Comentarios de la resolución (<span class="font-weight-bold" id="lblUsuario_ComentarioDeLaResolucion" runat="server"></span>)</label>
                                                 <label class="float-right" runat="server" id="lblFecha_ComentarioDeLaResolucion"></label>
                                                 <p runat="server" id="lblComentario_Resolicion"></p>
@@ -1141,6 +1233,16 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
         });
 
         $("#divDocumentacionCampoTrabajoModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divGaleriaGarantia").unitegallery({
             gallery_theme: "tilesgrid",
             tile_width: 180,
             tile_height: 120,

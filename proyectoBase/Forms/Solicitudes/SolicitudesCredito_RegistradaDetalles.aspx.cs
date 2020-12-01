@@ -57,6 +57,7 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                     pcIDSesion = "1";
 
                     CargarInformacionClienteSolicitud();
+                    CargarInformacionGarantia();
                 }
                 else
                 {
@@ -353,101 +354,7 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                             txtBuroActual.Text = sqlResultado["fcBuroActual"].ToString();
                             txtOrigen.Text = sqlResultado["fcOrigen"].ToString();
 
-
-                            /****** Comentarios del procesamiento de la solicitud ******/
-                            lblEstadoSolicitud.InnerText = estadoSolicitud;
-
-                            lblEstadoSolicitud.Attributes.Add("class", idEstadoSolicitud == "7" ? "text-center font-weight-bold text-success" : (idEstadoSolicitud == "5" || idEstadoSolicitud == "4") ? "text-center font-weight-bold text-danger" : "text-center font-weight-bold text-warning");
-
-                            var contadorComentario = 0;
-
-                            if (sqlResultado["fcReprogramadoComentario"].ToString() != string.Empty)
-                            {
-                                liObservacionesReprogramacion.Visible = true;
-                                lblUsuario_ComentarioReprogramacion.InnerText = sqlResultado["fcNombreGestor"].ToString();
-                                lblFecha_ComentarioReprogramacion.InnerText = DateTime.Parse(sqlResultado["fdReprogramadoInicio"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
-                                lblComentario_Reprogramacion.InnerText = sqlResultado["fcReprogramadoComentario"].ToString();
-                                contadorComentario++;
-                            }
-
-                            if (sqlResultado["fcCondicionadoComentario"].ToString() != string.Empty)
-                            {
-                                liObservaciones_OtrosCondicionamientos.Visible = true;
-                                lblUsuario_ComentarioOtrosCondicionamientos.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
-                                lblFecha_OtrosCondicionamientos.InnerText = DateTime.Parse(sqlResultado["fdCondicionadoInicio"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
-                                lblComentario_OtrosCondicionamientos.InnerText = sqlResultado["fcCondicionadoComentario"].ToString();
-                                contadorComentario++;
-                            }
-
-                            if (sqlResultado["fcComentarioValidacionInfoPersonal"].ToString() != string.Empty)
-                            {
-                                liObservacionesInformacionPersonal.Visible = true;
-                                lblUsuario_ComentarioInformacionPerosnal.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
-                                lblFecha_ComentarioInformacionPersonal.InnerText = DateTime.Parse(sqlResultado["fdAnalisisTiempoValidarInformacionPersonal"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
-                                lblComentario_InformacionPersonal.InnerText = sqlResultado["fcComentarioValidacionInfoPersonal"].ToString();
-                                contadorComentario++;
-                            }
-
-                            if (sqlResultado["fcComentarioValidacionInfoLaboral"].ToString() != string.Empty)
-                            {
-                                liObservacionesInformacionLaboral.Visible = true;
-                                lblUsuario_ComentarioInformacionLaboral.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
-                                lblFecha_ComentarioInformacionLaboral.InnerText = DateTime.Parse(sqlResultado["fdAnalisisTiempoValidarInformacionLaboral"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
-                                lblComentario_InformacionLaboral.InnerText = sqlResultado["fcComentarioValidacionInfoLaboral"].ToString();
-                                contadorComentario++;
-                            }
-
-                            if (sqlResultado["fcComentarioValidacionReferenciasPersonales"].ToString() != string.Empty)
-                            {
-                                liObservacionesReferenciasPersonales.Visible = true;
-                                lblUsuario_ComentarioReferenciasPersonales.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
-                                lblFecha_ComentarioReferenciasPersonales.InnerText = DateTime.Parse(sqlResultado["fdAnalisisTiempoValidacionReferenciasPersonales"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
-                                lblComentario_ReferenciasPersonales.InnerText = sqlResultado["fcComentarioValidacionReferenciasPersonales"].ToString();
-                                contadorComentario++;
-                            }
-
-                            if (sqlResultado["fcComentarioValidacionDocumentacion"].ToString() != string.Empty)
-                            {
-                                liObservacionesDocumentacion.Visible = true;
-                                lblUsuario_ComentarioDocumentacion.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
-                                lblFecha_ComentarioDocumentacion.InnerText = DateTime.Parse(sqlResultado["fdAnalisisTiempoValidarDocumentos"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
-                                lblComentario_Documentacion.InnerText = sqlResultado["fcComentarioValidacionDocumentacion"].ToString();
-                                contadorComentario++;
-                            }
-
-                            if (sqlResultado["fcObservacionesDeCredito"].ToString() != string.Empty)
-                            {
-                                liObservacionesParaGestoria.Visible = true;
-                                lblUsuario_ComentarioParaGestoria.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
-                                lblFecha_ComentarioParaGestoria.InnerText = DateTime.Parse(sqlResultado["fdEnvioARutaAnalista"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
-                                lblComentario_ParaGestoria.InnerText = sqlResultado["fcObservacionesDeCredito"].ToString();
-                                contadorComentario++;
-                            }
-
-                            if (sqlResultado["fcObservacionesDeCampo"].ToString() != string.Empty)
-                            {
-                                liObservacionesDeGestoria.Visible = true;
-                                lblUsuario_ComentarioDeGestoria.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
-                                lblFecha_ComentarioDeGestoria.InnerText = DateTime.Parse(sqlResultado["fdEnRutaDeInvestigacionFin"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
-                                lblComentario_DeGestoria.InnerText = sqlResultado["fcObservacionesDeCampo"].ToString();
-                                contadorComentario++;
-                            }
-
-                            if (sqlResultado["fcComentarioResolucion"].ToString() != string.Empty)
-                            {
-                                liComentariosDeLaResolucion.Visible = true;
-                                lblUsuario_ComentarioDeLaResolucion.InnerText = sqlResultado["fcNombreCortoAnalista"].ToString();
-                                lblFecha_ComentarioDeLaResolucion.InnerText = DateTime.Parse(sqlResultado["fdTiempoTomaDecisionFinal"].ToString()).ToString("dddd, dd MMMM yyyy hh:mm tt");
-                                lblComentario_Resolicion.InnerText = sqlResultado["fcComentarioResolucion"].ToString();
-                                contadorComentario++;
-                            }
-
-                            if (contadorComentario > 0)
-                            {
-                                divNoHayMasDetalles.Visible = false;
-                                divLineaDeTiempo.Visible = true;
-                            }
-
+                            /****** Comentarios del procesamiento de la solicitud *SE HACE EN EL FRONTEND* ******/
 
                             /****** Documentos de la solicitud ******/
                             sqlResultado.NextResult();
@@ -504,6 +411,16 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                             divDocumentacionLaboralModal.InnerHtml = documentacionLaboral.ToString();
                             divDocumentacionSoliFisicaModal.InnerHtml = documentacionSolicitudFisica.ToString();
 
+                            if (documentacionDomicilio.ToString() == "")
+                            {
+                                divDocumentacionDomicilioModal.Visible = false;
+                            }
+
+                            if (documentacionLaboral.ToString() == "")
+                            {
+                                divDocumentacionLaboralModal.Visible = false;
+                            }
+
                             if (documentacionCampoDomicilio.ToString() != "")
                             {
                                 divDocumentacionCampoDomicilio.InnerHtml = documentacionCampoDomicilio.ToString();
@@ -520,27 +437,8 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                                 divContenedorCampoTrabajoModal.Visible = true;
                             }
 
-                            /****** Condicionamientos de la solicitud ******/
+                            /****** Condicionamientos de la solicitud *SE HACE EN EL FRONTEND* ******/
                             sqlResultado.NextResult();
-
-                            if (sqlResultado.HasRows)
-                            {
-                                pestanaListaSolicitudCondiciones.Style.Add("display", "");
-
-                                HtmlTableRow tRowSolicitudCondiciones = null;
-                                var EstadoCondicion = string.Empty;
-
-                                while (sqlResultado.Read())
-                                {
-                                    EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"] == false ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-danger mb-0'>Pendiente</label>";
-                                    tRowSolicitudCondiciones = new HtmlTableRow();
-                                    tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcCondicion"].ToString() });
-                                    tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionCondicion"].ToString() });
-                                    tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcComentarioAdicional"].ToString() });
-                                    tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerHtml = EstadoCondicion });
-                                    tblListaSolicitudCondiciones.Rows.Add(tRowSolicitudCondiciones);
-                                }
-                            }
 
                             /****** Información del cliente ******/
                             sqlResultado.NextResult();
@@ -687,6 +585,99 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
         }
     }
 
+    public void CargarInformacionGarantia()
+    {
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitud_CREDGarantia_ObtenerPorIdSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        if (!sqlResultado.HasRows)
+                        {
+                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitud + "&IDApp=" + pcIDApp) + "','_self')";
+                            Response.Write("<script>");
+                            Response.Write(lcScript);
+                            Response.Write("</script>");
+                        }
+
+                        while (sqlResultado.Read())
+                        {
+                            /* El primer resultado es información de la solicitud y el cliente */
+
+
+                            /* El segundo resultado es la información de la garantía*/
+                            sqlResultado.NextResult();
+
+                            if (!sqlResultado.HasRows)
+                            {
+                                panelInformacionGarantia.Visible = false;
+                            }
+                            else
+                            {
+                                /* Informacion del garantía */
+                                while (sqlResultado.Read())
+                                {
+                                    txtVIN.Text = sqlResultado["fcVin"].ToString();
+                                    txtTipoDeGarantia.Text = sqlResultado["fcTipoGarantia"].ToString();
+                                    txtTipoDeVehiculo.Text = sqlResultado["fcTipoVehiculo"].ToString();
+                                    txtMarca.Text = sqlResultado["fcMarca"].ToString();
+                                    txtModelo.Text = sqlResultado["fcModelo"].ToString();
+                                    txtAnio.Text = sqlResultado["fiAnio"].ToString();
+                                    txtColor.Text = sqlResultado["fcColor"].ToString();
+                                    txtMatricula.Text = sqlResultado["fcMatricula"].ToString();
+                                    txtSerieMotor.Text = sqlResultado["fcMotor"].ToString();
+                                    txtSerieChasis.Text = sqlResultado["fcChasis"].ToString();
+                                    txtGPS.Text = sqlResultado["fcGPS"].ToString();
+                                    txtCilindraje.Text = sqlResultado["fcCilindraje"].ToString();
+                                    txtRecorrido.Text = string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnRecorrido"].ToString())) + " " + sqlResultado["fcUnidadDeDistancia"].ToString();
+                                    txtTransmision.Text = sqlResultado["fcTransmision"].ToString();
+                                    txtTipoDeCombustible.Text = sqlResultado["fcTipoCombustible"].ToString();
+                                    txtSerieUno.Text = sqlResultado["fcSerieUno"].ToString();
+                                    txtSerieDos.Text = sqlResultado["fcSerieDos"].ToString();
+                                    txtComentario.InnerText = sqlResultado["fcComentario"].ToString().Trim();
+                                }
+
+                                /* Fotografías de la garantía */
+                                sqlResultado.NextResult();
+
+                                if (!sqlResultado.HasRows)
+                                {
+                                    divGaleriaGarantia.InnerHtml = "<img alt='No hay fotografías disponibles' src='/Imagenes/Imagen_no_disponible.png' data-image='/Imagenes/Imagen_no_disponible.png' data-description='No hay fotografías disponibles'/>";
+                                }
+                                else
+                                {
+                                    var imagenesGarantia = new StringBuilder();
+
+                                    while (sqlResultado.Read())
+                                    {
+                                        imagenesGarantia.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
+                                    }
+                                    divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+    }
+
     [WebMethod]
     public static SolicitudesCredito_RegistradaDetalles_EstadoProcesos_ViewModel CargarEstadoSolicitud(string dataCrypt)
     {
@@ -728,17 +719,26 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
 
                                 EnAnalisisInicio = (DateTime)sqlResultado["fdEnAnalisisInicio"],
                                 UsuarioAnalista = (string)sqlResultado["fcUsuarioAnalista"],
-                                ComentarioValidacionInfoPersonal = (string)sqlResultado["fcComentarioValidacionInfoPersonal"],
+
+                                FechaValidacionInformacionPersonal = (DateTime)sqlResultado["fdAnalisisTiempoValidarInformacionPersonal"],
+                                ComentarioValidacionInformacionPersonal = (string)sqlResultado["fcComentarioValidacionInfoPersonal"],
+
+                                FechaValidacionDocumentacion = (DateTime)sqlResultado["fdAnalisisTiempoValidarDocumentos"],
                                 ComentarioValidacionDocumentacion = (string)sqlResultado["fcComentarioValidacionDocumentacion"],
+
+                                FechaValidacionReferenciasPersonales = (DateTime)sqlResultado["fdAnalisisTiempoValidacionReferenciasPersonales"],
                                 ComentarioValidacionReferenciasPersonales = (string)sqlResultado["fcComentarioValidacionReferenciasPersonales"],
-                                ComentarioValidacionInfoLaboral = (string)sqlResultado["fcComentarioValidacionInfoLaboral"],
+
+                                FechaValidacionInformacionLaboral = (DateTime)sqlResultado["fdAnalisisTiempoValidacionReferenciasPersonales"],
+                                ComentarioValidacionInformacionLaboral = (string)sqlResultado["fcComentarioValidacionInfoLaboral"],
+
                                 ComentarioResolucion = (string)sqlResultado["fcComentarioResolucion"],
                                 TiempoTomaDecisionFinal = (DateTime)sqlResultado["fdTiempoTomaDecisionFinal"],
                                 EnAnalisisFin = (DateTime)sqlResultado["fdEnAnalisisFin"],
 
                                 CondicionadoInicio = (DateTime)sqlResultado["fdCondicionadoInicio"],
                                 ComentarioCondicionado = (string)sqlResultado["fcCondicionadoComentario"],
-                                UsuarioCondicionado = (string)sqlResultado["fcUsuarioAnalista"],
+                                UsuarioCondicionado = (string)sqlResultado["fcUsuarioEnIngreso"],
                                 CondicionadoFin = (DateTime)sqlResultado["fdCondificionadoFin"],
 
                                 FechaEnvioARuta = (DateTime)sqlResultado["fdEnvioARutaAnalista"],
@@ -756,12 +756,16 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                                 UsuarioPasoFinal = (string)sqlResultado["fcUsuarioPasoFinal"],
                                 ComentarioPasoFinal = (string)sqlResultado["fcComentarioPasoFinal"],
                                 PasoFinalFin = (DateTime)sqlResultado["fdPasoFinalFin"],
+
+                                IdEstadoSolicitud = (byte)sqlResultado["fiEstadoSolicitud"],
+                                EstadoSolicitud = (string)sqlResultado["fcEstadoSolicitud"],
+
+                                SolicitudActiva = (byte)sqlResultado["fiSolicitudActiva"]
                             };
 
                         } // while sqlResultado.Read()
                     } // using executeReader
                 } // using command
-
 
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Condiciones_ObtenerPorIdSolicitud", sqlConexion))
                 {
@@ -784,11 +788,10 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                                 TipoCondicion = sqlResultado["fcCondicion"].ToString(),
                                 DescripcionCondicion = sqlResultado["fcDescripcionCondicion"].ToString(),
                                 ComentarioAdicional = sqlResultado["fcComentarioAdicional"].ToString(),
-                                Estado = (bool)sqlResultado["fbEstadoCondicion"]
+                                EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"]
                             });
                         }
-                    }
-
+                    } // using executeReader()
                 } // using command
             } // using connection
         }
@@ -893,14 +896,6 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
         return lURLDesencriptado;
     }
 
-    public static T ConvertFromDBVal<T>(object obj)
-    {
-        if (obj == null || obj == DBNull.Value)
-            return default(T);
-        else
-            return (T)obj;
-    }
-
     public static int GetMonthDifference(DateTime startDate, DateTime endDate)
     {
         int monthsApart = 12 * (startDate.Year - endDate.Year) + startDate.Month - endDate.Month;
@@ -934,10 +929,19 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
 
         public DateTime EnAnalisisInicio { get; set; }
         public string UsuarioAnalista { get; set; }
-        public string ComentarioValidacionInfoPersonal { get; set; }
+
+        public DateTime FechaValidacionInformacionPersonal { get; set; }
+        public string ComentarioValidacionInformacionPersonal { get; set; }
+
+        public DateTime FechaValidacionDocumentacion { get; set; }
         public string ComentarioValidacionDocumentacion { get; set; }
+
+        public DateTime FechaValidacionReferenciasPersonales { get; set; }
         public string ComentarioValidacionReferenciasPersonales { get; set; }
-        public string ComentarioValidacionInfoLaboral { get; set; }
+
+        public DateTime FechaValidacionInformacionLaboral { get; set; }
+        public string ComentarioValidacionInformacionLaboral { get; set; }
+
         public string ComentarioResolucion { get; set; }
         public DateTime TiempoTomaDecisionFinal { get; set; }
         public DateTime EnAnalisisFin { get; set; }
@@ -963,6 +967,11 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
         public string ComentarioPasoFinal { get; set; }
         public DateTime PasoFinalFin { get; set; }
 
+        public int IdEstadoSolicitud { get; set; }
+        public string EstadoSolicitud { get; set; }
+
+        public int SolicitudActiva { get; set; }
+
         public List<SolicitudesCredito_RegistradaDetalles_Condicion_ViewModel> Condiciones { get; set; }
 
         public SolicitudesCredito_RegistradaDetalles_EstadoProcesos_ViewModel()
@@ -979,6 +988,6 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
         public string TipoCondicion { get; set; }
         public string DescripcionCondicion { get; set; }
         public string ComentarioAdicional { get; set; }
-        public bool Estado { get; set; }
+        public bool EstadoCondicion { get; set; }
     }
 }
