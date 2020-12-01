@@ -9,6 +9,6 @@
 
 
 
-public partial class BandejaMisSolicitudes
+public partial class SolicitudesCredito_Bandeja_Movil
 {
 }

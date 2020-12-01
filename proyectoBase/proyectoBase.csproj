@@ -897,11 +897,11 @@
     <Content Include="Forms\Aval\Aval_Registrar.aspx" />
     <Content Include="Forms\Clientes\GestionCobranzaClienteDocumentos.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
-    <Content Include="Forms\NuevoCotizadorCarros\CotizadorCarros.aspx" />
+    <Content Include="Forms\Movil\CotizadorCarros.aspx" />
     <Content Include="Forms\Solicitudes\Garantia_Actualizar.aspx" />
     <Content Include="Forms\Solicitudes\GarantiaSinSolicitud_Detalles.aspx" />
     <Content Include="Forms\Solicitudes\Garantia_Registrar.aspx" />
-    <Content Include="Forms\Movil\BandejaMisSolicitudes.aspx" />
+    <Content Include="Forms\Movil\SolicitudesCredito_Bandeja_Movil.aspx" />
     <Content Include="Forms\Movil\BandejaPrecalificados.aspx" />
     <Content Include="Forms\Movil\precalificado_buscador.aspx" />
     <Content Include="Forms\Movil\Precalificado_Puesto109.aspx" />
@@ -1720,11 +1720,11 @@
     <Compile Include="Forms\Clientes\Precalificado_Resolucion.aspx.designer.cs">
       <DependentUpon>Precalificado_Resolucion.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NuevoCotizadorCarros\CotizadorCarros.aspx.cs">
+    <Compile Include="Forms\Movil\CotizadorCarros.aspx.cs">
       <DependentUpon>CotizadorCarros.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Forms\NuevoCotizadorCarros\CotizadorCarros.aspx.designer.cs">
+    <Compile Include="Forms\Movil\CotizadorCarros.aspx.designer.cs">
       <DependentUpon>CotizadorCarros.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\Garantia_Actualizar.aspx.cs">
@@ -1748,12 +1748,12 @@
     <Compile Include="Forms\Solicitudes\Garantia_Registrar.aspx.designer.cs">
       <DependentUpon>Garantia_Registrar.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Movil\BandejaMisSolicitudes.aspx.cs">
-      <DependentUpon>BandejaMisSolicitudes.aspx</DependentUpon>
+    <Compile Include="Forms\Movil\SolicitudesCredito_Bandeja_Movil.aspx.cs">
+      <DependentUpon>SolicitudesCredito_Bandeja_Movil.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Forms\Movil\BandejaMisSolicitudes.aspx.designer.cs">
-      <DependentUpon>BandejaMisSolicitudes.aspx</DependentUpon>
+    <Compile Include="Forms\Movil\SolicitudesCredito_Bandeja_Movil.aspx.designer.cs">
+      <DependentUpon>SolicitudesCredito_Bandeja_Movil.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Movil\BandejaPrecalificados.aspx.cs">
       <DependentUpon>BandejaPrecalificados.aspx</DependentUpon>
@@ -2134,7 +2134,6 @@
     <Folder Include="Content\icons\ionicons\png\512\" />
     <Folder Include="Content\images\small\" />
     <Folder Include="Content\images\users\" />
-    <Folder Include="Forms\Garantias\" />
     <Folder Include="Scripts\app\Garantias\" />
   </ItemGroup>
   <ItemGroup>
