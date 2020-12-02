@@ -7,87 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
-    <style>
-        html {
-            background-color: rgb(255,255,255) !important;
-        }
-
-        .FormatoBotonesIconoCuadrado40 {
-            position: absolute;
-            background-color: white;
-            border-style: solid;
-            border-color: lightgray;
-            border-width: 1px;
-            margin: 0;
-            white-space: normal !important;
-            vertical-align: text-top;
-            text-align: center;
-            padding-left: 5px;
-            padding-right: 5px;
-            padding-top: 55px;
-            padding-bottom: 5px;
-            height: 95px;
-            width: 80px;
-            font-size: 12px;
-            cursor: pointer;
-            background-repeat: no-repeat;
-            background-position-y: 10px;
-            background-position-x: center;
-            display: inline-block;
-            text-wrap: normal;
-            color: #808080;
-        }
-
-            .FormatoBotonesIconoCuadrado40:hover {
-                background-color: #b3ecff;
-                color: black;
-            }
-
-        .card {
-            border: none;
-            -webkit-box-shadow: none !important;
-            box-shadow: none !important;
-        }
-
-        p {
-            font-size: 15.5px !important;
-            text-align: justify !important;
-            text-justify: inter-word !important;
-        }
-
-        #divContratoPDF p {
-            font-size: 11px !important;
-            text-align: justify !important;
-            text-justify: inter-word !important;
-            color: black;
-        }
-
-        #divContratoPDF label {
-            font-size: 11px !important;
-            color: black;
-        }
-
-        .page-break {
-            page-break-after: always;
-        }
-
-        .ug-thumbs-grid {
-            left: 50px !important;
-        }
-
-        .divImprimir {
-            color: black !important;
-        }
-    </style>
+    <link href="/CSS/SolicitudesCredito_ImprimirDocumentacion.css" rel="stylesheet" />
 </head>
 <body class="EstiloBody">
     <form id="frmGuardarPreSolicitud" runat="server">
-
         <div class="card m-0">
             <div class="card-header pb-1 pt-1">
                 <div class="float-right p-1" id="Loader" style="display: none;">
