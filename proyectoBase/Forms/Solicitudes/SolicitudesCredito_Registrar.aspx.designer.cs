@@ -238,22 +238,49 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtPlazo;
 
     /// <summary>
-    /// Control divOrigen.
+    /// Control ddlMoneda.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divOrigen;
+    protected global::System.Web.UI.WebControls.DropDownList ddlMoneda;
 
     /// <summary>
-    /// Control ddlOrigen.
+    /// Control divCotizadorAutos.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlOrigen;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divCotizadorAutos;
+
+    /// <summary>
+    /// Control ddlTipoGastosDeCierre.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoGastosDeCierre;
+
+    /// <summary>
+    /// Control ddlTipoDeSeguro.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeSeguro;
+
+    /// <summary>
+    /// Control ddlGps.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlGps;
 
     /// <summary>
     /// Control divValorFinanciar.
@@ -283,13 +310,22 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtValorCuota;
 
     /// <summary>
-    /// Control ddlMoneda.
+    /// Control divOrigen.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlMoneda;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divOrigen;
+
+    /// <summary>
+    /// Control ddlOrigen.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlOrigen;
 
     /// <summary>
     /// Control step_garantia.

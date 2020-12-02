@@ -236,10 +236,11 @@
                                 <asp:Label runat="server" ID="lblMontoParaCompraVehiculoEnPalabras_Contrato" class="font-weight-bold"></asp:Label>
                                 para compra del vehiculo (<asp:Label runat="server" ID="lblMontoParaCompraVehiculo_Contrato"></asp:Label>)
                                 y
-                                <asp:Label runat="server" ID="lblMontoParaCompraSeguroYGPSEnPalabras_Contrato" class="font-weight-bold"></asp:Label>
-                                (<asp:Label runat="server" ID="lblMontoParaCompraSeguroYGPS_Contrato"></asp:Label>)
+                                <asp:Label runat="server" ID="lblMontoParaCompraGPSEnPalabras_Contrato" class="font-weight-bold"></asp:Label>
+                                (<asp:Label runat="server" ID="lblMontoParaCompraGPS_Contrato"></asp:Label>)
                                 para compra de modulo de monitoreo por GPS y
-                                <asp:Label runat="server" ID="lblMontoGastosDeCierre_Contrato"></asp:Label>
+                                <asp:Label runat="server" ID="lblMontoGastosDeCierreEnPalabras_Contrato" class="font-weight-bold"></asp:Label>
+                                (<asp:Label runat="server" ID="lblMontoGastosDeCierre_Contrato"></asp:Label>)
                                 por concepto de gastos de cierre y papeleria todo en monda de curso legal en Honduras.
                                 <b>-SEGUNDO: CONDICIONES DEL FINANCIAMIENTO.-</b> El préstamo se facilita bajo las siguientes condiciones: 
                                 <b>A) DESTINO: EL CLIENTE </b>acepta, reconoce y autoriza que la cantidad recibida en préstamo será para compra de: 
@@ -270,7 +271,7 @@
 
                                 <b>- B) COMISIONES.-TASAS DE INTERES.-COSTO ANUAL TOTAL.- EL CLIENTE</b> se obliga a pagar a <b>PRESTADITO</b>, a partir de esta fecha una 
                                 tasa de interés simple  del <b>
-                                    <asp:Label runat="server" ID="lblTasaInteresSimple_Contrato">1.67</asp:Label>%
+                                    <asp:Label runat="server" ID="lblTasaInteresSimpleMensual_Contrato">1.67</asp:Label>%
                                 PORCIENTO MENSUAL </b>, amartizando capital mas intereses basada en la regla del 78 misma que sera pagadero
                                 <asp:Label runat="server" ID="lblTipoDePlazo_Contrato"></asp:Label>
                                 en moneda de curso legal en Honduras,
@@ -284,7 +285,7 @@
                             <p>
                                 <b>C) FORMA  Y PLAZO DEL FINANCIAMENTO:</b>
                                 <b>Anticipo por concepto de prima de:
-                                    <asp:Label runat="server" ID="lblMontoPrima_Contrato"></asp:Label>, plazo de
+                                    <asp:Label runat="server" ID="lblMontoPrima_Contrato"></asp:Label> y plazo de
                                     <asp:Label runat="server" ID="lblPlazo_Contrato"></asp:Label>
                                     <asp:Label runat="server" ID="lblFrecuenciaPago_Contrato"></asp:Label>
                                     valor de la cuota:
@@ -295,6 +296,7 @@
                                 <asp:Label runat="server" ID="lblPlazoGPS_Contrato"></asp:Label>
                                 cuotas de Servicio de monitoreo por GPS por un valor de
                                 <asp:Label runat="server" ID="lblValorCuotaGPSPalabras_Contrato"></asp:Label>
+                                (<asp:Label runat="server" ID="lblValorCuotaGPS_Contrato"></asp:Label>)
                                 y 
                                 <asp:Label runat="server" ID="lblPlazoSeguro_Contrato"></asp:Label>
                                 cuotas de
@@ -305,7 +307,8 @@
                                 y así sucesivamente de forma
                                 <asp:Label runat="server" ID="lblPlazoPago_Contrato"></asp:Label>
                                 hasta la completa cancelación de la deuda en caso de cumplir el 100% del financiamiento sin abonar a capital y sin sumar gastos por cobranza y/o moratorios o cualquiera otro gasto generado por gestiones de recuperacion o incumplimento seria de
-                                <asp:Label runat="server" ID="lblMontoPrestamo2_Contrato"></asp:Label>
+                                <asp:Label runat="server" ID="lblMontoTotalPrestamoPalabras_Contrato"></asp:Label>
+                                (<asp:Label runat="server" ID="lblMontoTotalPrestamo_Contrato"></asp:Label>)
                             </p>
                             <p>
                                 <b>D) DE LA FORMA, DE LA MONEDA  Y LUGAR DE PAGO:</b>
@@ -325,8 +328,9 @@
                                 Los gastos que se incurra por matricula, mantenimiento, reparación y todas las relacionadas para conservación del vehículo en perfecto estado, deberá ser pagadas por el <b>CLIENTE</b>, así como también los gastos que se ocasione en la recuperación del vehículo en caso de mora. 
                                 <b>- TERCERO: AUTORIZACIONES ESPECIALES: EL CLIENTE</b>
                                 por este acto, en tanto no haya cumplido con el pago total de su obligación, autoriza a <b>PRESTADITO</b> expresamente y sin ser necesario la notificación previa para: 
-                                <b>A)</b> Vender, Ceder o de cualquier otra forma traspasar, o celebrar contratos de participación, de descuentos con relación al crédito y derechos consignados en este documento o títulos valores relacionados a este mismo; 
                                 <span class="page-break"></span>
+                                <b>A)</b> Vender, Ceder o de cualquier otra forma traspasar, o celebrar contratos de participación, de descuentos con relación al crédito y derechos consignados en este documento o títulos valores relacionados a este mismo; 
+                                
                                 <b>B)</b> Autorizar a <b>PRESTADITO</b> para que en cualquier tiempo pueda acceder a la información de la Central de Riesgos de la Comisión Nacional de Bancos y Seguros u otra central de riesgo pública o privada, para gestionar y conocer la situación crediticia de <b>EL CLIENTE</b> frente a las demás instituciones del sistema financiero nacional. 
                                 <b>- C) EL CLIENTE</b> Autoriza de manera Irrevocable, a que <b>PRESTADITO</b> pueda entrar en su domicilio, para solo efecto de retirar el vehículo comprado con este préstamo, o que lo retire de una tercera persona sin necesidad de intervención judicial, esta cláusula solo se ejecutara en caso de mora de 2 o más cuotas vencidas y mientras no haya sido cancelado el total adeudado. 
                                 <b>- CUARTO: OBLIGACIONES GENERALES.- EL CLIENTE</b> durante la vigencia del presente contrato también se obliga a:

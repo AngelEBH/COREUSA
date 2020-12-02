@@ -734,25 +734,98 @@ function CargarDocumentosRequeridos() {
 
 /* Cargar prestamos disponibles consultados en el cotizador */
 function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
+    debugger;
 
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/CalculoPrestamo",
-        data: JSON.stringify({ idProducto: PRECALIFICADO.IdProducto, valorGlobal: valorGlobal, valorPrima: valorPrima, plazo: plazo, dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
 
-            MensajeError('No se pudo realizar el cálculo del préstamo, contacte al administrador');
-        },
-        success: function (data) {
+    if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203) {
 
-            var objCalculo = data.d;
 
-            var valorCuota = objCalculo.CuotaMensual == 0 ? data.d.CuotaQuincenal : data.d.CuotaMensual;
-            $("#txtValorCuota").val(valorCuota);
-            $("#txtValorFinanciar").val(objCalculo.ValoraFinanciar);
+        var lcSeguro = '';
+        var lcGPS = '';
+        var lcGastosdeCierre = '';
+
+        if ($("#ddlTipoDeSeguro :selected").val() == "A - Full Cover") {
+            lcSeguro = "1";
         }
-    });
+        if ($("#ddlTipoDeSeguro :selected").val() == "B - Basico + Garantía") {
+            lcSeguro = "2";
+        }
+
+        if ($("#ddlTipoDeSeguro :selected").val() == "C - Basico") {
+            lcSeguro = "3";
+        }
+
+
+        lcGastosdeCierre = $("#ddlTipoGastosDeCierre :selected").val() == "Financiado" ? "1" : "0";
+
+
+
+        if ($("#ddlGps :selected").val() == "Si - CPI") {
+            lcGPS = "1";
+        }
+        if ($("#ddlGps :selected").val() == "Si - CableColor") {
+            lcGPS = "2";
+        }
+
+        if (lcSeguro != '' && lcGPS != '' && lcGastosdeCierre != '') {
+
+
+            $.ajax({
+                type: "POST",
+                url: "SolicitudesCredito_Registrar.aspx/CalculoPrestamoVehiculo",
+                data: JSON.stringify(
+                    {
+                        idProducto: PRECALIFICADO.IdProducto,
+                        valorGlobal: valorGlobal,
+                        valorPrima: valorPrima,
+                        plazo: plazo,
+                        scorePromedio: PRECALIFICADO.ScorePromedio,
+                        tipoSeguro: lcSeguro,
+                        tipoGps: lcGPS,
+                        gastosDeCierreFinanciados: lcGastosdeCierre,
+                        dataCrypt: window.location.href
+                    }),
+                contentType: 'application/json; charset=utf-8',
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                    MensajeError('No se pudo realizar el cálculo del préstamo, contacte al administrador');
+                },
+                success: function (data) {
+
+                    var objCalculo = data.d;
+
+                    var valorCuota = objCalculo.CuotaMensualNeta;
+                    $("#txtValorCuota").val(valorCuota);
+                    $("#txtValorFinanciar").val(objCalculo.ValoraFinanciar);
+                }
+            });
+        }
+
+       
+
+    }
+    else {
+
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Registrar.aspx/CalculoPrestamo",
+            data: JSON.stringify({ idProducto: PRECALIFICADO.IdProducto, valorGlobal: valorGlobal, valorPrima: valorPrima, plazo: plazo, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+
+                MensajeError('No se pudo realizar el cálculo del préstamo, contacte al administrador');
+            },
+            success: function (data) {
+
+                var objCalculo = data.d;
+
+                var valorCuota = objCalculo.CuotaMensual == 0 ? data.d.CuotaQuincenal : data.d.CuotaMensual;
+                $("#txtValorCuota").val(valorCuota);
+                $("#txtValorFinanciar").val(objCalculo.ValoraFinanciar);
+            }
+        });
+    }
 }
 
 /* Cargar municipios del departamento seleccionado del domicilio */
@@ -836,8 +909,8 @@ $("select").on('change', function () {
     $(this).parsley().validate();
 });
 
-$('#txtValorGlobal,#txtValorPrima,#txtPlazo').blur(function () {
-    //radiofaro
+$('#txtValorGlobal,#txtValorPrima,#txtPlazo,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps').blur(function () {
+    
     var valorGlobal = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
     var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
     var plazo = parseInt($("#txtPlazo").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazo").val().replace(/,/g, ''));

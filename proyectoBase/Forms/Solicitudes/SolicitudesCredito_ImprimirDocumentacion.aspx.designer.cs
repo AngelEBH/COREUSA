@@ -400,22 +400,31 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblMontoParaCompraVehiculo_Contrato;
 
     /// <summary>
-    /// Control lblMontoParaCompraSeguroYGPSEnPalabras_Contrato.
+    /// Control lblMontoParaCompraGPSEnPalabras_Contrato.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoParaCompraSeguroYGPSEnPalabras_Contrato;
+    protected global::System.Web.UI.WebControls.Label lblMontoParaCompraGPSEnPalabras_Contrato;
 
     /// <summary>
-    /// Control lblMontoParaCompraSeguroYGPS_Contrato.
+    /// Control lblMontoParaCompraGPS_Contrato.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoParaCompraSeguroYGPS_Contrato;
+    protected global::System.Web.UI.WebControls.Label lblMontoParaCompraGPS_Contrato;
+
+    /// <summary>
+    /// Control lblMontoGastosDeCierreEnPalabras_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoGastosDeCierreEnPalabras_Contrato;
 
     /// <summary>
     /// Control lblMontoGastosDeCierre_Contrato.
@@ -508,13 +517,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblNumeroMotor_Contrato;
 
     /// <summary>
-    /// Control lblTasaInteresSimple_Contrato.
+    /// Control lblTasaInteresSimpleMensual_Contrato.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblTasaInteresSimple_Contrato;
+    protected global::System.Web.UI.WebControls.Label lblTasaInteresSimpleMensual_Contrato;
 
     /// <summary>
     /// Control lblTipoDePlazo_Contrato.
@@ -598,6 +607,15 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblValorCuotaGPSPalabras_Contrato;
 
     /// <summary>
+    /// Control lblValorCuotaGPS_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblValorCuotaGPS_Contrato;
+
+    /// <summary>
     /// Control lblPlazoSeguro_Contrato.
     /// </summary>
     /// <remarks>
@@ -643,13 +661,22 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblPlazoPago_Contrato;
 
     /// <summary>
-    /// Control lblMontoPrestamo2_Contrato.
+    /// Control lblMontoTotalPrestamoPalabras_Contrato.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoPrestamo2_Contrato;
+    protected global::System.Web.UI.WebControls.Label lblMontoTotalPrestamoPalabras_Contrato;
+
+    /// <summary>
+    /// Control lblMontoTotalPrestamo_Contrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMontoTotalPrestamo_Contrato;
 
     /// <summary>
     /// Control lblCorreo_Contrato.
