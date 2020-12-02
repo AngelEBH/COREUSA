@@ -91,7 +91,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 fcNombreCortoAnalista = (string)reader["fcNombreCortoAnalista"]
                             };
                             IDPRODUCTO = (int)reader["fiIDTipoProducto"];
-                            lblArraigoLaboral.Text = (string)reader["fcClienteArraigoLaboral"].ToString();
+                            //lblArraigoLaboral.Text = (string)reader["fcClienteArraigoLaboral"].ToString();
 
                             /* Llenar ficha de resumen */
                             //lblResumenCliente.Text = ((string)reader["fcPrimerNombreCliente"] + " " + (string)reader["fcSegundoNombreCliente"] + " " + (string)reader["fcPrimerApellidoCliente"] + " " + (string)reader["fcSegundoApellidoCliente"]).Replace(" ","");
@@ -121,7 +121,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 }
 
                 string NombreLogo = IDPRODUCTO == 101 ? "iconoRecibirDinero48.png" : IDPRODUCTO == 201 ? "iconoMoto48.png" : IDPRODUCTO == 202 ? "iconoAuto48.png" : IDPRODUCTO == 301 ? "iconoConsumo48.png" : "iconoConsumo48.png";
-                LogoPrestamo.ImageUrl = "http://172.20.3.140/Imagenes/" + NombreLogo;
+                imgLogo.ImageUrl = "http://172.20.3.140/Imagenes/" + NombreLogo;
 
                 if (solicitudes.fiIDAnalista == Convert.ToInt32(pcIDUsuario))
                 {

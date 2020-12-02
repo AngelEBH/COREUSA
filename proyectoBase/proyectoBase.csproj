@@ -762,6 +762,7 @@
     <Content Include="CSS\Estilos_CSS.css" />
     <Content Include="CSS\Imprimir.css" />
     <Content Include="CSS\ImprimirTickets.css" />
+    <Content Include="CSS\SolicitudesCredito_Analisis.css" />
     <Content Include="Documentos\Solicitudes\Solicitud249\CTES249C8-20201006T143456-001.jpg" />
     <Content Include="Documentos\Solicitudes\Solicitud249\CTES249D1-20202806T092850-0.png" />
     <Content Include="Documentos\Solicitudes\Solicitud249\CTES249D18-20202806T092850-0.png" />

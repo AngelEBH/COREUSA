@@ -1,4 +1,7 @@
-﻿gMontoFinal = 0;
+﻿
+InicializarComponentes();
+
+gMontoFinal = 0;
 gPlazoFinal = 0;
 var objSolicitud = [];
 var resolucionHabilitada = false;
@@ -2373,3 +2376,150 @@ $(window).on('show.bs.modal', function () {
 window.addEventListener('scroll', () => {
     document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
 });
+
+
+function InicializarComponentes() {
+
+    $(".MascaraCantidad").inputmask("decimal", {
+        alias: 'numeric',
+        groupSeparator: ',',
+        digits: 2,
+        integerDigits: 11,
+        digitsOptional: false,
+        placeholder: '0',
+        radixPoint: ".",
+        autoGroup: true,
+        min: 0.00
+    });
+    $(".MascaraEnteros").inputmask("integer", {
+        alias: 'numeric',
+        groupSeparator: ',',
+        digits: 0,
+        min: 0,
+        max: 999,
+        digitsOptional: false,
+        placeholder: '0',
+        autoGroup: true
+    });
+
+    $("#divDocumentacionCedula").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+    $("#divDocumentacionCedulaModal").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+    $("#divDocumentacionDomicilio").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+    $("#divDocumentacionDomicilioModal").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+    $("#divDocumentacionLaboral").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+    $("#divDocumentacionLaboralModal").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+    $("#divDocumentacionSoliFisicaModal").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+    $("#divDocumentacionCampoDomicilio").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+    $("#divDocumentacionCampoDomicilioModal").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+    $("#divDocumentacionCampoTrabajo").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+    $("#divDocumentacionCampoTrabajoModal").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+    $("#divGaleriaGarantia").unitegallery({
+        gallery_theme: "tilesgrid",
+        tile_width: 180,
+        tile_height: 120,
+        lightbox_type: "compact",
+        grid_num_rows: 15,
+        tile_enable_textpanel: true,
+        tile_textpanel_title_text_align: "center"
+    });
+
+}

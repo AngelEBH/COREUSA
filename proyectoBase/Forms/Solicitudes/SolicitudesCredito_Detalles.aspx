@@ -119,6 +119,8 @@
             </div>
             <div class="card-body">
                 <div class="collapse-group">
+
+                    <!-- Informacion personal -->
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingOne">
                             <h6 class="panel-title m-0 font-14">
@@ -186,6 +188,7 @@
                         </div>
                     </div>
 
+                    <!-- Informacion domicilio -->
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingTwo">
                             <h6 class="panel-title m-0 font-14">
@@ -249,6 +252,7 @@
                         </div>
                     </div>
 
+                    <!-- Informacion conyugal -->
                     <div class="panel panel-default" id="divPanelInformacionConyugal" runat="server">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingThree">
                             <h6 class="panel-title m-0 font-14">
@@ -300,8 +304,8 @@
                         </div>
                     </div>
 
+                    <!-- Informacion laboral -->
                     <div class="panel panel-default">
-
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingFour">
                             <h6 class="panel-title m-0 font-14">
                                 <a href="#collapseInformacionLaboral" class="text-dark collapsed h6 font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseThree">
@@ -396,6 +400,7 @@
                         </div>
                     </div>
 
+                    <!-- Referencias personales -->
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingFive">
                             <h6 class="m-0 font-14">
@@ -436,6 +441,7 @@
                         </div>
                     </div>
 
+                    <!-- Información de la garantía -->
                     <div class="panel panel-default" id="panelInformacionGarantia" runat="server" visible="true">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingGarantia">
                             <h6 class="m-0 font-14">
@@ -549,7 +555,7 @@
                         </div>
                     </div>
 
-                    <!-- Informacion del prestamo requerido y el calculo del mismo -->
+                    <!-- Información del préstamo -->
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingSix">
                             <h6 class="panel-title m-0 font-14">
@@ -767,7 +773,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </div>
                     </div>
 
-
+                    <!-- Información de perfil -->
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingSeven">
                             <h6 class="m-0 font-14">
@@ -779,7 +785,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </div>
                         <div id="collapseInformacionAnalisis" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
                             <div class="panel-body">
-                                <div class="row mb-0" id="div1" runat="server">
+                                <div class="row mb-0" id="divInformacionPerfil" runat="server">
                                     <div class="col-lg-6 col-md-6 col-12 border-right border-gray">
                                         <div class="form-group row">
                                             <div class="col-12">
@@ -805,6 +811,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </div>
                     </div>
 
+                    <!-- Investigación de campo -->
                     <div class="panel panel-default" id="divInformaciondeCampo" runat="server" visible="false">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingEight">
                             <h6 class="panel-title m-0 font-14">
@@ -908,7 +915,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                 </div>
                 <!--/ collapse-group -->
             </div>
-            <!--/ card-header -->
+            <!--/ card-body -->
         </div>
         <!--/ card -->
 
