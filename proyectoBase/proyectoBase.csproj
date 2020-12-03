@@ -1106,6 +1106,7 @@
     <Content Include="Imagenes\pruebaImagen.jpg" />
     <Content Include="Imagenes\PulgarAbajoIcon.png" />
     <Content Include="Imagenes\PulgarArribaIcon.png" />
+    <Content Include="Imagenes\receipt_40px.png" />
     <Content Include="Imagenes\refresh_40px.png" />
     <Content Include="Imagenes\resume_32px.png" />
     <Content Include="Imagenes\resume_40px.png" />
@@ -1272,6 +1273,7 @@
     <Content Include="Imagenes\USFlagicon32.png" />
     <Content Include="Imagenes\USFlagicon64.png" />
     <Content Include="Imagenes\USFlagicon96.png" />
+    <Content Include="Imagenes\vehicle_insurance_40px.png" />
     <Content Include="Scripts\app\Aval\Aval_Actualizar.js" />
     <Content Include="Scripts\app\Aval\Aval_Detalles.js" />
     <Content Include="Scripts\app\Aval\Aval_Registrar.js" />

@@ -76,7 +76,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-0">
+                            <div class="row justify-content-between mb-0">
                                 <!-- Información del cliente -->
                                 <div class="col-lg-6">
                                     <h6 class="mb-1">Físicas</h6>
@@ -132,7 +132,8 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Unidad de medida</label>
-                                            <asp:DropDownList ID="ddlUnidadDeMedida" runat="server" CssClass="form-control form-control-sm col-form-label" required="required"></asp:DropDownList>
+                                            <asp:DropDownList ID="ddlUnidadDeMedida" runat="server" CssClass="form-control form-control-sm col-form-label" required="required" data-parsley-errors-container="#error-ddlUnidadDeMedida"></asp:DropDownList>
+                                            <div id="error-ddlUnidadDeMedida"></div>
                                         </div>
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Transmisión</label>
@@ -164,6 +165,45 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="col-lg-6">
+                                    <h6 class="mb-1">Propietario de la garantía</h6>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Identidad</label>
+                                            <asp:TextBox ID="txtIdentidadPropietario" CssClass="form-control form-control-sm" type="text" required="required" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Nombre completo</label>
+                                            <asp:TextBox ID="txtNombrePropietario" CssClass="form-control form-control-sm" type="text" required="required" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Nacionalidad</label>                                            
+                                            <asp:DropDownList ID="ddlNacionalidadPropietario" runat="server" CssClass="form-control form-control-sm col-form-label" required="required" data-parsley-errors-container="#error-ddlNacionalidadPropietario"></asp:DropDownList>
+                                            <div id="error-ddlNacionalidadPropietario"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 border-left border-gray">
+                                    <h6 class="mb-1">Vendedor de la garantía</h6>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Identidad</label>
+                                            <asp:TextBox ID="txtIdentidadVendedor" CssClass="form-control form-control-sm" type="text" required="required" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Nombre completo</label>
+                                            <asp:TextBox ID="txtNombreVendedor" CssClass="form-control form-control-sm" type="text" required="required" runat="server"></asp:TextBox>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Nacionalidad</label>
+                                            <asp:DropDownList ID="ddlNacionalidadVendedor" runat="server" CssClass="form-control form-control-sm col-form-label" required="required" data-parsley-errors-container="#error-ddlNacionalidadVendedor"></asp:DropDownList>
+                                            <div id="error-ddlNacionalidadVendedor"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="row">
                                 <div class="col-12">

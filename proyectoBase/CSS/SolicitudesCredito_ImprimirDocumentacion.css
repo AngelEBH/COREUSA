@@ -68,3 +68,7 @@ p {
 .divImprimir {
     color: black !important;
 }
+
+#divConevionCyVPDF p {
+    font-size: 12px !important;
+}

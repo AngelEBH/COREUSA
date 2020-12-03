@@ -39,6 +39,14 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
                 ValorPrima: $("#txtValorPrima").val().replace(/,/g, ''),
                 ValorFinanciado: $("#txtValorFinanciado").val().replace(/,/g, ''),
                 GastosDeCierre: $("#txtGastosDeCierre").val().replace(/,/g, ''),
+
+                IdentidadPropietario: $("#txtIdentidadPropietario").val(),
+                NombrePropietario: $("#txtNombrePropietario").val(),
+                IdNacionalidadPropietario: $("#ddlNacionalidadPropietario :selected").val(),
+
+                IdentidadVendedor: $("#txtIdentidadVendedor").val(),
+                NombreVendedor: $("#txtNombreVendedor").val(),
+                IdNacionalidadVendedor: $("#ddlNacionalidadVendedor :selected").val(),
             }
 
             $.ajax({

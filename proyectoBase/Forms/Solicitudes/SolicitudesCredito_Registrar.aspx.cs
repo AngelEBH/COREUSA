@@ -78,6 +78,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                 if (Precalificado.IdProducto == 202 || Precalificado.IdProducto == 203)
                 {
+                    lblTituloMontoPrestmo.Text = "Valor del vehículo";
+
                     divCotizadorAutos.Visible = true;
                     ddlTipoGastosDeCierre.Enabled = true;
                     ddlTipoDeSeguro.Enabled = true;

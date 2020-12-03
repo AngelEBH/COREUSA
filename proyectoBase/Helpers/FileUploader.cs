@@ -22,7 +22,7 @@ namespace adminfiles
             { "limit", 5 }, //limite de archivos a subir
             { "maxSize", 10 }, //peso máximo de todos los archivos seleccionado en megas (MB)
             { "fileMaxSize", 2 }, //peso máximo por archivo
-            { "extensions", new string[] { "jpg", "png"} },
+            { "extensions", new string[] { "jpg", "png", "jpeg"} },
             { "disallowedExtensions", new string[] { "asp", "aspx", "cs" } },
             { "required", false },
             { "uploadDir", @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\" },
