@@ -520,7 +520,7 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
 
             objSeccion = {
                 IdSolicitud: ID_SOLICITUD,
-                IdCliente: ID_CLIENTE,                
+                IdCliente: ID_CLIENTE,
                 ValorSeleccionado: $("#txtValorFinanciar").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciar").val().replace(/,/g, ''),
                 PlazoSeleccionado: $("#txtPlazoSeleccionado").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazoSeleccionado").val().replace(/,/g, ''),
                 ValorGarantia: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
@@ -999,129 +999,129 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
 //function RecargarInformacion() {
 
-//    MostrarLoader();
+// MostrarLoader();
 
-//    $.ajax({
-//        type: "POST",
-//        url: "SolicitudesCredito_ActualizarSolicitud.aspx/ObtenerInformacionClienteSolicitudPorIdSolicitud",
-//        data: JSON.stringify({ dataCrypt: window.location.href }),
-//        contentType: "application/json; charset=utf-8",
-//        error: function (xhr, ajaxOptions, thrownError) {
-//            MensajeError('Ocurrió un error al recargar la información, contacte al administrador.');
-//            OcultarLoader();
-//        },
-//        success: function (data) {
-
-
-//            if (data.d != null) {
-
-//                var resultado = data.d;
-
-//                /* información de pestaña información personal */
-//                $("#txtIdentidadCliente").val(respaldoInformacionPersonal.txtProfesion);
-//                $("#txtRtnCliente").val(respaldoInformacionPersonal.txtProfesion);
-//                $("#txtPrimerNombre").val(respaldoInformacionPersonal.txtProfesion);
-//                $("#txtSegundoNombre").val(respaldoInformacionPersonal.txtProfesion);
-//                $("#txtPrimerApellido").val(respaldoInformacionPersonal.txtProfesion);
-//                $("#txtSegundoApellido").val(respaldoInformacionPersonal.txtProfesion);
-//                $("#ddlNacionalidad").val(respaldoInformacionPersonal.ddlNacionalidad);
-//                $("#ddlTipoDeCliente").val(respaldoInformacionPersonal.ddlEstadoCivil);
-//                $("#txtFechaDeNacimiento").val(respaldoInformacionPersonal.txtProfesion);
-//                $("#txtEdadDelCliente").val(respaldoInformacionPersonal.txtProfesion);
-//                $("input[name=sexoCliente][value=" + respaldoInformacionPersonal.sexoCliente + "]").prop('checked', true);
-//                $("#txtCorreoElectronico").val(respaldoInformacionPersonal.txtCorreoElectronico);
-//                $("#txtNumeroTelefono").val(respaldoInformacionPersonal.txtCorreoElectronico);
-//                $("#ddlTipoDeVivienda").val(respaldoInformacionPersonal.ddlTipoDeVivienda);
-//                $("#ddlTiempoDeResidir").val(respaldoInformacionPersonal.ddlTiempoDeResidir);
-//                $("#ddlEstadoCivil").val(respaldoInformacionPersonal.ddlEstadoCivil);
-//                $("#txtProfesion").val(respaldoInformacionPersonal.txtProfesion);
+// $.ajax({
+// type: "POST",
+// url: "SolicitudesCredito_ActualizarSolicitud.aspx/ObtenerInformacionClienteSolicitudPorIdSolicitud",
+// data: JSON.stringify({ dataCrypt: window.location.href }),
+// contentType: "application/json; charset=utf-8",
+// error: function (xhr, ajaxOptions, thrownError) {
+// MensajeError('Ocurrió un error al recargar la información, contacte al administrador.');
+// OcultarLoader();
+// },
+// success: function (data) {
 
 
-//                /* Informacion domicilio */
-//                $("#ddlDepartamentoDomicilio").val(respaldoinformacionDomicilio.ddlDepartamentoDomicilio);
-//                CargarMunicipios(respaldoinformacionDomicilio.ddlDepartamentoDomicilio, 'Domicilio', false, respaldoinformacionDomicilio.ddlMunicipioDomicilio);
-//                CargarCiudadesPoblados(respaldoinformacionDomicilio.ddlDepartamentoDomicilio, respaldoinformacionDomicilio.ddlMunicipioDomicilio, 'Domicilio', false, respaldoinformacionDomicilio.ddlCiudadPobladoDomicilio);
-//                CargarBarriosColonias(respaldoinformacionDomicilio.ddlDepartamentoDomicilio, respaldoinformacionDomicilio.ddlMunicipioDomicilio, respaldoinformacionDomicilio.ddlCiudadPobladoDomicilio, 'Domicilio', respaldoinformacionDomicilio.ddlBarrioColoniaDomicilio);
-//                $("#txtTelefonoCasa").val(respaldoinformacionDomicilio.txtTelefonoCasa);
-//                $("#txtDireccionDetalladaDomicilio").val(respaldoinformacionDomicilio.txtDireccionDetalladaDomicilio);
-//                $("#txtReferenciasDelDomicilio").val(respaldoinformacionDomicilio.txtReferenciasDelDomicilio);
+// if (data.d != null) {
 
-//                /* Informacion laboral */
-//                $("#txtNombreDelTrabajo").val(respaldoInformacionLaboral.txtNombreDelTrabajo);
-//                $("#txtFechaDeIngreso").val(respaldoInformacionLaboral.txtFechaDeIngreso);
-//                $("#txtPuestoAsignado").val(respaldoInformacionLaboral.txtPuestoAsignado);
-//                $("#txtIngresosMensuales").val(respaldoInformacionLaboral.txtPuestoAsignado);
-//                $("#txtTelefonoEmpresa").val(respaldoInformacionLaboral.txtTelefonoEmpresa);
-//                $("#txtExtensionRecursosHumanos").val(respaldoInformacionLaboral.txtExtensionRecursosHumanos);
-//                $("#txtExtensionCliente").val(respaldoInformacionLaboral.txtExtensionCliente);
-//                $("#txtFuenteDeOtrosIngresos").val(respaldoInformacionLaboral.txtFuenteDeOtrosIngresos);
-//                $("#txtValorOtrosIngresos").val(respaldoInformacionLaboral.txtValorOtrosIngresos);
-//                $("#ddlDepartamentoEmpresa").val(respaldoInformacionLaboral.ddlDepartamentoEmpresa);
-//                CargarMunicipios(respaldoInformacionLaboral.ddlDepartamentoEmpresa, 'Empresa', false, respaldoInformacionLaboral.ddlMunicipioEmpresa);
-//                CargarCiudadesPoblados(respaldoInformacionLaboral.ddlDepartamentoEmpresa, respaldoInformacionLaboral.ddlMunicipioEmpresa, 'Empresa', false, respaldoInformacionLaboral.ddlCiudadPobladoEmpresa);
-//                CargarBarriosColonias(respaldoInformacionLaboral.ddlDepartamentoEmpresa, respaldoInformacionLaboral.ddlMunicipioEmpresa, respaldoInformacionLaboral.ddlCiudadPobladoEmpresa, 'Empresa', respaldoInformacionLaboral.ddlBarrioColoniaEmpresa);
-//                $("#txtDireccionDetalladaEmpresa").val(respaldoInformacionLaboral.txtDireccionDetalladaEmpresa);
-//                $("#txtReferenciasEmpresa").val(respaldoInformacionLaboral.txtReferenciasEmpresa);
+// var resultado = data.d;
 
-//                /* Informacion conyugal */
-//                if (informacionConyugal != null) {
-
-//                    var respaldoInformacionConyugal = JSON.parse(localStorage.getItem('RespaldoInformacionConyugal'));
-
-//                    $("#txtIdentidadConyugue").val(respaldoInformacionConyugal.txtIdentidadConyugue);
-//                    $("#txtNombresConyugue").val(respaldoInformacionConyugal.txtNombresConyugue);
-//                    $("#txtFechaNacimientoConyugue").val(respaldoInformacionConyugal.txtFechaNacimientoConyugue);
-//                    $("#txtTelefonoConyugue").val(respaldoInformacionConyugal.txtTelefonoConyugue);
-//                    $("#txtLugarDeTrabajoConyuge").val(respaldoInformacionConyugal.txtLugarDeTrabajoConyuge);
-//                    $("#txtIngresosMensualesConyugue").val(respaldoInformacionConyugal.txtIngresosMensualesConyugue);
-//                    $("#txtTelefonoTrabajoConyugue").val(respaldoInformacionConyugal.txtTelefonoTrabajoConyugue);
-//                }
-//                else if ($("#ddlEstadoCivil :selected").data('requiereinformacionconyugal') == false) {
-
-//                    $(".infoConyugal").prop('disabled', true);
-//                }
+// /* información de pestaña información personal */
+// $("#txtIdentidadCliente").val(respaldoInformacionPersonal.txtProfesion);
+// $("#txtRtnCliente").val(respaldoInformacionPersonal.txtProfesion);
+// $("#txtPrimerNombre").val(respaldoInformacionPersonal.txtProfesion);
+// $("#txtSegundoNombre").val(respaldoInformacionPersonal.txtProfesion);
+// $("#txtPrimerApellido").val(respaldoInformacionPersonal.txtProfesion);
+// $("#txtSegundoApellido").val(respaldoInformacionPersonal.txtProfesion);
+// $("#ddlNacionalidad").val(respaldoInformacionPersonal.ddlNacionalidad);
+// $("#ddlTipoDeCliente").val(respaldoInformacionPersonal.ddlEstadoCivil);
+// $("#txtFechaDeNacimiento").val(respaldoInformacionPersonal.txtProfesion);
+// $("#txtEdadDelCliente").val(respaldoInformacionPersonal.txtProfesion);
+// $("input[name=sexoCliente][value=" + respaldoInformacionPersonal.sexoCliente + "]").prop('checked', true);
+// $("#txtCorreoElectronico").val(respaldoInformacionPersonal.txtCorreoElectronico);
+// $("#txtNumeroTelefono").val(respaldoInformacionPersonal.txtCorreoElectronico);
+// $("#ddlTipoDeVivienda").val(respaldoInformacionPersonal.ddlTipoDeVivienda);
+// $("#ddlTiempoDeResidir").val(respaldoInformacionPersonal.ddlTiempoDeResidir);
+// $("#ddlEstadoCivil").val(respaldoInformacionPersonal.ddlEstadoCivil);
+// $("#txtProfesion").val(respaldoInformacionPersonal.txtProfesion);
 
 
+// /* Informacion domicilio */
+// $("#ddlDepartamentoDomicilio").val(respaldoinformacionDomicilio.ddlDepartamentoDomicilio);
+// CargarMunicipios(respaldoinformacionDomicilio.ddlDepartamentoDomicilio, 'Domicilio', false, respaldoinformacionDomicilio.ddlMunicipioDomicilio);
+// CargarCiudadesPoblados(respaldoinformacionDomicilio.ddlDepartamentoDomicilio, respaldoinformacionDomicilio.ddlMunicipioDomicilio, 'Domicilio', false, respaldoinformacionDomicilio.ddlCiudadPobladoDomicilio);
+// CargarBarriosColonias(respaldoinformacionDomicilio.ddlDepartamentoDomicilio, respaldoinformacionDomicilio.ddlMunicipioDomicilio, respaldoinformacionDomicilio.ddlCiudadPobladoDomicilio, 'Domicilio', respaldoinformacionDomicilio.ddlBarrioColoniaDomicilio);
+// $("#txtTelefonoCasa").val(respaldoinformacionDomicilio.txtTelefonoCasa);
+// $("#txtDireccionDetalladaDomicilio").val(respaldoinformacionDomicilio.txtDireccionDetalladaDomicilio);
+// $("#txtReferenciasDelDomicilio").val(respaldoinformacionDomicilio.txtReferenciasDelDomicilio);
 
-//                /* Referencias personales de la solicitud */
-//                var tblReferenciasPersonales = $("#tblReferenciasPersonales tbody");
-//                tblReferenciasPersonales.empty();
-//                tblReferenciasPersonales.append('<tr><td class="text-center" colspan="6">No hay registros disponibles...</td></tr>');
+// /* Informacion laboral */
+// $("#txtNombreDelTrabajo").val(respaldoInformacionLaboral.txtNombreDelTrabajo);
+// $("#txtFechaDeIngreso").val(respaldoInformacionLaboral.txtFechaDeIngreso);
+// $("#txtPuestoAsignado").val(respaldoInformacionLaboral.txtPuestoAsignado);
+// $("#txtIngresosMensuales").val(respaldoInformacionLaboral.txtPuestoAsignado);
+// $("#txtTelefonoEmpresa").val(respaldoInformacionLaboral.txtTelefonoEmpresa);
+// $("#txtExtensionRecursosHumanos").val(respaldoInformacionLaboral.txtExtensionRecursosHumanos);
+// $("#txtExtensionCliente").val(respaldoInformacionLaboral.txtExtensionCliente);
+// $("#txtFuenteDeOtrosIngresos").val(respaldoInformacionLaboral.txtFuenteDeOtrosIngresos);
+// $("#txtValorOtrosIngresos").val(respaldoInformacionLaboral.txtValorOtrosIngresos);
+// $("#ddlDepartamentoEmpresa").val(respaldoInformacionLaboral.ddlDepartamentoEmpresa);
+// CargarMunicipios(respaldoInformacionLaboral.ddlDepartamentoEmpresa, 'Empresa', false, respaldoInformacionLaboral.ddlMunicipioEmpresa);
+// CargarCiudadesPoblados(respaldoInformacionLaboral.ddlDepartamentoEmpresa, respaldoInformacionLaboral.ddlMunicipioEmpresa, 'Empresa', false, respaldoInformacionLaboral.ddlCiudadPobladoEmpresa);
+// CargarBarriosColonias(respaldoInformacionLaboral.ddlDepartamentoEmpresa, respaldoInformacionLaboral.ddlMunicipioEmpresa, respaldoInformacionLaboral.ddlCiudadPobladoEmpresa, 'Empresa', respaldoInformacionLaboral.ddlBarrioColoniaEmpresa);
+// $("#txtDireccionDetalladaEmpresa").val(respaldoInformacionLaboral.txtDireccionDetalladaEmpresa);
+// $("#txtReferenciasEmpresa").val(respaldoInformacionLaboral.txtReferenciasEmpresa);
 
-//                if (data.d != null) {
+// /* Informacion conyugal */
+// if (informacionConyugal != null) {
 
-//                    if (data.d.length > 0) {
+// var respaldoInformacionConyugal = JSON.parse(localStorage.getItem('RespaldoInformacionConyugal'));
 
-//                        var referenciasPersonales = resultado.Cliente.ListaReferenciasPersonales;
-//                        let templateReferenciasPersonales = '';
-//                        let btnEliminarReferencia = '';
-//                        let btnEditarReferencia = '';
+// $("#txtIdentidadConyugue").val(respaldoInformacionConyugal.txtIdentidadConyugue);
+// $("#txtNombresConyugue").val(respaldoInformacionConyugal.txtNombresConyugue);
+// $("#txtFechaNacimientoConyugue").val(respaldoInformacionConyugal.txtFechaNacimientoConyugue);
+// $("#txtTelefonoConyugue").val(respaldoInformacionConyugal.txtTelefonoConyugue);
+// $("#txtLugarDeTrabajoConyuge").val(respaldoInformacionConyugal.txtLugarDeTrabajoConyuge);
+// $("#txtIngresosMensualesConyugue").val(respaldoInformacionConyugal.txtIngresosMensualesConyugue);
+// $("#txtTelefonoTrabajoConyugue").val(respaldoInformacionConyugal.txtTelefonoTrabajoConyugue);
+// }
+// else if ($("#ddlEstadoCivil :selected").data('requiereinformacionconyugal') == false) {
 
-//                        tblReferenciasPersonales.empty();
+// $(".infoConyugal").prop('disabled', true);
+// }
 
-//                        tblReferenciasPersonales.append('<tr><th>nombre completo</th><th>Telefono</th><th>Lugar de trabajo</th><th>Tiempo de conocer</th><th>Parentesco</th><th>Acciones</th></tr>');
 
-//                        for (var i = 0; i < referenciasPersonales.length; i++) {
 
-//                            btnEliminarReferencia = '<button id="btnEliminarReferencia" data-id="' + referenciasPersonales[i].IdReferencia + '" class="btn btn-sm btn-danger mb-0" type="button" title="Eliminar referencia personal"><i class="far fa-trash-alt"></i></button>';
-//                            btnEditarReferencia = '<button id="btnEditarReferencia" data-id="' + referenciasPersonales[i].IdReferencia + '" data-nombre="' + referenciasPersonales[i].NombreCompleto + '" data-trabajo="' + referenciasPersonales[i].LugarTrabajo + '" data-telefono="' + referenciasPersonales[i].TelefonoReferencia + '" data-idtiempodeconocer="' + referenciasPersonales[i].IdTiempoDeConocer + '" data-idparentesco="' + referenciasPersonales[i].IdParentescoReferencia + '" class="btn btn-sm btn-info mb-0" type="button" title="Editar referencia personal"><i class="far fa-edit"></i></button>';
+// /* Referencias personales de la solicitud */
+// var tblReferenciasPersonales = $("#tblReferenciasPersonales tbody");
+// tblReferenciasPersonales.empty();
+// tblReferenciasPersonales.append('<tr><td class="text-center" colspan="6">No hay registros disponibles...</td></tr>');
 
-//                            templateReferenciasPersonales += '<tr><td class="pt-0 pb-0">' + referenciasPersonales[i].NombreCompleto + '</td><td class="pt-0 pb-0 text-center">' + referenciasPersonales[i].TelefonoReferencia + '</td><td class="pt-0 pb-0">' + referenciasPersonales[i].LugarTrabajo + '</td><td class="pt-0 pb-0 text-center">' + referenciasPersonales[i].TiempoDeConocer + '</td><td class="pt-0 pb-0">' + referenciasPersonales[i].DescripcionParentesco + '</td><td class="text-center pt-0 pb-0">' + btnEliminarReferencia + btnEditarReferencia + '</td></tr>';
-//                        }
+// if (data.d != null) {
 
-//                        tblReferenciasPersonales.append(templateReferenciasPersonales);
-//                    }
-//                }
+// if (data.d.length > 0) {
 
-//            }
-//            else {
-//                MensajeError('Ocurrió un error al recargar la información, contacte al administrador.');
-//            }
+// var referenciasPersonales = resultado.Cliente.ListaReferenciasPersonales;
+// let templateReferenciasPersonales = '';
+// let btnEliminarReferencia = '';
+// let btnEditarReferencia = '';
 
-//            OcultarLoader();
+// tblReferenciasPersonales.empty();
 
-//        }// success
-//    }); // ajax
+// tblReferenciasPersonales.append('<tr><th>nombre completo</th><th>Telefono</th><th>Lugar de trabajo</th><th>Tiempo de conocer</th><th>Parentesco</th><th>Acciones</th></tr>');
+
+// for (var i = 0; i < referenciasPersonales.length; i++) {
+
+// btnEliminarReferencia = '<button id="btnEliminarReferencia" data-id="' + referenciasPersonales[i].IdReferencia + '" class="btn btn-sm btn-danger mb-0" type="button" title="Eliminar referencia personal"><i class="far fa-trash-alt"></i></button>';
+// btnEditarReferencia = '<button id="btnEditarReferencia" data-id="' + referenciasPersonales[i].IdReferencia + '" data-nombre="' + referenciasPersonales[i].NombreCompleto + '" data-trabajo="' + referenciasPersonales[i].LugarTrabajo + '" data-telefono="' + referenciasPersonales[i].TelefonoReferencia + '" data-idtiempodeconocer="' + referenciasPersonales[i].IdTiempoDeConocer + '" data-idparentesco="' + referenciasPersonales[i].IdParentescoReferencia + '" class="btn btn-sm btn-info mb-0" type="button" title="Editar referencia personal"><i class="far fa-edit"></i></button>';
+
+// templateReferenciasPersonales += '<tr><td class="pt-0 pb-0">' + referenciasPersonales[i].NombreCompleto + '</td><td class="pt-0 pb-0 text-center">' + referenciasPersonales[i].TelefonoReferencia + '</td><td class="pt-0 pb-0">' + referenciasPersonales[i].LugarTrabajo + '</td><td class="pt-0 pb-0 text-center">' + referenciasPersonales[i].TiempoDeConocer + '</td><td class="pt-0 pb-0">' + referenciasPersonales[i].DescripcionParentesco + '</td><td class="text-center pt-0 pb-0">' + btnEliminarReferencia + btnEditarReferencia + '</td></tr>';
+// }
+
+// tblReferenciasPersonales.append(templateReferenciasPersonales);
+// }
+// }
+
+// }
+// else {
+// MensajeError('Ocurrió un error al recargar la información, contacte al administrador.');
+// }
+
+// OcultarLoader();
+
+// }// success
+// }); // ajax
 //}
 
 function MensajeExito(mensaje) {

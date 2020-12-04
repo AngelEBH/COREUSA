@@ -315,7 +315,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblValorCuota_CompromisoLegal.Text = monedaSimbolo + " " + valorCuotaTotal.ToString("N");
                                         lblGarantiaUsada_CompromisoLegal.Text = /*Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
                                         lblIdentidadFirma_CompromisoLegal.Text = identidad;
-                                        //lblNombreFirma_CompromisoLegal.Text = nombreCliente;
+                                        /*lblNombreFirma_CompromisoLegal.Text = nombreCliente; */
 
                                         /* Convenio de compra y venta de vehiculos para financiamiento a tercero */
                                         lblNombreCliente_ConvenioCyV.Text = nombreVendedorGarantia;
@@ -348,7 +348,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblNombreCliente_Traspaso.Text = nombreCliente;
                                         lblIdentidad_Traspaso.Text = identidad;
                                         lblNacionalidad_Traspaso.Text = nacionalidad;
-                                        //lblDireccion_Traspaso.Text = direccionCliente;
+                                        /*lblDireccion_Traspaso.Text = direccionCliente;*/
                                         lblMarca_Traspaso.Text = marca;
                                         lblModelo_Traspaso.Text = modelo;
                                         lblSerieMotor_Traspaso.Text = serieMotor;
@@ -377,7 +377,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblMatricula_TraspasoVendedor.Text = matricula;
                                         lblGarantiaUsada_TraspasoVendedor.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
 
-                                        /* BASICO + CPI*/
+                                        /* Básico + CPI*/
                                         lblNombreCliente_BasicoCPI.Text = nombreCliente;
                                         lblNumeroPrestamo_BasicoCPI.Text = numeroPrestamo;
                                     }

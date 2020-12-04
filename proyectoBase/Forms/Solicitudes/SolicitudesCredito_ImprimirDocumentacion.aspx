@@ -226,31 +226,31 @@
                         <div class="col-12">
                             <p>
                                 Nostros, <b>ERICK GEOVANY MOLINA PADILLA</b>,
-                                Casado, Ingeniero Industrial, con domicilio en la ciudad de San Pedro Sula, Departamento de Cortés, quien actúan en su condición de Representante Legal de la Sociedad Mercantil denominada
+Casado, Ingeniero Industrial, con domicilio en la ciudad de San Pedro Sula, Departamento de Cortés, quien actúan en su condición de Representante Legal de la Sociedad Mercantil denominada
                                 <b>PRESTADITO S.A. de C.V.</b> empresa domiciliada en la ciudad de San Pedro Sula, departamento de Cortes, llamada en adelante
                                 <b>PRESTADITO</b> o <b>PRESTAMISTA</b>; y por otra parte el Sr(a)
                                 <asp:Label runat="server" ID="lblNombre_Contrato" class="font-weight-bold"></asp:Label>,
-                                mayor de edad, de nacionalidad
+mayor de edad, de nacionalidad
                                 <asp:Label runat="server" ID="lblNacionalidad_Contrato" class="font-weight-bold"></asp:Label>
                                 y de este domicilio,
-                                con identidad No.
+con identidad No.
                                 <asp:Label runat="server" ID="lblIdentidad_Contrato" class="font-weight-bold"></asp:Label>
                                 con domicilio y dirección en
                                 <asp:Label runat="server" ID="lblDireccion_Contrato"></asp:Label>,
-                                llamado en adelante <b>EL CIENTE, PRESTATARIO y/o DEUDOR</b>, convienen celebrar el siguiente <b>CONTRATO DE CRÉDITO PARA COMPRA DE VEHICULO</b>
+llamado en adelante <b>EL CIENTE, PRESTATARIO y/o DEUDOR</b>, convienen celebrar el siguiente <b>CONTRATO DE CRÉDITO PARA COMPRA DE VEHICULO</b>
                                 y acuerdan lo estipulado en las siguientes clausulas:
                                 <b>PRIMERO: OBJETO DEL CONTRATO.- EL CLIENTE </b>declara recibir en este acto de <b>PRESTADITO</b>, un préstamo por la cantidad de
                                 <asp:Label runat="server" ID="lblMontoPrestamoEnPalabras_Contrato" class="font-weight-bold"></asp:Label>
                                 (<asp:Label runat="server" ID="lblMontoPrestamo_Contrato"></asp:Label>) de los cuales se destinaran
                                 <asp:Label runat="server" ID="lblMontoParaCompraVehiculoEnPalabras_Contrato" class="font-weight-bold"></asp:Label>
                                 (<asp:Label runat="server" ID="lblMontoParaCompraVehiculo_Contrato"></asp:Label>)
-                                para compra del vehiculo y
+para compra del vehiculo y
                                 <asp:Label runat="server" ID="lblMontoParaCompraGPSEnPalabras_Contrato" class="font-weight-bold"></asp:Label>
                                 (<asp:Label runat="server" ID="lblMontoParaCompraGPS_Contrato"></asp:Label>)
-                                para compra de modulo de monitoreo por GPS y
+para compra de modulo de monitoreo por GPS y
                                 <asp:Label runat="server" ID="lblMontoGastosDeCierreEnPalabras_Contrato" class="font-weight-bold"></asp:Label>
                                 (<asp:Label runat="server" ID="lblMontoGastosDeCierre_Contrato"></asp:Label>)
-                                por concepto de gastos de cierre y papeleria todo en monda de curso legal en Honduras.
+por concepto de gastos de cierre y papeleria todo en monda de curso legal en Honduras.
                                 <b>-SEGUNDO: CONDICIONES DEL FINANCIAMIENTO.-</b> El préstamo se facilita bajo las siguientes condiciones:
                                 <b>A) DESTINO: EL CLIENTE </b>acepta, reconoce y autoriza que la cantidad recibida en préstamo será para compra de:
                             </p>
@@ -282,16 +282,16 @@
                                 Mismo que será desembolsado por <b>PRESTADITO</b> a la persona que distribuya o sea propietario del vehículo y este ultimo deberá de entregárselo al Cliente cuando sea autorizado por <b>PRESTADITO</b>.
 
                                 <b>- B) TASAS DE INTERES.-COSTO ANUAL TOTAL.- EL CLIENTE</b> se obliga a pagar a <b>PRESTADITO</b>, a partir de esta fecha una
-                                tasa de interés simple del <b>
-                                    <asp:Label runat="server" ID="lblTasaInteresSimpleMensual_Contrato">1.67</asp:Label>%
-                                PORCIENTO MENSUAL </b>, amartizando capital mas intereses basada en la regla del 78 misma que sera pagadero
+tasa de interés simple del <b>
+    <asp:Label runat="server" ID="lblTasaInteresSimpleMensual_Contrato">1.67</asp:Label>%
+PORCIENTO MENSUAL </b>, amartizando capital mas intereses basada en la regla del 78 misma que sera pagadero
                                 <asp:Label runat="server" ID="lblTipoDePlazo_Contrato"></asp:Label>
                                 en moneda de curso legal en Honduras, sobre el saldo total de la deuda.
                                 <b>Por la falta de pago</b> a su vencimiento de cualquiera de los abonos a capital, intereses y/o recargos, <b>EL CLIENTE</b> pagará intereses moratorios
-                                del <b>4.31% PORCIENTO MENSUAL</b> sobre el saldo de capital vencido, por razón de daños y perjuicios hasta que se cancele la totalidad de la mora, sin que deba considerarse prorrogado el plazo
+del <b>4.31% PORCIENTO MENSUAL</b> sobre el saldo de capital vencido, por razón de daños y perjuicios hasta que se cancele la totalidad de la mora, sin que deba considerarse prorrogado el plazo
                                 <b>.-COSTO ANUAL TOTAL:</b> El costo anual total del préstamo (CAT) es de
                                 <asp:Label runat="server" ID="lblCAT_Contrato"></asp:Label>%
-                                incluye el cobro y pago del capital, los intereses ordinarios, y bajo la condición que <b>EL CLIENTE</b> cumpla con sus obligaciones en las formas y plazos detallados.
+incluye el cobro y pago del capital, los intereses ordinarios, y bajo la condición que <b>EL CLIENTE</b> cumpla con sus obligaciones en las formas y plazos detallados.
                             </p>
                             <p>
                                 <b>C) FORMA Y PLAZO DEL FINANCIAMENTO:</b>
@@ -300,7 +300,7 @@
                                     y plazo de
                                     <asp:Label runat="server" ID="lblPlazo_Contrato"></asp:Label>
                                     <asp:Label runat="server" ID="lblFrecuenciaPago_Contrato"></asp:Label>,
-                                    valor de la cuota:
+valor de la cuota:
                                     <asp:Label runat="server" ID="lblValorCuotaPalabras_Contrato"></asp:Label>
                                     (<asp:Label runat="server" ID="lblValorCuota_Contrato"></asp:Label>)
                                 </b>
@@ -309,13 +309,13 @@
                                 cuotas de Servicio de monitoreo por GPS por un valor de
                                 <asp:Label runat="server" ID="lblValorCuotaGPSPalabras_Contrato"></asp:Label>
                                 (<asp:Label runat="server" ID="lblValorCuotaGPS_Contrato"></asp:Label>)
-                                y
+y
                                 <asp:Label runat="server" ID="lblPlazoSeguro_Contrato"></asp:Label>
                                 cuotas de
                                 <asp:Label runat="server" ID="lblValorCuotaSeguroPalabras_Contrato"></asp:Label>
                                 (<asp:Label runat="server" ID="lblValorCuotaSeguro_Contrato"></asp:Label>)
-                                por concepto de seguro de vehiculo debiendo hacer efectivo el pago de la <b>primera cuota el
-                                <asp:Label runat="server" ID="lblFechaPrimerCuota_Contrato"></asp:Label></b>
+por concepto de seguro de vehiculo debiendo hacer efectivo el pago de la <b>primera cuota el
+    <asp:Label runat="server" ID="lblFechaPrimerCuota_Contrato"></asp:Label></b>
                                 y así sucesivamente de forma
                                 <asp:Label runat="server" ID="lblPlazoPago_Contrato"></asp:Label>
                                 hasta la completa cancelación de la deuda en caso de cumplir el 100% del financiamiento sin abonar a capital y sin sumar gastos por cobranza y/o moratorios o cualquiera otro gasto generado por gestiones de recuperacion o incumplimento seria de
@@ -349,14 +349,14 @@
                                 <b>A)</b> Permitir que <b>PRESTADITO</b> ejerza los controles que juzgue convenientes, para asegurarse que los fondos de este crédito se inviertan en los fines que se han indicado anteriormente y condiciones que se estipulan en este contrato.
                                 <b>- B) DE LA GARANTIA:</b>
                                 En calidad de Garantía para el Cumplimiento de la presente obligación <b>El CLIENTE</b> firmara una <b>PAGARE</b> sin protesto, así como también da en propiedad a <b>PRESTADITO</b> el vehículo comprado con el dinero objeto del presente préstamo, quedándose <b>PRESTADITO</b> con la documentación original del vehículo y el <b>CLIENTE</b> en posesión del vehículo del cual será responsable mientras se encuentre en su poder y no se haya cancelado el precio total pactado para la terminación del presente contrato.
-                                Sin perjuicio de la <b>designación de garantías fiduciarias como ser Menaje de Hogar y demás bienes pertenecientes AL CLIENTE</b>, por lo que está terminantemente prohibido para el <b>CLIENTE</b> utilizar el vehículo para transporte público como ser taxi en todas sus modalidades incluyendo VIP,
-                                asi como también transporte de carga o similares, también se le porhibe enajenar, vender, permutar, donar, gravar, prestar o dar en prenda el vehículo dado en propiedad, sin la autorización por escrito otorgada por <b>PRESTADITO</b>, el incumplimiento de las prohibiciones faculta a <b>PRESTADITO</b> a retirar el vehículo.
-                                Para el menaje se formalizará el Inventario de estos, este que pasara a formar parte del presente contrato.
+Sin perjuicio de la <b>designación de garantías fiduciarias como ser Menaje de Hogar y demás bienes pertenecientes AL CLIENTE</b>, por lo que está terminantemente prohibido para el <b>CLIENTE</b> utilizar el vehículo para transporte público como ser taxi en todas sus modalidades incluyendo VIP,
+asi como también transporte de carga o similares, también se le porhibe enajenar, vender, permutar, donar, gravar, prestar o dar en prenda el vehículo dado en propiedad, sin la autorización por escrito otorgada por <b>PRESTADITO</b>, el incumplimiento de las prohibiciones faculta a <b>PRESTADITO</b> a retirar el vehículo.
+Para el menaje se formalizará el Inventario de estos, este que pasara a formar parte del presente contrato.
                                 <b>C)</b> Suscribir y a mantener un seguro para vehículos en lempiras moneda de curso legal en Honduras; mientras esté vigente la deuda, por la cuantía y condiciones que señale <b>PRESTADITO</b>, con una compañía aseguradora; siendo entendido que <b>EL CLIENTE</b> deberá endosar a favor de <b>PRESTADITO</b> la respectiva póliza de seguro, o a favor de la persona natural o jurídica a cuyo nombre se traspase el presente crédito, hasta la total cancelación del saldo pendiente de pago por la deuda. <b>PRESTADITO</b> podrá pagar y cargar al préstamo las primas de seguro, si <b>EL CLIENTE</b> no lo renueva y paga a los treinta (30) días previos al vencimiento de la póliza de seguro respectiva, sin que la acción del pago o cargo sea obligatorio para <b>PRESTADITO</b>, quien no asumirá ni incurrirá en responsabilidad por no hacer el pago de las primas de seguro.
                                 <b>D)</b> Mantenerse al día en el pago de los impuestos que graven a <b>EL CLIENTE</b> o al <b>VEHÍCULO</b> dado en garantía.
                                 <b>- E)</b> Cuidar como buen padre de familia el vehículo dado en garantía, mientras se encuentre en su poder y no se haya cancelado el precio total pactado para la terminación del presente contrato, quedando a su cargo los riesgos de dicho bien mueble por lo que será responsable de la perdida, destrucción o deterioro que sufra aun por caso fortuito o fuerza mayor.
                                 <b>- F)</b> Mantener la licencia de conducir vigente, mientras no se haya cancelado la totalidad del préstamo, en caso que <b>EL CLIENTE</b> haya solicitado excepción al momento de otorgarse el Préstamo por no poseer licencia vigente, entonces dispondrá solamente de un máximo de 40 días para presentar la Licencia de conducir a <b>PRESTADITO</b>, caso contrario <b>AUTORIZA</b> anticipadamente a <b>PRESTADITO</b> a que se le retire, en calidad de custodia, el vehiculo hasta que presente la licencia de conducir aun y cuando sus cuotas estén al día.
-                                La excepción anterior <b>no faculta al CLIENTE</b> a conducir el vehiculo sin su respectiva Licencia emitida por la Dirección Nacional de Transito, ni a prestar a quien no tenga dicho documento, ya que <b>PRESTADITO</b> respeta las leyes hondureñas.
+La excepción anterior <b>no faculta al CLIENTE</b> a conducir el vehiculo sin su respectiva Licencia emitida por la Dirección Nacional de Transito, ni a prestar a quien no tenga dicho documento, ya que <b>PRESTADITO</b> respeta las leyes hondureñas.
                                 <b>- QUINTO: DE LOS DEBERES DEL CLIENTE: </b>
                                 Se conviene que, desde la fecha de otorgamiento de este contrato, hasta la fecha en que se pague el total de las obligaciones pendientes con <b>PRESTADITO, EL CLIENTE</b> deberá informar siempre, por vía telefónica o escrita y a la brevedad posible, las siguientes acciones:
                                 <b>1)</b> Contraiga deudas con otras instituciones financieras, no financieras, puestos de bolsa, proveedores, filiales y otros. <b>EL CLIENTE</b> aprueba libre y voluntariamente por ser válidas, todas las condiciones fijadas en este inciso, por entender que de tal manera <b>PRESTADITO</b> se asegura de la solvencia de <b>EL CLIENTE</b> y del pago del crédito otorgado.
@@ -379,7 +379,7 @@
                                 <b>- NOVENO: COBROS EXTRAJUDICIALES.-</b> En caso de ser necesarias las gestiones de cobranzas extrajudiciales por la mora en el pago o el vencimiento anticipado del contrato, estas se realizarán de la siguiente manera:
                                 <b>1)</b> Para Mora de 1 a 180 días: alternativamente podrán ser llamadas telefónicas, correos electrónicos, mensajes por cualquier medio electrónico, visitas por gestores, cartas de cobro escritas solicitando el pago y dirigidas a las direcciones indicadas. Estas gestiones tendrán un costo de doscientos cincuenta lempiras (L250.00), cargados al estado de cuenta del préstamo otorgado, son acumulables por cada cuota vencida y serán pagados por <b>EL CLIENTE</b> en todos los casos y sin excepción;
                                 <b>2)</b> Si su caso fuere trasladado a Profesionales del Derecho, cuyas gestiones iniciales podrán ser: llamadas telefónicas, envió de correos electrónicos, cartas de cobro escritas, y visitas, causaran el cobro de honorarios
-                                profesionales según el Arancel del Profesional del Derecho vigente, y se calculará sobre el capital, intereses, recargos, cargos y seguros en mora, tal como lo establece el artículo 1432 del Código Civil.- En caso de ser perseguida la deuda por proceso Judicial, se cargaran igualmente los gastos ocasionados por costas durante dicho proceso. <b>PRESTADITO</b> podrá asignar a una empresa o Agencia de Cobranzas y/o Recuperaciones para que realice estas labores de cobro desde el día uno de atraso en el estado de cuenta lo cual es aceptado por el deudor.
+profesionales según el Arancel del Profesional del Derecho vigente, y se calculará sobre el capital, intereses, recargos, cargos y seguros en mora, tal como lo establece el artículo 1432 del Código Civil.- En caso de ser perseguida la deuda por proceso Judicial, se cargaran igualmente los gastos ocasionados por costas durante dicho proceso. <b>PRESTADITO</b> podrá asignar a una empresa o Agencia de Cobranzas y/o Recuperaciones para que realice estas labores de cobro desde el día uno de atraso en el estado de cuenta lo cual es aceptado por el deudor.
                                 <b>- DÉCIMO: ACCIONES JUDICIALES.- </b>
                                 En caso de mora o vencimiento anticipado del contrato, dará lugar para que <b>PRESTADITO</b> ejerza las acciones judiciales correspondientes, quedando obligado el cliente a pago de gastos y honorarios que ocasione el procedimiento judicial. Así como para determinar el saldo adeudado El estado de cuenta certificado por el contador de <b>PRESTADITO</b> o de quien haya adquirido los derechos, hará fe en juicio para establecer el saldo a cargo de <b>EL CLIENTE</b> y Constituirá junto con el presente contrato título ejecutivo, sin necesidad de reconocimiento de firma ni de otro requisito previo alguno, según lo establecido en la ley del sistema financiero. En caso de ejecución de la presente obligación las partes nos sometemos a la jurisdicción y competencia de los Juzgados de San Pedro Sula, Cortés.
                                 <b>.- DÉCIMO PRIMERA: MEDIOS PARA COMUNICACIONES.- EL CLIENTE y PRESTADITO</b> establecen y a la vez autorizan, que para las distintas notificaciones que se deban hacer conforme a lo estipulado por este contrato o por lo dispuesto por la ley, se harán efectivas a través de uno solo de los siguientes medios:
@@ -389,13 +389,13 @@
                                 <b>C)</b> Notificación mediante cualquier red sociales que pudiese pertenecer al Cliente,
                                 <b>D)</b> o a las direcciones indicadas en cualquiera de los documentos suscritos con <b>“ PRESTADITO ”</b>. Cualquier cambio de dirección o número telefónico deberá notificarse fehacientemente, con una anticipación razonable a <b>PRESTADITO</b> y hasta entonces se considera efectiva.
                                 <b>.-DÉCIMO SEGUNDA: DE LAS AUTORIZACIONES ESPECIALES. EL CLIENTE </b>otorga de manera expresa, voluntaria e irrevocable su consentimiento para que en caso de mora, <b>PRESTADITO</b> o sus representantes puedan ingresar a su domicilio a retirar el vehículo, y por lo tanto lo exime de toda responsabilidad que pueda incurrir según el artículo 99 de la Constitución de la Republica.
-                                Así como faculta a <b>“ PRESTADITO ”</b>, sus distintas dependencias, así como también a su personal, que mediante visitas a su domicilio se le puedan presentar y ofrecer las diferentes propuestas de negocio, servicios, catálogos de nuevos productos; a su vez, faculta otros canales, sean estos telefónicos o electrónicos, a que se comuniquen y a que le informen en los días de semana, así como también en los días llamados vacaciones, o festivos, en los diferentes horarios abiertos, incluso fin de semana, exonerándole de cualquier perjuicio a la empresa o de ser estas visitas catalogadas como “hostigamiento”.
+Así como faculta a <b>“ PRESTADITO ”</b>, sus distintas dependencias, así como también a su personal, que mediante visitas a su domicilio se le puedan presentar y ofrecer las diferentes propuestas de negocio, servicios, catálogos de nuevos productos; a su vez, faculta otros canales, sean estos telefónicos o electrónicos, a que se comuniquen y a que le informen en los días de semana, así como también en los días llamados vacaciones, o festivos, en los diferentes horarios abiertos, incluso fin de semana, exonerándole de cualquier perjuicio a la empresa o de ser estas visitas catalogadas como “hostigamiento”.
                                 <b>- El CLIENTE:</b> autoriza de manera expresa y voluntaria que en caso de que PRESTADITO retire el vehículo, pueda ser subastado al mejor postor y el dinero recibido de la misma se abonara a la deuda, si existiera un excedente se le dará al <b>CLIENTE</b> y en caso que no cubriese el total adeudado, <b>PRESTADITO</b> se reserva el derecho de ejercer acciones legales contra el <b>CLIENTE</b> por el pago de saldo total adeudado, que incluye capital, intereses y otros cargos o gastos que incurra.
                                 <b>- DÉCIMO TERCERA: COMPROBACION DE HABER RECIBIDO INSTRUCCIÓN Y ORIENTACION DEL PRODUCTO Y ENTREGA DE COPIA DEL CONVENIO Y PLAN DE PAGO.- EL CLIENTE</b> por este acto acepta que previo a la celebración de este contrato, ha recibido toda la orientación y explicación necesaria sobre las condiciones del convenio, las consecuencias legales y judiciales de su incumplimiento, así como que ha recibido una copia íntegra de este documento y del plan de pagos respectivo.
-                                .- Finalmente las partes declaramos que es cierto todo lo anteriormente expresado, y que por ser ello lo convenido, aceptamos libre y voluntariamente, todas estipulaciones, condiciones y cláusulas contenidas en el presente contrato de préstamo.
-                                En fe de lo cual firmamos en la ciudad de
+.- Finalmente las partes declaramos que es cierto todo lo anteriormente expresado, y que por ser ello lo convenido, aceptamos libre y voluntariamente, todas estipulaciones, condiciones y cláusulas contenidas en el presente contrato de préstamo.
+En fe de lo cual firmamos en la ciudad de
                                 <span class="lblCiudad_Firma"></span>,
-                                a los
+a los
                                 <span class="lblNumeroDia_Firma"></span>
                                 días del mes de
                                 <span class="lblMes_Firma"></span>
@@ -790,10 +790,10 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                                     <asp:Label runat="server" ID="lblNombreCliente_Traspaso"></asp:Label>,</b>
                                 mayor de edad,
                                 <asp:Label runat="server" ID="lblNacionalidad_Traspaso"></asp:Label>,
-                                con número de identidad
+con número de identidad
                                 <asp:Label runat="server" ID="lblIdentidad_Traspaso"></asp:Label>
                                 y de este domicilio,
-                                en mi condición de propietario por medio de este documento hago formal traspaso del vehiculo que se describe de la forma siguiente
+en mi condición de propietario por medio de este documento hago formal traspaso del vehiculo que se describe de la forma siguiente
                             </p>
 
                             <div class="row">
@@ -888,9 +888,9 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                                 El cual cedo todos los deberes y derechos que antes ejercía sobre el vehículo antes mencionado a PRESTADITO SA, con Numero de RTN 0501-9016-811399, aceptando que el vehículo es
                                 <asp:Label runat="server" ID="lblGarantiaUsada_Traspaso"></asp:Label>
                                 y se encuentra de su entera satisfacción sin garantía alguna.
-                                Y para seguridad y constancia de las autoridades firmo en la ciudad de
+Y para seguridad y constancia de las autoridades firmo en la ciudad de
                                 <span class="lblCiudad_Firma"></span>,
-                                a los
+a los
                                 <span class="lblNumeroDia_Firma"></span>
                                 días del mes de
                                 <span class="lblMes_Firma"></span>
@@ -942,10 +942,10 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                                     <asp:Label runat="server" ID="lblNombreCliente_TraspasoVendedor"></asp:Label>,</b>
                                 mayor de edad,
                                 <asp:Label runat="server" ID="lblNacionalidad_TraspasoVendedor"></asp:Label>,
-                                con número de identidad
+con número de identidad
                                 <asp:Label runat="server" ID="lblIdentidad_TraspasoVendedor"></asp:Label>
                                 y de este domicilio,
-                                en mi condición de propietario por medio de este documento hago formal traspaso del vehiculo que se describe de la forma siguiente
+en mi condición de propietario por medio de este documento hago formal traspaso del vehiculo que se describe de la forma siguiente
                             </p>
 
                             <div class="row">
@@ -1040,9 +1040,9 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                                 El cual cedo todos los deberes y derechos que antes ejercía sobre el vehículo antes mencionado a PRESTADITO SA, con Numero de RTN 0501-9016-811399, aceptando que el vehículo es
                                 <asp:Label runat="server" ID="lblGarantiaUsada_TraspasoVendedor"></asp:Label>
                                 y se encuentra de su entera satisfacción sin garantía alguna.
-                                Y para seguridad y constancia de las autoridades firmo en la ciudad de
+Y para seguridad y constancia de las autoridades firmo en la ciudad de
                                 <span class="lblCiudad_Firma"></span>,
-                                a los
+a los
                                 <span class="lblNumeroDia_Firma"></span>
                                 días del mes de
                                 <span class="lblMes_Firma"></span>
@@ -1090,30 +1090,30 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                         <div class="col-12">
                             <p>
                                 Por una Parte, PRESTADITO. DE C.V. con domicilio en la ciudad de San Pedro Sula, Cortes, Honduras, C.A.
-                                representada por el señor ERICK GEOVANI MOLINA PADILLA, facultad otorgada mediante instrumento
-                                número 86 ante notario Efraín Antonio Gutiérrez Ardon, que en lo sucesivo se llamara &lt;LA COMPAÑÍA&gt;, de
-                                conformidad a la SOLICITUD presentada al cliente y las CONDICIONES GENERALES de la presente.
-                                Por la otra
+representada por el señor ERICK GEOVANI MOLINA PADILLA, facultad otorgada mediante instrumento
+número 86 ante notario Efraín Antonio Gutiérrez Ardon, que en lo sucesivo se llamara &lt;LA COMPAÑÍA&gt;, de
+conformidad a la SOLICITUD presentada al cliente y las CONDICIONES GENERALES de la presente.
+Por la otra
                                 <asp:Label Font-Bold="true" runat="server" ID="lblNombreCliente_BasicoCPI"></asp:Label>
-                                <b>(El cliente)</b>, con las generales mencionadas en el prestamo                                
+                                <b>(El cliente)</b>, con las generales mencionadas en el prestamo
                                 <asp:Label runat="server" Font-Bold="true" ID="lblNumeroPrestamo_BasicoCPI"></asp:Label>
                                 que en lo sucesivo se denominará &lt;EL CONTRATANTE&gt;.
                             </p>
                             <p>
                                 <b>FINALIDAD DEL CONVENIO:</b>
                                 El presente convenio tiene por objeto cubrir los siniestros en que pudiese verse
-                                involucrado El VEHICULO DADO EN GARANTIA DEL PRESTAMO, para lo cual se obliga por una parte a la
+involucrado El VEHICULO DADO EN GARANTIA DEL PRESTAMO, para lo cual se obliga por una parte a la
                                 <b>compañía</b> o la que esta contrate, a cubrir el saldo capital hasta la fecha en que pueda existir algún siniestro,
-                                y por la otra parte el contratante o cliente se obliga a pagar el servicio mediante cuotas.
+y por la otra parte el contratante o cliente se obliga a pagar el servicio mediante cuotas.
                             </p>
                             <p class="text-center">
                                 <b>CONDICIONES GENERALES</b>
                             </p>
                             <p>
                                 <b>PRIMERA: CONSTITUCIÓN DEL CONTRATO</b>
-                                El convenio de GARANTÍA SOBRE EL VEHICULO DADO EN GARANTIA DEL PRESTAMO queda										
-                                constituido mediante el presente contrato, el cual es firmado y se estampa la huella digital de ambas partes
-                                en señal de aceptación de todas las condiciones establecidas partes.
+                                El convenio de GARANTÍA SOBRE EL VEHICULO DADO EN GARANTIA DEL PRESTAMO queda
+constituido mediante el presente contrato, el cual es firmado y se estampa la huella digital de ambas partes
+en señal de aceptación de todas las condiciones establecidas partes.
                             </p>
                             <p>
                                 <b>SEGUNDA: OBJETO DE LA GARANTÍA SOBRE EL VEHICULO DADO EN GARANTIA</b>
@@ -1136,20 +1136,20 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                                 <li>Los siniestros mencionados en la cláusula anterior deben ocurrir en el territorio nacional para que sea cubierto.</li>
                                 <li>El vehículo debe de ser conducido por una persona debidamente acreditada, mayor de 18 años y menor a 75 años de lo contrario la garantía no cubre.</li>
                                 <li>Aplica única y exclusivamente para reparar los daños ocasionados al automóvil que se encuentre en arrendamiento con Compañía Financiera “PRESTADITO S.A.” o en su defecto los daños causados a un
-                                    tercero hasta Lps 50,000 siempre y cuando el arrendamiento este vigente y con sus saldos al día, bajos los límites de cobertura indicados, el saldo capital adeudado a la fecha del siniestro.
+tercero hasta Lps 50,000 siempre y cuando el arrendamiento este vigente y con sus saldos al día, bajos los límites de cobertura indicados, el saldo capital adeudado a la fecha del siniestro.
                                 </li>
                                 <li>Para que los daños ocasionados sean cubiertos, el automóvil deberá ser conducido por El Arrendatario, esposa e hijos con licencia vigente y deberá estar al día en sus cuotas de arrendamiento,
-                                    caso contrario los daños ocasionados serán reparados por cuenta del arrendatario.
+caso contrario los daños ocasionados serán reparados por cuenta del arrendatario.
                                 </li>
                                 <li>El Arrendatario debe contar con licencia de conducir vigente.</li>
                                 <li>Solo cubre colisiones debidamente acreditas con el parte de la policía de tránsito y cuando sea
-                                    denuncia interpuesta sin parte de transito solo se reconoce como máximo el 50% del valor del siniestro previa inspección de ajustador.
+denuncia interpuesta sin parte de transito solo se reconoce como máximo el 50% del valor del siniestro previa inspección de ajustador.
                                 </li>
-                                <li>En caso de robo del vehículo en garantía será necesario acreditar dicho siniestro ante entidad																								
-                                    competente en territorio Hondureño.																								
+                                <li>En caso de robo del vehículo en garantía será necesario acreditar dicho siniestro ante entidad
+competente en territorio Hondureño.
                                 </li>
                                 <li>El arrendatario se obliga a reportar en un plazo máximo de 24 hrs el siniestro a Prestadito SA al
-                                    teléfono 2540 1050 o vía email a sac@miprestadito.com
+teléfono 2540 1050 o vía email a sac@miprestadito.com
                                 </li>
                                 <li>Mantener al día el pago del préstamo y la cuota del servicio del seguro y respectivo GPS.</li>
                             </ol>
@@ -1159,8 +1159,8 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                             </p>
                             <ol type="a">
                                 <li>No se cubre los accidentes o daños ocasionados al automóvil por el arrendatario, sin que tenga
-                                    implicación un tercero a excepción de Vuelcos Accidentales, Colisiones Accidentales, Incendio, Auto
-                                    ignición, Rayo,Desbordamiento de Ríos, derrumbes de carretera y otros fenómenos de la naturaleza
+implicación un tercero a excepción de Vuelcos Accidentales, Colisiones Accidentales, Incendio, Auto
+ignición, Rayo,Desbordamiento de Ríos, derrumbes de carretera y otros fenómenos de la naturaleza
                                 </li>
                                 <li>No cubre rotura de cristales</li>
                                 <li>No cubre equipo especial que pueda ser instalado</li>
@@ -1180,25 +1180,25 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                             </ol>
                             <p>
                                 Una vez completada la documentación de reclamación del siniestro el proceso de pago lo realizara la empresa
-                                en un plazo no mayor a 10 días de hábiles, conforme a reclamo
+en un plazo no mayor a 10 días de hábiles, conforme a reclamo
                             </p>
                             <p>
                                 <b>SEXTA: El contratante,</b>
                                 entiende y acepta que las coberturas anteriormente mencionadas están respaldas por
-                                una compañía de seguros local y que exclusivamente en caso de que la compañía aseguradora local no cubra
-                                el montó del siniestro debido a que este exceda el límite anual especificado en el contrato de crédito, este
-                                será cubierto por una empresa extranjera tercera contratada por Prestadito SA para este fin, misma que se
-                                limita al valor del saldo capital al momento en que se presenta el siniestro o al valor de mercado de la garantía.
+una compañía de seguros local y que exclusivamente en caso de que la compañía aseguradora local no cubra
+el montó del siniestro debido a que este exceda el límite anual especificado en el contrato de crédito, este
+será cubierto por una empresa extranjera tercera contratada por Prestadito SA para este fin, misma que se
+limita al valor del saldo capital al momento en que se presenta el siniestro o al valor de mercado de la garantía.
                             </p>
                             <p>
                                 <b>SEPTIMA: El contratante</b>
                                 acepta que las cuotas por la contratación de este servicio, sean cargadas a su plan de
-                                pago del préstamo que se otorgó para la compra del vehículo dado en garantía, cuotas que serán de valor fijo, para
-                                la cual se obliga a cumplir en tiempo y forma, para que la garantía le cubra los siniestros que pudiesen ocurrir.
+pago del préstamo que se otorgó para la compra del vehículo dado en garantía, cuotas que serán de valor fijo, para
+la cual se obliga a cumplir en tiempo y forma, para que la garantía le cubra los siniestros que pudiesen ocurrir.
                             </p>
                             <p>
                                 El contratante declara haber entendido en toda su amplitud y alcances la presente garantía, por lo cual en fe
-                                de lo acá establecido se firma y se estampa huella digital en fecha
+de lo acá establecido se firma y se estampa huella digital en fecha
                                 <span class="lblNumeroDia_Firma"></span>
                                 de
                                 <span class="lblMes_Firma"></span>
