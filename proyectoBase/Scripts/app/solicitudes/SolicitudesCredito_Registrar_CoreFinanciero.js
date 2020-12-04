@@ -734,11 +734,8 @@ function CargarDocumentosRequeridos() {
 
 /* Cargar prestamos disponibles consultados en el cotizador */
 function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
-    debugger;
-
-
+    
     if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203) {
-
 
         var lcSeguro = '';
         var lcGPS = '';
@@ -765,6 +762,9 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
         }
         if ($("#ddlGps :selected").val() == "Si - CableColor") {
             lcGPS = "2";
+        }
+        if ($("#ddlGps :selected").val() == "No") {
+            lcGPS = "0";
         }
 
         if (lcSeguro != '' && lcGPS != '' && lcGastosdeCierre != '') {
@@ -800,12 +800,8 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
                 }
             });
         }
-
-       
-
     }
     else {
-
 
         $.ajax({
             type: "POST",
@@ -910,7 +906,7 @@ $("select").on('change', function () {
 });
 
 $('#txtValorGlobal,#txtValorPrima,#txtPlazo,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps').blur(function () {
-    
+
     var valorGlobal = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
     var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
     var plazo = parseInt($("#txtPlazo").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazo").val().replace(/,/g, ''));

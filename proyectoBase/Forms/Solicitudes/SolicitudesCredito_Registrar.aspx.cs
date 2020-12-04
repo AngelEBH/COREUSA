@@ -34,7 +34,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         {
             var lcURL = Request.Url.ToString();
             var liParamStart = lcURL.IndexOf("?");
-            DSC = new DSCore.DataCrypt();
+
             Precalificado = new Precalificado_ViewModel();
             Constantes = new SolicitudesCredito_Registrar_Constantes();
             DocumentosRequeridos = new List<TipoDocumento_ViewModel>();
@@ -76,30 +76,43 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     txtValorPrima.Enabled = true;
                 }
 
-                if (Precalificado.IdProducto == 202 || Precalificado.IdProducto == 203)
+                switch (Precalificado.IdProducto)
                 {
-                    lblTituloMontoPrestmo.Text = "Valor del vehículo";
+                    case 202:
+                    case 203:
 
-                    divCotizadorAutos.Visible = true;
-                    ddlTipoGastosDeCierre.Enabled = true;
-                    ddlTipoDeSeguro.Enabled = true;
-                    ddlGps.Enabled = true;
+                        lblTituloMontoPrestmo.Text = "Valor del vehiculo";
+                        divCotizadorAutos.Visible = true;
+                        ddlTipoGastosDeCierre.Enabled = true;
+                        ddlTipoDeSeguro.Enabled = true;
+                        ddlGps.Enabled = true;
 
+                        ddlTipoGastosDeCierre.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlTipoGastosDeCierre.Items.Add("Financiado");
+                        ddlTipoGastosDeCierre.Items.Add("Sin financiar");
 
-                    ddlTipoGastosDeCierre.Items.Add(new ListItem("Seleccionar", ""));
-                    ddlTipoGastosDeCierre.Items.Add("Financiado");
-                    ddlTipoGastosDeCierre.Items.Add("Sin financiar");
+                        ddlGps.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlGps.Items.Add("No");
+                        ddlGps.Items.Add("Si - CPI");
+                        ddlGps.Items.Add("Si - CableColor");
 
+                        ddlTipoDeSeguro.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlTipoDeSeguro.Items.Add("A - Full Cover");
+                        ddlTipoDeSeguro.Items.Add("B - Basico + Garantía");
+                        break;
 
-                    ddlGps.Items.Add(new ListItem("Seleccionar", ""));
-                    ddlGps.Items.Add("No");
-                    ddlGps.Items.Add("Si - CPI");
-                    ddlGps.Items.Add("Si - CableColor");
+                    case 101:
+                        lblTituloMontoPrestmo.Text = "Valor solicitado";
+                        break;
 
-                    ddlTipoDeSeguro.Items.Add(new ListItem("Seleccionar", ""));
-                    ddlTipoDeSeguro.Items.Add("A - Full Cover");
-                    ddlTipoDeSeguro.Items.Add("B - Basico + Garantía");
+                    case 201:
+                        lblTituloMontoPrestmo.Text = "Valor de la moto";
+                        break;
 
+                    case 301:
+                    case 302:
+                        lblTituloMontoPrestmo.Text = "Valor del artículo";
+                        break;                        
                 }
 
                 /* Para utilizar las constantes de validaciones en el frontend */
@@ -118,6 +131,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 { "limit", 1 },
                 { "title", "auto" },
                 { "uploadDir", uploadDir },
+                { "extensions", new string[] { "jpg", "png", "jpeg"} },
                 { "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
                 { "fileMaxSize", 10 }, //peso máximo por archivo
             });

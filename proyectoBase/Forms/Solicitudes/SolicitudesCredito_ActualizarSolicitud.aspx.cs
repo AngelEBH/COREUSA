@@ -22,8 +22,13 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     public string IdSolicitud = "";
     public string IdCliente = "";
     private string pcIDApp = "";
+    public string pcID = "";
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public SolicitudesCredito_ActualizarSolicitud_Precalificado_ViewModel Precalificado;
     public List<TipoDocumento_ViewModel> DocumentosRequeridos = new List<TipoDocumento_ViewModel>();
+    public string jsonPrecalicado;
+
+    public int IdProducto { get; set; }
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -34,6 +39,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
             var lcURL = Request.Url.ToString();
             var liParamStart = lcURL.IndexOf("?");
             string lcParametros;
+
+            Precalificado = new SolicitudesCredito_ActualizarSolicitud_Precalificado_ViewModel();
 
             if (liParamStart > 0)
                 lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
@@ -57,6 +64,9 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                 CargarListas();
                 CargarInformacion();
+                CargarPrecalificado();
+
+                jsonPrecalicado = JsonConvert.SerializeObject(Precalificado);
             }
             else
             {
@@ -288,6 +298,54 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             /****** Informacion de la solicitud ******/
                             IdCliente = sqlResultado["fiIDCliente"].ToString();
 
+                            IdProducto = (int)sqlResultado["fiIDProducto"];
+
+                            lblTipoDePlazo.InnerText = "quincenal";
+
+                            switch (IdProducto)
+                            {
+                                case 202:
+                                case 203:
+
+                                    divCotizadorAutos.Visible = true;
+                                    ddlTipoGastosDeCierre.Enabled = true;
+                                    ddlTipoDeSeguro.Enabled = true;
+                                    ddlGps.Enabled = true;
+
+                                    ddlTipoGastosDeCierre.Items.Add(new ListItem("Seleccionar", ""));
+                                    ddlTipoGastosDeCierre.Items.Add("Financiado");
+                                    ddlTipoGastosDeCierre.Items.Add("Sin financiar");
+
+                                    ddlGps.Items.Add(new ListItem("Seleccionar", ""));
+                                    ddlGps.Items.Add("No");
+                                    ddlGps.Items.Add("Si - CPI");
+                                    ddlGps.Items.Add("Si - CableColor");
+
+                                    ddlTipoDeSeguro.Items.Add(new ListItem("Seleccionar", ""));
+                                    ddlTipoDeSeguro.Items.Add("A - Full Cover");
+                                    ddlTipoDeSeguro.Items.Add("B - Basico + Garantía");
+                                    ddlTipoDeSeguro.Items.Add("C - Basico");
+
+                                    lblTituloMontoPrestmo.Text = "Valor del vehiculo";
+                                    lblTipoDePlazo.InnerText = "mensual";
+
+                                    break;
+
+                                case 101:
+                                    lblTituloMontoPrestmo.Text = "Valor solicitado";
+                                    break;
+
+                                case 201:
+                                    lblTituloMontoPrestmo.Text = "Valor de la moto";
+                                    break;
+
+                                case 301:
+                                case 302:
+                                    lblTituloMontoPrestmo.Text = "Valor del artículo";
+                                    break;
+                            }
+
+
                             /****** Documentos de la solicitud ******/
                             sqlResultado.NextResult();
 
@@ -345,13 +403,12 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                         liReferenciasPersonales.Visible = true;
                                         tblCondicionesReferenciasPersonales.Rows.Add(tRowCondicionAcciones);
                                     }
-                                    /* condiciones de la información de la solicitud
-                                    else if (listaCondiciones.Contains(9))
+                                    /* condiciones de la información de la solicitud */
+                                    else if (sqlResultado["fiIDCondicion"].ToString() == "9" && estadoCondicion == true)
                                     {
-                                    liInformacionDeLaSolicitud.Visible = true;
-                                    tblCondicionesInformacionDeLaSolicitud.Rows.Add(tRowCondicionAcciones);
+                                        liInformacionPrestamoSolicitado.Visible = true;
+                                        tblCondicionesInformacionSolicitud.Rows.Add(tRowCondicionAcciones);
                                     }
-                                    */
                                     /* condiciones de informacion personal */
                                     else if (sqlResultado["fiIDCondicion"].ToString() == "10" && estadoCondicion == true)
                                     {
@@ -387,6 +444,9 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             var hoy = DateTime.Today;
                             var edad = hoy.Year - fechaNacimiento.Year;
                             if (fechaNacimiento.Date > hoy.AddYears(-edad)) edad--;
+
+
+                            pcID = sqlResultado["fcIdentidadCliente"].ToString();
 
                             txtIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
                             txtRtnCliente.Text = sqlResultado["fcRTN"].ToString();
@@ -584,6 +644,63 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         }
     }
 
+    public void CargarPrecalificado()
+    {
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                /* Cargar precalificado del cliente */
+                using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        /* Si no está precalificado, retornar a pantalla de precalificacion */
+                        if (!sqlResultado.HasRows)
+                        {
+                            string lcScript = "window.open('precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')";
+                            Response.Write("<script>");
+                            Response.Write(lcScript);
+                            Response.Write("</script>");
+                        }
+
+                        while (sqlResultado.Read())
+                        {
+                            Precalificado.IdClienteSAF = sqlResultado["fcIDCliente"].ToString();
+                            Precalificado.Identidad = sqlResultado["fcIdentidad"].ToString();
+                            Precalificado.PrimerNombre = sqlResultado["fcPrimerNombre"].ToString();
+                            Precalificado.SegundoNombre = sqlResultado["fcSegundoNombre"].ToString();
+                            Precalificado.PrimerApellido = sqlResultado["fcPrimerApellido"].ToString();
+                            Precalificado.SegundoApellido = sqlResultado["fcSegundoApellido"].ToString();
+                            Precalificado.Telefono = sqlResultado["fcTelefono"].ToString();
+                            Precalificado.Ingresos = decimal.Parse(sqlResultado["fnIngresos"].ToString());
+                            Precalificado.Obligaciones = decimal.Parse(sqlResultado["fnTotalObligaciones"].ToString());
+                            Precalificado.Disponible = decimal.Parse(sqlResultado["fnCapacidadDisponible"].ToString());
+                            Precalificado.FechaNacimiento = DateTime.Parse(sqlResultado["fdFechadeNacimiento"].ToString());
+                            Precalificado.IdTipoDeSolicitud = (byte)sqlResultado["fiTipoSolicitudCliente"];
+                            Precalificado.TipoDeSolicitud = sqlResultado["fcTipoSolicitud"].ToString();
+                            Precalificado.IdProducto = int.Parse(sqlResultado["fiIDProducto"].ToString());
+                            Precalificado.Producto = sqlResultado["fcProducto"].ToString();
+                            Precalificado.ScorePromedio = sqlResultado["fiScorePromedio"].ToString();
+                        }
+                    }
+                } // using sp consulta ejecutivos
+            }// using conexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+    }
+
+
     public static List<Municipios_ViewModel> CargarMunicipios(int idDepartamento)
     {
         var municipios = new List<Municipios_ViewModel>();
@@ -763,13 +880,13 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 resultadoActualizacion = idSolicitudCondicion.ToString();
             }
 
-            /* condiciones de la información de la solicitud
-            if (listaCondiciones.Contains(9))
+            /* condiciones de la información de la solicitud */
+            if (idTipoDeCondicion == 9)
             {
-                var objSolicitudesMaster = json_serializer.Deserialize<SolicitudesMasterViewModel>(objSeccion);
-                resultadoActualizacion = ActualizarSolicitudMaster(objSolicitudesMaster, idSolicitud, pcIDSesion, pcIDUsuario, pcIDApp);
+                var informacionSolicitud = json_serializer.Deserialize<SolicitudesCredito_Solicitud_Maestro_ViewModel>(objSeccion);
+                resultadoActualizacion = ActualizarInformacionSolicitud(informacionSolicitud, idSolicitud, pcIDSesion, pcIDUsuario, pcIDApp);
             }
-            */
+
 
             /* condiciones de informacion personal */
             if (idTipoDeCondicion == 10)
@@ -1152,7 +1269,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return resultado;
     }
 
-
     /* Administracion de referencias personales */
     [WebMethod]
     public static List<Cliente_ReferenciaPersonal_ViewModel> ListadoReferenciasPersonalesPorIdSolicitud(string dataCrypt)
@@ -1358,6 +1474,48 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         }
         return resultado;
     }
+
+
+    public static string ActualizarInformacionSolicitud(SolicitudesCredito_Solicitud_Maestro_ViewModel informacionSolicitud, string idSolicitud, string pcIDSesion, string pcIDUsuario, string pcIDApp)
+    {
+        var resultado = string.Empty;
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Maestro_Actualizar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pnValorSeleccionado", informacionSolicitud.ValorSeleccionado);
+                    sqlComando.Parameters.AddWithValue("@piPlazoSeleccionado", informacionSolicitud.PlazoSeleccionado);
+                    //sqlComando.Parameters.AddWithValue("@piMoneda", informacionSolicitud.IdMoneda);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", informacionSolicitud.ValorPrima);
+                    sqlComando.Parameters.AddWithValue("@pnValorGarantia", informacionSolicitud.ValorGarantia);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            resultado = sqlResultado["MensajeError"].ToString();
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultado;
+    }
+
 
     //[WebMethod]
     //public SolicitudesCredito_ActualizarSolicitud_Cliente_ViewModel ObtenerInformacionClienteSolicitudPorIdSolicitud(string dataCrypt)
@@ -1692,6 +1850,114 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     //    return informacion;
     //}
 
+
+    [WebMethod]
+    public static SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel CalculoPrestamo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string dataCrypt)
+    {
+        var calculo = new SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel();
+        try
+        {
+            var urlDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
+            var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CredSolicitud_CalculoPrestamo", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
+                    sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", valorGlobal);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
+                    sqlComando.Parameters.AddWithValue("@liPlazo", plazo);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            calculo = new SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel()
+                            {
+                                SegurodeDeuda = decimal.Parse(sqlResultado["fnSegurodeDeuda"].ToString()),
+                                SegurodeVehiculo = decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
+                                GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
+                                ValoraFinanciar = decimal.Parse(sqlResultado["fnValoraFinanciar"].ToString()),
+                                CuotaQuincenal = decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
+                                CuotaMensual = decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()),
+                                CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
+                                CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
+                                CuotaMensualNeta = decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()),
+                                TotalSeguroVehiculo = decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString())
+                            };
+                        } // using sqlResultado.Read()
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            calculo = null;
+        }
+        return calculo;
+    }
+
+
+    [WebMethod]
+    public static SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel CalculoPrestamoVehiculo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string scorePromedio, int tipoSeguro, int tipoGps, int gastosDeCierreFinanciados, string dataCrypt)
+    {
+        var calculo = new SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel();
+        try
+        {
+            var urlDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
+            var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
+                    sqlComando.Parameters.AddWithValue("@pnMontoaPrestamo", (valorGlobal - valorPrima));
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
+                    sqlComando.Parameters.AddWithValue("@piScorePromedio", scorePromedio);
+                    sqlComando.Parameters.AddWithValue("@piTipodeSeguro", tipoSeguro);
+                    sqlComando.Parameters.AddWithValue("@piTipodeGPS", tipoGps);
+                    sqlComando.Parameters.AddWithValue("@piFinanciandoGastosdeCierre", gastosDeCierreFinanciados);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (sqlResultado["fiIDPlazo"].ToString() == plazo.ToString())
+                            {
+                                calculo = new SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel()
+                                {
+                                    ValoraFinanciar = decimal.Parse(sqlResultado["fnTotalaFinanciar"].ToString()),
+                                    CuotaMensualNeta = decimal.Parse(sqlResultado["fnTotalCuota"].ToString())
+                                };
+                            }
+                        } // using sqlResultado.Read()
+                    }// using sqlcomand.ExecuteReader()
+                }// using command
+            } // using connection
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            calculo = null;
+        }
+        return calculo;
+    }
+
     [WebMethod]
     public static string ObtenerUrlEncriptado(int idCliente, string dataCrypt)
     {
@@ -1733,6 +1999,61 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     }
 
     #region View Models
+
+    public class SolicitudesCredito_ActualizarSolicitud_Precalificado_ViewModel
+    {
+        public string IdClienteSAF { get; set; }
+        public string TipoDeClienteSAF { get; set; }
+        public bool PermitirIngresarSolicitud { get; set; }
+        public string MensajePermitirIngresarSolicitud { get; set; }
+        public string Identidad { get; set; }
+        public string Rtn { get; set; }
+        public string PrimerNombre { get; set; }
+        public string SegundoNombre { get; set; }
+        public string PrimerApellido { get; set; }
+        public string SegundoApellido { get; set; }
+        public string Telefono { get; set; }
+        public decimal Obligaciones { get; set; }
+        public decimal Ingresos { get; set; }
+        public decimal Disponible { get; set; }
+        public DateTime FechaNacimiento { get; set; }
+        public int IdTipoDeSolicitud { get; set; }
+        public string TipoDeSolicitud { get; set; }
+        public int IdProducto { get; set; }
+        public string Producto { get; set; }
+        public string ScorePromedio { get; set; }
+    }
+
+    public class SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel
+    {
+        public decimal SegurodeDeuda { get; set; }
+        public decimal GastosdeCierre { get; set; }
+        public decimal ValoraFinanciar { get; set; }
+        public decimal CuotaQuincenal { get; set; }
+        public decimal CuotaMensual { get; set; }
+        public decimal SegurodeVehiculo { get; set; }
+        public decimal CostoGPS { get; set; }
+        public decimal CuotaServicioGPS { get; set; }
+        public decimal TotalSeguroVehiculo { get; set; }
+        public decimal CuotaSegurodeVehiculo { get; set; }
+        public decimal CuotaMensualNeta { get; set; }
+        public string TipoCuota { get; set; }
+    }
+
+    public class SolicitudesCredito_Solicitud_Maestro_ViewModel
+    {
+        public int IdSolicitud { get; set; }
+        public int IdCliente { get; set; }
+        public decimal ValorSeleccionado { get; set; }
+        public int PlazoSeleccionado { get; set; }
+        
+        public decimal ValorPrima { get; set; }
+        public decimal ValorGarantia { get; set; }
+
+
+        public int IdMoneda { get; set; }
+
+    }
 
 
     public class SolicitudesCredito_ActualizarSolicitud_Cliente_ViewModel

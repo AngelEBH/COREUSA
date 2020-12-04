@@ -330,8 +330,8 @@ $(document).ready(function () {
                 }
 
                 //if (plazoSeleccionado > CONSTANTES.PrestamoMaximo_Plazo) {
-                // state = false;
-                // MensajeError('El plazo máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Plazo + '.');
+                //    state = false;
+                //    MensajeError('El plazo máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Plazo + '.');
                 //}
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
@@ -651,7 +651,7 @@ function CargarDocumentosRequeridos() {
                     limit: iter.CantidadMaximaDoucmentos, // Limite de archivos a subir
                     maxSize: 10, // Peso máximo de todos los archivos seleccionado en megas (MB)
                     fileMaxSize: 2, // Peso máximo de un archivo
-                    extensions: ['jpg', 'png'],// Extensiones/formatos permitidos
+                    extensions: ['jpg', 'png', 'jpeg'],// Extensiones/formatos permitidos
                     upload: {
                         url: 'SolicitudesCredito_Registrar.aspx?type=upload&doc=' + iter.IdTipoDocumento,
                         data: null,

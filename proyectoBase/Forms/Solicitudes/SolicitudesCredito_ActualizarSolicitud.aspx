@@ -49,12 +49,13 @@
                 <div id="smartwizard" class="h-100">
                     <ul>
                         <li runat="server" id="liInformacionPrestamo"><a href="#step-1" class="pt-3 pb-2 font-12">Condicionamientos</a></li>
-                        <li runat="server" visible="true" id="liInformacionPersonal"><a href="#step-2" class="pt-3 pb-2 font-12">Información personal</a></li>
-                        <li runat="server" visible="true" id="liInformacionDomicilio"><a href="#step-3" class="pt-3 pb-2 font-12">Información domicilio</a></li>
-                        <li runat="server" visible="true" id="liInformacionLaboral"><a href="#step-4" class="pt-3 pb-2 font-12">Información laboral</a></li>
-                        <li runat="server" visible="true" id="liInformacionConyugal"><a href="#step-5" class="pt-3 pb-2 font-12">Información conyugal</a></li>
-                        <li runat="server" visible="true" id="liReferenciasPersonales"><a href="#step-6" class="pt-3 pb-2 font-12">Referencias personales</a></li>
-                        <li runat="server" visible="true" id="liDocumentacion"><a href="#step-7" class="pt-3 pb-2 font-12">Documentación</a></li>
+                        <li runat="server" visible="false" id="liInformacionPrestamoSolicitado"><a href="#step-informacionPrestamoSolicitado" class="pt-3 pb-2 font-12">Información préstamo solicitado</a></li>
+                        <li runat="server" visible="false" id="liInformacionPersonal"><a href="#step-2" class="pt-3 pb-2 font-12">Información personal</a></li>
+                        <li runat="server" visible="false" id="liInformacionDomicilio"><a href="#step-3" class="pt-3 pb-2 font-12">Información domicilio</a></li>
+                        <li runat="server" visible="false" id="liInformacionLaboral"><a href="#step-4" class="pt-3 pb-2 font-12">Información laboral</a></li>
+                        <li runat="server" visible="false" id="liInformacionConyugal"><a href="#step-5" class="pt-3 pb-2 font-12">Información conyugal</a></li>
+                        <li runat="server" visible="false" id="liReferenciasPersonales"><a href="#step-6" class="pt-3 pb-2 font-12">Referencias personales</a></li>
+                        <li runat="server" visible="false" id="liDocumentacion"><a href="#step-7" class="pt-3 pb-2 font-12">Documentación</a></li>
                     </ul>
                     <div>
                         <!-- Listado de condiciones de la solicitud -->
@@ -100,6 +101,78 @@
                             </div>
                         </div>
 
+
+                        <!-- Información principal -->
+                        <div id="step-informacionPrestamoSolicitado" class="form-section">
+
+                            <div class="form-group row m-0 border-bottom border-gray justify-content-between">
+                                <div class="col-auto p-0">
+                                    <h6 class="mt-1">Actualizar información de la solicitud</h6>
+                                </div>
+                                <div class="col-auto p-0 mb-1">
+                                    <button type="button" class="btn btn-warning pt-1 pb-1" id="btnFinalizarCondiciones_InfoSolicitud" data-toggle="modal" data-target="#modalFinalizarCondicion_InfoSolicitud">
+                                        <i class="far fa-check-square"></i>
+                                        Finalizar condiciones
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Montos de la solicitud -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <h6 class="mb-1 pt-3">Montos de la solicitud</h6>
+
+                                    <div class="form-group row mb-0">
+                                        <!-- Monto global -->
+                                        <div class="col-sm-4">
+                                            <asp:Label CssClass="col-form-label" ID="lblTituloMontoPrestmo" runat="server" Text="Valor global" AssociatedControlID="txtValorGlobal" />
+                                            <asp:TextBox ID="txtValorGlobal" CssClass="form-control form-control-sm mascara-cantidad" Enabled="true" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <!-- Valor de la prima -->
+                                        <div class="col-sm-4" id="divPrima" runat="server">
+                                            <label class="col-form-label">Valor de la prima</label>
+                                            <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm mascara-cantidad" Enabled="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <!-- Valor a Financiar -->
+                                        <div class="col-sm-4" id="divPlazo" runat="server">
+                                            <label class="col-form-label">Plazo <span class="font-weight-bold" id="lblTipoDePlazo" runat="server"></span></label>
+                                            <asp:TextBox ID="txtPlazoSeleccionado" CssClass="form-control form-control-sm mascara-plazos" Enabled="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row mb-0" runat="server" id="divCotizadorAutos" visible="false">
+                                        <div class="col-sm-4">
+                                            <asp:Label CssClass="col-form-label" runat="server" Text="Gastos de cierre" AssociatedControlID="ddlTipoGastosDeCierre" />
+                                            <asp:DropDownList ID="ddlTipoGastosDeCierre" runat="server" CssClass="form-control form-control-sm" Enabled="false" data-parsley-group="informacionPrestamo" required="required" data-parsley-errors-container="#error-ddlTipoGastosDeCierre"></asp:DropDownList>
+                                            <div id="error-ddlTipoGastosDeCierre"></div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="col-form-label">Tipo de seguro</label>
+                                            <asp:DropDownList ID="ddlTipoDeSeguro" runat="server" CssClass="form-control form-control-sm" Enabled="false" data-parsley-group="informacionPrestamo" required="required" data-parsley-errors-container="#error-ddlTipoDeSeguro"></asp:DropDownList>
+                                            <div id="error-ddlTipoDeSeguro"></div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <asp:Label CssClass="col-form-label" runat="server" Text="Lleva GPS" AssociatedControlID="ddlGps" />
+                                            <asp:DropDownList ID="ddlGps" runat="server" CssClass="form-control form-control-sm" Enabled="false" data-parsley-group="informacionPrestamo" required="required" data-parsley-errors-container="#error-ddlGps"></asp:DropDownList>
+                                            <div id="error-ddlGps"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <!-- Valor a Financiar -->
+                                        <div class="col-sm-6" id="div1" runat="server">
+                                            <label class="col-form-label">Valor a Financiar</label>
+                                            <asp:TextBox ID="txtValorFinanciar" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                        <!-- Valor de la cuota calculada -->
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Valor de la cuota</label>
+                                            <asp:TextBox ID="txtValorCuota" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                         <!-- Información personal del cliente -->
                         <div id="step-2" class="form-section">
 
@@ -621,6 +694,43 @@
         </div>
 
         <!--modal de finalizar condiciones de informacion personal -->
+        <div id="modalFinalizarCondicion_InfoSolicitud" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicion_InfoSolicitudLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header pt-2 pb-2">
+                        <h6 class="modal-title" id="modalFinalizarCondicion_InfoSolicitudLabel">Finalizar condicionamientos (<b>Información de la solicitud</b>)</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table id="tblCondicionesInformacionSolicitud" class="table tabla-compacta table-striped table-bordered" runat="server">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de condición</th>
+                                                <th>Descripción</th>
+                                                <th>Comentario adicional</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--modal de finalizar condiciones de informacion personal -->
         <div id="modalFinalizarCondicion_InfoPersonal" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalFinalizarCondicionListaLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -872,6 +982,7 @@
     <script>
         const ID_SOLICITUD = <%=this.IdSolicitud%>;
         const ID_CLIENTE = <%=this.IdCliente%>;
+        const PRECALIFICADO = <%=this.jsonPrecalicado%>;
     </script>
     <script src="/Scripts/plugins/steps/js/jquery.smartWizard.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
@@ -879,6 +990,6 @@
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=20201124130225"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=20201204162105"></script>
 </body>
 </html>

@@ -69,6 +69,6 @@ p {
     color: black !important;
 }
 
-#divConevionCyVPDF p {
+#divConevionCyVPDF p, #divBasicoCPIPDF p, #divBasicoCPIPDF li {
     font-size: 12px !important;
 }

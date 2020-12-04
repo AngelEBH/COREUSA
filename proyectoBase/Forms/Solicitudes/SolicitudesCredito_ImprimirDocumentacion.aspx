@@ -58,7 +58,7 @@
                                 <asp:TextBox ID="txtPlazoFinanciar" ReadOnly="true" CssClass="form-control form-control-sm col-form-label text-right" runat="server"></asp:TextBox>
                             </div>
                             <div class="col-lg-3 col-md-6 col-sm-3 col-6">
-                                <label class="col-form-label">48 Cuotas <span runat="server" id="lblTipoDePlazoCuota"></span></label>
+                                <label class="col-form-label">Cuota <span runat="server" id="lblTipoDePlazoCuota"></span></label>
                                 <asp:TextBox ID="txtValorCuota" ReadOnly="true" CssClass="form-control form-control-sm col-form-label text-right" runat="server"></asp:TextBox>
                             </div>
                         </div>
@@ -88,16 +88,16 @@
                                 <button type="button" id="btnInspeccionSeguroDeVehiculo" onclick="ExportToPDF('INSPECCION_SEGURO_VEHICULO','divContenedorInspeccionSeguro','divInspeccionSeguroPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');">
                                     Inspección seguro
                                 </button>
-                                <button type="button" id="btnTraspaso" onclick="ExportToPDF('TRASPASO','divContenedorTraspaso','divTraspasoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
+                                <button type="button" id="btnTraspaso" onclick="ExportToPDF('TRASPASO_CLIENTE','divContenedorTraspaso','divTraspasoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
                                     Traspaso Cliente
                                 </button>
-                                <button type="button" id="btnTraspasoVendedor" onclick="ExportToPDF('TRASPASO','divContenedorTraspaso','divTraspasoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
-                                    Traspaso Vendedor
+                                <button type="button" id="btnTraspasoVendedor" onclick="ExportToPDF('TRASPASO_PROPIETARIO','divContenedorTraspasoVendedor','divTraspasoVendedorPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
+                                    Traspaso Propietario
                                 </button>
                                 <button type="button" id="btnRecibo" onclick="ExportToPDF('TRASPASO','divContenedorTraspaso','divTraspasoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/receipt_40px.png');">
                                     Recibo
                                 </button>
-                                <button type="button" id="btnBasicoCPI" onclick="ExportToPDF('TRASPASO','divContenedorTraspaso','divTraspasoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/vehicle_insurance_40px.png');">
+                                <button type="button" id="btnBasicoCPI" onclick="ExportToPDF('BASICO_CPI','divContenedorBasicoCPI','divBasicoCPIPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/vehicle_insurance_40px.png');">
                                     Básico + CPI
                                 </button>
                             </div>
@@ -712,7 +712,7 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
             </div>
         </div>
 
-        <!-- INSPECCIÓN DEL SEGURO (LISTO) -->
+        <!-- Inspeccion del vehiculo *Listo* -->
         <div id="divContenedorInspeccionSeguro" runat="server">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDF">
                 <div class="card-body pt-0">
@@ -922,7 +922,7 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
             </div>
         </div>
 
-        <!-- Traspaso de vehiculo del cliente *Listo* -->
+        <!-- Traspaso de vehiculo del propietario *Listo* -->
         <div id="divContenedorTraspasoVendedor" style="margin-top: 999px; display: none;">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divTraspasoVendedorPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -1069,6 +1069,154 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                             <label class="mt-0 d-block">Identidad</label>
                         </div>
                         <div class="col-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Básico + CPI -->
+        <div id="divContenedorBasicoCPI" style="margin-top: 999px; display: none;">
+            <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divBasicoCPIPDF" style="display: none;">
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <h6 class="font-weight-bold">GARANTIA SOBRE EL VEHICULO DADO EN GARANTIA DEL PRESTAMO</h6>
+                            <label class="font-weight-bold">De Las Partes</label>
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <p>
+                                Por una Parte, PRESTADITO. DE C.V. con domicilio en la ciudad de San Pedro Sula, Cortes, Honduras, C.A.
+                                representada por el señor ERICK GEOVANI MOLINA PADILLA, facultad otorgada mediante instrumento
+                                número 86 ante notario Efraín Antonio Gutiérrez Ardon, que en lo sucesivo se llamara &lt;LA COMPAÑÍA&gt;, de
+                                conformidad a la SOLICITUD presentada al cliente y las CONDICIONES GENERALES de la presente.
+                                Por la otra
+                                <asp:Label Font-Bold="true" runat="server" ID="lblNombreCliente_BasicoCPI"></asp:Label>
+                                <b>(El cliente)</b>, con las generales mencionadas en el prestamo                                
+                                <asp:Label runat="server" Font-Bold="true" ID="lblNumeroPrestamo_BasicoCPI"></asp:Label>
+                                que en lo sucesivo se denominará &lt;EL CONTRATANTE&gt;.
+                            </p>
+                            <p>
+                                <b>FINALIDAD DEL CONVENIO:</b>
+                                El presente convenio tiene por objeto cubrir los siniestros en que pudiese verse
+                                involucrado El VEHICULO DADO EN GARANTIA DEL PRESTAMO, para lo cual se obliga por una parte a la
+                                <b>compañía</b> o la que esta contrate, a cubrir el saldo capital hasta la fecha en que pueda existir algún siniestro,
+                                y por la otra parte el contratante o cliente se obliga a pagar el servicio mediante cuotas.
+                            </p>
+                            <p class="text-center">
+                                <b>CONDICIONES GENERALES</b>
+                            </p>
+                            <p>
+                                <b>PRIMERA: CONSTITUCIÓN DEL CONTRATO</b>
+                                El convenio de GARANTÍA SOBRE EL VEHICULO DADO EN GARANTIA DEL PRESTAMO queda										
+                                constituido mediante el presente contrato, el cual es firmado y se estampa la huella digital de ambas partes
+                                en señal de aceptación de todas las condiciones establecidas partes.
+                            </p>
+                            <p>
+                                <b>SEGUNDA: OBJETO DE LA GARANTÍA SOBRE EL VEHICULO DADO EN GARANTIA</b>
+                                <br />
+                                La GARANTÍA está destinada exclusivamente en cubrir el vehículo de los siguientes siniestros:
+                            </p>
+                            <ol type="a">
+                                <li>Vuelcos Accidentales o Colisiones</li>
+                                <li>Incendio, Auto ignición y Rayo</li>
+                                <li>Robo Total.</li>
+                                <li>Huelgas y Alborotos Populares.</li>
+                                <li>Responsabilidad Civil en sus Bienes (Daños a Terceros en sus Bienes, hasta Lps 50,000)</li>
+                                <li>Responsabilidad Civil en sus Personas (Daños a Terceros en sus Personas, hasta Lps 50,000)</li>
+                                <li>Desbordamiento de Ríos, derrumbes de carretera y otros fenómenos de la naturaleza.</li>
+                            </ol>
+                            <p>
+                                <b>TERCERA: CONDICIONES ESPECIALES</b>
+                            </p>
+                            <ol type="a">
+                                <li>Los siniestros mencionados en la cláusula anterior deben ocurrir en el territorio nacional para que sea cubierto.</li>
+                                <li>El vehículo debe de ser conducido por una persona debidamente acreditada, mayor de 18 años y menor a 75 años de lo contrario la garantía no cubre.</li>
+                                <li>Aplica única y exclusivamente para reparar los daños ocasionados al automóvil que se encuentre en arrendamiento con Compañía Financiera “PRESTADITO S.A.” o en su defecto los daños causados a un
+                                    tercero hasta Lps 50,000 siempre y cuando el arrendamiento este vigente y con sus saldos al día, bajos los límites de cobertura indicados, el saldo capital adeudado a la fecha del siniestro.
+                                </li>
+                                <li>Para que los daños ocasionados sean cubiertos, el automóvil deberá ser conducido por El Arrendatario, esposa e hijos con licencia vigente y deberá estar al día en sus cuotas de arrendamiento,
+                                    caso contrario los daños ocasionados serán reparados por cuenta del arrendatario.
+                                </li>
+                                <li>El Arrendatario debe contar con licencia de conducir vigente.</li>
+                                <li>Solo cubre colisiones debidamente acreditas con el parte de la policía de tránsito y cuando sea
+                                    denuncia interpuesta sin parte de transito solo se reconoce como máximo el 50% del valor del siniestro previa inspección de ajustador.
+                                </li>
+                                <li>En caso de robo del vehículo en garantía será necesario acreditar dicho siniestro ante entidad																								
+                                    competente en territorio Hondureño.																								
+                                </li>
+                                <li>El arrendatario se obliga a reportar en un plazo máximo de 24 hrs el siniestro a Prestadito SA al
+                                    teléfono 2540 1050 o vía email a sac@miprestadito.com
+                                </li>
+                                <li>Mantener al día el pago del préstamo y la cuota del servicio del seguro y respectivo GPS.</li>
+                            </ol>
+                            <span class="page-break"></span>
+                            <p class="mt-5">
+                                <b>CUARTA: SE EXCLUYE DE SINIESTROS</b>
+                            </p>
+                            <ol type="a">
+                                <li>No se cubre los accidentes o daños ocasionados al automóvil por el arrendatario, sin que tenga
+                                    implicación un tercero a excepción de Vuelcos Accidentales, Colisiones Accidentales, Incendio, Auto
+                                    ignición, Rayo,Desbordamiento de Ríos, derrumbes de carretera y otros fenómenos de la naturaleza
+                                </li>
+                                <li>No cubre rotura de cristales</li>
+                                <li>No cubre equipo especial que pueda ser instalado</li>
+                            </ol>
+                            <p>
+                                <b>QUINTA: PROCESO DE RECLAMO</b>
+                                <br />
+                                Al presentarse un reclamo el usuario deberá avocarse de manera personal al Oficial de Crédito de PRESTADITO S.A.
+                            </p>
+                            <ol type="a">
+                                <li>Presentar dos cotizaciones de los daños ocasionados al automóvil asegurado</li>
+                                <li>Certificación del Parte de Tránsito o Certificado de Denuncia interpuesta</li>
+                                <li>Fotografías a color de los daños del automóvil</li>
+                                <li>Fotografías a color del automóvil una vez reparado</li>
+                                <li>Los derechos de cobertura no pueden ser traspasados, cedidos, ni endosados</li>
+                                <li>PRESTADITO S.A. optara por una tercera cotización, reservándose el derecho de autorizar la reparación del automóvil asegurado en el taller de su elección.</li>
+                            </ol>
+                            <p>
+                                Una vez completada la documentación de reclamación del siniestro el proceso de pago lo realizara la empresa
+                                en un plazo no mayor a 10 días de hábiles, conforme a reclamo
+                            </p>
+                            <p>
+                                <b>SEXTA: El contratante,</b>
+                                entiende y acepta que las coberturas anteriormente mencionadas están respaldas por
+                                una compañía de seguros local y que exclusivamente en caso de que la compañía aseguradora local no cubra
+                                el montó del siniestro debido a que este exceda el límite anual especificado en el contrato de crédito, este
+                                será cubierto por una empresa extranjera tercera contratada por Prestadito SA para este fin, misma que se
+                                limita al valor del saldo capital al momento en que se presenta el siniestro o al valor de mercado de la garantía.
+                            </p>
+                            <p>
+                                <b>SEPTIMA: El contratante</b>
+                                acepta que las cuotas por la contratación de este servicio, sean cargadas a su plan de
+                                pago del préstamo que se otorgó para la compra del vehículo dado en garantía, cuotas que serán de valor fijo, para
+                                la cual se obliga a cumplir en tiempo y forma, para que la garantía le cubra los siniestros que pudiesen ocurrir.
+                            </p>
+                            <p>
+                                El contratante declara haber entendido en toda su amplitud y alcances la presente garantía, por lo cual en fe
+                                de lo acá establecido se firma y se estampa huella digital en fecha
+                                <span class="lblNumeroDia_Firma"></span>
+                                de
+                                <span class="lblMes_Firma"></span>
+                                del
+                                <span class="lblAnio_Firma"></span>.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Firma del cliente -->
+                    <div class="row justify-content-center mt-1 pt-1">
+                        <div class="col-5 text-center mt-1">
+                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                            <label class="mt-0 d-block">Contratante o Cliente</label>
+                        </div>
+                        <div class="col-5 text-center mt-1">
+                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                            <label class="mt-0 d-block">Prestadito S.A.</label>
+                        </div>
                     </div>
                 </div>
             </div>

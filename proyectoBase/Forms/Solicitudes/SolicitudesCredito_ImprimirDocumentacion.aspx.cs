@@ -128,45 +128,27 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var ciudadPoblado = sqlResultado["fcPoblado"].ToString();
                             var direccionCliente = sqlResultado["fcDireccionCliente"].ToString();
 
-                            /* Información de la solicitud*/
+                            /* Información de la solicitud y prestamo */
                             var producto = sqlResultado["fcProducto"].ToString();
                             var montoTotalContrato = decimal.Parse(sqlResultado["fnValorTotalContrato"].ToString());
                             var plazoFinalAprobado = sqlResultado["fiPlazo"].ToString();
                             var valorTotalFinanciamiento = decimal.Parse(sqlResultado["fnValorTotalFinanciamiento"].ToString());
-
                             var tipoDePlazo = sqlResultado["fcTipoDePlazo"].ToString();
                             var tipoDePlazoSufijoAl = sqlResultado["fcTipoPlazo"].ToString();
-
                             var varlorGarantia = decimal.Parse(sqlResultado["fnValorGarantia"].ToString());
                             var valorPrima = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
-
                             var valorCuotaPrestamo = decimal.Parse(sqlResultado["fnCuotaMensualPrestamo"].ToString());
                             var valorCuotaGPS = decimal.Parse(sqlResultado["fnCuotaMensualGPS"].ToString());
                             var valorCuotaSeguro = decimal.Parse(sqlResultado["fnCuotaMensualSeguro"].ToString());
                             var valorCuotaTotal = decimal.Parse(sqlResultado["fnCuotaTotal"].ToString());
-
                             var valorParaCompraDeVehiculo = decimal.Parse(sqlResultado["fnValorAPrestar"].ToString());
                             var valorParaCompraDeGPS = decimal.Parse(sqlResultado["fnCostoGPS"].ToString());
                             var valorParaGastosDeCierre = decimal.Parse(sqlResultado["fnGastosDeCierre"].ToString());
-
                             var moneda = sqlResultado["fcNombreMoneda"].ToString();
                             var monedaSimbolo = sqlResultado["fcSimboloMoneda"].ToString();
                             var monedaAbreviatura = sqlResultado["fcAbreviaturaMoneda"].ToString();
-
                             var tasaDeInteresSimpleMensual = decimal.Parse(sqlResultado["fnTasaMensualAplicada"].ToString());
                             var tasaDeInteresAnualAplicada = decimal.Parse(sqlResultado["fnTasaAnualAplicada"].ToString());
-
-                            /* Propietario de la garantia */
-                            var nombrePropietarioGarantia = sqlResultado["fcNombrePropietarioGarantia"].ToString();
-                            var identidadPropietarioGarantia = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
-                            var nacionalidadPropietarioGarantia = sqlResultado["fiIDNacionalidadPropietarioGarantia"].ToString();
-                            var estadoCivilPropietarioGarantia = sqlResultado["fiIDEstadoCivilPropietarioGarantia"].ToString();
-
-                            /* Vendedor de la garantia. Puede o no ser el mismo propietario */
-                            var nombreVendedorGarantia = sqlResultado["fcNombreVendedorGarantia"].ToString();
-                            var identidadVendedorGarantia = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
-                            var nacionalidadVendedorGarantia = sqlResultado["fiIDNacionalidadVendedorGarantia"].ToString();
-                            var estadoCivilVendedorGarantia = sqlResultado["fiIDEstadoCivilVendedorGarantia"].ToString();
 
                             lblIdSolicitud.InnerText = pcIDSolicitud;
                             txtNombreCliente.Text = nombreCliente;
@@ -217,6 +199,18 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         var serieUno = sqlResultado["fcSerieUno"].ToString();
                                         var serieDos = sqlResultado["fcSerieDos"].ToString();
                                         var comentario = sqlResultado["fcComentario"].ToString().Trim();
+
+                                        /* Propietario de la garantia */
+                                        var nombrePropietarioGarantia = sqlResultado["fcNombrePropietarioGarantia"].ToString();
+                                        var identidadPropietarioGarantia = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
+                                        var nacionalidadPropietarioGarantia = sqlResultado["fcNacionalidadPropietarioGarantia"].ToString();
+                                        var estadoCivilPropietarioGarantia = sqlResultado["fcEstadoCivilPropietarioGarantia"].ToString();
+
+                                        /* Vendedor de la garantia. Puede o no ser el mismo propietario */
+                                        var nombreVendedorGarantia = sqlResultado["fcNombreVendedorGarantia"].ToString();
+                                        var identidadVendedorGarantia = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
+                                        var nacionalidadVendedorGarantia = sqlResultado["fcNacionalidadVendedorGarantia"].ToString();
+                                        var estadoCivilVendedorGarantia = sqlResultado["fcEstadoCivilPropietarioGarantia"].ToString();
 
                                         txtVIN.Text = VIN;
                                         txtTipoDeGarantia.Text = tipoDeGarantia;
@@ -382,6 +376,10 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblSerieChasis_TraspasoVendedor.Text = serieChasis;
                                         lblMatricula_TraspasoVendedor.Text = matricula;
                                         lblGarantiaUsada_TraspasoVendedor.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
+
+                                        /* BASICO + CPI*/
+                                        lblNombreCliente_BasicoCPI.Text = nombreCliente;
+                                        lblNumeroPrestamo_BasicoCPI.Text = numeroPrestamo;
                                     }
 
                                     sqlResultado.NextResult();
@@ -395,14 +393,20 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     else
                                     {
                                         var imagenesGarantia = new StringBuilder();
+                                        var imagenesGarantiaParaInspeccionDeSeguro = new StringBuilder();
 
                                         while (sqlResultado.Read())
                                         {
                                             imagenesGarantia.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
+
+                                            if ((bool)sqlResultado["fbApareceEnInspeccionDeSeguro"] == true)
+                                            {
+                                                imagenesGarantiaParaInspeccionDeSeguro.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
+                                            }
                                         }
 
                                         divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
-                                        divGaleriaInspeccionSeguroDeVehiculo.InnerHtml = imagenesGarantia.ToString();
+                                        divGaleriaInspeccionSeguroDeVehiculo.InnerHtml = imagenesGarantiaParaInspeccionDeSeguro.ToString();
                                     }
                                 }
                                 divInformacionGarantia.Visible = true;
