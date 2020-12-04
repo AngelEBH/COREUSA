@@ -374,6 +374,8 @@
                                 <b>f)</b> Por actuación fraudulenta o haber proporcionado a <b>PRESTADITO</b> información o datos falsos o incompletos para obtener el préstamo;
                                 <b>g)</b> Por ser del conocimiento de <b>PRESTADITO</b>, la existencia de obligaciones de <b>EL CLIENTE</b> pendientes de pago con el Estado, en tal cantidad que a su criterio ponga en peligro la recuperación de los adeudos debido a la preferencia del Estado para obtener el pago a su favor antes que <b>PRESTADITO</b>;
                                 <b>h)</b> El incumplimiento de parte de <b>EL CLIENTE</b> de cualquiera de las obligaciones contraídas en este contrato.
+                                <b>i)</b> Retirar, desconectar, adulterar, o de cualquier forma hacer que el GPS del Vehiculo no funcione correctamente.
+
                                 <b>- NOVENO: COBROS EXTRAJUDICIALES.-</b> En caso de ser necesarias las gestiones de cobranzas extrajudiciales por la mora en el pago o el vencimiento anticipado del contrato, estas se realizarán de la siguiente manera:
                                 <b>1)</b> Para Mora de 1 a 180 días: alternativamente podrán ser llamadas telefónicas, correos electrónicos, mensajes por cualquier medio electrónico, visitas por gestores, cartas de cobro escritas solicitando el pago y dirigidas a las direcciones indicadas. Estas gestiones tendrán un costo de doscientos cincuenta lempiras (L250.00), cargados al estado de cuenta del préstamo otorgado, son acumulables por cada cuota vencida y serán pagados por <b>EL CLIENTE</b> en todos los casos y sin excepción;
                                 <b>2)</b> Si su caso fuere trasladado a Profesionales del Derecho, cuyas gestiones iniciales podrán ser: llamadas telefónicas, envió de correos electrónicos, cartas de cobro escritas, y visitas, causaran el cobro de honorarios
@@ -885,6 +887,158 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                             <p>
                                 El cual cedo todos los deberes y derechos que antes ejercía sobre el vehículo antes mencionado a PRESTADITO SA, con Numero de RTN 0501-9016-811399, aceptando que el vehículo es
                                 <asp:Label runat="server" ID="lblGarantiaUsada_Traspaso"></asp:Label>
+                                y se encuentra de su entera satisfacción sin garantía alguna.
+                                Y para seguridad y constancia de las autoridades firmo en la ciudad de
+                                <span class="lblCiudad_Firma"></span>,
+                                a los
+                                <span class="lblNumeroDia_Firma"></span>
+                                días del mes de
+                                <span class="lblMes_Firma"></span>
+                                del año
+                                <span class="lblAnio_Firma"></span>.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Firma del cliente -->
+                    <div class="row mt-5">
+                        <div class="col-1"></div>
+                        <div class="col-5 text-center mt-5">
+                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
+                            <label class="mt-0 d-block">Nombre</label>
+                        </div>
+                        <div class="col-5 text-center mt-5">
+                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
+                            <label class="mt-0 d-block">Firma</label>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-3"></div>
+                        <div class="col-6 text-center mt-5">
+                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
+                            <label class="mt-0 d-block">Identidad</label>
+                        </div>
+                        <div class="col-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Traspaso de vehiculo del cliente *Listo* -->
+        <div id="divContenedorTraspasoVendedor" style="margin-top: 999px; display: none;">
+            <div class="card m-0 divImprimir" runat="server" visible="true" id="divTraspasoVendedorPDF" style="display: none;">
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div class="col-12 m-0 p-0">
+                            <img src="/Imagenes/LogoPrestadito.png" />
+                        </div>
+                        <div class="col-12">
+                            <h5 class="text-center font-weight-bold">TRASPASO DE VEHÍCULO</h5>
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <p>
+                                <b>YO,
+                                    <asp:Label runat="server" ID="lblNombreCliente_TraspasoVendedor"></asp:Label>,</b>
+                                mayor de edad,
+                                <asp:Label runat="server" ID="lblNacionalidad_TraspasoVendedor"></asp:Label>,
+                                con número de identidad
+                                <asp:Label runat="server" ID="lblIdentidad_TraspasoVendedor"></asp:Label>
+                                y de este domicilio,
+                                en mi condición de propietario por medio de este documento hago formal traspaso del vehiculo que se describe de la forma siguiente
+                            </p>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 font-weight-bold">
+                                            Marca:
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <asp:Label runat="server" ID="lblMarca_TraspasoVendedor"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 font-weight-bold">
+                                            Tipo:
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <asp:Label runat="server" ID="lblTipoDeVehiculo_TraspasoVendedor"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 font-weight-bold">
+                                            Motor:
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <asp:Label runat="server" ID="lblSerieMotor_TraspasoVendedor"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 font-weight-bold">
+                                            VIN:
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <asp:Label runat="server" ID="lblVIN_TraspasoVendedor"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 font-weight-bold">
+                                            Cilindraje:
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <asp:Label runat="server" ID="lblCilindraje_TraspasoVendedor"></asp:Label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 font-weight-bold">
+                                            Modelo:
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <asp:Label runat="server" ID="lblModelo_TraspasoVendedor"></asp:Label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 font-weight-bold">
+                                            Color:
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <asp:Label runat="server" ID="lblColor_TraspasoVendedor"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 font-weight-bold">
+                                            Chasis:
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <asp:Label runat="server" ID="lblSerieChasis_TraspasoVendedor"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 font-weight-bold">
+                                            Año:
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <asp:Label runat="server" ID="lblAnio_TraspasoVendedor"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 font-weight-bold">
+                                            Matricula:
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <asp:Label runat="server" ID="lblMatricula_TraspasoVendedor"></asp:Label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>
+                                El cual cedo todos los deberes y derechos que antes ejercía sobre el vehículo antes mencionado a PRESTADITO SA, con Numero de RTN 0501-9016-811399, aceptando que el vehículo es
+                                <asp:Label runat="server" ID="lblGarantiaUsada_TraspasoVendedor"></asp:Label>
                                 y se encuentra de su entera satisfacción sin garantía alguna.
                                 Y para seguridad y constancia de las autoridades firmo en la ciudad de
                                 <span class="lblCiudad_Firma"></span>,

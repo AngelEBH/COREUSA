@@ -62,23 +62,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     MesFirma = hoy.ToString("MMMM");
                     AnioFirma = hoy.Year.ToString();
 
-                    /* Determinar fecha del primer pago */
-                    MesPrimerPago = hoy.AddMonths(1).ToString("MMMM");
-                    AnioPrimerPago = hoy.AddMonths(1).Year.ToString();
-                    DiaPrimerPago = hoy.Day.ToString();
-
-                    //if (hoy.Day >= 6 && hoy.Day <= 25)
-                    //{
-                    //    DiaPrimerPago = "15";
-                    //}
-                    //else if (hoy.Day >= 25 || hoy.Day <= 6)
-                    //{
-                    //    var fechaPrimerPago = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-                    //    var ultimoDiaDelMes = fechaPrimerPago.Day;
-
-                    //    DiaPrimerPago = ultimoDiaDelMes.ToString();
-                    //}
-
                     CargarInformacion();
                 }
             }
@@ -121,6 +104,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                             var fechaPrimerPago = (DateTime)sqlResultado["fdFechaPrimerCuota"];
 
+                            /* Determinar fecha del primer pago */
                             MesPrimerPago = fechaPrimerPago.ToString("MMMM");
                             AnioPrimerPago = fechaPrimerPago.Year.ToString();
                             DiaPrimerPago = fechaPrimerPago.Day.ToString();
@@ -151,9 +135,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var valorTotalFinanciamiento = decimal.Parse(sqlResultado["fnValorTotalFinanciamiento"].ToString());
 
                             var tipoDePlazo = sqlResultado["fcTipoDePlazo"].ToString();
-                            var tipoDePlazoContrato = sqlResultado["fcTipoPlazo"].ToString();
-                            //var tipoDePlazoPlurar = sqlResultado["fcTipoDePlazo"].ToString();
-                            //var tipoDePlazoSufijoMente = sqlResultado["fcSufijoMente"].ToString();
+                            var tipoDePlazoSufijoAl = sqlResultado["fcTipoPlazo"].ToString();
 
                             var varlorGarantia = decimal.Parse(sqlResultado["fnValorGarantia"].ToString());
                             var valorPrima = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
@@ -174,6 +156,18 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var tasaDeInteresSimpleMensual = decimal.Parse(sqlResultado["fnTasaMensualAplicada"].ToString());
                             var tasaDeInteresAnualAplicada = decimal.Parse(sqlResultado["fnTasaAnualAplicada"].ToString());
 
+                            /* Propietario de la garantia */
+                            var nombrePropietarioGarantia = sqlResultado["fcNombrePropietarioGarantia"].ToString();
+                            var identidadPropietarioGarantia = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
+                            var nacionalidadPropietarioGarantia = sqlResultado["fiIDNacionalidadPropietarioGarantia"].ToString();
+                            var estadoCivilPropietarioGarantia = sqlResultado["fiIDEstadoCivilPropietarioGarantia"].ToString();
+
+                            /* Vendedor de la garantia. Puede o no ser el mismo propietario */
+                            var nombreVendedorGarantia = sqlResultado["fcNombreVendedorGarantia"].ToString();
+                            var identidadVendedorGarantia = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
+                            var nacionalidadVendedorGarantia = sqlResultado["fiIDNacionalidadVendedorGarantia"].ToString();
+                            var estadoCivilVendedorGarantia = sqlResultado["fiIDEstadoCivilVendedorGarantia"].ToString();
+
                             lblIdSolicitud.InnerText = pcIDSolicitud;
                             txtNombreCliente.Text = nombreCliente;
                             txtIdentidadCliente.Text = identidad;
@@ -182,9 +176,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             txtProducto.Text = producto;
                             txtMontoFinalAFinanciar.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
                             txtPlazoFinanciar.Text = plazoFinalAprobado;
-                            lblTipoDePlazo.InnerText = tipoDePlazo;
+                            lblTipoDePlazo.InnerText = tipoDePlazoSufijoAl;
                             txtValorCuota.Text = valorCuotaTotal.ToString("N");
-                            lblTipoDePlazoCuota.InnerText = tipoDePlazo;
+                            lblTipoDePlazoCuota.InnerText = tipoDePlazoSufijoAl;
 
                             int requiereGarantia = (byte)sqlResultado["fiRequiereGarantia"];
 
@@ -217,7 +211,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         var GPS = sqlResultado["fcGPS"].ToString();
                                         var cilindraje = sqlResultado["fcCilindraje"].ToString();
                                         var recorridoNumerico = Convert.ToDecimal(sqlResultado["fnRecorrido"].ToString());
-                                        var recorrido = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnRecorrido"].ToString())) + " " + sqlResultado["fcUnidadDeDistancia"].ToString();
+                                        var recorrido = string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnRecorrido"].ToString())) + " " + sqlResultado["fcUnidadDeDistancia"].ToString();
                                         var transmision = sqlResultado["fcTransmision"].ToString();
                                         var tipoDeCombustible = sqlResultado["fcTipoCombustible"].ToString();
                                         var serieUno = sqlResultado["fcSerieUno"].ToString();
@@ -300,10 +294,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblNombreFirma_Contrato.Text = nombreCliente;
                                         lblIdentidadFirma_Contrato.Text = identidad;
 
-
-
-
-
                                         /* Pagare */
                                         lblMontoTitulo_Pagare.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
                                         lblNombre_Pagare.Text = nombreCliente;
@@ -323,7 +313,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblInteresesMoratorios_Pagare.Text = "4.52";
                                         lblNombreFirma_Pagare.Text = nombreCliente;
                                         lblIdentidadFirma_Pagare.Text = identidad;
-                                        
 
                                         /* Compromiso legal */
                                         lblNombreCliente_CompromisoLegal.Text = nombreCliente;
@@ -335,10 +324,10 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         //lblNombreFirma_CompromisoLegal.Text = nombreCliente;
 
                                         /* Convenio de compra y venta de vehiculos para financiamiento a tercero */
-                                        lblNombreCliente_ConvenioCyV.Text = nombreCliente;
-                                        lblNacionalidad_ConvenioCyV.Text = nacionalidad;
+                                        lblNombreCliente_ConvenioCyV.Text = nombreVendedorGarantia;
+                                        lblNacionalidad_ConvenioCyV.Text = nacionalidadVendedorGarantia;
                                         lblEstadoCivil_ConvenioCyV.Text = estadoCivil;
-                                        lblIdentidad_ConvenioCyV.Text = identidad;
+                                        lblIdentidad_ConvenioCyV.Text = identidadVendedorGarantia;
                                         lblCiudadCliente_ConvenioCyV.Text = ciudadPoblado;
                                         lblMarca_ConvenioCyV.Text = marca;
                                         lblModelo_ConvenioCyV.Text = modelo;
@@ -361,7 +350,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblRecorrido_InspeccionSeguro.Text = recorrido;
                                         lblMatricula_InspeccionSeguro.Text = matricula;
 
-                                        /* Traspaso */
+                                        /* Traspaso cliente */
                                         lblNombreCliente_Traspaso.Text = nombreCliente;
                                         lblIdentidad_Traspaso.Text = identidad;
                                         lblNacionalidad_Traspaso.Text = nacionalidad;
@@ -377,6 +366,22 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblSerieChasis_Traspaso.Text = serieChasis;
                                         lblMatricula_Traspaso.Text = matricula;
                                         lblGarantiaUsada_Traspaso.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
+
+                                        /* Traspaso vendedor */
+                                        lblNombreCliente_TraspasoVendedor.Text = nombrePropietarioGarantia;
+                                        lblIdentidad_TraspasoVendedor.Text = identidadPropietarioGarantia;
+                                        lblNacionalidad_TraspasoVendedor.Text = nacionalidadPropietarioGarantia;
+                                        lblMarca_TraspasoVendedor.Text = marca;
+                                        lblModelo_TraspasoVendedor.Text = modelo;
+                                        lblSerieMotor_TraspasoVendedor.Text = serieMotor;
+                                        lblVIN_TraspasoVendedor.Text = VIN;
+                                        lblAnio_TraspasoVendedor.Text = anio;
+                                        lblCilindraje_TraspasoVendedor.Text = cilindraje;
+                                        lblTipoDeVehiculo_TraspasoVendedor.Text = tipoDeVehiculo;
+                                        lblColor_TraspasoVendedor.Text = color;
+                                        lblSerieChasis_TraspasoVendedor.Text = serieChasis;
+                                        lblMatricula_TraspasoVendedor.Text = matricula;
+                                        lblGarantiaUsada_TraspasoVendedor.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
                                     }
 
                                     sqlResultado.NextResult();
@@ -401,11 +406,12 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     }
                                 }
                                 divInformacionGarantia.Visible = true;
-                            }
-                        }
-                    }
-                }
-            }
+
+                            } // if requiereGarantia == 1
+                        } // while sqlResultado.Read()
+                    } // using executeReader
+                } // using command
+            } // using connection
         }
         catch (Exception ex)
         {
@@ -520,7 +526,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     #endregion
 
     #region View Models
-    
+
     public class InformacionPrincipal_Cliente_Solicitud_ViewModel
     {
         public int IdSolicitud { get; set; }
@@ -555,6 +561,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         public string GPS { get; set; }
         public string Comentario { get; set; }
     }
-    
+
     #endregion
 }
