@@ -373,6 +373,5 @@ function OcultarLoader() {
 
 function resetForm($form) {
     $form.find('input:text, input:password, input:file,input[type="date"],input[type="email"], select, textarea').val('');
-    $form.find('input:radio, input:checkbox')
-        .removeAttr('checked').removeAttr('selected');
+    $form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
 }
