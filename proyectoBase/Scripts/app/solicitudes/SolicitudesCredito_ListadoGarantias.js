@@ -24,7 +24,7 @@ $(document).ready(function () {
     dtListado = $('#datatable-listado').DataTable({
         "pageLength": 15,
         "aaSorting": [],
-        "dom": "<'row'<'col-sm-12'>>" +
+        "dom": "<'row'<'col-sm-12'B>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
         "language": {
@@ -109,7 +109,14 @@ $(document).ready(function () {
                 }
             },
             { "data": "VIN" },
-            { "data": "DocumentosSubidos" },
+            { "data": "DocumentosSubidos", "className": "text-center" },
+            {
+                "data": "EstadoSolicitudGPS", "className": "text-center",
+                "render": function (data, type, row) {
+
+                    return '<span class="badge badge-' + row["EstadoSolicitudGPSClassName"] + ' p-1">' + row["EstadoSolicitudGPS"] + '</span>';
+                }
+            },
             {
                 "data": "IdGarantia", "className": "text-center",
                 "render": function (data, type, row) {
@@ -118,8 +125,31 @@ $(document).ready(function () {
                 }
             }
         ],
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                title: 'Solicitudes_de_credito_' + moment(),
+                autoFilter: true,
+                messageTop: 'Garantías de solicitudes de crédito' + moment().format('YYYY/MM/DD'),
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                }
+            },
+            {
+                extend: 'colvis',
+                text: 'Ocultar columnas'
+            },
+            {
+                extend: 'print',
+                text: 'Imprimir',
+                autoFilter: true,
+                exportOptions: {
+                    columns: [1, 3, 4, 5, 6, 7, 10]
+                }
+            }
+        ],
         columnDefs: [
-            { targets: [0, 10], orderable: false },
+            { targets: [0, 11], orderable: false },
             { "width": "1%", "targets": 1 }
         ]
     });
@@ -211,16 +241,16 @@ $(document).ready(function () {
 
         switch (filtro) {
             case "0":
-                dtListado.columns(10).search("").draw();
+                dtListado.columns(11).search("").draw();
                 break;
             case "1":
-                dtListado.columns(10).search("estadoPendiente").draw();
+                dtListado.columns(11).search("estadoPendiente").draw();
                 break;
             case "2":
-                dtListado.columns(10).search("estadoListo").draw();
+                dtListado.columns(11).search("estadoListo").draw();
                 break;
             default:
-                dtListado.columns(10).search("").draw();
+                dtListado.columns(11).search("").draw();
         }
     });
 

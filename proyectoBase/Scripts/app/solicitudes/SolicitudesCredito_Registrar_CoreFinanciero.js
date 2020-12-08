@@ -123,8 +123,6 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                 ListaReferenciasPersonales: listaReferenciasPersonales
             };
 
-            console.log(listaReferenciasPersonales);
-
             var garantia = null;
 
             if (CONSTANTES.RequiereGarantia == 1) {

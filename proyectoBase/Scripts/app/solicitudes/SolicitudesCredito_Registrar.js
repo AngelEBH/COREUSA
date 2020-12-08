@@ -738,30 +738,104 @@ function CargarDocumentosRequeridos() {
 /* Cargar prestamos disponibles consultados en el cotizador */
 function CargarPrestamosOfertados(valorProducto, valorPrima) {
 
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/CargarPrestamosOfertados",
-        data: JSON.stringify({ valorProducto: valorProducto.replace(/,/g, ''), valorPrima: valorPrima.replace(/,/g, ''), dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
+    debugger;
 
-            MensajeError('No se pudo cargar los préstamos sugeridos, contacte al administrador');
-            $("#ddlPrestamosDisponibles").empty();
-        },
-        success: function (data) {
 
-            var ListaPrestamosOfertados = data.d;
+    if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203) {
 
-            var ddlPrestamosDisponibles = $("#ddlPrestamosDisponibles");
-            ddlPrestamosDisponibles.empty();
-            ddlPrestamosDisponibles.append("<option selected value=''>Seleccione una opción</option>");
+        var lcSeguro = '';
+        var lcGPS = '';
+        var lcGastosdeCierre = '';
 
-            for (var i = 0; i < ListaPrestamosOfertados.length; i++) {
-
-                ddlPrestamosDisponibles.append("<option value='" + ListaPrestamosOfertados[i].MontoOfertado + "' data-plazoseleccionado='" + ListaPrestamosOfertados[i].Plazo + "'>" + 'Producto: ' + ListaPrestamosOfertados[i].Producto + ' | Monto ofertado: ' + ListaPrestamosOfertados[i].MontoOfertado + ' | Plazo ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Plazo + ' | Cuota ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Cuota + "</option>");
-            }
+        if ($("#ddlTipoDeSeguro :selected").val() == "A - Full Cover") {
+            lcSeguro = "1";
         }
-    });
+        if ($("#ddlTipoDeSeguro :selected").val() == "B - Basico + Garantía") {
+            lcSeguro = "2";
+        }
+
+        if ($("#ddlTipoDeSeguro :selected").val() == "C - Basico") {
+            lcSeguro = "3";
+        }
+
+        lcGastosdeCierre = $("#ddlTipoGastosDeCierre :selected").val() == "Financiado" ? "1" : "0";
+
+        if ($("#ddlGps :selected").val() == "Si - CPI") {
+            lcGPS = "1";
+        }
+        if ($("#ddlGps :selected").val() == "Si - CableColor") {
+            lcGPS = "2";
+        }
+        if ($("#ddlGps :selected").val() == "No") {
+            lcGPS = "0";
+        }
+
+        if (lcSeguro != '' && lcGPS != '' && lcGastosdeCierre != '') {
+
+            $.ajax({
+                type: "POST",
+                url: "SolicitudesCredito_Registrar.aspx/CargarPrestamosOfertadosVehiculo",
+                data: JSON.stringify(
+                    {
+                        idProducto: PRECALIFICADO.IdProducto,
+                        valorGlobal: valorProducto,
+                        valorPrima: valorPrima,
+                        scorePromedio: PRECALIFICADO.ScorePromedio,
+                        tipoSeguro: lcSeguro,
+                        tipoGps: lcGPS,
+                        gastosDeCierreFinanciados: lcGastosdeCierre,
+                        dataCrypt: window.location.href
+                    }),
+                contentType: 'application/json; charset=utf-8',
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                    MensajeError('No se pudo cargar los préstamos sugeridos, contacte al administrador');
+                    $("#ddlPrestamosDisponibles").empty();
+                },
+                success: function (data) {
+
+                    var ListaPrestamosOfertados = data.d;
+
+                    var ddlPrestamosDisponibles = $("#ddlPrestamosDisponibles");
+                    ddlPrestamosDisponibles.empty();
+                    ddlPrestamosDisponibles.append("<option selected value=''>Seleccione una opción</option>");
+
+                    for (var i = 0; i < ListaPrestamosOfertados.length; i++) {
+
+                        ddlPrestamosDisponibles.append("<option value='" + ListaPrestamosOfertados[i].MontoOfertado + "' data-plazoseleccionado='" + ListaPrestamosOfertados[i].Plazo + "'>" + 'Monto ofertado: ' + ListaPrestamosOfertados[i].MontoOfertado + ' | Plazo ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Plazo + ' | Cuota ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Cuota + "</option>");
+                    }
+                }
+            });
+        }
+    }
+    else {
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Registrar.aspx/CargarPrestamosOfertados",
+            data: JSON.stringify({ valorProducto: valorProducto.replace(/,/g, ''), valorPrima: valorPrima.replace(/,/g, ''), dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+
+                MensajeError('No se pudo cargar los préstamos sugeridos, contacte al administrador');
+                $("#ddlPrestamosDisponibles").empty();
+            },
+            success: function (data) {
+
+                var ListaPrestamosOfertados = data.d;
+
+                var ddlPrestamosDisponibles = $("#ddlPrestamosDisponibles");
+                ddlPrestamosDisponibles.empty();
+                ddlPrestamosDisponibles.append("<option selected value=''>Seleccione una opción</option>");
+
+                for (var i = 0; i < ListaPrestamosOfertados.length; i++) {
+
+                    ddlPrestamosDisponibles.append("<option value='" + ListaPrestamosOfertados[i].MontoOfertado + "' data-plazoseleccionado='" + ListaPrestamosOfertados[i].Plazo + "'>" + 'Monto ofertado: ' + ListaPrestamosOfertados[i].MontoOfertado + ' | Plazo ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Plazo + ' | Cuota ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Cuota + "</option>");
+                }
+            }
+        });
+    }
+    
 }
 
 /* Cargar municipios del departamento seleccionado del domicilio */
@@ -845,7 +919,7 @@ $("select").on('change', function () {
     $(this).parsley().validate();
 });
 
-$('#txtValorGlobal,#txtValorPrima').blur(function () {
+$('#txtValorGlobal,#txtValorPrima,#txtPlazo,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps').blur(function () {
 
     var valorGlobal = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
     var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));

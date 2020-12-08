@@ -31,16 +31,18 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             if (liParamStart > 0)
                 lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
             else
-                lcParametros = String.Empty;
+                lcParametros = string.Empty;
 
-            if (lcParametros != String.Empty)
+            if (lcParametros != string.Empty)
             {
                 string pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                 pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
                 CargarInformacionUsuario();
                 CargarListas();
             }
@@ -70,8 +72,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                             pcBuzoCorreoUsuario = sqlResultado["fcBuzondeCorreo"].ToString();
                         }
                     }
-                }
-            }
+                } // using command
+            } // using connection
         }
         catch (Exception ex)
         {
@@ -100,7 +102,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);                    
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
@@ -112,8 +114,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                             ddlUbicacionInstalacion_Detalle.Items.Add(new ListItem(sqlResultado["fcNombreAgencia"].ToString(), sqlResultado["fiIDAgencia"].ToString()));
                         }
                     }
-                }
-            }
+                } // using command
+            } // using  connection
         }
         catch (Exception ex)
         {
@@ -124,7 +126,6 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     [WebMethod]
     public static List<SolicitudesCredito_ListadoGarantias_ViewModel> CargarListado(string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var listado = new List<SolicitudesCredito_ListadoGarantias_ViewModel>();
         try
         {
@@ -181,6 +182,10 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 Comentario_Instalacion = sqlResultado["fcComentarioInstalacionGPS"].ToString(),
                                 IdEstadoInstalacion = (int)sqlResultado["fiStatusGPSInstalacion"],
                                 EstadoActivoSolicitudGPS = (bool)sqlResultado["fiGPSInstalacionActivo"],
+
+                                /* Estado de solicitud de instalación de GPS*/
+                                EstadoSolicitudGPS = sqlResultado["fcInstalacionGPSEstatus"].ToString(),
+                                EstadoSolicitudGPSClassName = sqlResultado["fcInstalacionGPSEstatusClassName"].ToString()
                             });
                         }
                     } // using reader
@@ -197,7 +202,6 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     [WebMethod]
     public static List<GarantiaSinSolicitud_ViewModel> CargarListadoGarantiasSinGarantia(string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var listado = new List<GarantiaSinSolicitud_ViewModel>();
         try
         {
@@ -246,7 +250,6 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     [WebMethod]
     public static bool GuardarSolicitudGPS(SolicitudGPS_ViewModel solicitudGPS, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
@@ -285,7 +288,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 
                                 var contenidoCorreo = "<table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
                                     "<tr><th style='text-align:left;'>Cliente:</th> <td>" + solicitudGPS.NombreCliente + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Identidad:</th> <td>" + solicitudGPS.IdentidadCliente + "</td></tr>" +                                    
+                                    "<tr><th style='text-align:left;'>Identidad:</th> <td>" + solicitudGPS.IdentidadCliente + "</td></tr>" +
                                     "<tr><th style='text-align:left;'>Fecha de instalación:</th> <td>" + solicitudGPS.FechaInstalacion.ToString("MM/dd/yyyy hh:mm tt") + "</td></tr>" +
                                     "<tr><th style='text-align:left;'>Ubicación:</th> <td>" + solicitudGPS.AgenciaInstalacion + "</td></tr>" +
                                     "<tr><th style='text-align:left;'>VIN:</th> <td>" + solicitudGPS.VIN + "</td></tr>" +
@@ -314,7 +317,6 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     [WebMethod]
     public static SolicitudGPS_ViewModel CargarInformacionSolicitudGPS(int idSolicitud, int idGarantia, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         SolicitudGPS_ViewModel solicitudGPS = null;
         try
         {
@@ -370,7 +372,6 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     [WebMethod]
     public static bool ActualizarSolicitudGPS(SolicitudGPS_ViewModel solicitudGPS, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
@@ -411,7 +412,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 
                                 var contenidoCorreo = "<table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
                                     "<tr><th style='text-align:left;'>Cliente:</th> <td>" + solicitudGPS.NombreCliente + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Identidad:</th> <td>" + solicitudGPS.IdentidadCliente + "</td></tr>" +                                    
+                                    "<tr><th style='text-align:left;'>Identidad:</th> <td>" + solicitudGPS.IdentidadCliente + "</td></tr>" +
                                     "<tr><th style='text-align:left;'>Fecha de instalación:</th> <td>" + solicitudGPS.FechaInstalacion.ToString("MM/dd/yyyy hh:mm tt") + "</td></tr>" +
                                     "<tr><th style='text-align:left;'>Ubicación:</th> <td>" + solicitudGPS.AgenciaInstalacion + "</td></tr>" +
                                     "<tr><th style='text-align:left;'>VIN:</th> <td>" + solicitudGPS.VIN + "</td></tr>" +
@@ -419,10 +420,10 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                     "<tr><th style='text-align:left;'>Modelo:</th> <td>" + solicitudGPS.Modelo + "</td></tr>" +
                                     "<tr><th style='text-align:left;'>Año:</th> <td>" + solicitudGPS.Anio + "</td></tr>" +
                                     "<tr><th style='text-align:left;'>Solicitado por:</th> <td>" + solicitudGPS.NombreUsuario + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Comentario:</th> <td>" + solicitudGPS.Comentario_Instalacion + "</td></tr>"+
+                                    "<tr><th style='text-align:left;'>Comentario:</th> <td>" + solicitudGPS.Comentario_Instalacion + "</td></tr>" +
                                     "</table>";
 
-                                EnviarCorreo("Actualización de solicitud de GPS", "Actualización de solicitud de GPS","Nuevos datos", contenidoCorreo, solicitudGPS.CorreoUsuario);
+                                EnviarCorreo("Actualización de solicitud de GPS", "Actualización de solicitud de GPS", "Nuevos datos", contenidoCorreo, solicitudGPS.CorreoUsuario);
                             }
                         }
                     } // using reader
@@ -441,7 +442,6 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     public static string EncriptarParametros(int idSolicitud, int idGarantia, string dataCrypt)
     {
         string resultado;
-        var DSC = new DSCore.DataCrypt();
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
@@ -462,25 +462,30 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         }
         return resultado;
     }
-        
+
     public static Uri DesencriptarURL(string URL)
     {
         Uri lURLDesencriptado = null;
         try
         {
-            var DSC = new DSCore.DataCrypt();
-            int liParamStart = 0;
-            string lcParametros = "";
-            string pcEncriptado = "";
+            var liParamStart = 0;
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
             liParamStart = URL.IndexOf("?");
-            if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            else
-                lcParametros = String.Empty;
 
-            if (lcParametros != String.Empty)
+            if (liParamStart > 0)
+            {
+                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
+            }
+            else
+            {
+                lcParametros = string.Empty;
+            }
+
+            if (lcParametros != string.Empty)
             {
                 pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
+
                 string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
@@ -594,6 +599,10 @@ public class SolicitudesCredito_ListadoGarantias_ViewModel
     public string Comentario_Instalacion { get; set; }
     public int IdEstadoInstalacion { get; set; }
     public bool EstadoActivoSolicitudGPS { get; set; }
+
+    /* Estado de solicitud de instalacion de GPS */
+    public string EstadoSolicitudGPS { get; set; }
+    public string EstadoSolicitudGPSClassName { get; set; }
 }
 
 public class SolicitudGPS_ViewModel
