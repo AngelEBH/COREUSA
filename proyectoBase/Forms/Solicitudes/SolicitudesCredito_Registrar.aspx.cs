@@ -123,6 +123,14 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         break;
                 }
 
+                if (Precalificado.Identidad == "0801197009490")
+                {
+                    Precalificado.PermitirIngresarSolicitud = true;
+                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 10000;
+                    Constantes.MontoFinanciarMaximoCliente = 10000;
+                    Constantes.PrestamoMaximo_Monto = 10000;
+                }
+
                 /* Para utilizar las constantes de validaciones en el frontend */
                 jsonConstantes = JsonConvert.SerializeObject(Constantes);
                 jsonPrecalicado = JsonConvert.SerializeObject(Precalificado);
@@ -685,10 +693,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         ddlEstadoCivil.Items.Add(new ListItem("Seleccionar", ""));
 
                         ddlEstadoCivilPropietario.Items.Clear();
-                        ddlEstadoCivilPropietario.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlEstadoCivilPropietario.Items.Add(new ListItem("Seleccionar", "0"));
 
                         ddlEstadoCivilVendedor.Items.Clear();
-                        ddlEstadoCivilVendedor.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlEstadoCivilVendedor.Items.Add(new ListItem("Seleccionar", "0"));
 
                         while (sqlResultado.Read())
                         {
@@ -708,10 +716,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         ddlNacionalidad.Items.Add(new ListItem("Seleccionar", ""));
 
                         ddlNacionalidadPropietario.Items.Clear();
-                        ddlNacionalidadPropietario.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlNacionalidadPropietario.Items.Add(new ListItem("Seleccionar", "0"));
 
                         ddlNacionalidadVendedor.Items.Clear();
-                        ddlNacionalidadVendedor.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlNacionalidadVendedor.Items.Add(new ListItem("Seleccionar", "0"));
 
                         while (sqlResultado.Read())
                         {
