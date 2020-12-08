@@ -787,193 +787,382 @@ public partial class SolicitudesCredito_Analisis
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divGaleriaGarantia;
 
     /// <summary>
-    /// Control lblIngresosPrecalificado.
+    /// Control divCapacidadDePagoPrecalificado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblIngresosPrecalificado;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divCapacidadDePagoPrecalificado;
 
     /// <summary>
-    /// Control lblObligacionesPrecalificado.
+    /// Control txtIngresosPrecalificado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblObligacionesPrecalificado;
+    protected global::System.Web.UI.WebControls.TextBox txtIngresosPrecalificado;
 
     /// <summary>
-    /// Control lblDisponiblePrecalificado.
+    /// Control txtObligacionesPrecalificado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblDisponiblePrecalificado;
+    protected global::System.Web.UI.WebControls.TextBox txtObligacionesPrecalificado;
 
     /// <summary>
-    /// Control lblCapacidadPagoMensual.
+    /// Control txtDisponiblePrecalificado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblCapacidadPagoMensual;
+    protected global::System.Web.UI.WebControls.TextBox txtDisponiblePrecalificado;
 
     /// <summary>
-    /// Control lblCapacidadPagoQuincenal.
+    /// Control txtCapacidadDePagoMensual.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblCapacidadPagoQuincenal;
+    protected global::System.Web.UI.WebControls.TextBox txtCapacidadDePagoMensual;
 
     /// <summary>
-    /// Control lblValorPmoSugeridoSeleccionado.
+    /// Control txtCapacidadDePagoQuincenal.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblValorPmoSugeridoSeleccionado;
+    protected global::System.Web.UI.WebControls.TextBox txtCapacidadDePagoQuincenal;
 
     /// <summary>
-    /// Control lblMontoValorVehiculo.
+    /// Control divRecalculoCapacidadDePago.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoValorVehiculo;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divRecalculoCapacidadDePago;
 
     /// <summary>
-    /// Control lblMontoPrima.
+    /// Control txtIngresos_Recalculo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoPrima;
+    protected global::System.Web.UI.WebControls.TextBox txtIngresos_Recalculo;
 
     /// <summary>
-    /// Control lblMontoFinanciarEfectivo.
+    /// Control txtObligaciones_Recalculo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoFinanciarEfectivo;
+    protected global::System.Web.UI.WebControls.TextBox txtObligaciones_Recalculo;
 
     /// <summary>
-    /// Control lblMontoCuotaEfectivo.
+    /// Control txtDisponible_Recalculo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoCuotaEfectivo;
+    protected global::System.Web.UI.WebControls.TextBox txtDisponible_Recalculo;
 
     /// <summary>
-    /// Control lblMontoFinanciarMoto.
+    /// Control txtCapacidadDePagoMensual_Recalculo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoFinanciarMoto;
+    protected global::System.Web.UI.WebControls.TextBox txtCapacidadDePagoMensual_Recalculo;
 
     /// <summary>
-    /// Control lblMontoCuotaMoto.
+    /// Control txtCapacidadDePagoQuicenal_Recalculo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoCuotaMoto;
+    protected global::System.Web.UI.WebControls.TextBox txtCapacidadDePagoQuicenal_Recalculo;
 
     /// <summary>
-    /// Control lblMontoFinanciarAuto.
+    /// Control divPrestamosSueridos_CapacidadDePagoReal.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoFinanciarAuto;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPrestamosSueridos_CapacidadDePagoReal;
 
     /// <summary>
-    /// Control lblMontoCuotaTotalAuto.
+    /// Control divTablaNuevosPrestamosSugeridos.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoCuotaTotalAuto;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divTablaNuevosPrestamosSugeridos;
 
     /// <summary>
-    /// Control lblIngresosReales.
+    /// Control tblPrestamosSugeridosReales.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblIngresosReales;
+    protected global::System.Web.UI.HtmlControls.HtmlTable tblPrestamosSugeridosReales;
 
     /// <summary>
-    /// Control lblObligacionesReales.
+    /// Control divSinCapacidadDePago.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblObligacionesReales;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divSinCapacidadDePago;
 
     /// <summary>
-    /// Control lblDisponibleReal.
+    /// Control divPrestamoSolicitado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblDisponibleReal;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPrestamoSolicitado;
 
     /// <summary>
-    /// Control lblCapacidadPagoMensualReal.
+    /// Control txtValorAFinanciarSeleccionado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblCapacidadPagoMensualReal;
+    protected global::System.Web.UI.WebControls.TextBox txtValorAFinanciarSeleccionado;
 
     /// <summary>
-    /// Control lblCapacidadPagoQuincenalReal.
+    /// Control txtMonedaSolicitada.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblCapacidadPagoQuincenalReal;
+    protected global::System.Web.UI.WebControls.TextBox txtMonedaSolicitada;
 
     /// <summary>
-    /// Control lblMontoPrestamoEscogido.
+    /// Control txtValorGarantia.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblMontoPrestamoEscogido;
+    protected global::System.Web.UI.WebControls.TextBox txtValorGarantia;
 
     /// <summary>
-    /// Control lblPlazoEscogido.
+    /// Control txtValorPrima.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblPlazoEscogido;
+    protected global::System.Web.UI.WebControls.TextBox txtValorPrima;
+
+    /// <summary>
+    /// Control lblTipoDePlazo_Solicitado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTipoDePlazo_Solicitado;
+
+    /// <summary>
+    /// Control txtPlazoSeleccionado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtPlazoSeleccionado;
+
+    /// <summary>
+    /// Control txtOrigen.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtOrigen;
+
+    /// <summary>
+    /// Control txtMontoTotalAFinanciar_Calculo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtMontoTotalAFinanciar_Calculo;
+
+    /// <summary>
+    /// Control txtCuotaDelPrestamo_Calculo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCuotaDelPrestamo_Calculo;
+
+    /// <summary>
+    /// Control txtCuotaDelSeguro_Calculo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCuotaDelSeguro_Calculo;
+
+    /// <summary>
+    /// Control txtCuotaGPS_Calculo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCuotaGPS_Calculo;
+
+    /// <summary>
+    /// Control txtCuotaTotal_Calculo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCuotaTotal_Calculo;
+
+    /// <summary>
+    /// Control txtCostoAparatoGPS_Calculo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCostoAparatoGPS_Calculo;
+
+    /// <summary>
+    /// Control txtGastosDeCierre_Calculo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtGastosDeCierre_Calculo;
+
+    /// <summary>
+    /// Control divPrestamoFinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPrestamoFinalAprobado;
+
+    /// <summary>
+    /// Control lblEstadoDelMontoFinalAFinanciar.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblEstadoDelMontoFinalAFinanciar;
+
+    /// <summary>
+    /// Control txtMontoTotalAFinanciar_FinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtMontoTotalAFinanciar_FinalAprobado;
+
+    /// <summary>
+    /// Control lblTipoDePlazo_FinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTipoDePlazo_FinalAprobado;
+
+    /// <summary>
+    /// Control txtPlazoFinal_FinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtPlazoFinal_FinalAprobado;
+
+    /// <summary>
+    /// Control txtCuotaDelPrestamo_FinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCuotaDelPrestamo_FinalAprobado;
+
+    /// <summary>
+    /// Control txtCuotaDelSeguro_FinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCuotaDelSeguro_FinalAprobado;
+
+    /// <summary>
+    /// Control txtCuotaGPS_FinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCuotaGPS_FinalAprobado;
+
+    /// <summary>
+    /// Control txtCuotaTotal_FinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCuotaTotal_FinalAprobado;
+
+    /// <summary>
+    /// Control txtCostoAparatoGPS_FinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtCostoAparatoGPS_FinalAprobado;
+
+    /// <summary>
+    /// Control txtGastosDeCierre_FinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtGastosDeCierre_FinalAprobado;
 
     /// <summary>
     /// Control divInformacionPerfil.
@@ -1172,6 +1361,78 @@ public partial class SolicitudesCredito_Analisis
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDocumentacionCampoTrabajo;
+
+    /// <summary>
+    /// Control divDocumentacionCedulaModal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDocumentacionCedulaModal;
+
+    /// <summary>
+    /// Control divDocumentacionDomicilioModal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDocumentacionDomicilioModal;
+
+    /// <summary>
+    /// Control divDocumentacionLaboralModal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDocumentacionLaboralModal;
+
+    /// <summary>
+    /// Control divDocumentacionSoliFisicaModal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDocumentacionSoliFisicaModal;
+
+    /// <summary>
+    /// Control divContenedorCampoDomicilioModal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divContenedorCampoDomicilioModal;
+
+    /// <summary>
+    /// Control divDocumentacionCampoDomicilioModal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDocumentacionCampoDomicilioModal;
+
+    /// <summary>
+    /// Control divContenedorCampoTrabajoModal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divContenedorCampoTrabajoModal;
+
+    /// <summary>
+    /// Control divDocumentacionCampoTrabajoModal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDocumentacionCampoTrabajoModal;
 
     /// <summary>
     /// Control pestanaListaSolicitudCondiciones.
@@ -1424,4 +1685,373 @@ public partial class SolicitudesCredito_Analisis
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblResumenGestorTrabajo;
+
+    /// <summary>
+    /// Control Li1.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl Li1;
+
+    /// <summary>
+    /// Control lblEstadoSolicitud.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblEstadoSolicitud;
+
+    /// <summary>
+    /// Control divNoHayMasDetalles.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divNoHayMasDetalles;
+
+    /// <summary>
+    /// Control divLineaDeTiempo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divLineaDeTiempo;
+
+    /// <summary>
+    /// Control liObservacionesReprogramacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liObservacionesReprogramacion;
+
+    /// <summary>
+    /// Control lblUsuario_ComentarioReprogramacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblUsuario_ComentarioReprogramacion;
+
+    /// <summary>
+    /// Control lblFecha_ComentarioReprogramacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblFecha_ComentarioReprogramacion;
+
+    /// <summary>
+    /// Control lblComentario_Reprogramacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblComentario_Reprogramacion;
+
+    /// <summary>
+    /// Control liObservaciones_OtrosCondicionamientos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liObservaciones_OtrosCondicionamientos;
+
+    /// <summary>
+    /// Control lblUsuario_ComentarioOtrosCondicionamientos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblUsuario_ComentarioOtrosCondicionamientos;
+
+    /// <summary>
+    /// Control lblFecha_OtrosCondicionamientos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblFecha_OtrosCondicionamientos;
+
+    /// <summary>
+    /// Control lblComentario_OtrosCondicionamientos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblComentario_OtrosCondicionamientos;
+
+    /// <summary>
+    /// Control liObservacionesInformacionPersonal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liObservacionesInformacionPersonal;
+
+    /// <summary>
+    /// Control lblUsuario_ComentarioInformacionPerosnal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblUsuario_ComentarioInformacionPerosnal;
+
+    /// <summary>
+    /// Control lblFecha_ComentarioInformacionPersonal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblFecha_ComentarioInformacionPersonal;
+
+    /// <summary>
+    /// Control lblComentario_InformacionPersonal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblComentario_InformacionPersonal;
+
+    /// <summary>
+    /// Control liObservacionesInformacionLaboral.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liObservacionesInformacionLaboral;
+
+    /// <summary>
+    /// Control lblUsuario_ComentarioInformacionLaboral.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblUsuario_ComentarioInformacionLaboral;
+
+    /// <summary>
+    /// Control lblFecha_ComentarioInformacionLaboral.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblFecha_ComentarioInformacionLaboral;
+
+    /// <summary>
+    /// Control lblComentario_InformacionLaboral.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblComentario_InformacionLaboral;
+
+    /// <summary>
+    /// Control liObservacionesReferenciasPersonales.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liObservacionesReferenciasPersonales;
+
+    /// <summary>
+    /// Control lblUsuario_ComentarioReferenciasPersonales.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblUsuario_ComentarioReferenciasPersonales;
+
+    /// <summary>
+    /// Control lblFecha_ComentarioReferenciasPersonales.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblFecha_ComentarioReferenciasPersonales;
+
+    /// <summary>
+    /// Control lblComentario_ReferenciasPersonales.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblComentario_ReferenciasPersonales;
+
+    /// <summary>
+    /// Control liObservacionesDocumentacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liObservacionesDocumentacion;
+
+    /// <summary>
+    /// Control lblUsuario_ComentarioDocumentacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblUsuario_ComentarioDocumentacion;
+
+    /// <summary>
+    /// Control lblFecha_ComentarioDocumentacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblFecha_ComentarioDocumentacion;
+
+    /// <summary>
+    /// Control lblComentario_Documentacion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblComentario_Documentacion;
+
+    /// <summary>
+    /// Control liObservacionesParaGestoria.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liObservacionesParaGestoria;
+
+    /// <summary>
+    /// Control lblUsuario_ComentarioParaGestoria.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblUsuario_ComentarioParaGestoria;
+
+    /// <summary>
+    /// Control lblFecha_ComentarioParaGestoria.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblFecha_ComentarioParaGestoria;
+
+    /// <summary>
+    /// Control lblComentario_ParaGestoria.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblComentario_ParaGestoria;
+
+    /// <summary>
+    /// Control liObservacionesDeGestoria.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liObservacionesDeGestoria;
+
+    /// <summary>
+    /// Control lblUsuario_ComentarioDeGestoria.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblUsuario_ComentarioDeGestoria;
+
+    /// <summary>
+    /// Control lblFecha_ComentarioDeGestoria.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblFecha_ComentarioDeGestoria;
+
+    /// <summary>
+    /// Control lblComentario_DeGestoria.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblComentario_DeGestoria;
+
+    /// <summary>
+    /// Control liComentariosDeLaResolucion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl liComentariosDeLaResolucion;
+
+    /// <summary>
+    /// Control lblUsuario_ComentarioDeLaResolucion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblUsuario_ComentarioDeLaResolucion;
+
+    /// <summary>
+    /// Control lblFecha_ComentarioDeLaResolucion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblFecha_ComentarioDeLaResolucion;
+
+    /// <summary>
+    /// Control lblComentario_Resolicion.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblComentario_Resolicion;
+
+    /// <summary>
+    /// Control Table1.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTable Table1;
 }

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Garantia_Detalles.aspx.cs" Inherits="Garantia_Detalles" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Garantia_Detalles.aspx.cs" Inherits="Garantia_Detalles" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
