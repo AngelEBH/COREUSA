@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -60,7 +60,6 @@
                         <li><a href="#step-7" class="pt-3 pb-2 font-12">Documentación</a></li>
                     </ul>
                     <div>
-
                         <!-- Información principal -->
                         <div id="step-1" class="form-section">
 
@@ -73,7 +72,6 @@
                                     <label>Producto: <span class="btn btn-sm btn-info mb-0" id="lblProducto" runat="server">Prestadito Motos</span></label>
                                 </div>
                             </div>
-
                             <div class="row mb-0">
                                 <!-- Información del cliente -->
                                 <div class="col-lg-6">
@@ -311,7 +309,7 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Identidad</label>
-                                            <asp:TextBox ID="txtIdentidadPropietario" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtIdentidadPropietario" CssClass="form-control form-control-sm mascara-identidad" type="text" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Nombre completo</label>
@@ -335,7 +333,7 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Identidad</label>
-                                            <asp:TextBox ID="txtIdentidadVendedor" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtIdentidadVendedor" CssClass="form-control form-control-sm mascara-identidad" type="text" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Nombre completo</label>
@@ -378,7 +376,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6 border-right border-gray">
+                                <div class="col-md-8 border-right border-gray">
                                     <h6 class="mt-3 mb-1">Información básica</h6>
 
                                     <div class="form-group row">
@@ -422,7 +420,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <h6 class="mt-3 mb-1">Información de contacto</h6>
 
                                     <div class="form-group row">
@@ -692,7 +690,7 @@
                                         <tr>
                                             <th>Nombre completo</th>
                                             <th>Telefono</th>
-                                            <th>Lugar de trabajo</th>
+                                            <%--<th>Lugar de trabajo</th>--%>
                                             <th>Tiempo de conocer</th>
                                             <th>Parentesco</th>
                                             <th>Quitar</th>
@@ -753,10 +751,10 @@
                                 <div id="error-ddlParentescos"></div>
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row" style="display: none;">
                             <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
                             <div class="col-sm-8">
-                                <asp:TextBox ID="txtLugarTrabajoReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtLugarTrabajoReferencia" CssClass="form-control form-control-sm" type="text" Enabled="false" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
                             </div>
                         </div>
                     </div>

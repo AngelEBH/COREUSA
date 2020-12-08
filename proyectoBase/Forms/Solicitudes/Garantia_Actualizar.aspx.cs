@@ -18,9 +18,9 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
     private string pcIDUsuario = "";
     private string pcIDGarantia = "";
     private string pcIDSolicitud = "";
-    private static DSCore.DataCrypt DSC;
-    public List<SeccionGarantia_ViewModel> Documentos_Secciones_Garantia;
     public bool EsDigitadoManualmente;
+    private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public List<SeccionGarantia_ViewModel> Documentos_Secciones_Garantia;    
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -31,29 +31,36 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
         {
             var lcURL = Request.Url.ToString();
             var liParamStart = lcURL.IndexOf("?");
-            DSC = new DSCore.DataCrypt();
+
             Documentos_Secciones_Garantia = new List<SeccionGarantia_ViewModel>();
 
             string lcParametros;
-            if (liParamStart > 0)
-                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-            else
-                lcParametros = String.Empty;
 
-            if (lcParametros != String.Empty)
+            if (liParamStart > 0)
+            {
+                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
+            }
+            else
+            {
+                lcParametros = string.Empty;
+            }
+
+            if (lcParametros != string.Empty)
             {
                 var pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia") ?? "0";
-                pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL") ?? "0";
+                pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
+                pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");                
+                lblNoSolicitud.InnerText = pcIDSolicitud != "0" ? ("Solicitud de crédito No. " + pcIDSolicitud) : "Sin solicitud de crédito";
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 HttpContext.Current.Session["ListaDocumentosGarantia_Actualizar"] = null;
-                Session.Timeout = 1440;
+                Session.Timeout = 10080;
             }
             LlenarListas();
         }
@@ -111,10 +118,6 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
     {
         try
         {
-            ddlUnidadDeMedida.Items.Clear();
-            ddlUnidadDeMedida.Items.Add(new ListItem("Kilómetros", "KM"));
-            ddlUnidadDeMedida.Items.Add(new ListItem("Millas", "M"));
-
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
@@ -131,7 +134,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        /* Secciones de garantia para la documentación */
+                        /* Primer resultado: Secciones de garantia para la documentación */
                         while (sqlResultado.Read())
                         {
                             Documentos_Secciones_Garantia.Add(new SeccionGarantia_ViewModel()
@@ -142,7 +145,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                         }
                         Session["Documentos_Secciones_Garantia_Actualizar"] = Documentos_Secciones_Garantia;
 
-                        /* Tipo de garantía */
+                        /* Segundo resultado: Tipo de garantía */
                         sqlResultado.NextResult();
 
                         ddlTipoDeGarantia.Items.Clear();
@@ -157,8 +160,14 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                             ddlTipoDeGarantia.Enabled = true;
                         }
 
-                        /* Informacion de la garantía */
+                        /* Tercer resultado: Informacion de la garantía */
                         sqlResultado.NextResult();
+
+                        var idEstadoCivilPropietario = "0";
+                        var idNacionalidadPropietario = "0";
+
+                        var idEstadoCivilVendedor = "0";
+                        var idNacionalidadVendedor = "0";
 
                         while (sqlResultado.Read())
                         {
@@ -187,10 +196,61 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                             txtNumeroPrestamo.Text = sqlResultado["fcPrestamo"].ToString();
                             txtComentario.InnerText = sqlResultado["fcComentario"].ToString();
                             EsDigitadoManualmente = (bool)sqlResultado["fbDigitadoManualmente"];
+
+                            txtIdentidadPropietario.Text = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
+                            txtNombrePropietario.Text = sqlResultado["fcNombrePropietarioGarantia"].ToString();
+                            idEstadoCivilPropietario = sqlResultado["fiIDEstadoCivilPropietarioGarantia"].ToString();
+                            idNacionalidadPropietario = sqlResultado["fiIDNacionalidadPropietarioGarantia"].ToString();
+
+                            txtIdentidadVendedor.Text = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
+                            txtNombreVendedor.Text = sqlResultado["fcNombreVendedorGarantia"].ToString();
+                            idEstadoCivilVendedor = sqlResultado["fiIDEstadoCivilVendedorGarantia"].ToString();
+                            idNacionalidadVendedor = sqlResultado["fiIDNacionalidadVendedorGarantia"].ToString();
                         }
-                    }
-                }
-            }
+
+                        /* Cuarto resultado: Catalogo de estados civiles */
+                        sqlResultado.NextResult();
+
+                        ddlEstadoCivilPropietario.Items.Clear();
+                        ddlEstadoCivilPropietario.Items.Add(new ListItem("Seleccionar", ""));
+
+                        ddlEstadoCivilVendedor.Items.Clear();
+                        ddlEstadoCivilVendedor.Items.Add(new ListItem("Seleccionar", ""));
+
+                        while (sqlResultado.Read())
+                        {
+                            ddlEstadoCivilPropietario.Items.Add(new ListItem(sqlResultado["fcDescripcionEstadoCivil"].ToString(), sqlResultado["fiIDEstadoCivil"].ToString()));
+                            ddlEstadoCivilVendedor.Items.Add(new ListItem(sqlResultado["fcDescripcionEstadoCivil"].ToString(), sqlResultado["fiIDEstadoCivil"].ToString()));
+                        }
+
+                        ddlEstadoCivilPropietario.SelectedValue = idEstadoCivilPropietario;
+                        ddlEstadoCivilVendedor.SelectedValue = idEstadoCivilVendedor;
+
+                        /* Quinto resultado: Catalogo de nacionalidades */
+                        sqlResultado.NextResult();
+
+                        ddlNacionalidadPropietario.Items.Clear();
+                        ddlNacionalidadPropietario.Items.Add(new ListItem("Seleccionar", ""));
+
+                        ddlNacionalidadVendedor.Items.Clear();
+                        ddlNacionalidadVendedor.Items.Add(new ListItem("Seleccionar", ""));
+
+                        while (sqlResultado.Read())
+                        {
+                            ddlNacionalidadPropietario.Items.Add(new ListItem(sqlResultado["fcDescripcionNacionalidad"].ToString(), sqlResultado["fiIDNacionalidad"].ToString()));
+                            ddlNacionalidadVendedor.Items.Add(new ListItem(sqlResultado["fcDescripcionNacionalidad"].ToString(), sqlResultado["fiIDNacionalidad"].ToString()));
+                        }
+
+                        ddlNacionalidadPropietario.SelectedValue = idNacionalidadPropietario;
+                        ddlNacionalidadVendedor.SelectedValue = idNacionalidadVendedor;
+
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
+            } // using sqlConexion
+
+            ddlUnidadDeMedida.Items.Clear();
+            ddlUnidadDeMedida.Items.Add(new ListItem("Kilómetros", "KM"));
+            ddlUnidadDeMedida.Items.Add(new ListItem("Millas", "M"));
         }
         catch (Exception ex)
         {
@@ -252,6 +312,17 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@pnValorPrima", garantia.ValorPrima);
                         sqlComando.Parameters.AddWithValue("@pnValorFinanciado", garantia.ValorFinanciado);
                         sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", garantia.GastosDeCierre);
+
+                        sqlComando.Parameters.AddWithValue("@pcNombrePropietarioGarantia", garantia.NombrePropietario);
+                        sqlComando.Parameters.AddWithValue("@pcIdentidadPropietarioGarantia", garantia.IdentidadPropietario);
+                        sqlComando.Parameters.AddWithValue("@piIDNacionalidadPropietarioGarantia", garantia.IdNacionalidadPropietario);
+                        sqlComando.Parameters.AddWithValue("@piIDEstadoCivilPropietarioGarantia", garantia.IdEstadoCivilPropietario);
+
+                        sqlComando.Parameters.AddWithValue("@pcNombreVendedorGarantia", garantia.NombreVendedor);
+                        sqlComando.Parameters.AddWithValue("@pcIdentidadVendedorGarantia", garantia.IdentidadVendedor);
+                        sqlComando.Parameters.AddWithValue("@piIDNacionalidadVendedorGarantia", garantia.IdNacionalidadVendedor);
+                        sqlComando.Parameters.AddWithValue("@piIDEstadoCivilVendedorGarantia", garantia.IdEstadoCivilVendedor);
+
                         sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
                         sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.EsDigitadoManualmente);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -277,9 +348,9 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                                     }
                                     return resultado;
                                 }
-                            }
-                        }
-                    }
+                            } // sqlResultado.Read()
+                        } // sqlComando.ExecuteReader()
+                    } // using sqlComando
 
                     /* Lista de documentos que se va ingresar en la base de datos y se va mover al nuevo directorio */
                     var garantiaDocumentos = new List<SolicitudesDocumentosViewModel>();
@@ -310,10 +381,10 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                                         URLArchivo = "/Documentos/Solicitudes/" + NombreCarpetaDocumentos + "/" + NuevoNombreDocumento + ".png",
                                         fiTipoDocumento = file.fiTipoDocumento
                                     });
-                                }
-                            }
-                        }
-                    }
+                                } // if File.Exists
+                            } // foreach lista documentos
+                        } // if lista documentos != null
+                    } // if Session["ListaDocumentosGarantia_Actualizar"] != null
 
                     /* Guardar los documentos de la garantia en la base de datos*/
                     int contadorErrores = 0;
@@ -332,6 +403,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 while (sqlResultado.Read())
@@ -360,10 +432,10 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                         return resultado;
                     }
 
+                    tran.Commit();
+
                     resultado.ResultadoExitoso = true;
                     resultado.MensajeResultado = "La información de la garantía se actualizó correctamente";
-
-                    //tran.Commit();
                 }
                 catch (Exception ex)
                 {
@@ -423,18 +495,23 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var lcParametros = "";
-            var pcEncriptado = "";
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
             var liParamStart = Url.IndexOf("?");
 
             if (liParamStart > 0)
+            {
                 lcParametros = Url.Substring(liParamStart, Url.Length - liParamStart);
+            }
             else
+            {
                 lcParametros = string.Empty;
+            }
 
             if (lcParametros != string.Empty)
             {
                 pcEncriptado = Url.Substring((liParamStart + 1), Url.Length - (liParamStart + 1));
+
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
@@ -446,59 +523,71 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
         return lURLDesencriptado;
     }
 
-    
-}
+    #region View Models
 
-public class SeccionGarantia_ViewModel
-{
-    public int IdSeccionGarantia { get; set; }
-    public string DescripcionSeccion { get; set; }
-}
+    public class SeccionGarantia_ViewModel
+    {
+        public int IdSeccionGarantia { get; set; }
+        public string DescripcionSeccion { get; set; }
+    }
 
-public class Garantia_ViewModel
-{
-    public int IdGarantia { get; set; }
-    public string NumeroPrestamo { get; set; }
-    public string VIN { get; set; }
-    public string TipoDeGarantia { get; set; }
-    public string TipoDeVehiculo { get; set; }
-    public string Marca { get; set; }
-    public string Modelo { get; set; }
-    public string Anio { get; set; }
-    public string Color { get; set; }
-    public string Cilindraje { get; set; }
-    public decimal Recorrido { get; set; }
-    public string UnidadDeDistancia { get; set; }
-    public string Transmision { get; set; }
-    public string TipoDeCombustible { get; set; }
-    public string Matricula { get; set; }
-    public string SerieUno { get; set; }
-    public string SerieDos { get; set; }
-    public string SerieChasis { get; set; }
-    public string SerieMotor { get; set; }
-    public string GPS { get; set; }
-    public string Comentario { get; set; }
-    public bool EsDigitadoManualmente { get; set; }
-    public decimal ValorMercado { get; set; }
-    public decimal ValorPrima { get; set; }
-    public decimal ValorFinanciado { get; set; }
-    public decimal GastosDeCierre { get; set; }
-}
+    public class Garantia_ViewModel
+    {
+        public int IdGarantia { get; set; }
+        public string NumeroPrestamo { get; set; }
+        public string VIN { get; set; }
+        public string TipoDeGarantia { get; set; }
+        public string TipoDeVehiculo { get; set; }
+        public string Marca { get; set; }
+        public string Modelo { get; set; }
+        public string Anio { get; set; }
+        public string Color { get; set; }
+        public string Cilindraje { get; set; }
+        public decimal Recorrido { get; set; }
+        public string UnidadDeDistancia { get; set; }
+        public string Transmision { get; set; }
+        public string TipoDeCombustible { get; set; }
+        public string Matricula { get; set; }
+        public string SerieUno { get; set; }
+        public string SerieDos { get; set; }
+        public string SerieChasis { get; set; }
+        public string SerieMotor { get; set; }
+        public string GPS { get; set; }
+        public string Comentario { get; set; }
+        public bool EsDigitadoManualmente { get; set; }
+        public decimal ValorMercado { get; set; }
+        public decimal ValorPrima { get; set; }
+        public decimal ValorFinanciado { get; set; }
+        public decimal GastosDeCierre { get; set; }
 
-public class Garantia_Documentos_ViewModel
-{
-    public string NombreAntiguo { get; set; }
-    public string NombreArchivo { get; set; }
-    public string Extension { get; set; }
-    public string RutaArchivo { get; set; }
-    public string URL { get; set; }
-    public int IdSeccionGarantia { get; set; }
-    public string Comentario { get; set; }
-}
+        public string IdentidadPropietario { get; set; }
+        public string NombrePropietario { get; set; }
+        public int IdNacionalidadPropietario { get; set; }
+        public int IdEstadoCivilPropietario { get; set; }
 
-public class Resultado_ViewModel
-{
-    public bool ResultadoExitoso { get; set; }
-    public string MensajeResultado { get; set; }
-    public string DebugString { get; set; }
+        public string IdentidadVendedor { get; set; }
+        public string NombreVendedor { get; set; }
+        public int IdNacionalidadVendedor { get; set; }
+        public int IdEstadoCivilVendedor { get; set; }
+    }
+
+    public class Garantia_Documentos_ViewModel
+    {
+        public string NombreAntiguo { get; set; }
+        public string NombreArchivo { get; set; }
+        public string Extension { get; set; }
+        public string RutaArchivo { get; set; }
+        public string URL { get; set; }
+        public int IdSeccionGarantia { get; set; }
+        public string Comentario { get; set; }
+    }
+
+    public class Resultado_ViewModel
+    {
+        public bool ResultadoExitoso { get; set; }
+        public string MensajeResultado { get; set; }
+        public string DebugString { get; set; }
+    }
+
+    #endregion
 }

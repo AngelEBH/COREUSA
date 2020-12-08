@@ -40,6 +40,15 @@ public partial class Garantia_Registrar
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMensaje;
 
     /// <summary>
+    /// Control Loader.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl Loader;
+
+    /// <summary>
     /// Control spinnerCargando.
     /// </summary>
     /// <remarks>
@@ -211,6 +220,78 @@ public partial class Garantia_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtGastosDeCierre;
 
     /// <summary>
+    /// Control txtIdentidadPropietario.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtIdentidadPropietario;
+
+    /// <summary>
+    /// Control txtNombrePropietario.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtNombrePropietario;
+
+    /// <summary>
+    /// Control ddlEstadoCivilPropietario.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlEstadoCivilPropietario;
+
+    /// <summary>
+    /// Control ddlNacionalidadPropietario.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlNacionalidadPropietario;
+
+    /// <summary>
+    /// Control txtIdentidadVendedor.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtIdentidadVendedor;
+
+    /// <summary>
+    /// Control txtNombreVendedor.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtNombreVendedor;
+
+    /// <summary>
+    /// Control ddlEstadoCivilVendedor.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlEstadoCivilVendedor;
+
+    /// <summary>
+    /// Control ddlNacionalidadVendedor.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlNacionalidadVendedor;
+
+    /// <summary>
     /// Control txtSerieUno.
     /// </summary>
     /// <remarks>
@@ -254,6 +335,15 @@ public partial class Garantia_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtGPS;
+
+    /// <summary>
+    /// Control txtNumeroPrestamo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtNumeroPrestamo;
 
     /// <summary>
     /// Control txtComentario.

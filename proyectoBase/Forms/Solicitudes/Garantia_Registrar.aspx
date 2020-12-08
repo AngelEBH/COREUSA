@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Guardar nueva garantía</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <style>
         html {
@@ -32,19 +32,25 @@
     <form runat="server" id="frmGarantia" class="" action="#" data-parsley-excluded="[disabled]">
         <div class="card mb-0">
             <div class="card-header pb-1 pt-1">
-                <!-- loader -->
-                <div class="float-right p-1" id="Loader" style="display: none;">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only"></span>
+                <div class="row justify-content-between">
+                    <div class="col-auto">
+                        <h6>Guardar garantía: <span runat="server" id="lblNoSolicitud"></span><small><span runat="server" id="lblMensaje" class="text-danger" visible="false"></span></small></h6>
+                    </div>
+                    <div class="col-1 align-self-center">
+                        <!-- loader -->
+                        <div id="Loader" class="float-right" runat="server" style="display: none;">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <h5>Guardar garantía: Solicitud <span runat="server" id="lblNoSolicitud"></span><small><span runat="server" id="lblMensaje" class="text-danger" visible="false"></span></small></h5>
             </div>
             <div class="card-body">
                 <div id="smartwizard" class="h-100">
                     <ul>
-                        <li><a href="#step-1" class="pt-3 pb-2 font-12">(1) Características</a></li>
-                        <li><a href="#step-2" class="pt-3 pb-2 font-12">(2) Documentación</a></li>
+                        <li><a href="#step-1" class="pt-3 pb-2 font-12">Características</a></li>
+                        <li><a href="#step-2" class="pt-3 pb-2 font-12">Documentación</a></li>
                     </ul>
                     <div>
                         <!-- Información principal -->
@@ -79,7 +85,7 @@
                             <div class="row justify-content-between mb-0">
                                 <!-- Información del cliente -->
                                 <div class="col-lg-6">
-                                    <h6 class="mb-1">Físicas</h6>
+                                    <h6 class="mb-1">Características físicas</h6>
 
                                     <div class="form-group row">
                                         <div class="col-12">
@@ -94,8 +100,6 @@
                                             <label class="col-form-label">Tipo de vehículo</label>
                                             <asp:TextBox ID="txtTipoDeVehiculo" placeholder="EJ. Turismo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
                                         <div class="col-sm-3">
                                             <label class="col-form-label">Marca</label>
                                             <asp:TextBox ID="txtMarca" placeholder="EJ. Honda" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
@@ -120,7 +124,7 @@
                                 </div>
                                 <!-- Información del préstamo máximo -->
                                 <div class="col-lg-6 border-left border-gray">
-                                    <h6 class="mb-1">Mecánicas</h6>
+                                    <h6 class="mb-1">Características mecánicas</h6>
                                     <div class="form-group row mb-4">
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Cilindraje</label>
@@ -146,7 +150,7 @@
                                     </div>
 
                                     <h6 class="mb-1">Valores de la garantía</h6>
-                                    <div class="form-group row">
+                                    <div class="form-group row mb-0">
                                         <div class="col-sm-3">
                                             <label class="col-form-label">Precio mercado</label>
                                             <asp:TextBox ID="txtPrecioMercado" CssClass="form-control form-control-sm mascara-cantidad" type="text" Text="0" required="required" runat="server"></asp:TextBox>
@@ -167,18 +171,23 @@
                                 </div>
 
                                 <div class="col-lg-6">
-                                    <h6 class="mb-1">Propietario de la garantía</h6>
+                                    <h6 class="mb-1 border-top border-gray pt-2">Propietario de la garantía</h6>
                                     <div class="form-group row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-6">
                                             <label class="col-form-label">Identidad</label>
-                                            <asp:TextBox ID="txtIdentidadPropietario" CssClass="form-control form-control-sm" type="text" required="required" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtIdentidadPropietario" CssClass="form-control form-control-sm mascara-identidad" type="text" required="required" runat="server"></asp:TextBox>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-6">
                                             <label class="col-form-label">Nombre completo</label>
                                             <asp:TextBox ID="txtNombrePropietario" CssClass="form-control form-control-sm" type="text" required="required" runat="server"></asp:TextBox>
                                         </div>
-                                        <div class="col-sm-4">
-                                            <label class="col-form-label">Nacionalidad</label>                                            
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Estado Civil</label>
+                                            <asp:DropDownList ID="ddlEstadoCivilPropietario" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required" data-parsley-errors-container="#error-ddlEstadoCivilPropietario"></asp:DropDownList>
+                                            <div id="error-ddlEstadoCivilPropietario"></div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Nacionalidad</label>
                                             <asp:DropDownList ID="ddlNacionalidadPropietario" runat="server" CssClass="form-control form-control-sm col-form-label" required="required" data-parsley-errors-container="#error-ddlNacionalidadPropietario"></asp:DropDownList>
                                             <div id="error-ddlNacionalidadPropietario"></div>
                                         </div>
@@ -186,17 +195,22 @@
                                 </div>
 
                                 <div class="col-lg-6 border-left border-gray">
-                                    <h6 class="mb-1">Vendedor de la garantía</h6>
+                                    <h6 class="mb-1 border-top border-gray pt-2">Vendedor de la garantía</h6>
                                     <div class="form-group row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-6">
                                             <label class="col-form-label">Identidad</label>
-                                            <asp:TextBox ID="txtIdentidadVendedor" CssClass="form-control form-control-sm" type="text" required="required" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtIdentidadVendedor" CssClass="form-control form-control-sm mascara-identidad" type="text" required="required" runat="server"></asp:TextBox>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-6">
                                             <label class="col-form-label">Nombre completo</label>
                                             <asp:TextBox ID="txtNombreVendedor" CssClass="form-control form-control-sm" type="text" required="required" runat="server"></asp:TextBox>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Estado Civil</label>
+                                            <asp:DropDownList ID="ddlEstadoCivilVendedor" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required" data-parsley-errors-container="#error-ddlEstadoCivilVendedor"></asp:DropDownList>
+                                            <div id="error-ddlEstadoCivilVendedor"></div>
+                                        </div>
+                                        <div class="col-sm-6">
                                             <label class="col-form-label">Nacionalidad</label>
                                             <asp:DropDownList ID="ddlNacionalidadVendedor" runat="server" CssClass="form-control form-control-sm col-form-label" required="required" data-parsley-errors-container="#error-ddlNacionalidadVendedor"></asp:DropDownList>
                                             <div id="error-ddlNacionalidadVendedor"></div>
@@ -297,6 +311,8 @@
                 autoGroup: true,
                 min: 0.0,
             });
+            $(".mascara-identidad").inputmask("9999999999999");
+            $(".mascara-rtn").inputmask("99999999999999");
         });
     </script>
     <script src="/Scripts/plugins/steps/js/jquery.smartWizard.js"></script>
@@ -304,6 +320,6 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/Garantia_Registrar.js?v=20201023130420"></script>
+    <script src="/Scripts/app/solicitudes/Garantia_Registrar.js?v=20201208125525"></script>
 </body>
 </html>

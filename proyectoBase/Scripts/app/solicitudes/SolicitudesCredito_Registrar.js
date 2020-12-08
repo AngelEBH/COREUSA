@@ -85,7 +85,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
             var cliente = {
                 IdCliente: CONSTANTES.IdCliente,
                 RtnCliente: $("#txtRtnCliente").val(),
-                IdNacionalidad: $("#ddlNacionalidad").val(),
+                IdNacionalidad: $("#ddlNacionalidad :selected").val(),
                 ProfesionOficio: $("#txtProfesion").val(),
                 Correo: $("#txtCorreoElectronico").val(),
                 Sexo: $("input[name='sexoCliente']:checked").val(),
@@ -124,7 +124,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
             };
 
             var garantia = null;
-            debugger;
+
             if (CONSTANTES.RequiereGarantia == 1) {
 
                 garantia = {
@@ -133,7 +133,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                     TipoDeVehiculo: $("#txtTipoDeVehiculo").val(),
                     Marca: $("#txtMarca").val(),
                     Modelo: $("#txtModelo").val(),
-                    Anio: $("#txtAnio").val().replace(/,/g, '') == '' ? 0 : $("#txtAnio").val().replace(/,/g, ''),
+                    Anio: $("#txtAnio").val().replace(/,/g, '') ?? 0,
                     Color: $("#txtColor").val(),
                     Matricula: $("#txtMatricula").val(),
                     Cilindraje: $("#txtCilindraje").val(),
@@ -149,10 +149,20 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                     Comentario: $("#txtComentario").val(),
                     NumeroPrestamo: '',
                     esDigitadoManualmente: true,
-                    ValorMercado: 0,
-                    ValorPrima: 0,
-                    ValorFinanciado: 0,
+                    ValorMercado: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
+                    ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
+                    ValorFinanciado: $("#txtValorFinanciar").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciar").val().replace(/,/g, ''),
                     GastosDeCierre: 0,
+
+                    IdentidadPropietario: $("#txtIdentidadPropietario").val(),
+                    NombrePropietario: $("#txtNombrePropietario").val(),
+                    IdNacionalidadPropietario: $("#ddlNacionalidadPropietario :selected").val(),
+                    IdEstadoCivilPropietario: $("#ddlEstadoCivilPropietario :selected").val(),
+
+                    IdentidadVendedor: $("#txtIdentidadVendedor").val(),
+                    NombreVendedor: $("#txtNombreVendedor").val(),
+                    IdNacionalidadVendedor: $("#ddlNacionalidadVendedor :selected").val(),
+                    IdEstadoCivilVendedor: $("#ddlEstadoCivilVendedor :selected").val()
                 }
             };
 
@@ -256,17 +266,17 @@ $(document).ready(function () {
                 var montoOfertadoSeleccionado = parseFloat($("#ddlPrestamosDisponibles :selected").val());
                 var plazoSeleccionado = parseInt($("#ddlPrestamosDisponibles option:selected").data('plazoseleccionado') == '' ? 0 : $("#ddlPrestamosDisponibles option:selected").data('plazoseleccionado'));
 
-                if (montoOfertadoSeleccionado < valorFinanciar) {
+                //if (montoOfertadoSeleccionado < valorFinanciar) {
 
-                    state = false;
-                    MensajeError('El monto del préstamo ofertado seleccionado no puede ser menor que el valor a Financiar');
-                }
+                //    state = false;
+                //    MensajeError('El monto del préstamo ofertado seleccionado no puede ser menor que el valor a Financiar');
+                //}
 
-                if (montoOfertadoSeleccionado > valorFinanciar) {
+                //if (montoOfertadoSeleccionado > valorFinanciar) {
 
-                    state = false;
-                    MensajeError('El monto del préstamo ofertado seleccionado no puede ser mayor que el valor a Financiar');
-                }
+                //    state = false;
+                //    MensajeError('El monto del préstamo ofertado seleccionado no puede ser mayor que el valor a Financiar');
+                //}
 
                 if (CONSTANTES.RequierePrima == 1) {
 
@@ -527,18 +537,18 @@ $('#btnAgregarReferenciaTabla').on('click', function (e) {
 
         var NombreCompletoReferencia = $("#txtNombreReferencia").val();
         var TelefonoReferencia = $("#txtTelefonoReferencia").val();
-        var LugarTrabajoReferencia = $("#txtLugarTrabajoReferencia").val();
+        var LugarTrabajoReferencia = '-';
         var IdTiempoConocerReferencia = $("#ddlTiempoDeConocerReferencia :selected").val();
         var tiempoDeConocerReferenciaDescripcion = $("#ddlTiempoDeConocerReferencia :selected").text();
         var IdParentescoReferencia = $("#ddlParentescos :selected").val();
         var parentescoReferenciaDescripcion = $("#ddlParentescos :selected").text();
         var btnQuitarReferencia = '<button type="button" id="btnQuitarReferenciaPersonal" ' +
-            'data-nombreReferencia="' + NombreCompletoReferencia + '" data-telefonoReferencia="' + TelefonoReferencia + '" data-lugarTrabajoReferencia="' + LugarTrabajoReferencia + '"' +
+            'data-nombreReferencia="' + NombreCompletoReferencia + '" data-telefonoReferencia="' + TelefonoReferencia + '"' +
             'data-tiempoDeConocerReferencia="' + IdTiempoConocerReferencia + '" data-tiempoDeConocerReferenciaDescripcion="' + tiempoDeConocerReferenciaDescripcion + '" data-parentescoReferencia="' + IdParentescoReferencia + '" data-parentescoReferenciaDescripcion="' + parentescoReferenciaDescripcion + '"' +
-            'class="btn btn-sm btn-danger" > Quitar</button > ';
+            'class="btn btn-sm btn-danger" ><i class="far fa-trash-alt"></i> Quitar</button > ';
 
         /* Agregar referencia a la tabla de referencias personales */
-        var row = '<tr><td>' + NombreCompletoReferencia + '</td><td>' + TelefonoReferencia + '</td><td>' + LugarTrabajoReferencia + '</td><td>' + tiempoDeConocerReferenciaDescripcion + '</td><td>' + parentescoReferenciaDescripcion + '</td><td class="text-center">' + btnQuitarReferencia + '</td></tr>';
+        var row = '<tr><td>' + NombreCompletoReferencia + '</td><td>' + TelefonoReferencia + '</td><td>' + tiempoDeConocerReferenciaDescripcion + '</td><td>' + parentescoReferenciaDescripcion + '</td><td class="text-center">' + btnQuitarReferencia + '</td></tr>';
         $("#tblReferenciasPersonales tbody").append(row);
 
         $("#modalAgregarReferenciaPersonal").modal('hide');
@@ -549,7 +559,7 @@ $('#btnAgregarReferenciaTabla').on('click', function (e) {
         var referencia = {
             NombreCompletoReferencia: NombreCompletoReferencia,
             TelefonoReferencia: TelefonoReferencia,
-            LugarTrabajoReferencia: LugarTrabajoReferencia,
+            LugarTrabajoReferencia: '-',
             IdTiempoConocerReferencia: IdTiempoConocerReferencia,
             tiempoDeConocerReferenciaDescripcion: tiempoDeConocerReferenciaDescripcion,
             IdParentescoReferencia: IdParentescoReferencia,
@@ -558,6 +568,9 @@ $('#btnAgregarReferenciaTabla').on('click', function (e) {
 
         /* Agregar objeto referencia a la lista de referencias personales que se enviará al servidor */
         listaReferenciasPersonales.push(referencia);
+    }
+    else {
+        $('#frmSolicitud').parsley().validate({ group: 'referenciasPersonales', force: true });
     }
 });
 
@@ -569,7 +582,7 @@ $(document).on('click', 'button#btnQuitarReferenciaPersonal', function () {
     var referenciaPersonal = {
         NombreCompletoReferencia: $(this).data('nombrereferencia'),
         TelefonoReferencia: $(this).data('telefonoreferencia'),
-        LugarTrabajoReferencia: $(this).data('lugartrabajoreferencia'),
+        LugarTrabajoReferencia: '-',
         IdTiempoConocerReferencia: $(this).data('tiempodeconocerreferencia').toString(),
         tiempoDeConocerReferenciaDescripcion: $(this).data('tiempodeconocerreferenciadescripcion'),
         IdParentescoReferencia: $(this).data('parentescoreferencia').toString(),
@@ -585,7 +598,7 @@ $(document).on('click', 'button#btnQuitarReferenciaPersonal', function () {
             var iter = {
                 NombreCompletoReferencia: listaReferenciasPersonales[i].NombreCompletoReferencia,
                 TelefonoReferencia: listaReferenciasPersonales[i].TelefonoReferencia,
-                LugarTrabajoReferencia: listaReferenciasPersonales[i].LugarTrabajoReferencia,
+                LugarTrabajoReferencia: '-',
                 IdTiempoConocerReferencia: listaReferenciasPersonales[i].IdTiempoConocerReferencia.toString(),
                 tiempoDeConocerReferenciaDescripcion: listaReferenciasPersonales[i].tiempoDeConocerReferenciaDescripcion,
                 IdParentescoReferencia: listaReferenciasPersonales[i].IdParentescoReferencia.toString(),
@@ -738,9 +751,6 @@ function CargarDocumentosRequeridos() {
 /* Cargar prestamos disponibles consultados en el cotizador */
 function CargarPrestamosOfertados(valorProducto, valorPrima) {
 
-    debugger;
-
-
     if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203) {
 
         var lcSeguro = '';
@@ -775,8 +785,7 @@ function CargarPrestamosOfertados(valorProducto, valorPrima) {
             $.ajax({
                 type: "POST",
                 url: "SolicitudesCredito_Registrar.aspx/CargarPrestamosOfertadosVehiculo",
-                data: JSON.stringify(
-                    {
+                data: JSON.stringify({
                         idProducto: PRECALIFICADO.IdProducto,
                         valorGlobal: valorProducto,
                         valorPrima: valorPrima,
@@ -835,7 +844,7 @@ function CargarPrestamosOfertados(valorProducto, valorPrima) {
             }
         });
     }
-    
+
 }
 
 /* Cargar municipios del departamento seleccionado del domicilio */
@@ -1156,7 +1165,12 @@ function GuardarRespaldoInformacionPrestamo() {
         txtRtnCliente: $("#txtRtnCliente").val(),
         txtValorGlobal: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
         txtValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
-        ddlOrigen: $("#ddlOrigen :selected").val()
+        ddlOrigen: $("#ddlOrigen :selected").val(),
+
+        /* Parametros de cotizador de vehiculos */
+        ddlTipoGastosDeCierre: $("#ddlTipoGastosDeCierre :selected").val(),
+        ddlTipoDeSeguro: $("#ddlTipoDeSeguro :selected").val(),
+        ddlGps: $("#ddlGps :selected").val()
     }
     localStorage.setItem('RespaldoInformacionPrestamo', JSON.stringify(respaldoInformacionPrestamo));
 }
@@ -1248,7 +1262,19 @@ function GuardarRespaldoInformacionGarantia() {
         txtSerieChasis: $("#txtSerieChasis").val(),
         txtSerieDos: $("#txtSerieDos").val(),
         txtGPS: $("#txtGPS").val(),
-        txtComentario: $("#txtComentario").val()
+        txtComentario: $("#txtComentario").val(),
+
+        /* Informacion propietario de la garantia */
+        txtIdentidadPropietario: $("#txtIdentidadPropietario").val(),
+        txtNombrePropietario: $("#txtNombrePropietario").val(),
+        ddlNacionalidadPropietario: $("#ddlNacionalidadPropietario :selected").val(),
+        ddlEstadoCivilPropietario: $("#ddlEstadoCivilPropietario :selected").val(),
+
+        /* Informacion vendedor de la garantia */
+        txtIdentidadVendedor: $("#txtIdentidadVendedor").val(),
+        txtNombreVendedor: $("#txtNombreVendedor").val(),
+        ddlNacionalidadVendedor: $("#ddlNacionalidadVendedor :selected").val(),
+        ddlEstadoCivilVendedor: $("#ddlEstadoCivilVendedor :selected").val()
     }
     localStorage.setItem('RespaldoInformacionGarantia', JSON.stringify(respaldoInformacionGarantia));
 }
@@ -1260,6 +1286,8 @@ function GuardarRespaldoReferenciasPersonales() {
 
 function RecuperarRespaldos() {
 
+    //MostrarLoader();
+
     $(".buscardorddl").select2("destroy");
 
     /* Recuperar información de pestaña información del préstamo */
@@ -1269,13 +1297,23 @@ function RecuperarRespaldos() {
 
         $("#txtRtnCliente").val(RespaldoInformacionPrestamo.txtRtnCliente);
         $("#ddlOrigen").val(RespaldoInformacionPrestamo.ddlOrigen);
-        var valorGlobal = parseFloat(RespaldoInformacionPrestamo.txtValorGlobal).toFixed(2);
-        var valorPrima = parseFloat(RespaldoInformacionPrestamo.txtValorPrima).toFixed(2);
+
+        var valorGlobal = parseFloat(RespaldoInformacionPrestamo.txtValorGlobal);
+        var valorPrima = parseFloat(RespaldoInformacionPrestamo.txtValorPrima);
         var valorFinanciar = valorGlobal - valorPrima;
+
         $("#txtValorGlobal").val(valorGlobal);
         $("#txtValorPrima").val(valorPrima);
         $("#txtValorFinanciar").val(valorFinanciar);
-        CargarPrestamosOfertados(RespaldoInformacionPrestamo.txtValorGlobal.toString(), RespaldoInformacionPrestamo.txtValorPrima.toString());
+
+        /* Parametros de cotizador de vehiculos */
+        $("#ddlTipoGastosDeCierre").val(RespaldoInformacionPrestamo.ddlTipoGastosDeCierre);
+        $("#ddlTipoDeSeguro").val(RespaldoInformacionPrestamo.ddlTipoDeSeguro);
+        $("#ddlGps").val(RespaldoInformacionPrestamo.ddlGps);
+
+        if (valorGlobal > 0 && valorPrima > 0 && valorFinanciar > 0) {
+            CargarPrestamosOfertados(RespaldoInformacionPrestamo.txtValorGlobal.toString(), RespaldoInformacionPrestamo.txtValorPrima.toString());
+        }
     }
 
     /* Recuperar respaldo de pestaña de informacion personal */
@@ -1370,6 +1408,18 @@ function RecuperarRespaldos() {
         $("#txtSerieDos").val(respaldoInformacionGarantia.txtSerieDos);
         $("#txtGPS").val(respaldoInformacionGarantia.txtGPS);
         $("#txtComentario").val(respaldoInformacionGarantia.txtComentario);
+
+        /* Informacion propietario de la garantia */
+        $("#txtIdentidadPropietario").val(respaldoInformacionGarantia.txtIdentidadPropietario);
+        $("#txtNombrePropietario").val(respaldoInformacionGarantia.txtNombrePropietario);
+        $("#ddlNacionalidadPropietario").val(respaldoInformacionGarantia.ddlNacionalidadPropietario);
+        $("#ddlEstadoCivilPropietario").val(respaldoInformacionGarantia.ddlEstadoCivilPropietario);
+
+        /* Informacion vendedor de la garantia */
+        $("#txtIdentidadVendedor").val(respaldoInformacionGarantia.txtIdentidadVendedor);
+        $("#txtNombreVendedor").val(respaldoInformacionGarantia.txtNombreVendedor);
+        $("#ddlNacionalidadVendedor").val(respaldoInformacionGarantia.ddlNacionalidadVendedor);
+        $("#ddlEstadoCivilVendedor").val(respaldoInformacionGarantia.ddlEstadoCivilVendedor);
     }
 
     /* Recuperar respaldo de pestaña de referencias personales del cliente */
@@ -1390,12 +1440,12 @@ function RecuperarRespaldos() {
                 referencia = RespaldolistaReferenciasPersonales[i];
 
                 btnQuitarReferencia = '<button type="button" id="btnQuitarReferenciaPersonal" ' +
-                    'data-nombreReferencia="' + referencia.NombreCompletoReferencia + '" data-telefonoReferencia="' + referencia.TelefonoReferencia + '" data-lugarTrabajoReferencia="' + referencia.LugarTrabajoReferencia + '"' +
+                    'data-nombreReferencia="' + referencia.NombreCompletoReferencia + '" data-telefonoReferencia="' + referencia.TelefonoReferencia + '" ' +
                     'data-tiempoDeConocerReferencia="' + referencia.IdTiempoConocerReferencia + '" data-tiempoDeConocerReferenciaDescripcion="' + referencia.tiempoDeConocerReferenciaDescripcion + '" data-parentescoReferencia="' + referencia.IdParentescoReferencia + '" data-parentescoReferenciaDescripcion="' + referencia.parentescoReferenciaDescripcion + '"' +
-                    'class="btn btn-sm btn-danger">Quitar</button > ';
+                    'class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Quitar</button > ';
 
                 /* Agregar referencia a la tabla de referencias personales */
-                var row = '<tr><td>' + referencia.NombreCompletoReferencia + '</td><td>' + referencia.TelefonoReferencia + '</td><td>' + referencia.LugarTrabajoReferencia + '</td><td>' + referencia.tiempoDeConocerReferenciaDescripcion + '</td><td>' + referencia.parentescoReferenciaDescripcion + '</td><td class="text-center">' + btnQuitarReferencia + '</td></tr>';
+                var row = '<tr><td>' + referencia.NombreCompletoReferencia + '</td><td>' + referencia.TelefonoReferencia + '</td><td>' + referencia.tiempoDeConocerReferenciaDescripcion + '</td><td>' + referencia.parentescoReferenciaDescripcion + '</td><td class="text-center">' + btnQuitarReferencia + '</td></tr>';
 
                 tablaReferenciasPersonales.append(row);
 
@@ -1417,6 +1467,54 @@ function RecuperarRespaldos() {
             removeAllItems: function () { return "Eliminar todos los elementos" }
         }
     });
+
+    //OcultarLoader();
+}
+
+$("#btnBuscarVIN").click(function () {
+
+    BuscarVIN();
+});
+
+function BuscarVIN() {
+
+    let idVIN = $("#txtBuscarVIN").val().trim();
+
+    if (idVIN) {
+
+        MostrarLoader();
+
+        $.ajax({
+            url: 'https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/' + idVIN,
+            type: 'Get',
+            data: { format: "json" },
+            success: function (data) {
+
+                if (data.Results[0].ErrorCode != "0") {
+                    MensajeError('Resultado de la búsqueda: ' + data.Results[0].ErrorText);
+                }
+
+                $("#txtVIN").val(data.Results[0].VIN);
+                $("#txtMarca").val(data.Results[0].Make);
+                $("#txtModelo").val(data.Results[0].Model);
+                $("#txtTipoDeVehiculo").val(data.Results[0].VehicleType);
+                $("#txtAnio").val(data.Results[0].ModelYear);
+                $("#txtTipoDeVehiculo").val(data.Results[0].BodyClass);
+                $("#txtCilindraje").val(data.Results[0].DisplacementL);
+                $("#txtTipoDeCombustible").val(data.Results[0].FuelTypePrimary);
+                $("#txtSerieUno").val(data.Results[0].Series);
+                $("#txtTransmision").val(data.Results[0].TransmissionStyle);
+
+                OcultarLoader();
+            },
+            error: function (data) {
+                console.log('ocurrió un error: ' + data);
+
+                OcultarLoader();
+                MensajeError('No se pudo cargar la información de este VIN');
+            }
+        });
+    }
 }
 
 function ConvertirFechaJavaScriptAFechaCsharp(fecha) {
@@ -1432,4 +1530,14 @@ function ConvertirFechaJavaScriptAFechaCsharp(fecha) {
         dt.getSeconds().toString().padStart(2, '0')}`;
 
     return fechaConvertida
+}
+
+function MostrarLoader() {
+
+    $("#Loader").css('display', '');
+}
+
+function OcultarLoader() {
+
+    $("#Loader").css('display', 'none');
 }

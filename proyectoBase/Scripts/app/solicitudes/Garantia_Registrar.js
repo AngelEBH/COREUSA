@@ -34,19 +34,18 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
                 Comentario: $("#txtComentario").val(),
                 NumeroPrestamo: $("#txtNumeroPrestamo").val(),
                 esDigitadoManualmente: esDigitadoManualmente,
-
-                ValorMercado: $("#txtPrecioMercado").val().replace(/,/g, ''),
-                ValorPrima: $("#txtValorPrima").val().replace(/,/g, ''),
-                ValorFinanciado: $("#txtValorFinanciado").val().replace(/,/g, ''),
-                GastosDeCierre: $("#txtGastosDeCierre").val().replace(/,/g, ''),
-
+                ValorMercado: $("#txtPrecioMercado").val().replace(/,/g, '') == '' ? 0 : $("#txtPrecioMercado").val().replace(/,/g, ''),
+                ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
+                ValorFinanciado: $("#txtValorFinanciado").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciado").val().replace(/,/g, ''),
+                GastosDeCierre: $("#txtGastosDeCierre").val().replace(/,/g, '') == '' ? 0 : $("#txtGastosDeCierre").val().replace(/,/g, ''),
                 IdentidadPropietario: $("#txtIdentidadPropietario").val(),
                 NombrePropietario: $("#txtNombrePropietario").val(),
                 IdNacionalidadPropietario: $("#ddlNacionalidadPropietario :selected").val(),
-
+                IdEstadoCivilPropietario: $("#ddlEstadoCivilPropietario :selected").val(),
                 IdentidadVendedor: $("#txtIdentidadVendedor").val(),
                 NombreVendedor: $("#txtNombreVendedor").val(),
                 IdNacionalidadVendedor: $("#ddlNacionalidadVendedor :selected").val(),
+                IdEstadoCivilVendedor: $("#ddlEstadoCivilVendedor :selected").val()
             }
 
             $.ajax({
