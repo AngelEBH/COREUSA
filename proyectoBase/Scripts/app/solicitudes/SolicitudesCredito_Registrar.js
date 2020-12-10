@@ -1,4 +1,6 @@
-﻿if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+﻿LISTA_COTIZACIONES = '';
+
+if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
     Swal.fire(
         {
             title: '¡Oh no!',
@@ -133,7 +135,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                     TipoDeVehiculo: $("#txtTipoDeVehiculo").val(),
                     Marca: $("#txtMarca").val(),
                     Modelo: $("#txtModelo").val(),
-                    Anio: $("#txtAnio").val().replace(/,/g, '') ?? 0,
+                    Anio: $("#txtAnio").val().replace(/,/g, '') == '' ? 0 : $("#txtAnio").val().replace(/,/g, ''),
                     Color: $("#txtColor").val(),
                     Matricula: $("#txtMatricula").val(),
                     Cilindraje: $("#txtCilindraje").val(),
@@ -166,10 +168,25 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                 }
             };
 
+            var cotizacionSeleccionada = {};
+
+            if (LISTA_COTIZACIONES != '') {
+
+                var idCotizacionSeleccionada = $("#ddlPrestamosDisponibles option:selected").data('idcotizacion');
+
+                jQuery.each(LISTA_COTIZACIONES, function (i, val) {
+
+                    if (val.IdOrden == idCotizacionSeleccionada) {
+
+                        cotizacionSeleccionada = val;
+                    }
+                });
+            }
+
             $.ajax({
                 type: "POST",
                 url: 'SolicitudesCredito_Registrar.aspx/IngresarSolicitud',
-                data: JSON.stringify({ solicitud: solicitud, cliente: cliente, precalificado: PRECALIFICADO, garantia: garantia, esClienteNuevo: CONSTANTES.EsClienteNuevo, dataCrypt: window.location.href }),
+                data: JSON.stringify({ solicitud: solicitud, cliente: cliente, precalificado: PRECALIFICADO, garantia: garantia, esClienteNuevo: CONSTANTES.EsClienteNuevo, dataCrypt: window.location.href, cotizador: cotizacionSeleccionada}),
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr, ajaxOptions, thrownError) {
                     MensajeError('No se guardó el registro, contacte al administrador');
@@ -805,13 +822,15 @@ function CargarPrestamosOfertados(valorProducto, valorPrima) {
 
                     var ListaPrestamosOfertados = data.d;
 
+                    LISTA_COTIZACIONES = ListaPrestamosOfertados;
+
                     var ddlPrestamosDisponibles = $("#ddlPrestamosDisponibles");
                     ddlPrestamosDisponibles.empty();
                     ddlPrestamosDisponibles.append("<option selected value=''>Seleccione una opción</option>");
 
                     for (var i = 0; i < ListaPrestamosOfertados.length; i++) {
 
-                        ddlPrestamosDisponibles.append("<option value='" + ListaPrestamosOfertados[i].MontoOfertado + "' data-plazoseleccionado='" + ListaPrestamosOfertados[i].Plazo + "'>" + 'Monto ofertado: ' + ListaPrestamosOfertados[i].MontoOfertado + ' | Plazo ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Plazo + ' | Cuota ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Cuota + "</option>");
+                        ddlPrestamosDisponibles.append("<option value='" + ListaPrestamosOfertados[i].TotalAFinanciar + "' data-plazoseleccionado='" + ListaPrestamosOfertados[i].Plazo + "' data-idcotizacion='" + ListaPrestamosOfertados[i].IdOrden + "'>" + 'Monto ofertado: ' + ListaPrestamosOfertados[i].TotalAFinanciar + ' | Plazo ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Plazo + ' | Cuota ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].CuotaTotal + "</option>");
                     }
                 }
             });
@@ -833,13 +852,15 @@ function CargarPrestamosOfertados(valorProducto, valorPrima) {
 
                 var ListaPrestamosOfertados = data.d;
 
+                LISTA_COTIZACIONES = '';
+
                 var ddlPrestamosDisponibles = $("#ddlPrestamosDisponibles");
                 ddlPrestamosDisponibles.empty();
                 ddlPrestamosDisponibles.append("<option selected value=''>Seleccione una opción</option>");
 
                 for (var i = 0; i < ListaPrestamosOfertados.length; i++) {
 
-                    ddlPrestamosDisponibles.append("<option value='" + ListaPrestamosOfertados[i].MontoOfertado + "' data-plazoseleccionado='" + ListaPrestamosOfertados[i].Plazo + "'>" + 'Monto ofertado: ' + ListaPrestamosOfertados[i].MontoOfertado + ' | Plazo ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Plazo + ' | Cuota ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Cuota + "</option>");
+                    ddlPrestamosDisponibles.append("<option value='" + ListaPrestamosOfertados[i].TotalAFinanciar + "' data-plazoseleccionado='" + ListaPrestamosOfertados[i].Plazo + "' data-idcotizacion='" + ListaPrestamosOfertados[i].IdOrden + "'>" + 'Monto ofertado: ' + ListaPrestamosOfertados[i].TotalAFinanciar + ' | Plazo ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Plazo + ' | Cuota ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].CuotaTotal + "</option>");
                 }
             }
         });
