@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Text;
 using System.Web;
 
@@ -59,7 +60,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     var hoy = DateTime.Today;
 
                     DiasFirma = hoy.Day.ToString();
-                    MesFirma = hoy.ToString("MMMM");
+                    MesFirma = hoy.ToString("MMMM", new CultureInfo("es-ES"));
                     AnioFirma = hoy.Year.ToString();
 
                     CargarInformacion();
@@ -105,7 +106,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var fechaPrimerPago = (DateTime)sqlResultado["fdFechaPrimerCuota"];
 
                             /* Determinar fecha del primer pago */
-                            MesPrimerPago = fechaPrimerPago.ToString("MMMM");
+                            MesPrimerPago = fechaPrimerPago.ToString("MMMM", new CultureInfo("es-ES"));
                             AnioPrimerPago = fechaPrimerPago.Year.ToString();
                             DiaPrimerPago = fechaPrimerPago.Day.ToString();
 
