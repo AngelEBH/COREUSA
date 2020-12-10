@@ -1,4 +1,6 @@
-﻿if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+﻿COTIZADOR = null;
+
+if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
     Swal.fire(
         {
             title: '¡Oh no!',
@@ -127,6 +129,10 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
 
             if (CONSTANTES.RequiereGarantia == 1) {
 
+                var valorMercado = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
+                var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
+                var valorFinanciado = valorMercado - valorPrima;
+
                 garantia = {
                     VIN: $("#txtVIN").val(),
                     TipoDeGarantia: $("#txtTipoDeGarantia").val(),
@@ -149,9 +155,9 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                     Comentario: $("#txtComentario").val(),
                     NumeroPrestamo: '',
                     esDigitadoManualmente: true,
-                    ValorMercado: 0,
-                    ValorPrima: 0,
-                    ValorFinanciado: 0,
+                    ValorMercado: valorMercado,
+                    ValorPrima: valorPrima,
+                    ValorFinanciado: valorFinanciado,
                     GastosDeCierre: 0,
 
                     IdentidadPropietario: $("#txtIdentidadPropietario").val(),
@@ -169,7 +175,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
             $.ajax({
                 type: "POST",
                 url: 'SolicitudesCredito_Registrar.aspx/IngresarSolicitud',
-                data: JSON.stringify({ solicitud: solicitud, cliente: cliente, precalificado: PRECALIFICADO, garantia: garantia, esClienteNuevo: CONSTANTES.EsClienteNuevo, dataCrypt: window.location.href }),
+                data: JSON.stringify({ solicitud: solicitud, cliente: cliente, precalificado: PRECALIFICADO, garantia: garantia, esClienteNuevo: CONSTANTES.EsClienteNuevo, dataCrypt: window.location.href, cotizador: COTIZADOR }),
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr, ajaxOptions, thrownError) {
                     MensajeError('No se guardó el registro, contacte al administrador');
@@ -340,8 +346,8 @@ $(document).ready(function () {
                 }
 
                 //if (plazoSeleccionado > CONSTANTES.PrestamoMaximo_Plazo && CONSTANTES.PrestamoMaximo_Plazo != null) {
-                //    //state = false;
-                //    MensajeAdvertencia('El plazo máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Plazo + '.');
+                // //state = false;
+                // MensajeAdvertencia('El plazo máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Plazo + '.');
                 //}
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
@@ -803,9 +809,10 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
                     var objCalculo = data.d;
 
-                    var valorCuota = objCalculo.CuotaMensualNeta;
-                    $("#txtValorCuota").val(valorCuota);
-                    $("#txtValorFinanciar").val(objCalculo.ValoraFinanciar);
+                    $("#txtValorCuota").val(objCalculo.CuotaTotal);
+                    $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
+
+                    COTIZADOR = objCalculo;
                 }
             });
         }
@@ -824,10 +831,8 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
             success: function (data) {
 
                 var objCalculo = data.d;
-
-                var valorCuota = objCalculo.CuotaMensual == 0 ? data.d.CuotaQuincenal : data.d.CuotaMensual;
-                $("#txtValorCuota").val(valorCuota);
-                $("#txtValorFinanciar").val(objCalculo.ValoraFinanciar);
+                $("#txtValorCuota").val(objCalculo.CuotaTotal);
+                $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
             }
         });
     }
