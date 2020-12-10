@@ -1,4 +1,5 @@
 ﻿var objSeccion = '';
+COTIZADOR = null;
 
 $('#smartwizard').smartWizard({
     selected: 0,
@@ -484,6 +485,8 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
 
     var listaCondicionesDeDocumentacion = [1, 2, 3, 4, 5, 6];
 
+    var cotizador = {};
+
     /* Documentacion */
     if (jQuery.inArray(idTipoDeCondicion, listaCondicionesDeDocumentacion) >= 0) {
 
@@ -494,45 +497,32 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
     else if (idTipoDeCondicion == '8' || idTipoDeCondicion == '14') {
 
         objSeccion = {};
-
-        //if (listaClientesReferencias != null) {
-        // if (listaClientesReferencias.length > 0) {
-
-        // objSeccion = listaClientesReferencias;
-
-        // }
-        // else {
-        // MensajeError('La cantidad minima de referencias personales es: 4. Entre ellas 2 familiares.');
-        // $("#modalFinalizarCondicion_ReferenciasPersonales").modal('hide');
-        // return false;
-        // }
-        //}
-        //else {
-        // MensajeError('No se detectó ningún cambio en la referencias personalels.');
-        // $("#modalFinalizarCondicion_ReferenciasPersonales").modal('hide');
-        // return false;
-        //}
     }
     /* Informacion de la solicitud */
     else if (idTipoDeCondicion == '9') {
+
+        
+        debugger;
 
         if ($('#frmSolicitud').parsley().isValid({ group: 'informacionPrestamo' })) {
 
             objSeccion = {
                 IdSolicitud: ID_SOLICITUD,
                 IdCliente: ID_CLIENTE,
+                IdProducto: ID_PRODUCTO,
                 ValorSeleccionado: $("#txtValorFinanciar").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciar").val().replace(/,/g, ''),
                 PlazoSeleccionado: $("#txtPlazoSeleccionado").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazoSeleccionado").val().replace(/,/g, ''),
                 ValorGarantia: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
-                ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, '')
-            }
+                ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, '')                
+            };
+
+            cotizador = COTIZADOR;
         }
         else {
             $('#frmSolicitud').parsley().validate({ group: 'informacionPrestamo', force: true });
             $("#modalFinalizarCondicion_InfoSolicitud").modal('hide');
             return false;
         }
-
     }
 
     /* Informacion personal */
@@ -648,17 +638,17 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
 
     objSeccion = JSON.stringify(objSeccion);
 
-    FinalizarSeccionCondicionamientos(idSolicitudCondicion, idTipoDeCondicion, objSeccion);
+    FinalizarSeccionCondicionamientos(idSolicitudCondicion, idTipoDeCondicion, objSeccion, cotizador);
 
 });
 
 /* Finalizar condicionamientos de una seccion del formulario */
-function FinalizarSeccionCondicionamientos(idSolicitudCondicion, idTipoDeCondicion, objSeccion) {
+function FinalizarSeccionCondicionamientos(idSolicitudCondicion, idTipoDeCondicion, objSeccion, cotizador) {
 
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_ActualizarSolicitud.aspx/ActualizarCondicionamiento',
-        data: JSON.stringify({ idSolicitudCondicion: idSolicitudCondicion, idCliente: ID_CLIENTE, idTipoDeCondicion: idTipoDeCondicion, objSeccion: objSeccion, dataCrypt: window.location.href }),
+        data: JSON.stringify({ idSolicitudCondicion: idSolicitudCondicion, idCliente: ID_CLIENTE, idTipoDeCondicion: idTipoDeCondicion, objSeccion: objSeccion, dataCrypt: window.location.href, cotizador: cotizador }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al finalizar condicionamiento');
@@ -945,7 +935,7 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
             $.ajax({
                 type: "POST",
-                url: "SolicitudesCredito_Registrar.aspx/CalculoPrestamoVehiculo",
+                url: "SolicitudesCredito_ActualizarSolicitud.aspx/CalculoPrestamoVehiculo",
                 data: JSON.stringify(
                     {
                         idProducto: PRECALIFICADO.IdProducto,
@@ -967,9 +957,10 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
                     var objCalculo = data.d;
 
-                    var valorCuota = objCalculo.CuotaMensualNeta;
-                    $("#txtValorCuota").val(valorCuota);
-                    $("#txtValorFinanciar").val(objCalculo.ValoraFinanciar);
+                    $("#txtValorCuota").val(objCalculo.CuotaTotal);
+                    $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
+
+                    COTIZADOR = objCalculo;
                 }
             });
         }
@@ -978,7 +969,7 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Registrar.aspx/CalculoPrestamo",
+            url: "SolicitudesCredito_ActualizarSolicitud.aspx/CalculoPrestamo",
             data: JSON.stringify({ idProducto: PRECALIFICADO.IdProducto, valorGlobal: valorGlobal, valorPrima: valorPrima, plazo: plazo, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
@@ -988,10 +979,8 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
             success: function (data) {
 
                 var objCalculo = data.d;
-
-                var valorCuota = objCalculo.CuotaMensual == 0 ? data.d.CuotaQuincenal : data.d.CuotaMensual;
-                $("#txtValorCuota").val(valorCuota);
-                $("#txtValorFinanciar").val(objCalculo.ValoraFinanciar);
+                $("#txtValorCuota").val(objCalculo.CuotaTotal);
+                $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
             }
         });
     }

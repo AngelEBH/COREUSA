@@ -974,15 +974,15 @@
                 </div>
             </div>
         </div>
-
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
-    <script>
-        const ID_SOLICITUD = <%=this.IdSolicitud%>;
+    <script>        
         const ID_CLIENTE = <%=this.IdCliente%>;
-        const PRECALIFICADO = <%=this.jsonPrecalicado%>;
+        const ID_PRODUCTO = <%=this.IdProducto%>;
+        const ID_SOLICITUD = <%=this.IdSolicitud%>;
+        const PRECALIFICADO = <%=this.jsonPrecalicado%>;        
     </script>
     <script src="/Scripts/plugins/steps/js/jquery.smartWizard.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
@@ -990,6 +990,6 @@
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=20201204162105"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=20201210172725"></script>
 </body>
 </html>
