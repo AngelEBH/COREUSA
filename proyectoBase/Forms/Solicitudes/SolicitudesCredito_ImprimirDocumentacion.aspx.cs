@@ -232,6 +232,15 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         txtSerieDos.Text = serieDos;
                                         txtComentario.InnerText = comentario;
 
+                                        txtNombrePropietarioGarantia.Text = sqlResultado["fcNombrePropietarioGarantia"].ToString();
+                                        txtIdentidadPropietarioGarantia.Text = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
+                                        txtNacionalidadPropietarioGarantia.Text = sqlResultado["fcNacionalidadPropietarioGarantia"].ToString();
+                                        txtEstadoCivilPropietarioGarantia.Text = sqlResultado["fcEstadoCivilPropietarioGarantia"].ToString();
+                                        txtNombreVendedorGarantia.Text = sqlResultado["fcNombreVendedorGarantia"].ToString();
+                                        txtIdentidadVendedorGarantia.Text = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
+                                        txtNacionalidadVendedorGarantia.Text = sqlResultado["fcNacionalidadVendedorGarantia"].ToString();
+                                        txtEstadoCivilVendedorGarantia.Text = sqlResultado["fcEstadoCivilVendedorGarantia"].ToString();
+
                                         /* Contrato */
                                         lblNombre_Contrato.Text = nombreCliente;
                                         lblNacionalidad_Contrato.Text = nacionalidad;

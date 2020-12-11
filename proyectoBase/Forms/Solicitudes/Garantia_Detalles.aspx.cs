@@ -7,9 +7,9 @@ using System.Web;
 
 public partial class Garantia_Detalles : System.Web.UI.Page
 {
-    public string pcIDUsuario = "";
     public string pcIDApp = "";
     public string pcIDSesion = "";
+    public string pcIDUsuario = "";
     public string pcIDSolicitud = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
@@ -30,19 +30,21 @@ public partial class Garantia_Detalles : System.Web.UI.Page
                 }
                 else
                 {
-                    lcParametros = String.Empty;
+                    lcParametros = string.Empty;
                 }
 
-                if (lcParametros != String.Empty)
+                if (lcParametros != string.Empty)
                 {
                     var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     lcEncriptado = lcEncriptado.Replace("%2f", "/");
                     var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
-                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL") ?? "";
+
+                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+
                     CargarInformacion();
                 }
             }
@@ -98,12 +100,6 @@ public partial class Garantia_Detalles : System.Web.UI.Page
                             txtIdentidadCliente.Text = identidad;
                             txtRtn.Text = RTN;
                             txtTelefonoCliente.Text = telefonoPrimario;
-                            txtProducto.Text = producto;
-                            txtMontoFinalAFinanciar.Text = montoFinalFinanciar;
-                            txtPlazoFinanciar.Text = plazoFinalAprobado;
-                            lblTipoDePlazo.InnerText = tipoDePlazo;
-                            txtValorCuota.Text = valorCuota;
-                            lblTipoDePlazoCuota.InnerText = tipoDePlazo;
 
                             int requiereGarantia = (byte)sqlResultado["fiRequiereGarantia"];
 
@@ -159,6 +155,14 @@ public partial class Garantia_Detalles : System.Web.UI.Page
                                     txtSerieUno.Text = serieUno;
                                     txtSerieDos.Text = serieDos;
                                     txtComentario.InnerText = comentario;
+                                    txtNombrePropietarioGarantia.Text = sqlResultado["fcNombrePropietarioGarantia"].ToString();
+                                    txtIdentidadPropietarioGarantia.Text = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
+                                    txtNacionalidadPropietarioGarantia.Text = sqlResultado["fcNacionalidadPropietarioGarantia"].ToString();
+                                    txtEstadoCivilPropietarioGarantia.Text = sqlResultado["fcEstadoCivilPropietarioGarantia"].ToString();
+                                    txtNombreVendedorGarantia.Text = sqlResultado["fcNombreVendedorGarantia"].ToString();
+                                    txtIdentidadVendedorGarantia.Text = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
+                                    txtNacionalidadVendedorGarantia.Text = sqlResultado["fcNacionalidadVendedorGarantia"].ToString();
+                                    txtEstadoCivilVendedorGarantia.Text = sqlResultado["fcEstadoCivilVendedorGarantia"].ToString();
                                 }
 
                                 sqlResultado.NextResult();
@@ -178,11 +182,12 @@ public partial class Garantia_Detalles : System.Web.UI.Page
                                     }
                                     divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
                                 }
-                            }
-                        }
-                    }
-                }
-            }
+
+                            } // else !sqlResultado.HasRows
+                        } // while sqlResultado.Read()
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {

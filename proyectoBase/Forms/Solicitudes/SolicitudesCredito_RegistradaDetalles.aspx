@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles de la solicitud</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -445,8 +445,7 @@
                             <div class="panel-body">
                                 <div class="row mb-0" id="divInformacionGarantia" runat="server">
                                     <div class="col-lg-6">
-
-                                        <h6 class="font-weight-bold">Características físicas</h6>
+                                        <h6 class="m-0 pt-2 font-weight-bold">Características físicas</h6>
 
                                         <div class="form-group row">
                                             <div class="col-sm-4 col-12">
@@ -495,7 +494,7 @@
                                             </div>
                                         </div>
 
-                                        <h6 class="font-weight-bold m-0 pt-2">Características mecánicas</h6>
+                                        <h6 class="font-weight-bold m-0">Características mecánicas</h6>
 
                                         <div class="form-group row">
                                             <div class="col-sm-4">
@@ -537,6 +536,50 @@
                                                 <!-- Div donde se muestran las imágenes de la garantía-->
                                                 <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;">
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 border-gray">
+                                        <h6 class="m-0 pt-2 font-weight-bold border-top border-gray">Propietario de la garantía</h6>
+
+                                        <div class="form-group row">
+                                            <div class="col-sm-6">
+                                                <label class="col-form-label">Nombre</label>
+                                                <asp:TextBox ID="txtNombrePropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="col-form-label">Identidad</label>
+                                                <asp:TextBox ID="txtIdentidadPropietarioGarantia" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Nacionalidad</label>
+                                                <asp:TextBox ID="txtNacionalidadPropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Estado civil</label>
+                                                <asp:TextBox ID="txtEstadoCivilPropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 border-left border-gray">
+                                        <h6 class="m-0 pt-2 font-weight-bold border-top border-gray">Vendedor de la garantía</h6>
+                                        <div class="form-group row">
+                                            <div class="col-6">
+                                                <label class="col-form-label">Nombre</label>
+                                                <asp:TextBox ID="txtNombreVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Identidad</label>
+                                                <asp:TextBox ID="txtIdentidadVendedorGarantia" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Nacionalidad</label>
+                                                <asp:TextBox ID="txtNacionalidadVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Estado civil</label>
+                                                <asp:TextBox ID="txtEstadoCivilVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                                             </div>
                                         </div>
                                     </div>
@@ -1130,7 +1173,8 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
     <script src="/Scripts/plugins/countdownjs/countdown.min.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_RegistradaDetalles.js?v=20200902095555"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_RegistradaDetalles.js?v=202012111057"></script>
+    
     <script>
         $("#divDocumentacionCedula").unitegallery({
             gallery_theme: "tilesgrid",
@@ -1243,13 +1287,13 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
         });
 
         $("#divGaleriaGarantia").unitegallery({
-            gallery_theme: "tilesgrid",
+            //gallery_theme: "tilesgrid",
             tile_width: 180,
             tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
+            //lightbox_type: "compact",
+            //grid_num_rows: 15,
+            //tile_enable_textpanel: true,
+            //tile_textpanel_title_text_align: "center"
         });
 
     </script>

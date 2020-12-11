@@ -119,8 +119,6 @@
             </div>
             <div class="card-body">
                 <div class="collapse-group">
-
-                    <!-- Informacion personal -->
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingOne">
                             <h6 class="panel-title m-0 font-14">
@@ -188,7 +186,6 @@
                         </div>
                     </div>
 
-                    <!-- Informacion domicilio -->
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingTwo">
                             <h6 class="panel-title m-0 font-14">
@@ -252,7 +249,6 @@
                         </div>
                     </div>
 
-                    <!-- Informacion conyugal -->
                     <div class="panel panel-default" id="divPanelInformacionConyugal" runat="server">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingThree">
                             <h6 class="panel-title m-0 font-14">
@@ -304,8 +300,8 @@
                         </div>
                     </div>
 
-                    <!-- Informacion laboral -->
                     <div class="panel panel-default">
+
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingFour">
                             <h6 class="panel-title m-0 font-14">
                                 <a href="#collapseInformacionLaboral" class="text-dark collapsed h6 font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseThree">
@@ -400,7 +396,6 @@
                         </div>
                     </div>
 
-                    <!-- Referencias personales -->
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingFive">
                             <h6 class="m-0 font-14">
@@ -441,7 +436,6 @@
                         </div>
                     </div>
 
-                    <!-- Información de la garantía -->
                     <div class="panel panel-default" id="panelInformacionGarantia" runat="server" visible="true">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingGarantia">
                             <h6 class="m-0 font-14">
@@ -455,8 +449,7 @@
                             <div class="panel-body">
                                 <div class="row mb-0" id="divInformacionGarantia" runat="server">
                                     <div class="col-lg-6">
-
-                                        <h6 class="font-weight-bold">Características físicas</h6>
+                                        <h6 class="m-0 pt-2 font-weight-bold">Características físicas</h6>
 
                                         <div class="form-group row">
                                             <div class="col-sm-4 col-12">
@@ -505,7 +498,7 @@
                                             </div>
                                         </div>
 
-                                        <h6 class="font-weight-bold m-0 pt-2">Características mecánicas</h6>
+                                        <h6 class="font-weight-bold m-0">Características mecánicas</h6>
 
                                         <div class="form-group row">
                                             <div class="col-sm-4">
@@ -550,12 +543,56 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-lg-6 border-gray">
+                                        <h6 class="m-0 pt-2 font-weight-bold border-top border-gray">Propietario de la garantía</h6>
+
+                                        <div class="form-group row">
+                                            <div class="col-sm-6">
+                                                <label class="col-form-label">Nombre</label>
+                                                <asp:TextBox ID="txtNombrePropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="col-form-label">Identidad</label>
+                                                <asp:TextBox ID="txtIdentidadPropietarioGarantia" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Nacionalidad</label>
+                                                <asp:TextBox ID="txtNacionalidadPropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Estado civil</label>
+                                                <asp:TextBox ID="txtEstadoCivilPropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 border-left border-gray">
+                                        <h6 class="m-0 pt-2 font-weight-bold border-top border-gray">Vendedor de la garantía</h6>
+                                        <div class="form-group row">
+                                            <div class="col-6">
+                                                <label class="col-form-label">Nombre</label>
+                                                <asp:TextBox ID="txtNombreVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Identidad</label>
+                                                <asp:TextBox ID="txtIdentidadVendedorGarantia" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Nacionalidad</label>
+                                                <asp:TextBox ID="txtNacionalidadVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Estado civil</label>
+                                                <asp:TextBox ID="txtEstadoCivilVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Información del préstamo -->
+                    <!-- Informacion del prestamo requerido y el calculo del mismo -->
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingSix">
                             <h6 class="panel-title m-0 font-14">
@@ -773,7 +810,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </div>
                     </div>
 
-                    <!-- Información de perfil -->
+
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingSeven">
                             <h6 class="m-0 font-14">
@@ -785,7 +822,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </div>
                         <div id="collapseInformacionAnalisis" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
                             <div class="panel-body">
-                                <div class="row mb-0" id="divInformacionPerfil" runat="server">
+                                <div class="row mb-0" id="div1" runat="server">
                                     <div class="col-lg-6 col-md-6 col-12 border-right border-gray">
                                         <div class="form-group row">
                                             <div class="col-12">
@@ -811,7 +848,6 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </div>
                     </div>
 
-                    <!-- Investigación de campo -->
                     <div class="panel panel-default" id="divInformaciondeCampo" runat="server" visible="false">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingEight">
                             <h6 class="panel-title m-0 font-14">
@@ -915,7 +951,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                 </div>
                 <!--/ collapse-group -->
             </div>
-            <!--/ card-body -->
+            <!--/ card-header -->
         </div>
         <!--/ card -->
 
@@ -1141,7 +1177,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
     <script src="/Scripts/plugins/countdownjs/countdown.min.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Detalles.js?v=20201201153352"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Detalles.js?v=202012111022"></script>
     <script>
         $("#divDocumentacionCedula").unitegallery({
             gallery_theme: "tilesgrid",
@@ -1254,14 +1290,15 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
         });
 
         $("#divGaleriaGarantia").unitegallery({
-            gallery_theme: "tilesgrid",
+            //gallery_theme: "tilesgrid",
             tile_width: 180,
             tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
+            //lightbox_type: "compact",
+            //grid_num_rows: 15,
+            //tile_enable_textpanel: true,
+            //tile_textpanel_title_text_align: "center"
         });
+
     </script>
 </body>
 </html>

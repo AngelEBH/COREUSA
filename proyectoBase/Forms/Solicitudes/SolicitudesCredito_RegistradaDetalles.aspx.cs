@@ -647,6 +647,15 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                                     txtSerieUno.Text = sqlResultado["fcSerieUno"].ToString();
                                     txtSerieDos.Text = sqlResultado["fcSerieDos"].ToString();
                                     txtComentario.InnerText = sqlResultado["fcComentario"].ToString().Trim();
+
+                                    txtNombrePropietarioGarantia.Text = sqlResultado["fcNombrePropietarioGarantia"].ToString();
+                                    txtIdentidadPropietarioGarantia.Text = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
+                                    txtNacionalidadPropietarioGarantia.Text = sqlResultado["fcNacionalidadPropietarioGarantia"].ToString();
+                                    txtEstadoCivilPropietarioGarantia.Text = sqlResultado["fcEstadoCivilPropietarioGarantia"].ToString();
+                                    txtNombreVendedorGarantia.Text = sqlResultado["fcNombreVendedorGarantia"].ToString();
+                                    txtIdentidadVendedorGarantia.Text = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
+                                    txtNacionalidadVendedorGarantia.Text = sqlResultado["fcNacionalidadVendedorGarantia"].ToString();
+                                    txtEstadoCivilVendedorGarantia.Text = sqlResultado["fcEstadoCivilVendedorGarantia"].ToString();
                                 }
 
                                 /* Fotografías de la garantía */
