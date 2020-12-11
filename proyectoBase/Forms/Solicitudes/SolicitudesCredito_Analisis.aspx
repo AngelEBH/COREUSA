@@ -16,6 +16,7 @@
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <link href="/CSS/SolicitudesCredito_Analisis.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
 </head>
 <body>
     <form id="frmPrincipal" runat="server">
@@ -142,7 +143,7 @@
                                     </h6>
                                 </div>
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
-                                    <button id="btnValidarInformacionPersonal" type="button" class="btn btn-sm btn-warning btn-block waves-effect waves-light validador">
+                                    <button id="btnValidarInformacionPersonal" type="button" class="btn btn-sm btn-warning btn-block" data-tipovalidacion="ValidarInformacionPersonal">
                                         <i class="far fa-check-square"></i>
                                         Validar información personal
                                     </button>
@@ -336,7 +337,7 @@
                                     </h6>
                                 </div>
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
-                                    <button id="btnValidarInformacionLaboral" type="button" class="btn btn-sm btn-warning btn-block waves-effect waves-light validador">
+                                    <button id="btnValidarInformacionLaboral" type="button" class="btn btn-sm btn-warning btn-block" data-tipovalidacion="ValidarInformacionLaboral">
                                         <i class="far fa-check-square"></i>
                                         Validar información laboral
                                     </button>
@@ -442,7 +443,7 @@
                                     </h6>
                                 </div>
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
-                                    <button id="btnValidarReferenciasPersonales" type="button" class="btn btn-sm btn-warning btn-block waves-effect waves-light validador">
+                                    <button id="btnValidarReferenciasPersonales" type="button" class="btn btn-sm btn-warning btn-block" data-tipovalidacion="ValidarInformacionLaboral">
                                         <i class="far fa-check-square"></i>
                                         Validar referencias personales
                                     </button>
@@ -464,6 +465,7 @@
                                                         <th>Tiempo de conocer</th>
                                                         <th>Telefono</th>
                                                         <th>Parentesco</th>
+                                                        <th></th>
                                                         <th></th>
                                                     </tr>
                                                 </thead>
@@ -586,6 +588,50 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-lg-6 border-gray">
+                                        <h6 class="m-0 pt-2 font-weight-bold border-top border-gray">Propietario de la garantía</h6>
+
+                                        <div class="form-group row">
+                                            <div class="col-sm-6">
+                                                <label class="col-form-label">Nombre</label>
+                                                <asp:TextBox ID="txtNombrePropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="col-form-label">Identidad</label>
+                                                <asp:TextBox ID="txtIdentidadPropietarioGarantia" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Nacionalidad</label>
+                                                <asp:TextBox ID="txtNacionalidadPropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Estado civil</label>
+                                                <asp:TextBox ID="txtEstadoCivilPropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 border-left border-gray">
+                                        <h6 class="m-0 pt-2 font-weight-bold border-top border-gray">Vendedor de la garantía</h6>
+                                        <div class="form-group row">
+                                            <div class="col-6">
+                                                <label class="col-form-label">Nombre</label>
+                                                <asp:TextBox ID="txtNombreVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Identidad</label>
+                                                <asp:TextBox ID="txtIdentidadVendedorGarantia" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Nacionalidad</label>
+                                                <asp:TextBox ID="txtNacionalidadVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Estado civil</label>
+                                                <asp:TextBox ID="txtEstadoCivilVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -606,7 +652,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group row">
-                                            <button id="btnDigitarValoresManualmente" title="Digitar monto manualmente" type="button" class="btn btn-success col-sm-3 btn-block waves-effect waves-light validador">
+                                            <button id="btnDigitarValoresManualmente" title="Digitar monto manualmente" type="button" class="btn btn-success col-sm-3 btn-block waves-effect waves-light">
                                                 Digitar monto manualmente
                                             </button>
                                         </div>
@@ -1006,7 +1052,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                     </h6>
                                 </div>
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
-                                    <button id="btnEnviarACampo" type="button" class="btn btn-sm btn-warning btn-block waves-effect waves-light validador">
+                                    <button id="btnEnviarACampo" type="button" class="btn btn-sm btn-warning btn-block" data-tipovalidacion="ValidarInformacionLaboral">
                                         <i class="far fa-check-square"></i>
                                         Enviar a campo
                                     </button>
@@ -1042,7 +1088,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                     </div>
 
                     <!-- Investigación de campo -->
-                    <div class="panel panel-default" id="divInformaciondeCampo" runat="server" visible="true">
+                    <div class="panel panel-default" id="divInformaciondeCampo" runat="server" visible="false">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingEight">
                             <h6 class="panel-title m-0 font-14">
                                 <a href="#collapseInformaciondeCampo" class="text-dark collapsed h6 collapsed font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseNine">
@@ -1053,7 +1099,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </div>
                         <div id="collapseInformaciondeCampo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
                             <div class="panel-body">
-                                <div class="row mb-0 border-bottom border-gray" id="divResolucionDomicilio" runat="server" visible="true">
+                                <div class="row mb-0 border-bottom border-gray" id="divResolucionDomicilio" runat="server" visible="false">
                                     <div class="col-lg-6 col-md-6">
                                         <h6>Resolución del Domicilio <small>(<span id="lblResolucionCampoDomicilio" runat="server" class="font-weight-bold"></span>)</small></h6>
 
@@ -1092,7 +1138,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                     </div>
                                 </div>
 
-                                <div class="row mb-0 mt-1" id="divResolucionTrabajo" runat="server" visible="true">
+                                <div class="row mb-0 mt-1" id="divResolucionTrabajo" runat="server" visible="false">
                                     <div class="col-lg-6 col-md-6">
                                         <h6>Resolución del Trabajo <small>(<span id="lblResolucionCampoTrabajo" runat="server" class="font-weight-bold"></span>)</small></h6>
 
@@ -1200,72 +1246,6 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                 </div>
             </div>
         </div>
-
-        <!-- modal validar documentacion -->
-        <%--<div id="modalFinalizarValidarDocumentacion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarValidarDocumentacionLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalFinalizarValidarDocumentacionLabel">Terminar validación</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-                        ¿Está seguro de realizar la validación de la documentación?<br />
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <button id="btnValidarIdentidades" data-id="1" style="background-color: transparent; border: none;"><i class="mdi mdi-check mdi-24px"></i></button>
-                                <label class="header-title">Documentación identidad</label>
-                                <div class="popup-gallery" id="divDocumentacionCedulaModal">
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <button id="btnValidarDomiciliar" data-id="2" style="background-color: transparent; border: none;"><i class="mdi mdi-check mdi-24px"></i></button>
-                                <label class="mt-0 header-title text-center">Documentación domiciliar</label>
-                                <div class="popup-gallery" id="divDocumentacionDomicilioModal">
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <button id="btnValidarLaboral" data-id="3" style="background-color: transparent; border: none;"><i class="mdi mdi-check mdi-24px"></i></button>
-                                <label class="mt-0 header-title text-center">Documentación laboral</label>
-                                <div class="popup-gallery" id="divDocumentacionLaboralModal">
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <button id="btnValidarSoliFisica" data-id="4" style="background-color: transparent; border: none;"><i class="mdi mdi-check mdi-24px"></i></button>
-                                <label class="mt-0 header-title text-center">Solicitud fisica</label>
-                                <div class="popup-gallery" id="divDocumentacionSoliFisicaModal">
-                                </div>
-                            </div>
-                            <div class="col-sm-12" id="tituloCampoDomicilioModal" style="display: none;">
-                                <label class="mt-0 header-title text-center">Documentación de campo (Domicilio)</label>
-                                <div class="popup-gallery" id="divDocumentacionCampoDomicilioModal">
-                                </div>
-                            </div>
-                            <div class="col-sm-12" id="tituloCampoTrabajoModal" style="display: none;">
-                                <label class="mt-0 header-title text-center">Documentación de campo (Trabajo)</label>
-                                <div class="popup-gallery" id="divDocumentacionCampoTrabajoModal">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-form-label">Observaciones</label>
-                            <div>
-                                <input id="comentariosDocumentacion" class="form-control" type="text" value="" data-parsley-maxlength="150" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="btnValidoDocumentacionConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
-                            Confirmar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>--%>
-
 
         <div id="modalDocumentacion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDocumentacionLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -1415,7 +1395,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane p-3" id="listaCondiciones" role="tabpanel">
+                            <div class="tab-pane p-3" id="tbllistaCondiciones" role="tabpanel">
                                 <table id="tblListaSolicitudCondiciones" runat="server" class="table table-condensed table-striped">
                                     <thead>
                                         <tr>
@@ -1590,7 +1570,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 </a>
                             </li>
                             <li class="nav-item" runat="server" id="Li1" style="display: none;">
-                                <a class="nav-link" data-toggle="tab" href="#listaCondiciones" role="tab">
+                                <a class="nav-link" data-toggle="tab" href="#tabListaCondiciones" role="tab">
                                     <span class="d-none d-sm-block">Condiciones de la solictud</span>
                                 </a>
                             </li>
@@ -1675,7 +1655,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane pr-0 pl-0 pt-3" id="listaCondiciones" role="tabpanel">
+                            <div class="tab-pane pr-0 pl-0 pt-3" id="tabListaCondiciones" role="tabpanel">
                                 <table id="Table1" runat="server" class="table table-hover mb-0 cursor-pointer">
                                     <thead class="thead-light">
                                         <tr>
@@ -2094,13 +2074,14 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
     <script src="/Scripts/plugins/countdownjs/countdown.min.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    
-    
-    
+
+
+
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script src="/Scripts/plugins/kendo/jszip.min.js"></script>
     <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
     <script src="/Scripts/plugins/kendo/PrintHtmlToPDF.js"></script>
+    <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Analisis.js?v=20200903152956"></script>
     <script type="x/kendo-template" id="page-template">
@@ -2226,13 +2207,13 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
         });
 
         $("#divGaleriaGarantia").unitegallery({
-            gallery_theme: "tilesgrid",
+            //gallery_theme: "tilesgrid",
             tile_width: 180,
             tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
+            //lightbox_type: "compact",
+            //grid_num_rows: 15,
+            //tile_enable_textpanel: true,
+            //tile_textpanel_title_text_align: "center"
         });
     </script>
 </body>

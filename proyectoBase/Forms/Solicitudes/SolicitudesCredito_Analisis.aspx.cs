@@ -12,13 +12,12 @@ using System.Web.UI.HtmlControls;
 public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 {
     public string pcID = "";
-    public string pcIDApp = "";
-    public string IdProducto = "";
+    public string pcIDApp = "";    
+    public string IdProducto = "";    
     public string pcIDSesion = "";
     public string pcIDUsuario = "";
     public string pcIDSolicitud = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-
     public int IdCliente = 0;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -54,11 +53,9 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
                     pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-                    pcIDSesion = "1";
 
                     CargarInformacionClienteSolicitud();
                     CargarInformacionGarantia();
@@ -579,7 +576,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 }
             }
 
-            logo = IdProducto == "101" ? "iconoRecibirDinero48.png" : IdProducto == "201" ? "iconoMoto48.png" : IdProducto == "202" ? "iconoAuto48.png" : IdProducto == "301" ? "iconoConsumo48.png" : "iconoConsumo48.png";
+            logo = IdProducto == "101" ? "iconoRecibirDinero48.png" : IdProducto == "201" ? "iconoMoto48.png" : (IdProducto == "202" || IdProducto == "203") ? "iconoAuto48.png" : IdProducto == "301" ? "iconoConsumo48.png" : "iconoConsumo48.png";
             imgLogo.ImageUrl = "/Imagenes/" + logo;
         }
         catch (Exception ex)
@@ -650,6 +647,14 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                     txtSerieUno.Text = sqlResultado["fcSerieUno"].ToString();
                                     txtSerieDos.Text = sqlResultado["fcSerieDos"].ToString();
                                     txtComentario.InnerText = sqlResultado["fcComentario"].ToString().Trim();
+                                    txtNombrePropietarioGarantia.Text = sqlResultado["fcNombrePropietarioGarantia"].ToString();
+                                    txtIdentidadPropietarioGarantia.Text = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
+                                    txtNacionalidadPropietarioGarantia.Text = sqlResultado["fcNacionalidadPropietarioGarantia"].ToString();
+                                    txtEstadoCivilPropietarioGarantia.Text = sqlResultado["fcEstadoCivilPropietarioGarantia"].ToString();
+                                    txtNombreVendedorGarantia.Text = sqlResultado["fcNombreVendedorGarantia"].ToString();
+                                    txtIdentidadVendedorGarantia.Text = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
+                                    txtNacionalidadVendedorGarantia.Text = sqlResultado["fcNacionalidadVendedorGarantia"].ToString();
+                                    txtEstadoCivilVendedorGarantia.Text = sqlResultado["fcEstadoCivilVendedorGarantia"].ToString();
                                 }
 
                                 /* Fotografías de la garantía */
@@ -669,11 +674,11 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                     }
                                     divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
                                 }
-                            }
-                        }
-                    }
-                }
-            }
+                            } // using !sqlResultado.HasRows
+                        } // while sqlResultado.Read()
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -716,8 +721,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             TipoDePlazo = (string)sqlResultado["fcTipodeCuota"]
                         };
                     }
-                }
-            }
+                } // using sqlComando.ExecuteReader()
+            } // using sqlComando
         }
         catch (Exception ex)
         {
@@ -762,53 +767,40 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 EnIngresoInicio = (DateTime)sqlResultado["fdEnIngresoInicio"],
                                 EnIngresoFin = (DateTime)sqlResultado["fdEnIngresoFin"],
                                 UsuarioEnIngreso = (string)sqlResultado["fcUsuarioEnIngreso"],
-
                                 EnColaInicio = (DateTime)sqlResultado["fdEnColaInicio"],
                                 EnColaFin = (DateTime)sqlResultado["fdEnColaFin"],
-
                                 EnAnalisisInicio = (DateTime)sqlResultado["fdEnAnalisisInicio"],
                                 UsuarioAnalista = (string)sqlResultado["fcUsuarioAnalista"],
-
                                 FechaValidacionInformacionPersonal = (DateTime)sqlResultado["fdAnalisisTiempoValidarInformacionPersonal"],
                                 ComentarioValidacionInformacionPersonal = (string)sqlResultado["fcComentarioValidacionInfoPersonal"],
-
                                 FechaValidacionDocumentacion = (DateTime)sqlResultado["fdAnalisisTiempoValidarDocumentos"],
                                 ComentarioValidacionDocumentacion = (string)sqlResultado["fcComentarioValidacionDocumentacion"],
-
                                 FechaValidacionReferenciasPersonales = (DateTime)sqlResultado["fdAnalisisTiempoValidacionReferenciasPersonales"],
                                 ComentarioValidacionReferenciasPersonales = (string)sqlResultado["fcComentarioValidacionReferenciasPersonales"],
-
                                 FechaValidacionInformacionLaboral = (DateTime)sqlResultado["fdAnalisisTiempoValidacionReferenciasPersonales"],
                                 ComentarioValidacionInformacionLaboral = (string)sqlResultado["fcComentarioValidacionInfoLaboral"],
-
                                 ComentarioResolucion = (string)sqlResultado["fcComentarioResolucion"],
                                 TiempoTomaDecisionFinal = (DateTime)sqlResultado["fdTiempoTomaDecisionFinal"],
                                 EnAnalisisFin = (DateTime)sqlResultado["fdEnAnalisisFin"],
-
                                 CondicionadoInicio = (DateTime)sqlResultado["fdCondicionadoInicio"],
                                 ComentarioCondicionado = (string)sqlResultado["fcCondicionadoComentario"],
                                 UsuarioCondicionado = (string)sqlResultado["fcUsuarioEnIngreso"],
                                 CondicionadoFin = (DateTime)sqlResultado["fdCondificionadoFin"],
-
                                 FechaEnvioARuta = (DateTime)sqlResultado["fdEnvioARutaAnalista"],
                                 ObservacionesDeCreditos = (string)sqlResultado["fcObservacionesDeCredito"],
                                 EnRutaDeInvestigacionInicio = (DateTime)sqlResultado["fdEnRutaDeInvestigacionInicio"],
                                 UsuarioGestorAsignado = (string)sqlResultado["fcGestorAsignado"],
                                 ObservacionesDeCampo = (string)sqlResultado["fcObservacionesDeCampo"],
                                 EnRutaDeInvestigacionFin = (DateTime)sqlResultado["fdEnRutaDeInvestigacionFin"],
-
                                 ReprogramadoInicio = (DateTime)sqlResultado["fdReprogramadoInicio"],
                                 ComentarioReprogramado = (string)sqlResultado["fcReprogramadoComentario"],
                                 ReprogramadoFin = (DateTime)sqlResultado["fdReprogramadoFin"],
-
                                 PasoFinalInicio = (DateTime)sqlResultado["fdPasoFinalInicio"],
                                 UsuarioPasoFinal = (string)sqlResultado["fcUsuarioPasoFinal"],
                                 ComentarioPasoFinal = (string)sqlResultado["fcComentarioPasoFinal"],
                                 PasoFinalFin = (DateTime)sqlResultado["fdPasoFinalFin"],
-
                                 IdEstadoSolicitud = (byte)sqlResultado["fiEstadoSolicitud"],
                                 EstadoSolicitud = (string)sqlResultado["fcEstadoSolicitud"],
-
                                 SolicitudActiva = (byte)sqlResultado["fiSolicitudActiva"]
                             };
 
@@ -852,205 +844,180 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static bool ValidacionesAnalisis(string validacion, string observacion, string dataCrypt)
+    public static bool ValidacionesDeAnalisis(string tipoDeValidacion, string comentario, string dataCrypt)
     {
-        bool resultadoProceso = false;
+        var resultado = false;
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDSesion = "1";
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ValidacionesAnalisis", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Analisis_Validaciones", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@fcValidacion", validacion);
-                    sqlComando.Parameters.AddWithValue("@fcComentario", observacion);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pcTipoDeValidacion", tipoDeValidacion);
+                    sqlComando.Parameters.AddWithValue("@pcComentario", comentario);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
-                    sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
-                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
-                                resultadoProceso = true;
+                        sqlResultado.Read();
+                        resultado = sqlResultado["MensajeError"].ToString().StartsWith("-1") ? false : true;                            
                     }
-                }
-            }
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return resultadoProceso;
+        return resultado;
     }
 
     [WebMethod]
-    public static bool EnviarACampo(string fcObservacionesDeCredito, string dataCrypt)
+    public static bool EnviarACampo(string observacionesDeCredito, string dataCrypt)
     {
-        bool resultadoProceso = false;
+        var resultado = false;
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDSesion = "1";
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_EnviarACampo", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Analisis_EnviarACampo", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@fcObservacionesDeCredito", fcObservacionesDeCredito);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pcObservacionesDeCredito", observacionesDeCredito);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
-                    sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
-                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
-                                resultadoProceso = true;
+                        sqlResultado.Read();
+                        resultado = sqlResultado["MensajeError"].ToString().StartsWith("-1") ? false : true;
                     }
-                }
-            }
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return resultadoProceso;
+        return resultado;
     }
 
     [WebMethod]
-    public static int SolicitudResolucion(SolicitudesBitacoraViewModel objBitacora, SolicitudesMasterViewModel objSolicitud, string dataCrypt)
+    public static bool ResolucionDeLaSolicitud(SolicitudesMasterViewModel objSolicitud, string dataCrypt)
     {
-        int resultadoProceso = 0;
+        var resultado = false;
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");            
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDSesion = "1";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolictud_Resolucion", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolictudes_Resolucion", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@fiEstadoSolicitud", objSolicitud.fiEstadoSolicitud);
-
-                    if (objSolicitud.fiMontoFinalSugerido != null)
-                        sqlComando.Parameters.AddWithValue("@fnMontoFinalSugerido", (decimal)objSolicitud.fiMontoFinalSugerido);
-                    else
-                        sqlComando.Parameters.AddWithValue("@fnMontoFinalSugerido", DBNull.Value);
-
-                    if (objSolicitud.fiMontoFinalSugerido != null)
-                        sqlComando.Parameters.AddWithValue("@fnMontoFinalFinanciar", (decimal)objSolicitud.fiMontoFinalFinanciar);
-                    else
-                        sqlComando.Parameters.AddWithValue("@fnMontoFinalFinanciar", DBNull.Value);
-
-                    if (objSolicitud.fiPlazoFinalAprobado != null)
-                        sqlComando.Parameters.AddWithValue("@fiPlazoFinalAprobado", objSolicitud.fiPlazoFinalAprobado);
-                    else
-                        sqlComando.Parameters.AddWithValue("@fiPlazoFinalAprobado", DBNull.Value);
-
-                    sqlComando.Parameters.AddWithValue("@fcComentarioResolucion", objBitacora.fcComentarioResolucion);
-                    sqlComando.Parameters.AddWithValue("@fiIDUsuarioPasoFinal", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piEstadoSolicitud", objSolicitud.fiEstadoSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pnMontoFinalSugerido", (decimal)objSolicitud.fiMontoFinalSugerido);
+                    sqlComando.Parameters.AddWithValue("@pnMontoFinalFinanciar", (decimal)objSolicitud.fiMontoFinalFinanciar);
+                    sqlComando.Parameters.AddWithValue("@piPlazoFinalAprobado", objSolicitud.fiPlazoFinalAprobado);
+                    sqlComando.Parameters.AddWithValue("@pcComentarioResolucion", objSolicitud.fiPlazoFinalAprobado);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        string MensajeError = string.Empty;
-                        while (reader.Read())
-                            MensajeError = (string)reader["MensajeError"];
-
-                        if (!MensajeError.StartsWith("-1"))
-                            resultadoProceso = Convert.ToInt32(MensajeError);
+                        sqlResultado.Read();
+                        resultado = sqlResultado["MensajeError"].ToString().StartsWith("-1") ? false : true;
                     }
-                }
-            }
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return resultadoProceso;
+        return resultado;
     }
 
     [WebMethod]
     public static string ObtenerUrlEncriptado(string dataCrypt)
     {
         var lURLDesencriptado = DesencriptarURL(dataCrypt);
-        var pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
-        var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp").ToString();
-        //var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString() ?? "1";
-        var pcIDSesion = "1";
+        var pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");        
+        var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
         var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+        //var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString();
+        var pcIDSesion = "1";
+        
         var parametrosEncriptados = DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
 
         return parametrosEncriptados;
     }
 
     [WebMethod]
-    public static bool ActualizarIngresosCliente(decimal sueldoBaseReal, decimal bonosComisionesReal, string dataCrypt)
+    public static bool ActualizarIngresosCliente(int idCliente, decimal sueldoBaseReal, decimal bonosComisionesReal, string dataCrypt)
     {
-        bool resultadoProceso = false;
+        var resultado = false;
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ActualizarIngresosClienteSolicitud", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Analisis_ActualizarIngresosCliente", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@fnSueldoBaseReal", sueldoBaseReal);
-                    sqlComando.Parameters.AddWithValue("@fnBonosComisionesReal", bonosComisionesReal);
-                    sqlComando.Parameters.AddWithValue("@fiIDUsuarioModifica", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDCliente", idCliente);
+                    sqlComando.Parameters.AddWithValue("@pnSueldoBaseReal", sueldoBaseReal);
+                    sqlComando.Parameters.AddWithValue("@pnBonosComisionesReal", bonosComisionesReal);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
-                    sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
-                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
-                                resultadoProceso = true;
+                        sqlResultado.Read();
+                        resultado = sqlResultado["MensajeError"].ToString().StartsWith("-1") ? false : false;
                     }
                 }
             }
@@ -1059,7 +1026,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         {
             ex.Message.ToString();
         }
-        return resultadoProceso;
+        return resultado;
     }
 
     [WebMethod]
@@ -1072,8 +1039,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1117,8 +1083,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             int idProducto = 0;
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
@@ -1189,8 +1154,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1261,8 +1225,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             string identidad = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1314,8 +1277,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1359,8 +1321,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1402,8 +1363,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1443,8 +1403,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1489,8 +1448,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            ////string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            string pcIDSesion = "1";
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
