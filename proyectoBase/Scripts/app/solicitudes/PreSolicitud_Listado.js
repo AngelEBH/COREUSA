@@ -171,7 +171,7 @@ $(document).on('click', 'button#btnDetalles', function () {
 
             if (data.d != "-1") {
 
-                var preSolicitud = data.d;                
+                var preSolicitud = data.d;
 
                 // estado pre solicitud
                 var classEstadoPreSolicitud = preSolicitud.EstadoFavorable == 0 ? 'warning' : preSolicitud.EstadoFavorable == 1 ? 'success' : preSolicitud.EstadoFavorable == 2 ? 'danger' : 'warning';
@@ -195,17 +195,14 @@ $(document).on('click', 'button#btnDetalles', function () {
 
                     $("#lblTipoDeUbicacion").text('Investigación de domicilio');
                 }
-                else if (preSolicitud.IdTipoDeUbicacion == 2){
+                else if (preSolicitud.IdTipoDeUbicacion == 2) {
                     $("#lblTipoDeUbicacion").text('Investigación de trabajo');
                 }
-
-                console.log(preSolicitud.FechaDescargadoPorGestor);
-                
 
                 // gestoria
                 $("#txtGestorAsignado").val(preSolicitud.IdGestorValidador == 0 ? 'No Asignado' : preSolicitud.GestorValidador);
                 $("#txtGestion").val(preSolicitud.GestionDeCampo);
-                $("#txtFechaDescargadoPorGestor").val(preSolicitud.FechaDescargadoPorGestor == '/Date(-2208967200000)/' ? 'Aún no recibido' : moment(preSolicitud.FechaValidacion).locale('es').format('YYYY/MM/DD h:mm:ss a'));
+                $("#txtFechaDescargadoPorGestor").val(preSolicitud.FechaDescargadoPorGestor == '/Date(-2208967200000)/' ? 'Aún no recibido' : moment(preSolicitud.FechaDescargadoPorGestor).locale('es').format('YYYY/MM/DD h:mm:ss a'));
                 $("#txtFechaValidacion").val(preSolicitud.FechaValidacion == '/Date(-2208967200000)/' ? 'Áún no validado' : moment(preSolicitud.FechaValidacion).locale('es').format('YYYY/MM/DD h:mm:ss a'));
                 $("#txtObservacionesGestoria").val(preSolicitud.ObservacionesDeCampo);
 

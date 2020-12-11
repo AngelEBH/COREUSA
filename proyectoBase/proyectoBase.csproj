@@ -1318,7 +1318,7 @@
     <Content Include="Scripts\app\solicitudes\PreSolicitud_Guardar.js" />
     <Content Include="Scripts\app\solicitudes\Garantia_Registrar.js" />
     <Content Include="Scripts\app\Negociaciones\Negociaciones_Registrar.js" />
-    <Content Include="Scripts\app\PreSolicitudes\PreSolicitud_Listado.js" />
+    <Content Include="Scripts\app\solicitudes\PreSolicitud_Listado.js" />
     <Content Include="Scripts\app\Scripts_Cobros\Scripts_Cobros.js" />
     <Content Include="Scripts\app\solicitudesCredito\SolicitudesCredito_ListaMantenimiento.js" />
     <Content Include="Scripts\app\solicitudesCredito\SolicitudesCredito_Mantenimiento.js" />
@@ -2192,6 +2192,7 @@
     <Folder Include="Content\images\small\" />
     <Folder Include="Content\images\users\" />
     <Folder Include="Scripts\app\Garantias\" />
+    <Folder Include="Scripts\app\PreSolicitudes\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\.editorconfig">
