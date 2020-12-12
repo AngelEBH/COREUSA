@@ -831,8 +831,11 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
             success: function (data) {
 
                 var objCalculo = data.d;
+
                 $("#txtValorCuota").val(objCalculo.CuotaTotal);
                 $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
+
+                COTIZADOR = objCalculo;
             }
         });
     }

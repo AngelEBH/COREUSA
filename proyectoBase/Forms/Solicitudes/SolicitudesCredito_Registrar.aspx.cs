@@ -1471,7 +1471,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
 
                     /* Guardar informacion del cotizador para imprimir documentos... si,esto va a fallar también */
-                    if (precalificado.IdProducto == 202 || precalificado.IdProducto == 203)
+                    if (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 201)
                     {
                         var hoy = DateTime.Today;
                         DateTime fechaPrimerPago;
@@ -1496,6 +1496,12 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                         fechaPrimerPago = new DateTime(AnioPrimerPago, MesPrimerPago.Month, DiaPrimerPago);
 
+                        decimal totalAFinanciar = cotizador.TotalAFinanciar;
+                        decimal valorAPrestar = garantia.ValorMercado - garantia.ValorPrima;
+                        decimal tasaInteresAnual = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203) ? cotizador.TasaInteresAnual : ObtenerTasaInteresAnualPorIdProducto(precalificado.IdProducto);
+                        decimal tasaInteresMensual = cotizador.TasaInteresAnual / 12;
+                        decimal totalAFinanciarConIntereses = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203) ? cotizador.TotalFinanciadoConIntereses : CalcularTotalAFinanciarConIntereses(cotizador.TotalAFinanciar, solicitud.PlazoSeleccionado, tasaInteresAnual, precalificado.IdProducto);
+                        
 
                         using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Guardar", sqlConexion, tran))
                         {
@@ -1504,20 +1510,20 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", IdSolicitudInsertada);
                             sqlComando.Parameters.AddWithValue("@pcNumeroPrestamo", "No disponible");
                             sqlComando.Parameters.AddWithValue("@pdFechaPrimerCuota", fechaPrimerPago);
-                            sqlComando.Parameters.AddWithValue("@pnValorTotalFinanciamiento", cotizador.TotalAFinanciar);
-                            sqlComando.Parameters.AddWithValue("@pnValorAPrestar", garantia.ValorMercado - garantia.ValorPrima);
+                            sqlComando.Parameters.AddWithValue("@pnValorTotalFinanciamiento", totalAFinanciar);
+                            sqlComando.Parameters.AddWithValue("@pnValorAPrestar", valorAPrestar);
                             sqlComando.Parameters.AddWithValue("@pnCostoGPS", cotizador.CostoGPS);
                             sqlComando.Parameters.AddWithValue("@pnValorTotalSeguro", cotizador.TotalSeguroVehiculo);
                             sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", cotizador.GastosdeCierre);
-                            sqlComando.Parameters.AddWithValue("@pnTasaMensualAplicada", cotizador.TasaInteresAnual / 12);
-                            sqlComando.Parameters.AddWithValue("@pnTasaAnualAplicada", cotizador.TasaInteresAnual);
+                            sqlComando.Parameters.AddWithValue("@pnTasaMensualAplicada", tasaInteresMensual);
+                            sqlComando.Parameters.AddWithValue("@pnTasaAnualAplicada", tasaInteresAnual);
                             sqlComando.Parameters.AddWithValue("@piPlazo", solicitud.PlazoSeleccionado);
                             sqlComando.Parameters.AddWithValue("@pcTipoDePlazo", "Meses");
                             sqlComando.Parameters.AddWithValue("@pnCuotaMensualPrestamo", cotizador.CuotaDelPrestamo);
                             sqlComando.Parameters.AddWithValue("@pnCuotaMensualGPS", cotizador.CuotaServicioGPS);
                             sqlComando.Parameters.AddWithValue("@pnCuotaMensualSeguro", cotizador.CuotaSegurodeVehiculo);
                             sqlComando.Parameters.AddWithValue("@pnCuotaTotal", cotizador.CuotaTotal);
-                            sqlComando.Parameters.AddWithValue("@pnValorTotalContrato", cotizador.TotalFinanciadoConIntereses);
+                            sqlComando.Parameters.AddWithValue("@pnValorTotalContrato", totalAFinanciarConIntereses);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -1896,6 +1902,39 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             }
         }
         return resultadoProceso;
+    }
+
+    private static decimal CalcularTotalAFinanciarConIntereses(decimal totalAFinanciar, int plazoSeleccionado, decimal tasaInteresAnual, int idProducto)
+    {
+        throw new NotImplementedException();
+    }
+
+    private static decimal ObtenerTasaInteresAnualPorIdProducto(int idProducto)
+    {
+        decimal tasaInteresAnual = 0;
+
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                using (var sqlComando = new SqlCommand("sp_CatalogoProductos", sqlConexion))
+                {
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            tasaInteresAnual = idProducto == (int)sqlResultado["fiIDProducto"] ? (decimal)sqlResultado["fnTasadeInteres"] : 0;
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+
+        return tasaInteresAnual;
     }
 
     public static Uri DesencriptarURL(string Url)
