@@ -1,14 +1,14 @@
-﻿LISTA_COTIZACIONES = '';
+﻿COTIZADOR = null;
 
-if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+if (PRECALIFICADO.PermitirIngresarSolicitud == false && (PRECALIFICADO.MensajePermitirIngresarSolicitud != '' && PRECALIFICADO.MensajePermitirIngresarSolicitud != null)) {
     Swal.fire(
         {
             title: '¡Oh no!',
             text: PRECALIFICADO.MensajePermitirIngresarSolicitud,
-            type: 'error',
+            type: 'warning',
             showCancelButton: false,
             confirmButtonColor: "#58db83",
-            confirmButtonText: "OK"
+            confirmButtonText: "OMITIR"
         }
     )
 }
@@ -48,23 +48,22 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
 
         if (cantidadReferencias < CONSTANTES.CantidadMinimaDeReferenciasPersonales) {
             if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true) {
-                iziToast.warning({
-                    title: 'Atención',
-                    message: 'Se requieren mínimo ' + CONSTANTES.CantidadMinimaDeReferenciasPersonales + ' referencias personales. Entre ellas 2 familiares.'
-                });
+
+                MensajeAdvertencia('Se requieren mínimo ' + CONSTANTES.CantidadMinimaDeReferenciasPersonales + ' referencias personales. Entre ellas 2 familiares.');
             }
         }
 
-        if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true && cantidadReferencias >= CONSTANTES.CantidadMinimaDeReferenciasPersonales && PRECALIFICADO.PermitirIngresarSolicitud == true) {
+        if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true && cantidadReferencias >= CONSTANTES.CantidadMinimaDeReferenciasPersonales /*&& PRECALIFICADO.PermitirIngresarSolicitud == true*/) {
 
             var solicitud = {
                 IdCliente: CONSTANTES.IdCliente,
                 ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
                 ValorGlobal: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
-                ValorSeleccionado: $("#ddlPrestamosDisponibles option:selected").val(),
-                PlazoSeleccionado: $("#ddlPrestamosDisponibles option:selected").data('plazoseleccionado'),
+                ValorSeleccionado: $("#txtValorFinanciar").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciar").val().replace(/,/g, ''),
+                PlazoSeleccionado: $("#ddlPlazosDisponibles option:selected").val() == '' ? 0 : $("#ddlPlazosDisponibles option:selected").val(),
                 IdOrigen: $("#ddlOrigen option:selected").val() == null ? 1 : parseInt($("#ddlOrigen option:selected").val()),
-                EnIngresoInicio: ConvertirFechaJavaScriptAFechaCsharp(localStorage.getItem("EnIngresoInicio"))
+                EnIngresoInicio: ConvertirFechaJavaScriptAFechaCsharp(localStorage.getItem("EnIngresoInicio")),
+                //IdTipoMoneda: $("#ddlMoneda option:selected").val()
             };
 
             var Cliente_InformacionConyugal = {};
@@ -87,13 +86,14 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
             var cliente = {
                 IdCliente: CONSTANTES.IdCliente,
                 RtnCliente: $("#txtRtnCliente").val(),
-                IdNacionalidad: $("#ddlNacionalidad :selected").val(),
+                IdNacionalidad: $("#ddlNacionalidad").val(),
                 ProfesionOficio: $("#txtProfesion").val(),
                 Correo: $("#txtCorreoElectronico").val(),
                 Sexo: $("input[name='sexoCliente']:checked").val(),
                 IdEstadoCivil: $("#ddlEstadoCivil :selected").val(),
                 IdVivienda: $("#ddlTipoDeVivienda :selected").val(),
                 IdTiempoResidir: $("#ddlTiempoDeResidir :selected").val(),
+                IdTipoCliente: $("#ddlTipoDeCliente :selected").val(),
                 TelefonoCliente: $("#txtNumeroTelefono").val(),
 
                 InformacionDomicilio: {
@@ -129,13 +129,17 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
 
             if (CONSTANTES.RequiereGarantia == 1) {
 
+                var valorMercado = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
+                var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
+                var valorFinanciado = valorMercado - valorPrima;
+
                 garantia = {
                     VIN: $("#txtVIN").val(),
                     TipoDeGarantia: $("#txtTipoDeGarantia").val(),
                     TipoDeVehiculo: $("#txtTipoDeVehiculo").val(),
                     Marca: $("#txtMarca").val(),
                     Modelo: $("#txtModelo").val(),
-                    Anio: $("#txtAnio").val().replace(/,/g, '') == '' ? 0 : $("#txtAnio").val().replace(/,/g, ''),
+                    Anio: $("#txtAnio").val().replace(/,/g, '') ?? 0,
                     Color: $("#txtColor").val(),
                     Matricula: $("#txtMatricula").val(),
                     Cilindraje: $("#txtCilindraje").val(),
@@ -151,9 +155,9 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                     Comentario: $("#txtComentario").val(),
                     NumeroPrestamo: '',
                     esDigitadoManualmente: true,
-                    ValorMercado: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
-                    ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
-                    ValorFinanciado: $("#txtValorFinanciar").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciar").val().replace(/,/g, ''),
+                    ValorMercado: valorMercado,
+                    ValorPrima: valorPrima,
+                    ValorFinanciado: valorFinanciado,
                     GastosDeCierre: 0,
 
                     IdentidadPropietario: $("#txtIdentidadPropietario").val(),
@@ -168,25 +172,10 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                 }
             };
 
-            var cotizacionSeleccionada = {};
-
-            if (LISTA_COTIZACIONES != '') {
-
-                var idCotizacionSeleccionada = $("#ddlPrestamosDisponibles option:selected").data('idcotizacion');
-
-                jQuery.each(LISTA_COTIZACIONES, function (i, val) {
-
-                    if (val.IdOrden == idCotizacionSeleccionada) {
-
-                        cotizacionSeleccionada = val;
-                    }
-                });
-            }
-
             $.ajax({
                 type: "POST",
                 url: 'SolicitudesCredito_Registrar.aspx/IngresarSolicitud',
-                data: JSON.stringify({ solicitud: solicitud, cliente: cliente, precalificado: PRECALIFICADO, garantia: garantia, esClienteNuevo: CONSTANTES.EsClienteNuevo, dataCrypt: window.location.href, cotizador: cotizacionSeleccionada}),
+                data: JSON.stringify({ solicitud: solicitud, cliente: cliente, precalificado: PRECALIFICADO, garantia: garantia, esClienteNuevo: CONSTANTES.EsClienteNuevo, dataCrypt: window.location.href, cotizador: COTIZADOR }),
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr, ajaxOptions, thrownError) {
                     MensajeError('No se guardó el registro, contacte al administrador');
@@ -283,17 +272,17 @@ $(document).ready(function () {
                 var montoOfertadoSeleccionado = parseFloat($("#ddlPrestamosDisponibles :selected").val());
                 var plazoSeleccionado = parseInt($("#ddlPrestamosDisponibles option:selected").data('plazoseleccionado') == '' ? 0 : $("#ddlPrestamosDisponibles option:selected").data('plazoseleccionado'));
 
-                //if (montoOfertadoSeleccionado < valorFinanciar) {
+                if (montoOfertadoSeleccionado < valorFinanciar) {
 
-                //    state = false;
-                //    MensajeError('El monto del préstamo ofertado seleccionado no puede ser menor que el valor a Financiar');
-                //}
+                    state = false;
+                    MensajeAdvertencia('El monto del préstamo ofertado seleccionado no puede ser menor que el valor a Financiar');
+                }
 
-                //if (montoOfertadoSeleccionado > valorFinanciar) {
+                if (montoOfertadoSeleccionado > valorFinanciar) {
 
-                //    state = false;
-                //    MensajeError('El monto del préstamo ofertado seleccionado no puede ser mayor que el valor a Financiar');
-                //}
+                    state = false;
+                    MensajeAdvertencia('El monto del préstamo ofertado seleccionado no puede ser mayor que el valor a Financiar');
+                }
 
                 if (CONSTANTES.RequierePrima == 1) {
 
@@ -310,7 +299,7 @@ $(document).ready(function () {
                         if (valorPrima < ((valorGlobal * CONSTANTES.PorcentajePrimaMinima) / 100)) {
 
                             state = false;
-                            MensajeError('El porcentaje de prima mínimo para este producto es: ' + CONSTANTES.PorcentajePrimaMinima + '%. Aumente el valor de la prima.');
+                            MensajeAdvertencia('El porcentaje de prima mínimo para este producto es: ' + CONSTANTES.PorcentajePrimaMinima + '%. Aumente el valor de la prima.');
                         }
                     }
                 } /* if requiere prima */
@@ -320,7 +309,7 @@ $(document).ready(function () {
                     if (valorFinanciar < CONSTANTES.MontoFinanciarMinimo) {
 
                         state = false;
-                        MensajeError('El monto mínimo a financiar para este producto es ' + CONSTANTES.MontoFinanciarMinimo + '.');
+                        MensajeAdvertencia('El monto mínimo a financiar para este producto es ' + CONSTANTES.MontoFinanciarMinimo + '.');
                     }
                 }
 
@@ -329,7 +318,7 @@ $(document).ready(function () {
                     if (valorFinanciar > CONSTANTES.MontoFinanciarMaximo) {
 
                         state = false;
-                        MensajeError('El monto máximo a financiar para este producto es ' + CONSTANTES.MontoFinanciarMaximo + '.');
+                        MensajeAdvertencia('El monto máximo a financiar para este producto es ' + CONSTANTES.MontoFinanciarMaximo + '.');
                     }
                 }
 
@@ -338,7 +327,7 @@ $(document).ready(function () {
                     if (plazoSeleccionado < CONSTANTES.PlazoMinimo) {
 
                         state = false;
-                        MensajeError('El plazo mínimo a financiar para este producto es ' + CONSTANTES.PlazoMinimo + '.');
+                        MensajeAdvertencia('El plazo mínimo a financiar para este producto es ' + CONSTANTES.PlazoMinimo + '.');
                     }
                 }
 
@@ -347,22 +336,22 @@ $(document).ready(function () {
                     if (plazoSeleccionado > CONSTANTES.PlazoMaximo) {
 
                         state = false;
-                        MensajeError('El plazo máximo a financiar para este producto es ' + CONSTANTES.PlazoMaximo + '.');
+                        MensajeAdvertencia('El plazo máximo a financiar para este producto es ' + CONSTANTES.PlazoMaximo + '.');
                     }
                 }
 
-                if (valorFinanciar > CONSTANTES.PrestamoMaximo_Monto) {
+                if (valorFinanciar > CONSTANTES.PrestamoMaximo_Monto && CONSTANTES.PrestamoMaximo_Monto != 0) {
                     state = false;
-                    MensajeError('El monto máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Monto + '.');
+                    MensajeAdvertencia('El monto máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Monto + '.');
                 }
 
-                //if (plazoSeleccionado > CONSTANTES.PrestamoMaximo_Plazo) {
-                //    state = false;
-                //    MensajeError('El plazo máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Plazo + '.');
+                //if (plazoSeleccionado > CONSTANTES.PrestamoMaximo_Plazo && CONSTANTES.PrestamoMaximo_Plazo != null) {
+                // //state = false;
+                // MensajeAdvertencia('El plazo máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Plazo + '.');
                 //}
 
-                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
+                    MensajeExito(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     state = false;
                 }
 
@@ -395,11 +384,10 @@ $(document).ready(function () {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionPersonal', force: true });
                 }
 
-                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
+                    MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     state = false;
                 }
-
                 return state;
             }
 
@@ -415,11 +403,10 @@ $(document).ready(function () {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionDomicilio', force: true });
                 }
 
-                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
+                    MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     state = false;
                 }
-
                 return state;
             }
 
@@ -435,11 +422,10 @@ $(document).ready(function () {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionLaboral', force: true });
                 }
 
-                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
+                    MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     state = false;
                 }
-
                 return state;
             }
 
@@ -457,11 +443,10 @@ $(document).ready(function () {
                         $('#frmSolicitud').parsley().validate({ group: 'informacionConyugal', force: true });
                     }
 
-                    if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                        MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                    if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
+                        MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                         state = false;
                     }
-
                     return state;
                 }
             }
@@ -490,8 +475,8 @@ $(document).ready(function () {
                     }
                 }
 
-                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeError(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
+                    MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     state = false;
                 }
 
@@ -766,7 +751,7 @@ function CargarDocumentosRequeridos() {
 }
 
 /* Cargar prestamos disponibles consultados en el cotizador */
-function CargarPrestamosOfertados(valorProducto, valorPrima) {
+function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
     if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203) {
 
@@ -801,11 +786,13 @@ function CargarPrestamosOfertados(valorProducto, valorPrima) {
 
             $.ajax({
                 type: "POST",
-                url: "SolicitudesCredito_Registrar.aspx/CargarPrestamosOfertadosVehiculo",
-                data: JSON.stringify({
+                url: "SolicitudesCredito_Registrar.aspx/CalculoPrestamoVehiculo",
+                data: JSON.stringify(
+                    {
                         idProducto: PRECALIFICADO.IdProducto,
-                        valorGlobal: valorProducto,
+                        valorGlobal: valorGlobal,
                         valorPrima: valorPrima,
+                        plazo: plazo,
                         scorePromedio: PRECALIFICADO.ScorePromedio,
                         tipoSeguro: lcSeguro,
                         tipoGps: lcGPS,
@@ -815,23 +802,16 @@ function CargarPrestamosOfertados(valorProducto, valorPrima) {
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr, ajaxOptions, thrownError) {
 
-                    MensajeError('No se pudo cargar los préstamos sugeridos, contacte al administrador');
-                    $("#ddlPrestamosDisponibles").empty();
+                    MensajeError('No se pudo realizar el cálculo del préstamo, contacte al administrador');
                 },
                 success: function (data) {
 
-                    var ListaPrestamosOfertados = data.d;
+                    var objCalculo = data.d;
 
-                    LISTA_COTIZACIONES = ListaPrestamosOfertados;
+                    $("#txtValorCuota").val(objCalculo.CuotaTotal);
+                    $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
 
-                    var ddlPrestamosDisponibles = $("#ddlPrestamosDisponibles");
-                    ddlPrestamosDisponibles.empty();
-                    ddlPrestamosDisponibles.append("<option selected value=''>Seleccione una opción</option>");
-
-                    for (var i = 0; i < ListaPrestamosOfertados.length; i++) {
-
-                        ddlPrestamosDisponibles.append("<option value='" + ListaPrestamosOfertados[i].TotalAFinanciar + "' data-plazoseleccionado='" + ListaPrestamosOfertados[i].Plazo + "' data-idcotizacion='" + ListaPrestamosOfertados[i].IdOrden + "'>" + 'Monto ofertado: ' + ListaPrestamosOfertados[i].TotalAFinanciar + ' | Plazo ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Plazo + ' | Cuota ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].CuotaTotal + "</option>");
-                    }
+                    COTIZADOR = objCalculo;
                 }
             });
         }
@@ -840,32 +820,24 @@ function CargarPrestamosOfertados(valorProducto, valorPrima) {
 
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Registrar.aspx/CargarPrestamosOfertados",
-            data: JSON.stringify({ valorProducto: valorProducto.replace(/,/g, ''), valorPrima: valorPrima.replace(/,/g, ''), dataCrypt: window.location.href }),
+            url: "SolicitudesCredito_Registrar.aspx/CalculoPrestamo",
+            data: JSON.stringify({ idProducto: PRECALIFICADO.IdProducto, valorGlobal: valorGlobal, valorPrima: valorPrima, plazo: plazo, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
 
-                MensajeError('No se pudo cargar los préstamos sugeridos, contacte al administrador');
-                $("#ddlPrestamosDisponibles").empty();
+                MensajeError('No se pudo realizar el cálculo del préstamo, contacte al administrador');
             },
             success: function (data) {
 
-                var ListaPrestamosOfertados = data.d;
+                var objCalculo = data.d;
 
-                LISTA_COTIZACIONES = '';
+                $("#txtValorCuota").val(objCalculo.CuotaTotal);
+                $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
 
-                var ddlPrestamosDisponibles = $("#ddlPrestamosDisponibles");
-                ddlPrestamosDisponibles.empty();
-                ddlPrestamosDisponibles.append("<option selected value=''>Seleccione una opción</option>");
-
-                for (var i = 0; i < ListaPrestamosOfertados.length; i++) {
-
-                    ddlPrestamosDisponibles.append("<option value='" + ListaPrestamosOfertados[i].TotalAFinanciar + "' data-plazoseleccionado='" + ListaPrestamosOfertados[i].Plazo + "' data-idcotizacion='" + ListaPrestamosOfertados[i].IdOrden + "'>" + 'Monto ofertado: ' + ListaPrestamosOfertados[i].TotalAFinanciar + ' | Plazo ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].Plazo + ' | Cuota ' + ListaPrestamosOfertados[i].TipoPlazo + ': ' + ListaPrestamosOfertados[i].CuotaTotal + "</option>");
-                }
+                COTIZADOR = objCalculo;
             }
         });
     }
-
 }
 
 /* Cargar municipios del departamento seleccionado del domicilio */
@@ -949,12 +921,12 @@ $("select").on('change', function () {
     $(this).parsley().validate();
 });
 
-$('#txtValorGlobal,#txtValorPrima,#txtPlazo,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps').blur(function () {
+$('#txtValorGlobal,#txtValorPrima,#ddlPlazosDisponibles,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps').blur(function () {
 
     var valorGlobal = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
     var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
+    var plazo = parseInt($("#ddlPlazosDisponibles option:selected").val() == '' ? 0 : $("#ddlPlazosDisponibles option:selected").val());
     var valorFinanciar = valorGlobal - valorPrima;
-    $("#txtValorFinanciar").val(valorFinanciar);
     var state = true;
 
     if (CONSTANTES.RequierePrima == 1) {
@@ -970,7 +942,7 @@ $('#txtValorGlobal,#txtValorPrima,#txtPlazo,#ddlTipoGastosDeCierre,#ddlTipoDeSeg
             if (valorPrima < ((valorGlobal * CONSTANTES.PorcentajePrimaMinima) / 100)) {
 
                 state = false;
-                MensajeError('El porcentaje de prima mínimo para este producto es: ' + CONSTANTES.PorcentajePrimaMinima + '%. Aumente el valor de la prima.');
+                MensajeAdvertencia('El porcentaje de prima mínimo para este producto es: ' + CONSTANTES.PorcentajePrimaMinima + '%. Aumente el valor de la prima.');
             }
         }
     } /* if requiere prima */
@@ -980,7 +952,7 @@ $('#txtValorGlobal,#txtValorPrima,#txtPlazo,#ddlTipoGastosDeCierre,#ddlTipoDeSeg
         if (valorFinanciar < CONSTANTES.MontoFinanciarMinimo) {
 
             state = false;
-            MensajeError('El monto mínimo a financiar para este producto es ' + CONSTANTES.MontoFinanciarMinimo + '.');
+            MensajeAdvertencia('El monto mínimo a financiar es ' + CONSTANTES.MontoFinanciarMinimo + '.');
         }
     }
 
@@ -989,17 +961,18 @@ $('#txtValorGlobal,#txtValorPrima,#txtPlazo,#ddlTipoGastosDeCierre,#ddlTipoDeSeg
         if (valorFinanciar > CONSTANTES.MontoFinanciarMaximo) {
 
             state = false;
-            MensajeError('El monto máximo a financiar para este producto es ' + CONSTANTES.MontoFinanciarMaximo + '.');
+            MensajeAdvertencia('El monto máximo a financiar para este producto es ' + CONSTANTES.MontoFinanciarMaximo + '.');
         }
     }
 
-    if (valorFinanciar > CONSTANTES.PrestamoMaximo_Monto) {
+    if (valorFinanciar > CONSTANTES.PrestamoMaximo_Monto && CONSTANTES.PrestamoMaximo_Monto != 0) {
+
         state = false;
-        MensajeError('El monto máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Monto + '.');
+        MensajeAdvertencia('El monto máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Monto + '.');
     }
 
-    if (state == true) {
-        CargarPrestamosOfertados(valorGlobal.toString(), valorPrima.toString());
+    if (valorGlobal > 0 && plazo > 0 && state == true) {
+        CalculoPrestamo(valorGlobal.toString(), valorPrima.toString(), plazo.toString());
     }
 });
 
@@ -1172,6 +1145,13 @@ function MensajeError(mensaje) {
     });
 }
 
+function MensajeAdvertencia(mensaje) {
+    iziToast.warning({
+        title: 'Atención',
+        message: mensaje
+    });
+}
+
 function MensajeInformacion(mensaje) {
     iziToast.info({
         title: 'Info',
@@ -1186,6 +1166,8 @@ function GuardarRespaldoInformacionPrestamo() {
         txtRtnCliente: $("#txtRtnCliente").val(),
         txtValorGlobal: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
         txtValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
+        ddlPlazosDisponibles: $("#ddlPlazosDisponibles option:selected").val() == '' ? 0 : $("#ddlPlazosDisponibles option:selected").val(),
+        //ddlMoneda: $("#ddlMoneda :selected").val(),
         ddlOrigen: $("#ddlOrigen :selected").val(),
 
         /* Parametros de cotizador de vehiculos */
@@ -1203,10 +1185,9 @@ function GuardarRespaldoInformacionPersonal() {
         ddlNacionalidad: $("#ddlNacionalidad").val(),
         txtProfesion: $("#txtProfesion").val(),
         ddlEstadoCivil: $("#ddlEstadoCivil :selected").val(),
+        //ddlTipoDeCliente: $("#ddlTipoDeCliente :selected").val(),
         sexoCliente: $("input[name='sexoCliente']:checked").val(),
         txtCorreoElectronico: $("#txtCorreoElectronico").val(),
-        ddlTipoDeVivienda: $("#ddlTipoDeVivienda :selected").val(),
-        ddlTiempoDeResidir: $("#ddlTiempoDeResidir :selected").val()
     }
     localStorage.setItem('RespaldoInformacionPersonal', JSON.stringify(respaldoInformacionPersonal));
 }
@@ -1221,7 +1202,10 @@ function GuardarRespaldoinformacionDomicilio() {
         ddlBarrioColoniaDomicilio: $("#ddlBarrioColoniaDomicilio :selected").val(),
         txtTelefonoCasa: $("#txtTelefonoCasa").val(),
         txtDireccionDetalladaDomicilio: $("#txtDireccionDetalladaDomicilio").val(),
-        txtReferenciasDelDomicilio: $("#txtReferenciasDelDomicilio").val()
+        txtReferenciasDelDomicilio: $("#txtReferenciasDelDomicilio").val(),
+
+        ddlTipoDeVivienda: $("#ddlTipoDeVivienda :selected").val(),
+        ddlTiempoDeResidir: $("#ddlTiempoDeResidir :selected").val()
     }
     localStorage.setItem('RespaldoinformacionDomicilio', JSON.stringify(respaldoinformacionDomicilio));
 }
@@ -1318,22 +1302,22 @@ function RecuperarRespaldos() {
 
         $("#txtRtnCliente").val(RespaldoInformacionPrestamo.txtRtnCliente);
         $("#ddlOrigen").val(RespaldoInformacionPrestamo.ddlOrigen);
-
         var valorGlobal = parseFloat(RespaldoInformacionPrestamo.txtValorGlobal);
         var valorPrima = parseFloat(RespaldoInformacionPrestamo.txtValorPrima);
-        var valorFinanciar = valorGlobal - valorPrima;
+        var plazo = parseInt(RespaldoInformacionPrestamo.ddlPlazosDisponibles);
 
         $("#txtValorGlobal").val(valorGlobal);
         $("#txtValorPrima").val(valorPrima);
-        $("#txtValorFinanciar").val(valorFinanciar);
+        $("#ddlPlazosDisponibles").val(plazo);
+        //$("#ddlMoneda").val(RespaldoInformacionPrestamo.ddlMoneda);
 
         /* Parametros de cotizador de vehiculos */
         $("#ddlTipoGastosDeCierre").val(RespaldoInformacionPrestamo.ddlTipoGastosDeCierre);
         $("#ddlTipoDeSeguro").val(RespaldoInformacionPrestamo.ddlTipoDeSeguro);
         $("#ddlGps").val(RespaldoInformacionPrestamo.ddlGps);
 
-        if (valorGlobal > 0 && valorPrima > 0 && valorFinanciar > 0) {
-            CargarPrestamosOfertados(RespaldoInformacionPrestamo.txtValorGlobal.toString(), RespaldoInformacionPrestamo.txtValorPrima.toString());
+        if (valorGlobal > 0 && plazo > 0) {
+            CalculoPrestamo(valorGlobal.toString(), valorPrima.toString(), plazo.toString());
         }
     }
 
@@ -1345,13 +1329,12 @@ function RecuperarRespaldos() {
         $("#ddlNacionalidad").val(respaldoInformacionPersonal.ddlNacionalidad);
         $("#txtProfesion").val(respaldoInformacionPersonal.txtProfesion);
         $("#ddlEstadoCivil").val(respaldoInformacionPersonal.ddlEstadoCivil);
+        //$("#ddlTipoDeCliente").val(respaldoInformacionPersonal.ddlTipoDeCliente);
         $("input[name=sexoCliente][value=" + respaldoInformacionPersonal.sexoCliente + "]").prop('checked', true);
         $("#txtCorreoElectronico").val(respaldoInformacionPersonal.txtCorreoElectronico);
-        $("#ddlTipoDeVivienda").val(respaldoInformacionPersonal.ddlTipoDeVivienda);
-        $("#ddlTiempoDeResidir").val(respaldoInformacionPersonal.ddlTiempoDeResidir);
     }
 
-    /* Recuperar resplado de pestaña de informacion domiciliar */
+    /* Recuperar resplado de pestaña de informacion de domicilio */
     if (localStorage.getItem('RespaldoinformacionDomicilio') != null) {
 
         var respaldoinformacionDomicilio = JSON.parse(localStorage.getItem('RespaldoinformacionDomicilio'));
@@ -1363,6 +1346,9 @@ function RecuperarRespaldos() {
         $("#txtTelefonoCasa").val(respaldoinformacionDomicilio.txtTelefonoCasa);
         $("#txtDireccionDetalladaDomicilio").val(respaldoinformacionDomicilio.txtDireccionDetalladaDomicilio);
         $("#txtReferenciasDelDomicilio").val(respaldoinformacionDomicilio.txtReferenciasDelDomicilio);
+
+        $("#ddlTipoDeVivienda").val(respaldoinformacionDomicilio.ddlTipoDeVivienda);
+        $("#ddlTiempoDeResidir").val(respaldoinformacionDomicilio.ddlTiempoDeResidir);
     }
 
     /* Recuperar informacion de pestaña de informacion laboral */
@@ -1403,7 +1389,6 @@ function RecuperarRespaldos() {
 
         $(".infoConyugal").prop('disabled', true);
     }
-
 
     /* Recuperar informacion de pestaña de informacion de la garantia */
     if (localStorage.getItem('RespaldoInformacionGarantia') != null) {
