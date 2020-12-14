@@ -1,6 +1,6 @@
 ﻿COTIZADOR = null;
 
-if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+if (PRECALIFICADO.PermitirIngresarSolicitud == false && (PRECALIFICADO.MensajePermitirIngresarSolicitud != '' && PRECALIFICADO.MensajePermitirIngresarSolicitud != null)) {
     Swal.fire(
         {
             title: '¡Oh no!',
@@ -53,7 +53,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
             }
         }
 
-        if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true && cantidadReferencias >= CONSTANTES.CantidadMinimaDeReferenciasPersonales && PRECALIFICADO.PermitirIngresarSolicitud == true) {
+        if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true && cantidadReferencias >= CONSTANTES.CantidadMinimaDeReferenciasPersonales /*&& PRECALIFICADO.PermitirIngresarSolicitud == true*/) {
 
             var solicitud = {
                 IdCliente: CONSTANTES.IdCliente,
@@ -350,8 +350,8 @@ $(document).ready(function () {
                 // MensajeAdvertencia('El plazo máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Plazo + '.');
                 //}
 
-                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
-                    MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
+                    MensajeExito(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     //state = false;
                 }
 
@@ -384,7 +384,7 @@ $(document).ready(function () {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionPersonal', force: true });
                 }
 
-                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
                     MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     //state = false;
                 }
@@ -403,7 +403,7 @@ $(document).ready(function () {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionDomicilio', force: true });
                 }
 
-                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
                     MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     //state = false;
                 }
@@ -422,7 +422,7 @@ $(document).ready(function () {
                     $('#frmSolicitud').parsley().validate({ group: 'informacionLaboral', force: true });
                 }
 
-                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
                     MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     //state = false;
                 }
@@ -443,7 +443,7 @@ $(document).ready(function () {
                         $('#frmSolicitud').parsley().validate({ group: 'informacionConyugal', force: true });
                     }
 
-                    if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+                    if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
                         MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                         //state = false;
                     }
@@ -475,7 +475,7 @@ $(document).ready(function () {
                     }
                 }
 
-                if (PRECALIFICADO.PermitirIngresarSolicitud == false) {
+                if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
                     MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     //state = false;
                 }
@@ -752,7 +752,6 @@ function CargarDocumentosRequeridos() {
 
 /* Cargar prestamos disponibles consultados en el cotizador */
 function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
-
 
     if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203) {
 
@@ -1187,9 +1186,7 @@ function GuardarRespaldoInformacionPersonal() {
         ddlEstadoCivil: $("#ddlEstadoCivil :selected").val(),
         ddlTipoDeCliente: $("#ddlTipoDeCliente :selected").val(),
         sexoCliente: $("input[name='sexoCliente']:checked").val(),
-        txtCorreoElectronico: $("#txtCorreoElectronico").val(),
-        ddlTipoDeVivienda: $("#ddlTipoDeVivienda :selected").val(),
-        ddlTiempoDeResidir: $("#ddlTiempoDeResidir :selected").val()
+        txtCorreoElectronico: $("#txtCorreoElectronico").val(),        
     }
     localStorage.setItem('RespaldoInformacionPersonal', JSON.stringify(respaldoInformacionPersonal));
 }
@@ -1204,7 +1201,10 @@ function GuardarRespaldoinformacionDomicilio() {
         ddlBarrioColoniaDomicilio: $("#ddlBarrioColoniaDomicilio :selected").val(),
         txtTelefonoCasa: $("#txtTelefonoCasa").val(),
         txtDireccionDetalladaDomicilio: $("#txtDireccionDetalladaDomicilio").val(),
-        txtReferenciasDelDomicilio: $("#txtReferenciasDelDomicilio").val()
+        txtReferenciasDelDomicilio: $("#txtReferenciasDelDomicilio").val(),
+
+        ddlTipoDeVivienda: $("#ddlTipoDeVivienda :selected").val(),
+        ddlTiempoDeResidir: $("#ddlTiempoDeResidir :selected").val()
     }
     localStorage.setItem('RespaldoinformacionDomicilio', JSON.stringify(respaldoinformacionDomicilio));
 }
@@ -1330,9 +1330,7 @@ function RecuperarRespaldos() {
         $("#ddlEstadoCivil").val(respaldoInformacionPersonal.ddlEstadoCivil);
         $("#ddlTipoDeCliente").val(respaldoInformacionPersonal.ddlTipoDeCliente);
         $("input[name=sexoCliente][value=" + respaldoInformacionPersonal.sexoCliente + "]").prop('checked', true);
-        $("#txtCorreoElectronico").val(respaldoInformacionPersonal.txtCorreoElectronico);
-        $("#ddlTipoDeVivienda").val(respaldoInformacionPersonal.ddlTipoDeVivienda);
-        $("#ddlTiempoDeResidir").val(respaldoInformacionPersonal.ddlTiempoDeResidir);
+        $("#txtCorreoElectronico").val(respaldoInformacionPersonal.txtCorreoElectronico);        
     }
 
     /* Recuperar resplado de pestaña de informacion de domicilio */
@@ -1347,6 +1345,9 @@ function RecuperarRespaldos() {
         $("#txtTelefonoCasa").val(respaldoinformacionDomicilio.txtTelefonoCasa);
         $("#txtDireccionDetalladaDomicilio").val(respaldoinformacionDomicilio.txtDireccionDetalladaDomicilio);
         $("#txtReferenciasDelDomicilio").val(respaldoinformacionDomicilio.txtReferenciasDelDomicilio);
+
+        $("#ddlTipoDeVivienda").val(respaldoinformacionDomicilio.ddlTipoDeVivienda);
+        $("#ddlTiempoDeResidir").val(respaldoinformacionDomicilio.ddlTiempoDeResidir);
     }
 
     /* Recuperar informacion de pestaña de informacion laboral */
