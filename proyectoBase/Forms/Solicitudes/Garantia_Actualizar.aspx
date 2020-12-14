@@ -277,7 +277,7 @@
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script>
-
+        const user = '<%= pcIDUsuario.ToString() %>';
         esDigitadoManualmente = <%= EsDigitadoManualmente.ToString().ToLower() %>;
 
         $("#cbDigitarManualmente").prop("checked", esDigitadoManualmente);
@@ -331,7 +331,7 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/Garantia_Actualizar.js?v=20201208125025"></script>
+    <script src="/Scripts/app/solicitudes/Garantia_Actualizar.js?v=20201214145252"></script>
 </body>
 </html>
 

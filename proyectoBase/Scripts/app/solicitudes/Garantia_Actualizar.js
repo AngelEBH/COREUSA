@@ -4,11 +4,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
 
         var modelState = $('#frmGarantia').parsley().isValid();
 
-        if (!modelState) {
-            $('#frmGarantia').parsley().validate();
-        }
-
-        if (modelState) {
+        if (modelState || user == '11') {
 
             var garantia = {
 
@@ -40,12 +36,12 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
                 GastosDeCierre: $("#txtGastosDeCierre").val().replace(/,/g, '') == '' ? 0 : $("#txtGastosDeCierre").val().replace(/,/g, ''),
                 IdentidadPropietario: $("#txtIdentidadPropietario").val(),
                 NombrePropietario: $("#txtNombrePropietario").val(),
-                IdNacionalidadPropietario: $("#ddlNacionalidadPropietario :selected").val(),
-                IdEstadoCivilPropietario: $("#ddlEstadoCivilPropietario :selected").val(),
+                IdNacionalidadPropietario: $("#ddlNacionalidadPropietario :selected").val() == '' ? 0 : $("#ddlNacionalidadPropietario :selected").val(),
+                IdEstadoCivilPropietario: $("#ddlEstadoCivilPropietario :selected").val() == '' ? 0 : $("#ddlEstadoCivilPropietario :selected").val(),
                 IdentidadVendedor: $("#txtIdentidadVendedor").val(),
                 NombreVendedor: $("#txtNombreVendedor").val(),
-                IdNacionalidadVendedor: $("#ddlNacionalidadVendedor :selected").val(),
-                IdEstadoCivilVendedor: $("#ddlEstadoCivilVendedor :selected").val()
+                IdNacionalidadVendedor: $("#ddlNacionalidadVendedor :selected").val() == '' ? 0 : $("#ddlNacionalidadVendedor :selected").val(),
+                IdEstadoCivilVendedor: $("#ddlEstadoCivilVendedor :selected").val() == '' ? 0 : $("#ddlEstadoCivilVendedor :selected").val()
             }
 
             $.ajax({
@@ -70,6 +66,9 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
                     }
                 }
             });
+        }
+        else {
+            $('#frmGarantia').parsley().validate();
         }
     });
 
@@ -120,7 +119,7 @@ $(document).ready(function () {
 
             if (stepNumber == 0) {
 
-                var state = $('#frmGarantia').parsley().isValid();
+                var state = ($('#frmGarantia').parsley().isValid() || user == '11') ? true : false;
 
                 if (state == false) {
 

@@ -60,7 +60,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                 ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
                 ValorGlobal: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
                 ValorSeleccionado: $("#txtValorFinanciar").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciar").val().replace(/,/g, ''),
-                PlazoSeleccionado: $("#txtPlazo").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazo").val().replace(/,/g, ''),
+                PlazoSeleccionado: $("#ddlPlazosDisponibles option:selected").val() == '' ? 0 : $("#ddlPlazosDisponibles option:selected").val(),
                 IdOrigen: $("#ddlOrigen option:selected").val() == null ? 1 : parseInt($("#ddlOrigen option:selected").val()),
                 EnIngresoInicio: ConvertirFechaJavaScriptAFechaCsharp(localStorage.getItem("EnIngresoInicio")),
                 IdTipoMoneda: $("#ddlMoneda option:selected").val()
@@ -921,11 +921,11 @@ $("select").on('change', function () {
     $(this).parsley().validate();
 });
 
-$('#txtValorGlobal,#txtValorPrima,#txtPlazo,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps').blur(function () {
+$('#txtValorGlobal,#txtValorPrima,#ddlPlazosDisponibles,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps').blur(function () {
 
     var valorGlobal = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
     var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
-    var plazo = parseInt($("#txtPlazo").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazo").val().replace(/,/g, ''));
+    var plazo = parseInt($("#ddlPlazosDisponibles option:selected").val() == '' ? 0 : $("#ddlPlazosDisponibles option:selected").val());
     var valorFinanciar = valorGlobal - valorPrima;
     var state = true;
 
@@ -1165,7 +1165,7 @@ function GuardarRespaldoInformacionPrestamo() {
         txtRtnCliente: $("#txtRtnCliente").val(),
         txtValorGlobal: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
         txtValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
-        txtPlazo: $("#txtPlazo").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazo").val().replace(/,/g, ''),
+        ddlPlazosDisponibles: $("#ddlPlazosDisponibles option:selected").val() == '' ? 0 : $("#ddlPlazosDisponibles option:selected").val(),
         ddlMoneda: $("#ddlMoneda :selected").val(),
         ddlOrigen: $("#ddlOrigen :selected").val(),
 
@@ -1186,7 +1186,7 @@ function GuardarRespaldoInformacionPersonal() {
         ddlEstadoCivil: $("#ddlEstadoCivil :selected").val(),
         ddlTipoDeCliente: $("#ddlTipoDeCliente :selected").val(),
         sexoCliente: $("input[name='sexoCliente']:checked").val(),
-        txtCorreoElectronico: $("#txtCorreoElectronico").val(),        
+        txtCorreoElectronico: $("#txtCorreoElectronico").val(),
     }
     localStorage.setItem('RespaldoInformacionPersonal', JSON.stringify(respaldoInformacionPersonal));
 }
@@ -1303,11 +1303,11 @@ function RecuperarRespaldos() {
         $("#ddlOrigen").val(RespaldoInformacionPrestamo.ddlOrigen);
         var valorGlobal = parseFloat(RespaldoInformacionPrestamo.txtValorGlobal);
         var valorPrima = parseFloat(RespaldoInformacionPrestamo.txtValorPrima);
-        var plazo = parseInt(RespaldoInformacionPrestamo.txtPlazo);
+        var plazo = parseInt(RespaldoInformacionPrestamo.ddlPlazosDisponibles);
 
         $("#txtValorGlobal").val(valorGlobal);
         $("#txtValorPrima").val(valorPrima);
-        $("#txtPlazo").val(plazo);
+        $("#ddlPlazosDisponibles").val(plazo);
         $("#ddlMoneda").val(RespaldoInformacionPrestamo.ddlMoneda);
 
         /* Parametros de cotizador de vehiculos */
@@ -1330,7 +1330,7 @@ function RecuperarRespaldos() {
         $("#ddlEstadoCivil").val(respaldoInformacionPersonal.ddlEstadoCivil);
         $("#ddlTipoDeCliente").val(respaldoInformacionPersonal.ddlTipoDeCliente);
         $("input[name=sexoCliente][value=" + respaldoInformacionPersonal.sexoCliente + "]").prop('checked', true);
-        $("#txtCorreoElectronico").val(respaldoInformacionPersonal.txtCorreoElectronico);        
+        $("#txtCorreoElectronico").val(respaldoInformacionPersonal.txtCorreoElectronico);
     }
 
     /* Recuperar resplado de pestaña de informacion de domicilio */

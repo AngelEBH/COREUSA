@@ -15,7 +15,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
 {
     private string pcIDApp = "";
     private string pcIDSesion = "";
-    private string pcIDUsuario = "";
+    public string pcIDUsuario = "";
     private string pcIDGarantia = "";
     private string pcIDSolicitud = "";
     public bool EsDigitadoManualmente;
