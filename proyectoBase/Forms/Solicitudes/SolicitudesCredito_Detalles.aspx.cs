@@ -219,6 +219,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                             tblEstadoSolicitud.Rows.Add(tRowEstadoProcesamiento);
 
                             IdProducto = sqlResultado["fiIDProducto"].ToString();
+
                             lblProducto.Text = sqlResultado["fcProducto"].ToString();
                             lblNoSolicitud.Text = sqlResultado["fiIDSolicitud"].ToString();
                             lblTipoSolicitud.Text = sqlResultado["fcTipoSolicitud"].ToString();

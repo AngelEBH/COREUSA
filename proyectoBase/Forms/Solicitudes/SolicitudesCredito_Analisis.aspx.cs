@@ -68,8 +68,10 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     Response.Write("</script>");
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                ex.Message.ToString();
+
                 string lcScript = "window.open('SolicitudesCredito_Bandeja.aspx?" + lcEncriptado + "','_self')";
                 Response.Write("<script>");
                 Response.Write(lcScript);

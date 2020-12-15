@@ -26,9 +26,9 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             if (liParamStart > 0)
                 lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
             else
-                lcParametros = string.Empty;
+                lcParametros = String.Empty;
 
-            if (lcParametros != string.Empty)
+            if (lcParametros != String.Empty)
             {
                 pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
@@ -37,8 +37,8 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                 pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
 
-                //if (pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "146")
-                    //btnAbrirSolicitud.Visible = true;
+                if (pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "146")
+                    btnAbrirSolicitud.Visible = true;
             }
         }
     }
