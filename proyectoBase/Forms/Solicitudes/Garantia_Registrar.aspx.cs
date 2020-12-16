@@ -198,10 +198,10 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                         sqlResultado.NextResult();
 
                         ddlEstadoCivilPropietario.Items.Clear();
-                        ddlEstadoCivilPropietario.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlEstadoCivilPropietario.Items.Add(new ListItem("Seleccionar", "0"));
 
                         ddlEstadoCivilVendedor.Items.Clear();
-                        ddlEstadoCivilVendedor.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlEstadoCivilVendedor.Items.Add(new ListItem("Seleccionar", "0"));
 
                         while (sqlResultado.Read())
                         {
@@ -213,10 +213,10 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                         sqlResultado.NextResult();
 
                         ddlNacionalidadPropietario.Items.Clear();
-                        ddlNacionalidadPropietario.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlNacionalidadPropietario.Items.Add(new ListItem("Seleccionar", "0"));
 
                         ddlNacionalidadVendedor.Items.Clear();
-                        ddlNacionalidadVendedor.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlNacionalidadVendedor.Items.Add(new ListItem("Seleccionar", "0"));
 
                         while (sqlResultado.Read())
                         {
@@ -324,9 +324,13 @@ public partial class Garantia_Registrar : System.Web.UI.Page
                                     resultado.MensajeResultado = "No se pudo guardar la garantía, contacte al administrador.";
                                     resultado.DebugString = resultadoSp;
 
-                                    if (resultadoSp.Contains("Violation of UNIQUE KEY"))
+                                    if (resultadoSp.Contains("Violation of UNIQUE KEY") && pcIDSolicitud != "0")
                                     {
                                         resultado.MensajeResultado = "El VIN que intenta guardar ya está asociado a esta solicitud.";
+                                    }
+                                    else
+                                    {
+                                        resultado.MensajeResultado = "El VIN que intenta guardar ya está registrado sin solicitud.";
                                     }
                                     return resultado;
                                 }
@@ -445,9 +449,9 @@ public partial class Garantia_Registrar : System.Web.UI.Page
             if (ListaDocumentos != null)
             {
                 /* Crear el nuevo directorio para los documentos de la garantia */
-                string DirectorioTemporal = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
-                string NombreCarpetaDocumentos = "Solicitud" + idSolicitud;
-                string DirectorioDocumentos = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + NombreCarpetaDocumentos + "\\";
+                var DirectorioTemporal = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
+                var NombreCarpetaDocumentos = "Solicitud" + idSolicitud;
+                var DirectorioDocumentos = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + NombreCarpetaDocumentos + "\\";
                 bool CarpetaExistente = Directory.Exists(DirectorioDocumentos);
 
                 if (!CarpetaExistente)

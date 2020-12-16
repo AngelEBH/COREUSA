@@ -3,8 +3,13 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Web;
+using System.Web.Services;
 
 public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Page
 {
@@ -182,7 +187,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     while (sqlResultado.Read())
                                     {
                                         var VIN = sqlResultado["fcVin"].ToString();
-                                        var tipoDeGarantia = sqlResultado["fcVin"].ToString();
+                                        var tipoDeGarantia = sqlResultado["fcTipoGarantia"].ToString();
                                         var tipoDeVehiculo = sqlResultado["fcTipoVehiculo"].ToString();
                                         var marca = sqlResultado["fcMarca"].ToString();
                                         var modelo = sqlResultado["fcModelo"].ToString();
@@ -211,7 +216,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         var nombreVendedorGarantia = sqlResultado["fcNombreVendedorGarantia"].ToString();
                                         var identidadVendedorGarantia = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
                                         var nacionalidadVendedorGarantia = sqlResultado["fcNacionalidadVendedorGarantia"].ToString();
-                                        var estadoCivilVendedorGarantia = sqlResultado["fcEstadoCivilPropietarioGarantia"].ToString();
+                                        var estadoCivilVendedorGarantia = sqlResultado["fcEstadoCivilVendedorGarantia"].ToString();
 
                                         txtVIN.Text = VIN;
                                         txtTipoDeGarantia.Text = tipoDeGarantia;
@@ -232,14 +237,14 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         txtSerieDos.Text = serieDos;
                                         txtComentario.InnerText = comentario;
 
-                                        txtNombrePropietarioGarantia.Text = sqlResultado["fcNombrePropietarioGarantia"].ToString();
-                                        txtIdentidadPropietarioGarantia.Text = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
-                                        txtNacionalidadPropietarioGarantia.Text = sqlResultado["fcNacionalidadPropietarioGarantia"].ToString();
-                                        txtEstadoCivilPropietarioGarantia.Text = sqlResultado["fcEstadoCivilPropietarioGarantia"].ToString();
-                                        txtNombreVendedorGarantia.Text = sqlResultado["fcNombreVendedorGarantia"].ToString();
-                                        txtIdentidadVendedorGarantia.Text = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
-                                        txtNacionalidadVendedorGarantia.Text = sqlResultado["fcNacionalidadVendedorGarantia"].ToString();
-                                        txtEstadoCivilVendedorGarantia.Text = sqlResultado["fcEstadoCivilVendedorGarantia"].ToString();
+                                        txtNombrePropietarioGarantia.Text = nombrePropietarioGarantia;
+                                        txtIdentidadPropietarioGarantia.Text = identidadPropietarioGarantia;
+                                        txtNacionalidadPropietarioGarantia.Text = nacionalidadPropietarioGarantia;
+                                        txtEstadoCivilPropietarioGarantia.Text = estadoCivilPropietarioGarantia;
+                                        txtNombreVendedorGarantia.Text = nombreVendedorGarantia;
+                                        txtIdentidadVendedorGarantia.Text = identidadVendedorGarantia;
+                                        txtNacionalidadVendedorGarantia.Text = nacionalidadVendedorGarantia;
+                                        txtEstadoCivilVendedorGarantia.Text = estadoCivilVendedorGarantia;
 
                                         /* Contrato */
                                         lblNombre_Contrato.Text = nombreCliente;
@@ -309,9 +314,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblMontoPalabras_Pagare.Text = ConvertirCantidadALetras(valorTotalFinanciamiento.ToString()) + " " + moneda; ;
                                         lblMontoDigitos_Pagare.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
 
-                                        lblDiaPrimerPago_Pagare.Text = DiaPrimerPago;
-                                        lblMesPrimerPago_Pagare.Text = MesPrimerPago;
-                                        lblAnioPrimerPago_Pagare.Text = AnioPrimerPago;
+                                        lblDiaPrimerPago_Pagare.Text = "________";
+                                        lblMesPrimerPago_Pagare.Text = "________________";
+                                        lblAnioPrimerPago_Pagare.Text = "________________";
 
                                         lblPorcentajeInteresFluctuante_Pagare.Text = tasaDeInteresSimpleMensual.ToString("N");
                                         lblInteresesMoratorios_Pagare.Text = "4.52";
@@ -330,7 +335,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         /* Convenio de compra y venta de vehiculos para financiamiento a tercero */
                                         lblNombreCliente_ConvenioCyV.Text = nombreVendedorGarantia;
                                         lblNacionalidad_ConvenioCyV.Text = nacionalidadVendedorGarantia;
-                                        lblEstadoCivil_ConvenioCyV.Text = estadoCivil;
+                                        lblEstadoCivil_ConvenioCyV.Text = estadoCivilVendedorGarantia;
                                         lblIdentidad_ConvenioCyV.Text = identidadVendedorGarantia;
                                         lblCiudadCliente_ConvenioCyV.Text = ciudadPoblado;
                                         lblMarca_ConvenioCyV.Text = marca;
@@ -343,7 +348,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblCilindraje_ConvenioCyV.Text = cilindraje;
                                         lblMatricula_ConvenioCyV.Text = matricula;
                                         lblVIN_ConvenioCyV.Text = VIN;
-                                        lblNombre_ConvenioCyV.Text = nombreCliente.ToUpper();
+                                        lblNombre_ConvenioCyV.Text = nombreVendedorGarantia.ToUpper();
 
                                         /* Inspeccion seguro */
                                         lblNombre_InspeccionSeguro.Text = nombreCliente;
@@ -390,6 +395,56 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         /* Básico + CPI*/
                                         lblNombreCliente_BasicoCPI.Text = nombreCliente;
                                         lblNumeroPrestamo_BasicoCPI.Text = numeroPrestamo;
+
+                                        /* Recibo */
+                                        lblFecha_Recibo.Text = DateTime.Now.ToString("MM/dd/yyyy");
+                                        lblSumaRecibidaEnPalabras_Recibo.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString());
+                                        lblMarca_Recibo.Text = marca;
+                                        lblModelo_Recibo.Text = modelo;
+                                        lblAnio_Recibo.Text = anio;
+                                        lblColor_Recibo.Text = color;
+                                        lblTipo_Recibo.Text = tipoDeVehiculo;
+                                        lblCilindraje_Recibo.Text = cilindraje;
+                                        lblSerieMotor_Recibo.Text = serieMotor;
+                                        lblVIN_Recibo.Text = VIN;
+                                        lblSerieChasis_Recibo.Text = serieChasis;
+                                        lblPlaca_Recibo.Text = matricula;
+                                        lblNombreCliente_Recibo.Text = nombreCliente.ToUpper();
+                                        lblTotalRecibido_Recibo.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");
+                                        lblNombreVendedor_Recibo.Text = nombreVendedorGarantia;
+                                        lblIdentidadVendedor_Recibo.Text = identidadVendedorGarantia;
+
+                                        /* Correo liquidacion */
+                                        lblAño_CorreoLiquidacion.Text = anio;
+                                        lblPlaca_CorreoLiquidacion.Text = matricula;
+                                        lblMarca_CorreoLiquidacion.Text = marca;
+                                        lblModelo_CorreoLiquidacion.Text = modelo;
+                                        lblTipoVehiculo_CorreoLiquidacion.Text = tipoDeVehiculo;
+                                        lblColor_CorreoLiquidacion.Text = color;
+                                        lblSerieMotor_CorreoLiquidacion.Text = serieMotor;
+                                        lblSerieChasis_CorreoLiquidacion.Text = serieChasis;
+                                        lblVIN_CorreoLiquidacion.Text = VIN;
+                                        lblNombreCliente_CorreoLiquidacion.Text = nombreCliente;
+                                        lblIdentidadCliente_CorreoLiquidacion.Text = identidad;
+                                        lblNumeroPrestamo_CorreoLiquidacion.Text = "";
+                                        lblNombreVendedor_CorreoLiquidacion.Text = nombreVendedorGarantia;
+                                        lblIdentidadVendedor_CorreoLiquidacion.Text = identidadVendedorGarantia;
+                                        lblValorNumero_CorreoLiquidacion.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");
+                                        lblValorLetra_CorreoLiquidacion.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString()) + " " + moneda;
+
+                                        /* Correo seguro */
+                                        lblAño_CorreoSeguro.Text = anio;
+                                        lblPlaca_CorreoSeguro.Text = matricula;
+                                        lblMarca_CorreoSeguro.Text = marca;
+                                        lblModelo_CorreoSeguro.Text = modelo;
+                                        lblTipoVehiculo_CorreoSeguro.Text = tipoDeVehiculo;
+                                        lblColor_CorreoSeguro.Text = color;
+                                        lblSerieMotor_CorreoSeguro.Text = serieMotor;
+                                        lblSerieChasis_CorreoSeguro.Text = serieChasis;
+                                        lblVIN_CorreoSeguro.Text = VIN;
+                                        lblNombreCliente_CorreoSeguro.Text = nombreCliente;
+                                        lblIdentidadCliente_CorreoSeguro.Text = identidad;
+                                        lblNumeroPrestamo_CorreoSeguro.Text = "";
                                     }
 
                                     sqlResultado.NextResult();
@@ -429,8 +484,162 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         }
         catch (Exception ex)
         {
-            MostrarMensaje("Error al cargar información de la solicitud " + pcIDSolicitud + ": " + ex.Message.ToString());
+            var mensajeExtra = string.Empty;
+
+            if (int.Parse(pcIDSolicitud) < 802)
+            {
+                mensajeExtra = "Esta opción está disponible a partir de la solicitud de crédito No. 802";
+            }
+
+            MostrarMensaje("Error al cargar información de la solicitud " + pcIDSolicitud + ": " + ex.Message.ToString() + " " + mensajeExtra);
+            divContenedorInspeccionSeguro.Visible = false;
         }
+    }
+
+    [WebMethod]
+    public static bool EnviarDocumentoPorCorreo(string asunto, string tituloGeneral, string contenidoHtml, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+
+            var buzonCorreoUsuario = string.Empty;
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreSeguridad.dbo.sp_InformacionUsuario", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            buzonCorreoUsuario = sqlResultado["fcBuzondeCorreo"].ToString();
+                        }
+                    } // using reader
+                } // using command
+            } // using connection
+
+            resultado = EnviarCorreo(asunto, tituloGeneral, tituloGeneral, contenidoHtml, buzonCorreoUsuario);
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultado;
+    }
+
+    public static bool EnviarCorreo(string pcAsunto, string pcTituloGeneral, string pcSubtitulo, string pcContenidodelMensaje, string buzonCorreoUsuario)
+    {
+        var resultado = false;
+        try
+        {
+            var pmmMensaje = new MailMessage();
+            var smtpCliente = new SmtpClient();
+
+            smtpCliente.Host = "mail.miprestadito.com";
+            smtpCliente.Port = 587;
+            smtpCliente.Credentials = new System.Net.NetworkCredential("systembot@miprestadito.com", "iPwf@p3q");
+            smtpCliente.EnableSsl = true;
+
+            pmmMensaje.Subject = pcAsunto;
+            pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
+            pmmMensaje.To.Add("sistemas@miprestadito.com");
+            //pmmMensaje.To.Add(buzonCorreoUsuario);
+            pmmMensaje.CC.Add(buzonCorreoUsuario);
+            pmmMensaje.IsBodyHtml = true;
+
+            string htmlString = @"<!DOCTYPE html> " +
+                        "<html>" +
+                        "<body>" +
+                        "    <div style=\"width: 500px;\">" +
+                        "        <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
+                        "            <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
+                        "                <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                        "                <td>&nbsp;</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                        "                <td style=\"background-color:whitesmoke; text-align:center;\">Datos del cliente y la garantía</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                        "                <td>&nbsp;</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                        "                <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                        "                <td>&nbsp;</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
+                        "                <td>System Bot Prestadito</td>" +
+                        "            </tr>" +
+                        "        </table>" +
+                        "    </div>" +
+                        "</body> " +
+                        "</html> ";
+
+            pmmMensaje.Body = htmlString;
+
+            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+            smtpCliente.Send(pmmMensaje);
+
+            smtpCliente.Dispose();
+
+            resultado = true;
+        }
+        catch (Exception ex)
+        {
+            ExceptionLogging.SendExcepToDB(ex);
+            resultado = false;
+        }
+
+        return resultado;
+    }
+
+    public static Uri DesencriptarURL(string URL)
+    {
+        Uri lURLDesencriptado = null;
+        try
+        {
+            var liParamStart = 0;
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
+            liParamStart = URL.IndexOf("?");
+
+            if (liParamStart > 0)
+            {
+                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
+            }
+            else
+            {
+                lcParametros = string.Empty;
+            }
+
+            if (lcParametros != string.Empty)
+            {
+                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
+
+                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return lURLDesencriptado;
     }
 
     protected void MostrarMensaje(string mensaje)
@@ -576,5 +785,24 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         public string Comentario { get; set; }
     }
 
+    public class CorreoViewModel
+    {
+        public string Anio { get; set; }
+        public string Placa { get; set; }
+        public string Marca { get; set; }
+        public string Modelo { get; set; }
+        public string TipoDeGarantia { get; set; }
+        public string Color { get; set; }
+        public string SerieMotor { get; set; }
+        public string SerieChasis { get; set; }
+        public string VIN { get; set; }
+
+        public string NombreDelCliente { get; set; }
+        public string IdentidadDeCliente { get; set; }
+        public string NumeroPrestamo { get; set; }
+        public string NombreVendedor { get; set; }
+        public string IdentidadVendedor { get; set; }
+        public decimal ValorTotal { get; set; }
+    }
     #endregion
 }

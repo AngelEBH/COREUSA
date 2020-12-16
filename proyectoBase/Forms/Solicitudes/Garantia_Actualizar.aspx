@@ -175,20 +175,20 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Identidad</label>
-                                            <asp:TextBox ID="txtIdentidadPropietario" CssClass="form-control form-control-sm mascara-identidad" type="text" required="required" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtIdentidadPropietario" CssClass="form-control form-control-sm mascara-identidad" type="text" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Nombre completo</label>
-                                            <asp:TextBox ID="txtNombrePropietario" CssClass="form-control form-control-sm" type="text" required="required" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtNombrePropietario" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Estado Civil</label>
-                                            <asp:DropDownList ID="ddlEstadoCivilPropietario" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required" data-parsley-errors-container="#error-ddlEstadoCivilPropietario"></asp:DropDownList>
+                                            <asp:DropDownList ID="ddlEstadoCivilPropietario" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" data-parsley-errors-container="#error-ddlEstadoCivilPropietario"></asp:DropDownList>
                                             <div id="error-ddlEstadoCivilPropietario"></div>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Nacionalidad</label>
-                                            <asp:DropDownList ID="ddlNacionalidadPropietario" runat="server" CssClass="form-control form-control-sm col-form-label" required="required" data-parsley-errors-container="#error-ddlNacionalidadPropietario"></asp:DropDownList>
+                                            <asp:DropDownList ID="ddlNacionalidadPropietario" runat="server" CssClass="form-control form-control-sm col-form-label" data-parsley-errors-container="#error-ddlNacionalidadPropietario"></asp:DropDownList>
                                             <div id="error-ddlNacionalidadPropietario"></div>
                                         </div>
                                     </div>
@@ -199,20 +199,20 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Identidad</label>
-                                            <asp:TextBox ID="txtIdentidadVendedor" CssClass="form-control form-control-sm mascara-identidad" type="text" required="required" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtIdentidadVendedor" CssClass="form-control form-control-sm mascara-identidad" type="text" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Nombre completo</label>
-                                            <asp:TextBox ID="txtNombreVendedor" CssClass="form-control form-control-sm" type="text" required="required" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtNombreVendedor" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Estado Civil</label>
-                                            <asp:DropDownList ID="ddlEstadoCivilVendedor" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" required="required" data-parsley-errors-container="#error-ddlEstadoCivilVendedor"></asp:DropDownList>
+                                            <asp:DropDownList ID="ddlEstadoCivilVendedor" runat="server" CssClass="form-control form-control-sm col-form-label buscadorddl" data-parsley-errors-container="#error-ddlEstadoCivilVendedor"></asp:DropDownList>
                                             <div id="error-ddlEstadoCivilVendedor"></div>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Nacionalidad</label>
-                                            <asp:DropDownList ID="ddlNacionalidadVendedor" runat="server" CssClass="form-control form-control-sm col-form-label" required="required" data-parsley-errors-container="#error-ddlNacionalidadVendedor"></asp:DropDownList>
+                                            <asp:DropDownList ID="ddlNacionalidadVendedor" runat="server" CssClass="form-control form-control-sm col-form-label" data-parsley-errors-container="#error-ddlNacionalidadVendedor"></asp:DropDownList>
                                             <div id="error-ddlNacionalidadVendedor"></div>
                                         </div>
                                     </div>
@@ -331,7 +331,7 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/Garantia_Actualizar.js?v=20201214145252"></script>
+    <script src="/Scripts/app/solicitudes/Garantia_Actualizar.js?v=20201216081425"></script>
 </body>
 </html>
 

@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -23,7 +23,7 @@
                         <span class="sr-only"></span>
                     </div>
                 </div>
-                <h5>Imprimir documentación solicitud de crédito No. <span id="lblIdSolicitud" class="font-weight-bold" runat="server">330</span></h5>
+                <h5>Imprimir documentación solicitud de crédito No. <span id="lblIdSolicitud" class="font-weight-bold" runat="server"></span></h5>
             </div>
             <div class="card-body pt-0">
                 <div class="row mb-0">
@@ -75,30 +75,33 @@
                                     Pagaré
                                 </button>
                                 <button type="button" id="btnCompromisoLegal" onclick="ExportToPDF('COMPROMISO_LEGAL','divContenedorCompromisoLegal','divCompromisoLegalPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
-                                    Compromiso Legal
+                                    Compromiso legal
                                 </button>
                                 <button type="button" id="btnConvenioComprayVenta" onclick="ExportToPDF('CONVENIO_DE_COMPRA_Y_VENTA_DE_VEHICULOS_PARA_FINANCIAMIENTO','divContenedorConvenioCyV','divConevionCyVPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
                                     C. y V. de vehic. finan.
                                 </button>
-                                <a href="/Documentos/Recursos/INSPECCION%20DE%20VEHICULO.pdf" download>
-                                    <button type="button" id="btnInspeccionVehiculo" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');">
-                                        Inspección de vehículo
-                                    </button>
+                                <a href="/Documentos/Recursos/INSPECCION%20DE%20VEHICULO.pdf" download="Inspección vehículo" id="btnInspeccionVehiculo" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');">Inspección de vehículo
                                 </a>
                                 <button type="button" id="btnInspeccionSeguroDeVehiculo" onclick="ExportToPDF('INSPECCION_SEGURO_VEHICULO','divContenedorInspeccionSeguro','divInspeccionSeguroPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');">
                                     Inspección seguro
                                 </button>
                                 <button type="button" id="btnTraspaso" onclick="ExportToPDF('TRASPASO_CLIENTE','divContenedorTraspaso','divTraspasoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
-                                    Traspaso Cliente
+                                    Traspaso cliente
                                 </button>
                                 <button type="button" id="btnTraspasoVendedor" onclick="ExportToPDF('TRASPASO_PROPIETARIO','divContenedorTraspasoVendedor','divTraspasoVendedorPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
-                                    Traspaso Propietario
+                                    Traspaso propietario
                                 </button>
-                                <button type="button" id="btnRecibo" onclick="ExportToPDF('TRASPASO','divContenedorTraspaso','divTraspasoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/receipt_40px.png');">
+                                <button type="button" id="btnRecibo" onclick="ExportToPDF('RECIBO','divContenedorRecibo','divReciboPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/receipt_40px.png');">
                                     Recibo
                                 </button>
                                 <button type="button" id="btnBasicoCPI" onclick="ExportToPDF('BASICO_CPI','divContenedorBasicoCPI','divBasicoCPIPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/vehicle_insurance_40px.png');">
                                     Básico + CPI
+                                </button>
+                                <button type="button" id="btnEnviarCorreoLiquidacion" onclick="EnviarCorreo('Liquidación', 'Liquidación', 'divCorreoLiquidacionPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
+                                    Correo Liquidación
+                                </button>
+                                <button type="button" id="btnEnviarCorreoSeguro" onclick="EnviarCorreo('Seguro', 'Seguro de garantía', 'divCorreoSeguroPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
+                                    Correo Seguro
                                 </button>
                             </div>
                         </div>
@@ -256,7 +259,7 @@
 
         <!-- ********** DOCUMENTOS ********** -->
 
-        <!-- Contrato *Listo* -->
+        <!-- Contrato -->
         <div id="divContenedorContrato" style="margin-top: 999px; display: none;">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divContratoPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -472,7 +475,7 @@ a los
             </div>
         </div>
 
-        <!-- Pagaré *Listo* -->
+        <!-- Pagaré -->
         <div id="divContenedorPagare" style="margin-top: 999px; display: none;">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divPagarePDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -551,7 +554,7 @@ a los
             </div>
         </div>
 
-        <!-- Compromiso Legal *Listo* -->
+        <!-- Compromiso Legal -->
         <div id="divContenedorCompromisoLegal" style="margin-top: 999px; display: none;">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divCompromisoLegalPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -631,7 +634,7 @@ a los <span class="lblNumeroDia_Firma"></span>
             </div>
         </div>
 
-        <!-- Convenio de regulación de compra y venta de vehiculos para financiamiento a tercero *Listo* -->
+        <!-- Convenio de regulación de compra y venta de vehiculos para financiamiento a tercero -->
         <div id="divContenedorConvenioCyV" style="margin-top: 999px; display: none;">
             <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divConevionCyVPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -759,7 +762,7 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
             </div>
         </div>
 
-        <!-- Inspeccion del vehiculo *Listo* -->
+        <!-- Inspeccion del vehiculo -->
         <div id="divContenedorInspeccionSeguro" runat="server">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDF">
                 <div class="card-body pt-0">
@@ -817,7 +820,122 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
             </div>
         </div>
 
-        <!-- Traspaso de vehiculo del cliente *Listo* -->
+        <!-- Recibo -->
+        <div id="divContenedorRecibo" runat="server" style="margin-top: 999px; display: none;">
+            <div class="card m-0 divImprimir" runat="server" visible="true" id="divReciboPDF" style="display: none;">
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div class="col-12 mb-5">
+                            <img src="/Imagenes/LogoPrestadito.png" />
+                        </div>
+                        <div class="col-6 align-self-center">
+                            <h4 class="text-center font-weight-bold">PRESTADITO S.A DE C.V</h4>
+                        </div>
+                        <div class="col-6">
+                            <table class="table table-bordered" style="border-width: 1px !important;">
+                                <tr>
+                                    <th class="bg-light font-weight-bold text-center pb-0">RTN</th>
+                                    <td class="p-0 text-center font-weight-bold">
+                                        <asp:Label runat="server" ID="lblRTNEmpresa_Recibo">05019016811399</asp:Label></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light font-weight-bold text-center pb-0">Fecha</th>
+                                    <td class="p-0 text-center">
+                                        <asp:Label runat="server" ID="lblFecha_Recibo"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light font-weight-bold text-center pb-0">Recibo</th>
+                                    <td class="p-0 text-center">
+                                        <asp:Label runat="server" ID="lblRecibo_Recibo"></asp:Label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-12">
+                            <table class="table table-bordered mb-0">
+                                <tr>
+                                    <th class="bg-light font-weight-bold p-1" style="width: 15%">Recibí de:</th>
+                                    <td class="p-1 font-weight-bold">
+                                        <asp:Label runat="server" ID="lblNombreEmpresa_Recibo">PRESTADITO SA DE CV</asp:Label></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light font-weight-bold p-1" style="width: 15%">La suma de:</th>
+                                    <td class="p-1 font-weight-bold">
+                                        <asp:Label runat="server" ID="lblSumaRecibidaEnPalabras_Recibo"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light font-weight-bold p-1" style="width: 15%">Pago por:</th>
+                                    <td class="p-1 font-weight-bold">
+                                        <asp:Label runat="server" ID="lblConceptoPago_Recibo">FINANCIAMIENTO DE VEHICULO AUTOMOTOR MARCA:
+                                            <asp:Label runat="server" ID="lblMarca_Recibo"></asp:Label>
+                                            MODELO: 
+                                            <asp:Label runat="server" ID="lblModelo_Recibo"></asp:Label>
+                                            AÑO:
+                                            <asp:Label runat="server" ID="lblAnio_Recibo"></asp:Label>
+                                            COLOR:
+                                            <asp:Label runat="server" ID="lblColor_Recibo"></asp:Label>
+                                            TIPO:
+                                            <asp:Label runat="server" ID="lblTipo_Recibo"></asp:Label>
+                                            CILINDRAJE:
+                                            <asp:Label runat="server" ID="lblCilindraje_Recibo"></asp:Label>
+                                            Y CON REGISTRO DE MATRICULA MOTOR:
+                                            <asp:Label runat="server" ID="lblSerieMotor_Recibo"></asp:Label>
+                                            VIN:
+                                            <asp:Label runat="server" ID="lblVIN_Recibo"></asp:Label>
+                                            CHASIS:
+                                            <asp:Label runat="server" ID="lblSerieChasis_Recibo"></asp:Label>
+                                            PLACA: 
+                                            <asp:Label runat="server" ID="lblPlaca_Recibo"></asp:Label>
+                                            CLIENTE:
+                                            <asp:Label runat="server" ID="lblNombreCliente_Recibo"></asp:Label>
+                                        </asp:Label>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="table table-bordered mb-5">
+                                <tr>
+                                    <th class="font-weight-bold p-1 text-right" style="width: 50%">TOTAL RECIBIDO</th>
+                                    <td class="p-1 font-weight-bold text-right" style="width: 50%">
+                                        <asp:Label runat="server" ID="lblTotalRecibido_Recibo"></asp:Label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class="row justify-content-center pt-5">
+                        <div class="col-6">
+                            <label class="text-center font-weight-bold border-top border-bottom-0 border-right-0 border-left-0 form-control border-dark pt-2">NOMBRE Y FIRMA DE RECIBIDO</label>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label>RECIBE</label>
+                                </div>
+                                <div class="col-9">
+                                    <asp:Label runat="server" CssClass="font-weight-bold" ID="lblNombreVendedor_Recibo"></asp:Label>
+                                </div>
+                                <div class="col-3">
+                                    <label>IDENTIDAD</label>
+                                </div>
+                                <div class="col-9">
+                                    <asp:Label runat="server" CssClass="font-weight-bold" ID="lblIdentidadVendedor_Recibo"></asp:Label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Traspaso de vehiculo del cliente -->
         <div id="divContenedorTraspaso" style="margin-top: 999px; display: none;">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divTraspasoPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -969,7 +1087,7 @@ a los
             </div>
         </div>
 
-        <!-- Traspaso de vehiculo del propietario *Listo* -->
+        <!-- Traspaso de vehiculo del propietario -->
         <div id="divContenedorTraspasoVendedor" style="margin-top: 999px; display: none;">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divTraspasoVendedorPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -1121,7 +1239,6 @@ a los
             </div>
         </div>
 
-
         <!-- Básico + CPI -->
         <div id="divContenedorBasicoCPI" style="margin-top: 999px; display: none;">
             <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divBasicoCPIPDF" style="display: none;">
@@ -1269,6 +1386,329 @@ de lo acá establecido se firma y se estampa huella digital en fecha
             </div>
         </div>
 
+        <!-- Correo liquidación -->
+        <div id="divContenedorCorreoLiquidacion" style="display:none;">
+            <div id="divCorreoLiquidacionPDF">
+
+                <table border="1" style="width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
+                    <tr>
+                        <th colspan='2' style='text-align: left; font-weight: bold;'><em>DATOS DEL VEHICULO</em></th>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>AÑO</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblAño_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>PLACA</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblPlaca_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>MARCA</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblMarca_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>MODELO</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblModelo_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>TIPO</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblTipoVehiculo_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>COLOR</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblColor_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>MOTOR</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblSerieMotor_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>CHASIS</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblSerieChasis_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>VIN</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblVIN_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">
+                            <br />
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan='2' style='text-align: left; font-weight: bold;'><em>DATOS DEL CLIENTE</em></th>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>NOMBRE</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblNombreCliente_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>IDENTIDAD</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblIdentidadCliente_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'># PRESTAMO</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblNumeroPrestamo_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">
+                            <br />
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan='2' style='text-align: left; font-weight: bold;'><em>DATOS DEL VENDEDOR</em></th>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>NOMBRE</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblNombreVendedor_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>IDENTIDAD</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblIdentidadVendedor_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>VALOR NUMERO</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblValorNumero_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>VALOR LETRA</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblValorLetra_CorreoLiquidacion"></asp:Label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Correo seguro -->
+        <div id="divContenedorCorreoSeguro" style="display:none;">
+            <div id="divCorreoSeguroPDF">
+
+
+                <table border="1" style="width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
+                    <tr>
+                        <th colspan='2' style='text-align: left; font-weight: bold;'><em>DATOS DEL VEHICULO</em></th>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>AÑO</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblAño_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>PLACA</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblPlaca_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>MARCA</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblMarca_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>MODELO</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblModelo_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>TIPO</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblTipoVehiculo_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>COLOR</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblColor_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>MOTOR</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblSerieMotor_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>CHASIS</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblSerieChasis_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>VIN</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblVIN_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">
+                            <br />
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan='2' style='text-align: left; font-weight: bold;'><em>DATOS DEL CLIENTE</em></th>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>NOMBRE</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblNombreCliente_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>IDENTIDAD</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblIdentidadCliente_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'># PRESTAMO</th>
+                        <td>
+                            <asp:Label runat="server" ID="lblNumeroPrestamo_CorreoSeguro"></asp:Label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Convenio de regulación de compra y venta de vehiculos para financiamiento a tercero -->
+        <div id="divContenedorInspeccionSegurosContinental" style="/*margin-top: 999px; display: none;*/">
+            <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divSegurosContinentalPDF" style="/*display: none;*/">
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div class="col-12 m-0 p-0">
+                            <img src="/Imagenes/logoSegCon.png" class="mt-0 pt-0" />
+                        </div>
+                        <div class="col-12">
+                            <h4 class="text-center font-weight-bold">INFORME DE INSPECCIÓN DE RIESGO PARA ASEGURAR AUTOMÓVILES</h4>
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="row mb-0 pb-0">
+                        <div class="col-auto mb-0">
+                            Asegurado:
+                        </div>
+                        <div class="col-10 p-0 mt-3 mb-0">
+                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        </div>
+                    </div>
+                    <div class="row mb-0 pb-0">
+                        <div class="col-auto mb-0">
+                            Marca:
+                        </div>
+                        <div class="col-2 p-0 mt-3 mb-0">
+                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        </div>
+                        <div class="col-auto mb-0">
+                            Modelo:
+                        </div>
+                        <div class="col-2 p-0 mt-3 mb-0">
+                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        </div>
+                        <div class="col-auto mb-0">
+                            Año:
+                        </div>
+                        <div class="col-2 p-0 mt-3 mb-0">
+                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        </div>
+                        <div class="col-auto mb-0">
+                            Color:
+                        </div>
+                        <div class="col-2 p-0 mt-3 mb-0">
+                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        </div>
+                    </div>
+                    <div class="row mb-0 pb-0">
+                        <div class="col-auto mb-0">
+                            Serie No:
+                        </div>
+                        <div class="col-3 p-0 mt-3 mb-0">
+                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        </div>
+                        <div class="col-auto mb-0">
+                            Motor No:
+                        </div>
+                        <div class="col-3 p-0 mt-3 mb-0">
+                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        </div>
+                        <div class="col-auto mb-0">
+                            Tipo:
+                        </div>
+                        <div class="col-3 p-0 mt-3 mb-0">
+                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        </div>
+                    </div>
+
+                    <div class="row mb-0 pb-0">
+                        <div class="col-1 mb-0">
+                            Placa:
+                        </div>
+                        <div class="col-3 p-0 mt-3 mb-0">
+                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        </div>
+                        <div class="col-auto mb-0">
+                            Ocupantes:
+                        </div>
+                        <div class="col-2 p-0 mt-3 mb-0">
+                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        </div>
+                        <div class="col-autp mb-0">
+                            Cilindraje No.
+                        </div>
+                        <div class="col-2 p-0 mt-3 mb-0">
+                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        </div>
+                        
+                    </div>
+                    <!-- Firma del cliente -->
+                    <div class="row justify-content-center mt-1 pt-1">
+                        <div class="col-5 text-center mt-1">
+                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                            <label class="mt-0 d-block">Por la empresa PRESTADITO S.A. de C.V.</label>
+                            <label class="mt-0 d-block">ERICK GEOVANY MOLINA PADILLA</label>
+                        </div>
+                        <div class="col-5 text-center mt-1">
+                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                            <label class="mt-0 d-block">Por el cliente</label>
+                            <asp:Label runat="server" ID="Label16" class="mt-0 d-block"></asp:Label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -1337,6 +1777,42 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                 $("#Loader").css('display', 'none');
             });
         }
+
+        function EnviarCorreo(asunto, tituloGeneral, idContenidoHtml) {
+
+            let contenidoHtml = $('#' + idContenidoHtml + '').html();
+
+            $.ajax({
+                type: "POST",
+                url: "SolicitudesCredito_ImprimirDocumentacion.aspx/EnviarDocumentoPorCorreo",
+                data: JSON.stringify({ asunto: asunto, tituloGeneral: tituloGeneral, contenidoHtml: contenidoHtml, dataCrypt: window.location.href }),
+                contentType: "application/json; charset=utf-8",
+                error: function (xhr, ajaxOptions, thrownError) {
+                    MensajeError('No se pudo enviar el correo, contacte al administrador.');
+                },
+                success: function (data) {
+
+                    data.d == true ? MensajeExito('El correo se envió correctamente') : MensajeError('No se pudo enviar el correo, contacte al administrador.');
+
+                }
+            });
+        }
+
+        function MensajeError(mensaje) {
+            iziToast.error({
+                title: 'Error',
+                message: mensaje
+            });
+        }
+
+        function MensajeExito(mensaje) {
+            iziToast.success({
+                title: 'Éxito',
+                message: mensaje
+            });
+        }
+
     </script>
 </body>
 </html>
+

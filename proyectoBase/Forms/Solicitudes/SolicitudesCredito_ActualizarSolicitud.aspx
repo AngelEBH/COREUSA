@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Actualizar solicitud de crédito</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
@@ -982,7 +982,7 @@
         const ID_CLIENTE = <%=this.IdCliente%>;
         const ID_PRODUCTO = <%=this.IdProducto%>;
         const ID_SOLICITUD = <%=this.IdSolicitud%>;
-        const PRECALIFICADO = <%=this.jsonPrecalicado%>;        
+        const PRECALIFICADO = <%=this.jsonPrecalicado%>;
     </script>
     <script src="/Scripts/plugins/steps/js/jquery.smartWizard.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>

@@ -59,6 +59,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
+                IdSolicitud = "848";
+
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 Session.Timeout = 10080;
 
@@ -403,7 +405,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                         tblCondicionesReferenciasPersonales.Rows.Add(tRowCondicionAcciones);
                                     }
                                     /* condiciones de la información de la solicitud */
-                                    else if (sqlResultado["fiIDCondicion"].ToString() == "9" && estadoCondicion == true)
+                                    else if (sqlResultado["fiIDCondicion"].ToString() == "9" && estadoCondicion == true || 1 == 1)
                                     {
                                         liInformacionPrestamoSolicitado.Visible = true;
                                         tblCondicionesInformacionSolicitud.Rows.Add(tRowCondicionAcciones);
@@ -687,7 +689,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             Precalificado.TipoDeSolicitud = sqlResultado["fcTipoSolicitud"].ToString();
                             Precalificado.IdProducto = int.Parse(sqlResultado["fiIDProducto"].ToString());
                             Precalificado.Producto = sqlResultado["fcProducto"].ToString();
-                            Precalificado.ScorePromedio = sqlResultado["fiScorePromedio"].ToString();
+                            Precalificado.ScorePromedio = "500";
                         }
                     }
                 } // using sp consulta ejecutivos

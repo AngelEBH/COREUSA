@@ -1145,6 +1145,7 @@
     <Content Include="Imagenes\resume_32px.png" />
     <Content Include="Imagenes\resume_40px.png" />
     <Content Include="Imagenes\resume_50px.png" />
+    <Content Include="Imagenes\send_email_40px.png" />
     <Content Include="Imagenes\Thumbs.db" />
     <Content Include="Imagenes\AnimacionCargando.gif" />
     <Content Include="Imagenes\BannerBuenasNoches.PNG" />

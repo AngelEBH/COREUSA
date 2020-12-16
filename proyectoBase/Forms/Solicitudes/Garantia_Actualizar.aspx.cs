@@ -20,7 +20,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
     private string pcIDSolicitud = "";
     public bool EsDigitadoManualmente;
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-    public List<SeccionGarantia_ViewModel> Documentos_Secciones_Garantia;    
+    public List<SeccionGarantia_ViewModel> Documentos_Secciones_Garantia;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -55,7 +55,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                 pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
-                pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");                
+                pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
                 lblNoSolicitud.InnerText = pcIDSolicitud != "0" ? ("Solicitud de crédito No. " + pcIDSolicitud) : "Sin solicitud de crédito";
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
@@ -72,13 +72,13 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-                { "limit", 1 },
-                { "title", "auto" },
-                { "uploadDir", uploadDir },
-                { "extensions", new string[] { "jpg", "png", "jpeg"} },
-                { "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
-                { "fileMaxSize", 20 }, //peso máximo por archivo
-            });
+{ "limit", 1 },
+{ "title", "auto" },
+{ "uploadDir", uploadDir },
+{ "extensions", new string[] { "jpg", "png", "jpeg"} },
+{ "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
+{ "fileMaxSize", 20 }, //peso máximo por archivo
+});
 
             switch (type)
             {
@@ -212,10 +212,10 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                         sqlResultado.NextResult();
 
                         ddlEstadoCivilPropietario.Items.Clear();
-                        ddlEstadoCivilPropietario.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlEstadoCivilPropietario.Items.Add(new ListItem("Seleccionar", "0"));
 
                         ddlEstadoCivilVendedor.Items.Clear();
-                        ddlEstadoCivilVendedor.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlEstadoCivilVendedor.Items.Add(new ListItem("Seleccionar", "0"));
 
                         while (sqlResultado.Read())
                         {
@@ -230,10 +230,10 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                         sqlResultado.NextResult();
 
                         ddlNacionalidadPropietario.Items.Clear();
-                        ddlNacionalidadPropietario.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlNacionalidadPropietario.Items.Add(new ListItem("Seleccionar", "0"));
 
                         ddlNacionalidadVendedor.Items.Clear();
-                        ddlNacionalidadVendedor.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlNacionalidadVendedor.Items.Add(new ListItem("Seleccionar", "0"));
 
                         while (sqlResultado.Read())
                         {
@@ -288,9 +288,9 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
-                        sqlComando.Parameters.AddWithValue("@piIDCanal", 1);                        
+                        sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
                         sqlComando.Parameters.AddWithValue("@pcPrestamo", garantia.NumeroPrestamo);
-                        sqlComando.Parameters.AddWithValue("@pcVin", garantia.VIN);                        
+                        sqlComando.Parameters.AddWithValue("@pcVin", garantia.VIN);
                         sqlComando.Parameters.AddWithValue("@pcTipoGarantia", garantia.TipoDeGarantia);
                         sqlComando.Parameters.AddWithValue("@pcTipoVehiculo", garantia.TipoDeVehiculo);
                         sqlComando.Parameters.AddWithValue("@pcMarca", garantia.Marca);
@@ -342,9 +342,13 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                                     resultado.MensajeResultado = "No se pudo actualizar la información de la garantía, contacte al administrador.";
                                     resultado.DebugString = resultadoSp;
 
-                                    if (resultadoSp.Contains("Violation of UNIQUE KEY"))
+                                    if (resultadoSp.Contains("Violation of UNIQUE KEY") && pcIDSolicitud != "0")
                                     {
                                         resultado.MensajeResultado = "El VIN que intenta guardar ya está asociado a esta solicitud.";
+                                    }
+                                    else
+                                    {
+                                        resultado.MensajeResultado = "El VIN que intenta guardar ya está registrado sin solicitud.";
                                     }
                                     return resultado;
                                 }
