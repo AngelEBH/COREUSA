@@ -1,10 +1,10 @@
-﻿var IconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">,</label></i>';
-var IconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">.</label></i>';
-var IconoRojo = '<i class="mdi mdi mdi-close-circle mdi-24px text-danger p-0"></i>';
-var ProcesoPendiente = "/Date(-2208967200000)/";
-var IDNT = "";
-var IDSOL = 0;
-var FiltroActual = "";
+﻿const iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">,</label></i>';
+const iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">.</label></i>';
+const iconoRojo = '<i class="mdi mdi mdi-close-circle mdi-24px text-danger p-0"></i>';
+const procesoPendiente = "/Date(-2208967200000)/";
+var identidad = "";
+var idSolicitud = 0;
+var filtroActual = "";
 
 $(document).ready(function () {
 
@@ -52,7 +52,7 @@ $(document).ready(function () {
             url: "SolicitudesCredito_Bandeja.aspx/CargarSolicitudes",
             contentType: 'application/json; charset=utf-8',
             data: function (dtParms) {
-                return JSON.stringify({ dataCrypt: window.location.href, IDSOL: 0 });
+                return JSON.stringify({ dataCrypt: window.location.href, idSolicitud: 0 });
             },
             "dataSrc": function (json) {
                 var return_data = json.d;
@@ -79,19 +79,19 @@ $(document).ready(function () {
                 "data": "fdFechaCreacionSolicitud",
                 "render": function (value) {
                     if (value === null) return "";
-                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a');
+                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
                 }
             },
             {
                 "data": "fdEnIngresoInicio", "className": "text-center",
                 "render": function (data, type, row) {
-                    return row["fdEnIngresoInicio"] != ProcesoPendiente ? row["fdEnIngresoFin"] != ProcesoPendiente ? IconoExito : IconoPendiente : '';
+                    return row["fdEnIngresoInicio"] != procesoPendiente ? row["fdEnIngresoFin"] != procesoPendiente ? iconoExito : iconoPendiente : '';
                 }
             },
             {
                 "data": "fdEnTramiteInicio", "className": "text-center",
                 "render": function (data, type, row) {
-                    return row["fdEnTramiteInicio"] != ProcesoPendiente ? row["fdEnTramiteFin"] != ProcesoPendiente ? IconoExito : IconoPendiente : '';
+                    return row["fdEnTramiteInicio"] != procesoPendiente ? row["fdEnTramiteFin"] != procesoPendiente ? iconoExito : iconoPendiente : '';
                 }
             },
             {
@@ -99,10 +99,10 @@ $(document).ready(function () {
                 "render": function (data, type, row) {
 
                     var Resultado = '';
-                    Resultado = row["fdEnAnalisisInicio"] != ProcesoPendiente ? row["fdEnAnalisisFin"] != ProcesoPendiente ? IconoExito : IconoPendiente : '';
+                    Resultado = row["fdEnAnalisisInicio"] != procesoPendiente ? row["fdEnAnalisisFin"] != procesoPendiente ? iconoExito : iconoPendiente : '';
 
-                    if (row["fdEnAnalisisFin"] == ProcesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7) && row["fdEnAnalisisInicio"] != ProcesoPendiente) {
-                        Resultado = row["fiEstadoSolicitud"] == 7 ? IconoExito : IconoRojo;
+                    if (row["fdEnAnalisisFin"] == procesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7) && row["fdEnAnalisisInicio"] != procesoPendiente) {
+                        Resultado = row["fiEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
                     }
 
                     return Resultado;
@@ -114,15 +114,15 @@ $(document).ready(function () {
 
                     var Resultado = '';
 
-                    if (row["fdEnvioARutaAnalista"] != ProcesoPendiente) {
+                    if (row["fdEnvioARutaAnalista"] != procesoPendiente) {
 
-                        Resultado = (row["fdEnCampoFin"] != ProcesoPendiente || row["fiEstadoDeCampo"] == 2) ? IconoExito : IconoPendiente;
+                        Resultado = (row["fdEnCampoFin"] != procesoPendiente || row["fiEstadoDeCampo"] == 2) ? iconoExito : iconoPendiente;
 
-                        if (row["fdEnCampoFin"] == ProcesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
-                            Resultado = row["fiEstadoSolicitud"] == 7 ? IconoExito : IconoRojo;
+                        if (row["fdEnCampoFin"] == procesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
+                            Resultado = row["fiEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
                         }
                         else if (row["fiEstadoSolicitud"] == 5) {
-                            Resultado = IconoRojo;
+                            Resultado = iconoRojo;
                         }
                     }
 
@@ -135,12 +135,12 @@ $(document).ready(function () {
 
                     var Resultado = '';
 
-                    if (row["fdCondicionadoInicio"] != ProcesoPendiente) {
+                    if (row["fdCondicionadoInicio"] != procesoPendiente) {
 
-                        Resultado = row["fdCondificionadoFin"] != ProcesoPendiente ? IconoExito : IconoPendiente;
+                        Resultado = row["fdCondificionadoFin"] != procesoPendiente ? iconoExito : iconoPendiente;
 
-                        if (row["fdCondificionadoFin"] == ProcesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
-                            Resultado = row["fiEstadoSolicitud"] == 7 ? IconoExito : IconoRojo;
+                        if (row["fdCondificionadoFin"] == procesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
+                            Resultado = row["fiEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
                         }
                     }
                     return Resultado;
@@ -152,13 +152,13 @@ $(document).ready(function () {
 
                     var Resultado = '';
 
-                    if (row["fdReprogramadoInicio"] != ProcesoPendiente) {
+                    if (row["fdReprogramadoInicio"] != procesoPendiente) {
 
-                        Resultado = row["fdReprogramadoFin"] != ProcesoPendiente ? IconoExito : IconoPendiente;
+                        Resultado = row["fdReprogramadoFin"] != procesoPendiente ? iconoExito : iconoPendiente;
 
 
-                        if (row["fdReprogramadoFin"] == ProcesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
-                            Resultado = row["fiEstadoSolicitud"] == 7 ? IconoExito : IconoRojo;
+                        if (row["fdReprogramadoFin"] == procesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
+                            Resultado = row["fiEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
                         }
                     }
                     return Resultado;
@@ -170,13 +170,13 @@ $(document).ready(function () {
 
                     var Resultado = '';
 
-                    if (row["PasoFinalInicio"] != ProcesoPendiente) {
+                    if (row["PasoFinalInicio"] != procesoPendiente) {
 
-                        Resultado = row["PasoFinalFin"] != ProcesoPendiente ? IconoExito : IconoPendiente;
+                        Resultado = row["PasoFinalFin"] != procesoPendiente ? iconoExito : iconoPendiente;
 
 
-                        if (row["PasoFinalFin"] == ProcesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
-                            Resultado = row["fiEstadoSolicitud"] == 7 ? IconoExito : IconoRojo;
+                        if (row["PasoFinalFin"] == procesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
+                            Resultado = row["fiEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
                         }
                     }
                     return Resultado;
@@ -197,8 +197,7 @@ $(document).ready(function () {
                 "data": "ftTiempoTomaDecisionFinal", "visible": false, "title": 'Fecha resolución',
                 "render": function (value) {
 
-                    console.log(moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a'));
-                    return value != ProcesoPendiente ? moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a') : '';
+                    return value != procesoPendiente ? moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a') : '';
                 }
             },
         ],
@@ -287,7 +286,7 @@ $(document).ready(function () {
 
     $("#min").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
@@ -295,26 +294,30 @@ $(document).ready(function () {
 
     $("#max").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
     });
 
     $("#min, #max").change(function () {
-        FiltroActual = 'rangoFechas';
+        filtroActual = 'rangoFechas';
         dtBandeja.draw();
     });
 
     /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
-        if (FiltroActual == 'rangoFechas') {
+
+        if (filtroActual == 'rangoFechas') {
+
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
                 FechaIngreso = new Date(a[5]);
             return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaIngreso <= Hasta) || ("Invalid Date" == Hasta && FechaIngreso >= Desde) || (FechaIngreso <= Hasta && FechaIngreso >= Desde);
         }
-        else { return true; }
+        else {
+            return true;
+        }
     });
 
     $("#añoIngreso").datepicker({
@@ -329,34 +332,36 @@ $(document).ready(function () {
     });
 
     $("#datatable-bandeja tbody").on("click", "tr", function () {
-        var row = dtBandeja.row(this).data(),
-            IDAnalistaEncargado = row.fiIDUsuarioModifica,
-            IDSolicitud = row.fiIDSolicitud;
+        var row = dtBandeja.row(this).data();
+        let idAnalistaSolicitud = row.fiIDUsuarioModifica;
+        idSolicitud = row.fiIDSolicitud;
 
         $("#lblCliente").text(row.fcPrimerNombreCliente + ' ' + row.fcSegundoNombreCliente + ' ' + row.fcPrimerApellidoCliente + ' ' + row.fcSegundoApellidoCliente + ' ');
         $("#lblIdentidadCliente").text(row.fcIdentidadCliente);
 
-        if (IDAnalistaEncargado != 0 || 1 == 1) {
+        if (idAnalistaSolicitud != 0 || 1 == 1) {
+
             $.ajax({
                 type: "POST",
                 url: "SolicitudesCredito_Bandeja.aspx/VerificarAnalista",
-                data: JSON.stringify({ dataCrypt: window.location.href, ID: IDAnalistaEncargado }),
+                data: JSON.stringify({ dataCrypt: window.location.href, idAnalista: idAnalistaSolicitud }),
                 contentType: "application/json; charset=utf-8",
                 error: function (xhr, ajaxOptions, thrownError) {
                     MensajeError("No se pudo cargar la información, contacte al administrador");
                 },
                 success: function (data) {
+
                     //if (data.d == true) {
                     $("#modalAbrirSolicitud").modal({ backdrop: !1 });
-                    IDSOL = IDSolicitud;
-                    IDNT = row.fcIdentidadCliente;
+                    idSolicitud = idSolicitud;
+                    identidad = row.fcIdentidadCliente;
                     //}
                 }
             });
         }
         else {
-            IDSOL = IDSolicitud;
-            IDNT = row.fcIdentidadCliente;
+            idSolicitud = idSolicitud;
+            identidad = row.fcIdentidadCliente;
             $("#modalAbrirSolicitud").modal({ backdrop: !1 });
         }
     });
@@ -370,7 +375,7 @@ $("#btnAbrirSolicitud").click(function (e) {
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Bandeja.aspx/AbrirAnalisisSolicitud",
-        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: IDSOL, Identidad: IDNT }),
+        data: JSON.stringify({ dataCrypt: window.location.href, idSolicitud: idSolicitud, Identidad: identidad }),
         contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError("No se pudo cargar la solicitud, contacte al administrador");
@@ -386,14 +391,14 @@ $("#btnDetallesSolicitud").click(function (e) {
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Bandeja.aspx/EncriptarParametros",
-        data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: IDSOL, Identidad: IDNT }),
+        data: JSON.stringify({ dataCrypt: window.location.href, idSolicitud: idSolicitud, identidad: identidad }),
         contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError("No se pudo cargar la solicitud, contacte al administrador");
         },
         success: function (data) {
             data.d != "-1" ? window.location = "SolicitudesCredito_Detalles.aspx?" + data.d : MensajeError("No se pudo al redireccionar a pantalla de detalles");
-        },
+        }
     });
 });
 

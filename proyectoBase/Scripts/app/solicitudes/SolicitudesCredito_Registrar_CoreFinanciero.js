@@ -1454,9 +1454,6 @@ function RecuperarRespaldos() {
 
                 tablaReferenciasPersonales.append(row);
 
-                console.log('Referencia localstorage');
-                console.log(referencia);
-
                 listaReferenciasPersonales.push(referencia);
                 cantidadReferencias++;
             }
@@ -1549,3 +1546,44 @@ function OcultarLoader() {
 
     $("#Loader").css('display', 'none');
 }
+
+
+/* Solicitar cambio de score... */
+$("#btnSolicitarCambioScore").click(function () {
+
+    if ($('#frmSolicitud').parsley().isValid({ group: 'cambiarScore' })) {
+
+        $("#btnSolicitarCambioScore").prop('disabled', true);
+
+        let nuevoScore = $("#txtNuevoScore").val() == '' ? 0 : $("#txtNuevoScore").val();
+        let comentarioAdicional = $("#txtCambiarScoreComentarioAdicional").val();
+        let nombreCliente = PRECALIFICADO.PrimerNombre + ' ' + PRECALIFICADO.SegundoNombre + ' ' + PRECALIFICADO.PrimerApellido + ' ' + PRECALIFICADO.SegundoApellido
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Registrar.aspx/EnviarSolicitudCambioScore",
+            data: JSON.stringify({ identidadCliente: PRECALIFICADO.Identidad, nombreCliente: nombreCliente, scoreActual: PRECALIFICADO.ScorePromedio, nuevoScore: nuevoScore, comentarioAdicional: comentarioAdicional, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+
+                $("#btnSolicitarCambioScore").prop('disabled', false);
+                MensajeError('No se pudo enviar el correo, contacte al administrador.');
+            },
+            success: function (data) {
+
+
+                data.d == true ? MensajeExito('Solicitud de cambio de score enviada por correo exitosamente!') : MensajeError('No se pudo enviar el correo, contacte al administrador.');
+
+                $("#txtNuevoScore,#txtCambiarScoreComentarioAdicional").val('');
+                $("#btnSolicitarCambioScore").prop('disabled', false);
+            }
+        });
+
+        MensajeInformacion('Enviando solicitud por correo...');
+
+        $("#modalCambiarScore").modal('hide');
+    }
+    else {
+        $('#frmSolicitud').parsley().validate({ group: 'cambiarScore', force: true });
+    }
+});

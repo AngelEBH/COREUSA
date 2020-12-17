@@ -11,7 +11,10 @@ using System.Web.UI.WebControls;
 using Newtonsoft.Json;
 using proyectoBase.Models.ViewModel;
 using adminfiles;
-
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
+using System.Net.Mail;
 
 public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 {
@@ -260,6 +263,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             txtEdadDelCliente.Text = edad + " años";
                             lblTipodeSolicitud.InnerText = Precalificado.TipoDeSolicitud;
                             lblProducto.InnerText = Precalificado.Producto;
+                            lblScoreCliente.InnerText = Precalificado.ScorePromedio;
                         }
                     }
                 } // using sp consulta ejecutivos
@@ -463,9 +467,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 lblMensaje.InnerText = "(Este cliente ya cuenta con una solicitud de crédito activa, esperar resolución)";
                                 lblMensaje.Visible = true;
-
-                                Precalificado.PermitirIngresarSolicitud = false;
-                                Precalificado.MensajePermitirIngresarSolicitud = "Este cliente ya cuenta con una solicitud de crédito activa, esperar resolución";
                             }
                         }
                     }
@@ -806,25 +807,25 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             ddlTiempoDeConocerReferencia.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
                         }
 
-                        /* Moneda */
                         sqlResultado.NextResult();
 
-                        //ddlMoneda.Items.Clear();
-                        //ddlMoneda.Items.Add(new ListItem("Seleccionar", ""));
-                        //while (sqlResultado.Read())
-                        //{
-                        // ddlMoneda.Items.Add(new ListItem(sqlResultado["fcNombreMoneda"].ToString(), sqlResultado["fiMoneda"].ToString()));
-                        //}
+                        /* Moneda */
+                        ddlMoneda.Items.Clear();
+                        ddlMoneda.Items.Add(new ListItem("Seleccionar", ""));
+                        while (sqlResultado.Read())
+                        {
+                            ddlMoneda.Items.Add(new ListItem(sqlResultado["fcNombreMoneda"].ToString(), sqlResultado["fiMoneda"].ToString()));
+                        }
+
+                        sqlResultado.NextResult();
 
                         /* Tipo de cliente */
-                        sqlResultado.NextResult();
-
-                        //ddlTipoDeCliente.Items.Clear();
-                        //ddlTipoDeCliente.Items.Add(new ListItem("Seleccionar", ""));
-                        //while (sqlResultado.Read())
-                        //{
-                        // ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
-                        //}
+                        ddlTipoDeCliente.Items.Clear();
+                        ddlTipoDeCliente.Items.Add(new ListItem("Seleccionar", ""));
+                        while (sqlResultado.Read())
+                        {
+                            ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
+                        }
                     }
                 }
 
@@ -920,7 +921,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 rbSexoMasculino.Checked = true;
                             }
                             ddlEstadoCivil.SelectedValue = sqlResultado["fiIDEstadoCivil"].ToString();
-                            //ddlTipoDeCliente.SelectedValue = sqlResultado["fiTipoCliente"].ToString();
+                            ddlTipoDeCliente.SelectedValue = sqlResultado["fiTipoCliente"].ToString();
                             ddlTipoDeVivienda.SelectedValue = sqlResultado["fiIDVivienda"].ToString();
                             ddlTiempoDeResidir.SelectedValue = sqlResultado["fiTiempoResidir"].ToString();
                         }
@@ -1400,7 +1401,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Insert", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", 1);
+                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", cliente.IdTipoCliente);
                             sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", precalificado.Identidad);
                             sqlComando.Parameters.AddWithValue("@fcRTN", cliente.RtnCliente);
                             sqlComando.Parameters.AddWithValue("@fcPrimerNombreCliente", precalificado.PrimerNombre);
@@ -1486,7 +1487,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@fiTipoSolicitud", precalificado.IdTipoDeSolicitud);
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@fnValorSeleccionado", solicitud.ValorSeleccionado);
-                        sqlComando.Parameters.AddWithValue("@fiMoneda", 1);
+                        sqlComando.Parameters.AddWithValue("@fiMoneda", solicitud.IdTipoMoneda);
                         sqlComando.Parameters.AddWithValue("@fiPlazoSeleccionado", solicitud.PlazoSeleccionado);
                         sqlComando.Parameters.AddWithValue("@fnValorPrima", solicitud.ValorPrima);
                         sqlComando.Parameters.AddWithValue("@fnValorGarantia", solicitud.ValorPrima == 0 ? 0 : solicitud.ValorGlobal);
@@ -2034,6 +2035,130 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             ex.Message.ToString();
         }
         return lURLDesencriptado;
+    }
+
+    [WebMethod]
+    public static bool EnviarSolicitudCambioScore(string identidadCliente, string nombreCliente, string scoreActual, string nuevoScore, string comentarioAdicional, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+
+            var buzonCorreoUsuario = string.Empty;
+            var nombreUsuario = string.Empty;
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreSeguridad.dbo.sp_InformacionUsuario", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            buzonCorreoUsuario = sqlResultado["fcBuzondeCorreo"].ToString();
+                            nombreUsuario = sqlResultado["fcNombreCorto"].ToString();
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+
+            var contenidoCorreo = "<table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
+            "<tr><th style='text-align:left;'>Identidad:</th> <td>" + identidadCliente + "</td></tr>" +
+            "<tr><th style='text-align:left;'>Nombre:</th> <td>" + nombreCliente + "</td></tr>" +
+            "<tr><th style='text-align:left;'>Score actual:</th> <td>" + scoreActual + "</td></tr>" +
+            "<tr><th style='text-align:left;'>Score solicitado:</th> <td>" + nuevoScore + "</td></tr>" +
+            "<tr><th style='text-align:left;'>Solicitado por:</th> <td>" + nombreUsuario + "</td></tr>" +
+            "<tr><th style='text-align:left;'>Comentario:</th> <td>" + comentarioAdicional + "</td></tr>" +
+            "</table>";
+
+            resultado = EnviarCorreo("Solicitud de cambio de SCORE", "Cambio de score", "Datos de la solicitud", contenidoCorreo, buzonCorreoUsuario);
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultado;
+    }
+
+    public static bool EnviarCorreo(string pcAsunto, string pcTituloGeneral, string pcSubtitulo, string pcContenidodelMensaje, string buzonCorreoUsuario)
+    {
+        var resultado = false;
+        try
+        {
+            var pmmMensaje = new MailMessage();
+            var smtpCliente = new SmtpClient();
+
+            smtpCliente.Host = "mail.miprestadito.com";
+            smtpCliente.Port = 587;
+            smtpCliente.Credentials = new System.Net.NetworkCredential("systembot@miprestadito.com", "iPwf@p3q");
+            smtpCliente.EnableSsl = true;
+
+            pmmMensaje.Subject = pcAsunto;
+            pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
+            pmmMensaje.To.Add("sistemas@miprestadito.com");
+            //pmmMensaje.To.Add("willian.diaz@miprestadito.com");
+            pmmMensaje.CC.Add(buzonCorreoUsuario);
+            pmmMensaje.CC.Add("edwin.aguilar@miprestadito.com");
+            pmmMensaje.IsBodyHtml = true;
+
+            string htmlString = @"<!DOCTYPE html> " +
+            "<html>" +
+            "<body>" +
+            " <div style=\"width: 500px;\">" +
+            " <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
+            " <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
+            " <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td style=\"background-color:whitesmoke; text-align:center;\">" + pcSubtitulo + "</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
+            " <td>System Bot Prestadito</td>" +
+            " </tr>" +
+            " </table>" +
+            " </div>" +
+            "</body> " +
+            "</html> ";
+
+            pmmMensaje.Body = htmlString;
+
+            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+            smtpCliente.Send(pmmMensaje);
+
+            smtpCliente.Dispose();
+
+            resultado = true;
+        }
+        catch (Exception ex)
+        {
+            ExceptionLogging.SendExcepToDB(ex);
+            resultado = false;
+        }
+
+        return resultado;
     }
 
     #region View Models

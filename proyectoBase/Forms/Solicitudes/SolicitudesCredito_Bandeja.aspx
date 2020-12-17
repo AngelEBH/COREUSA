@@ -21,7 +21,7 @@
         .opcion {
             cursor: pointer;
         }
-        
+
         #datatable-bandeja tbody tr {
             cursor: pointer;
         }
@@ -37,8 +37,9 @@
             float: left;
         }
 
-        #divContenedor_datatableButtons div .dropdown-menu{
-            overflow-y: auto; max-height: 300px !important;
+        #divContenedor_datatableButtons div .dropdown-menu {
+            overflow-y: auto;
+            max-height: 300px !important;
         }
     </style>
 </head>
@@ -124,7 +125,7 @@
                                 <option value="11">Noviembre</option>
                                 <option value="12" selected="selected">Diciembre</option>
                             </select>
-                        </div>                        
+                        </div>
                         <div class="col-lg-4 col-md-3 col-sm-3 col-6">
                             <label class="col-form-label">Búsqueda por Fecha</label>
                             <div class="input-daterange input-group" id="date-range">
@@ -132,7 +133,7 @@
                                 <input type="text" class="form-control form-control-sm" name="max" id="max" />
                             </div>
                         </div>
-                        <div class="col-lg-2 col-md-2 col-sm-3 col-6 align-self-end">                            
+                        <div class="col-lg-2 col-md-2 col-sm-3 col-6 align-self-end">
                             <label class="col-form-label">Búsqueda por Año</label>
                             <input id="añoIngreso" class="form-control form-control-sm" type="text" />
                         </div>
@@ -194,7 +195,6 @@
 
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <!-- datatable js -->
@@ -216,6 +216,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=20201028094025"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=20201217113750"></script>
 </body>
 </html>

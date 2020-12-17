@@ -1604,8 +1604,8 @@ de lo acá establecido se firma y se estampa huella digital en fecha
         </div>
 
         <!-- Convenio de regulación de compra y venta de vehiculos para financiamiento a tercero -->
-        <div id="divContenedorInspeccionSegurosContinental" style="/*margin-top: 999px; display: none;*/">
-            <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divSegurosContinentalPDF" style="/*display: none;*/">
+        <div id="divContenedorInspeccionSegurosContinental" style="margin-top: 999px; display: none;">
+            <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divSegurosContinentalPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
@@ -1740,6 +1740,7 @@ de lo acá establecido se firma y se estampa huella digital en fecha
         const diafirma = '<%=DiasFirma%>';
         const mesFirma = ' <%=MesFirma%>';
         const anioFirma = ' <%=AnioFirma%>';
+        const idSolicitud = '<%=pcIDSolicitud%>';
 
         $('.lblDepartamento_Firma').text(departamentoFirma);
         $('.lblCiudad_Firma').text(ciudadFirma);
@@ -1755,7 +1756,7 @@ de lo acá establecido se firma y se estampa huella digital en fecha
 
             var opt = {
                 margin: 0.3,
-                filename: fileName + '.pdf',
+                filename: 'Solicitud_' + idSolicitud + '_' + fileName + '.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: {
                     dpi: 192,
@@ -1811,7 +1812,6 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                 message: mensaje
             });
         }
-
     </script>
 </body>
 </html>

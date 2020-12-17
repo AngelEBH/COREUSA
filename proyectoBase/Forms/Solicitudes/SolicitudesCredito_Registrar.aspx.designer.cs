@@ -67,6 +67,15 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblProducto;
 
     /// <summary>
+    /// Control lblScoreCliente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblScoreCliente;
+
+    /// <summary>
     /// Control txtIdentidadCliente.
     /// </summary>
     /// <remarks>
@@ -245,6 +254,15 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlPlazosDisponibles;
+
+    /// <summary>
+    /// Control ddlMoneda.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlMoneda;
 
     /// <summary>
     /// Control divCotizadorAutos.
@@ -614,6 +632,15 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlEstadoCivil;
+
+    /// <summary>
+    /// Control ddlTipoDeCliente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeCliente;
 
     /// <summary>
     /// Control txtFechaDeNacimiento.
@@ -1010,4 +1037,22 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtLugarTrabajoReferencia;
+
+    /// <summary>
+    /// Control txtNuevoScore.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtNuevoScore;
+
+    /// <summary>
+    /// Control txtCambiarScoreComentarioAdicional.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtCambiarScoreComentarioAdicional;
 }
