@@ -1066,6 +1066,15 @@ public partial class SolicitudesCredito_Detalles
     protected global::System.Web.UI.WebControls.TextBox txtOrigen;
 
     /// <summary>
+    /// Control divCalculoPrestamoSolicitado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divCalculoPrestamoSolicitado;
+
+    /// <summary>
     /// Control txtMontoTotalAFinanciar_Calculo.
     /// </summary>
     /// <remarks>
@@ -1226,6 +1235,24 @@ public partial class SolicitudesCredito_Detalles
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtGastosDeCierre_FinalAprobado;
+
+    /// <summary>
+    /// Control txtTasaAnualAplicada_FinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtTasaAnualAplicada_FinalAprobado;
+
+    /// <summary>
+    /// Control txtTasaMensualAplicada_FinalAprobado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtTasaMensualAplicada_FinalAprobado;
 
     /// <summary>
     /// Control div1.

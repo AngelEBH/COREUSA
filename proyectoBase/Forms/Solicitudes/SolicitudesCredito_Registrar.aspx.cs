@@ -163,13 +163,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-{ "limit", 1 },
-{ "title", "auto" },
-{ "uploadDir", uploadDir },
-{ "extensions", new string[] { "jpg", "png", "jpeg"} },
-{ "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
-{ "fileMaxSize", 10 }, //peso máximo por archivo
-});
+                { "limit", 1 },
+                { "title", "auto" },
+                { "uploadDir", uploadDir },
+                { "extensions", new string[] { "jpg", "png", "jpeg"} },
+                { "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
+                { "fileMaxSize", 10 }, //peso máximo por archivo
+            });
 
             switch (type)
             {
@@ -284,7 +284,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         var prestamoMaximoSegurido = new CotizadorProductos_ViewModel();
 
                         decimal montoMayor = 0;
-                        int IdContador = 1;
+                        int idContador = 1;
 
                         while (sqlResultado.Read())
                         {
@@ -292,7 +292,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 prestamoMaximoSegurido = new CotizadorProductos_ViewModel()
                                 {
-                                    IdCotizacion = IdContador,
+                                    IdCotizacion = idContador,
                                     IdProducto = int.Parse(sqlResultado["fiIDProducto"].ToString()),
                                     Producto = sqlResultado["fcProducto"].ToString(),
                                     MontoOfertado = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString()),
@@ -302,7 +302,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 };
                             }
                             montoMayor = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString());
-                            IdContador++;
+                            idContador++;
                         }
 
                         Precalificado.PrestamoMaximoSugerido = prestamoMaximoSegurido;
@@ -1584,8 +1584,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 while (sqlResultado.Read())
                                 {
-                                    mensajeError = sqlResultado["MensajeError"].ToString();
-                                    if (mensajeError.StartsWith("-1"))
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -1679,8 +1678,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 while (sqlResultado.Read())
                                 {
-                                    mensajeError = sqlResultado["MensajeError"].ToString();
-                                    if (mensajeError.StartsWith("-1"))
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -1732,8 +1730,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             while (sqlResultado.Read())
                             {
-                                mensajeError = sqlResultado["MensajeError"].ToString();
-                                if (mensajeError.StartsWith("-1"))
+                                if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                     contadorErrores++;
                             }
                         }
@@ -1768,8 +1765,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             while (sqlResultado.Read())
                             {
-                                mensajeError = sqlResultado["MensajeError"].ToString();
-                                if (mensajeError.StartsWith("-1"))
+                                if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                     contadorErrores++;
                             }
                         }
@@ -1806,8 +1802,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 while (sqlResultado.Read())
                                 {
-                                    mensajeError = (string)sqlResultado["MensajeError"];
-                                    if (mensajeError.StartsWith("-1"))
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -1848,9 +1843,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                     {
                                         while (sqlResultado.Read())
                                         {
-                                            mensajeError = sqlResultado["MensajeError"].ToString();
-
-                                            if (mensajeError.StartsWith("-1"))
+                                            if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                             {
                                                 contadorErrores++;
                                             }
@@ -1898,7 +1891,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@pnValorPrima", garantia.ValorPrima);
                             sqlComando.Parameters.AddWithValue("@pnValorFinanciado", garantia.ValorFinanciado);
                             sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", 0);
-
                             sqlComando.Parameters.AddWithValue("@pcNombrePropietarioGarantia", garantia.NombrePropietario);
                             sqlComando.Parameters.AddWithValue("@pcIdentidadPropietarioGarantia", garantia.IdentidadPropietario);
                             sqlComando.Parameters.AddWithValue("@piIDNacionalidadPropietarioGarantia", garantia.IdNacionalidadPropietario);
@@ -1907,7 +1899,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@pcIdentidadVendedorGarantia", garantia.IdentidadVendedor);
                             sqlComando.Parameters.AddWithValue("@piIDNacionalidadVendedorGarantia", garantia.IdNacionalidadVendedor);
                             sqlComando.Parameters.AddWithValue("@piIDEstadoCivilVendedorGarantia", garantia.IdEstadoCivilVendedor);
-
                             sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
                             sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.EsDigitadoManualmente);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -1923,8 +1914,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                                     if (!resultadoSp.StartsWith("-1"))
                                     {
-                                        mensajeError = sqlResultado["MensajeError"].ToString();
-                                        if (mensajeError.StartsWith("-1"))
+                                        if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                             contadorErrores++;
                                     }
                                 }

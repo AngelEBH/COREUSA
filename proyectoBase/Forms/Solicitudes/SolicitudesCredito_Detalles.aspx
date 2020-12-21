@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Detalles.aspx.cs" Inherits="SolicitudesCredito_Detalles" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Detalles.aspx.cs" Inherits="SolicitudesCredito_Detalles" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -725,43 +725,47 @@
                                             </div>
                                         </div>
 
-                                        <label class="font-weight-bold">Cálculo del préstamo solicitado</label>
+                                        <div id="divCalculoPrestamoSolicitado" runat="server">
 
-                                        <!-- Calculo del prestamo -->
+                                            <label class="font-weight-bold">Cálculo del préstamo solicitado</label>
 
-                                        <!--
-EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
--->
-                                        <div class="form-group row">
-                                            <div class="col-sm-12 col-6">
-                                                <label class="col-form-label">Monto total a financiar</label>
-                                                <asp:TextBox ID="txtMontoTotalAFinanciar_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            <!-- Calculo del prestamo -->
+
+                                            <!--
+                                            EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+                                            MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+                                            -->
+                                            <div class="form-group row">
+                                                <div class="col-sm-12 col-6">
+                                                    <label class="col-form-label">Monto total a financiar</label>
+                                                    <asp:TextBox ID="txtMontoTotalAFinanciar_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-sm-4 col-6">
+                                                    <label class="col-form-label">Couta del préstamo</label>
+                                                    <asp:TextBox ID="txtCuotaDelPrestamo_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-sm-4 col-6">
+                                                    <label class="col-form-label">Couta del seguro</label>
+                                                    <asp:TextBox ID="txtCuotaDelSeguro_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-sm-4 col-6">
+                                                    <label class="col-form-label">Cuota del GPS</label>
+                                                    <asp:TextBox ID="txtCuotaGPS_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="col-form-label">Cuota total</label>
+                                                    <asp:TextBox ID="txtCuotaTotal_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Costo aparato GPS</label>
+                                                    <asp:TextBox ID="txtCostoAparatoGPS_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Gastos de cierre</label>
+                                                    <asp:TextBox ID="txtGastosDeCierre_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
                                             </div>
-                                            <div class="col-sm-4 col-6">
-                                                <label class="col-form-label">Couta del préstamo</label>
-                                                <asp:TextBox ID="txtCuotaDelPrestamo_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-sm-4 col-6">
-                                                <label class="col-form-label">Couta del seguro</label>
-                                                <asp:TextBox ID="txtCuotaDelSeguro_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-sm-4 col-6">
-                                                <label class="col-form-label">Cuota del GPS</label>
-                                                <asp:TextBox ID="txtCuotaGPS_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="col-form-label">Cuota total</label>
-                                                <asp:TextBox ID="txtCuotaTotal_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-6">
-                                                <label class="col-form-label">Costo aparato GPS</label>
-                                                <asp:TextBox ID="txtCostoAparatoGPS_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-6">
-                                                <label class="col-form-label">Gastos de cierre</label>
-                                                <asp:TextBox ID="txtGastosDeCierre_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
+
                                         </div>
 
 
@@ -801,6 +805,14 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                                 <div class="col-6">
                                                     <label class="col-form-label">Gastos de cierre</label>
                                                     <asp:TextBox ID="txtGastosDeCierre_FinalAprobado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Tasa anual aplicada</label>
+                                                    <asp:TextBox ID="txtTasaAnualAplicada_FinalAprobado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Tasa mensual aplicada</label>
+                                                    <asp:TextBox ID="txtTasaMensualAplicada_FinalAprobado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>

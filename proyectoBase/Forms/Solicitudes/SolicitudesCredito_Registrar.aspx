@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Ingresar solicitud de crédito</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style>
@@ -72,7 +72,7 @@
                                     <label>Tipo de solicitud: <span class="btn btn-sm btn-info mb-0" id="lblTipodeSolicitud" runat="server">NUEVO</span></label>
                                     <label>Producto: <span class="btn btn-sm btn-info mb-0" id="lblProducto" runat="server">Prestadito Motos</span></label>
                                     <label>Score: <span class="btn btn-sm btn-info mb-0" id="lblScoreCliente" runat="server">N/A</span></label>
-                                    <button type="button" class="btn btn-md p-0" title="Solicitar cambio de SCORE" data-toggle="modal" data-target="#modalCambiarScore"><i class="far fa-envelope p-0 m-0"></i></button>
+                                    <button type="button" class="btn btn-md p-0" title="Solicitar cambio de SCORE" data-toggle="modal" data-target="#modalCambiarScore"><i class="far fa-edit p-0 m-0"></i></button>
                                 </div>
                             </div>
                             <div class="row mb-0">
@@ -318,7 +318,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-lg-6">
                                     <h6 class="mb-1">Propietario de la garantía</h6>
                                     <div class="form-group row">
@@ -342,7 +341,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-lg-6 border-left border-gray">
                                     <h6 class="mb-1">Vendedor de la garantía</h6>
                                     <div class="form-group row">
@@ -366,8 +364,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="row">
                                 <div class="col-12">
@@ -516,7 +512,6 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-
                                     <h6 class="border-top border-gray"></h6>
 
                                     <div class="form-group row">
@@ -895,6 +890,6 @@
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_CoreFinanciero.js?v=20201217112725"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_CoreFinanciero.js?v=20201217112850"></script>
 </body>
 </html>

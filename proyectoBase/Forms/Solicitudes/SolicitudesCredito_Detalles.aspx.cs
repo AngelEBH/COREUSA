@@ -239,60 +239,71 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                             txtValorGarantia.Text = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()).ToString("N");
                             txtValorPrima.Text = decimal.Parse(sqlResultado["fnValorPrima"].ToString()).ToString("N");
                             txtPlazoSeleccionado.Text = sqlResultado["fiPlazoSeleccionado"].ToString();
-                            /*lblTipoDePlazo_FinalAprobado.InnerText = sqlResultado["AquiPonerDinamicamenteElTipoDePlazo"].ToString(); */
-                            lblTipoDePlazo_Solicitado.InnerText = IdProducto == "202" ? "Mensual" : "Quincenal";
+                            lblTipoDePlazo_Solicitado.InnerText = (IdProducto == "202" || IdProducto == "203") ? "Mensual" : "Quincenal";
                             txtOrigen.Text = sqlResultado["fcOrigen"].ToString();
 
-                            /*** Calculo del prestamo solicitado ***/
-                            decimal montoPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : decimal.Parse(sqlResultado["fnValorSeleccionado"].ToString());
-                            decimal valorPrimaPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
-                            int plazoSeleccionado = int.Parse(sqlResultado["fiPlazoSeleccionado"].ToString());
+                            /*** Calculo del prestamo SOLICITADO ***/
+                            var montoPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : decimal.Parse(sqlResultado["fnValorSeleccionado"].ToString());
+                            var valorPrimaPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
+                            var plazoSeleccionado = int.Parse(sqlResultado["fiPlazoSeleccionado"].ToString());
 
                             var calculoPrestamoSolicitado = new SolicitudesCredito_Detalles_Calculo_ViewModel();
 
                             if (IdProducto == "101" || IdProducto == "301" || IdProducto == "201" || IdProducto == "302")
                             {
                                 calculoPrestamoSolicitado = CalcularPrestamo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
+
+                                txtMontoTotalAFinanciar_Calculo.Text = calculoPrestamoSolicitado.ValorAFinanciar.ToString("N");
+                                txtCuotaDelPrestamo_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaPrestamo.ToString("N");
+                                txtCuotaDelSeguro_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaSeguroDeVehiculo.ToString("N");
+                                txtCuotaGPS_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaServicioGPS.ToString("N");
+                                txtCuotaTotal_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaNeta.ToString("N");
+                                txtCostoAparatoGPS_Calculo.Text = calculoPrestamoSolicitado.CostoAparatoGPS.ToString("N");
+                                txtGastosDeCierre_Calculo.Text = calculoPrestamoSolicitado.ValorGastosDeCierre.ToString("N");
+                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N");
+                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N");
+
                             }
                             else if (IdProducto == "202" || IdProducto == "203")
                             {
-                                calculoPrestamoSolicitado = CalcularPrestamo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
-                            }                            
-
-                            txtMontoTotalAFinanciar_Calculo.Text = calculoPrestamoSolicitado.ValorAFinanciar.ToString("N");
-                            txtCuotaDelPrestamo_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaPrestamo.ToString("N");
-                            txtCuotaDelSeguro_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaSeguroDeVehiculo.ToString("N");
-                            txtCuotaGPS_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaServicioGPS.ToString("N");
-                            txtCuotaTotal_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaNeta.ToString("N");
-                            txtCostoAparatoGPS_Calculo.Text = calculoPrestamoSolicitado.CostoAparatoGPS.ToString("N");
-                            txtGastosDeCierre_Calculo.Text = calculoPrestamoSolicitado.ValorGastosDeCierre.ToString("N");
+                                /* Haciendo pruebas, si el prestamo es 202 o 203 no se mostrará préstamo solicitado
+                                 * solo se mostrará el div del monto final a financiar actual
+                                 * mismo que se va a extraer de la tabla CredSolicitud_InformacionPrestamo
+                                 */
+                                divCalculoPrestamoSolicitado.Visible = false;
+                            }
 
                             var montoFinalAFinanciar = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString());
 
-                            /*** Prestamo Final aprobado ***/
-                            if (montoFinalAFinanciar != 0)
+                            /*** Prestamo FINAL APROBADO ***/
+                            if (montoFinalAFinanciar != 0 || IdProducto == "202" || IdProducto == "203")
                             {
-                                var valorPrestamoFinal = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : montoFinalAFinanciar;
-                                var valorPrimaFinal = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
-                                var plazoFinal = int.Parse(sqlResultado["fiPlazoFinalAprobado"].ToString());
-
+                                var valorTotalFinalAFinanciar = 0m;
+                                var valorPrimaFinal = 0m;
+                                var plazoFinal = 0;
                                 var calculoPrestamoFinal = new SolicitudesCredito_Detalles_Calculo_ViewModel();
 
                                 if (IdProducto == "101" || IdProducto == "301" || IdProducto == "201" || IdProducto == "302")
                                 {
+                                    valorTotalFinalAFinanciar = montoFinalAFinanciar;
+                                    valorPrimaFinal = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
+                                    plazoFinal = int.Parse(sqlResultado["fiPlazoFinalAprobado"].ToString());
+
                                     calculoPrestamoFinal = CalcularPrestamo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
                                 }
                                 else if (IdProducto == "202" || IdProducto == "203")
                                 {
-                                    calculoPrestamoFinal = CalcularPrestamo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
+                                    calculoPrestamoFinal = CargarPrestamoSolicitadoVehiculo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
+
+                                    valorTotalFinalAFinanciar = calculoPrestamoFinal.ValorAFinanciar;
+                                    plazoFinal = calculoPrestamoFinal.Plazo;
                                 }
 
                                 lblEstadoDelMontoFinalAFinanciar.InnerText = idEstadoSolicitud == "7" ? "(Aprobado)" : "(No Aprobado)";
                                 lblEstadoDelMontoFinalAFinanciar.Attributes.Add("class", idEstadoSolicitud == "7" ? "font-weight-bold text-success" : "font-weight-bold text-danger");
-                                txtMontoTotalAFinanciar_FinalAprobado.Text = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString()).ToString("N");
+                                txtMontoTotalAFinanciar_FinalAprobado.Text = valorTotalFinalAFinanciar.ToString("N");
                                 txtPlazoFinal_FinalAprobado.Text = plazoFinal.ToString();
-                                /*lblTipoDePlazo_FinalAprobado.InnerText = sqlResultado["AquiPonerDinamicamenteElTipoDePlazo"].ToString(); */
-                                lblTipoDePlazo_FinalAprobado.InnerText = IdProducto == "202" ? "Mensual" : "Quincenal";
+                                lblTipoDePlazo_FinalAprobado.InnerText = (IdProducto == "202" || IdProducto == "203") ? "Mensual" : "Quincenal";
 
                                 /* Culcular préstamo final a financiar */
                                 txtCuotaDelPrestamo_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaPrestamo.ToString("N");
@@ -301,6 +312,9 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 txtCuotaTotal_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaNeta.ToString("N");
                                 txtCostoAparatoGPS_FinalAprobado.Text = calculoPrestamoFinal.CostoAparatoGPS.ToString("N");
                                 txtGastosDeCierre_FinalAprobado.Text = calculoPrestamoFinal.ValorGastosDeCierre.ToString("N");
+
+                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N");
+                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N");
 
                                 divPrestamoFinalAprobado.Visible = true;
                             }
@@ -845,7 +859,9 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                             ValorCuotaSeguroDeVehiculo = (decimal)sqlResultado["fnCuotaSegurodeVehiculo"],
                             ValorCuotaNeta = (decimal)sqlResultado["fnValorCuotaNeta"],
                             Plazo = (short)sqlResultado["fiPlazo"],
-                            TipoDePlazo = (string)sqlResultado["fcTipodeCuota"]
+                            TipoDePlazo = (string)sqlResultado["fcTipodeCuota"],
+                            TasaAnualAplicada = (decimal)sqlResultado["fnTasaDeInteresAnual"],
+                            TasaMensualAplicada = (decimal)sqlResultado["fnTasaDeInteresMensual"]
                         };
                     }
                 }
@@ -859,13 +875,13 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         return resultado;
     }
 
-    public SolicitudesCredito_Detalles_Calculo_ViewModel CalcularPrestamoVehiculo(string idProducto, decimal valorPrestamo, decimal valorPrima, int plazo, SqlConnection sqlConexion)
+    public SolicitudesCredito_Detalles_Calculo_ViewModel CargarPrestamoSolicitadoVehiculo(string idProducto, decimal valorPrestamo, decimal valorPrima, int plazo, SqlConnection sqlConexion)
     {
         SolicitudesCredito_Detalles_Calculo_ViewModel resultado = null;
         try
         {
-
-            if (int.Parse(pcIDSolicitud) >= 802)
+            /* Si la información */
+            if (int.Parse(pcIDSolicitud) < 802)
             {
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_CalculoPrestamo", sqlConexion))
                 {
@@ -894,7 +910,44 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 ValorCuotaSeguroDeVehiculo = (decimal)sqlResultado["fnCuotaSegurodeVehiculo"],
                                 ValorCuotaNeta = (decimal)sqlResultado["fnValorCuotaNeta"],
                                 Plazo = (short)sqlResultado["fiPlazo"],
-                                TipoDePlazo = (string)sqlResultado["fcTipodeCuota"]
+                                TipoDePlazo = (string)sqlResultado["fcTipodeCuota"],
+                                TasaAnualAplicada = (decimal)sqlResultado["fnTasaDeInteresAnual"],
+                                TasaMensualAplicada = (decimal)sqlResultado["fnTasaDeInteresMensual"]
+                            };
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_ObtenerPorIdSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            resultado = new SolicitudesCredito_Detalles_Calculo_ViewModel()
+                            {
+                                ValorSeguroDeDeuda = 0,
+                                ValorSeguroDeVehiculo = (decimal)sqlResultado["fnValorTotalSeguro"],
+                                ValorGastosDeCierre = (decimal)sqlResultado["fnGastosDeCierre"],
+                                ValorAFinanciar = (decimal)sqlResultado["fnValorTotalFinanciamiento"],
+                                ValorCuotaPrestamo = (decimal)sqlResultado["fnCuotaMensualPrestamo"],
+                                CostoAparatoGPS = (decimal)sqlResultado["fnCostoGPS"],
+                                ValorCuotaServicioGPS = (decimal)sqlResultado["fnCuotaMensualGPS"],
+                                TotalSeguroVehiculo = (decimal)sqlResultado["fnValorTotalSeguro"],
+                                ValorCuotaSeguroDeVehiculo = (decimal)sqlResultado["fnCuotaMensualSeguro"],
+                                ValorCuotaNeta = (decimal)sqlResultado["fnCuotaTotal"],
+                                Plazo = (int)sqlResultado["fiPlazo"],
+                                TipoDePlazo = (string)sqlResultado["fcTipoDePlazo"],
+                                TasaAnualAplicada = (decimal)sqlResultado["fnTasaAnualAplicada"] < 0 ? ((decimal)sqlResultado["fnTasaAnualAplicada"] * 100) : (decimal)sqlResultado["fnTasaAnualAplicada"],
+                                TasaMensualAplicada = (decimal)sqlResultado["fnTasaMensualAplicada"] < 0 ? ((decimal)sqlResultado["fnTasaMensualAplicada"] * 100) : (decimal)sqlResultado["fnTasaMensualAplicada"]
                             };
                         }
                     }
@@ -975,6 +1028,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         public decimal ValorCuotaNeta { get; set; }
         public int Plazo { get; set; }
         public string TipoDePlazo { get; set; }
+        public decimal TasaAnualAplicada { get; set; }
+        public decimal TasaMensualAplicada { get; set; }
     }
 
     public class SolicitudesCredito_Detalles_EstadoProcesos_ViewModel
