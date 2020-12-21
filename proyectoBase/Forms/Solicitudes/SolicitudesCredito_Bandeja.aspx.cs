@@ -34,16 +34,17 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             if (lcParametros != string.Empty)
             {
                 pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-
-                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-                Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                
+                var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + DSC.Desencriptar(pcEncriptado));
 
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "1";
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
                 if (pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "146")
-                    btnAbrirSolicitud.Visible = true;
+                {
+                    btnAbrirAnalisis.Visible = true;
+                }
             }
         }
     }
@@ -57,7 +58,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "1";
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -135,7 +136,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string AbrirAnalisisSolicitud(int idSolicitud, string identidad, string dataCrypt)
+    public static string AbrirAnalisis(int idSolicitud, string identidad, string dataCrypt)
     {
         var resultado = string.Empty;
         try
@@ -143,7 +144,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "1";
 
             /* Validar que solo el primer usuario en iniciar el analisis de la solicitud tenga acceso al analisis de la misma */
             string lcParametros = "usr=" + pcIDUsuario +
@@ -171,7 +172,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "1";
 
             string lcParametros = "usr=" + pcIDUsuario +
             "&IDApp=" + pcIDApp +
@@ -195,12 +196,10 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "1";
 
             if (idAnalista == pcIDUsuario)
-            {
                 resultado = true;
-            }
         }
         catch
         {
@@ -230,7 +229,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             if (lcParametros != string.Empty)
             {
                 pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-                
+
                 string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
@@ -257,7 +256,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         public int IdSoliciud { get; set; }
         public int IdProducto { get; set; }
         public string Producto { get; set; }
-        public DateTime FechaCreacionSolicitud { get; set; }        
+        public DateTime FechaCreacionSolicitud { get; set; }
         public int SolicitudActiva { get; set; }
         public int IdUsuarioCreador { get; set; }
         public string UsuarioCreador { get; set; }
@@ -268,16 +267,16 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         public int IdAnalistaSolicitud { get; set; }
         public string AnalistaSolicitud { get; set; }
         public int IdGestorAsignado { get; set; }
-        public string GestorAsignado { get; set; }        
+        public string GestorAsignado { get; set; }
         public int IdEstadoSolicitud { get; set; }
         public int IdCliente { get; set; }
-        public string IdentidadCliente { get; set; }        
+        public string IdentidadCliente { get; set; }
         public bool ClienteActivo { get; set; }
         public string RazonInactivo { get; set; }
         public string PrimerNombreCliente { get; set; }
         public string SegundoNombreCliente { get; set; }
         public string PrimerApellidoCliente { get; set; }
-        public string SegundoApellidoCliente { get; set; }        
+        public string SegundoApellidoCliente { get; set; }
         public DateTime EnIngresoInicio { get; set; }
         public DateTime EnIngresoFin { get; set; }
         public DateTime EnTramiteInicio { get; set; }
@@ -311,6 +310,5 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         public string ComentarioPasoFinal { get; set; }
         public DateTime PasoFinalFin { get; set; }
     }
-
     #endregion
 }

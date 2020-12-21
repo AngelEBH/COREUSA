@@ -79,7 +79,7 @@ $(document).ready(function () {
                 "data": "fdFechaCreacionSolicitud",
                 "render": function (value) {
                     if (value === null) return "";
-                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
+                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm A');
                 }
             },
             {
@@ -197,7 +197,7 @@ $(document).ready(function () {
                 "data": "ftTiempoTomaDecisionFinal", "visible": false, "title": 'Fecha resolución',
                 "render": function (value) {
 
-                    return value != procesoPendiente ? moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a') : '';
+                    return value != procesoPendiente ? moment(value).locale('es').format('YYYY/MM/DD hh:mm A') : '';
                 }
             },
         ],
@@ -212,7 +212,7 @@ $(document).ready(function () {
                 autoFilter: true,
                 messageTop: 'Solicitudes de crédito ' + moment().format('YYYY/MM/DD'),
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 13,14]
+                    columns: [0, 1, 2, 3, 4, 5, 13, 14]
                 }
             },
             {
@@ -370,12 +370,12 @@ $(document).ready(function () {
 });
 
 
-$("#btnAbrirSolicitud").click(function (e) {
+$("#btnAbrirAnalisis").click(function (e) {
 
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Bandeja.aspx/AbrirAnalisisSolicitud",
-        data: JSON.stringify({ dataCrypt: window.location.href, idSolicitud: idSolicitud, Identidad: identidad }),
+        url: "SolicitudesCredito_Bandeja.aspx/AbrirAnalisis",
+        data: JSON.stringify({ idSolicitud: idSolicitud, Identidad: identidad, dataCrypt: window.location.href }),
         contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError("No se pudo cargar la solicitud, contacte al administrador");
@@ -386,12 +386,12 @@ $("#btnAbrirSolicitud").click(function (e) {
     });
 });
 
-$("#btnDetallesSolicitud").click(function (e) {
+$("#btnAbrirDetalles").click(function (e) {
 
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Bandeja.aspx/EncriptarParametros",
-        data: JSON.stringify({ dataCrypt: window.location.href, idSolicitud: idSolicitud, identidad: identidad }),
+        data: JSON.stringify({ idSolicitud: idSolicitud, identidad: identidad, dataCrypt: window.location.href }),
         contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError("No se pudo cargar la solicitud, contacte al administrador");
@@ -400,10 +400,6 @@ $("#btnDetallesSolicitud").click(function (e) {
             data.d != "-1" ? window.location = "SolicitudesCredito_Detalles.aspx?" + data.d : MensajeError("No se pudo al redireccionar a pantalla de detalles");
         }
     });
-});
-
-jQuery("#date-range").datepicker({
-    toggleActive: !0
 });
 
 function MensajeError(mensaje) {
@@ -415,7 +411,5 @@ function MensajeError(mensaje) {
 
 function FiltrarSolicitudesMesActual() {
 
-    var mesActual = moment().format("MM");
-
-    dtBandeja.columns(5).search('/' + mesActual + '/').draw();
+    dtBandeja.columns(5).search('/' + moment().format("MM") + '/').draw();
 }

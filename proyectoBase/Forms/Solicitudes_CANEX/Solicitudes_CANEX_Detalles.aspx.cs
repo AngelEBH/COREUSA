@@ -15,17 +15,17 @@ using System.Web.UI.HtmlControls;
 
 public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 {
-    string pcEncriptado = "";
-    string pcIDUsuario = "";
-    string pcIDSesion = "";
-    string pcIDApp = "";
+    public string pcEncriptado = "";
+    public string pcIDUsuario = "";
+    public string pcIDSesion = "";
+    public string pcIDApp = "";
 
     public short IdPais = 0;
     public short IdSocio = 0;
     public short IdAgencia = 0;
-    public decimal IdEstadoSolicitud = 0;
     public int IdSolicitudPrestadito = 0;
-    public DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public decimal IdEstadoSolicitud = 0;
+    public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -34,19 +34,23 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             try
             {
                 var idSolicitud = "0";
-                var lcURL = "";
+                var lcURL = string.Empty;
                 var liParamStart = 0;
-                var lcParametros = "";
-                var lcParametroDesencriptado = "";
+                var lcParametros = string.Empty;
+                var lcParametroDesencriptado = string.Empty;
                 Uri lURLDesencriptado = null;
 
                 lcURL = Request.Url.ToString();
                 liParamStart = lcURL.IndexOf("?");
 
                 if (liParamStart > 0)
+                {
                     lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
+                }
                 else
+                {
                     lcParametros = string.Empty;
+                }
 
                 if (lcParametros != string.Empty)
                 {
@@ -75,7 +79,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                            
+
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 while (sqlResultado.Read())
@@ -168,13 +172,9 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     txtIngresosMensuales.Text = sqlResultado["fnIngresoMensualBase"].ToString();
 
                                     if (esComisionista == 0)
-                                    {
                                         divComisionesCliente.Visible = false;
-                                    }
                                     else
-                                    {
                                         txtComisionesCliente.Text = sqlResultado["fnIngresoMensualComisiones"].ToString();
-                                    }
 
                                     int arraigoLaboralMeses = GetMonthDifference(hoy, DateTime.Parse(sqlResultado["fdFechaIngresoEmpresa"].ToString()));
 
@@ -265,7 +265,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                            
+
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 /* Llenar table de referencias */
@@ -313,7 +313,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);                            
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                             using (var sqlResultado = sqlComando.ExecuteReader())
@@ -476,7 +476,6 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     public static bool CondicionarSolicitud(List<SolicitudesCondicionamientosViewModel> solicitudCondiciones, int idPais, int idSocio, int idAgencia, string dataCrypt)
     {
         var resultadoProceso = false;
-        var DSC = new DSCore.DataCrypt();
 
         using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
         {
@@ -491,7 +490,6 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-                    long MensajeError = 0;
 
                     foreach (SolicitudesCondicionamientosViewModel item in solicitudCondiciones)
                     {
@@ -512,17 +510,15 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             {
                                 while (readerList.Read())
                                 {
-                                    MensajeError = (long)readerList["RESULT"];
-                                }
-
-                                if (MensajeError == 1)
-                                {
-                                    resultadoProceso = true;
-                                }
-                                else
-                                {
-                                    resultadoProceso = false;
-                                    break;
+                                    if ((long)readerList["RESULT"] == 1)
+                                    {
+                                        resultadoProceso = true;
+                                    }
+                                    else
+                                    {
+                                        resultadoProceso = false;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -547,12 +543,11 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         int resultadoProceso = 0;
         try
         {
-            var DSC = new DSCore.DataCrypt();
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
             var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             long mensajeError = 0;
 
             const int estadoRechazado = 5;
@@ -597,7 +592,6 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     [WebMethod]
     public static ResponseEntitie ImportarSolicitud(int idPais, int idSocio, int idAgencia, string comentario, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultadoProceso = new ResponseEntitie();
         var ListadoDocumentosCANEX = new List<SolicitudesDocumentosViewModel>();
 
@@ -606,14 +600,14 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
             var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
             var resultadoSp = false;
             var mensajeResultado = string.Empty;
             var mensajeError = string.Empty;
-            int idSolicitudPrestadito = 0;
-            int contadorErrores = 0;
+            var idSolicitudPrestadito = 0;
+            var contadorErrores = 0;
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -796,7 +790,6 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         return resultadoProceso;
                     }
                 } // if SP == true
-
             } // using connection
         }
         catch (Exception ex)
@@ -809,7 +802,6 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     [WebMethod]
     public static string ObtenerUrlEncriptado(string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var lURLDesencriptado = DesencriptarURL(dataCrypt);
         var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
         var pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
@@ -824,15 +816,19 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var DSC = new DSCore.DataCrypt();
             var liParamStart = 0;
             var lcParametros = string.Empty;
             var pcEncriptado = string.Empty;
             liParamStart = URL.IndexOf("?");
+
             if (liParamStart > 0)
+            {
                 lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
+            }
             else
+            {
                 lcParametros = string.Empty;
+            }
 
             if (lcParametros != string.Empty)
             {

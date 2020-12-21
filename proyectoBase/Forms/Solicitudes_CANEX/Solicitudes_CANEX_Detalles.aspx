@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles de la solicitud CANEX</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -51,19 +51,24 @@
                                 <button id="btnDetallesResolucion" runat="server" visible="false" data-toggle="modal" data-target="#modalEstado" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
                                     Detalles del estado
                                 </button>
-                                <button runat="server" id="btnHistorialExterno" class="btn btn-sm btn-success waves-effect waves-light" type="button">
-                                    Buro externo
+                                <button runat="server" id="btnHistorialExterno" type="button" class="btn btn-secondary waves-effect waves-light">
+                                    <i class="fas fa-clipboard-check"></i>
+                                    Buró Externo
                                 </button>
-                                <button runat="server" id="btnValidoDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-success btn-sm waves-effect waves-light">
-                                    <small>Ver docs</small>
+                                <button runat="server" id="btnValidoDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-secondary waves-effect waves-light">
+                                    <i class="fas fa-file-alt"></i>
+                                    Documentos
                                 </button>
-                                <button runat="server" id="btnCondicionarSolicitud" class="btn btn-sm btn-warning validador" data-toggle="modal" data-target="#modalCondicionarSolicitud" type="button">
+                                <button runat="server" id="btnCondicionarSolicitud" type="button" data-toggle="modal" data-target="#modalCondicionarSolicitud" class="btn btn-warning waves-effect waves-light validador">
+                                    <i class="fas fa-pen-square"></i>
                                     Condicionar
                                 </button>
-                                <button runat="server" id="btnRechazar" class="btn btn-sm btn-danger waves-effect waves-light validador" data-toggle="modal" data-target="#modalResolucionRechazar" type="button">
+                                <button runat="server" id="btnRechazar" type="button" data-toggle="modal" data-target="#modalResolucionRechazar" class="btn btn-danger waves-effect waves-light validador">
+                                    <i class="fas fa-thumbs-down"></i>
                                     Rechazar
                                 </button>
-                                <button runat="server" id="btnAceptarSolicitud" class="btn btn-sm btn-warning waves-effect waves-light validador" disabled="disabled" data-toggle="modal" data-target="#modalResolucionAprobar" title="" type="button">
+                                <button runat="server" id="btnAceptarSolicitud" type="button" data-toggle="modal" disabled="disabled" data-target="#modalResolucionAprobar" title="" class="btn btn-success waves-effect waves-light validador">
+                                    <i class="fas fa-thumbs-up"></i>
                                     Aceptar
                                 </button>
                             </div>
@@ -84,17 +89,23 @@
                             <tbody>
                                 <tr>
                                     <th class="text-center pt-1 pb-1">No. Solicitud:
-                                        <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                        <asp:Label ID="lblNoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                                    </th>
                                     <th class="text-center pt-1 pb-1">No. Cliente:
-                                        <asp:Label ID="lblNoCliente" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                        <asp:Label ID="lblNoCliente" CssClass="col-form-label" runat="server"></asp:Label>
+                                    </th>
                                     <th class="text-center pt-1 pb-1">Tipo Solicitud:
-                                        <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                        <asp:Label ID="lblTipoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                                    </th>
                                     <th class="text-center pt-1 pb-1">Agente de Ventas:
-                                        <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                        <asp:Label ID="lblAgenteDeVentas" CssClass="col-form-label" runat="server"></asp:Label>
+                                    </th>
                                     <th class="text-center pt-1 pb-1">Agencia:
-                                        <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                        <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label>
+                                    </th>
                                     <th class="text-center pt-1 pb-1">Estado:
-                                        <asp:Label ID="lblEstadoSolicitud" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                        <asp:Label ID="lblEstadoSolicitud" CssClass="col-form-label" runat="server"></asp:Label>
+                                    </th>
                                 </tr>
                             </tbody>
                         </table>
@@ -662,7 +673,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        ¿Está seguro de que desea <strong>RECHAZAR</strong> esta solicitud?<br />
+                        ¿Está seguro de <strong>RECHAZAR</strong> esta solicitud?<br />
                         <br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
@@ -691,7 +702,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        ¿Está seguro de que desea <strong>ACEPTAR</strong> esta solicitud?<br />
+                        ¿Está seguro de <strong>ACEPTAR</strong> esta solicitud?<br />
                         *Se importará a la bandeja de solicitudes*<br />
                         <br />
                         <div class="form-group">
@@ -746,7 +757,6 @@
                 </div>
             </div>
         </div>
-
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -764,7 +774,7 @@
         idEstado = <%=this.IdEstadoSolicitud%>;
         const idSolicitudImportada = <%=this.IdSolicitudPrestadito%>;
     </script>
-    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=20201027154785"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=20201221090925"></script>
 
     <script>
         $("#divDocumentacionCedula").unitegallery({

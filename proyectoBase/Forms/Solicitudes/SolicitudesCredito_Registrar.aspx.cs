@@ -1532,13 +1532,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         var AnioPrimerPago = hoy.AddMonths(1).Year;
                         var DiaPrimerPago = hoy.Day;
 
-                        if (hoy.Day >= 6 && hoy.Day <= 25)
+                        if (hoy.Day >= 6 && hoy.Day <= 21)
                         {
                             MesPrimerPago = hoy.AddMonths(1);
                             DiaPrimerPago = 15;
                         }
 
-                        else if (hoy.Day < 6 || hoy.Day > 25)
+                        else if (hoy.Day < 6 || hoy.Day > 21)
                         {
                             var fecha = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
 

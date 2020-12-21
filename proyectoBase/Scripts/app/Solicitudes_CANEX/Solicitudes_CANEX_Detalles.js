@@ -79,7 +79,7 @@ $("#btnCondicionarSolicitudConfirmar").click(function () {
     $.ajax({
         type: "POST",
         url: "Solicitudes_CANEX_Detalles.aspx/CondicionarSolicitud",
-        data: JSON.stringify({ SolicitudCondiciones: listaCondicionamientos, idPais: idPais, idSocio: idSocio, idAgencia: idAgencia, dataCrypt: window.location.href }),
+        data: JSON.stringify({ solicitudCondiciones: listaCondicionamientos, idPais: idPais, idSocio: idSocio, idAgencia: idAgencia, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la información, contacte al administrador');

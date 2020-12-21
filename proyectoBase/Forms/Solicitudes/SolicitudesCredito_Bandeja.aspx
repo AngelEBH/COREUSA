@@ -176,13 +176,15 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
-                    ¿Desea abrir la solicitud del cliente <strong><span id="lblCliente"></span></strong>con identidad <strong><span id="lblIdentidadCliente"></span></strong>?
+                    Abrir solicitud de crédito <strong id="lblNoSolicitud"></strong>
+                    cliente <strong id="lblCliente"></strong>
+                    con identidad <strong id="lblIdentidadCliente"></strong>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnDetallesSolicitud" class="btn btn-primary waves-effect waves-light">
+                    <button id="btnAbrirDetalles" class="btn btn-primary waves-effect waves-light" type="button">
                         Detalles
                     </button>
-                    <button runat="server" type="button" id="btnAbrirSolicitud" visible="false" class="btn btn-primary waves-effect waves-light">
+                    <button id="btnAbrirAnalisis" class="btn btn-primary waves-effect waves-light" type="button" runat="server" visible="false">
                         Analizar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -216,6 +218,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=20201217113750"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=20201221095485"></script>
 </body>
 </html>
