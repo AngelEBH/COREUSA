@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
-    <link href="/CSS/SolicitudesCredito_ImprimirDocumentacion.css" rel="stylesheet" />
+    <link href="/CSS/SolicitudesCredito_ImprimirDocumentacion.css?v=20201222251721" rel="stylesheet" />
 </head>
 <body class="EstiloBody">
     <form id="frmGuardarPreSolicitud" runat="server">
@@ -63,7 +63,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-6 border-left border-gray justify-content-center">
                         <h6 class="">Imprimir documentos</h6>
                         <div class="form-group row mb-0">
@@ -97,6 +96,9 @@
                                 <button type="button" id="btnBasicoCPI" onclick="ExportToPDF('BASICO_CPI','divContenedorBasicoCPI','divBasicoCPIPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/vehicle_insurance_40px.png');">
                                     Básico + CPI
                                 </button>
+                                <button type="button" id="btnNotaDeEntrega" onclick="ExportToPDF('NOTA_DE_ENTREHA', 'divContenedorNotaDeEntrega', 'divNotaDeEntregaPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
+                                    Nota de entrega
+                                </button>
                                 <button type="button" id="btnEnviarCorreoLiquidacion" onclick="EnviarCorreo('Liquidación', 'Liquidación', 'divCorreoLiquidacionPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
                                     Correo Liquidación
                                 </button>
@@ -107,7 +109,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row mb-0" id="divInformacionGarantia" runat="server" visible="false">
                     <div class="col-12">
                         <h6 class="border-bottom pb-2">Información de la garantía</h6>
@@ -158,7 +159,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-lg-6">
                         <h6 class="m-0">Características físicas</h6>
                         <div class="form-group row">
@@ -250,7 +250,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group row mr-0 ml-0 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="false">
                     <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server"></asp:Label>
                 </div>
@@ -325,7 +324,6 @@ por concepto de gastos de cierre y papeleria todo en monda de curso legal en Hon
                                     <asp:Label runat="server" ID="lblNumeroMotor_Contrato"></asp:Label>
                                     y numero de chasís
                                     <asp:Label runat="server" ID="lblSerieChasis_Contato"></asp:Label>
-
                                 </b>
                             </p>
                             <p>
@@ -378,10 +376,8 @@ por concepto de seguro de vehiculo debiendo hacer efectivo el pago de la <b>prim
                                 <b>I)</b> Los abonos se harán primero a gastos, y cargos que pudieran haberse causado, luego los intereses, y el saldo, si lo hubiera, a capital;
                                 <b>- II)</b> El pago del préstamo se hará en la moneda pactada y en efectivo.
                                 <b>- III)</b> El pago se realizará conforme a lo establecido en el plan de pagos, en el caso que la fecha de pago sea día feriado, entonces deberá realizarse el día hábil inmediato anterior, en las oficinas, agencias, sucursales y ventanillas de <b>PRESTADITO</b>, o en cualquier otra institución tercerizada que se designe oportunamente en virtud de convenios de cobro de cartera.
-
                                 <b>- E) PAGO ANTICIPADO:</b>
                                 En caso de pago total de la obligación antes de su vencimiento, <b>EL CLIENTE</b> deberá pagar una comisión de prepago del dos por ciento (2%) sobre el saldo adeudado, y si es un pago parcial a capital superior al diez por ciento (10%) del monto adeudado, también pagará dicha comisión calculada sobre el monto a pagar. Esta condición aplicara únicamente cuando el saldo del capital adeudado exceda cien mil dólares ($100,000.00) o su equivalente en lempiras, o los fondos sean provenientes de una institución que penalice a <b>PRESTADITO</b> por pago anticipado, cualquiera de las dos o ambas conjuntamente.
-
                                 <b>- F) PROPIEDAD DEL VEHICULO.</b>
                                 Mientras no se haya cancelado la totalidad del Préstamo, será dueño del vehículo <b>PRESTADITO</b>, el cliente será considerado como poseedor y esta posesión esta condicionada, es decir si el cliente está cumpliendo con las obligaciones contraídas en este contrato, de lo contrario <b>PRESTADITO</b> podrá a su discreción retirarlo.
                             </p>
@@ -392,7 +388,6 @@ por concepto de seguro de vehiculo debiendo hacer efectivo el pago de la <b>prim
                                 por este acto, en tanto no haya cumplido con el pago total de su obligación, autoriza a <b>PRESTADITO</b> expresamente y sin ser necesario la notificación previa para:
                                 <span class="page-break"></span>
                                 <b>A)</b> Vender, Ceder o de cualquier otra forma traspasar, o celebrar contratos de participación, de descuentos con relación al crédito y derechos consignados en este documento o títulos valores relacionados a este mismo;
-
                                 <b>B)</b> Autorizar a <b>PRESTADITO</b> para que en cualquier tiempo pueda acceder a la información de la Central de Riesgos de la Comisión Nacional de Bancos y Seguros u otra central de riesgo pública o privada, para gestionar y conocer la situación crediticia de <b>EL CLIENTE</b> frente a las demás instituciones del sistema financiero nacional.
                                 <b>- C) EL CLIENTE</b> Autoriza de manera Irrevocable, a que <b>PRESTADITO</b> pueda entrar en su domicilio, para solo efecto de retirar el vehículo comprado con este préstamo, o que lo retire de una tercera persona sin necesidad de intervención judicial, esta cláusula solo se ejecutara en caso de mora de 2 o más cuotas vencidas y mientras no haya sido cancelado el total adeudado.
                                 <b>- CUARTO: OBLIGACIONES GENERALES.- EL CLIENTE</b> durante la vigencia del presente contrato también se obliga a:
@@ -425,7 +420,6 @@ La excepción anterior <b>no faculta al CLIENTE</b> a conducir el vehiculo sin s
                                 <b>g)</b> Por ser del conocimiento de <b>PRESTADITO</b>, la existencia de obligaciones de <b>EL CLIENTE</b> pendientes de pago con el Estado, en tal cantidad que a su criterio ponga en peligro la recuperación de los adeudos debido a la preferencia del Estado para obtener el pago a su favor antes que <b>PRESTADITO</b>;
                                 <b>h)</b> El incumplimiento de parte de <b>EL CLIENTE</b> de cualquiera de las obligaciones contraídas en este contrato.
                                 <b>i)</b> Retirar, desconectar, adulterar, o de cualquier forma hacer que el GPS del Vehiculo no funcione correctamente.
-
                                 <b>- NOVENO: COBROS EXTRAJUDICIALES.-</b> En caso de ser necesarias las gestiones de cobranzas extrajudiciales por la mora en el pago o el vencimiento anticipado del contrato, estas se realizarán de la siguiente manera:
                                 <b>1)</b> Para Mora de 1 a 180 días: alternativamente podrán ser llamadas telefónicas, correos electrónicos, mensajes por cualquier medio electrónico, visitas por gestores, cartas de cobro escritas solicitando el pago y dirigidas a las direcciones indicadas. Estas gestiones tendrán un costo de doscientos cincuenta lempiras (L250.00), cargados al estado de cuenta del préstamo otorgado, son acumulables por cada cuota vencida y serán pagados por <b>EL CLIENTE</b> en todos los casos y sin excepción;
                                 <b>2)</b> Si su caso fuere trasladado a Profesionales del Derecho, cuyas gestiones iniciales podrán ser: llamadas telefónicas, envió de correos electrónicos, cartas de cobro escritas, y visitas, causaran el cobro de honorarios
@@ -489,7 +483,6 @@ a los
                             <hr />
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-12">
                             <p>
@@ -613,10 +606,8 @@ a los <span class="lblNumeroDia_Firma"></span>
                             </p>
                         </div>
                     </div>
-
                     <!-- Firma del cliente -->
                     <div class="row mt-5 justify-content-center">
-                        <%--<div class="col-1"></div>--%>
                         <div class="col-5 text-center mt-5">
                             <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
                             <label class="mt-0 d-block">Nombre</label>
@@ -781,29 +772,36 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Asegurado</th>
                                     <td colspan="5" class="p-0">
-                                        <asp:Label runat="server" ID="lblNombre_InspeccionSeguro"></asp:Label></td>
+                                        <asp:Label runat="server" ID="lblNombre_InspeccionSeguro"></asp:Label>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Marca</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblMarca_InspeccionSeguro"></asp:Label></td>
+                                        <asp:Label runat="server" ID="lblMarca_InspeccionSeguro"></asp:Label>
+                                    </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Modelo</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblModelo_InspeccionSeguro"></asp:Label></td>
+                                        <asp:Label runat="server" ID="lblModelo_InspeccionSeguro"></asp:Label>
+                                    </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Año</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblAnio_InspeccionSeguro"></asp:Label></td>
+                                        <asp:Label runat="server" ID="lblAnio_InspeccionSeguro"></asp:Label>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Tipo</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblTipoDeVehiculo_InspeccionSeguro"></asp:Label></td>
+                                        <asp:Label runat="server" ID="lblTipoDeVehiculo_InspeccionSeguro"></asp:Label>
+                                    </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Kilometraje</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblRecorrido_InspeccionSeguro"></asp:Label></td>
+                                        <asp:Label runat="server" ID="lblRecorrido_InspeccionSeguro"></asp:Label>
+                                    </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Placa</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblMatricula_InspeccionSeguro"></asp:Label></td>
+                                        <asp:Label runat="server" ID="lblMatricula_InspeccionSeguro"></asp:Label>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -859,7 +857,8 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                                 <tr>
                                     <th class="bg-light font-weight-bold p-1" style="width: 15%">Recibí de:</th>
                                     <td class="p-1 font-weight-bold">
-                                        <asp:Label runat="server" ID="lblNombreEmpresa_Recibo">PRESTADITO SA DE CV</asp:Label></td>
+                                        <asp:Label runat="server" ID="lblNombreEmpresa_Recibo">PRESTADITO SA DE CV</asp:Label>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th class="bg-light font-weight-bold p-1" style="width: 15%">La suma de:</th>
@@ -906,8 +905,6 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                             </table>
                         </div>
                     </div>
-
-
                     <div class="row justify-content-center pt-5">
                         <div class="col-6">
                             <label class="text-center font-weight-bold border-top border-bottom-0 border-right-0 border-left-0 form-control border-dark pt-2">NOMBRE Y FIRMA DE RECIBIDO</label>
@@ -1387,9 +1384,8 @@ de lo acá establecido se firma y se estampa huella digital en fecha
         </div>
 
         <!-- Correo liquidación -->
-        <div id="divContenedorCorreoLiquidacion" style="display:none;">
+        <div id="divContenedorCorreoLiquidacion" style="display: none;">
             <div id="divCorreoLiquidacionPDF">
-
                 <table border="1" style="width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
                     <tr>
                         <th colspan='2' style='text-align: left; font-weight: bold;'><em>DATOS DEL VEHICULO</em></th>
@@ -1511,10 +1507,8 @@ de lo acá establecido se firma y se estampa huella digital en fecha
         </div>
 
         <!-- Correo seguro -->
-        <div id="divContenedorCorreoSeguro" style="display:none;">
+        <div id="divContenedorCorreoSeguro" style="display: none;">
             <div id="divCorreoSeguroPDF">
-
-
                 <table border="1" style="width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
                     <tr>
                         <th colspan='2' style='text-align: left; font-weight: bold;'><em>DATOS DEL VEHICULO</em></th>
@@ -1603,112 +1597,132 @@ de lo acá establecido se firma y se estampa huella digital en fecha
             </div>
         </div>
 
-        <!-- Convenio de regulación de compra y venta de vehiculos para financiamiento a tercero -->
-        <div id="divContenedorInspeccionSegurosContinental" style="margin-top: 999px; display: none;">
-            <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divSegurosContinentalPDF" style="display: none;">
-                <div class="card-body pt-0">
+        <!-- Nota de entrega -->
+        <div id="divContenedorNotaDeEntrega" style="margin-top: 999px; display: none;">
+            <div class="card m-0 divImprimir" runat="server" visible="true" id="divNotaDeEntregaPDF" style="display: none;">
+                <div class="card-body pt-0 pr-5 pl-5">
                     <div class="row">
-                        <div class="col-12 m-0 p-0">
-                            <img src="/Imagenes/logoSegCon.png" class="mt-0 pt-0" />
+                        <div class="col-12 m-0 p-0 text-center">
+                            <img src="/Imagenes/LogoPrestadito.png" class="pt-4" />
                         </div>
                         <div class="col-12">
-                            <h4 class="text-center font-weight-bold">INFORME DE INSPECCIÓN DE RIESGO PARA ASEGURAR AUTOMÓVILES</h4>
-                            <hr />
+                            <h4 class="text-center pt-2 pb-4"><b>NOTA DE ENTREGA <br /> POR APROBACIÓN DE CRÉDITO</b></h4>
                         </div>
                     </div>
-                    <div class="row mb-0 pb-0">
-                        <div class="col-auto mb-0">
-                            Asegurado:
+                    <div class="row">
+                        <div class="col-12">
+                            <p>
+                                Estimado (s)
+                                <b>
+                                    <asp:Label runat="server" ID="lblPropietarioGarantia_NotaEntrega"></asp:Label>,
+                                </b>
+                                por este medio hacemos de su conocimiento que la clienta
+                                <asp:Label runat="server" ID="lblNombreCliente_NotaEntrega"></asp:Label>,
+                                cuenta con un crédito aprobado con PRESTADITO por la cantidad de
+                                <asp:Label runat="server" ID="lblValorAPrestarEnPalabras_NotaEntrega"></asp:Label>
+                                (<asp:Label runat="server" ID="lblValorAPrestar_NotaEntrega" CssClass="font-weight-bold"></asp:Label>)
+                                solicitamos de su parte proceder con la entrega del vehículo al cliente en mención, así mismo se le pide entregar al Oficial de Prestadito la documentación
+                                original y completa del automóvil con las siguientes características:
+                            </p>
                         </div>
-                        <div class="col-10 p-0 mt-3 mb-0">
-                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
+                        <div class="col-2"></div>
+                        <div class="col-auto">
+                            <table class="table table-sm table-bordered" style="width:400px;">
+                                <tr>
+                                    <th>ESTADO</th>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblEstadoGarantia_NotaEntrega"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>MARCA</th>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblMarca_NotaEntrega"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>MODELO</th>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblModelo_NotaEntrega"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>AÑO</th>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblAño_NotaEntrega"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>TIPO</th>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblTipo_NotaEntrega"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>CHASIS</th>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblChasis_NotaEntrega"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>MOTOR</th>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblSerieMotor_NotaEntrega"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>COLOR</th>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblColor_NotaEntrega"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>CILINDRAJE</th>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblCilindraje_NotaEntrega"></asp:Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>PLACA</th>
+                                    <td><asp:Label runat="server" ID="lblPlaca_NotaEntrega"></asp:Label></td>
+                                </tr>
+                            </table>
                         </div>
-                    </div>
-                    <div class="row mb-0 pb-0">
-                        <div class="col-auto mb-0">
-                            Marca:
+                        <div class="col-3"></div>
+                        <div class="col-12">
+                            <p>
+                                En virtud de lo anterior se le emite esta <b>NOTA DE ENTREGA</b> y al mismo tiempo ratificamos nuestro 
+                                compromiso de hacer el pago correspondiente en efectivo o en Cheque al señor:
+                                <asp:Label runat="server" ID="lblNombreVendedorGarantia_NotaEntrega"></asp:Label>
+                                en cinco (5) días hábiles mismos que serán para inscribir dicho vehículo en el Instituto de la Propiedad Mercantil a favor de Prestadito,
+                                salvo que la documentación entregada no se encuentre completa y/o no pueda ser inscrito en el IP.
+                            </p>
+                            <p>
+                                Y para los fines que estime conveniente, se le extiende la presente en la ciudad de 
+                                <span class="lblCiudad_Firma"></span>,
+                                departamento de
+                                <span class="lblDepartamento_Firma"></span>,
+                                a los
+                                <span class="lblNumeroDia_Firma"></span>
+                                días del mes de
+                                <span class="lblMes_Firma"></span>
+                                del año <span class="lblAnio_Firma"></span>.
+                            </p>
                         </div>
-                        <div class="col-2 p-0 mt-3 mb-0">
-                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
-                        </div>
-                        <div class="col-auto mb-0">
-                            Modelo:
-                        </div>
-                        <div class="col-2 p-0 mt-3 mb-0">
-                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
-                        </div>
-                        <div class="col-auto mb-0">
-                            Año:
-                        </div>
-                        <div class="col-2 p-0 mt-3 mb-0">
-                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
-                        </div>
-                        <div class="col-auto mb-0">
-                            Color:
-                        </div>
-                        <div class="col-2 p-0 mt-3 mb-0">
-                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
-                        </div>
-                    </div>
-                    <div class="row mb-0 pb-0">
-                        <div class="col-auto mb-0">
-                            Serie No:
-                        </div>
-                        <div class="col-3 p-0 mt-3 mb-0">
-                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
-                        </div>
-                        <div class="col-auto mb-0">
-                            Motor No:
-                        </div>
-                        <div class="col-3 p-0 mt-3 mb-0">
-                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
-                        </div>
-                        <div class="col-auto mb-0">
-                            Tipo:
-                        </div>
-                        <div class="col-3 p-0 mt-3 mb-0">
-                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
-                        </div>
-                    </div>
-
-                    <div class="row mb-0 pb-0">
-                        <div class="col-1 mb-0">
-                            Placa:
-                        </div>
-                        <div class="col-3 p-0 mt-3 mb-0">
-                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
-                        </div>
-                        <div class="col-auto mb-0">
-                            Ocupantes:
-                        </div>
-                        <div class="col-2 p-0 mt-3 mb-0">
-                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
-                        </div>
-                        <div class="col-autp mb-0">
-                            Cilindraje No.
-                        </div>
-                        <div class="col-2 p-0 mt-3 mb-0">
-                            <label class="form-control border-bottom-0 border-left-0 border-right-0 border-dark p-0" style="border-radius: 0px;"></label>
-                        </div>
-                        
                     </div>
                     <!-- Firma del cliente -->
-                    <div class="row justify-content-center mt-1 pt-1">
-                        <div class="col-5 text-center mt-1">
+                    <div class="row">
+                        <div class="col-3"></div>
+                        <div class="col-6 text-center p-0 mt-3">
                             <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
-                            <label class="mt-0 d-block">Por la empresa PRESTADITO S.A. de C.V.</label>
-                            <label class="mt-0 d-block">ERICK GEOVANY MOLINA PADILLA</label>
+                            <label class="mt-0 d-block">SELLO Y FIRMA</label>
+                            <label class="mt-0 d-block">PRESTADITO S.A. DE C.V.</label>
                         </div>
-                        <div class="col-5 text-center mt-1">
-                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
-                            <label class="mt-0 d-block">Por el cliente</label>
-                            <asp:Label runat="server" ID="Label16" class="mt-0 d-block"></asp:Label>
-                        </div>
+                        <div class="col-3"></div>
                     </div>
                 </div>
             </div>
         </div>
-
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>

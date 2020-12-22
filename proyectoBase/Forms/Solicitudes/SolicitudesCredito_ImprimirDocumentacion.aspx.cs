@@ -445,6 +445,24 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblNombreCliente_CorreoSeguro.Text = nombreCliente;
                                         lblIdentidadCliente_CorreoSeguro.Text = identidad;
                                         lblNumeroPrestamo_CorreoSeguro.Text = "";
+
+                                        /* Nota de entrega */
+                                        lblPropietarioGarantia_NotaEntrega.Text = nombrePropietarioGarantia;
+                                        lblNombreCliente_NotaEntrega.Text = nombreCliente;
+                                        lblValorAPrestarEnPalabras_NotaEntrega.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString());
+                                        lblValorAPrestar_NotaEntrega.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");
+
+                                        lblEstadoGarantia_NotaEntrega.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
+                                        lblMarca_NotaEntrega.Text = marca;
+                                        lblModelo_NotaEntrega.Text = modelo;
+                                        lblAño_NotaEntrega.Text = anio;
+                                        lblTipo_NotaEntrega.Text = tipoDeVehiculo;
+                                        lblChasis_NotaEntrega.Text = serieChasis;
+                                        lblSerieMotor_NotaEntrega.Text = serieMotor;
+                                        lblColor_NotaEntrega.Text = color;
+                                        lblCilindraje_NotaEntrega.Text = cilindraje;
+                                        lblPlaca_NotaEntrega.Text = matricula;
+                                        lblNombreVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
                                     }
 
                                     sqlResultado.NextResult();
@@ -554,7 +572,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
             pmmMensaje.Subject = pcAsunto;
             pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
-            pmmMensaje.To.Add("sistemas@miprestadito.com");
+            pmmMensaje.To.Add("willian.diaz@miprestadito.com");
             //pmmMensaje.To.Add(buzonCorreoUsuario);
             pmmMensaje.CC.Add(buzonCorreoUsuario);
             pmmMensaje.IsBodyHtml = true;

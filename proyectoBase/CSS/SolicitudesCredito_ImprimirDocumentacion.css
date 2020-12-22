@@ -72,3 +72,10 @@ p {
 #divConevionCyVPDF p, #divBasicoCPIPDF p, #divBasicoCPIPDF li {
     font-size: 12px !important;
 }
+
+#divNotaDeEntregaPDF p {
+    font-size: 12px !important;
+    text-align: justify !important;
+    text-justify: inter-word !important;
+    color: black;
+}
