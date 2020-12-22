@@ -59,7 +59,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                 IdCliente: CONSTANTES.IdCliente,
                 ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
                 ValorGlobal: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
-                ValorSeleccionado: $("#txtValorFinanciar").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciar").val().replace(/,/g, ''),
+                ValorSeleccionado: $("#txtValorDePrestamo").val().replace(/,/g, '') == '' ? 0 : $("#txtValorDePrestamo").val().replace(/,/g, ''),
                 PlazoSeleccionado: $("#ddlPlazosDisponibles option:selected").val() == '' ? 0 : $("#ddlPlazosDisponibles option:selected").val(),
                 IdOrigen: $("#ddlOrigen option:selected").val() == null ? 1 : parseInt($("#ddlOrigen option:selected").val()),
                 EnIngresoInicio: ConvertirFechaJavaScriptAFechaCsharp(localStorage.getItem("EnIngresoInicio")),
@@ -139,7 +139,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                     TipoDeVehiculo: $("#txtTipoDeVehiculo").val(),
                     Marca: $("#txtMarca").val(),
                     Modelo: $("#txtModelo").val(),
-                    Anio: $("#txtAnio").val().replace(/,/g, '') ?? 0,
+                    Anio: $("#txtAnio").val().replace(/,/g, '') == '' ? 0 : $("#txtAnio").val().replace(/,/g, ''),
                     Color: $("#txtColor").val(),
                     Matricula: $("#txtMatricula").val(),
                     Cilindraje: $("#txtCilindraje").val(),
@@ -268,7 +268,7 @@ $(document).ready(function () {
                 }
 
                 var valorGlobal = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
-                var valorFinanciar = parseFloat($("#txtValorFinanciar").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciar").val().replace(/,/g, ''));
+                var valorFinanciar = parseFloat($("#txtValorDePrestamo").val().replace(/,/g, '') == '' ? 0 : $("#txtValorDePrestamo").val().replace(/,/g, ''));
                 var montoOfertadoSeleccionado = parseFloat($("#ddlPrestamosDisponibles :selected").val());
                 var plazoSeleccionado = parseInt($("#ddlPrestamosDisponibles option:selected").data('plazoseleccionado') == '' ? 0 : $("#ddlPrestamosDisponibles option:selected").data('plazoseleccionado'));
 
@@ -340,7 +340,7 @@ $(document).ready(function () {
                     }
                 }
 
-                if (valorFinanciar > CONSTANTES.PrestamoMaximo_Monto && CONSTANTES.PrestamoMaximo_Monto != 0) {
+                if (valorFinanciar > CONSTANTES.PrestamoMaximo_Monto && CONSTANTES.PrestamoMaximo_Monto != 0 && (PRECALIFICADO.IdProducto != 202 && PRECALIFICADO.IdProducto != 203)) {
                     state = false;
                     MensajeAdvertencia('El monto máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Monto + '.');
                 }
@@ -807,9 +807,10 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
                 success: function (data) {
 
                     var objCalculo = data.d;
-
+                    $("#txtValorDePrestamo").val(objCalculo.ValorDelPrestamo);
                     $("#txtValorCuota").val(objCalculo.CuotaTotal);
                     $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
+                    $("#txtTasaDeInteresAnual").val(objCalculo.TasaInteresAnual + '%');
 
                     COTIZADOR = objCalculo;
                 }
@@ -831,8 +832,10 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
                 var objCalculo = data.d;
 
+                $("#txtValorDePrestamo").val(objCalculo.ValorDelPrestamo);
                 $("#txtValorCuota").val(objCalculo.CuotaTotal);
                 $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
+                $("#txtTasaDeInteresAnual").val(objCalculo.TasaInteresAnual + '%');
 
                 COTIZADOR = objCalculo;
             }
@@ -1547,3 +1550,43 @@ function OcultarLoader() {
 
     $("#Loader").css('display', 'none');
 }
+
+/* Solicitar cambio de score... */
+$("#btnSolicitarCambioScore").click(function () {
+
+    if ($('#frmSolicitud').parsley().isValid({ group: 'cambiarScore' })) {
+
+        $("#btnSolicitarCambioScore").prop('disabled', true);
+
+        let nuevoScore = $("#txtNuevoScore").val() == '' ? 0 : $("#txtNuevoScore").val();
+        let comentarioAdicional = $("#txtCambiarScoreComentarioAdicional").val();
+        let nombreCliente = PRECALIFICADO.PrimerNombre + ' ' + PRECALIFICADO.SegundoNombre + ' ' + PRECALIFICADO.PrimerApellido + ' ' + PRECALIFICADO.SegundoApellido
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Registrar.aspx/EnviarSolicitudCambioScore",
+            data: JSON.stringify({ identidadCliente: PRECALIFICADO.Identidad, nombreCliente: nombreCliente, scoreActual: PRECALIFICADO.ScorePromedio, nuevoScore: nuevoScore, comentarioAdicional: comentarioAdicional, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+
+                $("#btnSolicitarCambioScore").prop('disabled', false);
+                MensajeError('No se pudo enviar el correo, contacte al administrador.');
+            },
+            success: function (data) {
+
+
+                data.d == true ? MensajeExito('Solicitud de cambio de score enviada por correo exitosamente!') : MensajeError('No se pudo enviar el correo, contacte al administrador.');
+
+                $("#txtNuevoScore,#txtCambiarScoreComentarioAdicional").val('');
+                $("#btnSolicitarCambioScore").prop('disabled', false);
+            }
+        });
+
+        MensajeInformacion('Enviando solicitud por correo...');
+
+        $("#modalCambiarScore").modal('hide');
+    }
+    else {
+        $('#frmSolicitud').parsley().validate({ group: 'cambiarScore', force: true });
+    }
+});

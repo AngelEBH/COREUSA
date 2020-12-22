@@ -25,7 +25,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     public string jsonConstantes;
     public string jsonPrecalicado;
     public Precalificado_ViewModel Precalificado;
-    public List<SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel> DocumentosRequeridos;
+    public List<TipoDocumento_ViewModel> DocumentosRequeridos;
     public SolicitudesCredito_Registrar_Constantes Constantes;
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
@@ -42,7 +42,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             DSC = new DSCore.DataCrypt();
             Precalificado = new Precalificado_ViewModel();
             Constantes = new SolicitudesCredito_Registrar_Constantes();
-            DocumentosRequeridos = new List<SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel>();
+            DocumentosRequeridos = new List<TipoDocumento_ViewModel>();
 
             string lcParametros;
 
@@ -467,6 +467,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 lblMensaje.InnerText = "(Este cliente ya cuenta con una solicitud de crédito activa, esperar resolución)";
                                 lblMensaje.Visible = true;
+
+                                Precalificado.PermitirIngresarSolicitud = false;
+                                Precalificado.MensajePermitirIngresarSolicitud = "Este cliente ya cuenta con una solicitud de crédito activa, esperar resolución";
                             }
                         }
                     }
@@ -767,7 +770,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         /* Tipos de documentos */
                         while (sqlResultado.Read())
                         {
-                            DocumentosRequeridos.Add(new SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel()
+                            DocumentosRequeridos.Add(new TipoDocumento_ViewModel()
                             {
                                 IdTipoDocumento = (short)sqlResultado["fiIDTipoDocumento"],
                                 DescripcionTipoDocumento = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
@@ -807,25 +810,25 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             ddlTiempoDeConocerReferencia.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
                         }
 
-                        sqlResultado.NextResult();
-
                         /* Moneda */
-                        ddlMoneda.Items.Clear();
-                        ddlMoneda.Items.Add(new ListItem("Seleccionar", ""));
-                        while (sqlResultado.Read())
-                        {
-                            ddlMoneda.Items.Add(new ListItem(sqlResultado["fcNombreMoneda"].ToString(), sqlResultado["fiMoneda"].ToString()));
-                        }
-
                         sqlResultado.NextResult();
+
+                        //ddlMoneda.Items.Clear();
+                        //ddlMoneda.Items.Add(new ListItem("Seleccionar", ""));
+                        //while (sqlResultado.Read())
+                        //{
+                        // ddlMoneda.Items.Add(new ListItem(sqlResultado["fcNombreMoneda"].ToString(), sqlResultado["fiMoneda"].ToString()));
+                        //}
 
                         /* Tipo de cliente */
-                        ddlTipoDeCliente.Items.Clear();
-                        ddlTipoDeCliente.Items.Add(new ListItem("Seleccionar", ""));
-                        while (sqlResultado.Read())
-                        {
-                            ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
-                        }
+                        sqlResultado.NextResult();
+
+                        //ddlTipoDeCliente.Items.Clear();
+                        //ddlTipoDeCliente.Items.Add(new ListItem("Seleccionar", ""));
+                        //while (sqlResultado.Read())
+                        //{
+                        // ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
+                        //}
                     }
                 }
 
@@ -921,7 +924,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 rbSexoMasculino.Checked = true;
                             }
                             ddlEstadoCivil.SelectedValue = sqlResultado["fiIDEstadoCivil"].ToString();
-                            ddlTipoDeCliente.SelectedValue = sqlResultado["fiTipoCliente"].ToString();
+                            //ddlTipoDeCliente.SelectedValue = sqlResultado["fiTipoCliente"].ToString();
                             ddlTipoDeVivienda.SelectedValue = sqlResultado["fiIDVivienda"].ToString();
                             ddlTiempoDeResidir.SelectedValue = sqlResultado["fiTiempoResidir"].ToString();
                         }
@@ -1186,9 +1189,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel> CargarDocumentosRequeridos()
+    public static List<TipoDocumento_ViewModel> CargarDocumentosRequeridos()
     {
-        return (List<SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel>)HttpContext.Current.Session["DocumentosRequeridos"];
+        return (List<TipoDocumento_ViewModel>)HttpContext.Current.Session["DocumentosRequeridos"];
     }
 
     [WebMethod]
@@ -1405,7 +1408,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Insert", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", cliente.IdTipoCliente);
+                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", 1);
                             sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", precalificado.Identidad);
                             sqlComando.Parameters.AddWithValue("@fcRTN", cliente.RtnCliente);
                             sqlComando.Parameters.AddWithValue("@fcPrimerNombreCliente", precalificado.PrimerNombre);
@@ -1491,7 +1494,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@fiTipoSolicitud", precalificado.IdTipoDeSolicitud);
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@fnValorSeleccionado", solicitud.ValorSeleccionado);
-                        sqlComando.Parameters.AddWithValue("@fiMoneda", solicitud.IdTipoMoneda);
+                        sqlComando.Parameters.AddWithValue("@fiMoneda", 1);
                         sqlComando.Parameters.AddWithValue("@fiPlazoSeleccionado", solicitud.PlazoSeleccionado);
                         sqlComando.Parameters.AddWithValue("@fnValorPrima", solicitud.ValorPrima);
                         sqlComando.Parameters.AddWithValue("@fnValorGarantia", solicitud.ValorPrima == 0 ? 0 : solicitud.ValorGlobal);
@@ -1588,8 +1591,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 while (sqlResultado.Read())
                                 {
-                                    mensajeError = sqlResultado["MensajeError"].ToString();
-                                    if (mensajeError.StartsWith("-1"))
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -1683,8 +1685,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 while (sqlResultado.Read())
                                 {
-                                    mensajeError = sqlResultado["MensajeError"].ToString();
-                                    if (mensajeError.StartsWith("-1"))
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -1736,8 +1737,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             while (sqlResultado.Read())
                             {
-                                mensajeError = sqlResultado["MensajeError"].ToString();
-                                if (mensajeError.StartsWith("-1"))
+                                if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                     contadorErrores++;
                             }
                         }
@@ -1772,8 +1772,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             while (sqlResultado.Read())
                             {
-                                mensajeError = sqlResultado["MensajeError"].ToString();
-                                if (mensajeError.StartsWith("-1"))
+                                if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                     contadorErrores++;
                             }
                         }
@@ -1810,8 +1809,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 while (sqlResultado.Read())
                                 {
-                                    mensajeError = (string)sqlResultado["MensajeError"];
-                                    if (mensajeError.StartsWith("-1"))
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -1852,9 +1850,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                     {
                                         while (sqlResultado.Read())
                                         {
-                                            mensajeError = sqlResultado["MensajeError"].ToString();
-
-                                            if (mensajeError.StartsWith("-1"))
+                                            if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                             {
                                                 contadorErrores++;
                                             }
@@ -1902,7 +1898,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@pnValorPrima", garantia.ValorPrima);
                             sqlComando.Parameters.AddWithValue("@pnValorFinanciado", garantia.ValorFinanciado);
                             sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", 0);
-
                             sqlComando.Parameters.AddWithValue("@pcNombrePropietarioGarantia", garantia.NombrePropietario);
                             sqlComando.Parameters.AddWithValue("@pcIdentidadPropietarioGarantia", garantia.IdentidadPropietario);
                             sqlComando.Parameters.AddWithValue("@piIDNacionalidadPropietarioGarantia", garantia.IdNacionalidadPropietario);
@@ -1911,7 +1906,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@pcIdentidadVendedorGarantia", garantia.IdentidadVendedor);
                             sqlComando.Parameters.AddWithValue("@piIDNacionalidadVendedorGarantia", garantia.IdNacionalidadVendedor);
                             sqlComando.Parameters.AddWithValue("@piIDEstadoCivilVendedorGarantia", garantia.IdEstadoCivilVendedor);
-
                             sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
                             sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.EsDigitadoManualmente);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -1923,14 +1917,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 while (sqlResultado.Read())
                                 {
-                                    var resultadoSp = sqlResultado["MensajeError"].ToString();
-
-                                    if (!resultadoSp.StartsWith("-1"))
-                                    {
-                                        mensajeError = sqlResultado["MensajeError"].ToString();
-                                        if (mensajeError.StartsWith("-1"))
-                                            contadorErrores++;
-                                    }
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                        contadorErrores++;
                                 }
                             }
                         }
@@ -2227,7 +2215,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public decimal CuotaTotal { get; set; }
         public string TipoCuota { get; set; }
         public decimal SegurodeDeuda { get; set; }
-
         public decimal ValorDelPrestamo { get; set; }
     }
 
@@ -2298,7 +2285,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public string NombreMunicipio { get; set; }
     }
 
-    public class SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel
+    public class TipoDocumento_ViewModel
     {
         public int IdTipoDocumento { get; set; }
         public string DescripcionTipoDocumento { get; set; }
