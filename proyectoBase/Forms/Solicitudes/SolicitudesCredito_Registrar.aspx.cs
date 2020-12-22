@@ -2151,6 +2151,73 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         return resultado;
     }
 
+    public static DateTime ObtenerFechaPrimerPagoPorProducto(string idProducto)
+    {
+        var fechaPrimerPago = DateTime.Today;
+
+        var hoy = DateTime.Today;
+        var mesPrimerPago = hoy.Month;
+        var anioPrimerPago = hoy.Year;
+        var diaPrimerPago = hoy.Day;
+
+
+        /* ================================================== */
+        /* ================= Quincenalmente ================= */
+        /* ======= Del 06 al 20 = prox. 30 quincenal ======== */
+        /* ======= Del 21 al 05 = prox. 15 quincenal ======== */
+        /* ================================================== */
+        if (idProducto == "101" || idProducto == "201" || idProducto == "301" || idProducto == "302")
+        {
+            /* Próximo 30 */
+            if (hoy.Day >= 6 && hoy.Day <= 20)
+            {
+                var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
+
+                diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
+            }
+            /* Próximo 15 */
+            else if (hoy.Day >= 21 || hoy.Day <= 5)
+            {
+                diaPrimerPago = 15;
+
+                if (hoy.Day >= 21)
+                {
+                    mesPrimerPago = hoy.AddMonths(1).Month;
+                    anioPrimerPago = hoy.AddMonths(1).Year;
+                }
+            }
+        }
+        /* ================================================== */
+        /* ================== Mensualmente ================== */
+        /* ========= Del 06 - 20 = prox. 30 mensual ========= */
+        /* ========= Del 21 - 05 = prox. 15 mensual ========= */
+        /* ================================================== */
+        else if (idProducto == "202" || idProducto == "203")
+        {
+            /* Próximo 30 */
+            if (hoy.Day >= 6 && hoy.Day <= 20)
+            {
+                var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
+                diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
+            }
+            /* Próximo 15 */
+            else if (hoy.Day >= 21 || hoy.Day <= 5)
+            {
+                diaPrimerPago = 15;
+
+                if (hoy.Day >= 21)
+                {
+                    mesPrimerPago = hoy.AddMonths(1).Month;
+                    anioPrimerPago = hoy.AddMonths(1).Year;
+                }
+            }
+        }
+
+        fechaPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
+
+        return fechaPrimerPago;
+    }
+
     #region View Models
     public class Origenes_ViewModel
     {

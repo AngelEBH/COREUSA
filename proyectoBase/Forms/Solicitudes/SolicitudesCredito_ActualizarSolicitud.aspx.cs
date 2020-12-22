@@ -59,8 +59,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
-                IdSolicitud = "848";
-
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 Session.Timeout = 10080;
 
@@ -689,7 +687,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             Precalificado.TipoDeSolicitud = sqlResultado["fcTipoSolicitud"].ToString();
                             Precalificado.IdProducto = int.Parse(sqlResultado["fiIDProducto"].ToString());
                             Precalificado.Producto = sqlResultado["fcProducto"].ToString();
-                            Precalificado.ScorePromedio = "500";
+                            Precalificado.ScorePromedio = sqlResultado["fiScorePromedio"].ToString();
                         }
                     }
                 } // using sp consulta ejecutivos
@@ -1270,6 +1268,108 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return resultado;
     }
 
+    public static string ActualizarInformacionSolicitud(SolicitudesCredito_Solicitud_Maestro_ViewModel informacionSolicitud, string idSolicitud, string pcIDSesion, string pcIDUsuario, string pcIDApp, SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel cotizador)
+    {
+        var resultado = string.Empty;
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Maestro_Actualizar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pnValorSeleccionado", informacionSolicitud.ValorSeleccionado);
+                    sqlComando.Parameters.AddWithValue("@piPlazoSeleccionado", informacionSolicitud.PlazoSeleccionado);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", informacionSolicitud.ValorPrima);
+                    sqlComando.Parameters.AddWithValue("@pnValorGarantia", informacionSolicitud.ValorGarantia);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            resultado = sqlResultado["MensajeError"].ToString();
+                        }
+                    }
+                }
+
+                /* Guardar informacion del cotizador para imprimir documentos... */
+                if (informacionSolicitud.IdProducto == 202 || informacionSolicitud.IdProducto == 203 || informacionSolicitud.IdProducto == 201)
+                {
+                    var hoy = DateTime.Today;
+                    DateTime fechaPrimerPago;
+
+                    /* Determinar fecha del primer pago */
+                    var MesPrimerPago = hoy;
+                    var AnioPrimerPago = hoy.AddMonths(1).Year;
+                    var DiaPrimerPago = hoy.Day;
+
+                    if (hoy.Day >= 6 && hoy.Day <= 25)
+                    {
+                        MesPrimerPago = hoy.AddMonths(1);
+                        DiaPrimerPago = 15;
+                    }
+
+                    else if (hoy.Day < 6 || hoy.Day > 25)
+                    {
+                        var fecha = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
+
+                        DiaPrimerPago = fecha.Day;
+                    }
+
+                    fechaPrimerPago = new DateTime(AnioPrimerPago, MesPrimerPago.Month, DiaPrimerPago);
+
+
+                    using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Actualizar", sqlConexion))
+                    {
+                        sqlComando.CommandType = CommandType.StoredProcedure;
+                        sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
+                        sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                        sqlComando.Parameters.AddWithValue("@pcNumeroPrestamo", "No disponible");
+                        sqlComando.Parameters.AddWithValue("@pdFechaPrimerCuota", fechaPrimerPago);
+                        sqlComando.Parameters.AddWithValue("@pnValorTotalFinanciamiento", cotizador.TotalAFinanciar);
+                        sqlComando.Parameters.AddWithValue("@pnValorAPrestar", informacionSolicitud.ValorGarantia - informacionSolicitud.ValorPrima);
+                        sqlComando.Parameters.AddWithValue("@pnCostoGPS", cotizador.CostoGPS);
+                        sqlComando.Parameters.AddWithValue("@pnValorTotalSeguro", cotizador.TotalSeguroVehiculo);
+                        sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", cotizador.GastosdeCierre);
+                        sqlComando.Parameters.AddWithValue("@pnTasaMensualAplicada", cotizador.TasaInteresAnual / 12);
+                        sqlComando.Parameters.AddWithValue("@pnTasaAnualAplicada", cotizador.TasaInteresAnual);
+                        sqlComando.Parameters.AddWithValue("@piPlazo", informacionSolicitud.PlazoSeleccionado);
+                        sqlComando.Parameters.AddWithValue("@pcTipoDePlazo", "Meses");
+                        sqlComando.Parameters.AddWithValue("@pnCuotaMensualPrestamo", cotizador.CuotaDelPrestamo);
+                        sqlComando.Parameters.AddWithValue("@pnCuotaMensualGPS", cotizador.CuotaServicioGPS);
+                        sqlComando.Parameters.AddWithValue("@pnCuotaMensualSeguro", cotizador.CuotaSegurodeVehiculo);
+                        sqlComando.Parameters.AddWithValue("@pnCuotaTotal", cotizador.CuotaTotal);
+                        sqlComando.Parameters.AddWithValue("@pnValorTotalContrato", cotizador.TotalFinanciadoConIntereses);
+                        sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                        sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                        sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                        sqlComando.CommandTimeout = 120;
+
+                        using (var sqlResultado = sqlComando.ExecuteReader())
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                resultado = sqlResultado["MensajeError"].ToString();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultado;
+    }
+
     /* Administracion de referencias personales */
     [WebMethod]
     public static List<Cliente_ReferenciaPersonal_ViewModel> ListadoReferenciasPersonalesPorIdSolicitud(string dataCrypt)
@@ -1476,109 +1576,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return resultado;
     }
 
-
-    public static string ActualizarInformacionSolicitud(SolicitudesCredito_Solicitud_Maestro_ViewModel informacionSolicitud, string idSolicitud, string pcIDSesion, string pcIDUsuario, string pcIDApp, SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel cotizador)
-    {
-        var resultado = string.Empty;
-        try
-        {
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Maestro_Actualizar", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                    sqlComando.Parameters.AddWithValue("@pnValorSeleccionado", informacionSolicitud.ValorSeleccionado);
-                    sqlComando.Parameters.AddWithValue("@piPlazoSeleccionado", informacionSolicitud.PlazoSeleccionado);                    
-                    sqlComando.Parameters.AddWithValue("@pnValorPrima", informacionSolicitud.ValorPrima);
-                    sqlComando.Parameters.AddWithValue("@pnValorGarantia", informacionSolicitud.ValorGarantia);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            resultado = sqlResultado["MensajeError"].ToString();
-                        }
-                    }
-                }
-
-                /* Guardar informacion del cotizador para imprimir documentos... si,esto va a fallar también */
-                if (informacionSolicitud.IdProducto == 202 || informacionSolicitud.IdProducto == 203)
-                {
-                    var hoy = DateTime.Today;
-                    DateTime fechaPrimerPago;
-
-                    /* Determinar fecha del primer pago */
-                    var MesPrimerPago = hoy;
-                    var AnioPrimerPago = hoy.AddMonths(1).Year;
-                    var DiaPrimerPago = hoy.Day;
-
-                    if (hoy.Day >= 6 && hoy.Day <= 25)
-                    {
-                        MesPrimerPago = hoy.AddMonths(1);
-                        DiaPrimerPago = 15;
-                    }
-
-                    else if (hoy.Day < 6 || hoy.Day > 25)
-                    {
-                        var fecha = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-
-                        DiaPrimerPago = fecha.Day;
-                    }
-
-                    fechaPrimerPago = new DateTime(AnioPrimerPago, MesPrimerPago.Month, DiaPrimerPago);
-
-
-                    using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Actualizar", sqlConexion))
-                    {
-                        sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
-                        sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                        sqlComando.Parameters.AddWithValue("@pcNumeroPrestamo", "No disponible");
-                        sqlComando.Parameters.AddWithValue("@pdFechaPrimerCuota", fechaPrimerPago);
-                        sqlComando.Parameters.AddWithValue("@pnValorTotalFinanciamiento", cotizador.TotalAFinanciar);
-                        sqlComando.Parameters.AddWithValue("@pnValorAPrestar", informacionSolicitud.ValorGarantia - informacionSolicitud.ValorPrima);
-                        sqlComando.Parameters.AddWithValue("@pnCostoGPS", cotizador.CostoGPS);
-                        sqlComando.Parameters.AddWithValue("@pnValorTotalSeguro", cotizador.TotalSeguroVehiculo);
-                        sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", cotizador.GastosdeCierre);
-                        sqlComando.Parameters.AddWithValue("@pnTasaMensualAplicada", cotizador.TasaInteresAnual / 12);
-                        sqlComando.Parameters.AddWithValue("@pnTasaAnualAplicada", cotizador.TasaInteresAnual);
-                        sqlComando.Parameters.AddWithValue("@piPlazo", informacionSolicitud.PlazoSeleccionado);
-                        sqlComando.Parameters.AddWithValue("@pcTipoDePlazo", "Meses");
-                        sqlComando.Parameters.AddWithValue("@pnCuotaMensualPrestamo", cotizador.CuotaDelPrestamo);
-                        sqlComando.Parameters.AddWithValue("@pnCuotaMensualGPS", cotizador.CuotaServicioGPS);
-                        sqlComando.Parameters.AddWithValue("@pnCuotaMensualSeguro", cotizador.CuotaSegurodeVehiculo);
-                        sqlComando.Parameters.AddWithValue("@pnCuotaTotal", cotizador.CuotaTotal);
-                        sqlComando.Parameters.AddWithValue("@pnValorTotalContrato", cotizador.TotalFinanciadoConIntereses);
-                        sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                        sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                        sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                        sqlComando.CommandTimeout = 120;
-
-                        using (var sqlResultado = sqlComando.ExecuteReader())
-                        {
-                            while (sqlResultado.Read())
-                            {
-                                resultado = sqlResultado["MensajeError"].ToString();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return resultado;
-    }
-
     [WebMethod]
     public static SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel CalculoPrestamo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string dataCrypt)
     {
@@ -1631,7 +1628,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         }
         return calculo;
     }
-
 
     [WebMethod]
     public static SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel CalculoPrestamoVehiculo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string scorePromedio, int tipoSeguro, int tipoGps, int gastosDeCierreFinanciados, string dataCrypt)
@@ -1735,6 +1731,71 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
             ex.Message.ToString();
         }
         return lUrlDesencriptado;
+    }
+
+    public static DateTime ObtenerFechaPrimerPagoPorProducto(string idProducto)
+    {
+        var fechaPrimerPago = DateTime.Today;
+        var hoy = DateTime.Today;
+        var mesPrimerPago = hoy.Month;
+        var anioPrimerPago = hoy.Year;
+        var diaPrimerPago = hoy.Day;
+
+        /* ================================================== */
+        /* ================= Quincenalmente ================= */
+        /* ======= Del 06 al 20 = prox. 30 quincenal ======== */
+        /* ======= Del 21 al 05 = prox. 15 quincenal ======== */
+        /* ================================================== */
+        if (idProducto == "101" || idProducto == "201" || idProducto == "301" || idProducto == "302")
+        {
+            /* Próximo 30 */
+            if (hoy.Day >= 6 && hoy.Day <= 20)
+            {
+                var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
+
+                diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
+            }
+            /* Próximo 15 */
+            else if (hoy.Day >= 21 || hoy.Day <= 5)
+            {
+                diaPrimerPago = 15;
+
+                if (hoy.Day >= 21)
+                {
+                    mesPrimerPago = hoy.AddMonths(1).Month;
+                    anioPrimerPago = hoy.AddMonths(1).Year;
+                }
+            }
+        }
+        /* ================================================== */
+        /* ================== Mensualmente ================== */
+        /* ========= Del 06 - 20 = prox. 30 mensual ========= */
+        /* ========= Del 21 - 05 = prox. 15 mensual ========= */
+        /* ================================================== */
+        else if (idProducto == "202" || idProducto == "203")
+        {
+            /* Próximo 30 */
+            if (hoy.Day >= 6 && hoy.Day <= 20)
+            {
+                var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
+                diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
+            }
+            /* Próximo 15 */
+            else if (hoy.Day >= 21 || hoy.Day <= 5)
+            {
+                diaPrimerPago = 15;
+
+                if (hoy.Day >= 21)
+                {
+                    mesPrimerPago = hoy.AddMonths(1).Month;
+                    anioPrimerPago = hoy.AddMonths(1).Year;
+                }
+            }
+        }
+
+        fechaPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
+
+        return fechaPrimerPago;
     }
 
     #region View Models

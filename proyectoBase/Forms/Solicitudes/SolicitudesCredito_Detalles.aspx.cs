@@ -267,9 +267,9 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                             else if (IdProducto == "202" || IdProducto == "203")
                             {
                                 /* Haciendo pruebas, si el prestamo es 202 o 203 no se mostrará préstamo solicitado
-                                 * solo se mostrará el div del monto final a financiar actual
-                                 * mismo que se va a extraer de la tabla CredSolicitud_InformacionPrestamo
-                                 */
+                                * solo se mostrará el div del monto final a financiar actual
+                                * mismo que se va a extraer de la tabla CredSolicitud_InformacionPrestamo
+                                */
                                 divCalculoPrestamoSolicitado.Visible = false;
                             }
 
