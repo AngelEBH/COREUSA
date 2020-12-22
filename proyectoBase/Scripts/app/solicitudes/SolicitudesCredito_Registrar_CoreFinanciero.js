@@ -59,7 +59,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                 IdCliente: CONSTANTES.IdCliente,
                 ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
                 ValorGlobal: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
-                ValorSeleccionado: $("#txtValorFinanciar").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciar").val().replace(/,/g, ''),
+                ValorSeleccionado: $("#txtValorDePrestamo").val().replace(/,/g, '') == '' ? 0 : $("#txtValorDePrestamo").val().replace(/,/g, ''),
                 PlazoSeleccionado: $("#ddlPlazosDisponibles option:selected").val() == '' ? 0 : $("#ddlPlazosDisponibles option:selected").val(),
                 IdOrigen: $("#ddlOrigen option:selected").val() == null ? 1 : parseInt($("#ddlOrigen option:selected").val()),
                 EnIngresoInicio: ConvertirFechaJavaScriptAFechaCsharp(localStorage.getItem("EnIngresoInicio")),
@@ -268,7 +268,7 @@ $(document).ready(function () {
                 }
 
                 var valorGlobal = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
-                var valorFinanciar = parseFloat($("#txtValorFinanciar").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciar").val().replace(/,/g, ''));
+                var valorFinanciar = parseFloat($("#txtValorDePrestamo").val().replace(/,/g, '') == '' ? 0 : $("#txtValorDePrestamo").val().replace(/,/g, ''));
                 var montoOfertadoSeleccionado = parseFloat($("#ddlPrestamosDisponibles :selected").val());
                 var plazoSeleccionado = parseInt($("#ddlPrestamosDisponibles option:selected").data('plazoseleccionado') == '' ? 0 : $("#ddlPrestamosDisponibles option:selected").data('plazoseleccionado'));
 
@@ -808,9 +808,10 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
                     var objCalculo = data.d;
 
+                    $("#txtValorDePrestamo").val(objCalculo.ValorDelPrestamo);
                     $("#txtValorCuota").val(objCalculo.CuotaTotal);
                     $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
-
+                    $("#lblTasaAnual").text('(Tasa interés anual ' + objCalculo.TasaInteresAnual + '%)');
                     COTIZADOR = objCalculo;
                 }
             });
@@ -831,9 +832,10 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
                 var objCalculo = data.d;
 
+                $("#txtValorDePrestamo").val(objCalculo.ValorDelPrestamo);
                 $("#txtValorCuota").val(objCalculo.CuotaTotal);
                 $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
-
+                $("#lblTasaAnual").text('(Tasa interés anual ' + objCalculo.TasaInteresAnual + '%)');
                 COTIZADOR = objCalculo;
             }
         });

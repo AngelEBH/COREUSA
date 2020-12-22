@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Ingresar solicitud de crédito</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style>
@@ -149,8 +149,6 @@
                                         </div>
                                         <div class="col-sm-3" id="divPlazo" runat="server">
                                             <asp:Label CssClass="col-form-label" ID="lblTituloPlazo" runat="server" Text="Plazos disponibles" AssociatedControlID="ddlPlazosDisponibles" />
-                                            <%--<asp:TextBox ID="txtPlazo" CssClass="form-control form-control-sm mascara-enteros" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>--%>
-
                                             <asp:DropDownList ID="ddlPlazosDisponibles" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="informacionPrestamo" data-parsley-errors-container="#error-ddlPlazosDisponibles"></asp:DropDownList>
                                             <div id="error-ddlPlazosDisponibles"></div>
 
@@ -183,14 +181,18 @@
                                     </div>
 
                                     <div class="form-group row">
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Valor del préstamo</label>
+                                            <asp:TextBox ID="txtValorDePrestamo" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
                                         <!-- Valor a Financiar -->
                                         <div class="col-sm-3" id="divValorFinanciar" runat="server">
-                                            <label class="col-form-label">Valor a Financiar</label>
+                                            <label class="col-form-label">Valor total a Financiar <small id="lblTasaAnual" class="font-weight-bold"></small></label>
                                             <asp:TextBox ID="txtValorFinanciar" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
                                         <!-- Valor de la cuota calculada -->
                                         <div class="col-sm-3">
-                                            <label class="col-form-label">Valor de la cuota</label>
+                                            <label class="col-form-label">Valor total de la cuota</label>
                                             <asp:TextBox ID="txtValorCuota" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
                                         <!-- Origen -->
@@ -318,6 +320,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-6">
                                     <h6 class="mb-1">Propietario de la garantía</h6>
                                     <div class="form-group row">
@@ -341,6 +344,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-6 border-left border-gray">
                                     <h6 class="mb-1">Vendedor de la garantía</h6>
                                     <div class="form-group row">
@@ -364,6 +368,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+
                             </div>
                             <div class="row">
                                 <div class="col-12">
@@ -512,6 +518,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
+
                                     <h6 class="border-top border-gray"></h6>
 
                                     <div class="form-group row">
@@ -890,6 +897,6 @@
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_CoreFinanciero.js?v=20201217112850"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_CoreFinanciero.js?v=20201222133125"></script>
 </body>
 </html>

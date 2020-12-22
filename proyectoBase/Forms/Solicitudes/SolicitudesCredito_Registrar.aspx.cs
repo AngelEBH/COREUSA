@@ -25,7 +25,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     public string jsonConstantes;
     public string jsonPrecalicado;
     public Precalificado_ViewModel Precalificado;
-    public List<TipoDocumento_ViewModel> DocumentosRequeridos;
+    public List<SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel> DocumentosRequeridos;
     public SolicitudesCredito_Registrar_Constantes Constantes;
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
@@ -42,7 +42,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             DSC = new DSCore.DataCrypt();
             Precalificado = new Precalificado_ViewModel();
             Constantes = new SolicitudesCredito_Registrar_Constantes();
-            DocumentosRequeridos = new List<TipoDocumento_ViewModel>();
+            DocumentosRequeridos = new List<SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel>();
 
             string lcParametros;
 
@@ -163,13 +163,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-                { "limit", 1 },
-                { "title", "auto" },
-                { "uploadDir", uploadDir },
-                { "extensions", new string[] { "jpg", "png", "jpeg"} },
-                { "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
-                { "fileMaxSize", 10 }, //peso máximo por archivo
-            });
+{ "limit", 1 },
+{ "title", "auto" },
+{ "uploadDir", uploadDir },
+{ "extensions", new string[] { "jpg", "png", "jpeg"} },
+{ "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
+{ "fileMaxSize", 10 }, //peso máximo por archivo
+});
 
             switch (type)
             {
@@ -284,7 +284,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         var prestamoMaximoSegurido = new CotizadorProductos_ViewModel();
 
                         decimal montoMayor = 0;
-                        int idContador = 1;
+                        int IdContador = 1;
 
                         while (sqlResultado.Read())
                         {
@@ -292,7 +292,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 prestamoMaximoSegurido = new CotizadorProductos_ViewModel()
                                 {
-                                    IdCotizacion = idContador,
+                                    IdCotizacion = IdContador,
                                     IdProducto = int.Parse(sqlResultado["fiIDProducto"].ToString()),
                                     Producto = sqlResultado["fcProducto"].ToString(),
                                     MontoOfertado = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString()),
@@ -302,7 +302,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 };
                             }
                             montoMayor = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString());
-                            idContador++;
+                            IdContador++;
                         }
 
                         Precalificado.PrestamoMaximoSugerido = prestamoMaximoSegurido;
@@ -767,7 +767,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         /* Tipos de documentos */
                         while (sqlResultado.Read())
                         {
-                            DocumentosRequeridos.Add(new TipoDocumento_ViewModel()
+                            DocumentosRequeridos.Add(new SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel()
                             {
                                 IdTipoDocumento = (short)sqlResultado["fiIDTipoDocumento"],
                                 DescripcionTipoDocumento = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
@@ -1186,9 +1186,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<TipoDocumento_ViewModel> CargarDocumentosRequeridos()
+    public static List<SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel> CargarDocumentosRequeridos()
     {
-        return (List<TipoDocumento_ViewModel>)HttpContext.Current.Session["DocumentosRequeridos"];
+        return (List<SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel>)HttpContext.Current.Session["DocumentosRequeridos"];
     }
 
     [WebMethod]
@@ -1247,7 +1247,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             CuotaDelPrestamo = (idProducto == 202 || idProducto == 203) ? decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()) : (decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()) - decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString())),
                             CuotaTotal = (idProducto == 202 || idProducto == 203) ? decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
                             CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
-                            TipoCuota = (idProducto == 202 || idProducto == 203) ? "Meses" : "Quincenas"
+                            TipoCuota = (idProducto == 202 || idProducto == 203) ? "Meses" : "Quincenas",
+                            ValorDelPrestamo = valorGlobal - valorPrima,
+                            TasaInteresAnual = decimal.Parse(sqlResultado["fnTasaDeInteresAnual"].ToString()),
                         };
                     } // using sqlResultado.ExecuteReader()
                 } // using sqlComando
@@ -1278,6 +1280,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 using (var sqlComando = new SqlCommand("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
                 {
                     var montoPrestamo = (idProducto == 203) ? valorPrima : valorGlobal - valorPrima;
+                    valorPrima = (idProducto == 203) ? valorGlobal - valorPrima : valorPrima;
 
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -1311,7 +1314,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                     CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
                                     CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
                                     CuotaTotal = decimal.Parse(sqlResultado["fnTotalCuota"].ToString()),
-                                    TipoCuota = "Meses"
+                                    TipoCuota = "Meses",
+                                    ValorDelPrestamo = montoPrestamo
                                 };
                             }
                         }
@@ -1584,7 +1588,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 while (sqlResultado.Read())
                                 {
-                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                    mensajeError = sqlResultado["MensajeError"].ToString();
+                                    if (mensajeError.StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -1678,7 +1683,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 while (sqlResultado.Read())
                                 {
-                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                    mensajeError = sqlResultado["MensajeError"].ToString();
+                                    if (mensajeError.StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -1730,7 +1736,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             while (sqlResultado.Read())
                             {
-                                if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                mensajeError = sqlResultado["MensajeError"].ToString();
+                                if (mensajeError.StartsWith("-1"))
                                     contadorErrores++;
                             }
                         }
@@ -1765,7 +1772,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             while (sqlResultado.Read())
                             {
-                                if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                mensajeError = sqlResultado["MensajeError"].ToString();
+                                if (mensajeError.StartsWith("-1"))
                                     contadorErrores++;
                             }
                         }
@@ -1802,7 +1810,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             {
                                 while (sqlResultado.Read())
                                 {
-                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                    mensajeError = (string)sqlResultado["MensajeError"];
+                                    if (mensajeError.StartsWith("-1"))
                                         contadorErrores++;
                                 }
                             }
@@ -1843,7 +1852,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                     {
                                         while (sqlResultado.Read())
                                         {
-                                            if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                            mensajeError = sqlResultado["MensajeError"].ToString();
+
+                                            if (mensajeError.StartsWith("-1"))
                                             {
                                                 contadorErrores++;
                                             }
@@ -1891,6 +1902,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@pnValorPrima", garantia.ValorPrima);
                             sqlComando.Parameters.AddWithValue("@pnValorFinanciado", garantia.ValorFinanciado);
                             sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", 0);
+
                             sqlComando.Parameters.AddWithValue("@pcNombrePropietarioGarantia", garantia.NombrePropietario);
                             sqlComando.Parameters.AddWithValue("@pcIdentidadPropietarioGarantia", garantia.IdentidadPropietario);
                             sqlComando.Parameters.AddWithValue("@piIDNacionalidadPropietarioGarantia", garantia.IdNacionalidadPropietario);
@@ -1899,6 +1911,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@pcIdentidadVendedorGarantia", garantia.IdentidadVendedor);
                             sqlComando.Parameters.AddWithValue("@piIDNacionalidadVendedorGarantia", garantia.IdNacionalidadVendedor);
                             sqlComando.Parameters.AddWithValue("@piIDEstadoCivilVendedorGarantia", garantia.IdEstadoCivilVendedor);
+
                             sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
                             sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.EsDigitadoManualmente);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -1914,7 +1927,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                                     if (!resultadoSp.StartsWith("-1"))
                                     {
-                                        if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                        mensajeError = sqlResultado["MensajeError"].ToString();
+                                        if (mensajeError.StartsWith("-1"))
                                             contadorErrores++;
                                     }
                                 }
@@ -2151,73 +2165,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         return resultado;
     }
 
-    public static DateTime ObtenerFechaPrimerPagoPorProducto(string idProducto)
-    {
-        var fechaPrimerPago = DateTime.Today;
-
-        var hoy = DateTime.Today;
-        var mesPrimerPago = hoy.Month;
-        var anioPrimerPago = hoy.Year;
-        var diaPrimerPago = hoy.Day;
-
-
-        /* ================================================== */
-        /* ================= Quincenalmente ================= */
-        /* ======= Del 06 al 20 = prox. 30 quincenal ======== */
-        /* ======= Del 21 al 05 = prox. 15 quincenal ======== */
-        /* ================================================== */
-        if (idProducto == "101" || idProducto == "201" || idProducto == "301" || idProducto == "302")
-        {
-            /* Próximo 30 */
-            if (hoy.Day >= 6 && hoy.Day <= 20)
-            {
-                var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-
-                diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
-            }
-            /* Próximo 15 */
-            else if (hoy.Day >= 21 || hoy.Day <= 5)
-            {
-                diaPrimerPago = 15;
-
-                if (hoy.Day >= 21)
-                {
-                    mesPrimerPago = hoy.AddMonths(1).Month;
-                    anioPrimerPago = hoy.AddMonths(1).Year;
-                }
-            }
-        }
-        /* ================================================== */
-        /* ================== Mensualmente ================== */
-        /* ========= Del 06 - 20 = prox. 30 mensual ========= */
-        /* ========= Del 21 - 05 = prox. 15 mensual ========= */
-        /* ================================================== */
-        else if (idProducto == "202" || idProducto == "203")
-        {
-            /* Próximo 30 */
-            if (hoy.Day >= 6 && hoy.Day <= 20)
-            {
-                var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-                diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
-            }
-            /* Próximo 15 */
-            else if (hoy.Day >= 21 || hoy.Day <= 5)
-            {
-                diaPrimerPago = 15;
-
-                if (hoy.Day >= 21)
-                {
-                    mesPrimerPago = hoy.AddMonths(1).Month;
-                    anioPrimerPago = hoy.AddMonths(1).Year;
-                }
-            }
-        }
-
-        fechaPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
-
-        return fechaPrimerPago;
-    }
-
     #region View Models
     public class Origenes_ViewModel
     {
@@ -2280,6 +2227,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public decimal CuotaTotal { get; set; }
         public string TipoCuota { get; set; }
         public decimal SegurodeDeuda { get; set; }
+
+        public decimal ValorDelPrestamo { get; set; }
     }
 
     public class SolicitudesCredito_Registrar_Constantes
@@ -2349,7 +2298,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public string NombreMunicipio { get; set; }
     }
 
-    public class TipoDocumento_ViewModel
+    public class SolicitudesCredito_Registrar_CoreFinanciero_TipoDocumento_ViewModel
     {
         public int IdTipoDocumento { get; set; }
         public string DescripcionTipoDocumento { get; set; }
