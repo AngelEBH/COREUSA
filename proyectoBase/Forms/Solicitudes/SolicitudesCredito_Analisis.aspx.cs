@@ -53,7 +53,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
                     pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
@@ -242,50 +242,86 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             txtValorGarantia.Text = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()).ToString("N");
                             txtValorPrima.Text = decimal.Parse(sqlResultado["fnValorPrima"].ToString()).ToString("N");
                             txtPlazoSeleccionado.Text = sqlResultado["fiPlazoSeleccionado"].ToString();
-                            /*lblTipoDePlazo_FinalAprobado.InnerText = sqlResultado["AquiPonerDinamicamenteElTipoDePlazo"].ToString(); */
-                            lblTipoDePlazo_Solicitado.InnerText = IdProducto == "202" ? "Mensual" : "Quincenal";
+                            lblTipoDePlazo_Solicitado.InnerText = (IdProducto == "202" || IdProducto == "203") ? "Mensual" : "Quincenal";
                             txtOrigen.Text = sqlResultado["fcOrigen"].ToString();
 
                             /*** Calculo del prestamo solicitado ***/
-                            decimal montoPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : decimal.Parse(sqlResultado["fnValorSeleccionado"].ToString());
-                            decimal valorPrimaPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
-                            int plazoSeleccionado = int.Parse(sqlResultado["fiPlazoSeleccionado"].ToString());
+                            var montoPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : decimal.Parse(sqlResultado["fnValorSeleccionado"].ToString());
+                            var valorPrimaPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
+                            var plazoSeleccionado = int.Parse(sqlResultado["fiPlazoSeleccionado"].ToString());
 
-                            var calculoPrestamoSolicitado = CalcularPrestamo(int.Parse(IdProducto), montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
+                            var calculoPrestamoSolicitado = new SolicitudesCredito_Analisis_Calculo_ViewModel();
 
-                            txtMontoTotalAFinanciar_Calculo.Text = calculoPrestamoSolicitado.ValorAFinanciar.ToString("N");
-                            txtCuotaDelPrestamo_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaPrestamo.ToString("N");
-                            txtCuotaDelSeguro_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaSeguroDeVehiculo.ToString("N");
-                            txtCuotaGPS_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaServicioGPS.ToString("N");
-                            txtCuotaTotal_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaNeta.ToString("N");
-                            txtCostoAparatoGPS_Calculo.Text = calculoPrestamoSolicitado.CostoAparatoGPS.ToString("N");
-                            txtGastosDeCierre_Calculo.Text = calculoPrestamoSolicitado.ValorGastosDeCierre.ToString("N");
+                            if (IdProducto == "101" || IdProducto == "301" || IdProducto == "201" || IdProducto == "302")
+                            {
+                                calculoPrestamoSolicitado = CalcularPrestamo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
+
+                                txtMontoTotalAFinanciar_Calculo.Text = calculoPrestamoSolicitado.ValorAFinanciar.ToString("N");
+                                txtCuotaDelPrestamo_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaPrestamo.ToString("N");
+                                txtCuotaDelSeguro_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaSeguroDeVehiculo.ToString("N");
+                                txtCuotaGPS_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaServicioGPS.ToString("N");
+                                txtCuotaTotal_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaNeta.ToString("N");
+                                txtCostoAparatoGPS_Calculo.Text = calculoPrestamoSolicitado.CostoAparatoGPS.ToString("N");
+                                txtGastosDeCierre_Calculo.Text = calculoPrestamoSolicitado.ValorGastosDeCierre.ToString("N");
+                                //txtTasaAnualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N");
+                                //txtTasaMensualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N");
+
+                            }
+                            else if (IdProducto == "202" || IdProducto == "203")
+                            {
+                                /* Haciendo pruebas, si el prestamo es 202 o 203 no se mostrará préstamo solicitado
+                                * solo se mostrará el div del monto final a financiar actual
+                                * mismo que se va a extraer de la tabla CredSolicitud_InformacionPrestamo
+                                */
+                                //divCalculoPrestamoSolicitado.Visible = false;
+                            }
 
                             var montoFinalAFinanciar = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString());
 
-                            /*** Prestamo Final aprobado ***/
-                            if (montoFinalAFinanciar != 0)
+                            /*** Prestamo FINAL APROBADO ***/
+                            if (montoFinalAFinanciar != 0 || IdProducto == "202" || IdProducto == "203")
                             {
-                                var valorPrestamoFinal = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : montoFinalAFinanciar;
-                                var valorPrimaFinal = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
-                                var plazoFinal = int.Parse(sqlResultado["fiPlazoFinalAprobado"].ToString());
+                                var valorTotalFinalAFinanciar = 0m;
+                                var valorPrimaFinal = 0m;
+                                var plazoFinal = 0;
+                                var calculoPrestamoFinal = new SolicitudesCredito_Analisis_Calculo_ViewModel();
 
-                                var calculoPrestamoFinal = CalcularPrestamo(int.Parse(IdProducto), valorPrestamoFinal, valorPrimaFinal, plazoFinal, sqlConexion);
+                                if (IdProducto == "101" || IdProducto == "301" || IdProducto == "201" || IdProducto == "302")
+                                {
+                                    valorTotalFinalAFinanciar = montoFinalAFinanciar;
+                                    valorPrimaFinal = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
+                                    plazoFinal = int.Parse(sqlResultado["fiPlazoFinalAprobado"].ToString());
 
-                                lblEstadoDelMontoFinalAFinanciar.InnerText = idEstadoSolicitud == "7" ? "(Aprobado)" : "(No Aprobado)";
-                                lblEstadoDelMontoFinalAFinanciar.Attributes.Add("class", idEstadoSolicitud == "7" ? "font-weight-bold text-success" : "font-weight-bold text-danger");
-                                txtMontoTotalAFinanciar_FinalAprobado.Text = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString()).ToString("N");
-                                txtPlazoFinal_FinalAprobado.Text = plazoFinal.ToString();
-                                /*lblTipoDePlazo_FinalAprobado.InnerText = sqlResultado["AquiPonerDinamicamenteElTipoDePlazo"].ToString(); */
-                                lblTipoDePlazo_FinalAprobado.InnerText = IdProducto == "202" ? "Mensual" : "Quincenal";
+                                    calculoPrestamoFinal = CalcularPrestamo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
+                                }
+                                else if (IdProducto == "202" || IdProducto == "203")
+                                {
+                                    calculoPrestamoFinal = CargarPrestamoSolicitadoVehiculo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
 
-                                /* Culcular préstamo final a financiar */
-                                txtCuotaDelPrestamo_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaPrestamo.ToString("N");
-                                txtCuotaDelSeguro_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaSeguroDeVehiculo.ToString("N");
-                                txtCuotaGPS_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaServicioGPS.ToString("N");
-                                txtCuotaTotal_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaNeta.ToString("N");
-                                txtCostoAparatoGPS_FinalAprobado.Text = calculoPrestamoFinal.CostoAparatoGPS.ToString("N");
-                                txtGastosDeCierre_FinalAprobado.Text = calculoPrestamoFinal.ValorGastosDeCierre.ToString("N");
+                                    valorTotalFinalAFinanciar = calculoPrestamoFinal.ValorAFinanciar;
+                                    plazoFinal = calculoPrestamoFinal.Plazo;
+                                }
+
+                                //var valorPrestamoFinal = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : montoFinalAFinanciar;
+                                //var valorPrimaFinal = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
+                                //var plazoFinal = int.Parse(sqlResultado["fiPlazoFinalAprobado"].ToString());
+
+                                //var calculoPrestamoFinal = CalcularPrestamo(IdProducto, valorPrestamoFinal, valorPrimaFinal, plazoFinal, sqlConexion);
+
+                                //lblEstadoDelMontoFinalAFinanciar.InnerText = idEstadoSolicitud == "7" ? "(Aprobado)" : "(No Aprobado)";
+                                //lblEstadoDelMontoFinalAFinanciar.Attributes.Add("class", idEstadoSolicitud == "7" ? "font-weight-bold text-success" : "font-weight-bold text-danger");
+                                //txtMontoTotalAFinanciar_FinalAprobado.Text = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString()).ToString("N");
+                                //txtPlazoFinal_FinalAprobado.Text = plazoFinal.ToString();
+                                ///*lblTipoDePlazo_FinalAprobado.InnerText = sqlResultado["AquiPonerDinamicamenteElTipoDePlazo"].ToString(); */
+                                //lblTipoDePlazo_FinalAprobado.InnerText = IdProducto == "202" ? "Mensual" : "Quincenal";
+
+                                ///* Culcular préstamo final a financiar */
+                                //txtCuotaDelPrestamo_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaPrestamo.ToString("N");
+                                //txtCuotaDelSeguro_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaSeguroDeVehiculo.ToString("N");
+                                //txtCuotaGPS_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaServicioGPS.ToString("N");
+                                //txtCuotaTotal_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaNeta.ToString("N");
+                                //txtCostoAparatoGPS_FinalAprobado.Text = calculoPrestamoFinal.CostoAparatoGPS.ToString("N");
+                                //txtGastosDeCierre_FinalAprobado.Text = calculoPrestamoFinal.ValorGastosDeCierre.ToString("N");
 
                                 divPrestamoFinalAprobado.Visible = true;
                             }
@@ -688,7 +724,97 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         }
     }
 
-    public SolicitudesCredito_Analisis_Calculo_ViewModel CalcularPrestamo(int idProducto, decimal valorPrestamo, decimal valorPrima, int plazo, SqlConnection sqlConexion)
+
+    #region Funciones de analisis
+
+    public SolicitudesCredito_Analisis_Calculo_ViewModel CargarPrestamoSolicitadoVehiculo(string idProducto, decimal valorPrestamo, decimal valorPrima, int plazo, SqlConnection sqlConexion)
+    {
+        SolicitudesCredito_Analisis_Calculo_ViewModel resultado = null;
+        try
+        {
+            /* Si la información */
+            if (int.Parse(pcIDSolicitud) < 802 && pcIDSolicitud != "773")
+            {
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_CalculoPrestamo", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
+                    sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", valorPrestamo);
+                    sqlComando.Parameters.AddWithValue("@liPlazo", plazo);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            resultado = new SolicitudesCredito_Analisis_Calculo_ViewModel()
+                            {
+                                ValorSeguroDeDeuda = (decimal)sqlResultado["fnSegurodeDeuda"],
+                                ValorSeguroDeVehiculo = (decimal)sqlResultado["fnSegurodeVehiculo"],
+                                ValorGastosDeCierre = (decimal)sqlResultado["fnGastosdeCierre"],
+                                ValorAFinanciar = (decimal)sqlResultado["fnValoraFinanciar"],
+                                ValorCuotaPrestamo = (decimal)sqlResultado["fnValorCuota"],
+                                CostoAparatoGPS = (decimal)sqlResultado["fnCostoGPS"],
+                                ValorCuotaServicioGPS = (decimal)sqlResultado["fnCuotaServicioGPS"],
+                                TotalSeguroVehiculo = (decimal)sqlResultado["fnTotalSeguroVehiculo"],
+                                ValorCuotaSeguroDeVehiculo = (decimal)sqlResultado["fnCuotaSegurodeVehiculo"],
+                                ValorCuotaNeta = (decimal)sqlResultado["fnValorCuotaNeta"],
+                                Plazo = (short)sqlResultado["fiPlazo"],
+                                TipoDePlazo = (string)sqlResultado["fcTipodeCuota"],
+                                TasaAnualAplicada = (decimal)sqlResultado["fnTasaDeInteresAnual"],
+                                TasaMensualAplicada = (decimal)sqlResultado["fnTasaDeInteresMensual"]
+                            };
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_ObtenerPorIdSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            resultado = new SolicitudesCredito_Analisis_Calculo_ViewModel()
+                            {
+                                ValorSeguroDeDeuda = 0,
+                                ValorSeguroDeVehiculo = (decimal)sqlResultado["fnValorTotalSeguro"],
+                                ValorGastosDeCierre = (decimal)sqlResultado["fnGastosDeCierre"],
+                                ValorAFinanciar = (decimal)sqlResultado["fnValorTotalFinanciamiento"],
+                                ValorCuotaPrestamo = (decimal)sqlResultado["fnCuotaMensualPrestamo"],
+                                CostoAparatoGPS = (decimal)sqlResultado["fnCostoGPS"],
+                                ValorCuotaServicioGPS = (decimal)sqlResultado["fnCuotaMensualGPS"],
+                                TotalSeguroVehiculo = (decimal)sqlResultado["fnValorTotalSeguro"],
+                                ValorCuotaSeguroDeVehiculo = (decimal)sqlResultado["fnCuotaMensualSeguro"],
+                                ValorCuotaNeta = (decimal)sqlResultado["fnCuotaTotal"],
+                                Plazo = (int)sqlResultado["fiPlazo"],
+                                TipoDePlazo = (string)sqlResultado["fcTipoDePlazo"],
+                                TasaAnualAplicada = (decimal)sqlResultado["fnTasaAnualAplicada"] < 0 ? ((decimal)sqlResultado["fnTasaAnualAplicada"] * 100) : (decimal)sqlResultado["fnTasaAnualAplicada"],
+                                TasaMensualAplicada = (decimal)sqlResultado["fnTasaMensualAplicada"] < 0 ? ((decimal)sqlResultado["fnTasaMensualAplicada"] * 100) : (decimal)sqlResultado["fnTasaMensualAplicada"]
+                            };
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = null;
+        }
+        return resultado;
+    }
+
+    public SolicitudesCredito_Analisis_Calculo_ViewModel CalcularPrestamo(string idProducto, decimal valorPrestamo, decimal valorPrima, int plazo, SqlConnection sqlConexion)
     {
         SolicitudesCredito_Analisis_Calculo_ViewModel resultado = null;
         try
@@ -720,7 +846,9 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             ValorCuotaSeguroDeVehiculo = (decimal)sqlResultado["fnCuotaSegurodeVehiculo"],
                             ValorCuotaNeta = (decimal)sqlResultado["fnValorCuotaNeta"],
                             Plazo = (short)sqlResultado["fiPlazo"],
-                            TipoDePlazo = (string)sqlResultado["fcTipodeCuota"]
+                            TipoDePlazo = (string)sqlResultado["fcTipodeCuota"],
+                            TasaAnualAplicada = (decimal)sqlResultado["fnTasaDeInteresAnual"],
+                            TasaMensualAplicada = (decimal)sqlResultado["fnTasaDeInteresMensual"]
                         };
                     }
                 } // using sqlComando.ExecuteReader()
@@ -893,10 +1021,10 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -927,17 +1055,16 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static bool ResolucionDeLaSolicitud(SolicitudesMasterViewModel objSolicitud, string dataCrypt)
+    public static bool ResolucionDeLaSolicitud(SolicitudesMasterViewModel solicitud, string dataCrypt)
     {
         var resultado = false;
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-
-            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -947,11 +1074,11 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piEstadoSolicitud", objSolicitud.fiEstadoSolicitud);
-                    sqlComando.Parameters.AddWithValue("@pnMontoFinalSugerido", (decimal)objSolicitud.fiMontoFinalSugerido);
-                    sqlComando.Parameters.AddWithValue("@pnMontoFinalFinanciar", (decimal)objSolicitud.fiMontoFinalFinanciar);
-                    sqlComando.Parameters.AddWithValue("@piPlazoFinalAprobado", objSolicitud.fiPlazoFinalAprobado);
-                    sqlComando.Parameters.AddWithValue("@pcComentarioResolucion", objSolicitud.fiPlazoFinalAprobado);
+                    sqlComando.Parameters.AddWithValue("@piEstadoSolicitud", solicitud.fiEstadoSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pnMontoFinalSugerido", (decimal)solicitud.fiMontoFinalSugerido);
+                    sqlComando.Parameters.AddWithValue("@pnMontoFinalFinanciar", (decimal)solicitud.fiMontoFinalFinanciar);
+                    sqlComando.Parameters.AddWithValue("@piPlazoFinalAprobado", solicitud.fiPlazoFinalAprobado);
+                    sqlComando.Parameters.AddWithValue("@pcComentarioResolucion", solicitud.fiPlazoFinalAprobado);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -974,19 +1101,17 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     [WebMethod]
     public static string ObtenerUrlEncriptado(string dataCrypt)
     {
-        var lURLDesencriptado = DesencriptarURL(dataCrypt);
-        var pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
-        var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-        var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-        var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString();
+        Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+        string pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
+        string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+        string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+        string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString() ?? "0";
 
-        var parametrosEncriptados = DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
-
-        return parametrosEncriptados;
+        return DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
     }
 
     [WebMethod]
-    public static bool ActualizarIngresosCliente(int idCliente, decimal sueldoBaseReal, decimal bonosComisionesReal, string dataCrypt)
+    public static bool ActualizarIngresosDelCliente(int idCliente, decimal sueldoBaseReal, decimal bonosComisionesReal, string dataCrypt)
     {
         var resultado = false;
         try
@@ -994,8 +1119,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1028,38 +1153,37 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static bool GuardarInformacionAnalisis(string tipoEmpresa, string tipoPerfil, string tipoEmpleo, string buroActual, string dataCrypt)
+    public static bool ActualizarInformacionPerfil(string tipoEmpresa, string tipoPerfil, string tipoEmpleo, string buroActual, string dataCrypt)
     {
-        bool resultadoProceso = false;
+        var resultadoProceso = false;
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CredSolicitud_GuardarInformaciondePerfil", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Analisis_ActualizarInformacionPerfil", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@fcTipoEmpresa", tipoEmpresa);
-                    sqlComando.Parameters.AddWithValue("@fcTipoPerfil", tipoPerfil);
-                    sqlComando.Parameters.AddWithValue("@fcTipoEmpleado", tipoEmpleo);
-                    sqlComando.Parameters.AddWithValue("@fcBuroActual", buroActual);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pcTipoEmpresa", tipoEmpresa);
+                    sqlComando.Parameters.AddWithValue("@pcTipoPerfil", tipoPerfil);
+                    sqlComando.Parameters.AddWithValue("@pcTipoEmpleado", tipoEmpleo);
+                    sqlComando.Parameters.AddWithValue("@pcBuroActual", buroActual);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
-                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
-                                resultadoProceso = true;
+                        sqlResultado.Read();
+                        resultadoProceso = !sqlResultado["MensajeError"].ToString().StartsWith("-1") ? true : false;
                     }
                 }
             }
@@ -1072,151 +1196,133 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static CalculoPrestamoViewModel CalculoPrestamo(decimal ValorPrestamo, decimal ValorPrima, decimal CantidadPlazos, string dataCrypt)
+    public static SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel CalculoPrestamo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string dataCrypt)
     {
-        CalculoPrestamoViewModel objCalculo = null;
+        SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel calculoPrestamo = null;
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            int idProducto = 0;
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                            idProducto = (int)reader["fiIDTipoProducto"];
-                    }
-                }
-
-                using (SqlCommand sqlComando = new SqlCommand("sp_CredSolicitud_CalculoPrestamo", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CredSolicitud_CalculoPrestamo", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
-                    sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", ValorPrestamo);
-                    sqlComando.Parameters.AddWithValue("@liPlazo", CantidadPlazos);
-                    sqlComando.Parameters.AddWithValue("@pnValorPrima", ValorPrima);
+                    sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", valorGlobal);
+                    sqlComando.Parameters.AddWithValue("@liPlazo", plazo);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
-                            objCalculo = new CalculoPrestamoViewModel()
+                            calculoPrestamo = new SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel()
                             {
-                                SegurodeDeuda = (decimal)reader["fnSegurodeDeuda"],
-                                SegurodeVehiculo = (decimal)reader["fnSegurodeVehiculo"],
-                                GastosdeCierre = (decimal)reader["fnGastosdeCierre"],
-                                ValoraFinanciar = (decimal)reader["fnValoraFinanciar"],
-                                CuotaQuincenal = (decimal)reader["fnCuotaQuincenal"],
-                                CuotaMensual = (decimal)reader["fnCuotaMensual"],
-                                CuotaServicioGPS = (decimal)reader["fnCuotaServicioGPS"],
-                                CuotaSegurodeVehiculo = (decimal)reader["fnCuotaSegurodeVehiculo"],
-                                CuotaMensualNeta = (decimal)reader["fnCuotaMensualNeta"],
-                                TotalSeguroVehiculo = (decimal)reader["fnTotalSeguroVehiculo"],
-                                TipoCuota = (string)reader["fcTipodeCuota"]
+                                SegurodeDeuda = decimal.Parse(sqlResultado["fnSegurodeDeuda"].ToString()),
+                                TotalSeguroVehiculo = (idProducto == 202 || idProducto == 203) ? decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()) : decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
+                                CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
+                                GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
+                                TotalAFinanciar = decimal.Parse(sqlResultado["fnValoraFinanciar"].ToString()),
+                                CuotaDelPrestamo = (idProducto == 202 || idProducto == 203) ? decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()) : (decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()) - decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString())),
+                                CuotaTotal = (idProducto == 202 || idProducto == 203) ? decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
+                                CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
+                                TipoCuota = (idProducto == 202 || idProducto == 203) ? "Meses" : "Quincenas",
+                                ValorDelPrestamo = valorGlobal + valorPrima,
+                                TasaInteresAnual = decimal.Parse(sqlResultado["fnTasaDeInteresAnual"].ToString()),
                             };
                         }
-                    }
-                }
-            }
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return objCalculo;
+        return calculoPrestamo;
     }
 
     [WebMethod]
-    public static ClienteAvalesViewModel DetallesAval(int IDAval, string dataCrypt)
+    public static SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel CalculoPrestamoVehiculo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string scorePromedio, int tipoSeguro, int tipoGps, int gastosDeCierreFinanciados, string dataCrypt)
     {
-        ClienteAvalesViewModel AvalInfo = null;
+        var calculo = new SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel();
         try
         {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var urlDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
+            var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CredAval_InformacionPrincipal", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
                 {
+                    var montoPrestamo = (idProducto == 203) ? valorPrima : valorGlobal - valorPrima;
+                    valorPrima = (idProducto == 203) ? valorGlobal - valorPrima : valorPrima;
+
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDAval", IDAval);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
+                    sqlComando.Parameters.AddWithValue("@pnMontoaPrestamo", montoPrestamo);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
+                    sqlComando.Parameters.AddWithValue("@piScorePromedio", scorePromedio);
+                    sqlComando.Parameters.AddWithValue("@piTipodeSeguro", tipoSeguro);
+                    sqlComando.Parameters.AddWithValue("@piTipodeGPS", tipoGps);
+                    sqlComando.Parameters.AddWithValue("@piFinanciandoGastosdeCierre", gastosDeCierreFinanciados);
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
-                            AvalInfo = new ClienteAvalesViewModel()
+                            if (sqlResultado["fiIDPlazo"].ToString() == plazo.ToString())
                             {
-                                fiIDAval = (int)reader["fiIDAval"],
-                                fiIDCliente = (int)reader["fiIDCliente"],
-                                fcIdentidadAval = (string)reader["fcIdentidadAval"],
-                                RTNAval = (string)reader["fcRTNAval"],
-                                fcPrimerNombreAval = (string)reader["fcPrimerNombreAval"],
-                                fcSegundoNombreAval = (string)reader["fcSegundoNombreAval"],
-                                fcPrimerApellidoAval = (string)reader["fcPrimerApellidoAval"],
-                                fcSegundoApellidoAval = (string)reader["fcSegundoApellidoAval"],
-                                fcTelefonoAval = (string)reader["fcTelefonoPrimarioAval"],
-                                fdFechaNacimientoAval = (DateTime)reader["fdFechaNacimientoAval"],
-                                fcCorreoElectronicoAval = (string)reader["fcCorreoElectronicoAval"],
-                                fcProfesionOficioAval = (string)reader["fcProfesionOficioAval"],
-                                fcSexoAval = (string)reader["fcSexoAval"],
-                                fbAvalActivo = (bool)reader["fbAvalActivo"],
-                                fcRazonInactivo = (string)reader["fcRazonInactivo"],
-                                fiTipoAval = (int)reader["fiTipoAval"],
-                                fcNombreTrabajo = (string)reader["fcNombreTrabajo"],
-                                fdTelefonoEmpresa = (string)reader["fcTelefonoEmpresa"],
-                                fcExtensionRecursosHumanos = (string)reader["fcExtensionRecursosHumanos"],
-                                fcExtensionAval = (string)reader["fcExtensionAval"],
-                                fiIngresosMensuales = (decimal)reader["fiIngresosMensuales"],
-                                fcPuestoAsignado = (string)reader["fcPuestoAsignado"],
-                                fcFechaIngreso = (DateTime)reader["fdFechaIngresoAval"],
-                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
-                            };
+                                calculo = new SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel()
+                                {
+                                    IdOrden = (int)sqlResultado["fiOrden"],
+                                    Plazo = (byte)sqlResultado["fiIDPlazo"],
+                                    TasaInteresAnual = decimal.Parse(sqlResultado["fiInteresAnual"].ToString()),
+                                    ValorGarantia = decimal.Parse(sqlResultado["fnValorVehiculo"].ToString()),
+                                    GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
+                                    CostoGPS = decimal.Parse(sqlResultado["fnCostoGPS"].ToString()),
+                                    TotalAFinanciar = decimal.Parse(sqlResultado["fnTotalaFinanciar"].ToString()),
+                                    TotalIntereses = decimal.Parse(sqlResultado["fnTotalIntereses"].ToString()),
+                                    TotalFinanciadoConIntereses = decimal.Parse(sqlResultado["fnTotalFinanciado"].ToString()),
+                                    CuotaDelPrestamo = decimal.Parse(sqlResultado["fnCuotadelPrestamo"].ToString()),
+                                    CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
+                                    CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
+                                    CuotaTotal = decimal.Parse(sqlResultado["fnTotalCuota"].ToString()),
+                                    TipoCuota = "Meses",
+                                    ValorDelPrestamo = montoPrestamo
+                                };
+                            }
                         }
-                    }
-                }
-            }
+                    } // using command.ExecuteReader()
+                } // using command
+            } // using connection
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
+            calculo = null;
         }
-        return AvalInfo;
+        return calculo;
     }
 
     [WebMethod]
-    public static PrecalificadoViewModel GetPrestamosSugeridos(decimal ValorProducto, decimal ValorPrima, string dataCrypt)
+    public static List<SolicitudesCredito_Analisis_CotizadorProductosViewModel> ObtenerPrestamosOfertados(decimal valorProducto, decimal valorPrima, string dataCrypt)
     {
-        PrecalificadoViewModel objPrecalificado = new PrecalificadoViewModel();
-        List<cotizadorProductosViewModel> listaCotizadorProductos = new List<cotizadorProductosViewModel>();
+        var listaCotizadorProductos = new List<SolicitudesCredito_Analisis_CotizadorProductosViewModel>();
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
@@ -1225,44 +1331,44 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand cmd = new SqlCommand("sp_CredCotizador_ConPrima", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CredCotizador_ConPrima", sqlConexion))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@pcIdentidad", identidad);
-                    cmd.Parameters.AddWithValue("@pnValorProducto", ValorProducto);
-                    cmd.Parameters.AddWithValue("@pnPrima", ValorPrima);
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@pcIdentidad", identidad);
+                    sqlComando.Parameters.AddWithValue("@pnValorProducto", valorProducto);
+                    sqlComando.Parameters.AddWithValue("@pnPrima", valorPrima);
 
-                    int IDContador = 1;
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    int idContador = 1;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
-                            listaCotizadorProductos.Add(new cotizadorProductosViewModel()
+                            listaCotizadorProductos.Add(new SolicitudesCredito_Analisis_CotizadorProductosViewModel()
                             {
-                                IDCotizacion = IDContador,
-                                IDProducto = (short)reader["fiIDProducto"],
-                                ProductoDescripcion = reader["fcProducto"].ToString(),
-                                fnMontoOfertado = decimal.Parse(reader["fnMontoOfertado"].ToString()),
-                                fiPlazo = int.Parse(reader["fiIDPlazo"].ToString()),
-                                fnCuotaQuincenal = decimal.Parse(reader["fnCuotaQuincenal"].ToString()),
-                                TipoCuota = (string)reader["fcTipodeCuota"]
+                                IdCotizacion = idContador,
+                                IdProducto = (short)sqlResultado["fiIDProducto"],
+                                Producto = sqlResultado["fcProducto"].ToString(),
+                                MontoOfertado = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString()),
+                                Plazo = int.Parse(sqlResultado["fiIDPlazo"].ToString()),
+                                ValorCuota = decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
+                                TipoDeCuota = sqlResultado["fcTipodeCuota"].ToString()
                             });
-                            IDContador += 1;
+                            idContador += 1;
                         }
-                    }
-                }
-                objPrecalificado.cotizadorProductos = listaCotizadorProductos;
-            }
+                    } // using sqlComando.ExecuteReader()
+                }// using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return objPrecalificado;
+        return listaCotizadorProductos;
     }
 
     [WebMethod]
@@ -1309,104 +1415,27 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         return resultadoProceso;
     }
 
+    #endregion
+
+    #region Condiciones de la solicitud
+
     [WebMethod]
-    public static bool ComentarioReferenciaPersonal(int IDReferencia, string comentario, string dataCrypt)
+    public static List<SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel> ObtenerCatalogoCondiciones(string dataCrypt)
     {
-        bool resultadoProceso = false;
+        var listaCondiciones = new List<SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel>();
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-                using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Comentario", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDReferencia", IDReferencia);
-                    sqlComando.Parameters.AddWithValue("@fcComentarioDeptoCredito", comentario);
-                    sqlComando.Parameters.AddWithValue("@fiAnalistaComentario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
-                    sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
-
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
-                                resultadoProceso = true;
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return resultadoProceso;
-    }
-
-    [WebMethod]
-    public static bool EliminarReferenciaPersonal(int IDReferencia, string dataCrypt)
-    {
-        bool resultadoProceso = false;
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("dbo.sp_CREDCliente_Referencias_Eliminar", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDReferencia", IDReferencia);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
-                    {
-                        while (reader.Read())
-                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
-                                resultadoProceso = true;
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return resultadoProceso;
-    }
-
-    [WebMethod]
-    public static List<SolicitudesCondicionamientosViewModel> GetCondiciones(string dataCrypt)
-    {
-        List<SolicitudesCondicionamientosViewModel> ListaCondiciones = new List<SolicitudesCondicionamientosViewModel>();
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-                using (SqlCommand sqlComando = new SqlCommand("sp_CREDCatalogo_Condiciones_Listar", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDCatalogo_Condiciones_Listar", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@fiIDCondicion", "0");
@@ -1418,11 +1447,11 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     {
                         while (reader.Read())
                         {
-                            ListaCondiciones.Add(new SolicitudesCondicionamientosViewModel()
+                            listaCondiciones.Add(new SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel()
                             {
-                                fiIDCondicion = (int)reader["fiIDCondicion"],
-                                fcCondicion = (string)reader["fcCondicion"],
-                                fcDescripcionCondicion = (string)reader["fcDescripcionCondicion"]
+                                IdCondicion = (int)reader["fiIDCondicion"],
+                                Condicion = (string)reader["fcCondicion"],
+                                DescripcionCondicion = (string)reader["fcDescripcionCondicion"]
                             });
                         }
                     }
@@ -1433,86 +1462,68 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         {
             ex.Message.ToString();
         }
-        return ListaCondiciones;
+        return listaCondiciones;
     }
 
     [WebMethod]
-    public static bool CondicionarSolicitud(List<SolicitudesCondicionamientosViewModel> SolicitudCondiciones, string fcCondicionadoComentario, string dataCrypt)
+    public static bool CondicionarSolicitud(List<SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel> listaCondiciones, string observacionesOtrasCondiciones, string dataCrypt)
     {
-        bool resultadoProceso = false;
+        var resultadoProceso = false;
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
-                using (SqlTransaction transaccion = sqlConexion.BeginTransaction("insercionSolicitudCondiciones"))
+
+                using (var transaccion = sqlConexion.BeginTransaction("insercionSolicitudCondiciones"))
                 {
                     try
                     {
-                        using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_CondicionarSolicitudBitacora", sqlConexion, transaccion))
+                        foreach (SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel item in listaCondiciones)
                         {
-                            sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                            if (fcCondicionadoComentario == null)
-                                sqlComando.Parameters.AddWithValue("@fcCondicionadoComentario", "");
-                            else
-                                sqlComando.Parameters.AddWithValue("@fcCondicionadoComentario", fcCondicionadoComentario);
-
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                            sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
-                            sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
-
-                            using (SqlDataReader reader = sqlComando.ExecuteReader())
+                            using (var sqlComandoList = new SqlCommand("sp_CREDSolicitudes_Condiciones_Guardar", sqlConexion, transaccion))
                             {
-                                while (reader.Read())
-                                {
-                                    if (reader["MensajeError"].ToString().StartsWith("-1"))
-                                        return false;
-                                }
-                            }
-                        }
-
-                        foreach (SolicitudesCondicionamientosViewModel item in SolicitudCondiciones)
-                        {
-                            using (SqlCommand sqlComandoList = new SqlCommand("sp_CREDSolicitud_Condicionamientos_Insert", sqlConexion, transaccion))
-                            {
-                                sqlComandoList.CommandType = CommandType.StoredProcedure;
-                                sqlComandoList.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                                sqlComandoList.Parameters.AddWithValue("@fiIDCondicion", item.fiIDCondicion);
-                                sqlComandoList.Parameters.AddWithValue("@fcComentarioAdicional", item.fcComentarioAdicional);
+                                sqlComandoList.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                                sqlComandoList.Parameters.AddWithValue("@piIDCondicion", item.IdCondicion);
+                                sqlComandoList.Parameters.AddWithValue("@pcComentarioAdicional", item.ComentarioAdicional);
+                                sqlComandoList.Parameters.AddWithValue("@pcComentarioOtrasCondiciones", observacionesOtrasCondiciones);
                                 sqlComandoList.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                                 sqlComandoList.Parameters.AddWithValue("@piIDApp", pcIDApp);
                                 sqlComandoList.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                                sqlComandoList.Parameters.AddWithValue("@pcUserNameCreated", "");
-                                sqlComandoList.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
-                                using (SqlDataReader readerList = sqlComandoList.ExecuteReader())
-                                {
-                                    readerList.Read();
+                                sqlComandoList.CommandType = CommandType.StoredProcedure;
 
-                                    if (!readerList["MensajeError"].ToString().StartsWith("-1"))
-                                        resultadoProceso = true;
-                                    else
+                                using (var sqlResultado = sqlComandoList.ExecuteReader())
+                                {
+                                    sqlResultado.Read();
+
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                     {
                                         resultadoProceso = false;
                                         break;
+                                    }
+                                    else
+                                    {
+                                        resultadoProceso = true;
                                     }
                                 }
                             }
                         }
 
-                        if (SolicitudCondiciones.Count == 0)
+                        if (listaCondiciones.Count == 0)
+                        {
                             resultadoProceso = true;
+                        }
 
                         if (resultadoProceso == true)
+                        {
                             transaccion.Commit();
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -1528,6 +1539,255 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         }
         return resultadoProceso;
     }
+
+    #endregion
+
+    #region Administracion de referencias personales
+
+    [WebMethod]
+    public static bool ActualizarObservacionesReferenciaPersonal(int idReferencia, string observaciones, string dataCrypt)
+    {
+        var resultadoProceso = false;
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_ActualizarObservacionesDeCredito", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDReferencia", idReferencia);
+                    sqlComando.Parameters.AddWithValue("@pcObservacionesDeCredito", observaciones);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var reader = sqlComando.ExecuteReader())
+                    {
+                        reader.Read();
+
+                        resultadoProceso = !reader["MensajeError"].ToString().StartsWith("-1") ? true : false;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
+
+    [WebMethod]
+    public static List<SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel> ListadoReferenciasPersonalesPorIdSolicitud(string dataCrypt)
+    {
+        var listadoReferenciasPersonales = new List<SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_ObtenerPorIdSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            listadoReferenciasPersonales.Add(new SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel()
+                            {
+                                IdReferencia = (int)sqlResultado["fiIDReferencia"],
+                                IdCliente = (int)sqlResultado["fiIDCliente"],
+                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
+                                NombreCompleto = sqlResultado["fcNombreCompletoReferencia"].ToString(),
+                                LugarTrabajo = sqlResultado["fcLugarTrabajoReferencia"].ToString(),
+                                IdTiempoDeConocer = (short)sqlResultado["fiTiempoConocerReferencia"],
+                                TiempoDeConocer = sqlResultado["fcTiempoDeConocer"].ToString(),
+                                TelefonoReferencia = sqlResultado["fcTelefonoReferencia"].ToString(),
+                                IdParentescoReferencia = (int)sqlResultado["fiIDParentescoReferencia"],
+                                DescripcionParentesco = sqlResultado["fcDescripcionParentesco"].ToString(),
+                                ReferenciaActivo = (bool)sqlResultado["fbReferenciaActivo"],
+                                RazonInactivo = sqlResultado["fcRazonInactivo"].ToString(),
+                            });
+                        }
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            listadoReferenciasPersonales = null;
+        }
+        return listadoReferenciasPersonales;
+    }
+
+    [WebMethod]
+    public static bool RegistrarReferenciaPersonal(SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Guardar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDCliente", referenciaPersonal.IdCliente);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", referenciaPersonal.IdSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pcNombreCompletoReferencia", referenciaPersonal.NombreCompleto.Trim());
+                    sqlComando.Parameters.AddWithValue("@pcLugarTrabajoReferencia", referenciaPersonal.LugarTrabajo.Trim());
+                    sqlComando.Parameters.AddWithValue("@piTiempoConocerReferencia", referenciaPersonal.IdTiempoDeConocer);
+                    sqlComando.Parameters.AddWithValue("@pcTelefonoReferencia", referenciaPersonal.TelefonoReferencia.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDParentescoReferencia", referenciaPersonal.IdParentescoReferencia);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool EliminarReferenciaPersonal(int idReferenciaPersonal, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Eliminar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDReferencia", idReferenciaPersonal);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool ActualizarReferenciaPersonal(SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Actualizar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDReferenciaPersonal", referenciaPersonal.IdReferencia);
+                    sqlComando.Parameters.AddWithValue("@pcNombreCompletoReferencia", referenciaPersonal.NombreCompleto.Trim());
+                    sqlComando.Parameters.AddWithValue("@pcLugarTrabajoReferencia", referenciaPersonal.LugarTrabajo.Trim());
+                    sqlComando.Parameters.AddWithValue("@piTiempoConocerReferencia", referenciaPersonal.IdTiempoDeConocer);
+                    sqlComando.Parameters.AddWithValue("@pcTelefonoReferencia", referenciaPersonal.TelefonoReferencia.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDParentescoReferencia", referenciaPersonal.IdParentescoReferencia);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    #endregion
+
+    #region Funciones
 
     public static Uri DesencriptarURL(string URL)
     {
@@ -1568,15 +1828,70 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         return Math.Abs(monthsApart);
     }
 
-    public static T ConvertFromDBVal<T>(object obj)
-    {
-        if (obj == null || obj == DBNull.Value)
-            return default(T);
-        else
-            return (T)obj;
-    }
+    #endregion
 
     #region View Models
+
+    public class SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel
+    {
+        public int IdOrden { get; set; }
+        public int Plazo { get; set; }
+        public decimal TasaInteresAnual { get; set; }
+        public decimal ValorGarantia { get; set; }
+        public decimal TotalSeguroVehiculo { get; set; }
+        public decimal GastosdeCierre { get; set; }
+        public decimal CostoGPS { get; set; }
+        public decimal TotalAFinanciar { get; set; }
+        public decimal TotalIntereses { get; set; }
+        public decimal TotalFinanciadoConIntereses { get; set; }
+        public decimal CuotaDelPrestamo { get; set; }
+        public decimal CuotaSegurodeVehiculo { get; set; }
+        public decimal CuotaServicioGPS { get; set; }
+        public decimal CuotaTotal { get; set; }
+        public string TipoCuota { get; set; }
+        public decimal SegurodeDeuda { get; set; }
+        public decimal ValorDelPrestamo { get; set; }
+    }
+
+    public class SolicitudesCredito_Analisis_CotizadorProductosViewModel
+    {
+        public int IdCotizacion { get; set; }
+        public int IdProducto { get; set; }
+        public string Producto { get; set; }
+        public decimal MontoOfertado { get; set; }
+        public int Plazo { get; set; }
+        public string TipoDeCuota { get; set; }
+        public decimal ValorCuota { get; set; }
+    }
+
+    public class SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel
+    {
+        public int IdReferencia { get; set; }
+        public int IdCliente { get; set; }
+        public int IdSolicitud { get; set; }
+        public string NombreCompleto { get; set; }
+        public string LugarTrabajo { get; set; }
+        public int IdTiempoDeConocer { get; set; }
+        public string TiempoDeConocer { get; set; }
+        public string TelefonoReferencia { get; set; }
+        public int IdParentescoReferencia { get; set; }
+        public string DescripcionParentesco { get; set; }
+        public bool ReferenciaActivo { get; set; }
+        public string RazonInactivo { get; set; }
+        public string ComentarioDeptoCredito { get; set; }
+        public int AnalistaComentario { get; set; }
+    }
+
+    public class SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel
+    {
+        public int IdSolicitudCondicion { get; set; }
+        public int IdSolicitud { get; set; }
+        public int IdCondicion { get; set; }        
+        public string Condicion { get; set; }
+        public string DescripcionCondicion { get; set; }        
+        public string ComentarioAdicional { get; set; }
+        public bool EstadoCondicion { get; set; }
+    }
 
     public class SolicitudesCredito_Analisis_Calculo_ViewModel
     {
@@ -1592,6 +1907,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         public decimal ValorCuotaNeta { get; set; }
         public int Plazo { get; set; }
         public string TipoDePlazo { get; set; }
+        public decimal TasaAnualAplicada { get; set; }
+        public decimal TasaMensualAplicada { get; set; }
     }
 
     public class SolicitudesCredito_Analisis_EstadoProcesos_ViewModel
@@ -1599,55 +1916,41 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         public DateTime EnIngresoInicio { get; set; }
         public DateTime EnIngresoFin { get; set; }
         public string UsuarioEnIngreso { get; set; }
-
         public DateTime EnColaInicio { get; set; }
         public DateTime EnColaFin { get; set; }
-
         public DateTime EnAnalisisInicio { get; set; }
         public string UsuarioAnalista { get; set; }
-
         public DateTime FechaValidacionInformacionPersonal { get; set; }
         public string ComentarioValidacionInformacionPersonal { get; set; }
-
         public DateTime FechaValidacionDocumentacion { get; set; }
         public string ComentarioValidacionDocumentacion { get; set; }
-
         public DateTime FechaValidacionReferenciasPersonales { get; set; }
         public string ComentarioValidacionReferenciasPersonales { get; set; }
-
         public DateTime FechaValidacionInformacionLaboral { get; set; }
         public string ComentarioValidacionInformacionLaboral { get; set; }
-
         public string ComentarioResolucion { get; set; }
         public DateTime TiempoTomaDecisionFinal { get; set; }
         public DateTime EnAnalisisFin { get; set; }
-
         public DateTime CondicionadoInicio { get; set; }
         public string ComentarioCondicionado { get; set; }
         public string UsuarioCondicionado { get; set; }
         public DateTime CondicionadoFin { get; set; }
-
         public DateTime FechaEnvioARuta { get; set; }
         public string ObservacionesDeCreditos { get; set; }
         public DateTime EnRutaDeInvestigacionInicio { get; set; }
         public string UsuarioGestorAsignado { get; set; }
         public string ObservacionesDeCampo { get; set; }
         public DateTime EnRutaDeInvestigacionFin { get; set; }
-
         public DateTime ReprogramadoInicio { get; set; }
         public string ComentarioReprogramado { get; set; }
         public DateTime ReprogramadoFin { get; set; }
-
         public DateTime PasoFinalInicio { get; set; }
         public string UsuarioPasoFinal { get; set; }
         public string ComentarioPasoFinal { get; set; }
         public DateTime PasoFinalFin { get; set; }
-
         public int IdEstadoSolicitud { get; set; }
         public string EstadoSolicitud { get; set; }
-
         public int SolicitudActiva { get; set; }
-
         public List<SolicitudesCredito_Analisis_Condicion_ViewModel> Condiciones { get; set; }
 
         public SolicitudesCredito_Analisis_EstadoProcesos_ViewModel()

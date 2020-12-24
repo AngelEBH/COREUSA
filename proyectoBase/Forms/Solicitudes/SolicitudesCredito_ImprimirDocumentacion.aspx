@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -772,35 +772,35 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Asegurado</th>
                                     <td colspan="5" class="p-0">
-                                        <asp:Label runat="server" ID="lblNombre_InspeccionSeguro"></asp:Label>
+                                        <asp:Label runat="server" ID="lblNombre_InspeccionSeguro"> Victoria Alejandra Meza Aguilar</asp:Label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Marca</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblMarca_InspeccionSeguro"></asp:Label>
+                                        <asp:Label runat="server" ID="lblMarca_InspeccionSeguro">FORD</asp:Label>
                                     </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Modelo</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblModelo_InspeccionSeguro"></asp:Label>
+                                        <asp:Label runat="server" ID="lblModelo_InspeccionSeguro">ESCAPE</asp:Label>
                                     </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Año</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblAnio_InspeccionSeguro"></asp:Label>
+                                        <asp:Label runat="server" ID="lblAnio_InspeccionSeguro">2017</asp:Label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Tipo</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblTipoDeVehiculo_InspeccionSeguro"></asp:Label>
+                                        <asp:Label runat="server" ID="lblTipoDeVehiculo_InspeccionSeguro">CAMIONETA</asp:Label>
                                     </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Kilometraje</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblRecorrido_InspeccionSeguro"></asp:Label>
+                                        <asp:Label runat="server" ID="lblRecorrido_InspeccionSeguro">29052 MI</asp:Label>
                                     </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Placa</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblMatricula_InspeccionSeguro"></asp:Label>
+                                        <asp:Label runat="server" ID="lblMatricula_InspeccionSeguro">HBG7942</asp:Label>
                                     </td>
                                 </tr>
                             </table>

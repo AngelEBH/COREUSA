@@ -1138,6 +1138,24 @@ public partial class SolicitudesCredito_Detalles
     protected global::System.Web.UI.WebControls.TextBox txtGastosDeCierre_Calculo;
 
     /// <summary>
+    /// Control txtTasaAnualAplicada_Calculo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtTasaAnualAplicada_Calculo;
+
+    /// <summary>
+    /// Control txtTasaMensualAplicada_Calculo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtTasaMensualAplicada_Calculo;
+
+    /// <summary>
     /// Control divPrestamoFinalAprobado.
     /// </summary>
     /// <remarks>

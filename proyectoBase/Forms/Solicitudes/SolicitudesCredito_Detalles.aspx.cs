@@ -218,7 +218,6 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                             tblEstadoSolicitud.Rows.Add(tRowEstadoProcesamiento);
 
                             IdProducto = sqlResultado["fiIDProducto"].ToString();
-
                             lblProducto.Text = sqlResultado["fcProducto"].ToString();
                             lblNoSolicitud.Text = sqlResultado["fiIDSolicitud"].ToString();
                             lblTipoSolicitud.Text = sqlResultado["fcTipoSolicitud"].ToString();
@@ -260,8 +259,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 txtCuotaTotal_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaNeta.ToString("N");
                                 txtCostoAparatoGPS_Calculo.Text = calculoPrestamoSolicitado.CostoAparatoGPS.ToString("N");
                                 txtGastosDeCierre_Calculo.Text = calculoPrestamoSolicitado.ValorGastosDeCierre.ToString("N");
-                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N");
-                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N");
+                                txtTasaAnualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N");
+                                txtTasaMensualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N");
 
                             }
                             else if (IdProducto == "202" || IdProducto == "203")
@@ -312,9 +311,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 txtCuotaTotal_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaNeta.ToString("N");
                                 txtCostoAparatoGPS_FinalAprobado.Text = calculoPrestamoFinal.CostoAparatoGPS.ToString("N");
                                 txtGastosDeCierre_FinalAprobado.Text = calculoPrestamoFinal.ValorGastosDeCierre.ToString("N");
-
-                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N");
-                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N");
+                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoFinal.TasaAnualAplicada.ToString("N");
+                                txtTasaMensualAplicada_FinalAprobado.Text = calculoPrestamoFinal.TasaMensualAplicada.ToString("N");
 
                                 divPrestamoFinalAprobado.Visible = true;
                             }
@@ -608,7 +606,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                 }
             }
 
-            logo = IdProducto == "101" ? "iconoRecibirDinero48.png" : IdProducto == "201" ? "iconoMoto48.png" : IdProducto == "202" ? "iconoAuto48.png" : IdProducto == "301" ? "iconoConsumo48.png" : "iconoConsumo48.png";
+            logo = IdProducto == "101" ? "iconoRecibirDinero48.png" : IdProducto == "201" ? "iconoMoto48.png" : (IdProducto == "202" || IdProducto == "203") ? "iconoAuto48.png" : (IdProducto == "301" || IdProducto == "302") ? "iconoConsumo48.png" : "iconoConsumo48.png";
             imgLogo.ImageUrl = "/Imagenes/" + logo;
         }
         catch (Exception ex)
@@ -881,7 +879,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         try
         {
             /* Si la información */
-            if (int.Parse(pcIDSolicitud) < 802)
+            if (int.Parse(pcIDSolicitud) < 802 && pcIDSolicitud != "773")
             {
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_CalculoPrestamo", sqlConexion))
                 {

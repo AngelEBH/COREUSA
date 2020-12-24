@@ -732,9 +732,9 @@
                                             <!-- Calculo del prestamo -->
 
                                             <!--
-                                            EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-                                            MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
-                                            -->
+EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+-->
                                             <div class="form-group row">
                                                 <div class="col-sm-12 col-6">
                                                     <label class="col-form-label">Monto total a financiar</label>
@@ -763,6 +763,15 @@
                                                 <div class="col-6">
                                                     <label class="col-form-label">Gastos de cierre</label>
                                                     <asp:TextBox ID="txtGastosDeCierre_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Tasa anual aplicada</label>
+                                                    <asp:TextBox ID="txtTasaAnualAplicada_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label">Tasa mensual aplicada</label>
+                                                    <asp:TextBox ID="txtTasaMensualAplicada_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                                 </div>
                                             </div>
 

@@ -1370,7 +1370,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return resultado;
     }
 
-    /* Administracion de referencias personales */
+    #region Administracion de referencias personales
+
     [WebMethod]
     public static List<Cliente_ReferenciaPersonal_ViewModel> ListadoReferenciasPersonalesPorIdSolicitud(string dataCrypt)
     {
@@ -1575,6 +1576,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         }
         return resultado;
     }
+    
+    #endregion
 
     [WebMethod]
     public static SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel CalculoPrestamo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string dataCrypt)
