@@ -1,4 +1,4 @@
-﻿using proyectoBase.Models.ViewModel;
+﻿using proy2ectoBase.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -84,9 +84,19 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     {
         try
         {
+            int idEstadoSolicitud = 0;
+
+            var estadoIngresada = (int)EstadosDeLaSolicitud.Ingresada;
+            var estadoEnCola = (int)EstadosDeLaSolicitud.EnCola;
+            var estadoEnAnalisis = (int)EstadosDeLaSolicitud.EnAnalisis;
+            var estadoCondicionada = (int)EstadosDeLaSolicitud.Condicionada;
+            var estadoRechazadaPorAnalista = (int)EstadosDeLaSolicitud.RechazadaPorAnalistas;
+            var estadoRechazadaPorGestores = (int)EstadosDeLaSolicitud.RechazadaPorGestores;
+            var estadoPasoFinal = (int)EstadosDeLaSolicitud.PasoFinal;
+            var estadoAutorizada = (int)EstadosDeLaSolicitud.Autorizada;
+
             var logo = string.Empty;
-            var estadoSolicitud = string.Empty;
-            var idEstadoSolicitud = string.Empty;
+            var estadoSolicitud = string.Empty;            
             var procesoPendiente = DateTime.Parse("1900-01-01 00:00:00.000");
             var iconoRojo = "<i class='mdi mdi-close-circle-outline mdi-18px text-danger'></i>";
             var iconoExito = "<i class='mdi mdi-check-circle-outline mdi-18px text-success'></i>";
@@ -111,7 +121,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                         while (sqlResultado.Read())
                         {
                             /****** Informacion de la solicitud ******/
-                            idEstadoSolicitud = sqlResultado["fiEstadoSolicitud"].ToString();
+                            idEstadoSolicitud = (int)sqlResultado["fiEstadoSolicitud"];
                             estadoSolicitud = sqlResultado["fcEstadoSolicitud"].ToString();
                             var fechaEnInvestigacionInicio = (DateTime)sqlResultado["fdEnRutaDeInvestigacionInicio"];
 
@@ -263,8 +273,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 txtCuotaTotal_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaNeta.ToString("N");
                                 txtCostoAparatoGPS_Calculo.Text = calculoPrestamoSolicitado.CostoAparatoGPS.ToString("N");
                                 txtGastosDeCierre_Calculo.Text = calculoPrestamoSolicitado.ValorGastosDeCierre.ToString("N");
-                                //txtTasaAnualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N");
-                                //txtTasaMensualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N");
+                                txtTasaAnualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N");
+                                txtTasaMensualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N");
 
                             }
                             else if (IdProducto == "202" || IdProducto == "203")
@@ -273,7 +283,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 * solo se mostrará el div del monto final a financiar actual
                                 * mismo que se va a extraer de la tabla CredSolicitud_InformacionPrestamo
                                 */
-                                //divCalculoPrestamoSolicitado.Visible = false;
+                                divCalculoPrestamoSolicitado.Visible = false;
                             }
 
                             var montoFinalAFinanciar = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString());
@@ -302,26 +312,21 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                     plazoFinal = calculoPrestamoFinal.Plazo;
                                 }
 
-                                //var valorPrestamoFinal = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : montoFinalAFinanciar;
-                                //var valorPrimaFinal = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
-                                //var plazoFinal = int.Parse(sqlResultado["fiPlazoFinalAprobado"].ToString());
+                                lblEstadoDelMontoFinalAFinanciar.InnerText = idEstadoSolicitud == "7" ? "(Aprobado)" : "(No Aprobado)";
+                                lblEstadoDelMontoFinalAFinanciar.Attributes.Add("class", idEstadoSolicitud == "7" ? "font-weight-bold text-success" : "font-weight-bold text-danger");
+                                txtMontoTotalAFinanciar_FinalAprobado.Text = valorTotalFinalAFinanciar.ToString("N");
+                                txtPlazoFinal_FinalAprobado.Text = plazoFinal.ToString();
+                                lblTipoDePlazo_FinalAprobado.InnerText = (IdProducto == "202" || IdProducto == "203") ? "Mensual" : "Quincenal";
 
-                                //var calculoPrestamoFinal = CalcularPrestamo(IdProducto, valorPrestamoFinal, valorPrimaFinal, plazoFinal, sqlConexion);
-
-                                //lblEstadoDelMontoFinalAFinanciar.InnerText = idEstadoSolicitud == "7" ? "(Aprobado)" : "(No Aprobado)";
-                                //lblEstadoDelMontoFinalAFinanciar.Attributes.Add("class", idEstadoSolicitud == "7" ? "font-weight-bold text-success" : "font-weight-bold text-danger");
-                                //txtMontoTotalAFinanciar_FinalAprobado.Text = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString()).ToString("N");
-                                //txtPlazoFinal_FinalAprobado.Text = plazoFinal.ToString();
-                                ///*lblTipoDePlazo_FinalAprobado.InnerText = sqlResultado["AquiPonerDinamicamenteElTipoDePlazo"].ToString(); */
-                                //lblTipoDePlazo_FinalAprobado.InnerText = IdProducto == "202" ? "Mensual" : "Quincenal";
-
-                                ///* Culcular préstamo final a financiar */
-                                //txtCuotaDelPrestamo_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaPrestamo.ToString("N");
-                                //txtCuotaDelSeguro_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaSeguroDeVehiculo.ToString("N");
-                                //txtCuotaGPS_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaServicioGPS.ToString("N");
-                                //txtCuotaTotal_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaNeta.ToString("N");
-                                //txtCostoAparatoGPS_FinalAprobado.Text = calculoPrestamoFinal.CostoAparatoGPS.ToString("N");
-                                //txtGastosDeCierre_FinalAprobado.Text = calculoPrestamoFinal.ValorGastosDeCierre.ToString("N");
+                                /* Culcular préstamo final a financiar */
+                                txtCuotaDelPrestamo_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaPrestamo.ToString("N");
+                                txtCuotaDelSeguro_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaSeguroDeVehiculo.ToString("N");
+                                txtCuotaGPS_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaServicioGPS.ToString("N");
+                                txtCuotaTotal_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaNeta.ToString("N");
+                                txtCostoAparatoGPS_FinalAprobado.Text = calculoPrestamoFinal.CostoAparatoGPS.ToString("N");
+                                txtGastosDeCierre_FinalAprobado.Text = calculoPrestamoFinal.ValorGastosDeCierre.ToString("N");
+                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoFinal.TasaAnualAplicada.ToString("N");
+                                txtTasaMensualAplicada_FinalAprobado.Text = calculoPrestamoFinal.TasaMensualAplicada.ToString("N");
 
                                 divPrestamoFinalAprobado.Visible = true;
                             }
@@ -437,6 +442,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                         break;
                                     default:
                                         break;
+
                                 }
                             }
 
@@ -601,7 +607,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTiempoDeConocer"].ToString() });
                                 tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTelefonoReferencia"].ToString() });
                                 tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionParentesco"].ToString() });
-                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerHtml = sqlResultado["fcComentarioDeptoCredito"].ToString() != "Sin comunicacion" ? "<i class='mdi mdi-check-circle-outline'></i>" : "<i class='mdi mdi-call-missed'></i>" });
+                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerHtml = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? sqlResultado["fcComentarioDeptoCredito"].ToString() != "Sin comunicacion" ? "<i class='mdi mdi-check-circle-outline'></i>" : "<i class='mdi mdi-call-missed'></i>" : "<i class='mdi mdi-phone-settings'></i>" });
                                 tRowReferencias.Cells.Add(new HtmlTableCell() { InnerHtml = btnComentarioReferenciaPersonal });
 
                                 colorClass = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? sqlResultado["fcComentarioDeptoCredito"].ToString() != "Sin comunicacion" ? "tr-exito" : "text-danger" : "";
@@ -614,7 +620,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 }
             }
 
-            logo = IdProducto == "101" ? "iconoRecibirDinero48.png" : IdProducto == "201" ? "iconoMoto48.png" : (IdProducto == "202" || IdProducto == "203") ? "iconoAuto48.png" : IdProducto == "301" ? "iconoConsumo48.png" : "iconoConsumo48.png";
+            logo = IdProducto == "101" ? "iconoRecibirDinero48.png" : IdProducto == "201" ? "iconoMoto48.png" : (IdProducto == "202" || IdProducto == "203") ? "iconoAuto48.png" : (IdProducto == "301" || IdProducto == "302") ? "iconoConsumo48.png" : "iconoConsumo48.png";
             imgLogo.ImageUrl = "/Imagenes/" + logo;
         }
         catch (Exception ex)
@@ -644,7 +650,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     {
                         if (!sqlResultado.HasRows)
                         {
-                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitud + "&IDApp=" + pcIDApp) + "','_self')";
+                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp) + "','_self')";
                             Response.Write("<script>");
                             Response.Write(lcScript);
                             Response.Write("</script>");
@@ -653,7 +659,6 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                         while (sqlResultado.Read())
                         {
                             /* El primer resultado es información de la solicitud y el cliente */
-
 
                             /* El segundo resultado es la información de la garantía*/
                             sqlResultado.NextResult();
@@ -712,7 +717,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                     }
                                     divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
                                 }
-                            } // using !sqlResultado.HasRows
+                            }
                         } // while sqlResultado.Read()
                     } // using sqlComando.ExecuteReader()
                 } // using sqlComando
@@ -723,7 +728,6 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             ex.Message.ToString();
         }
     }
-
 
     #region Funciones de analisis
 
@@ -1105,7 +1109,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         string pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
         string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
         string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-        string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID").ToString() ?? "0";
+        string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
         return DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
     }
@@ -1886,9 +1890,9 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     {
         public int IdSolicitudCondicion { get; set; }
         public int IdSolicitud { get; set; }
-        public int IdCondicion { get; set; }        
+        public int IdCondicion { get; set; }
         public string Condicion { get; set; }
-        public string DescripcionCondicion { get; set; }        
+        public string DescripcionCondicion { get; set; }
         public string ComentarioAdicional { get; set; }
         public bool EstadoCondicion { get; set; }
     }
@@ -1970,4 +1974,21 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         public bool EstadoCondicion { get; set; }
     }
     #endregion
+
 }
+
+#region Enums
+
+enum EstadosDeLaSolicitud : int
+{
+    Ingresada = 0,
+    EnCola = 1,
+    EnAnalisis = 2,
+    Condicionada = 3,
+    RechazadaPorAnalistas = 4,
+    RechazadaPorGestores = 5,
+    PasoFinal = 6,
+    Autorizada = 7
+}
+
+#endregion

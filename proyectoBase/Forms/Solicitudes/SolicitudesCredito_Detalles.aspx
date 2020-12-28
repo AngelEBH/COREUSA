@@ -730,11 +730,10 @@
                                             <label class="font-weight-bold">Cálculo del préstamo solicitado</label>
 
                                             <!-- Calculo del prestamo -->
-
                                             <!--
-EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
--->
+                                                EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+                                                MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+                                            -->
                                             <div class="form-group row">
                                                 <div class="col-sm-12 col-6">
                                                     <label class="col-form-label">Monto total a financiar</label>
