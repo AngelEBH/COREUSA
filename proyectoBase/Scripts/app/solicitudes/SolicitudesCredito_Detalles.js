@@ -4,8 +4,6 @@ var ID_ESTADO_SOLICITUD = '0';
 /* Abrir modal de detalles del procesamiento de la solicitud, comentarios y condiciones */
 $("#btnMasDetalles").click(function () {
 
-    debugger;
-
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Detalles.aspx/CargarEstadoSolicitud",
@@ -15,8 +13,6 @@ $("#btnMasDetalles").click(function () {
             MensajeError('No se pudo cargar la información, contacte al administrador');
         },
         success: function (data) {
-
-            debugger;
 
             if (data.d != null) {
 
