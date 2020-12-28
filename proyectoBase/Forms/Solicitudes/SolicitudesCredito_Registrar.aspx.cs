@@ -111,6 +111,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         break;
 
                     case 203:
+                    case 204:
 
                         lblTituloMontoPrestmo.Text = "Valor del vehiculo";
                         lblTituloPrima.InnerText = "Valor del empeño";
@@ -1243,14 +1244,14 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         calculo = new CalculoPrestamo_ViewModel()
                         {
                             SegurodeDeuda = decimal.Parse(sqlResultado["fnSegurodeDeuda"].ToString()),
-                            TotalSeguroVehiculo = (idProducto == 202 || idProducto == 203) ? decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()) : decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
+                            TotalSeguroVehiculo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()) : decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
                             CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
                             GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
                             TotalAFinanciar = decimal.Parse(sqlResultado["fnValoraFinanciar"].ToString()),
-                            CuotaDelPrestamo = (idProducto == 202 || idProducto == 203) ? decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()) : (decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()) - decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString())),
-                            CuotaTotal = (idProducto == 202 || idProducto == 203) ? decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
+                            CuotaDelPrestamo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()) : (decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()) - decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString())),
+                            CuotaTotal = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
                             CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
-                            TipoCuota = (idProducto == 202 || idProducto == 203) ? "Meses" : "Quincenas",
+                            TipoCuota = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? "Meses" : "Quincenas",
                             ValorDelPrestamo = valorGlobal - valorPrima,
                             TasaInteresAnual = decimal.Parse(sqlResultado["fnTasaDeInteresAnual"].ToString()),
                         };
@@ -1282,8 +1283,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                 using (var sqlComando = new SqlCommand("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
                 {
-                    var montoPrestamo = (idProducto == 203) ? valorPrima : valorGlobal - valorPrima;
-                    valorPrima = (idProducto == 203) ? valorGlobal - valorPrima : valorPrima;
+                    var montoPrestamo = (idProducto == 203 || idProducto == 204) ? valorPrima : valorGlobal - valorPrima;
+                    valorPrima = (idProducto == 203 || idProducto == 204) ? valorGlobal - valorPrima : valorPrima;
 
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -1529,7 +1530,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
 
                     /* Guardar informacion del cotizador para imprimir documentos... si,esto va a fallar también */
-                    if (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 201)
+                    if (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204 || precalificado.IdProducto == 201)
                     {
                         var hoy = DateTime.Today;
                         DateTime fechaPrimerPago;
@@ -1556,9 +1557,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                         decimal totalAFinanciar = cotizador.TotalAFinanciar;
                         decimal valorAPrestar = garantia.ValorMercado - garantia.ValorPrima;
-                        decimal tasaInteresAnual = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203) ? cotizador.TasaInteresAnual : ObtenerTasaInteresAnualPorIdProducto(precalificado.IdProducto);
+                        decimal tasaInteresAnual = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204) ? cotizador.TasaInteresAnual : ObtenerTasaInteresAnualPorIdProducto(precalificado.IdProducto);
                         decimal tasaInteresMensual = tasaInteresAnual / 12;
-                        decimal totalAFinanciarConIntereses = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203) ? cotizador.TotalFinanciadoConIntereses : CalcularTotalAFinanciarConIntereses(cotizador.TotalAFinanciar, solicitud.PlazoSeleccionado, tasaInteresAnual, precalificado.IdProducto);
+                        decimal totalAFinanciarConIntereses = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204) ? cotizador.TotalFinanciadoConIntereses : CalcularTotalAFinanciarConIntereses(cotizador.TotalAFinanciar, solicitud.PlazoSeleccionado, tasaInteresAnual, precalificado.IdProducto);
 
 
                         using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Guardar", sqlConexion, tran))
@@ -1952,7 +1953,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         decimal interesAnual;
 
         /* Determinar si el plazo es mensual o quincenal para calcular el interés anual */
-        var tipoDePlazo = (idProducto == 202 || idProducto == 203) ? 12 : 24;
+        var tipoDePlazo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? 12 : 24;
 
         if (tasaInteresAnual > 1)
         {

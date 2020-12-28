@@ -340,7 +340,7 @@ $(document).ready(function () {
                     }
                 }
 
-                if (valorFinanciar > CONSTANTES.PrestamoMaximo_Monto && CONSTANTES.PrestamoMaximo_Monto != 0 && (PRECALIFICADO.IdProducto != 202 && PRECALIFICADO.IdProducto != 203)) {
+                if (valorFinanciar > CONSTANTES.PrestamoMaximo_Monto && CONSTANTES.PrestamoMaximo_Monto != 0 && (PRECALIFICADO.IdProducto != 202 && PRECALIFICADO.IdProducto != 203 && PRECALIFICADO.IdProducto != 204)) {
                     state = false;
                     MensajeAdvertencia('El monto máximo a financiar para este cliente es ' + CONSTANTES.PrestamoMaximo_Monto + '.');
                 }
@@ -753,7 +753,9 @@ function CargarDocumentosRequeridos() {
 /* Cargar prestamos disponibles consultados en el cotizador */
 function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
-    if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203) {
+    debugger;
+
+    if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203 || PRECALIFICADO.IdProducto == 204) {
 
         var lcSeguro = '';
         var lcGPS = '';
