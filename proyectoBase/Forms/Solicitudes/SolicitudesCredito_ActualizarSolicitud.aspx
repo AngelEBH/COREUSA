@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Actualizar solicitud de crédito</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
@@ -130,8 +130,8 @@
                                         </div>
                                         <!-- Valor de la prima -->
                                         <div class="col-sm-4" id="divPrima" runat="server">
-                                            <label class="col-form-label">Valor de la prima</label>
-                                            <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm mascara-cantidad" Enabled="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <label class="col-form-label" runat="server" id="lblTituloPrima">Valor de la prima</label>
+                                            <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm mascara-cantidad" Enabled="false" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
                                         <!-- Valor a Financiar -->
                                         <div class="col-sm-4" id="divPlazo" runat="server">
@@ -156,20 +156,26 @@
                                             <div id="error-ddlGps"></div>
                                         </div>
                                     </div>
-
                                     <div class="form-group row">
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Valor del préstamo</label>
+                                            <asp:TextBox ID="txtValorDePrestamo" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
                                         <!-- Valor a Financiar -->
-                                        <div class="col-sm-6" id="div1" runat="server">
-                                            <label class="col-form-label">Valor a Financiar</label>
+                                        <div class="col-sm-3" id="divValorFinanciar" runat="server">
+                                            <label class="col-form-label">Valor total a Financiar <small id="lblTasaAnual" class="font-weight-bold"></small></label>
                                             <asp:TextBox ID="txtValorFinanciar" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
                                         <!-- Valor de la cuota calculada -->
-                                        <div class="col-sm-6">
-                                            <label class="col-form-label">Valor de la cuota</label>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Valor total de la cuota</label>
                                             <asp:TextBox ID="txtValorCuota" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Tasa de interés anual</label>
+                                            <asp:TextBox ID="txtTasaDeInteresAnual" CssClass="form-control form-control-sm font-weight-bold text-right" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -990,6 +996,6 @@
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=20201210172725"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=20201228143665"></script>
 </body>
 </html>

@@ -56,7 +56,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 IdSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
@@ -304,7 +304,37 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             switch (IdProducto)
                             {
                                 case 202:
+
+                                    lblTituloMontoPrestmo.Text = "Valor del vehiculo";
+                                    divCotizadorAutos.Visible = true;
+                                    ddlTipoGastosDeCierre.Enabled = true;
+                                    ddlTipoDeSeguro.Enabled = true;
+                                    ddlGps.Enabled = true;
+                                    txtValorPrima.Enabled = true;
+
+                                    ddlTipoGastosDeCierre.Items.Add(new ListItem("Seleccionar", ""));
+                                    ddlTipoGastosDeCierre.Items.Add("Financiado");
+                                    ddlTipoGastosDeCierre.Items.Add("Sin financiar");
+
+                                    ddlGps.Items.Add(new ListItem("Seleccionar", ""));
+                                    ddlGps.Items.Add("No");
+                                    ddlGps.Items.Add("Si - CPI");
+                                    ddlGps.Items.Add("Si - CableColor");
+
+                                    ddlTipoDeSeguro.Items.Add(new ListItem("Seleccionar", ""));
+                                    ddlTipoDeSeguro.Items.Add("A - Full Cover");
+                                    ddlTipoDeSeguro.Items.Add("B - Basico + Garantía");
+                                    ddlTipoDeSeguro.Items.Add("C - Basico");
+
+                                    lblTipoDePlazo.InnerText = "mensual";
+                                    break;
+
                                 case 203:
+                                case 204:
+
+                                    lblTituloMontoPrestmo.Text = "Valor del vehiculo";
+                                    lblTituloPrima.InnerText = "Valor del empeño";
+                                    txtValorPrima.Enabled = true;
 
                                     divCotizadorAutos.Visible = true;
                                     ddlTipoGastosDeCierre.Enabled = true;
@@ -325,13 +355,12 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     ddlTipoDeSeguro.Items.Add("B - Basico + Garantía");
                                     ddlTipoDeSeguro.Items.Add("C - Basico");
 
-                                    lblTituloMontoPrestmo.Text = "Valor del vehiculo";
                                     lblTipoDePlazo.InnerText = "mensual";
 
                                     break;
 
                                 case 101:
-                                    lblTituloMontoPrestmo.Text = "Valor solicitado";
+                                    lblTituloMontoPrestmo.Text = "Valor de efectivo solicitado";
                                     break;
 
                                 case 201:
@@ -856,7 +885,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
             var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var mensajeError = string.Empty;
 
@@ -1300,7 +1329,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 }
 
                 /* Guardar informacion del cotizador para imprimir documentos... */
-                if (informacionSolicitud.IdProducto == 202 || informacionSolicitud.IdProducto == 203 || informacionSolicitud.IdProducto == 201)
+                if (informacionSolicitud.IdProducto == 202 || informacionSolicitud.IdProducto == 203 || informacionSolicitud.IdProducto == 204 || informacionSolicitud.IdProducto == 201)
                 {
                     var hoy = DateTime.Today;
                     DateTime fechaPrimerPago;
@@ -1576,8 +1605,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         }
         return resultado;
     }
-    
+
     #endregion
+
+    #region Calculo de prestamo
 
     [WebMethod]
     public static SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel CalculoPrestamo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string dataCrypt)
@@ -1610,14 +1641,16 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             calculo = new SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel()
                             {
                                 SegurodeDeuda = decimal.Parse(sqlResultado["fnSegurodeDeuda"].ToString()),
-                                TotalSeguroVehiculo = (idProducto == 202 || idProducto == 203) ? decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()) : decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()),
+                                TotalSeguroVehiculo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()) : decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
                                 CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
                                 GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
                                 TotalAFinanciar = decimal.Parse(sqlResultado["fnValoraFinanciar"].ToString()),
-                                CuotaDelPrestamo = (idProducto == 202 || idProducto == 203) ? decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
-                                CuotaTotal = (idProducto == 202 || idProducto == 203) ? decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
+                                CuotaDelPrestamo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()) : (decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()) - decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString())),
+                                CuotaTotal = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
                                 CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
-                                TipoCuota = "Quincenal"
+                                TipoCuota = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? "Meses" : "Quincenas",
+                                ValorDelPrestamo = valorGlobal - valorPrima,
+                                TasaInteresAnual = decimal.Parse(sqlResultado["fnTasaDeInteresAnual"].ToString()),
                             };
                         } // using sqlResultado.Read()
                     }
@@ -1648,11 +1681,14 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                 using (var sqlComando = new SqlCommand("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
                 {
+                    var montoPrestamo = (idProducto == 203 || idProducto == 204) ? valorPrima : valorGlobal - valorPrima;
+                    valorPrima = (idProducto == 203 || idProducto == 204) ? valorGlobal - valorPrima : valorPrima;
+
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
-                    sqlComando.Parameters.AddWithValue("@pnMontoaPrestamo", (valorGlobal - valorPrima));
+                    sqlComando.Parameters.AddWithValue("@pnMontoaPrestamo", montoPrestamo);
                     sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
                     sqlComando.Parameters.AddWithValue("@piScorePromedio", scorePromedio);
                     sqlComando.Parameters.AddWithValue("@piTipodeSeguro", tipoSeguro);
@@ -1680,7 +1716,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
                                     CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
                                     CuotaTotal = decimal.Parse(sqlResultado["fnTotalCuota"].ToString()),
-                                    TipoCuota = "Mensual"
+                                    TipoCuota = "Mensual",
+                                    ValorDelPrestamo = montoPrestamo
                                 };
                             }
                         } // using sqlResultado.Read()
@@ -1696,6 +1733,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return calculo;
     }
 
+    #endregion
+
+    #region Otras funciones
+
     [WebMethod]
     public static string ObtenerUrlEncriptado(int idCliente, string dataCrypt)
     {
@@ -1703,7 +1744,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         var idUsuario = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("usr");
         var idSolicitud = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("IDSOL");
         var pcIDApp = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("IDApp");
-        var pcIDSesion = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("SID");
+        var pcIDSesion = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("SID") ?? "0";
 
         return DSC.Encriptar("usr=" + idUsuario + "&IDSOL=" + idSolicitud + "&cltID=" + idCliente + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
     }
@@ -1775,7 +1816,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         /* ========= Del 06 - 20 = prox. 30 mensual ========= */
         /* ========= Del 21 - 05 = prox. 15 mensual ========= */
         /* ================================================== */
-        else if (idProducto == "202" || idProducto == "203")
+        else if (idProducto == "202" || idProducto == "203" || idProducto == "204")
         {
             /* Próximo 30 */
             if (hoy.Day >= 6 && hoy.Day <= 20)
@@ -1800,6 +1841,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
         return fechaPrimerPago;
     }
+
+    #endregion
 
     #region View Models
 
@@ -1845,6 +1888,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         public decimal CuotaTotal { get; set; }
         public string TipoCuota { get; set; }
         public decimal SegurodeDeuda { get; set; }
+        public decimal ValorDelPrestamo { get; set; }
     }
 
     public class SolicitudesCredito_Solicitud_Maestro_ViewModel
@@ -1852,7 +1896,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         public int IdSolicitud { get; set; }
         public int IdCliente { get; set; }
         public decimal ValorSeleccionado { get; set; }
-        public int PlazoSeleccionado { get; set; }        
+        public int PlazoSeleccionado { get; set; }
         public decimal ValorPrima { get; set; }
         public decimal ValorGarantia { get; set; }
         public int IdMoneda { get; set; }

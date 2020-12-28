@@ -157,6 +157,15 @@ public partial class SolicitudesCredito_ActualizarSolicitud
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPrima;
 
     /// <summary>
+    /// Control lblTituloPrima.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTituloPrima;
+
+    /// <summary>
     /// Control txtValorPrima.
     /// </summary>
     /// <remarks>
@@ -229,13 +238,22 @@ public partial class SolicitudesCredito_ActualizarSolicitud
     protected global::System.Web.UI.WebControls.DropDownList ddlGps;
 
     /// <summary>
-    /// Control div1.
+    /// Control txtValorDePrestamo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl div1;
+    protected global::System.Web.UI.WebControls.TextBox txtValorDePrestamo;
+
+    /// <summary>
+    /// Control divValorFinanciar.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divValorFinanciar;
 
     /// <summary>
     /// Control txtValorFinanciar.
@@ -254,6 +272,15 @@ public partial class SolicitudesCredito_ActualizarSolicitud
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtValorCuota;
+
+    /// <summary>
+    /// Control txtTasaDeInteresAnual.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtTasaDeInteresAnual;
 
     /// <summary>
     /// Control txtIdentidadCliente.

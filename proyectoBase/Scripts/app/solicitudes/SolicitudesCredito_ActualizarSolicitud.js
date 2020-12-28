@@ -501,16 +501,13 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
     /* Informacion de la solicitud */
     else if (idTipoDeCondicion == '9') {
 
-        
-        debugger;
-
         if ($('#frmSolicitud').parsley().isValid({ group: 'informacionPrestamo' })) {
 
             objSeccion = {
                 IdSolicitud: ID_SOLICITUD,
                 IdCliente: ID_CLIENTE,
                 IdProducto: ID_PRODUCTO,
-                ValorSeleccionado: $("#txtValorFinanciar").val().replace(/,/g, '') == '' ? 0 : $("#txtValorFinanciar").val().replace(/,/g, ''),
+                ValorSeleccionado: $("#txtValorDePrestamo").val().replace(/,/g, '') == '' ? 0 : $("#txtValorDePrestamo").val().replace(/,/g, ''),
                 PlazoSeleccionado: $("#txtPlazoSeleccionado").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazoSeleccionado").val().replace(/,/g, ''),
                 ValorGarantia: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
                 ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, '')                
@@ -902,7 +899,7 @@ $('#txtValorGlobal,#txtValorPrima,#txtPlazoSeleccionado,#ddlTipoGastosDeCierre,#
 /* Cargar prestamos disponibles consultados en el cotizador */
 function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
-    if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203) {
+    if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203 || PRECALIFICADO.IdProducto == 204) {
 
         var lcSeguro = '';
         var lcGPS = '';
@@ -957,8 +954,10 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
                     var objCalculo = data.d;
 
+                    $("#txtValorDePrestamo").val(objCalculo.ValorDelPrestamo);
                     $("#txtValorCuota").val(objCalculo.CuotaTotal);
                     $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
+                    $("#txtTasaDeInteresAnual").val(objCalculo.TasaInteresAnual + '%');
 
                     COTIZADOR = objCalculo;
                 }
@@ -979,8 +978,12 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
             success: function (data) {
 
                 var objCalculo = data.d;
+                $("#txtValorDePrestamo").val(objCalculo.ValorDelPrestamo);
                 $("#txtValorCuota").val(objCalculo.CuotaTotal);
                 $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
+                $("#txtTasaDeInteresAnual").val(objCalculo.TasaInteresAnual + '%');
+
+                COTIZADOR = objCalculo;
             }
         });
     }
