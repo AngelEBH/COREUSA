@@ -54,7 +54,6 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                     pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-                    pcIDSesion = "1";
 
                     CargarInformacionClienteSolicitud();
                     CargarInformacionGarantia();
@@ -239,42 +238,71 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                             txtValorGarantia.Text = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()).ToString("N");
                             txtValorPrima.Text = decimal.Parse(sqlResultado["fnValorPrima"].ToString()).ToString("N");
                             txtPlazoSeleccionado.Text = sqlResultado["fiPlazoSeleccionado"].ToString();
-                            /*lblTipoDePlazo_FinalAprobado.InnerText = sqlResultado["AquiPonerDinamicamenteElTipoDePlazo"].ToString(); */
-                            lblTipoDePlazo_Solicitado.InnerText = IdProducto == "202" ? "Mensual" : "Quincenal";
+                            lblTipoDePlazo_Solicitado.InnerText = (IdProducto == "202" || IdProducto == "203" || IdProducto == "204") ? "Mensual" : "Quincenal";
                             txtOrigen.Text = sqlResultado["fcOrigen"].ToString();
 
-                            /*** Calculo del prestamo solicitado ***/
-                            decimal montoPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : decimal.Parse(sqlResultado["fnValorSeleccionado"].ToString());
-                            decimal valorPrimaPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
-                            int plazoSeleccionado = int.Parse(sqlResultado["fiPlazoSeleccionado"].ToString());
+                            /*** Calculo del prestamo SOLICITADO ***/
+                            var montoPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : decimal.Parse(sqlResultado["fnValorSeleccionado"].ToString());
+                            var valorPrimaPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
+                            var plazoSeleccionado = int.Parse(sqlResultado["fiPlazoSeleccionado"].ToString());
 
-                            var calculoPrestamoSolicitado = CalcularPrestamo(int.Parse(IdProducto), montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
+                            var calculoPrestamoSolicitado = new SolicitudesCredito_RegistradaDetalles_Calculo_ViewModel();
 
-                            txtMontoTotalAFinanciar_Calculo.Text = calculoPrestamoSolicitado.ValorAFinanciar.ToString("N");
-                            txtCuotaDelPrestamo_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaPrestamo.ToString("N");
-                            txtCuotaDelSeguro_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaSeguroDeVehiculo.ToString("N");
-                            txtCuotaGPS_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaServicioGPS.ToString("N");
-                            txtCuotaTotal_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaNeta.ToString("N");
-                            txtCostoAparatoGPS_Calculo.Text = calculoPrestamoSolicitado.CostoAparatoGPS.ToString("N");
-                            txtGastosDeCierre_Calculo.Text = calculoPrestamoSolicitado.ValorGastosDeCierre.ToString("N");
+                            if (IdProducto == "101" || IdProducto == "301" || IdProducto == "201" || IdProducto == "302")
+                            {
+                                calculoPrestamoSolicitado = CalcularPrestamo(int.Parse(IdProducto), montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
+
+                                txtMontoTotalAFinanciar_Calculo.Text = calculoPrestamoSolicitado.ValorAFinanciar.ToString("N");
+                                txtCuotaDelPrestamo_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaPrestamo.ToString("N");
+                                txtCuotaDelSeguro_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaSeguroDeVehiculo.ToString("N");
+                                txtCuotaGPS_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaServicioGPS.ToString("N");
+                                txtCuotaTotal_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaNeta.ToString("N");
+                                txtCostoAparatoGPS_Calculo.Text = calculoPrestamoSolicitado.CostoAparatoGPS.ToString("N");
+                                txtGastosDeCierre_Calculo.Text = calculoPrestamoSolicitado.ValorGastosDeCierre.ToString("N");
+                                txtTasaAnualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N");
+                                txtTasaMensualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N");
+
+                            }
+                            else if (IdProducto == "202" || IdProducto == "203" || IdProducto == "204")
+                            {
+                                /* Haciendo pruebas, si el prestamo es 202, 203 o 204 no se mostrará préstamo solicitado
+                                * solo se mostrará el div del monto final a financiar actual
+                                * mismo que se va a extraer de la tabla CredSolicitud_InformacionPrestamo
+                                */
+                                divCalculoPrestamoSolicitado.Visible = false;
+                            }
 
                             var montoFinalAFinanciar = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString());
 
-                            /*** Prestamo Final aprobado ***/
-                            if (montoFinalAFinanciar != 0)
+                            /*** Prestamo FINAL APROBADO ***/
+                            if (montoFinalAFinanciar != 0 || IdProducto == "202" || IdProducto == "203" || IdProducto == "204")
                             {
-                                var valorPrestamoFinal = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : montoFinalAFinanciar;
-                                var valorPrimaFinal = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
-                                var plazoFinal = int.Parse(sqlResultado["fiPlazoFinalAprobado"].ToString());
+                                var valorTotalFinalAFinanciar = 0m;
+                                var valorPrimaFinal = 0m;
+                                var plazoFinal = 0;
+                                var calculoPrestamoFinal = new SolicitudesCredito_RegistradaDetalles_Calculo_ViewModel();
 
-                                var calculoPrestamoFinal = CalcularPrestamo(int.Parse(IdProducto), valorPrestamoFinal, valorPrimaFinal, plazoFinal, sqlConexion);
+                                if (IdProducto == "101" || IdProducto == "301" || IdProducto == "201" || IdProducto == "302")
+                                {
+                                    valorTotalFinalAFinanciar = montoFinalAFinanciar;
+                                    valorPrimaFinal = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
+                                    plazoFinal = int.Parse(sqlResultado["fiPlazoFinalAprobado"].ToString());
+
+                                    calculoPrestamoFinal = CalcularPrestamo(int.Parse(IdProducto), montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
+                                }
+                                else if (IdProducto == "202" || IdProducto == "203" || IdProducto == "204")
+                                {
+                                    calculoPrestamoFinal = CargarPrestamoSolicitadoVehiculo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
+
+                                    valorTotalFinalAFinanciar = calculoPrestamoFinal.ValorAFinanciar;
+                                    plazoFinal = calculoPrestamoFinal.Plazo;
+                                }
 
                                 lblEstadoDelMontoFinalAFinanciar.InnerText = idEstadoSolicitud == "7" ? "(Aprobado)" : "(No Aprobado)";
                                 lblEstadoDelMontoFinalAFinanciar.Attributes.Add("class", idEstadoSolicitud == "7" ? "font-weight-bold text-success" : "font-weight-bold text-danger");
-                                txtMontoTotalAFinanciar_FinalAprobado.Text = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString()).ToString("N");
+                                txtMontoTotalAFinanciar_FinalAprobado.Text = valorTotalFinalAFinanciar.ToString("N");
                                 txtPlazoFinal_FinalAprobado.Text = plazoFinal.ToString();
-                                /*lblTipoDePlazo_FinalAprobado.InnerText = sqlResultado["AquiPonerDinamicamenteElTipoDePlazo"].ToString(); */
-                                lblTipoDePlazo_FinalAprobado.InnerText = IdProducto == "202" ? "Mensual" : "Quincenal";
+                                lblTipoDePlazo_FinalAprobado.InnerText = (IdProducto == "202" || IdProducto == "203" || IdProducto == "204") ? "Mensual" : "Quincenal";
 
                                 /* Culcular préstamo final a financiar */
                                 txtCuotaDelPrestamo_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaPrestamo.ToString("N");
@@ -283,6 +311,8 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                                 txtCuotaTotal_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaNeta.ToString("N");
                                 txtCostoAparatoGPS_FinalAprobado.Text = calculoPrestamoFinal.CostoAparatoGPS.ToString("N");
                                 txtGastosDeCierre_FinalAprobado.Text = calculoPrestamoFinal.ValorGastosDeCierre.ToString("N");
+                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoFinal.TasaAnualAplicada.ToString("N");
+                                txtTasaMensualAplicada_FinalAprobado.Text = calculoPrestamoFinal.TasaMensualAplicada.ToString("N");
 
                                 divPrestamoFinalAprobado.Visible = true;
                             }
@@ -576,7 +606,7 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                 }
             }
 
-            logo = IdProducto == "101" ? "iconoRecibirDinero48.png" : IdProducto == "201" ? "iconoMoto48.png" : IdProducto == "202" ? "iconoAuto48.png" : IdProducto == "301" ? "iconoConsumo48.png" : "iconoConsumo48.png";
+            logo = IdProducto == "101" ? "iconoRecibirDinero48.png" : IdProducto == "201" ? "iconoMoto48.png" : (IdProducto == "202" || IdProducto == "203" || IdProducto == "204") ? "iconoAuto48.png" : (IdProducto == "301" || IdProducto == "302") ? "iconoConsumo48.png" : "iconoConsumo48.png";
             imgLogo.ImageUrl = "/Imagenes/" + logo;
         }
         catch (Exception ex)
@@ -722,53 +752,40 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                                 EnIngresoInicio = (DateTime)sqlResultado["fdEnIngresoInicio"],
                                 EnIngresoFin = (DateTime)sqlResultado["fdEnIngresoFin"],
                                 UsuarioEnIngreso = (string)sqlResultado["fcUsuarioEnIngreso"],
-
                                 EnColaInicio = (DateTime)sqlResultado["fdEnColaInicio"],
                                 EnColaFin = (DateTime)sqlResultado["fdEnColaFin"],
-
                                 EnAnalisisInicio = (DateTime)sqlResultado["fdEnAnalisisInicio"],
                                 UsuarioAnalista = (string)sqlResultado["fcUsuarioAnalista"],
-
                                 FechaValidacionInformacionPersonal = (DateTime)sqlResultado["fdAnalisisTiempoValidarInformacionPersonal"],
                                 ComentarioValidacionInformacionPersonal = (string)sqlResultado["fcComentarioValidacionInfoPersonal"],
-
                                 FechaValidacionDocumentacion = (DateTime)sqlResultado["fdAnalisisTiempoValidarDocumentos"],
                                 ComentarioValidacionDocumentacion = (string)sqlResultado["fcComentarioValidacionDocumentacion"],
-
                                 FechaValidacionReferenciasPersonales = (DateTime)sqlResultado["fdAnalisisTiempoValidacionReferenciasPersonales"],
                                 ComentarioValidacionReferenciasPersonales = (string)sqlResultado["fcComentarioValidacionReferenciasPersonales"],
-
                                 FechaValidacionInformacionLaboral = (DateTime)sqlResultado["fdAnalisisTiempoValidacionReferenciasPersonales"],
                                 ComentarioValidacionInformacionLaboral = (string)sqlResultado["fcComentarioValidacionInfoLaboral"],
-
                                 ComentarioResolucion = (string)sqlResultado["fcComentarioResolucion"],
                                 TiempoTomaDecisionFinal = (DateTime)sqlResultado["fdTiempoTomaDecisionFinal"],
                                 EnAnalisisFin = (DateTime)sqlResultado["fdEnAnalisisFin"],
-
                                 CondicionadoInicio = (DateTime)sqlResultado["fdCondicionadoInicio"],
                                 ComentarioCondicionado = (string)sqlResultado["fcCondicionadoComentario"],
                                 UsuarioCondicionado = (string)sqlResultado["fcUsuarioEnIngreso"],
                                 CondicionadoFin = (DateTime)sqlResultado["fdCondificionadoFin"],
-
                                 FechaEnvioARuta = (DateTime)sqlResultado["fdEnvioARutaAnalista"],
                                 ObservacionesDeCreditos = (string)sqlResultado["fcObservacionesDeCredito"],
                                 EnRutaDeInvestigacionInicio = (DateTime)sqlResultado["fdEnRutaDeInvestigacionInicio"],
                                 UsuarioGestorAsignado = (string)sqlResultado["fcGestorAsignado"],
                                 ObservacionesDeCampo = (string)sqlResultado["fcObservacionesDeCampo"],
                                 EnRutaDeInvestigacionFin = (DateTime)sqlResultado["fdEnRutaDeInvestigacionFin"],
-
                                 ReprogramadoInicio = (DateTime)sqlResultado["fdReprogramadoInicio"],
                                 ComentarioReprogramado = (string)sqlResultado["fcReprogramadoComentario"],
                                 ReprogramadoFin = (DateTime)sqlResultado["fdReprogramadoFin"],
-
                                 PasoFinalInicio = (DateTime)sqlResultado["fdPasoFinalInicio"],
                                 UsuarioPasoFinal = (string)sqlResultado["fcUsuarioPasoFinal"],
                                 ComentarioPasoFinal = (string)sqlResultado["fcComentarioPasoFinal"],
                                 PasoFinalFin = (DateTime)sqlResultado["fdPasoFinalFin"],
-
                                 IdEstadoSolicitud = (byte)sqlResultado["fiEstadoSolicitud"],
                                 EstadoSolicitud = (string)sqlResultado["fcEstadoSolicitud"],
-
                                 SolicitudActiva = (byte)sqlResultado["fiSolicitudActiva"]
                             };
 
@@ -857,6 +874,93 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
         return resultado;
     }
 
+    public SolicitudesCredito_RegistradaDetalles_Calculo_ViewModel CargarPrestamoSolicitadoVehiculo(string idProducto, decimal valorPrestamo, decimal valorPrima, int plazo, SqlConnection sqlConexion)
+    {
+        SolicitudesCredito_RegistradaDetalles_Calculo_ViewModel resultado = null;
+        try
+        {
+            /* Si la información */
+            if (int.Parse(pcIDSolicitud) < 802 && pcIDSolicitud != "773")
+            {
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_CalculoPrestamo", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
+                    sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", valorPrestamo);
+                    sqlComando.Parameters.AddWithValue("@liPlazo", plazo);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            resultado = new SolicitudesCredito_RegistradaDetalles_Calculo_ViewModel()
+                            {
+                                ValorSeguroDeDeuda = (decimal)sqlResultado["fnSegurodeDeuda"],
+                                ValorSeguroDeVehiculo = (decimal)sqlResultado["fnSegurodeVehiculo"],
+                                ValorGastosDeCierre = (decimal)sqlResultado["fnGastosdeCierre"],
+                                ValorAFinanciar = (decimal)sqlResultado["fnValoraFinanciar"],
+                                ValorCuotaPrestamo = (decimal)sqlResultado["fnValorCuota"],
+                                CostoAparatoGPS = (decimal)sqlResultado["fnCostoGPS"],
+                                ValorCuotaServicioGPS = (decimal)sqlResultado["fnCuotaServicioGPS"],
+                                TotalSeguroVehiculo = (decimal)sqlResultado["fnTotalSeguroVehiculo"],
+                                ValorCuotaSeguroDeVehiculo = (decimal)sqlResultado["fnCuotaSegurodeVehiculo"],
+                                ValorCuotaNeta = (decimal)sqlResultado["fnValorCuotaNeta"],
+                                Plazo = (short)sqlResultado["fiPlazo"],
+                                TipoDePlazo = (string)sqlResultado["fcTipodeCuota"],
+                                TasaAnualAplicada = (decimal)sqlResultado["fnTasaDeInteresAnual"],
+                                TasaMensualAplicada = (decimal)sqlResultado["fnTasaDeInteresMensual"]
+                            };
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_ObtenerPorIdSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            resultado = new SolicitudesCredito_RegistradaDetalles_Calculo_ViewModel()
+                            {
+                                ValorSeguroDeDeuda = 0,
+                                ValorSeguroDeVehiculo = (decimal)sqlResultado["fnValorTotalSeguro"],
+                                ValorGastosDeCierre = (decimal)sqlResultado["fnGastosDeCierre"],
+                                ValorAFinanciar = (decimal)sqlResultado["fnValorTotalFinanciamiento"],
+                                ValorCuotaPrestamo = (decimal)sqlResultado["fnCuotaMensualPrestamo"],
+                                CostoAparatoGPS = (decimal)sqlResultado["fnCostoGPS"],
+                                ValorCuotaServicioGPS = (decimal)sqlResultado["fnCuotaMensualGPS"],
+                                TotalSeguroVehiculo = (decimal)sqlResultado["fnValorTotalSeguro"],
+                                ValorCuotaSeguroDeVehiculo = (decimal)sqlResultado["fnCuotaMensualSeguro"],
+                                ValorCuotaNeta = (decimal)sqlResultado["fnCuotaTotal"],
+                                Plazo = (int)sqlResultado["fiPlazo"],
+                                TipoDePlazo = (string)sqlResultado["fcTipoDePlazo"],
+                                TasaAnualAplicada = (decimal)sqlResultado["fnTasaAnualAplicada"] < 0 ? ((decimal)sqlResultado["fnTasaAnualAplicada"] * 100) : (decimal)sqlResultado["fnTasaAnualAplicada"],
+                                TasaMensualAplicada = (decimal)sqlResultado["fnTasaMensualAplicada"] < 0 ? ((decimal)sqlResultado["fnTasaMensualAplicada"] * 100) : (decimal)sqlResultado["fnTasaMensualAplicada"]
+                            };
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = null;
+        }
+        return resultado;
+    }
+
     [WebMethod]
     public static string ObtenerUrlEncriptado(string dataCrypt)
     {
@@ -926,6 +1030,8 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
         public decimal ValorCuotaNeta { get; set; }
         public int Plazo { get; set; }
         public string TipoDePlazo { get; set; }
+        public decimal TasaAnualAplicada { get; set; }
+        public decimal TasaMensualAplicada { get; set; }
     }
 
     public class SolicitudesCredito_RegistradaDetalles_EstadoProcesos_ViewModel
