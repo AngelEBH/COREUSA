@@ -13,37 +13,30 @@ public partial class CotizadorCarros : System.Web.UI.Page
     private string pcIDUsuario = "";
     private readonly DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
-    public string NombreUsuario = "";
     public string CorreoElectronico = "";
+    public string NombreUsuario = "";
     public string Telefono = "";
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        /* Inicio de captura de parametros y desencriptado de cadena */
         var lcURL = Request.Url.ToString();
+        var lcParametros = string.Empty;
         int liParamStart = lcURL.IndexOf("?");
 
-        string lcParametros;
         if (liParamStart > 0)
         {
             lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
         }
-        else
-        {
-            lcParametros = string.Empty;
-        }
 
         if (lcParametros != string.Empty)
         {
-            var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-            lcEncriptado = lcEncriptado.Replace("%2f", "/");
+            var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
             var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
             var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
             pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
         }
-        /* FIN de captura de parametros y desencriptado de cadena */
 
         if (ddlProducto.Items.Count == 0)
         {
@@ -54,6 +47,7 @@ public partial class CotizadorCarros : System.Web.UI.Page
             ddlProducto.Items.Add(new ListItem("Seleccionar", ""));
             ddlProducto.Items.Add("Finaciamiento");
             ddlProducto.Items.Add("Empeño");
+            ddlProducto.Items.Add("Credi-Empeño");
 
             ddlGPS.Items.Add(new ListItem("Seleccionar", ""));
             ddlGPS.Items.Add("No");
@@ -83,8 +77,28 @@ public partial class CotizadorCarros : System.Web.UI.Page
             return;
         }
 
-        var lcProducto = ddlProducto.SelectedValue == "Finaciamiento" ? "202" : "203";
+        if ((Convert.ToInt16(txtScorePromedio.Text.Trim()) > 500) && ddlProducto.SelectedValue == "Credi-Empeño")
+        {
+            PanelMensajeErrores.Visible = true;
+            lblMensaje.Text = "Para score mayor a 500 debe seleccionar producto financiamiento.";
+            return;
+        }
 
+        var lcProducto = string.Empty;
+        decimal liNumero;
+
+        switch (ddlProducto.SelectedValue)
+        {
+            case "Finaciamiento":
+                lcProducto = "202";
+                break;
+            case "Empeño":
+                lcProducto = "203";
+                break;
+            case "Credi-Empeño":
+                lcProducto = "204";
+                break;
+        }
 
         if (lcProducto == "203")
         {
@@ -102,7 +116,6 @@ public partial class CotizadorCarros : System.Web.UI.Page
             return;
         }
 
-        decimal liNumero;
         var lbEsNumerico = decimal.TryParse(txtValorVehiculo.Text, out liNumero);
 
         if (!lbEsNumerico)
@@ -135,11 +148,46 @@ public partial class CotizadorCarros : System.Web.UI.Page
             return;
         }
 
+        #region Validaciones de producto CrediEmpeño
+
+        if (lcProducto == "204")
+        {
+            if ((Convert.ToInt16(txtScorePromedio.Text.Trim()) > 400 && (Convert.ToInt16(txtScorePromedio.Text.Trim()) < 500)) && Convert.ToDouble(txtValorPrima.Text) < (Convert.ToDouble(txtValorVehiculo.Text) * (0.35)))
+            {
+                PanelMensajeErrores.Visible = true;
+                lblMensaje.Text = "Valor de la prima debe ser mayor o igual al 35%.";
+                return;
+            }
+
+            if ((Convert.ToInt16(txtScorePromedio.Text.Trim()) > 300 && (Convert.ToInt16(txtScorePromedio.Text.Trim()) <= 400)) && Convert.ToDouble(txtValorPrima.Text) < (Convert.ToDouble(txtValorVehiculo.Text) * (0.40)))
+            {
+                PanelMensajeErrores.Visible = true;
+                lblMensaje.Text = "Valor de la prima debe ser mayor o igual al 40%.";
+                return;
+            }
+
+            if ((Convert.ToInt16(txtScorePromedio.Text.Trim()) > 200 && (Convert.ToInt16(txtScorePromedio.Text.Trim()) <= 300)) && Convert.ToDouble(txtValorPrima.Text) < (Convert.ToDouble(txtValorVehiculo.Text) * (0.45)))
+            {
+                PanelMensajeErrores.Visible = true;
+                lblMensaje.Text = "Valor de la prima debe ser mayor o igual al 45%.";
+                return;
+            }
+
+            if ((Convert.ToInt16(txtScorePromedio.Text.Trim()) <= 200) && Convert.ToDouble(txtValorPrima.Text) < (Convert.ToDouble(txtValorVehiculo.Text) * (0.50)))
+            {
+                PanelMensajeErrores.Visible = true;
+                lblMensaje.Text = "Valor de la prima debe ser mayor o igual al 50%.";
+                return;
+            }
+        }
+
+        #endregion
+
         if ((Convert.ToDouble(txtValorPrima.Text) < (Convert.ToDouble(txtValorVehiculo.Text) * (0.45))) && lcProducto == "203")
         {
             PanelMensajeErrores.Visible = true;
             lblMensaje.Text = "Valor de a financiar no puede ser mayor al 55%.";
-            lblPorcentajedePrima.InnerText = "Máximo L " + string.Format("{0:N2}", Convert.ToString(Math.Round(Convert.ToDouble(txtValorVehiculo.Text) * (0.55), 2)));
+            lblPorcentajedePrima.InnerText = "Maximo L " + string.Format("{0:N2}", Convert.ToString(Math.Round(Convert.ToDouble(txtValorVehiculo.Text) * (0.55), 2)));
             lblPorcentajedePrima.Visible = true;
             return;
         }
@@ -195,8 +243,6 @@ public partial class CotizadorCarros : System.Web.UI.Page
 
 
                 var lcGastosdeCierre = ddlGastosdeCierre.SelectedValue == "Financiado" ? "1" : "0";
-
-
 
                 if (ddlGPS.SelectedValue == "Si - CPI")
                 {
@@ -282,7 +328,7 @@ public partial class CotizadorCarros : System.Web.UI.Page
                             tRowDatosParaSAF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnValorProvision"].ToString()).ToString("N") });
                             tRowDatosParaSAF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnSeguroContinental"].ToString()).ToString("N") });
                             tRowDatosParaSAF.Cells.Add(new HtmlTableCell() { InnerText = decimal.Parse(sqlResultado["fnTotal"].ToString()).ToString("N") });
-                            tRowDatosParaSAF.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcNombrePolizadeSeguro"].ToString()});
+                            tRowDatosParaSAF.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcNombrePolizadeSeguro"].ToString() });
 
                             tblDatosParaSAF.Rows.Add(tRowDatosParaSAF);
                         }
@@ -332,19 +378,28 @@ public partial class CotizadorCarros : System.Web.UI.Page
         {
             divValorDelVehiculo.Attributes.Add("class", "col-6");
             txtMonto.Enabled = false;
-            txtValorPrima.Visible = true;
+            divPrima.Visible = true;
             lblPrima.Visible = true;
             lblMonto.Text = "Valor a financiar del vehiculo:";
             lblPorcentajedePrima.Visible = true;
         }
-        else
+        else if (ddlProducto.SelectedValue == "Empeño")
         {
             divValorDelVehiculo.Attributes.Add("class", "col-12");
             txtMonto.Enabled = true;
-            txtValorPrima.Visible = false;
+            divPrima.Visible = false;
             lblPrima.Visible = false;
             lblMonto.Text = "Valor del empeño:";
             lblPorcentajedePrima.Visible = false;
+        }
+        else if (ddlProducto.SelectedValue == "Credi-Empeño")
+        {
+            divValorDelVehiculo.Attributes.Add("class", "col-6");
+            txtMonto.Enabled = false;
+            divPrima.Visible = true;
+            lblPrima.Visible = true;
+            lblMonto.Text = "Valor a financiar del vehiculo:";
+            lblPorcentajedePrima.Visible = true;
         }
 
         txtValorVehiculo.Focus();
@@ -360,7 +415,7 @@ public partial class CotizadorCarros : System.Web.UI.Page
             string lcValorPrima = string.IsNullOrEmpty(txtValorPrima.Text) ? "0" : txtValorPrima.Text;
             string lcMontoaFinaciar = string.IsNullOrEmpty(txtMonto.Text) ? "0" : txtMonto.Text;
 
-            if (ddlProducto.SelectedValue == "Finaciamiento")
+            if (ddlProducto.SelectedValue == "Finaciamiento" || ddlProducto.SelectedValue == "Credi-Empeño")
             {
                 txtMonto.Text = Convert.ToString(Convert.ToDecimal((Convert.ToDecimal(lcValorVehiculo) - Convert.ToDecimal(lcValorPrima)).ToString()));
                 lcMontoaFinaciar = string.IsNullOrEmpty(txtMonto.Text) ? "0" : txtMonto.Text;

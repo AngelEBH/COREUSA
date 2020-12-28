@@ -169,8 +169,8 @@
 
 
                 <!-- PDF DE LA COTIZACIÓN (IGNORAR) -->
-                <div id="divContenedor" style="/*margin-top: 999px; display: none; */">
-                    <div class="card m-0 divCotizacionPDF" runat="server" visible="true" id="divCotizacionPDF" style="/*display: none; */">
+                <div id="divContenedor" style="margin-top: 999px; display: none;">
+                    <div class="card m-0 divCotizacionPDF" runat="server" visible="true" id="divCotizacionPDF" style="display: none;">
                         <div class="card-body pt-0">
                             <div class="row">
 
