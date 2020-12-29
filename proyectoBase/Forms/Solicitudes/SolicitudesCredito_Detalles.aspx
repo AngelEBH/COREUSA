@@ -1199,126 +1199,45 @@
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Detalles.js?v=20201228115752"></script>
     <script>
-        $("#divDocumentacionCedula").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
+        InicializarGaleria('divDocumentacionCedula');
 
-        $("#divDocumentacionCedulaModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
+        InicializarGaleria('divDocumentacionCedulaModal');
 
-        $("#divDocumentacionDomicilio").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
+        InicializarGaleria('divDocumentacionDomicilio');
 
-        $("#divDocumentacionDomicilioModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
+        InicializarGaleria('divDocumentacionDomicilioModal');
 
-        $("#divDocumentacionLaboral").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
+        InicializarGaleria('divDocumentacionLaboral');
 
-        $("#divDocumentacionLaboralModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
+        InicializarGaleria('divDocumentacionLaboralModal');
 
-        $("#divDocumentacionSoliFisicaModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
+        InicializarGaleria('divDocumentacionSoliFisicaModal');
 
-        $("#divDocumentacionCampoDomicilio").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
+        InicializarGaleria('divDocumentacionCampoDomicilio');
 
-        $("#divDocumentacionCampoDomicilioModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
+        InicializarGaleria('divDocumentacionCampoDomicilioModal');
 
-        $("#divDocumentacionCampoTrabajo").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
+        InicializarGaleria('divDocumentacionCampoTrabajo');
 
-        $("#divDocumentacionCampoTrabajoModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
+        InicializarGaleria('divDocumentacionCampoTrabajoModal');
 
         $("#divGaleriaGarantia").unitegallery({
-            //gallery_theme: "tilesgrid",
             tile_width: 180,
-            tile_height: 120,
-            //lightbox_type: "compact",
-            //grid_num_rows: 15,
-            //tile_enable_textpanel: true,
-            //tile_textpanel_title_text_align: "center"
+            tile_height: 120
         });
 
+        function InicializarGaleria(idGaleria) {
+
+            $('#' + idGaleria + '').unitegallery({
+                gallery_theme: "tilesgrid",
+                tile_width: 180,
+                tile_height: 120,
+                lightbox_type: "compact",
+                grid_num_rows: 15,
+                tile_enable_textpanel: true,
+                tile_textpanel_title_text_align: "center"
+            });
+        }
     </script>
 </body>
 </html>

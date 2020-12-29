@@ -588,7 +588,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-lg-6 border-gray">
                                         <h6 class="m-0 pt-2 font-weight-bold border-top border-gray">Propietario de la garantía</h6>
 
@@ -639,188 +638,187 @@
 
                     <!-- Información del préstamo (Pendiente) -->
                     <%--<div class="panel panel-default">
-                        <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingSix">
-                            <h6 class="panel-title m-0 font-14">
-                                <a href="#collapsePrestamoRequerido" class="text-dark collapsed h6 font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseSix">
-                                    <i class="mdi mdi-cash-multiple mdi-24px"></i>
-                                    Información del Préstamo Requerido
-                                </a>
-                            </h6>
-                        </div>
-                        <div id="collapsePrestamoRequerido" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-                                            <button id="btnDigitarValoresManualmente" title="Digitar monto manualmente" type="button" class="btn btn-success col-sm-3 btn-block waves-effect waves-light">
-                                                Digitar monto manualmente
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <!-- INFORMACION DEL PRECALIFICADO -->
-                                    <div class="col-md-6 border">
-                                        <div class="form-group row">
-                                            <label class="col-sm-12 h6 text-center p-t-10">Capacidad de Pago - Precalificado</label>
+<div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingSix">
+<h6 class="panel-title m-0 font-14">
+<a href="#collapsePrestamoRequerido" class="text-dark collapsed h6 font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseSix">
+<i class="mdi mdi-cash-multiple mdi-24px"></i>
+Información del Préstamo Requerido
+</a>
+</h6>
+</div>
+<div id="collapsePrestamoRequerido" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+<div class="panel-body">
+<div class="row">
+<div class="col-md-12">
+<div class="form-group row">
+<button id="btnDigitarValoresManualmente" title="Digitar monto manualmente" type="button" class="btn btn-success col-sm-3 btn-block waves-effect waves-light">
+Digitar monto manualmente
+</button>
+</div>
+</div>
+<!-- INFORMACION DEL PRECALIFICADO -->
+<div class="col-md-6 border">
+<div class="form-group row">
+<label class="col-sm-12 h6 text-center p-t-10">Capacidad de Pago - Precalificado</label>
 
-                                            <label class="col-sm-6 col-form-label">Ingresos precalificado</label>
-                                            <asp:Label ID="lblIngresosPrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
+<label class="col-sm-6 col-form-label">Ingresos precalificado</label>
+<asp:Label ID="lblIngresosPrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                            <label class="col-sm-6 col-form-label">Obligaciones precalificado</label>
-                                            <asp:Label ID="lblObligacionesPrecalificado" CssClass="col-sm-6 text-danger" runat="server"></asp:Label>
+<label class="col-sm-6 col-form-label">Obligaciones precalificado</label>
+<asp:Label ID="lblObligacionesPrecalificado" CssClass="col-sm-6 text-danger" runat="server"></asp:Label>
 
-                                            <label class="col-sm-6 col-form-label">Disponible precalificado</label>
-                                            <asp:Label ID="lblDisponiblePrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
+<label class="col-sm-6 col-form-label">Disponible precalificado</label>
+<asp:Label ID="lblDisponiblePrecalificado" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                            <label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
-                                            <asp:Label ID="lblCapacidadPagoMensual" CssClass="col-sm-6" runat="server"></asp:Label>
+<label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
+<asp:Label ID="lblCapacidadPagoMensual" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                            <label class="col-sm-6 col-form-label">Capacidad de quincenal</label>
-                                            <asp:Label ID="lblCapacidadPagoQuincenal" CssClass="col-sm-6" runat="server"></asp:Label>
-                                        </div>
-                                    </div>
-                                    <!-- INFORMACION DEL PRESTAMO CON LOS DATOS DEL PRECALIFICADO-->
-                                    <div class="col-md-6 border">
-                                        <div class="form-group row">
-                                            <label class="col-sm-12 h6 text-center p-t-10">Préstamo Sugerido - Precalificado</label>
+<label class="col-sm-6 col-form-label">Capacidad de quincenal</label>
+<asp:Label ID="lblCapacidadPagoQuincenal" CssClass="col-sm-6" runat="server"></asp:Label>
+</div>
+</div>
+<!-- INFORMACION DEL PRESTAMO CON LOS DATOS DEL PRECALIFICADO-->
+<div class="col-md-6 border">
+<div class="form-group row">
+<label class="col-sm-12 h6 text-center p-t-10">Préstamo Sugerido - Precalificado</label>
 
-                                            <label class="col-sm-6 col-form-label" id="lblTituloValorPMO">PRESTAMO APROBADO</label>
-                                            <asp:Label ID="lblValorPmoSugeridoSeleccionado" CssClass="col-sm-6" runat="server"></asp:Label>
+<label class="col-sm-6 col-form-label" id="lblTituloValorPMO">PRESTAMO APROBADO</label>
+<asp:Label ID="lblValorPmoSugeridoSeleccionado" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                            <label id="lblValorVehiculo" class="col-sm-6 col-form-label" style="display: none;">Valor del vehiculo</label>
-                                            <asp:Label ID="lblMontoValorVehiculo" CssClass="col-sm-6" runat="server"></asp:Label>
+<label id="lblValorVehiculo" class="col-sm-6 col-form-label" style="display: none;">Valor del vehiculo</label>
+<asp:Label ID="lblMontoValorVehiculo" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                            <label id="lblPrima" class="col-sm-6 col-form-label">Prima</label>
-                                            <asp:Label ID="lblMontoPrima" CssClass="col-sm-6" runat="server"></asp:Label>
-                                        </div>
-                                        <div class="form-group row" id="divCargando">
-                                            <div class="col-sm-12 text-center p-t-10">
-                                                <div class="spinner-border" role="status">
-                                                    <span class="sr-only">Calculando...</span>
-                                                </div>
-                                                <br />
-                                                Calculando...
-                                            </div>
-                                        </div>
-                                        <!-- DIV CALCULO PRESTAMO EFECTIVO-->
-                                        <div class="form-group row" id="divPrestamoEfectivo" style="display: none;">
+<label id="lblPrima" class="col-sm-6 col-form-label">Prima</label>
+<asp:Label ID="lblMontoPrima" CssClass="col-sm-6" runat="server"></asp:Label>
+</div>
+<div class="form-group row" id="divCargando">
+<div class="col-sm-12 text-center p-t-10">
+<div class="spinner-border" role="status">
+<span class="sr-only">Calculando...</span>
+</div>
+<br />
+Calculando...
+</div>
+</div>
+<!-- DIV CALCULO PRESTAMO EFECTIVO-->
+<div class="form-group row" id="divPrestamoEfectivo" style="display: none;">
 
-                                            <strong class="col-sm-6 col-form-label">Monto a financiar</></strong>
-                                            <strong>
-                                                <asp:Label ID="lblMontoFinanciarEfectivo" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+<strong class="col-sm-6 col-form-label">Monto a financiar</></strong>
+<strong>
+<asp:Label ID="lblMontoFinanciarEfectivo" CssClass="col-sm-6" runat="server"></asp:Label></strong>
 
-                                            <label class="col-sm-6 col-form-label" id="lblTituloCuotaEfectivo">X Cuotas</label>
-                                            <strong>
-                                                <asp:Label ID="lblMontoCuotaEfectivo" CssClass="col-sm-6" runat="server"></asp:Label></strong>
-                                        </div>
-                                        <!-- DIV CALCULO PRESTAMO VEHICULO MOTO -->
-                                        <div class="form-group row" id="divPrestamoMoto" style="display: none;">
-                                            <label class="col-sm-6 col-form-label"><strong>Monto a financiar</strong></label>
-                                            <strong>
-                                                <asp:Label ID="lblMontoFinanciarMoto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+<label class="col-sm-6 col-form-label" id="lblTituloCuotaEfectivo">X Cuotas</label>
+<strong>
+<asp:Label ID="lblMontoCuotaEfectivo" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+</div>
+<!-- DIV CALCULO PRESTAMO VEHICULO MOTO -->
+<div class="form-group row" id="divPrestamoMoto" style="display: none;">
+<label class="col-sm-6 col-form-label"><strong>Monto a financiar</strong></label>
+<strong>
+<asp:Label ID="lblMontoFinanciarMoto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
 
-                                            <label class="col-sm-6 col-form-label" id="lblTituloCuotaMoto">X Cuotas</label>
-                                            <strong>
-                                                <asp:Label ID="lblMontoCuotaMoto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
-                                        </div>
-                                        <!-- DIV CALCULO PRESTAMO VEHICULO AUTO -->
-                                        <div class="form-group row" id="divPrestamoAuto" style="display: none;">
-                                            <label class="col-sm-6 col-form-label"><strong>Monto a financiar</strong></label>
-                                            <strong>
-                                                <asp:Label ID="lblMontoFinanciarAuto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+<label class="col-sm-6 col-form-label" id="lblTituloCuotaMoto">X Cuotas</label>
+<strong>
+<asp:Label ID="lblMontoCuotaMoto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+</div>
+<!-- DIV CALCULO PRESTAMO VEHICULO AUTO -->
+<div class="form-group row" id="divPrestamoAuto" style="display: none;">
+<label class="col-sm-6 col-form-label"><strong>Monto a financiar</strong></label>
+<strong>
+<asp:Label ID="lblMontoFinanciarAuto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
 
-                                            <label class="col-sm-6 col-form-label" id="lblTituloCuotaAuto">X Cuotas</label>
-                                            <strong>
-                                                <asp:Label ID="lblMontoCuotaTotalAuto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
-                                        </div>
-                                    </div>
-                                    <!--
+<label class="col-sm-6 col-form-label" id="lblTituloCuotaAuto">X Cuotas</label>
+<strong>
+<asp:Label ID="lblMontoCuotaTotalAuto" CssClass="col-sm-6" runat="server"></asp:Label></strong>
+</div>
+</div>
+<!--
 EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
 MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
 -->
-                                    <div class="col-md-6 border" id="divRecalculoReal" style="display: none;">
-                                        <div class="form-group row">
+<div class="col-md-6 border" id="divRecalculoReal" style="display: none;">
+<div class="form-group row">
 
-                                            <label class="col-sm-12 h6 text-center p-t-10">Recalculo de Capacidad de Pago - Ingresos Reales</label>
+<label class="col-sm-12 h6 text-center p-t-10">Recalculo de Capacidad de Pago - Ingresos Reales</label>
 
-                                            <label class="col-sm-6 col-form-label">Ingresos reales</label>
-                                            <asp:Label ID="lblIngresosReales" CssClass="col-sm-6" runat="server"></asp:Label>
+<label class="col-sm-6 col-form-label">Ingresos reales</label>
+<asp:Label ID="lblIngresosReales" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                            <label class="col-sm-6 col-form-label">Obligaciones</label>
-                                            <asp:Label ID="lblObligacionesReales" CssClass="col-sm-6" runat="server"></asp:Label>
+<label class="col-sm-6 col-form-label">Obligaciones</label>
+<asp:Label ID="lblObligacionesReales" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                            <label class="col-sm-6 col-form-label">Disponible real</label>
-                                            <asp:Label ID="lblDisponibleReal" CssClass="col-sm-6" runat="server"></asp:Label>
+<label class="col-sm-6 col-form-label">Disponible real</label>
+<asp:Label ID="lblDisponibleReal" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                            <label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
-                                            <asp:Label ID="lblCapacidadPagoMensualReal" CssClass="col-sm-6" runat="server"></asp:Label>
+<label class="col-sm-6 col-form-label">Capacidad de pago mensual</label>
+<asp:Label ID="lblCapacidadPagoMensualReal" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                            <label class="col-sm-6 col-form-label">Capacidad de pago quincenal</label>
-                                            <asp:Label ID="lblCapacidadPagoQuincenalReal" CssClass="col-sm-6" runat="server"></asp:Label>
-                                        </div>
-                                    </div>
-                                    <!-- PRESTAMOS SUGERIDOS CON LOS INGRESOS REALES-->
-                                    <div class="col-md-6 border border-success" id="divPmoSugeridoReal">
+<label class="col-sm-6 col-form-label">Capacidad de pago quincenal</label>
+<asp:Label ID="lblCapacidadPagoQuincenalReal" CssClass="col-sm-6" runat="server"></asp:Label>
+</div>
+</div>
+<!-- PRESTAMOS SUGERIDOS CON LOS INGRESOS REALES-->
+<div class="col-md-6 border border-success" id="divPmoSugeridoReal">
 
-                                        <div class="form-group row" id="divPrestamoElegido" style="display: none;">
-                                            <label class="col-sm-12 h6 text-center p-t-10">Monto a Financiar Actual</label>
+<div class="form-group row" id="divPrestamoElegido" style="display: none;">
+<label class="col-sm-12 h6 text-center p-t-10">Monto a Financiar Actual</label>
 
-                                            <label class="col-sm-6 col-form-label">Monto final a financiar</label>
-                                            <asp:Label ID="lblMontoPrestamoEscogido" CssClass="col-sm-6" runat="server"></asp:Label>
+<label class="col-sm-6 col-form-label">Monto final a financiar</label>
+<asp:Label ID="lblMontoPrestamoEscogido" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                            <label class="col-sm-6 col-form-label">Plazo final aprobado</label>
-                                            <asp:Label ID="lblPlazoEscogido" CssClass="col-sm-6" runat="server"></asp:Label>
-                                        </div>
-                                        <div class="form-group row" id="cargandoPrestamosSugeridosReales" style="display: none;">
-                                            <div class="col-sm-12 text-center p-t-10">
-                                                <div class="spinner-border" role="status">
-                                                    <span class="sr-only">Cargando..</span>
-                                                </div>
-                                                <br />
-                                                Cargando Préstamos Sugeridos...
-                                            </div>
-                                        </div>
-                                        <div class="form-group row" id="divPrestamosSugeridosReales" style="display: none;">
-                                            <label class="col-sm-12 h6 text-center p-t-10" id="lbldivPrestamosSugeridosReales">Préstamos Sugeridos - Real</label>
-                                            <div class="col-sm-12">
-                                                <table class="table table-condensed table-striped" id="tblPMOSugeridosReales">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Monto a financiar</th>
-                                                            <th>Plazo</th>
-                                                            <th>Cutoa</th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row" id="divSinCapacidadPago" style="display: none;">
-                                            <label class="col-sm-12 h6 text-center p-t-10" id="lbldivSinCapacidadPago">Incapacidad de pago</label>
-                                            <br />
-                                            <div class="col-sm-12">
-                                                <label>
-                                                    No hay prestamos sugeridos para esta capacidad de pago.<br />
-                                                    ¿Desea ingresar un monto manualmente?</label>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <button id="btnDigitarMontoManualmente" disabled="disabled" title="Digitar monto manualmente" type="button" class="btn btn-success btn-block waves-effect waves-light">
-                                                    Digitar monto
-                                                </button>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <button id="btnRechazarIncapacidadPagoModal" data-toggle="modal" data-target="#modalRechazarPorIncapcidadPago" disabled="disabled" title="Rechazar solicitud por incapacidad de pago" type="button" class="btn btn-danger btn-block waves-effect waves-light">
-                                                    Rechazar solicitud
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>--%>
-
+<label class="col-sm-6 col-form-label">Plazo final aprobado</label>
+<asp:Label ID="lblPlazoEscogido" CssClass="col-sm-6" runat="server"></asp:Label>
+</div>
+<div class="form-group row" id="cargandoPrestamosSugeridosReales" style="display: none;">
+<div class="col-sm-12 text-center p-t-10">
+<div class="spinner-border" role="status">
+<span class="sr-only">Cargando..</span>
+</div>
+<br />
+Cargando Préstamos Sugeridos...
+</div>
+</div>
+<div class="form-group row" id="divPrestamosSugeridosReales" style="display: none;">
+<label class="col-sm-12 h6 text-center p-t-10" id="lbldivPrestamosSugeridosReales">Préstamos Sugeridos - Real</label>
+<div class="col-sm-12">
+<table class="table table-condensed table-striped" id="tblPMOSugeridosReales">
+<thead>
+<tr>
+<th>Monto a financiar</th>
+<th>Plazo</th>
+<th>Cutoa</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+<div class="form-group row" id="divSinCapacidadPago" style="display: none;">
+<label class="col-sm-12 h6 text-center p-t-10" id="lbldivSinCapacidadPago">Incapacidad de pago</label>
+<br />
+<div class="col-sm-12">
+<label>
+No hay prestamos sugeridos para esta capacidad de pago.<br />
+¿Desea ingresar un monto manualmente?</label>
+</div>
+<div class="col-sm-6">
+<button id="btnDigitarMontoManualmente" disabled="disabled" title="Digitar monto manualmente" type="button" class="btn btn-success btn-block waves-effect waves-light">
+Digitar monto
+</button>
+</div>
+<div class="col-sm-6">
+<button id="btnRechazarIncapacidadPagoModal" data-toggle="modal" data-target="#modalRechazarPorIncapcidadPago" disabled="disabled" title="Rechazar solicitud por incapacidad de pago" type="button" class="btn btn-danger btn-block waves-effect waves-light">
+Rechazar solicitud
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>--%>
 
                     <!-- Información del préstamo -->
                     <div class="panel panel-default">
@@ -961,9 +959,9 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
 
                                             <!-- Calculo del prestamo -->
                                             <!--
-                                            EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-                                            MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
-                                            -->
+EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+-->
                                             <div class="form-group row">
                                                 <div class="col-sm-12 col-6">
                                                     <label class="col-form-label">Monto total a financiar</label>
@@ -1003,7 +1001,6 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                                 </div>
                                             </div>
                                         </div>
-
 
                                         <div id="divPrestamoFinalAprobado" runat="server">
 
@@ -1315,7 +1312,6 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
             </div>
         </div>
 
-
         <!-- modal validar referencias -->
         <div id="modalFinalizarValidarReferencias" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarValidarReferenciasLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -1421,6 +1417,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                             <th>Descripción</th>
                                             <th>Comentario Adicional</th>
                                             <th>Estado</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1587,7 +1584,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                     <span class="d-none d-sm-block">Más detalles</span>
                                 </a>
                             </li>
-                            <li class="nav-item" runat="server" id="Li1" style="display: none;">
+                            <li class="nav-item" runat="server" id="tabListaCondicionesDeLaSolicitud" style="display: none;">
                                 <a class="nav-link" data-toggle="tab" href="#tabListaCondiciones" role="tab">
                                     <span class="d-none d-sm-block">Condiciones de la solictud</span>
                                 </a>
@@ -1674,7 +1671,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 </div>
                             </div>
                             <div class="tab-pane pr-0 pl-0 pt-3" id="tabListaCondiciones" role="tabpanel">
-                                <table id="Table1" runat="server" class="table table-hover mb-0 cursor-pointer">
+                                <table id="tblListaCondicionesDeLaSolicitud" class="table table-bordered table-hover mb-0 cursor-pointer">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Tipo Condición</th>
@@ -2078,6 +2075,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                 </div>
             </div>
         </div>
+
     </form>
 
     <script src="/Scripts/js/jquery.min.js"></script>
@@ -2092,9 +2090,6 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
     <script src="/Scripts/plugins/countdownjs/countdown.min.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-
-
-
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script src="/Scripts/plugins/kendo/jszip.min.js"></script>
     <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
@@ -2102,6 +2097,48 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Analisis.js?v=20200903152956"></script>
+    <script>
+
+        InicializarGaleria('divDocumentacionCedula');
+
+        InicializarGaleria('divDocumentacionCedulaModal');
+
+        InicializarGaleria('divDocumentacionDomicilio');
+
+        InicializarGaleria('divDocumentacionDomicilioModal');
+
+        InicializarGaleria('divDocumentacionLaboral');
+
+        InicializarGaleria('divDocumentacionLaboralModal');
+
+        InicializarGaleria('divDocumentacionSoliFisicaModal');
+
+        InicializarGaleria('divDocumentacionCampoDomicilio');
+
+        InicializarGaleria('divDocumentacionCampoDomicilioModal');
+
+        InicializarGaleria('divDocumentacionCampoTrabajo');
+
+        InicializarGaleria('divDocumentacionCampoTrabajoModal');
+
+        $("#divGaleriaGarantia").unitegallery({
+            tile_width: 180,
+            tile_height: 120
+        });
+
+        function InicializarGaleria(idGaleria) {
+
+            $('#' + idGaleria + '').unitegallery({
+                gallery_theme: "tilesgrid",
+                tile_width: 180,
+                tile_height: 120,
+                lightbox_type: "compact",
+                grid_num_rows: 15,
+                tile_enable_textpanel: true,
+                tile_textpanel_title_text_align: "center"
+            });
+        }
+    </script>
     <script type="x/kendo-template" id="page-template">
         <div class="page-template">
             <div class="header">
@@ -2112,127 +2149,6 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                 Pagina #: pageNum # de #: totalPages #
             </div>
         </div>
-    </script>
-    <script>
-        $("#divDocumentacionCedula").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
-
-        $("#divDocumentacionCedulaModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
-
-        $("#divDocumentacionDomicilio").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
-
-        $("#divDocumentacionDomicilioModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
-
-        $("#divDocumentacionLaboral").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
-
-        $("#divDocumentacionLaboralModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
-
-        $("#divDocumentacionSoliFisicaModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
-
-        $("#divDocumentacionCampoDomicilio").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
-
-        $("#divDocumentacionCampoDomicilioModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
-
-        $("#divDocumentacionCampoTrabajo").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
-
-        $("#divDocumentacionCampoTrabajoModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15,
-            tile_enable_textpanel: true,
-            tile_textpanel_title_text_align: "center"
-        });
-
-        $("#divGaleriaGarantia").unitegallery({
-            //gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            //lightbox_type: "compact",
-            //grid_num_rows: 15,
-            //tile_enable_textpanel: true,
-            //tile_textpanel_title_text_align: "center"
-        });
     </script>
 </body>
 </html>

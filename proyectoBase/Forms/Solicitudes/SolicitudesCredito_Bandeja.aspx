@@ -51,8 +51,7 @@
                     <h6>Bandeja general de solicitudes</h6>
                 </div>
                 <div class="col-4">
-                    <input id="txtDatatableFilter" class="float-right form-control" type="text" placeholder="Buscar"
-                        aria-label="Buscar" />
+                    <input id="txtDatatableFilter" class="float-right form-control" type="text" placeholder="Buscar" aria-label="Buscar" />
                 </div>
             </div>
         </div>

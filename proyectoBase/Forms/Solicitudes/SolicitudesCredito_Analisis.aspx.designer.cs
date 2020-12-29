@@ -1804,13 +1804,13 @@ public partial class SolicitudesCredito_Analisis
     protected global::System.Web.UI.WebControls.Label lblResumenGestorTrabajo;
 
     /// <summary>
-    /// Control Li1.
+    /// Control tabListaCondicionesDeLaSolicitud.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl Li1;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl tabListaCondicionesDeLaSolicitud;
 
     /// <summary>
     /// Control lblEstadoSolicitud.
@@ -2162,13 +2162,4 @@ public partial class SolicitudesCredito_Analisis
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblComentario_Resolicion;
-
-    /// <summary>
-    /// Control Table1.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTable Table1;
 }
