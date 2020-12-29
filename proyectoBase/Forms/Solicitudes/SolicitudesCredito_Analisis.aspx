@@ -959,9 +959,9 @@ Rechazar solicitud
 
                                             <!-- Calculo del prestamo -->
                                             <!--
-EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
--->
+                                                EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+                                                MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+                                            -->
                                             <div class="form-group row">
                                                 <div class="col-sm-12 col-6">
                                                     <label class="col-form-label">Monto total a financiar</label>
@@ -1262,6 +1262,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
             </div>
         </div>
 
+        <!-- modal documentacion de la solicitud -->
         <div id="modalDocumentacion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDocumentacionLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -1350,11 +1351,11 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-
+                        <!-- Nav tabs -->
                         <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#pestanaAgregarCondiciones" role="tab">
-                                    <span class="d-none d-sm-block">Agregar Nuevas Condiciones</span>
+                                    <span class="d-none d-sm-block">Agregar nuevas condiciones</span>
                                 </a>
                             </li>
                             <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones" style="display: none;">
@@ -1363,24 +1364,19 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 </a>
                             </li>
                         </ul>
-
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div class="tab-pane active p-3" id="pestanaAgregarCondiciones" role="tabpanel">
-                                <br />
-                                <form id="frmAddCondicion">
-                                    <div class="form-group row">
-                                        <div class="col-sm-12">
-                                            <select id="ddlCondiciones" required="required" class="form-control form-control-sm">
-                                            </select>
-                                        </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <select id="ddlCondiciones" required="required" class="form-control form-control-sm" data-parsley-group="agregarCondiciones"></select>
                                     </div>
-                                    <div class="form-group row">
-                                        <div class="col-sm-12">
-                                            <input id="txtComentarioAdicional" required="required" type="text" class="form-control form-control-sm" placeholder="comentario adicional" data-parsley-maxlength="128" />
-                                        </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <input id="txtComentarioAdicional" required="required" type="text" class="form-control form-control-sm" placeholder="comentario adicional" data-parsley-maxlength="128" data-parsley-group="agregarCondiciones" />
                                     </div>
-                                </form>
+                                </div>
                                 <div class="form-group row">
                                     <div class="col-sm-9"></div>
                                     <div class="col-sm-3">

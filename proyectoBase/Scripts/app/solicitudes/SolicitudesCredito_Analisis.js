@@ -24,8 +24,11 @@ var resolucion = false;
 
 // #region Cargar detalles de la solicitud
 
-$("#btnMasDetalles").click(function () {
-    
+/* ====== Carga el estado actual del procesamiento de la solicitud =============================== */
+/* ====== Muestra el procesamiento de la solicitud en el modal "modalEstadoSolicitud" ============ */
+/* ====== Además actualiza variables globales y realiza otras validaciones ======================= */
+function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
+
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Analisis.aspx/CargarEstadoSolicitud",
@@ -51,8 +54,7 @@ $("#btnMasDetalles").click(function () {
                 var enIngresoFin = ObtenerFechaFormateada(informacionSolicitud.EnIngresoFin);
                 var enIngresoUsuario = informacionSolicitud.UsuarioEnIngreso;
 
-                if (ValidarFecha(informacionSolicitud.EnIngresoInicio) == null)
-                {
+                if (ValidarFecha(informacionSolicitud.EnIngresoInicio) == null) {
                     enIngresoUsuario = '-';
                 }
 
@@ -87,8 +89,7 @@ $("#btnMasDetalles").click(function () {
                 var enAnalisisFin = ObtenerFechaFormateada(informacionSolicitud.EnAnalisisFin);
                 var enAnalisisUsuario = informacionSolicitud.UsuarioAnalista;
 
-                if (ValidarFecha(informacionSolicitud.EnAnalisisInicio) == null)
-                {
+                if (ValidarFecha(informacionSolicitud.EnAnalisisInicio) == null) {
                     enAnalisisUsuario = '-';
                 }
 
@@ -108,8 +109,7 @@ $("#btnMasDetalles").click(function () {
                 var enCampoFin = ObtenerFechaFormateada(informacionSolicitud.EnRutaDeInvestigacionFin);
                 var enCampoUsuario = informacionSolicitud.UsuarioGestorAsignado;
 
-                if (ValidarFecha(informacionSolicitud.EnRutaDeInvestigacionInicio) == null)
-                {
+                if (ValidarFecha(informacionSolicitud.EnRutaDeInvestigacionInicio) == null) {
                     enCampoUsuario = '-';
                 }
 
@@ -129,8 +129,7 @@ $("#btnMasDetalles").click(function () {
                 var condicionadoFin = ObtenerFechaFormateada(informacionSolicitud.CondicionadoFin);
                 var condicionadoUsuario = informacionSolicitud.UsuarioCondicionado;
 
-                if (ValidarFecha(informacionSolicitud.CondicionadoInicio) == null)
-                {
+                if (ValidarFecha(informacionSolicitud.CondicionadoInicio) == null) {
                     condicionadoUsuario = '-';
                 }
 
@@ -150,8 +149,7 @@ $("#btnMasDetalles").click(function () {
                 var reprogramadoFin = ObtenerFechaFormateada(informacionSolicitud.ReprogramadoFin);
                 var reprogramadoUsuario = informacionSolicitud.UsuarioGestorAsignado;
 
-                if (ValidarFecha(informacionSolicitud.ReprogramadoInicio) == null)
-                {
+                if (ValidarFecha(informacionSolicitud.ReprogramadoInicio) == null) {
                     reprogramadoUsuario = '-';
                 }
 
@@ -171,8 +169,7 @@ $("#btnMasDetalles").click(function () {
                 var validacionFin = ObtenerFechaFormateada(informacionSolicitud.PasoFinalFin);
                 var validacionUsuario = informacionSolicitud.UsuarioPasoFinal;
 
-                if (ValidarFecha(informacionSolicitud.PasoFinalInicio) == null)
-                {
+                if (ValidarFecha(informacionSolicitud.PasoFinalInicio) == null) {
                     validacionUsuario = '-';
                 }
 
@@ -205,148 +202,126 @@ $("#btnMasDetalles").click(function () {
                 var contadorComentario = 0;
 
                 /* Reprogramado comentario */
-                if (informacionSolicitud.ComentarioReprogramado != '')
-                {
+                if (informacionSolicitud.ComentarioReprogramado != '') {
                     $("#lblUsuario_ComentarioReprogramacion").text(informacionSolicitud.UsuarioGestorAsignado);
                     $("#lblFecha_ComentarioReprogramacion").text(ObtenerFechaFormateada(informacionSolicitud.ReprogramadoInicio));
                     $("#lblComentario_Reprogramacion").text(informacionSolicitud.ComentarioReprogramado);
                     $("#liObservacionesReprogramacion").css('display', '');
                     contadorComentario++;
                 }
-                else
-                {
+                else {
                     $("#liObservacionesReprogramacion").css('display', 'none');
                 }
 
                 /* Condicionado comentario */
-                if (informacionSolicitud.ComentarioCondicionado != '')
-                {
+                if (informacionSolicitud.ComentarioCondicionado != '') {
                     $("#lblUsuario_ComentarioOtrosCondicionamientos").text(informacionSolicitud.UsuarioAnalista);
                     $("#lblFecha_OtrosCondicionamientos").text(ObtenerFechaFormateada(informacionSolicitud.CondicionadoInicio));
                     $("#lblComentario_OtrosCondicionamientos").text(informacionSolicitud.ComentarioCondicionado);
                     $("#liObservaciones_OtrosCondicionamientos").css('display', '');
                     contadorComentario++;
                 }
-                else
-                {
+                else {
                     $("#liObservaciones_OtrosCondicionamientos").css('display', 'none');
                 }
 
                 /* Informacion personal comentario */
-                if (informacionSolicitud.ComentarioValidacionInformacionPersonal != '')
-                {
+                if (informacionSolicitud.ComentarioValidacionInformacionPersonal != '') {
                     $("#lblUsuario_ComentarioInformacionPerosnal").text(informacionSolicitud.UsuarioAnalista);
                     $("#lblFecha_ComentarioInformacionPersonal").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionInformacionPersonal));
                     $("#lblComentario_InformacionPersonal").text(informacionSolicitud.ComentarioValidacionInformacionPersonal);
                     $("#liObservacionesInformacionPersonal").css('display', '');
                     contadorComentario++;
                 }
-                else
-                {
+                else {
                     $("#liObservacionesInformacionPersonal").css('display', 'none');
                 }
 
                 /* Informacion laboral comentario */
-                if (informacionSolicitud.ComentarioValidacionInformacionLaboral != '')
-                {
+                if (informacionSolicitud.ComentarioValidacionInformacionLaboral != '') {
                     $("#lblUsuario_ComentarioInformacionLaboral").text(informacionSolicitud.UsuarioAnalista);
                     $("#lblFecha_ComentarioInformacionLaboral").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionInformacionLaboral));
                     $("#lblComentario_InformacionLaboral").text(informacionSolicitud.ComentarioValidacionInformacionLaboral);
                     $("#liObservacionesInformacionLaboral").css('display', '');
                     contadorComentario++;
                 }
-                else
-                {
+                else {
                     $("#liObservacionesInformacionLaboral").css('display', 'none');
                 }
 
                 /* Referencias personales comentario */
-                if (informacionSolicitud.ComentarioValidacionReferenciasPersonales != '')
-                {
+                if (informacionSolicitud.ComentarioValidacionReferenciasPersonales != '') {
                     $("#lblUsuario_ComentarioReferenciasPersonales").text(informacionSolicitud.UsuarioAnalista);
                     $("#lblFecha_ComentarioReferenciasPersonales").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionReferenciasPersonales));
                     $("#lblComentario_ReferenciasPersonales").text(informacionSolicitud.ComentarioValidacionReferenciasPersonales);
                     $("#liObservacionesReferenciasPersonales").css('display', '');
                     contadorComentario++;
                 }
-                else
-                {
+                else {
                     $("#liObservacionesReferenciasPersonales").css('display', 'none');
                 }
 
                 /* Documentación comentario */
-                if (informacionSolicitud.ComentarioValidacionDocumentacion != '')
-                {
+                if (informacionSolicitud.ComentarioValidacionDocumentacion != '') {
                     $("#lblUsuario_ComentarioDocumentacion").text(informacionSolicitud.UsuarioAnalista);
                     $("#lblFecha_ComentarioDocumentacion").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionDocumentacion));
                     $("#lblComentario_Documentacion").text(informacionSolicitud.ComentarioValidacionDocumentacion);
                     $("#liObservacionesDocumentacion").css('display', '');
                     contadorComentario++;
                 }
-                else
-                {
+                else {
                     $("#liObservacionesDocumentacion").css('display', 'none');
                 }
 
                 /* Observaciones de crédito */
-                if (informacionSolicitud.ObservacionesDeCreditos != '')
-                {
+                if (informacionSolicitud.ObservacionesDeCreditos != '') {
                     $("#lblUsuario_ComentarioParaGestoria").text(informacionSolicitud.UsuarioAnalista);
                     $("#lblFecha_ComentarioParaGestoria").text(ObtenerFechaFormateada(informacionSolicitud.FechaEnvioARuta));
                     $("#lblComentario_ParaGestoria").text(informacionSolicitud.ObservacionesDeCreditos);
                     $("#liObservacionesParaGestoria").css('display', '');
                     contadorComentario++;
                 }
-                else
-                {
+                else {
                     $("#liObservacionesParaGestoria").css('display', 'none');
                 }
 
                 /* Observaciones de gestoria */
-                if (informacionSolicitud.ObservacionesDeCampo != '')
-                {
+                if (informacionSolicitud.ObservacionesDeCampo != '') {
                     $("#lblUsuario_ComentarioDeGestoria").text(informacionSolicitud.UsuarioGestorAsignado);
                     $("#lblFecha_ComentarioDeGestoria").text(ObtenerFechaFormateada(informacionSolicitud.EnRutaDeInvestigacionFin));
                     $("#lblComentario_DeGestoria").text(informacionSolicitud.ObservacionesDeCampo);
                     $("#liObservacionesDeGestoria").css('display', '');
                     contadorComentario++;
                 }
-                else
-                {
+                else {
                     $("#liObservacionesDeGestoria").css('display', 'none');
                 }
 
                 /* Comentarios de la resolución */
-                if (informacionSolicitud.ComentarioResolucion != '')
-                {
+                if (informacionSolicitud.ComentarioResolucion != '') {
                     $("#lblUsuario_ComentarioDeLaResolucion").text(informacionSolicitud.UsuarioAnalista);
                     $("#lblFecha_ComentarioDeLaResolucion").text(ObtenerFechaFormateada(informacionSolicitud.TiempoTomaDecisionFinal));
                     $("#lblComentario_Resolicion").text(informacionSolicitud.ComentarioResolucion);
                     $("#liComentariosDeLaResolucion").css('display', '');
                     contadorComentario++;
                 }
-                else
-                {
+                else {
                     $("#liComentariosDeLaResolucion").css('display', 'none');
                 }
 
-                if (contadorComentario > 0)
-                {
+                if (contadorComentario > 0) {
                     $("#divNoHayMasDetalles").css('display', 'none');
                     $("#divLineaDeTiempo").css('display', '');
                 }
-                else
-                {
+                else {
                     $("#divNoHayMasDetalles").css('display', '');
                     $("#divLineaDeTiempo").css('display', 'none');
                 }
 
-                if (informacionSolicitud.SolicitudActiva == 0)
-                {
+                if (informacionSolicitud.SolicitudActiva == 0) {
                     $("#divSolicitudInactiva").css('display', '');
                 }
-                else
-                {
+                else {
                     $("#divSolicitudInactiva").css('display', 'none');
                 }
 
@@ -386,7 +361,9 @@ $("#btnMasDetalles").click(function () {
                     $("#tabListaCondicionesDeLaSolicitud").css('display', 'none');
                 }
 
-                $("#modalEstadoSolicitud").modal();
+                if (mostrarModalDeDetalles == true) {
+                    $("#modalEstadoSolicitud").modal();
+                }
 
             } // if data.d != null
             else {
@@ -394,21 +371,30 @@ $("#btnMasDetalles").click(function () {
             }
         } // success
     }); // $.ajax
-});
+}
 
 // #endregion Cargar detalles de la solicitud
 
 // #region Administrar condiciones de la solicitud
 
-/* Condicionar solicitud */
+/* ====== Almacena la cantidad de nuevas condiciones que se estan agregando ================ */
+/* ====== Se utiliza para validar que se agregue por lo menos una condición ================ */
+var contadorNuevasCondiciones = 0;
+
+/* ====== Arreglo que almacena las nuevas condiciones que se van a agregar ================= */
+/* ====== Se actualiza al mismo tiempo que se van agregando las nuevas condiciones al DOM == */
+var listaNuevasCondiciones = [];
+
+/* Abrir modal para condicionar solicitud y ver las condiciones que ha tenido la solicitud */
 $("#btnCondicionarSolicitud").click(function () {
 
     var ddlCondiciones = $("#ddlCondiciones");
 
-    listaCondicionamientos = [];
+    listaNuevasCondiciones = [];
+
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/GetCondiciones",
+        url: "SolicitudesCredito_Analisis.aspx/ObtenerCatalogoCondiciones",
         data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
@@ -428,8 +414,7 @@ $("#btnCondicionarSolicitud").click(function () {
     });
 });
 
-var contadorCondiciones = 0;
-var listaCondicionamientos = [];
+/* Agregar nueva condición al DOM y al arreglo de nuevas condiciones que se guardarán */
 $("#btnAgregarCondicion").click(function () {
 
     if ($($("#frmAddCondicion")).parsley().isValid()) {
@@ -442,11 +427,11 @@ $("#btnAgregarCondicion").click(function () {
         $("#tblCondiciones tbody").append(newRowContent);
         $("#txtComentarioAdicional").val('');
 
-        listaCondicionamientos.push({
+        listaNuevasCondiciones.push({
             fiIDCondicion: condicionID,
             fcComentarioAdicional: comentarioAdicional
         });
-        contadorCondiciones = contadorCondiciones + 1;
+        contadorNuevasCondiciones = contadorNuevasCondiciones + 1;
 
     } else { $($("#frmAddCondicion")).parsley().validate(); }
 });
@@ -459,21 +444,21 @@ $(document).on('click', 'button#btnQuitarCondicion', function () {
         fcComentarioAdicional: $(this).data('comentario')
     };
     var list = [];
-    if (listaCondicionamientos.length > 0) {
+    if (listaNuevasCondiciones.length > 0) {
 
-        for (var i = 0; i < listaCondicionamientos.length; i++) {
+        for (var i = 0; i < listaNuevasCondiciones.length; i++) {
 
             var iter = {
-                fiIDCondicion: listaCondicionamientos[i].fiIDCondicion,
-                fcComentarioAdicional: listaCondicionamientos[i].fcComentarioAdicional
+                fiIDCondicion: listaNuevasCondiciones[i].fiIDCondicion,
+                fcComentarioAdicional: listaNuevasCondiciones[i].fcComentarioAdicional
             };
             if (JSON.stringify(iter) != JSON.stringify(condicion)) {
                 list.push(iter);
             }
         }
     }
-    listaCondicionamientos = list;
-    contadorCondiciones -= 1;
+    listaNuevasCondiciones = list;
+    contadorNuevasCondiciones -= 1;
 });
 
 $("#btnCondicionarSolicitudConfirmar").click(function () {
@@ -482,7 +467,7 @@ $("#btnCondicionarSolicitudConfirmar").click(function () {
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Analisis.aspx/CondicionarSolicitud",
-        data: JSON.stringify({ SolicitudCondiciones: listaCondicionamientos, fcCondicionadoComentario: otroComentario, dataCrypt: window.location.href }),
+        data: JSON.stringify({ SolicitudCondiciones: listaNuevasCondiciones, fcCondicionadoComentario: otroComentario, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la información, contacte al administrador');
@@ -851,6 +836,12 @@ $("#btnValidarTipoDocConfirmar").click(function () {
 // #endregion
 
 //#region Funciones de analisis
+
+$("#btnMasDetalles").click(function () {
+
+    CargarDetallesDelProcesamientoDeLaSolicitud(true);
+
+});
 
 /* Cargar buro externo */
 $("#btnHistorialExterno").click(function () {
