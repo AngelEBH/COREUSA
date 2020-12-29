@@ -108,69 +108,69 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                         while (sqlResultado.Read())
                         {
 
-                            //var fechaPrimerPago = (DateTime)sqlResultado["fdFechaPrimerCuota"];
+                            var fechaPrimerPago = (DateTime)sqlResultado["fdFechaPrimerCuota"];
 
-                            ///* Determinar fecha del primer pago */
-                            //MesPrimerPago = fechaPrimerPago.ToString("MMMM", new CultureInfo("es-ES"));
-                            //AnioPrimerPago = fechaPrimerPago.Year.ToString();
-                            //DiaPrimerPago = fechaPrimerPago.Day.ToString();
+                            /* Determinar fecha del primer pago */
+                            MesPrimerPago = fechaPrimerPago.ToString("MMMM", new CultureInfo("es-ES"));
+                            AnioPrimerPago = fechaPrimerPago.Year.ToString();
+                            DiaPrimerPago = fechaPrimerPago.Day.ToString();
 
-                            //DepartamentoFirma = sqlResultado["fcDepartamentoFirma"].ToString();
-                            //CiudadFirma = sqlResultado["fcCiudadFirma"].ToString();
+                            DepartamentoFirma = sqlResultado["fcDepartamentoFirma"].ToString();
+                            CiudadFirma = sqlResultado["fcCiudadFirma"].ToString();
 
-                            ///* Información del cliente */
-                            //var numeroPrestamo = sqlResultado["fcNumeroPrestamo"].ToString();
-                            //var nombreCliente = sqlResultado["fcNombreCliente"].ToString();
-                            //var identidad = sqlResultado["fcIdentidadCliente"].ToString();
-                            //var RTN = sqlResultado["fcRTN"].ToString();
-                            //var telefonoPrimario = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
-                            //var correoCliente = sqlResultado["fcCorreoElectronicoCliente"].ToString();
-                            //var profesionOficio = sqlResultado["fcProfesionOficioCliente"].ToString();
-                            //var estadoCivil = sqlResultado["fcDescripcionEstadoCivil"].ToString();
-                            //var nacionalidad = sqlResultado["fcDescripcionNacionalidad"].ToString();
+                            /* Información del cliente */
+                            var numeroPrestamo = sqlResultado["fcNumeroPrestamo"].ToString();
+                            var nombreCliente = sqlResultado["fcNombreCliente"].ToString();
+                            var identidad = sqlResultado["fcIdentidadCliente"].ToString();
+                            var RTN = sqlResultado["fcRTN"].ToString();
+                            var telefonoPrimario = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
+                            var correoCliente = sqlResultado["fcCorreoElectronicoCliente"].ToString();
+                            var profesionOficio = sqlResultado["fcProfesionOficioCliente"].ToString();
+                            var estadoCivil = sqlResultado["fcDescripcionEstadoCivil"].ToString();
+                            var nacionalidad = sqlResultado["fcDescripcionNacionalidad"].ToString();
 
-                            ///* Direccion del cliente */
-                            //var departamentoResidencia = sqlResultado["fcDepartamento"].ToString();
-                            //var ciudadPoblado = sqlResultado["fcPoblado"].ToString();
-                            //var direccionCliente = sqlResultado["fcDireccionCliente"].ToString();
+                            /* Direccion del cliente */
+                            var departamentoResidencia = sqlResultado["fcDepartamento"].ToString();
+                            var ciudadPoblado = sqlResultado["fcPoblado"].ToString();
+                            var direccionCliente = sqlResultado["fcDireccionCliente"].ToString();
 
-                            ///* Información de la solicitud y prestamo */
-                            //var producto = sqlResultado["fcProducto"].ToString();
-                            //var montoTotalContrato = decimal.Parse(sqlResultado["fnValorTotalContrato"].ToString());
-                            //var plazoFinalAprobado = sqlResultado["fiPlazo"].ToString();
-                            //var valorTotalFinanciamiento = decimal.Parse(sqlResultado["fnValorTotalFinanciamiento"].ToString());
-                            //var tipoDePlazo = sqlResultado["fcTipoDePlazo"].ToString();
-                            //var tipoDePlazoSufijoAl = sqlResultado["fcTipoPlazo"].ToString();
-                            //var varlorGarantia = decimal.Parse(sqlResultado["fnValorGarantia"].ToString());
-                            //var valorPrima = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
-                            //var valorCuotaPrestamo = decimal.Parse(sqlResultado["fnCuotaMensualPrestamo"].ToString());
-                            //var valorCuotaGPS = decimal.Parse(sqlResultado["fnCuotaMensualGPS"].ToString());
-                            //var valorCuotaSeguro = decimal.Parse(sqlResultado["fnCuotaMensualSeguro"].ToString());
-                            //var valorCuotaTotal = decimal.Parse(sqlResultado["fnCuotaTotal"].ToString());
-                            //var valorParaCompraDeVehiculo = decimal.Parse(sqlResultado["fnValorAPrestar"].ToString());
-                            //var valorParaCompraDeGPS = decimal.Parse(sqlResultado["fnCostoGPS"].ToString());
-                            //var valorParaGastosDeCierre = decimal.Parse(sqlResultado["fnGastosDeCierre"].ToString());
-                            //var moneda = sqlResultado["fcNombreMoneda"].ToString();
-                            //var monedaSimbolo = sqlResultado["fcSimboloMoneda"].ToString();
-                            //var monedaAbreviatura = sqlResultado["fcAbreviaturaMoneda"].ToString();
-                            //var tasaDeInteresSimpleMensual = decimal.Parse(sqlResultado["fnTasaMensualAplicada"].ToString());
-                            //var tasaDeInteresAnualAplicada = decimal.Parse(sqlResultado["fnTasaAnualAplicada"].ToString());
+                            /* Información de la solicitud y prestamo */
+                            var producto = sqlResultado["fcProducto"].ToString();
+                            var montoTotalContrato = decimal.Parse(sqlResultado["fnValorTotalContrato"].ToString());
+                            var plazoFinalAprobado = sqlResultado["fiPlazo"].ToString();
+                            var valorTotalFinanciamiento = decimal.Parse(sqlResultado["fnValorTotalFinanciamiento"].ToString());
+                            var tipoDePlazo = sqlResultado["fcTipoDePlazo"].ToString();
+                            var tipoDePlazoSufijoAl = sqlResultado["fcTipoPlazo"].ToString();
+                            var varlorGarantia = decimal.Parse(sqlResultado["fnValorGarantia"].ToString());
+                            var valorPrima = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
+                            var valorCuotaPrestamo = decimal.Parse(sqlResultado["fnCuotaMensualPrestamo"].ToString());
+                            var valorCuotaGPS = decimal.Parse(sqlResultado["fnCuotaMensualGPS"].ToString());
+                            var valorCuotaSeguro = decimal.Parse(sqlResultado["fnCuotaMensualSeguro"].ToString());
+                            var valorCuotaTotal = decimal.Parse(sqlResultado["fnCuotaTotal"].ToString());
+                            var valorParaCompraDeVehiculo = decimal.Parse(sqlResultado["fnValorAPrestar"].ToString());
+                            var valorParaCompraDeGPS = decimal.Parse(sqlResultado["fnCostoGPS"].ToString());
+                            var valorParaGastosDeCierre = decimal.Parse(sqlResultado["fnGastosDeCierre"].ToString());
+                            var moneda = sqlResultado["fcNombreMoneda"].ToString();
+                            var monedaSimbolo = sqlResultado["fcSimboloMoneda"].ToString();
+                            var monedaAbreviatura = sqlResultado["fcAbreviaturaMoneda"].ToString();
+                            var tasaDeInteresSimpleMensual = decimal.Parse(sqlResultado["fnTasaMensualAplicada"].ToString());
+                            var tasaDeInteresAnualAplicada = decimal.Parse(sqlResultado["fnTasaAnualAplicada"].ToString());
 
-                            //lblIdSolicitud.InnerText = pcIDSolicitud;
-                            //txtNombreCliente.Text = nombreCliente;
-                            //txtIdentidadCliente.Text = identidad;
-                            //txtRtn.Text = RTN;
-                            //txtTelefonoCliente.Text = telefonoPrimario;
-                            //txtProducto.Text = producto;
-                            //txtMontoFinalAFinanciar.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
-                            //txtPlazoFinanciar.Text = plazoFinalAprobado;
-                            //lblTipoDePlazo.InnerText = tipoDePlazoSufijoAl;
-                            //txtValorCuota.Text = valorCuotaTotal.ToString("N");
-                            //lblTipoDePlazoCuota.InnerText = tipoDePlazoSufijoAl;
+                            lblIdSolicitud.InnerText = pcIDSolicitud;
+                            txtNombreCliente.Text = nombreCliente;
+                            txtIdentidadCliente.Text = identidad;
+                            txtRtn.Text = RTN;
+                            txtTelefonoCliente.Text = telefonoPrimario;
+                            txtProducto.Text = producto;
+                            txtMontoFinalAFinanciar.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
+                            txtPlazoFinanciar.Text = plazoFinalAprobado;
+                            lblTipoDePlazo.InnerText = tipoDePlazoSufijoAl;
+                            txtValorCuota.Text = valorCuotaTotal.ToString("N");
+                            lblTipoDePlazoCuota.InnerText = tipoDePlazoSufijoAl;
 
-                            //int requiereGarantia = (byte)sqlResultado["fiRequiereGarantia"];
+                            int requiereGarantia = (byte)sqlResultado["fiRequiereGarantia"];
 
-                            if (1 == 1)
+                            if (requiereGarantia == 1)
                             {
                                 sqlResultado.NextResult();
 
@@ -246,223 +246,223 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         txtNacionalidadVendedorGarantia.Text = nacionalidadVendedorGarantia;
                                         txtEstadoCivilVendedorGarantia.Text = estadoCivilVendedorGarantia;
 
-                                        ///* Contrato */
-                                        //lblNombre_Contrato.Text = nombreCliente;
-                                        //lblNacionalidad_Contrato.Text = nacionalidad;
-                                        //lblIdentidad_Contrato.Text = identidad;
-                                        //lblDireccion_Contrato.Text = direccionCliente;
-                                        //lblCorreo_Contrato.Text = correoCliente;
+                                        /* Contrato */
+                                        lblNombre_Contrato.Text = nombreCliente;
+                                        lblNacionalidad_Contrato.Text = nacionalidad;
+                                        lblIdentidad_Contrato.Text = identidad;
+                                        lblDireccion_Contrato.Text = direccionCliente;
+                                        lblCorreo_Contrato.Text = correoCliente;
 
-                                        //lblMontoPrestamoEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorTotalFinanciamiento.ToString()) + " " + moneda;
-                                        //lblMontoPrestamo_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
+                                        lblMontoPrestamoEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorTotalFinanciamiento.ToString()) + " " + moneda;
+                                        lblMontoPrestamo_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
 
-                                        //lblMontoParaCompraVehiculoEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString()) + " " + moneda;
-                                        //lblMontoParaCompraVehiculo_Contrato.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");
+                                        lblMontoParaCompraVehiculoEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString()) + " " + moneda;
+                                        lblMontoParaCompraVehiculo_Contrato.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");
 
-                                        //lblMontoParaCompraGPSEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorParaCompraDeGPS.ToString()) + " " + moneda;
-                                        //lblMontoParaCompraGPS_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorParaCompraDeGPS);
+                                        lblMontoParaCompraGPSEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorParaCompraDeGPS.ToString()) + " " + moneda;
+                                        lblMontoParaCompraGPS_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorParaCompraDeGPS);
 
-                                        //lblMontoGastosDeCierreEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorParaGastosDeCierre.ToString()) + " " + moneda;
-                                        //lblMontoGastosDeCierre_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorParaGastosDeCierre);
+                                        lblMontoGastosDeCierreEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorParaGastosDeCierre.ToString()) + " " + moneda;
+                                        lblMontoGastosDeCierre_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorParaGastosDeCierre);
 
-                                        //lblMarca_Contrato.Text = marca;
-                                        //lblTipoVehiculo_Contrato.Text = tipoDeVehiculo;
-                                        //lblModelo_Contrato.Text = modelo;
-                                        //lblAnio_Contrato.Text = anio;
-                                        //lblColor_Contrato.Text = color;
-                                        //lblCilindraje_Contrato.Text = cilindraje;
-                                        //lblMatricula_Contrato.Text = matricula;
-                                        //lblVIN_Contrato.Text = VIN;
-                                        //lblNumeroMotor_Contrato.Text = serieMotor;
-                                        //lblSerieChasis_Contato.Text = serieChasis;
+                                        lblMarca_Contrato.Text = marca;
+                                        lblTipoVehiculo_Contrato.Text = tipoDeVehiculo;
+                                        lblModelo_Contrato.Text = modelo;
+                                        lblAnio_Contrato.Text = anio;
+                                        lblColor_Contrato.Text = color;
+                                        lblCilindraje_Contrato.Text = cilindraje;
+                                        lblMatricula_Contrato.Text = matricula;
+                                        lblVIN_Contrato.Text = VIN;
+                                        lblNumeroMotor_Contrato.Text = serieMotor;
+                                        lblSerieChasis_Contato.Text = serieChasis;
 
-                                        //lblTasaInteresSimpleMensual_Contrato.Text = tasaDeInteresSimpleMensual.ToString("N");
-                                        //lblTipoDePlazo_Contrato.Text = tipoDePlazo;
-                                        //lblCAT_Contrato.Text = tasaDeInteresAnualAplicada.ToString("N");
-                                        //lblMontoPrima_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorPrima));
-                                        //lblPlazo_Contrato.Text = plazoFinalAprobado;
-                                        //lblFrecuenciaPago_Contrato.Text = tipoDePlazo;
+                                        lblTasaInteresSimpleMensual_Contrato.Text = tasaDeInteresSimpleMensual.ToString("N");
+                                        lblTipoDePlazo_Contrato.Text = tipoDePlazo;
+                                        lblCAT_Contrato.Text = tasaDeInteresAnualAplicada.ToString("N");
+                                        lblMontoPrima_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorPrima));
+                                        lblPlazo_Contrato.Text = plazoFinalAprobado;
+                                        lblFrecuenciaPago_Contrato.Text = tipoDePlazo;
 
-                                        //lblValorCuotaPalabras_Contrato.Text = ConvertirCantidadALetras(valorCuotaPrestamo.ToString()) + " " + moneda; // pendiente
-                                        //lblValorCuota_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorCuotaPrestamo);
+                                        lblValorCuotaPalabras_Contrato.Text = ConvertirCantidadALetras(valorCuotaPrestamo.ToString()) + " " + moneda; // pendiente
+                                        lblValorCuota_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorCuotaPrestamo);
 
-                                        //lblPlazoGPS_Contrato.Text = plazoFinalAprobado;
-                                        //lblValorCuotaGPSPalabras_Contrato.Text = ConvertirCantidadALetras(valorCuotaGPS.ToString()) + " " + moneda; // pendiente
-                                        //lblValorCuotaGPS_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorCuotaGPS);
+                                        lblPlazoGPS_Contrato.Text = plazoFinalAprobado;
+                                        lblValorCuotaGPSPalabras_Contrato.Text = ConvertirCantidadALetras(valorCuotaGPS.ToString()) + " " + moneda; // pendiente
+                                        lblValorCuotaGPS_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorCuotaGPS);
 
-                                        //lblPlazoSeguro_Contrato.Text = plazoFinalAprobado;
-                                        //lblValorCuotaSeguroPalabras_Contrato.Text = ConvertirCantidadALetras(valorCuotaSeguro.ToString()) + " " + moneda; ;
-                                        //lblValorCuotaSeguro_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorCuotaSeguro);
+                                        lblPlazoSeguro_Contrato.Text = plazoFinalAprobado;
+                                        lblValorCuotaSeguroPalabras_Contrato.Text = ConvertirCantidadALetras(valorCuotaSeguro.ToString()) + " " + moneda; ;
+                                        lblValorCuotaSeguro_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorCuotaSeguro);
 
-                                        //lblFechaPrimerCuota_Contrato.Text = DiaPrimerPago.ToString() + " de " + MesPrimerPago + " del " + AnioPrimerPago.ToString();
-                                        //lblPlazoPago_Contrato.Text = tipoDePlazo;
+                                        lblFechaPrimerCuota_Contrato.Text = DiaPrimerPago.ToString() + " de " + MesPrimerPago + " del " + AnioPrimerPago.ToString();
+                                        lblPlazoPago_Contrato.Text = tipoDePlazo;
 
-                                        //lblMontoTotalPrestamoPalabras_Contrato.Text = ConvertirCantidadALetras(montoTotalContrato.ToString()) + " " + moneda; ;
-                                        //lblMontoTotalPrestamo_Contrato.Text = monedaSimbolo + " " + montoTotalContrato.ToString("N");
+                                        lblMontoTotalPrestamoPalabras_Contrato.Text = ConvertirCantidadALetras(montoTotalContrato.ToString()) + " " + moneda; ;
+                                        lblMontoTotalPrestamo_Contrato.Text = monedaSimbolo + " " + montoTotalContrato.ToString("N");
 
-                                        //lblNombreFirma_Contrato.Text = nombreCliente;
-                                        //lblIdentidadFirma_Contrato.Text = identidad;
+                                        lblNombreFirma_Contrato.Text = nombreCliente;
+                                        lblIdentidadFirma_Contrato.Text = identidad;
 
-                                        ///* Pagare */
-                                        //lblMontoTitulo_Pagare.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
-                                        //lblNombre_Pagare.Text = nombreCliente;
-                                        //lblEstadoCivil_Pagare.Text = estadoCivil;
-                                        //lblNacionalidad_Pagare.Text = nacionalidad;
-                                        //lblProfesion_Pagare.Text = profesionOficio;
-                                        //lblIdentidad_Pagare.Text = identidad;
-                                        //lblDireccion_Pagare.Text = direccionCliente;
-                                        //lblMontoPalabras_Pagare.Text = ConvertirCantidadALetras(valorTotalFinanciamiento.ToString()) + " " + moneda; ;
-                                        //lblMontoDigitos_Pagare.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
+                                        /* Pagare */
+                                        lblMontoTitulo_Pagare.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
+                                        lblNombre_Pagare.Text = nombreCliente;
+                                        lblEstadoCivil_Pagare.Text = estadoCivil;
+                                        lblNacionalidad_Pagare.Text = nacionalidad;
+                                        lblProfesion_Pagare.Text = profesionOficio;
+                                        lblIdentidad_Pagare.Text = identidad;
+                                        lblDireccion_Pagare.Text = direccionCliente;
+                                        lblMontoPalabras_Pagare.Text = ConvertirCantidadALetras(valorTotalFinanciamiento.ToString()) + " " + moneda; ;
+                                        lblMontoDigitos_Pagare.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
 
-                                        //lblDiaPrimerPago_Pagare.Text = "________";
-                                        //lblMesPrimerPago_Pagare.Text = "________________";
-                                        //lblAnioPrimerPago_Pagare.Text = "________________";
+                                        lblDiaPrimerPago_Pagare.Text = "________";
+                                        lblMesPrimerPago_Pagare.Text = "________________";
+                                        lblAnioPrimerPago_Pagare.Text = "________________";
 
-                                        //lblPorcentajeInteresFluctuante_Pagare.Text = tasaDeInteresSimpleMensual.ToString("N");
-                                        //lblInteresesMoratorios_Pagare.Text = "4.52";
-                                        //lblNombreFirma_Pagare.Text = nombreCliente;
-                                        //lblIdentidadFirma_Pagare.Text = identidad;
+                                        lblPorcentajeInteresFluctuante_Pagare.Text = tasaDeInteresSimpleMensual.ToString("N");
+                                        lblInteresesMoratorios_Pagare.Text = "4.52";
+                                        lblNombreFirma_Pagare.Text = nombreCliente;
+                                        lblIdentidadFirma_Pagare.Text = identidad;
 
-                                        ///* Compromiso legal */
-                                        //lblNombreCliente_CompromisoLegal.Text = nombreCliente;
-                                        //lblCantidadCuotas_CompromisoLegal.Text = plazoFinalAprobado;
-                                        //lblValorCuotaPalabras_CompromisoLegal.Text = ConvertirCantidadALetras(valorCuotaTotal.ToString()) + " " + moneda; ;
-                                        //lblValorCuota_CompromisoLegal.Text = monedaSimbolo + " " + valorCuotaTotal.ToString("N");
-                                        //lblGarantiaUsada_CompromisoLegal.Text = /*Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
-                                        //lblIdentidadFirma_CompromisoLegal.Text = identidad;
-                                        ///*lblNombreFirma_CompromisoLegal.Text = nombreCliente; */
+                                        /* Compromiso legal */
+                                        lblNombreCliente_CompromisoLegal.Text = nombreCliente;
+                                        lblCantidadCuotas_CompromisoLegal.Text = plazoFinalAprobado;
+                                        lblValorCuotaPalabras_CompromisoLegal.Text = ConvertirCantidadALetras(valorCuotaTotal.ToString()) + " " + moneda; ;
+                                        lblValorCuota_CompromisoLegal.Text = monedaSimbolo + " " + valorCuotaTotal.ToString("N");
+                                        lblGarantiaUsada_CompromisoLegal.Text = /*Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
+                                        lblIdentidadFirma_CompromisoLegal.Text = identidad;
+                                        /*lblNombreFirma_CompromisoLegal.Text = nombreCliente; */
 
-                                        ///* Convenio de compra y venta de vehiculos para financiamiento a tercero */
-                                        //lblNombreCliente_ConvenioCyV.Text = nombreVendedorGarantia;
-                                        //lblNacionalidad_ConvenioCyV.Text = nacionalidadVendedorGarantia;
-                                        //lblEstadoCivil_ConvenioCyV.Text = estadoCivilVendedorGarantia;
-                                        //lblIdentidad_ConvenioCyV.Text = identidadVendedorGarantia;
-                                        //lblCiudadCliente_ConvenioCyV.Text = ciudadPoblado;
-                                        //lblMarca_ConvenioCyV.Text = marca;
-                                        //lblModelo_ConvenioCyV.Text = modelo;
-                                        //lblAnio_ConvenioCyV.Text = anio;
-                                        //lblSerieMotor_ConvenioCyV.Text = serieMotor;
-                                        //lblSerieChasis_ConvenioCyV.Text = serieChasis;
-                                        //lblTipoVehiculoConvenioCyV.Text = tipoDeVehiculo;
-                                        //lblColor_ConvenioCyV.Text = color;
-                                        //lblCilindraje_ConvenioCyV.Text = cilindraje;
-                                        //lblMatricula_ConvenioCyV.Text = matricula;
-                                        //lblVIN_ConvenioCyV.Text = VIN;
-                                        //lblNombre_ConvenioCyV.Text = nombreVendedorGarantia.ToUpper();
+                                        /* Convenio de compra y venta de vehiculos para financiamiento a tercero */
+                                        lblNombreCliente_ConvenioCyV.Text = nombreVendedorGarantia;
+                                        lblNacionalidad_ConvenioCyV.Text = nacionalidadVendedorGarantia;
+                                        lblEstadoCivil_ConvenioCyV.Text = estadoCivilVendedorGarantia;
+                                        lblIdentidad_ConvenioCyV.Text = identidadVendedorGarantia;
+                                        lblCiudadCliente_ConvenioCyV.Text = ciudadPoblado;
+                                        lblMarca_ConvenioCyV.Text = marca;
+                                        lblModelo_ConvenioCyV.Text = modelo;
+                                        lblAnio_ConvenioCyV.Text = anio;
+                                        lblSerieMotor_ConvenioCyV.Text = serieMotor;
+                                        lblSerieChasis_ConvenioCyV.Text = serieChasis;
+                                        lblTipoVehiculoConvenioCyV.Text = tipoDeVehiculo;
+                                        lblColor_ConvenioCyV.Text = color;
+                                        lblCilindraje_ConvenioCyV.Text = cilindraje;
+                                        lblMatricula_ConvenioCyV.Text = matricula;
+                                        lblVIN_ConvenioCyV.Text = VIN;
+                                        lblNombre_ConvenioCyV.Text = nombreVendedorGarantia.ToUpper();
 
-                                        ///* Inspeccion seguro */
-                                        //lblNombre_InspeccionSeguro.Text = nombreCliente;
-                                        //lblMarca_InspeccionSeguro.Text = marca;
-                                        //lblModelo_InspeccionSeguro.Text = modelo;
-                                        //lblAnio_InspeccionSeguro.Text = anio;
-                                        //lblTipoDeVehiculo_InspeccionSeguro.Text = tipoDeVehiculo;
-                                        //lblRecorrido_InspeccionSeguro.Text = recorrido;
-                                        //lblMatricula_InspeccionSeguro.Text = matricula;
+                                        /* Inspeccion seguro */
+                                        lblNombre_InspeccionSeguro.Text = nombreCliente;
+                                        lblMarca_InspeccionSeguro.Text = marca;
+                                        lblModelo_InspeccionSeguro.Text = modelo;
+                                        lblAnio_InspeccionSeguro.Text = anio;
+                                        lblTipoDeVehiculo_InspeccionSeguro.Text = tipoDeVehiculo;
+                                        lblRecorrido_InspeccionSeguro.Text = recorrido;
+                                        lblMatricula_InspeccionSeguro.Text = matricula;
 
-                                        ///* Traspaso cliente */
-                                        //lblNombreCliente_Traspaso.Text = nombreCliente;
-                                        //lblIdentidad_Traspaso.Text = identidad;
-                                        //lblNacionalidad_Traspaso.Text = nacionalidad;
-                                        ///*lblDireccion_Traspaso.Text = direccionCliente;*/
-                                        //lblMarca_Traspaso.Text = marca;
-                                        //lblModelo_Traspaso.Text = modelo;
-                                        //lblSerieMotor_Traspaso.Text = serieMotor;
-                                        //lblVIN_Traspaso.Text = VIN;
-                                        //lblAnio_Traspaso.Text = anio;
-                                        //lblCilindraje_Traspaso.Text = cilindraje;
-                                        //lblTipoDeVehiculo_Traspaso.Text = tipoDeVehiculo;
-                                        //lblColor_Traspaso.Text = color;
-                                        //lblSerieChasis_Traspaso.Text = serieChasis;
-                                        //lblMatricula_Traspaso.Text = matricula;
-                                        //lblGarantiaUsada_Traspaso.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
+                                        /* Traspaso cliente */
+                                        lblNombreCliente_Traspaso.Text = nombreCliente;
+                                        lblIdentidad_Traspaso.Text = identidad;
+                                        lblNacionalidad_Traspaso.Text = nacionalidad;
+                                        /*lblDireccion_Traspaso.Text = direccionCliente;*/
+                                        lblMarca_Traspaso.Text = marca;
+                                        lblModelo_Traspaso.Text = modelo;
+                                        lblSerieMotor_Traspaso.Text = serieMotor;
+                                        lblVIN_Traspaso.Text = VIN;
+                                        lblAnio_Traspaso.Text = anio;
+                                        lblCilindraje_Traspaso.Text = cilindraje;
+                                        lblTipoDeVehiculo_Traspaso.Text = tipoDeVehiculo;
+                                        lblColor_Traspaso.Text = color;
+                                        lblSerieChasis_Traspaso.Text = serieChasis;
+                                        lblMatricula_Traspaso.Text = matricula;
+                                        lblGarantiaUsada_Traspaso.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
 
-                                        ///* Traspaso vendedor */
-                                        //lblNombreCliente_TraspasoVendedor.Text = nombrePropietarioGarantia;
-                                        //lblIdentidad_TraspasoVendedor.Text = identidadPropietarioGarantia;
-                                        //lblNacionalidad_TraspasoVendedor.Text = nacionalidadPropietarioGarantia;
-                                        //lblMarca_TraspasoVendedor.Text = marca;
-                                        //lblModelo_TraspasoVendedor.Text = modelo;
-                                        //lblSerieMotor_TraspasoVendedor.Text = serieMotor;
-                                        //lblVIN_TraspasoVendedor.Text = VIN;
-                                        //lblAnio_TraspasoVendedor.Text = anio;
-                                        //lblCilindraje_TraspasoVendedor.Text = cilindraje;
-                                        //lblTipoDeVehiculo_TraspasoVendedor.Text = tipoDeVehiculo;
-                                        //lblColor_TraspasoVendedor.Text = color;
-                                        //lblSerieChasis_TraspasoVendedor.Text = serieChasis;
-                                        //lblMatricula_TraspasoVendedor.Text = matricula;
-                                        //lblGarantiaUsada_TraspasoVendedor.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
+                                        /* Traspaso vendedor */
+                                        lblNombreCliente_TraspasoVendedor.Text = nombrePropietarioGarantia;
+                                        lblIdentidad_TraspasoVendedor.Text = identidadPropietarioGarantia;
+                                        lblNacionalidad_TraspasoVendedor.Text = nacionalidadPropietarioGarantia;
+                                        lblMarca_TraspasoVendedor.Text = marca;
+                                        lblModelo_TraspasoVendedor.Text = modelo;
+                                        lblSerieMotor_TraspasoVendedor.Text = serieMotor;
+                                        lblVIN_TraspasoVendedor.Text = VIN;
+                                        lblAnio_TraspasoVendedor.Text = anio;
+                                        lblCilindraje_TraspasoVendedor.Text = cilindraje;
+                                        lblTipoDeVehiculo_TraspasoVendedor.Text = tipoDeVehiculo;
+                                        lblColor_TraspasoVendedor.Text = color;
+                                        lblSerieChasis_TraspasoVendedor.Text = serieChasis;
+                                        lblMatricula_TraspasoVendedor.Text = matricula;
+                                        lblGarantiaUsada_TraspasoVendedor.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
 
-                                        ///* Básico + CPI*/
-                                        //lblNombreCliente_BasicoCPI.Text = nombreCliente;
-                                        //lblNumeroPrestamo_BasicoCPI.Text = numeroPrestamo;
+                                        /* Básico + CPI*/
+                                        lblNombreCliente_BasicoCPI.Text = nombreCliente;
+                                        lblNumeroPrestamo_BasicoCPI.Text = numeroPrestamo;
 
-                                        ///* Recibo */
-                                        //lblFecha_Recibo.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                                        //lblSumaRecibidaEnPalabras_Recibo.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString());
-                                        //lblMarca_Recibo.Text = marca;
-                                        //lblModelo_Recibo.Text = modelo;
-                                        //lblAnio_Recibo.Text = anio;
-                                        //lblColor_Recibo.Text = color;
-                                        //lblTipo_Recibo.Text = tipoDeVehiculo;
-                                        //lblCilindraje_Recibo.Text = cilindraje;
-                                        //lblSerieMotor_Recibo.Text = serieMotor;
-                                        //lblVIN_Recibo.Text = VIN;
-                                        //lblSerieChasis_Recibo.Text = serieChasis;
-                                        //lblPlaca_Recibo.Text = matricula;
-                                        //lblNombreCliente_Recibo.Text = nombreCliente.ToUpper();
-                                        //lblTotalRecibido_Recibo.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");
-                                        //lblNombreVendedor_Recibo.Text = nombreVendedorGarantia;
-                                        //lblIdentidadVendedor_Recibo.Text = identidadVendedorGarantia;
+                                        /* Recibo */
+                                        lblFecha_Recibo.Text = DateTime.Now.ToString("MM/dd/yyyy");
+                                        lblSumaRecibidaEnPalabras_Recibo.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString());
+                                        lblMarca_Recibo.Text = marca;
+                                        lblModelo_Recibo.Text = modelo;
+                                        lblAnio_Recibo.Text = anio;
+                                        lblColor_Recibo.Text = color;
+                                        lblTipo_Recibo.Text = tipoDeVehiculo;
+                                        lblCilindraje_Recibo.Text = cilindraje;
+                                        lblSerieMotor_Recibo.Text = serieMotor;
+                                        lblVIN_Recibo.Text = VIN;
+                                        lblSerieChasis_Recibo.Text = serieChasis;
+                                        lblPlaca_Recibo.Text = matricula;
+                                        lblNombreCliente_Recibo.Text = nombreCliente.ToUpper();
+                                        lblTotalRecibido_Recibo.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");
+                                        lblNombreVendedor_Recibo.Text = nombreVendedorGarantia;
+                                        lblIdentidadVendedor_Recibo.Text = identidadVendedorGarantia;
 
-                                        ///* Correo liquidacion */
-                                        //lblAño_CorreoLiquidacion.Text = anio;
-                                        //lblPlaca_CorreoLiquidacion.Text = matricula;
-                                        //lblMarca_CorreoLiquidacion.Text = marca;
-                                        //lblModelo_CorreoLiquidacion.Text = modelo;
-                                        //lblTipoVehiculo_CorreoLiquidacion.Text = tipoDeVehiculo;
-                                        //lblColor_CorreoLiquidacion.Text = color;
-                                        //lblSerieMotor_CorreoLiquidacion.Text = serieMotor;
-                                        //lblSerieChasis_CorreoLiquidacion.Text = serieChasis;
-                                        //lblVIN_CorreoLiquidacion.Text = VIN;
-                                        //lblNombreCliente_CorreoLiquidacion.Text = nombreCliente;
-                                        //lblIdentidadCliente_CorreoLiquidacion.Text = identidad;
-                                        //lblNumeroPrestamo_CorreoLiquidacion.Text = "";
-                                        //lblNombreVendedor_CorreoLiquidacion.Text = nombreVendedorGarantia;
-                                        //lblIdentidadVendedor_CorreoLiquidacion.Text = identidadVendedorGarantia;
-                                        //lblValorNumero_CorreoLiquidacion.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");
-                                        //lblValorLetra_CorreoLiquidacion.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString()) + " " + moneda;
+                                        /* Correo liquidacion */
+                                        lblAño_CorreoLiquidacion.Text = anio;
+                                        lblPlaca_CorreoLiquidacion.Text = matricula;
+                                        lblMarca_CorreoLiquidacion.Text = marca;
+                                        lblModelo_CorreoLiquidacion.Text = modelo;
+                                        lblTipoVehiculo_CorreoLiquidacion.Text = tipoDeVehiculo;
+                                        lblColor_CorreoLiquidacion.Text = color;
+                                        lblSerieMotor_CorreoLiquidacion.Text = serieMotor;
+                                        lblSerieChasis_CorreoLiquidacion.Text = serieChasis;
+                                        lblVIN_CorreoLiquidacion.Text = VIN;
+                                        lblNombreCliente_CorreoLiquidacion.Text = nombreCliente;
+                                        lblIdentidadCliente_CorreoLiquidacion.Text = identidad;
+                                        lblNumeroPrestamo_CorreoLiquidacion.Text = "";
+                                        lblNombreVendedor_CorreoLiquidacion.Text = nombreVendedorGarantia;
+                                        lblIdentidadVendedor_CorreoLiquidacion.Text = identidadVendedorGarantia;
+                                        lblValorNumero_CorreoLiquidacion.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");
+                                        lblValorLetra_CorreoLiquidacion.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString()) + " " + moneda;
 
-                                        ///* Correo seguro */
-                                        //lblAño_CorreoSeguro.Text = anio;
-                                        //lblPlaca_CorreoSeguro.Text = matricula;
-                                        //lblMarca_CorreoSeguro.Text = marca;
-                                        //lblModelo_CorreoSeguro.Text = modelo;
-                                        //lblTipoVehiculo_CorreoSeguro.Text = tipoDeVehiculo;
-                                        //lblColor_CorreoSeguro.Text = color;
-                                        //lblSerieMotor_CorreoSeguro.Text = serieMotor;
-                                        //lblSerieChasis_CorreoSeguro.Text = serieChasis;
-                                        //lblVIN_CorreoSeguro.Text = VIN;
-                                        //lblNombreCliente_CorreoSeguro.Text = nombreCliente;
-                                        //lblIdentidadCliente_CorreoSeguro.Text = identidad;
-                                        //lblNumeroPrestamo_CorreoSeguro.Text = "";
+                                        /* Correo seguro */
+                                        lblAño_CorreoSeguro.Text = anio;
+                                        lblPlaca_CorreoSeguro.Text = matricula;
+                                        lblMarca_CorreoSeguro.Text = marca;
+                                        lblModelo_CorreoSeguro.Text = modelo;
+                                        lblTipoVehiculo_CorreoSeguro.Text = tipoDeVehiculo;
+                                        lblColor_CorreoSeguro.Text = color;
+                                        lblSerieMotor_CorreoSeguro.Text = serieMotor;
+                                        lblSerieChasis_CorreoSeguro.Text = serieChasis;
+                                        lblVIN_CorreoSeguro.Text = VIN;
+                                        lblNombreCliente_CorreoSeguro.Text = nombreCliente;
+                                        lblIdentidadCliente_CorreoSeguro.Text = identidad;
+                                        lblNumeroPrestamo_CorreoSeguro.Text = "";
 
-                                        ///* Nota de entrega */
-                                        //lblPropietarioGarantia_NotaEntrega.Text = nombrePropietarioGarantia;
-                                        //lblNombreCliente_NotaEntrega.Text = nombreCliente;
-                                        //lblValorAPrestarEnPalabras_NotaEntrega.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString());
-                                        //lblValorAPrestar_NotaEntrega.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");
+                                        /* Nota de entrega */
+                                        lblPropietarioGarantia_NotaEntrega.Text = nombrePropietarioGarantia;
+                                        lblNombreCliente_NotaEntrega.Text = nombreCliente;
+                                        lblValorAPrestarEnPalabras_NotaEntrega.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString());
+                                        lblValorAPrestar_NotaEntrega.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");
 
-                                        //lblEstadoGarantia_NotaEntrega.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
-                                        //lblMarca_NotaEntrega.Text = marca;
-                                        //lblModelo_NotaEntrega.Text = modelo;
-                                        //lblAño_NotaEntrega.Text = anio;
-                                        //lblTipo_NotaEntrega.Text = tipoDeVehiculo;
-                                        //lblChasis_NotaEntrega.Text = serieChasis;
-                                        //lblSerieMotor_NotaEntrega.Text = serieMotor;
-                                        //lblColor_NotaEntrega.Text = color;
-                                        //lblCilindraje_NotaEntrega.Text = cilindraje;
-                                        //lblPlaca_NotaEntrega.Text = matricula;
-                                        //lblNombreVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
+                                        lblEstadoGarantia_NotaEntrega.Text = /* Convert.ToDecimal(recorridoNumerico) < 1 ? "nuevo" :*/ "usado";
+                                        lblMarca_NotaEntrega.Text = marca;
+                                        lblModelo_NotaEntrega.Text = modelo;
+                                        lblAño_NotaEntrega.Text = anio;
+                                        lblTipo_NotaEntrega.Text = tipoDeVehiculo;
+                                        lblChasis_NotaEntrega.Text = serieChasis;
+                                        lblSerieMotor_NotaEntrega.Text = serieMotor;
+                                        lblColor_NotaEntrega.Text = color;
+                                        lblCilindraje_NotaEntrega.Text = cilindraje;
+                                        lblPlaca_NotaEntrega.Text = matricula;
+                                        lblNombreVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
                                     }
 
                                     sqlResultado.NextResult();

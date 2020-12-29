@@ -772,35 +772,35 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Asegurado</th>
                                     <td colspan="5" class="p-0">
-                                        <asp:Label runat="server" ID="lblNombre_InspeccionSeguro"> Victoria Alejandra Meza Aguilar</asp:Label>
+                                        <asp:Label runat="server" ID="lblNombre_InspeccionSeguro"></asp:Label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Marca</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblMarca_InspeccionSeguro">FORD</asp:Label>
+                                        <asp:Label runat="server" ID="lblMarca_InspeccionSeguro"></asp:Label>
                                     </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Modelo</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblModelo_InspeccionSeguro">ESCAPE</asp:Label>
+                                        <asp:Label runat="server" ID="lblModelo_InspeccionSeguro"></asp:Label>
                                     </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Año</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblAnio_InspeccionSeguro">2017</asp:Label>
+                                        <asp:Label runat="server" ID="lblAnio_InspeccionSeguro"></asp:Label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Tipo</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblTipoDeVehiculo_InspeccionSeguro">CAMIONETA</asp:Label>
+                                        <asp:Label runat="server" ID="lblTipoDeVehiculo_InspeccionSeguro"></asp:Label>
                                     </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Kilometraje</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblRecorrido_InspeccionSeguro">29052 MI</asp:Label>
+                                        <asp:Label runat="server" ID="lblRecorrido_InspeccionSeguro"></asp:Label>
                                     </td>
                                     <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Placa</th>
                                     <td class="p-0">
-                                        <asp:Label runat="server" ID="lblMatricula_InspeccionSeguro">HBG7942</asp:Label>
+                                        <asp:Label runat="server" ID="lblMatricula_InspeccionSeguro"></asp:Label>
                                     </td>
                                 </tr>
                             </table>

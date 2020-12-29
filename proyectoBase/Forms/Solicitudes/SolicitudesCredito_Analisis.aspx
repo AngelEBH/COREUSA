@@ -35,19 +35,19 @@
                     <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
                         <div class="form-inline">
                             <div class="button-items pb-2">
-                                <button runat="server" id="btnResolucionSolicitud" type="button" class="btn btn-secondary waves-effect waves-light">
+                                <button runat="server" id="btnResolucionSolicitud" type="button" class="btn btn-secondary">
                                     <i class="far fa-edit"></i>
                                     Resolución
                                 </button>
-                                <button runat="server" id="btnHistorialExterno" type="button" class="btn btn-secondary waves-effect waves-light">
+                                <button runat="server" id="btnHistorialExterno" type="button" class="btn btn-secondary">
                                     <i class="fas fa-clipboard-check"></i>
                                     Buró Externo
                                 </button>
-                                <button runat="server" id="btnDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentacion" class="btn btn-warning waves-effect waves-light">
+                                <button runat="server" id="btnDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentacion" class="btn btn-warning">
                                     <i class="far fa-file-alt"></i>
                                     Documentos
                                 </button>
-                                <button runat="server" id="btnMasDetalles" type="button" class="btn btn-secondary waves-effect waves-light">
+                                <button runat="server" id="btnMasDetalles" type="button" class="btn btn-secondary">
                                     <i class="fas fa-info-circle"></i>
                                     Más detalles
                                 </button>
@@ -62,7 +62,7 @@
                                     <button id="btnImprimirReporte" type="button" class="btn btn-sm btn-success btn-block m-0" onclick="ExportHtmlToPdf('#ReporteSolicitud','Reporte_Solitud','Reporte de la Solicitud')" style="border-radius: 0;">
                                         Generar PDF
                                     </button>
-                                    <button id="btnHistorialInterno" title="Ver Historial interno del cliente" disabled="disabled" type="button" class="btn btn-sm btn-success btn-block waves-effect waves-light m-0" style="border-radius: 0;">
+                                    <button id="btnHistorialInterno" title="Ver Historial interno del cliente" disabled="disabled" type="button" class="btn btn-sm btn-success btn-block m-0" style="border-radius: 0;">
                                         Historial I
                                     </button>
                                     <button id="btnCondicionarSolicitud" type="button" class="btn btn-sm btn-warning btn-block m-0" style="border-radius: 0;">
@@ -651,7 +651,7 @@ Información del Préstamo Requerido
 <div class="row">
 <div class="col-md-12">
 <div class="form-group row">
-<button id="btnDigitarValoresManualmente" title="Digitar monto manualmente" type="button" class="btn btn-success col-sm-3 btn-block waves-effect waves-light">
+<button id="btnDigitarValoresManualmente" title="Digitar monto manualmente" type="button" class="btn btn-success col-sm-3 btn-block">
 Digitar monto manualmente
 </button>
 </div>
@@ -782,7 +782,7 @@ Cargando Préstamos Sugeridos...
 <label class="col-sm-12 h6 text-center p-t-10" id="lbldivPrestamosSugeridosReales">Préstamos Sugeridos - Real</label>
 <div class="col-sm-12">
 <table class="table table-condensed table-striped" id="tblPMOSugeridosReales">
-<thead>
+<thead class="thead-light">
 <tr>
 <th>Monto a financiar</th>
 <th>Plazo</th>
@@ -804,12 +804,12 @@ No hay prestamos sugeridos para esta capacidad de pago.<br />
 ¿Desea ingresar un monto manualmente?</label>
 </div>
 <div class="col-sm-6">
-<button id="btnDigitarMontoManualmente" disabled="disabled" title="Digitar monto manualmente" type="button" class="btn btn-success btn-block waves-effect waves-light">
+<button id="btnDigitarMontoManualmente" disabled="disabled" title="Digitar monto manualmente" type="button" class="btn btn-success btn-block">
 Digitar monto
 </button>
 </div>
 <div class="col-sm-6">
-<button id="btnRechazarIncapacidadPagoModal" data-toggle="modal" data-target="#modalRechazarPorIncapcidadPago" disabled="disabled" title="Rechazar solicitud por incapacidad de pago" type="button" class="btn btn-danger btn-block waves-effect waves-light">
+<button id="btnRechazarIncapacidadPagoModal" data-toggle="modal" data-target="#modalRechazarPorIncapcidadPago" disabled="disabled" title="Rechazar solicitud por incapacidad de pago" type="button" class="btn btn-danger btn-block">
 Rechazar solicitud
 </button>
 </div>
@@ -900,7 +900,7 @@ Rechazar solicitud
                                                 <div class="col-12" id="divTablaNuevosPrestamosSugeridos" runat="server" visible="false">
                                                     <div class="table-responsive">
                                                         <table class="table table-condensed table-striped table-hover cursor-pointer" id="tblPrestamosSugeridosReales" runat="server">
-                                                            <thead>
+                                                            <thead class="thead-light">
                                                                 <tr>
                                                                     <th>Monto a financiar</th>
                                                                     <th>Plazo</th>
@@ -1209,23 +1209,21 @@ Rechazar solicitud
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalFinalizarValidarPersonalLabel">Terminar validación</h5>
+                        <h6 class="modal-title mt-0" id="modalFinalizarValidarPersonalLabel">Terminar validación</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
                         ¿Está seguro de que desea terminar la validación de la información personal del cliente?<br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
-                            <div>
-                                <input id="comentariosInfoPersonal" class="form-control" data-parsley-maxlength="150" type="text" value="" />
-                            </div>
+                            <input id="comentariosInfoPersonal" class="form-control" data-parsley-maxlength="150" type="text" value="" />
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnValidoInfoPersonalConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                        <button type="button" id="btnValidoInfoPersonalConfirmar" class="btn btn-primary mr-1 validador">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -1238,23 +1236,21 @@ Rechazar solicitud
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalFinalizarValidarLaboralLabel">Terminar validación</h5>
+                        <h6 class="modal-title mt-0" id="modalFinalizarValidarLaboralLabel">Terminar validación</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
                         ¿Está seguro de que desea terminar la validación de la información laboral del cliente?<br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
-                            <div>
-                                <input id="comentariosInfoLaboral" class="form-control" type="text" data-parsley-maxlength="150" value="" />
-                            </div>
+                            <input id="comentariosInfoLaboral" class="form-control" type="text" data-parsley-maxlength="150" value="" />
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnValidoInfoLaboralConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                        <button type="button" id="btnValidoInfoLaboralConfirmar" class="btn btn-primary mr-1 validador">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -1305,7 +1301,7 @@ Rechazar solicitud
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
                         </button>
                     </div>
@@ -1318,23 +1314,21 @@ Rechazar solicitud
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalFinalizarValidarReferenciasLabel">Terminar validación</h5>
+                        <h6 class="modal-title mt-0" id="modalFinalizarValidarReferenciasLabel">Terminar validación</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
                         ¿Está seguro de que desea terminar la validación de las referencias personales del cliente?<br />
                         <div class="form-group">
                             <label>Observaciones</label>
-                            <div>
-                                <input id="comentarioReferenciasPersonales" class="form-control" type="text" value="" data-parsley-maxlength="150" />
-                            </div>
+                            <input id="comentarioReferenciasPersonales" class="form-control" type="text" value="" data-parsley-maxlength="150" />
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnValidoReferenciasConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                        <button type="button" id="btnValidoReferenciasConfirmar" class="btn btn-primary mr-1 validador">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -1347,7 +1341,7 @@ Rechazar solicitud
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalCondicionarSolicitudLabel">Condicionar solicitud</h5>
+                        <h6 class="modal-title mt-0" id="modalCondicionarSolicitudLabel">Condicionar solicitud</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
@@ -1359,14 +1353,14 @@ Rechazar solicitud
                                 </a>
                             </li>
                             <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones" style="display: none;">
-                                <a class="nav-link" data-toggle="tab" href="#listaCondiciones" role="tab">
+                                <a class="nav-link" data-toggle="tab" href="#tbllistaCondiciones" role="tab">
                                     <span class="d-none d-sm-block">Condiciones de la solictud</span>
                                 </a>
                             </li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div class="tab-pane active p-3" id="pestanaAgregarCondiciones" role="tabpanel">
+                            <div class="tab-pane active pt-3" id="pestanaAgregarCondiciones" role="tabpanel">
                                 <div class="form-group row">
                                     <div class="col-sm-12">
                                         <select id="ddlCondiciones" required="required" class="form-control form-control-sm" data-parsley-group="agregarCondiciones"></select>
@@ -1374,23 +1368,23 @@ Rechazar solicitud
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
-                                        <input id="txtComentarioAdicional" required="required" type="text" class="form-control form-control-sm" placeholder="comentario adicional" data-parsley-maxlength="128" data-parsley-group="agregarCondiciones" />
+                                        <textarea id="txtComentarioAdicional" required="required" class="form-control form-control-sm" placeholder="comentario adicional" data-parsley-maxlength="128" data-parsley-group="agregarCondiciones"></textarea>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-9"></div>
-                                    <div class="col-sm-3">
-                                        <button type="button" id="btnAgregarCondicion" class="btn btn-block btn-primary validador">Agregar</button>
+                                <div class="form-group row justify-content-end">
+                                    <div class="col-auto">
+                                        <button type="button" id="btnAgregarNuevaCondicion" class="btn btn-block btn-primary validador">Agregar condición</button>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
-                                        <table id="tblCondiciones" class="table table-condensed table-striped">
-                                            <thead>
+                                        <table id="tblNuevasCondiciones" class="table table-sm table-bordered table-condensed table-hover cursor-pointer mb-0">
+                                            <caption class="pt-1">Listado de nuevas condiciones</caption>
+                                            <thead class="thead-light">
                                                 <tr>
                                                     <th>Condicion</th>
                                                     <th>Comentario adicional</th>
-                                                    <th></th>
+                                                    <th>Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -1399,15 +1393,13 @@ Rechazar solicitud
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Otros</label>
-                                    <div>
-                                        <input id="razonCondicion" required="required" class="form-control" type="text" value="" data-parsley-maxlength="128" />
-                                    </div>
+                                    <label>Otras condiciones/observaciones</label>
+                                    <input id="razonCondicion" required="required" class="form-control" type="text" value="" data-parsley-maxlength="128" />
                                 </div>
                             </div>
-                            <div class="tab-pane p-3" id="tbllistaCondiciones" role="tabpanel">
-                                <table id="tblListaSolicitudCondiciones" runat="server" class="table table-condensed table-striped">
-                                    <thead>
+                            <div class="tab-pane pt-3" id="tbllistaCondiciones" role="tabpanel">
+                                <table id="tblListaSolicitudCondiciones" class="table table-sm table-bordered table-condensed table-hover cursor-pointer">
+                                    <thead class="thead-light">
                                         <tr>
                                             <th>Tipo Condición</th>
                                             <th>Descripción</th>
@@ -1424,10 +1416,10 @@ Rechazar solicitud
                         <!-- termina tab -->
                     </div>
                     <div class="modal-footer">
-                        <button id="btnCondicionarSolicitudConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                        <button type="button" id="btnCondicionarSolicitudConfirmar" class="btn btn-danger mr-1 validador">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -1451,10 +1443,10 @@ Rechazar solicitud
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnEnviarCampoConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                        <button type="button" id="btnEnviarCampoConfirmar" class="btn btn-primary mr-1 validador">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -1467,7 +1459,7 @@ Rechazar solicitud
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header text-center">
-                        <h5 class="modal-title w-100 mt-0" id="modalResumenLabel" style="text-align: center">Resumen de la solicitud - Información relevante</h5>
+                        <h6 class="modal-title w-100 mt-0" id="modalResumenLabel" style="text-align: center">Resumen de la solicitud - Información relevante</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body" id="ResumenSolicitud">
@@ -1546,10 +1538,10 @@ Rechazar solicitud
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="button" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
                         </button>
-                        <button type="button" class="btn btn-secondary waves-effect" onclick="ExportHtmlToPdf('#ResumenSolicitud','Resumen de la solicitud','Resumen de la solicitud - Información Relevante')">
+                        <button type="button" class="btn btn-secondary" onclick="ExportHtmlToPdf('#ResumenSolicitud','Resumen de la solicitud','Resumen de la solicitud - Información Relevante')">
                             Guardar PDF
                         </button>
                     </div>
@@ -1684,7 +1676,7 @@ Rechazar solicitud
                         <!-- termina tab -->
                     </div>
                     <div class="modal-footer">
-                        <button type="button" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="button" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
                         </button>
                     </div>
@@ -1705,16 +1697,14 @@ Rechazar solicitud
                         <br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
-                            <div>
-                                <input id="comentarioRechazar" required="required" class="form-control" type="text" value="" data-parsley-maxlength="150" />
-                            </div>
+                            <input id="comentarioRechazar" required="required" class="form-control" type="text" value="" data-parsley-maxlength="150" />
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnConfirmarRechazar" class="btn btn-danger waves-effect waves-light mr-1">
+                        <button type="button" id="btnConfirmarRechazar" class="btn btn-danger mr-1">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -1735,16 +1725,14 @@ Rechazar solicitud
                         <br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
-                            <div>
-                                <input id="comentarioAprobar" required="required" class="form-control" type="text" value="" data-parsley-maxlength="150" />
-                            </div>
+                            <input id="comentarioAprobar" required="required" class="form-control" type="text" value="" data-parsley-maxlength="150" />
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnConfirmarAprobar" class="btn btn-success waves-effect waves-light mr-1">
+                        <button type="button" id="btnConfirmarAprobar" class="btn btn-success mr-1">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -1772,16 +1760,16 @@ Rechazar solicitud
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="btnEliminarReferencia" data-toggle="modal" data-target="#modalEliminarReferencia" class="btn btn-danger float-left waves-effect waves-light mr-1 validador">
+                            <button type="button" id="btnEliminarReferencia" data-toggle="modal" data-target="#modalEliminarReferencia" class="btn btn-danger float-left mr-1 validador">
                                 Eliminar
                             </button>
-                            <button type="button" id="btnReferenciaSinComunicacion" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                            <button type="button" id="btnReferenciaSinComunicacion" class="btn btn-primary mr-1 validador">
                                 Sin comunicación
                             </button>
-                            <button type="button" id="btnComentarioReferenciaConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                            <button type="button" id="btnComentarioReferenciaConfirmar" class="btn btn-primary mr-1 validador">
                                 Confirmar
                             </button>
-                            <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                                 Cancelar
                             </button>
                         </div>
@@ -1802,10 +1790,10 @@ Rechazar solicitud
                         ¿Está seguro de eliminar esta referencia personal?
                     </div>
                     <div class="modal-footer">
-                        <button id="btnEliminarReferenciaConfirmar" class="btn btn-danger waves-effect waves-light mr-1">
+                        <button type="button" id="btnEliminarReferenciaConfirmar" class="btn btn-danger mr-1">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -1837,10 +1825,10 @@ Rechazar solicitud
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                            <button type="submit" class="btn btn-primary mr-1 validador">
                                 Confirmar
                             </button>
-                            <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                                 Cancelar
                             </button>
                         </div>
@@ -1862,10 +1850,10 @@ Rechazar solicitud
                         <br />
                     </div>
                     <div class="modal-footer">
-                        <button id="btnConfirmarPrestamoAprobado" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                        <button type="button" id="btnConfirmarPrestamoAprobado" class="btn btn-primary mr-1 validador">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -1885,10 +1873,10 @@ Rechazar solicitud
                         ¿Está seguro de llevar a cabo esta validación?
                     </div>
                     <div class="modal-footer">
-                        <button id="btnValidarTipoDocConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                        <button type="button" id="btnValidarTipoDocConfirmar" class="btn btn-primary mr-1 validador">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -1977,10 +1965,10 @@ Rechazar solicitud
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnMasDetallesAval" data-id="0" class="btn btn-primary waves-effect waves-light mr-1">
+                        <button type="button" id="btnMasDetallesAval" data-id="0" class="btn btn-primary mr-1">
                             Más detalles
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
                         </button>
                     </div>
@@ -2000,10 +1988,10 @@ Rechazar solicitud
                         ¿Está seguro de rechazar la solicitud por incapacidad de pago?
                     </div>
                     <div class="modal-footer">
-                        <button id="btnRechazarIncapPagoConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                        <button type="button" id="btnRechazarIncapPagoConfirmar" class="btn btn-primary mr-1 validador">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -2061,10 +2049,10 @@ Rechazar solicitud
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnActualizarMontoManualmente" class="btn btn-primary waves-effect waves-light mr-1 validador btn-default" disabled="disabled">
+                        <button type="button" id="btnActualizarMontoManualmente" class="btn btn-primary mr-1 validador btn-default" disabled="disabled">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>

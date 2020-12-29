@@ -4,7 +4,7 @@
 /* ====== Esta variable almacena el ID del estado actual de la solicitud ============== */
 /* ====== Se actualiza cada vez que se cargan los detalles de la solicitud ============ */
 /* ====== Se utiliza para realizar validaciones al cargar detalles de la solicitud ==== */
-var ID_ESTADO_SOLICITUD = '0'; 
+var ID_ESTADO_SOLICITUD = '0';
 
 /* ====== Esta variable (objeto) almacena el estado actual de la solicitud ============ */
 /* ====== Se actualiza cada vez que se cargan los detalles de la solicitud ============ */
@@ -344,7 +344,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
 
                             estadoCondicion = condiciones[i].EstadoCondicion != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>";
 
-                            templateCondiciones += '<tr><td>' + condiciones[i].TipoCondicion + '</td><td>' + condiciones[i].DescripcionCondicion + '</td><td>' + condiciones[i].ComentarioAdicional + '</td><td>' + estadoCondicion + '</td></tr>';
+                            templateCondiciones += '<tr><td>' + condiciones[i].Condicion + '</td><td>' + condiciones[i].DescripcionCondicion + '</td><td>' + condiciones[i].ComentarioAdicional + '</td><td>' + estadoCondicion + '</td></tr>';
                         }
 
                         tblCondiciones.append(templateCondiciones);
@@ -388,101 +388,180 @@ var listaNuevasCondiciones = [];
 /* Abrir modal para condicionar solicitud y ver las condiciones que ha tenido la solicitud */
 $("#btnCondicionarSolicitud").click(function () {
 
-    var ddlCondiciones = $("#ddlCondiciones");
-
+    /* Reiniciar el listado de nuevas condiciones cada vez que se abra esta opción */
     listaNuevasCondiciones = [];
+    contadorNuevasCondiciones = 0;
+    $("#btnCondicionarSolicitudConfirmar").prop('disabled', true);
+
+    $("#txtComentarioAdicional").val('');
+    let tblNuevasCondiciones = $("#tblNuevasCondiciones tbody");
+
+    tblNuevasCondiciones.empty();
+    tblNuevasCondiciones.append('<tr><td class="text-center" colspan="3">No hay registros disponibles...</td></tr>');
 
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/ObtenerCatalogoCondiciones",
+        url: "SolicitudesCredito_Analisis.aspx/ObtenerCatalogoCondicionesYSolicitudCondiciones",
         data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar el lista de condiciones');
-            $("#modalCondicionarSolicitud").modal();
+
+            MensajeError('Error al cargar el catalogo de condiciones y/o condiciones de la solicitud.');
         },
         success: function (data) {
-            var listaCondiciones = data.d;
-            $("#tblCondiciones tbody").empty();
-            $("#txtComentarioAdicional").val('');
+
+            let catalogoCondiciones = data.d.CatalogoCondiciones;
+            let solicitudCondiciones = data.d.CondicionesDeLaSolicitud;
+            let ddlCondiciones = $("#ddlCondiciones");
+
+            /* Catalogo de condiciones */
             ddlCondiciones.empty();
-            for (var i = 0; i < listaCondiciones.length; i++) {
-                ddlCondiciones.append('<option value="' + listaCondiciones[i].fiIDCondicion + '">' + listaCondiciones[i].fcCondicion + ' | ' + listaCondiciones[i].fcDescripcionCondicion + '</option>');
+
+            for (var i = 0; i < catalogoCondiciones.length; i++) {
+                ddlCondiciones.append('<option value="' + catalogoCondiciones[i].IdCondicion + '">' + catalogoCondiciones[i].Condicion + ' | ' + catalogoCondiciones[i].DescripcionCondicion + '</option>');
             }
+
+            /* Condiciones de la solicitud */
+            let tblListaSolicitudCondiciones = $("#tblListaSolicitudCondiciones tbody");
+            tblListaSolicitudCondiciones.empty();
+            tblListaSolicitudCondiciones.append('<tr><td class="text-center" colspan="5">No hay registros disponibles...</td></tr>');
+
+            if (solicitudCondiciones != null) {
+
+                if (solicitudCondiciones.length > 0) {
+
+                    let templateCondiciones, estadoCondicion, btnAnularCondicion = '';
+
+                    tblListaSolicitudCondiciones.empty();
+
+                    for (var i = 0; i < solicitudCondiciones.length; i++) {
+
+                        estadoCondicion = solicitudCondiciones[i].EstadoCondicion != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>";
+                        btnAnularCondicion = solicitudCondiciones[i].EstadoCondicion != true ? "" : "<button type='button' class='btn btn-sm btn-block btn-warning mb-0'><i class='far fa-trash-alt'></i> Anular</button>";
+
+                        templateCondiciones += '<tr><td>' + solicitudCondiciones[i].Condicion + '</td><td>' + solicitudCondiciones[i].DescripcionCondicion + '</td><td>' + solicitudCondiciones[i].ComentarioAdicional + '</td><td>' + estadoCondicion + '</td><td>' + btnAnularCondicion + '</td></tr>';
+                    }
+
+                    tblListaSolicitudCondiciones.append(templateCondiciones);
+
+                    $("#pestanaListaSolicitudCondiciones").css('display', '');
+
+                } // if solicitudCondiciones.length > 0
+                else {
+                    $("#pestanaListaSolicitudCondiciones").css('display', 'none');
+                }
+
+            } // if solicitudCondiciones != null
+            else {
+                $("#pestanaListaSolicitudCondiciones").css('display', 'none');
+            }
+
             $("#modalCondicionarSolicitud").modal();
-        }
-    });
+
+        } // success
+    }); // $.ajax
 });
 
-/* Agregar nueva condición al DOM y al arreglo de nuevas condiciones que se guardarán */
-$("#btnAgregarCondicion").click(function () {
+/* Agregar nueva condición al DOM y al arreglo (listaNuevasCondiciones) de nuevas condiciones que se guardarán */
+$("#btnAgregarNuevaCondicion").click(function () {
 
-    if ($($("#frmAddCondicion")).parsley().isValid()) {
-        var tblCondiciones = $("#tblCondiciones tbody");
-        var condicionID = $("#ddlCondiciones :selected").val();
-        var descripcionCondicion = $("#ddlCondiciones :selected").text();
-        var comentarioAdicional = $("#txtComentarioAdicional").val();
-        var btnQuitarCondicion = '<button data-id=' + condicionID + ' data-comentario="' + comentarioAdicional + '" id="btnQuitarCondicion" class="btn btn-sm btn-danger">Quitar</button>';
-        var newRowContent = '<tr><td>' + descripcionCondicion + '</td><td>' + comentarioAdicional + '</td><td>' + btnQuitarCondicion + '</td></tr>';
-        $("#tblCondiciones tbody").append(newRowContent);
-        $("#txtComentarioAdicional").val('');
+    if ($($("#frmPrincipal")).parsley().isValid({ group: 'agregarCondiciones' })) {
 
+        var tblNuevasCondiciones = $("#tblNuevasCondiciones tbody");
+
+        /* Si es la primera condición que se agrega al DOM de la tabla de nuevas condiciones, eliminar mensaje "No hay registros disponibles" */
+        if (contadorNuevasCondiciones == 0) {
+            tblNuevasCondiciones.empty();
+        }
+
+        var IdCondicion = $("#ddlCondiciones :selected").val();
+        var DescripcionCondicion = $("#ddlCondiciones :selected").text();
+        var ComentarioAdicional = $("#txtComentarioAdicional").val();
+        var btnQuitarCondicion = '<button data-id=' + IdCondicion + ' data-comentario="' + ComentarioAdicional + '" id="btnQuitarCondicion" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Quitar</button>';        
+
+        tblNuevasCondiciones.append('<tr><td>' + DescripcionCondicion + '</td><td>' + ComentarioAdicional + '</td><td>' + btnQuitarCondicion + '</td></tr>');
+        
         listaNuevasCondiciones.push({
-            fiIDCondicion: condicionID,
-            fcComentarioAdicional: comentarioAdicional
+            IdCondicion: IdCondicion,
+            ComentarioAdicional: ComentarioAdicional
         });
-        contadorNuevasCondiciones = contadorNuevasCondiciones + 1;
+        contadorNuevasCondiciones++;
+        $("#btnCondicionarSolicitudConfirmar").prop('disabled', false);
 
-    } else { $($("#frmAddCondicion")).parsley().validate(); }
+        $("#txtComentarioAdicional").val('');
+    }
+    else
+    {
+        $($("#frmPrincipal")).parsley().validate({ group: 'agregarCondiciones', force: true });
+    }
 });
 
 $(document).on('click', 'button#btnQuitarCondicion', function () {
 
-    $(this).closest('tr').remove()
-    var condicion = {
-        fiIDCondicion: $(this).data('id').toString(),
-        fcComentarioAdicional: $(this).data('comentario')
+    let nuevaListaDeCondiciones = [];
+
+    let condicionAQuitar = {
+        IdCondicion: $(this).data('id').toString(),
+        ComentarioAdicional: $(this).data('comentario')
     };
-    var list = [];
+
     if (listaNuevasCondiciones.length > 0) {
+
+        let item;
 
         for (var i = 0; i < listaNuevasCondiciones.length; i++) {
 
-            var iter = {
-                fiIDCondicion: listaNuevasCondiciones[i].fiIDCondicion,
-                fcComentarioAdicional: listaNuevasCondiciones[i].fcComentarioAdicional
+            item = {
+                IdCondicion: listaNuevasCondiciones[i].IdCondicion,
+                ComentarioAdicional: listaNuevasCondiciones[i].ComentarioAdicional
             };
-            if (JSON.stringify(iter) != JSON.stringify(condicion)) {
-                list.push(iter);
+            if (JSON.stringify(item) != JSON.stringify(condicionAQuitar)) {
+                nuevaListaDeCondiciones.push(item);
             }
         }
     }
-    listaNuevasCondiciones = list;
+    listaNuevasCondiciones = nuevaListaDeCondiciones;
     contadorNuevasCondiciones -= 1;
+
+    $(this).closest('tr').remove();
+
+    if (contadorNuevasCondiciones == 0) {
+        $("#tblNuevasCondiciones tbody").append('<tr><td class="text-center" colspan="5">No hay registros disponibles...</td></tr>');
+        $("#btnCondicionarSolicitudConfirmar").prop('disabled',true);
+    }
 });
 
 $("#btnCondicionarSolicitudConfirmar").click(function () {
 
-    var otroComentario = $("#razonCondicion").val() != '' ? $("#razonCondicion").val() : '';
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/CondicionarSolicitud",
-        data: JSON.stringify({ SolicitudCondiciones: listaNuevasCondiciones, fcCondicionadoComentario: otroComentario, dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudo cargar la información, contacte al administrador');
-        },
-        success: function (data) {
-            if (data.d == true) {
-                $("#modalCondicionarSolicitud").modal('hide');
-                //$("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('disabled', true);
-                $("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('title', 'La solicitud ya está condicionada, esperando actualización de agente de ventas');
-                MensajeExito('Estado de la solicitud actualizado');
-                actualizarEstadoSolicitud();
-            }
-            else { MensajeError('Error al condicionar la solicitud, contacte al administrador'); }
-        }
-    });
+    if (contadorNuevasCondiciones >= 1 && listaNuevasCondiciones.length >= 1) {
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Analisis.aspx/CondicionarSolicitud",
+            data: JSON.stringify({ listaCondiciones: listaNuevasCondiciones, observacionesOtrasCondiciones: $("#razonCondicion").val(), dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+
+                MensajeError('No se pudo cargar la información, contacte al administrador');
+            },
+            success: function (data) {
+
+                if (data.d == true) {
+
+                    $("#modalCondicionarSolicitud").modal('hide');
+                    MensajeExito('Estado de la solicitud actualizado');
+                    //actualizarEstadoSolicitud();
+                }
+                else
+                {
+                    MensajeError('Error al condicionar la solicitud, contacte al administrador');
+                }
+            } // success
+        }); // $.ajax
+    } // if contadorNuevasCondiciones >= 1 && listaNuevasCondiciones.length >= 1
+    else {
+        MensajeError('Debes agregar por lo menos una condición');
+    }    
 });
 
 // #endregion Administrar condiciones de la solicitud

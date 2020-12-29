@@ -954,12 +954,12 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            estadoSolicitud.Condiciones.Add(new SolicitudesCredito_Analisis_Condicion_ViewModel()
+                            estadoSolicitud.Condiciones.Add(new SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel()
                             {
                                 IdSolicitudCondicion = (int)sqlResultado["fiIDSolicitudCondicion"],
                                 IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
                                 IdCondicion = (int)sqlResultado["fiIDCondicion"],
-                                TipoCondicion = sqlResultado["fcCondicion"].ToString(),
+                                Condicion = sqlResultado["fcCondicion"].ToString(),
                                 DescripcionCondicion = sqlResultado["fcDescripcionCondicion"].ToString(),
                                 ComentarioAdicional = sqlResultado["fcComentarioAdicional"].ToString(),
                                 EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"]
@@ -1423,16 +1423,16 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     #region Administrar condiciones de la solicitud
 
     [WebMethod]
-    public static List<SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel> ObtenerCatalogoCondiciones(string dataCrypt)
+    public static CatalogoCondiciones_SolicitudCondiciones_ViewModel ObtenerCatalogoCondicionesYSolicitudCondiciones(string dataCrypt)
     {
-        var listaCondiciones = new List<SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel>();
+        var resultado = new CatalogoCondiciones_SolicitudCondiciones_ViewModel();
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1450,7 +1450,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     {
                         while (reader.Read())
                         {
-                            listaCondiciones.Add(new SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel()
+                            resultado.CatalogoCondiciones.Add(new Solicitudes_Credito_Analisis_Condicion_ViewModel()
                             {
                                 IdCondicion = (int)reader["fiIDCondicion"],
                                 Condicion = (string)reader["fcCondicion"],
@@ -1458,18 +1458,45 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             });
                         }
                     }
-                }
+                } // using comando obtener catalogo de condiciones
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Condiciones_ObtenerPorIdSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            resultado.CondicionesDeLaSolicitud.Add(new SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel()
+                            {
+                                IdSolicitudCondicion = (int)sqlResultado["fiIDSolicitudCondicion"],
+                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
+                                IdCondicion = (int)sqlResultado["fiIDCondicion"],
+                                Condicion = sqlResultado["fcCondicion"].ToString(),
+                                DescripcionCondicion = sqlResultado["fcDescripcionCondicion"].ToString(),
+                                ComentarioAdicional = sqlResultado["fcComentarioAdicional"].ToString(),
+                                EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"]
+                            });
+                        }
+                    } // using executeReader()
+                } // using command obtener condiciones de la solicitud
             }
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return listaCondiciones;
+        return resultado;
     }
 
     [WebMethod]
-    public static bool CondicionarSolicitud(List<SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel> listaCondiciones, string observacionesOtrasCondiciones, string dataCrypt)
+    public static bool CondicionarSolicitud(List<SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel> listaCondiciones, string observacionesOtrasCondiciones, string dataCrypt)
     {
         var resultadoProceso = false;
         try
@@ -1477,7 +1504,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
@@ -1488,7 +1515,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 {
                     try
                     {
-                        foreach (SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel item in listaCondiciones)
+                        foreach (SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel item in listaCondiciones)
                         {
                             using (var sqlComandoList = new SqlCommand("sp_CREDSolicitudes_Condiciones_Guardar", sqlConexion, transaccion))
                             {
@@ -1516,16 +1543,12 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                     }
                                 }
                             }
-                        }
+                        } // using for each listaCondiciones
 
-                        if (listaCondiciones.Count == 0)
+                        if (resultadoProceso != false)
                         {
+                            //transaccion.Commit();
                             resultadoProceso = true;
-                        }
-
-                        if (resultadoProceso == true)
-                        {
-                            transaccion.Commit();
                         }
                     }
                     catch (Exception ex)
@@ -1885,17 +1908,6 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         public int AnalistaComentario { get; set; }
     }
 
-    public class SolicitudesCredito_Analisis_Solicitud_Condicionamiento_ViewModel
-    {
-        public int IdSolicitudCondicion { get; set; }
-        public int IdSolicitud { get; set; }
-        public int IdCondicion { get; set; }
-        public string Condicion { get; set; }
-        public string DescripcionCondicion { get; set; }
-        public string ComentarioAdicional { get; set; }
-        public bool EstadoCondicion { get; set; }
-    }
-
     public class SolicitudesCredito_Analisis_Calculo_ViewModel
     {
         public decimal ValorSeguroDeDeuda { get; set; }
@@ -1954,41 +1966,45 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         public int IdEstadoSolicitud { get; set; }
         public string EstadoSolicitud { get; set; }
         public int SolicitudActiva { get; set; }
-        public List<SolicitudesCredito_Analisis_Condicion_ViewModel> Condiciones { get; set; }
+        public List<SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel> Condiciones { get; set; }
 
         public SolicitudesCredito_Analisis_EstadoProcesos_ViewModel()
         {
-            Condiciones = new List<SolicitudesCredito_Analisis_Condicion_ViewModel>();
+            Condiciones = new List<SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel>();
         }
     }
 
-    public class SolicitudesCredito_Analisis_Condicion_ViewModel
+    /* Estructua tabla Catalogo_Condiciones */
+    public class Solicitudes_Credito_Analisis_Condicion_ViewModel
+    {
+        public int IdCondicion { get; set; }
+        public string Condicion { get; set; }
+        public string DescripcionCondicion { get; set; }
+    }
+
+    /* Estructura tabla CredSolicitud_Condicionamientos */
+    public class SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel
     {
         public int IdSolicitudCondicion { get; set; }
         public int IdCondicion { get; set; }
         public int IdSolicitud { get; set; }
-        public string TipoCondicion { get; set; }
+        public string Condicion { get; set; }
         public string DescripcionCondicion { get; set; }
         public string ComentarioAdicional { get; set; }
         public bool EstadoCondicion { get; set; }
     }
 
+    public class CatalogoCondiciones_SolicitudCondiciones_ViewModel
+    {
+        public List<Solicitudes_Credito_Analisis_Condicion_ViewModel> CatalogoCondiciones { get; set; }
+        public List<SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel> CondicionesDeLaSolicitud { get; set; }
+
+        public CatalogoCondiciones_SolicitudCondiciones_ViewModel()
+        {
+            CatalogoCondiciones = new List<Solicitudes_Credito_Analisis_Condicion_ViewModel>();
+            CondicionesDeLaSolicitud = new List<SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel>();
+        }
+    }
+
     #endregion
-
 }
-
-#region Enums
-
-enum EstadosDeLaSolicitud : int
-{
-    Ingresada = 0,
-    EnCola = 1,
-    EnAnalisis = 2,
-    Condicionada = 3,
-    RechazadaPorAnalistas = 4,
-    RechazadaPorGestores = 5,
-    PasoFinal = 6,
-    Autorizada = 7
-}
-
-#endregion
