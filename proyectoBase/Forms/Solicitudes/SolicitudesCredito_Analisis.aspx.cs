@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 {
@@ -65,6 +66,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
                     CargarInformacionClienteSolicitud();
                     CargarInformacionGarantia();
+
+                    divPanelInformacionConyugal.Visible = true;
                 }
                 else
                 {
@@ -216,16 +219,15 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 estadoResolucion = iconoPendiente;
                             }
 
-                            HtmlTableRow tRowEstadoProcesamiento = null;
-                            tRowEstadoProcesamiento = new HtmlTableRow();
-                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoIngreso });
-                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoEnCola });
-                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoAnalisis });
-                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoCampo });
-                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoCondicionado });
-                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoReprogramado });
-                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoPasoFinal });
-                            tRowEstadoProcesamiento.Cells.Add(new HtmlTableCell() { InnerHtml = estadoResolucion });
+                            var tRowEstadoProcesamiento = new TableRow();
+                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoIngreso });
+                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoEnCola });
+                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoAnalisis });
+                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoCampo });
+                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoCondicionado });
+                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoReprogramado });
+                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoPasoFinal });
+                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoResolucion });
                             tblEstadoSolicitud.Rows.Add(tRowEstadoProcesamiento);
 
                             IdProducto = sqlResultado["fiIDProducto"].ToString();
@@ -270,8 +272,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 txtCuotaTotal_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaNeta.ToString("N");
                                 txtCostoAparatoGPS_Calculo.Text = calculoPrestamoSolicitado.CostoAparatoGPS.ToString("N");
                                 txtGastosDeCierre_Calculo.Text = calculoPrestamoSolicitado.ValorGastosDeCierre.ToString("N");
-                                txtTasaAnualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N");
-                                txtTasaMensualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N");
+                                txtTasaAnualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N") + "%";
+                                txtTasaMensualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N") + "%";
 
                             }
                             else if (IdProducto == "202" || IdProducto == "203" || IdProducto == "204")
@@ -322,8 +324,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 txtCuotaTotal_FinalAprobado.Text = calculoPrestamoFinal.ValorCuotaNeta.ToString("N");
                                 txtCostoAparatoGPS_FinalAprobado.Text = calculoPrestamoFinal.CostoAparatoGPS.ToString("N");
                                 txtGastosDeCierre_FinalAprobado.Text = calculoPrestamoFinal.ValorGastosDeCierre.ToString("N");
-                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoFinal.TasaAnualAplicada.ToString("N");
-                                txtTasaMensualAplicada_FinalAprobado.Text = calculoPrestamoFinal.TasaMensualAplicada.ToString("N");
+                                txtTasaAnualAplicada_FinalAprobado.Text = calculoPrestamoFinal.TasaAnualAplicada.ToString("N") + "%";
+                                txtTasaMensualAplicada_FinalAprobado.Text = calculoPrestamoFinal.TasaMensualAplicada.ToString("N") + "%";
 
                                 divPrestamoFinalAprobado.Visible = true;
                             }
@@ -590,27 +592,30 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             /****** Referencias de la solicitud ******/
                             sqlResultado.NextResult();
 
-                            HtmlTableRow tRowReferencias = null;
-                            var btnComentarioReferenciaPersonal = string.Empty;
+                            TableRow tRowReferencias = null;
+                            string btnComentarioReferenciaPersonal, btnEliminarReferencia, btnActualizarReferencia = string.Empty;
                             var colorClass = string.Empty;
 
                             while (sqlResultado.Read())
                             {
-                                btnComentarioReferenciaPersonal = "<button type='button' id='btnComentarioReferencia' data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-comment='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombreref='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' class='btn mdi mdi-comment' title='Ver observaciones del depto. de crédito'></button>";
+                                btnComentarioReferenciaPersonal = "<button type='button' id='btnComentarioReferencia' data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' class='btn btn-sm btn-info far fa-comments' title='Ver observaciones del depto. de crédito'></button>";
+                                btnActualizarReferencia = "<button type='button' id='btnActualizarReferencia' data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' class='btn btn-sm btn-info far fa-edit' title='Editar'></button>";
+                                btnEliminarReferencia = "<button type='button' id='btnEliminarReferencia' data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' class='btn btn-sm btn-danger far fa-trash-alt' title='Eliminar'></button>";
+                                
 
-                                tRowReferencias = new HtmlTableRow();
-                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcNombreCompletoReferencia"].ToString() });
-                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcLugarTrabajoReferencia"].ToString() });
-                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTiempoDeConocer"].ToString() });
-                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTelefonoReferencia"].ToString() });
-                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcDescripcionParentesco"].ToString() });
-                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerHtml = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? sqlResultado["fcComentarioDeptoCredito"].ToString() != "Sin comunicacion" ? "<i class='mdi mdi-check-circle-outline'></i>" : "<i class='mdi mdi-call-missed'></i>" : "<i class='mdi mdi-phone-settings'></i>" });
-                                tRowReferencias.Cells.Add(new HtmlTableCell() { InnerHtml = btnComentarioReferenciaPersonal });
+                                tRowReferencias = new TableRow();
+                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcNombreCompletoReferencia"].ToString() });
+                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcLugarTrabajoReferencia"].ToString() });
+                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTiempoDeConocer"].ToString() });
+                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTelefonoReferencia"].ToString() });
+                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcDescripcionParentesco"].ToString() });
+                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? sqlResultado["fcComentarioDeptoCredito"].ToString() != "Sin comunicacion" ? "<i class='far fa-check-circle' title='Validación realizada'></i>" : "<i class='fas fa-phone-slash' title='Sin comunicación'></i>" : "<i class='fas fa-phone' title='Validación pendiente'></i>", HorizontalAlign = HorizontalAlign.Center });
+                                tRowReferencias.Cells.Add(new TableCell() { Text = btnComentarioReferenciaPersonal + " " + btnActualizarReferencia + " " + btnEliminarReferencia, HorizontalAlign = HorizontalAlign.Center });
 
                                 colorClass = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? sqlResultado["fcComentarioDeptoCredito"].ToString() != "Sin comunicacion" ? "tr-exito" : "text-danger" : "";
 
                                 tRowReferencias.Attributes.Add("class", colorClass);
-                                tblReferencias.Rows.Add(tRowReferencias);
+                                tblReferenciasPersonales.Rows.Add(tRowReferencias);
                             }
                         }
                     }
@@ -1547,7 +1552,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
                         if (resultadoProceso != false)
                         {
-                            //transaccion.Commit();
+                            transaccion.Commit();
                             resultadoProceso = true;
                         }
                     }
@@ -1564,6 +1569,51 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             ex.Message.ToString();
         }
         return resultadoProceso;
+    }
+
+    [WebMethod]
+    public static bool AnularCondicionDeLaSolicitud(int idSolicitudCondicion, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Condiciones_Actualizar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitudCondicion", idSolicitudCondicion);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        sqlResultado.Read();
+
+                        if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                        {
+                            resultado = true;
+                        }
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
     }
 
     #endregion

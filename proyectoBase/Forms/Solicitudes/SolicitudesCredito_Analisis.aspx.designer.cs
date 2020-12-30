@@ -145,7 +145,7 @@ public partial class SolicitudesCredito_Analisis
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTable tblEstadoSolicitud;
+    protected global::System.Web.UI.WebControls.Table tblEstadoSolicitud;
 
     /// <summary>
     /// Control divInformacionPersonal.
@@ -589,13 +589,13 @@ public partial class SolicitudesCredito_Analisis
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divReferenciasPersonales;
 
     /// <summary>
-    /// Control tblReferencias.
+    /// Control tblReferenciasPersonales.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTable tblReferencias;
+    protected global::System.Web.UI.WebControls.Table tblReferenciasPersonales;
 
     /// <summary>
     /// Control panelInformacionGarantia.

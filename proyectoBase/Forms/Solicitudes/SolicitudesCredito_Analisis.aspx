@@ -34,13 +34,25 @@
                     </div>
                     <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
                         <div class="form-inline">
+                            <div class="dropdown pb-2 pr-2">
+                                <button class="btn btn-secondary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-bars"></i>
+                                    Más opciones
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <button type="button" class="dropdown-item pl-3" id="btnResumen" data-toggle="modal" data-target="#modalResumen"><i class="far fa-file-alt"></i> Resumen solicitud</button>
+                                    <button type="button" class="dropdown-item pl-3" id="btnImprimirReporte" onclick="ExportHtmlToPdf('#ReporteSolicitud','Reporte_Solitud','Reporte de la Solicitud')"><i class="far fa-file-pdf"></i> Generar PDF</button>
+                                    <button type="button" class="dropdown-item pl-3" id="btnHistorialInterno" title="Ver Historial interno del cliente" disabled="disabled"><i class="fas fa-history"></i> Historial Interno </button>
+                                    <button type="button" class="dropdown-item pl-3" id="btnCondicionarSolicitud"><i class="far fa-edit"></i> Condicionar solicitud</button>
+                                </div>
+                            </div>
                             <div class="button-items pb-2">
                                 <button runat="server" id="btnResolucionSolicitud" type="button" class="btn btn-secondary">
                                     <i class="far fa-edit"></i>
                                     Resolución
                                 </button>
                                 <button runat="server" id="btnHistorialExterno" type="button" class="btn btn-secondary">
-                                    <i class="fas fa-clipboard-check"></i>
+                                    <i class="far fa-credit-card"></i>
                                     Buró Externo
                                 </button>
                                 <button runat="server" id="btnDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentacion" class="btn btn-warning">
@@ -51,24 +63,6 @@
                                     <i class="fas fa-info-circle"></i>
                                     Más detalles
                                 </button>
-                                <button id="btnGroupVerticalDrop1" type="button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="mdi mdi-arrow-down"></i>
-                                    Más opciones
-                                </button>
-                                <div class="dropdown-menu EliminarEspacios" aria-labelledby="btnGroupVerticalDrop1">
-                                    <button id="btnResumen" type="button" data-toggle="modal" data-target="#modalResumen" class="btn btn-sm btn-success btn-block m-0" style="border-radius: 0;">
-                                        Resumen Sol.
-                                    </button>
-                                    <button id="btnImprimirReporte" type="button" class="btn btn-sm btn-success btn-block m-0" onclick="ExportHtmlToPdf('#ReporteSolicitud','Reporte_Solitud','Reporte de la Solicitud')" style="border-radius: 0;">
-                                        Generar PDF
-                                    </button>
-                                    <button id="btnHistorialInterno" title="Ver Historial interno del cliente" disabled="disabled" type="button" class="btn btn-sm btn-success btn-block m-0" style="border-radius: 0;">
-                                        Historial I
-                                    </button>
-                                    <button id="btnCondicionarSolicitud" type="button" class="btn btn-sm btn-warning btn-block m-0" style="border-radius: 0;">
-                                        Condicionar
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -107,22 +101,18 @@
                     </div>
                     <div class="col-12">
                         <div class="table-responsive">
-                            <table class="table table-sm m-0 text-center" id="tblEstadoSolicitud" runat="server">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Ingreso</th>
-                                        <th class="text-center">Recepción</th>
-                                        <th class="text-center">Analisis</th>
-                                        <th class="text-center">Campo</th>
-                                        <th class="text-center">Condic.</th>
-                                        <th class="text-center">Reprog.</th>
-                                        <th class="text-center">Validación</th>
-                                        <th class="text-center">Resolución</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                            <asp:Table runat="server" ID="tblEstadoSolicitud" CssClass="table table-sm m-0 text-center">
+                                <asp:TableHeaderRow TableSection="TableHeader">
+                                    <asp:TableHeaderCell CssClass="text-center">Ingreso</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">Recepción</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">Analisis</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">Campo</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">Condic.</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">Reprog.</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">Validación</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">Resolución</asp:TableHeaderCell>
+                                </asp:TableHeaderRow>
+                            </asp:Table>
                         </div>
                     </div>
                 </div>
@@ -437,8 +427,8 @@
                                 <div class="col-auto">
                                     <h6 class="panel-title m-0 font-14">
                                         <a role="button" data-toggle="collapse" href="#collapseReferenciasPersonales" class="text-dark h6 trigger collapsed font-weight-bold" aria-expanded="true" aria-controls="collapseFive">
-                                            <i class="mdi mdi-account-circle mdi-24px"></i>
-                                            Referencias personales
+                                            <i class="mdi mdi-phone-log mdi-24px"></i>
+                                            Referencias Personales del Cliente
                                         </a>
                                     </h6>
                                 </div>
@@ -454,24 +444,19 @@
                             <div class="panel-body">
                                 <div class="row mb-0" id="divReferenciasPersonales" runat="server">
                                     <div class="col-12">
-
                                         <h6>Lista de referencias personales</h6>
                                         <div class="table-responsive">
-                                            <table class="table table-sm table-hover cursor-pointer" id="tblReferencias" runat="server">
-                                                <thead class="thead-light">
-                                                    <tr>
-                                                        <th>Nombre referencia</th>
-                                                        <th>Lugar de trabajo</th>
-                                                        <th>Tiempo de conocer</th>
-                                                        <th>Telefono</th>
-                                                        <th>Parentesco</th>
-                                                        <th></th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="table-sm">
-                                                </tbody>
-                                            </table>
+                                            <asp:Table runat="server" ID="tblReferenciasPersonales" CssClass="table table-sm table-bordered table-hover cursor-pointer">
+                                                <asp:TableHeaderRow TableSection="TableHeader" CssClass="thead-light">
+                                                    <asp:TableHeaderCell CssClass="text-center">Nombre de la referencia</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell CssClass="text-center">Lugar de trabajo</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell CssClass="text-center">Tiempo de conocer</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell CssClass="text-center">Telefono</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell CssClass="text-center">Parentesco</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell CssClass="text-center">Estado</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell CssClass="text-center"></asp:TableHeaderCell>
+                                                </asp:TableHeaderRow>
+                                            </asp:Table>
                                         </div>
                                     </div>
                                 </div>
@@ -781,7 +766,7 @@ Cargando Préstamos Sugeridos...
 <div class="form-group row" id="divPrestamosSugeridosReales" style="display: none;">
 <label class="col-sm-12 h6 text-center p-t-10" id="lbldivPrestamosSugeridosReales">Préstamos Sugeridos - Real</label>
 <div class="col-sm-12">
-<table class="table table-condensed table-striped" id="tblPMOSugeridosReales">
+<table class="table table-sm table-striped" id="tblPMOSugeridosReales">
 <thead class="thead-light">
 <tr>
 <th>Monto a financiar</th>
@@ -899,7 +884,7 @@ Rechazar solicitud
                                             <div class="form-group row">
                                                 <div class="col-12" id="divTablaNuevosPrestamosSugeridos" runat="server" visible="false">
                                                     <div class="table-responsive">
-                                                        <table class="table table-condensed table-striped table-hover cursor-pointer" id="tblPrestamosSugeridosReales" runat="server">
+                                                        <table class="table table-sm table-hover cursor-pointer" id="tblPrestamosSugeridosReales" runat="server">
                                                             <thead class="thead-light">
                                                                 <tr>
                                                                     <th>Monto a financiar</th>
@@ -907,7 +892,7 @@ Rechazar solicitud
                                                                     <th>Cuota</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody class="table-condensed">
+                                                            <tbody>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -1061,8 +1046,8 @@ Rechazar solicitud
                                 <div class="col-auto">
                                     <h6 class="panel-title m-0 font-14">
                                         <a role="button" data-toggle="collapse" href="#collapseInformacionAnalisis" class="text-dark h6 trigger collapsed font-weight-bold" aria-expanded="true" aria-controls="collapseEight">
-                                            <i class="mdi mdi-account-circle mdi-24px"></i>
-                                            Información de perfil
+                                            <i class="mdi mdi-account-search mdi-24px"></i>
+                                            Información de Perfil
                                         </a>
                                     </h6>
                                 </div>
@@ -1368,7 +1353,7 @@ Rechazar solicitud
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
-                                        <textarea id="txtComentarioAdicional" required="required" class="form-control form-control-sm" placeholder="comentario adicional" data-parsley-maxlength="128" data-parsley-group="agregarCondiciones"></textarea>
+                                        <textarea id="txtComentarioAdicional" required="required" class="form-control form-control-sm" placeholder="comentario adicional" data-parsley-maxlength="128" data-parsley-minlength="15" data-parsley-group="agregarCondiciones"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row justify-content-end">
@@ -1378,7 +1363,7 @@ Rechazar solicitud
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
-                                        <table id="tblNuevasCondiciones" class="table table-sm table-bordered table-condensed table-hover cursor-pointer mb-0">
+                                        <table id="tblNuevasCondiciones" class="table table-sm table-bordered table-hover cursor-pointer mb-0">
                                             <caption class="pt-1">Listado de nuevas condiciones</caption>
                                             <thead class="thead-light">
                                                 <tr>
@@ -1398,7 +1383,7 @@ Rechazar solicitud
                                 </div>
                             </div>
                             <div class="tab-pane pt-3" id="tbllistaCondiciones" role="tabpanel">
-                                <table id="tblListaSolicitudCondiciones" class="table table-sm table-bordered table-condensed table-hover cursor-pointer">
+                                <table id="tblListaSolicitudCondiciones" class="table table-sm table-bordered table-hover cursor-pointer">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Tipo Condición</th>
@@ -1659,7 +1644,7 @@ Rechazar solicitud
                                 </div>
                             </div>
                             <div class="tab-pane pr-0 pl-0 pt-3" id="tabListaCondiciones" role="tabpanel">
-                                <table id="tblListaCondicionesDeLaSolicitud" class="table table-bordered table-hover mb-0 cursor-pointer">
+                                <table id="tblListaCondicionesDeLaSolicitud" class="table table-sm table-bordered table-hover mb-0 cursor-pointer">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Tipo Condición</th>
@@ -1741,39 +1726,32 @@ Rechazar solicitud
         </div>
 
         <!-- modal agregar comentario sobre una referencia personal -->
-        <div id="modalComentarioReferencia" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalComentarioReferenciaLabel" aria-hidden="true">
+        <div id="modalObservacionesReferenciaPersonal" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalComentarioReferenciaLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h6 class="modal-title mt-0" id="modalComentarioReferenciaLabel">Observaciones de referencia personal</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
-                    <form action="#" id="frmObservacionReferencia">
-                        <div class="modal-body">
-                            ¿Está seguro de actualizar las observaciones de la referencia personal
-                            <strong>
-                                <label id="lblNombreReferenciaModal"></label>
-                            </strong>?<br />
-                            <div class="form-group">
-                                <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesReferencia" required="required" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="informacionLaboral"></textarea>
-                            </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Observaciones y/o comentarios de la referencia personal <strong id="lblNombreReferenciaModal"></strong></label>
+                            <textarea id="txtObservacionesReferencia" required="required" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="observacionesReferenciaPersonal"></textarea>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" id="btnEliminarReferencia" data-toggle="modal" data-target="#modalEliminarReferencia" class="btn btn-danger float-left mr-1 validador">
-                                Eliminar
-                            </button>
-                            <button type="button" id="btnReferenciaSinComunicacion" class="btn btn-primary mr-1 validador">
+                    </div>
+                    <div class="modal-footer">
+                        <div class="button-items pb-2">
+                            <button type="button" id="btnReferenciaSinComunicacion" class="btn btn-danger validador">
                                 Sin comunicación
                             </button>
-                            <button type="button" id="btnComentarioReferenciaConfirmar" class="btn btn-primary mr-1 validador">
-                                Confirmar
+                            <button type="button" id="btnActualizarObservacionReferencia" class="btn btn-primary validador">
+                                Actualizar observaciones
                             </button>
                             <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                                 Cancelar
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2059,7 +2037,6 @@ Rechazar solicitud
                 </div>
             </div>
         </div>
-
     </form>
 
     <script src="/Scripts/js/jquery.min.js"></script>

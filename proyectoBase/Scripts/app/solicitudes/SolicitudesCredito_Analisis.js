@@ -1,5 +1,4 @@
-﻿
-// #region variables globales
+﻿// #region variables globales
 
 /* ====== Esta variable almacena el ID del estado actual de la solicitud ============== */
 /* ====== Se actualiza cada vez que se cargan los detalles de la solicitud ============ */
@@ -21,6 +20,7 @@ var resolucionHabilitada = false;
 var resolucion = false;
 
 // #endregion
+
 
 // #region Cargar detalles de la solicitud
 
@@ -44,10 +44,9 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                 var informacionSolicitud = data.d;
 
                 ID_ESTADO_SOLICITUD = informacionSolicitud.IdEstadoSolicitud;
+                ESTADO_SOLICITUD = informacionSolicitud;
 
-                var tablaEstatusSolicitud = $('#tblDetalleEstado tbody');
-
-                tablaEstatusSolicitud.empty();
+                var tablaEstatusSolicitud = $('#tblDetalleEstado tbody').empty();
 
                 /* En ingreso */
                 var enIngresoInicio = ObtenerFechaFormateada(informacionSolicitud.EnIngresoInicio);
@@ -68,7 +67,6 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
 
                 InicializarContador(informacionSolicitud.EnIngresoInicio, informacionSolicitud.EnIngresoFin, 'lblTiempoTranscurrido_EnIngreso');
 
-
                 /* En tramite */
                 var enColaInicio = ObtenerFechaFormateada(informacionSolicitud.EnColaInicio);
                 var enColaFin = ObtenerFechaFormateada(informacionSolicitud.EnColaFin);
@@ -82,7 +80,6 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                     '</tr>');
 
                 InicializarContador(informacionSolicitud.EnColaInicio, informacionSolicitud.EnColaFin, 'lblTiempoTranscurrido_EnCola');
-
 
                 /* En análisis */
                 var enAnalisisInicio = ObtenerFechaFormateada(informacionSolicitud.EnAnalisisInicio);
@@ -103,7 +100,6 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
 
                 InicializarContador(informacionSolicitud.EnAnalisisInicio, informacionSolicitud.EnAnalisisFin, 'lblTiempoTranscurrido_EnAnalisis');
 
-
                 /* En campo */
                 var enCampoInicio = ObtenerFechaFormateada(informacionSolicitud.EnRutaDeInvestigacionInicio);
                 var enCampoFin = ObtenerFechaFormateada(informacionSolicitud.EnRutaDeInvestigacionFin);
@@ -122,7 +118,6 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                     '</tr>');
 
                 InicializarContador(informacionSolicitud.EnRutaDeInvestigacionInicio, informacionSolicitud.EnRutaDeInvestigacionFin, 'lblTiempoTranscurrido_EnCampo');
-
 
                 /* Condicionado */
                 var condicionadoInicio = ObtenerFechaFormateada(informacionSolicitud.CondicionadoInicio);
@@ -143,7 +138,6 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
 
                 InicializarContador(informacionSolicitud.CondicionadoInicio, informacionSolicitud.CondicionadoFin, 'lblTiempoTranscurrido_Condicionado');
 
-
                 /* Reprogramado */
                 var reprogramadoInicio = ObtenerFechaFormateada(informacionSolicitud.ReprogramadoInicio);
                 var reprogramadoFin = ObtenerFechaFormateada(informacionSolicitud.ReprogramadoFin);
@@ -162,7 +156,6 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                     '</tr>');
 
                 InicializarContador(informacionSolicitud.ReprogramadoInicio, informacionSolicitud.ReprogramadoFin, 'lblTiempoTranscurrido_Reprogramado');
-
 
                 /* Validación */
                 var validacionInicio = ObtenerFechaFormateada(informacionSolicitud.PasoFinalInicio);
@@ -183,14 +176,12 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
 
                 InicializarContador(informacionSolicitud.PasoFinalInicio, informacionSolicitud.PasoFinalFin, 'lblTiempoTranscurrido_Validacion');
 
-
                 /* Tiempo total transcurrido */
                 tablaEstatusSolicitud.append('<tr>' +
                     '<td colspan="5" class="text-center">Tiempo total transcurrido: <span id="lblTiempoTotal"></span></td>' +
                     '</tr >');
 
                 InicializarContador(informacionSolicitud.EnColaInicio, informacionSolicitud.TiempoTomaDecisionFinal, 'lblTiempoTotal');
-
 
                 /* Verificar estado de la solicitud */
                 $("#lblEstadoSolicitud").text(informacionSolicitud.EstadoSolicitud);
@@ -326,18 +317,15 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                 }
 
                 /* Condiciones de la solicitud */
-                var tblCondiciones = $("#tblListaCondicionesDeLaSolicitud tbody");
-                tblCondiciones.empty();
-                tblCondiciones.append('<tr><td class="text-center" colspan="4">No hay registros disponibles...</td></tr>');
+                var tblCondiciones = $("#tblListaCondicionesDeLaSolicitud tbody").empty().append('<tr><td class="text-center" colspan="4">No hay registros disponibles...</td></tr>');
 
                 if (informacionSolicitud.Condiciones != null) {
 
                     if (informacionSolicitud.Condiciones.length > 0) {
 
-                        var condiciones = informacionSolicitud.Condiciones;
+                        let condiciones = informacionSolicitud.Condiciones;
                         let templateCondiciones = '';
                         let estadoCondicion = '';
-
                         tblCondiciones.empty();
 
                         for (var i = 0; i < condiciones.length; i++) {
@@ -361,6 +349,94 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                     $("#tabListaCondicionesDeLaSolicitud").css('display', 'none');
                 }
 
+                /* iconos del procesamiento de la solicitud que está debajo de la información principal de la solicitud */
+                var iconoRojo = "<i class='mdi mdi-close-circle-outline mdi-18px text-danger'></i>";
+                var iconoExito = "<i class='mdi mdi-check-circle-outline mdi-18px text-success'></i>";
+                var iconoPendiente = "<i class='mdi mdi-check-circle-outline mdi-18px text-warning'></i>";
+                var iconoCancelado = "<i class='mdi mdi-check-circle-outline mdi-18px text-secondary'></i>";
+                var estadoIngreso = '', estadoEnCola = '', estadoAnalisis = '', estadoCampo = '', estadoCondicionado = '', estadoReprogramado = '', estadoPasoFinal = '', estadoResolucion = '';
+                var tblEstadoSolicitud = $("#tblEstadoSolicitud tbody");
+
+                /* Estado en ingreso */
+                if (ValidarFecha(informacionSolicitud.EnIngresoInicio) != null) {
+                    estadoIngreso = ValidarFecha(informacionSolicitud.EnIngresoFin) != null ? iconoExito : iconoPendiente;
+                }
+
+                /* Estado en cola o recepción */
+                if (ValidarFecha(informacionSolicitud.EnColaInicio) != null) {
+
+                    estadoEnCola = ValidarFecha(informacionSolicitud.EnColaFin) != null ? iconoExito : iconoPendiente;
+
+                    if (ValidarFecha(informacionSolicitud.EnColaFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
+                        estadoEnCola = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
+                    }
+                }
+
+                /* Estado en analisis */
+                if (ValidarFecha(informacionSolicitud.EnAnalisisInicio) != null) {
+
+                    estadoAnalisis = ValidarFecha(informacionSolicitud.EnAnalisisFin) != null ? iconoExito : iconoPendiente;
+
+                    if (ValidarFecha(informacionSolicitud.EnAnalisisFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
+                        estadoAnalisis = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
+                    }
+                    if (ID_ESTADO_SOLICITUD == "4") {
+                        estadoAnalisis = iconoRojo;
+                    }
+                }
+
+                /* Estado en campo */
+                if (ValidarFecha(informacionSolicitud.FechaEnvioARuta) != null) {
+
+                    estadoCampo = ValidarFecha(informacionSolicitud.EnRutaDeInvestigacionFin) != null ? iconoExito : iconoPendiente;
+
+                    if (ValidarFecha(informacionSolicitud.EnRutaDeInvestigacionFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
+                        estadoCampo = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
+                    }
+                    if (ID_ESTADO_SOLICITUD == "5") {
+                        estadoCampo = iconoRojo;
+                    }
+                }
+
+                /* Estado condicionada */
+                if (ValidarFecha(informacionSolicitud.CondicionadoInicio) != null) {
+
+                    estadoCondicionado = ValidarFecha(informacionSolicitud.CondicionadoFin) != null ? iconoExito : iconoPendiente;
+
+                    if (ValidarFecha(informacionSolicitud.CondicionadoFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
+                        estadoCondicionado = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
+                    }
+                }
+
+                /* Estado Reprogramado */
+                if (ValidarFecha(informacionSolicitud.ReprogramadoInicio) != null) {
+
+                    estadoReprogramado = ValidarFecha(informacionSolicitud.ReprogramadoFin) != null ? iconoExito : iconoPendiente;
+
+                    if (ValidarFecha(informacionSolicitud.ReprogramadoFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
+                        estadoReprogramado = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
+                    }
+                }
+
+                /* Estado validacion final */
+                if (ValidarFecha(informacionSolicitud.PasoFinalInicio) != null) {
+
+                    estadoPasoFinal = ValidarFecha(informacionSolicitud.PasoFinalFin) != null ? iconoExito : iconoPendiente;
+
+                    if (ValidarFecha(informacionSolicitud.PasoFinalFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
+                        estadoPasoFinal = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
+                    }
+                }
+
+                if (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7") {
+                    estadoResolucion = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoRojo;
+                }
+                else if (ValidarFecha(informacionSolicitud.PasoFinalInicio) != null) {
+                    estadoResolucion = iconoPendiente;
+                }
+
+                tblEstadoSolicitud.empty().append('<tr><td> ' + estadoIngreso + ' </td><td> ' + estadoEnCola + ' </td><td> ' + estadoAnalisis + ' </td><td> ' + estadoCampo + ' </td><td> ' + estadoCondicionado + ' </td><td> ' + estadoReprogramado + ' </td><td> ' + estadoPasoFinal + ' </td><td> ' + estadoResolucion + ' </td></tr>');
+
                 if (mostrarModalDeDetalles == true) {
                     $("#modalEstadoSolicitud").modal();
                 }
@@ -374,6 +450,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
 }
 
 // #endregion Cargar detalles de la solicitud
+
 
 // #region Administrar condiciones de la solicitud
 
@@ -392,12 +469,9 @@ $("#btnCondicionarSolicitud").click(function () {
     listaNuevasCondiciones = [];
     contadorNuevasCondiciones = 0;
     $("#btnCondicionarSolicitudConfirmar").prop('disabled', true);
-
     $("#txtComentarioAdicional").val('');
-    let tblNuevasCondiciones = $("#tblNuevasCondiciones tbody");
 
-    tblNuevasCondiciones.empty();
-    tblNuevasCondiciones.append('<tr><td class="text-center" colspan="3">No hay registros disponibles...</td></tr>');
+    $("#tblNuevasCondiciones tbody").empty().append('<tr><td class="text-center" colspan="3">No hay registros disponibles...</td></tr>');
 
     $.ajax({
         type: "POST",
@@ -422,9 +496,7 @@ $("#btnCondicionarSolicitud").click(function () {
             }
 
             /* Condiciones de la solicitud */
-            let tblListaSolicitudCondiciones = $("#tblListaSolicitudCondiciones tbody");
-            tblListaSolicitudCondiciones.empty();
-            tblListaSolicitudCondiciones.append('<tr><td class="text-center" colspan="5">No hay registros disponibles...</td></tr>');
+            let tblListaSolicitudCondiciones = $("#tblListaSolicitudCondiciones tbody").empty().append('<tr><td class="text-center" colspan="5">No hay registros disponibles...</td></tr>');
 
             if (solicitudCondiciones != null) {
 
@@ -437,7 +509,7 @@ $("#btnCondicionarSolicitud").click(function () {
                     for (var i = 0; i < solicitudCondiciones.length; i++) {
 
                         estadoCondicion = solicitudCondiciones[i].EstadoCondicion != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>";
-                        btnAnularCondicion = solicitudCondiciones[i].EstadoCondicion != true ? "" : "<button type='button' class='btn btn-sm btn-block btn-warning mb-0'><i class='far fa-trash-alt'></i> Anular</button>";
+                        btnAnularCondicion = solicitudCondiciones[i].EstadoCondicion != true ? "" : "<button type='button' id='btnAnularCondicion' data-id='" + solicitudCondiciones[i].IdSolicitudCondicion + "' class='btn btn-sm btn-block btn-danger mb-0'><i class='far fa-trash-alt'></i> Anular</button>";
 
                         templateCondiciones += '<tr><td>' + solicitudCondiciones[i].Condicion + '</td><td>' + solicitudCondiciones[i].DescripcionCondicion + '</td><td>' + solicitudCondiciones[i].ComentarioAdicional + '</td><td>' + estadoCondicion + '</td><td>' + btnAnularCondicion + '</td></tr>';
                     }
@@ -477,10 +549,10 @@ $("#btnAgregarNuevaCondicion").click(function () {
         var IdCondicion = $("#ddlCondiciones :selected").val();
         var DescripcionCondicion = $("#ddlCondiciones :selected").text();
         var ComentarioAdicional = $("#txtComentarioAdicional").val();
-        var btnQuitarCondicion = '<button data-id=' + IdCondicion + ' data-comentario="' + ComentarioAdicional + '" id="btnQuitarCondicion" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Quitar</button>';        
+        var btnQuitarCondicion = '<button data-id=' + IdCondicion + ' data-comentario="' + ComentarioAdicional + '" id="btnQuitarCondicion" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Quitar</button>';
 
         tblNuevasCondiciones.append('<tr><td>' + DescripcionCondicion + '</td><td>' + ComentarioAdicional + '</td><td>' + btnQuitarCondicion + '</td></tr>');
-        
+
         listaNuevasCondiciones.push({
             IdCondicion: IdCondicion,
             ComentarioAdicional: ComentarioAdicional
@@ -490,12 +562,12 @@ $("#btnAgregarNuevaCondicion").click(function () {
 
         $("#txtComentarioAdicional").val('');
     }
-    else
-    {
+    else {
         $($("#frmPrincipal")).parsley().validate({ group: 'agregarCondiciones', force: true });
     }
 });
 
+/* Quitar nueva condición del DOM de la tabla y del arreglo (listaNuevasCondiciones) de nuevas condiciones que se guardará */
 $(document).on('click', 'button#btnQuitarCondicion', function () {
 
     let nuevaListaDeCondiciones = [];
@@ -527,10 +599,11 @@ $(document).on('click', 'button#btnQuitarCondicion', function () {
 
     if (contadorNuevasCondiciones == 0) {
         $("#tblNuevasCondiciones tbody").append('<tr><td class="text-center" colspan="5">No hay registros disponibles...</td></tr>');
-        $("#btnCondicionarSolicitudConfirmar").prop('disabled',true);
+        $("#btnCondicionarSolicitudConfirmar").prop('disabled', true);
     }
 });
 
+/* Confirmar condicionar la solicitud, guardar todas las nuuevas condiciones y cambiar el estado de la solicitud */
 $("#btnCondicionarSolicitudConfirmar").click(function () {
 
     if (contadorNuevasCondiciones >= 1 && listaNuevasCondiciones.length >= 1) {
@@ -547,13 +620,12 @@ $("#btnCondicionarSolicitudConfirmar").click(function () {
             success: function (data) {
 
                 if (data.d == true) {
-
                     $("#modalCondicionarSolicitud").modal('hide');
-                    MensajeExito('Estado de la solicitud actualizado');
-                    //actualizarEstadoSolicitud();
+
+                    MensajeExito('Estado de la solicitud actualizado. Actualizando información de la solicitud...');
+                    CargarDetallesDelProcesamientoDeLaSolicitud(false);
                 }
-                else
-                {
+                else {
                     MensajeError('Error al condicionar la solicitud, contacte al administrador');
                 }
             } // success
@@ -561,93 +633,124 @@ $("#btnCondicionarSolicitudConfirmar").click(function () {
     } // if contadorNuevasCondiciones >= 1 && listaNuevasCondiciones.length >= 1
     else {
         MensajeError('Debes agregar por lo menos una condición');
-    }    
+    }
+});
+
+/* Anular o cancelar condiciones de la solicitud. Estas condiciones son las que se muestran dinamicamente en el modal de condicionar solicitud (modalCondicionarSolicitud) */
+$(document).on('click', 'button#btnAnularCondicion', function () {
+
+    var buttonAnularCondicion = $(this);
+
+    $.ajax({
+        type: "POST",
+        url: 'SolicitudesCredito_Analisis.aspx/AnularCondicionDeLaSolicitud',
+        data: JSON.stringify({ idSolicitudCondicion: buttonAnularCondicion.data('id'), dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al anular la condición, contacte al administrador.');
+        },
+        success: function (data) {
+
+            if (data.d == true) {
+
+                buttonAnularCondicion.replaceWith('<label class="btn btn-sm btn-success mb-0"><i class="far fa-check-circle"></i> Anulada</label>');
+
+                MensajeExito('La condición se anuló correctamente. Actualizando información de la solicitud...');
+                CargarDetallesDelProcesamientoDeLaSolicitud();
+            }
+            else {
+                MensajeError('Error al anular la condición, contacte al administrador.');
+            }
+        }
+    });
 });
 
 // #endregion Administrar condiciones de la solicitud
 
+
 // #region Administrar referencias personales
 
 /* Actualizar comentario sobre una referencia personal radiofaro */
-var comentarioActual = '';
-var IDReferencia = '';
-var btnReferenciaSeleccionada = '';
+var observacionesReferenciaPersonal = '';
+var idReferenciaPersonalSeleccionada = '';
+var btnReferenciaPersonalSeleccionada = '';
 
 $(document).on('click', 'button#btnComentarioReferencia', function () {
 
-    btnReferenciaSeleccionada = $(this);
-    comentarioActual = $(this).data('comment');
-    IDReferencia = $(this).data('id');
-    var nombreReferencia = $(this).data('nombreref');
+    btnReferenciaPersonalSeleccionada = $(this);
+    observacionesReferenciaPersonal = btnReferenciaPersonalSeleccionada.data('observaciones');
+    idReferenciaPersonalSeleccionada = btnReferenciaPersonalSeleccionada.data('id');
 
-    $("#txtObservacionesReferencia").val(comentarioActual);
-    $("#lblNombreReferenciaModal").text(nombreReferencia);
+    $("#txtObservacionesReferencia").val(observacionesReferenciaPersonal);
+    $("#lblNombreReferenciaModal").text(btnReferenciaPersonalSeleccionada.data('nombrereferencia'));
 
-    if (comentarioActual != '' && comentarioActual != 'Sin comunicacion') {
-        $("#txtObservacionesReferencia").prop('disabled', true);
-        $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', true).removeClass('btn-primary').addClass('btn-secondary');
-    }
-    else if (comentarioActual == 'Sin comunicacion') {
+    if (observacionesReferenciaPersonal == 'Sin comunicacion') {
         $("#txtObservacionesReferencia").prop('disabled', false);
         $("#btnReferenciaSinComunicacion").prop('disabled', true);
-        $("#btnComentarioReferenciaConfirmar").prop('disabled', false).removeClass('btn-secondary').addClass('btn-primary');
+        $("#btnActualizarObservacionReferencia").prop('disabled', false).removeClass('btn-secondary').addClass('btn-primary');
     }
     else {
         $("#txtObservacionesReferencia").prop('disabled', false);
-        $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', false);
+        $("#btnActualizarObservacionReferencia,#btnReferenciaSinComunicacion").prop('disabled', false);
     }
-    $("#modalComentarioReferencia").modal();
+    $("#modalObservacionesReferenciaPersonal").modal();
 });
 
-$("#btnComentarioReferenciaConfirmar").click(function () {
+$("#btnActualizarObservacionReferencia").click(function () {
 
-    if ($($("#frmObservacionReferencia")).parsley().isValid()) {
+    if ($($("#txtObservacionesReferencia")).parsley().isValid()) {
 
-        $("#frmObservacionReferencia").submit(function (e) { e.preventDefault(); });
-        comentarioActual = $('#txtObservacionesReferencia').val();
+        observacionesReferenciaPersonal = $('#txtObservacionesReferencia').val();
 
         $.ajax({
             type: "POST",
-            url: 'SolicitudesCredito_Analisis.aspx/ComentarioReferenciaPersonal',
-            data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
+            url: 'SolicitudesCredito_Analisis.aspx/ActualizarObservacionesReferenciaPersonal',
+            data: JSON.stringify({ idReferencia: idReferenciaPersonalSeleccionada, observaciones: observacionesReferenciaPersonal, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Error al actualizar estado de la referencia personal');
+
+                MensajeError('Error al actualizar observaciones de la referencia personal, contacte al administrador.');
             },
             success: function (data) {
+
                 if (data.d == true) {
-                    $("#modalComentarioReferencia").modal('hide');
-                    MensajeExito('Observaciones de la referencia personal actualizadas correctamente');
-                    btnReferenciaSeleccionada.data('comment', comentarioActual);
-                    btnReferenciaSeleccionada.closest('tr').removeClass('text-danger').addClass('tr-exito');
-                    btnReferenciaSeleccionada.removeClass('mdi mdi-pencil').removeClass('mdi mdi-call-missed text-danger').addClass('mdi mdi-check-circle-outline tr-exito');
+
+                    $("#modalObservacionesReferenciaPersonal").modal('hide');
+                    MensajeExito('Las observaciones de la referencia personal se actualizaron correctamente.');
+                    btnReferenciaPersonalSeleccionada.data('observaciones', observacionesReferenciaPersonal);
+                    btnReferenciaPersonalSeleccionada.closest('tr').removeClass('text-danger').addClass('tr-exito');
+                    btnReferenciaPersonalSeleccionada.removeClass('far fa-edit').removeClass('fas fa-phone-slash text-danger').addClass('far fa-check-circle tr-exito');
                 }
-                else { MensajeError('Error al actualizar observaciones de la referencia personal'); }
+                else {
+                    MensajeError('Error al actualizar observaciones de la referencia personal');
+                }
             }
         });
     }
-    else { $($("#frmObservacionReferencia")).parsley().validate(); }
+    else {
+        $($("#txtObservacionesReferencia")).parsley().validate();
+    }
 });
 
 $("#btnReferenciaSinComunicacion").click(function () {
 
-    comentarioActual = 'Sin comunicacion';
+    observacionesReferenciaPersonal = 'Sin comunicacion';
 
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/ComentarioReferenciaPersonal',
-        data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
+        url: 'SolicitudesCredito_Analisis.aspx/ActualizarObservacionesReferenciaPersonal',
+        data: JSON.stringify({ idReferenciaPersonal: idReferenciaPersonalSeleccionada, comentario: observacionesReferenciaPersonal, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al actualizar estado de la referencia personal');
         },
         success: function (data) {
             if (data.d == true) {
-                $("#modalComentarioReferencia").modal('hide');
+                $("#modalObservacionesReferenciaPersonal").modal('hide');
                 MensajeExito('Estado de la referencia personal actualizado correctamente');
-                btnReferenciaSeleccionada.data('comment', comentarioActual);
-                btnReferenciaSeleccionada.removeClass('mdi mdi-check-circle-outline tr-exito').removeClass('mdi mdi-pencil').addClass('mdi mdi-call-missed text-danger');
-                btnReferenciaSeleccionada.closest('tr').addClass('text-danger');
+                btnReferenciaPersonalSeleccionada.data('observaciones', observacionesReferenciaPersonal);
+                btnReferenciaPersonalSeleccionada.removeClass('far fa-check-circle tr-exito').removeClass('far fa-edit').addClass('fas fa-phone-slash text-danger');
+                btnReferenciaPersonalSeleccionada.closest('tr').addClass('text-danger');
             }
             else { MensajeError('Error al actualizar estado de la referencia personal'); }
         }
@@ -655,7 +758,7 @@ $("#btnReferenciaSinComunicacion").click(function () {
 });
 
 $("#btnEliminarReferencia").click(function () {
-    $("#modalComentarioReferencia").modal('hide');
+    $("#modalObservacionesReferenciaPersonal").modal('hide');
     $("#modalEliminarReferencia").modal('show');
 });
 
@@ -664,7 +767,7 @@ $("#btnEliminarReferenciaConfirmar").click(function () {
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_Analisis.aspx/EliminarReferenciaPersonal',
-        data: JSON.stringify({ IDReferencia: IDReferencia, dataCrypt: window.location.href }),
+        data: JSON.stringify({ idReferenciaPersonal: idReferenciaPersonalSeleccionada, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al eliminar referencia personal');
@@ -681,6 +784,7 @@ $("#btnEliminarReferenciaConfirmar").click(function () {
 });
 
 // #endregion
+
 
 // #region validaciones de analisis
 
@@ -913,6 +1017,7 @@ $("#btnValidarTipoDocConfirmar").click(function () {
 });
 
 // #endregion
+
 
 //#region Funciones de analisis
 
@@ -1168,6 +1273,7 @@ $("#btnConfirmarPrestamoAprobado").click(function () {
 
 //#endregion Funciones de analisis
 
+
 // #region Calculos
 
 function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
@@ -1356,6 +1462,7 @@ function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
 
 // #endregion Calculos
 
+
 // #region Enviar a campo
 
 /* Enviar solicitud a campo */
@@ -1395,6 +1502,7 @@ $("#btnEnviarCampoConfirmar").click(function () {
 });
 
 // #endregion
+
 
 // #region Aprobar solicitud
 
@@ -1467,6 +1575,7 @@ $("#btnConfirmarAprobar").click(function () {
 });
 
 // #endregion Aprobar solicitud
+
 
 // #region Rechazar solicitud
 
@@ -1580,6 +1689,7 @@ $("#btnRechazarIncapPagoConfirmar").click(function () {
 
 // #endregion Rechazar solicitud
 
+
 //#region Funciones utilitarias
 
 countdown.setLabels(
@@ -1589,7 +1699,6 @@ countdown.setLabels(
     ' : ',
     'ahora',
     function (n) { return n.toString(); });
-
 
 function InicializarContador(fechaInicio, fechaFin, identificadorEtiqueta) {
 
@@ -1636,7 +1745,6 @@ function ObtenerFechaFormateada(fecha) {
     return fecha == '/Date(-2208967200000)/' ? '-' : moment(fecha).locale('es').format('YYYY/MM/DD hh:mm:ss A');
 }
 
-
 function ValidarFecha(fecha) {
 
     return fecha == '/Date(-2208967200000)/' ? null : fecha;
@@ -1676,6 +1784,7 @@ function MensajeError(mensaje) {
 }
 
 //#endregion Funciones utilitarias
+
 
 // #region Otras funciones
 
