@@ -25,7 +25,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Page load
+    #region Page load *Listo*
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -88,8 +88,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Cargar información del cliente, de la solicitud y de la garantía
-
+    #region Cargar información del cliente, de la solicitud y de la garantía *Listo*
+    
     public void CargarInformacionClienteSolicitud()
     {
         try
@@ -630,7 +630,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             ex.Message.ToString();
         }
     }
-
+    
     public void CargarInformacionGarantia()
     {
         try
@@ -1425,8 +1425,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Administrar condiciones de la solicitud
-
+    #region Administrar condiciones de la solicitud *Listo*
+    
     [WebMethod]
     public static CatalogoCondiciones_SolicitudCondiciones_ViewModel ObtenerCatalogoCondicionesYSolicitudCondiciones(string dataCrypt)
     {
