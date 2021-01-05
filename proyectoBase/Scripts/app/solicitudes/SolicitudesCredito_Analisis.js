@@ -1,4 +1,4 @@
-﻿// #region variables globales
+﻿// #region variables globales *Listo*
 
 /* ====== Esta variable almacena el ID del estado actual de la solicitud ============== */
 /* ====== Se actualiza cada vez que se cargan los detalles de la solicitud ============ */
@@ -22,7 +22,7 @@ var resolucion = false;
 // #endregion
 
 
-// #region Cargar detalles de la solicitud
+// #region Cargar detalles de la solicitud *Listo de momento*
 
 /* ====== Carga el estado actual del procesamiento de la solicitud =============================== */
 /* ====== Muestra el procesamiento de la solicitud en el modal "modalEstadoSolicitud" ============ */
@@ -452,7 +452,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
 // #endregion Cargar detalles de la solicitud
 
 
-// #region Administrar condiciones de la solicitud
+// #region Administrar condiciones de la solicitud *Listo*
 
 /* ====== Almacena la cantidad de nuevas condiciones que se estan agregando ================ */
 /* ====== Se utiliza para validar que se agregue por lo menos una condición ================ */

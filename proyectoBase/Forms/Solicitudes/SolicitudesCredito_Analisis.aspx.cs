@@ -595,13 +595,16 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             TableRow tRowReferencias = null;
                             string btnComentarioReferenciaPersonal, btnEliminarReferencia, btnActualizarReferencia = string.Empty;
                             var colorClass = string.Empty;
+                            var stringDatas = string.Empty;
 
                             while (sqlResultado.Read())
                             {
-                                btnComentarioReferenciaPersonal = "<button type='button' id='btnComentarioReferencia' data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' class='btn btn-sm btn-info far fa-comments' title='Ver observaciones del depto. de crédito'></button>";
-                                btnActualizarReferencia = "<button type='button' id='btnActualizarReferencia' data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' class='btn btn-sm btn-info far fa-edit' title='Editar'></button>";
-                                btnEliminarReferencia = "<button type='button' id='btnEliminarReferencia' data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' class='btn btn-sm btn-danger far fa-trash-alt' title='Eliminar'></button>";
-                                
+
+                                stringDatas = "data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-analista = '" + sqlResultado["fcNombreCorto"] + "' data-sincomunicacion = '" + sqlResultado["fbSinComunicacion"] + "' data-fechaanalisis= ' " + "1" == "1" ? "1" : "1" + "'";
+
+                                btnComentarioReferenciaPersonal = "<button type='button' id='btnComentarioReferencia' class='btn btn-sm btn-info far fa-comments' title='Ver observaciones del depto. de crédito'></button>";
+                                btnActualizarReferencia = "<button type='button' id='btnActualizarReferencia' class='btn btn-sm btn-info far fa-edit' title='Editar'></button>";
+                                btnEliminarReferencia = "<button type='button' id='btnEliminarReferencia' class='btn btn-sm btn-danger far fa-trash-alt' title='Eliminar'></button>";
 
                                 tRowReferencias = new TableRow();
                                 tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcNombreCompletoReferencia"].ToString() });
@@ -611,7 +614,6 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcDescripcionParentesco"].ToString() });
                                 tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? sqlResultado["fcComentarioDeptoCredito"].ToString() != "Sin comunicacion" ? "<i class='far fa-check-circle' title='Validación realizada'></i>" : "<i class='fas fa-phone-slash' title='Sin comunicación'></i>" : "<i class='fas fa-phone' title='Validación pendiente'></i>", HorizontalAlign = HorizontalAlign.Center });
                                 tRowReferencias.Cells.Add(new TableCell() { Text = btnComentarioReferenciaPersonal + " " + btnActualizarReferencia + " " + btnEliminarReferencia, HorizontalAlign = HorizontalAlign.Center });
-
                                 colorClass = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? sqlResultado["fcComentarioDeptoCredito"].ToString() != "Sin comunicacion" ? "tr-exito" : "text-danger" : "";
 
                                 tRowReferencias.Attributes.Add("class", colorClass);
