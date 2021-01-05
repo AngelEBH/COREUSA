@@ -447,7 +447,7 @@
                                         <h6>Lista de referencias personales</h6>
                                     </div>
                                     <div class="col-auto">
-                                        <button type="button" id="btnNuevaReferenciaPersonal" class="btn btn-info"><i class="fas fa-plus-circle"></i>Agregar nuevo</button>
+                                        <button type="button" id="btnNuevaReferenciaPersonal" class="btn btn-info"><i class="fas fa-plus-circle"></i>&nbsp; Agregar nuevo</button>
                                     </div>
                                     <div class="col-12">
                                         <div class="table-responsive">
@@ -1733,22 +1733,38 @@ Rechazar solicitud
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalComentarioReferenciaLabel">Observaciones de referencia personal</h6>
+                        <h6 class="modal-title mt-0" id="modalComentarioReferenciaLabel">Observaciones/Comentarios del departamento de crédito</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-4">
+                                <label class="col-form-label">Referencia personal</label>
+                                <asp:TextBox ID="txtNombreReferenciaModal" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-4">
+                                <label class="col-form-label">Analista de crédito</label>
+                                <asp:TextBox ID="txtAnalistaDeCredito" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server" Text="Willian Diaz"></asp:TextBox>
+                            </div>
+                            <div class="col-4">
+                                <label class="col-form-label">Fecha de análisis</label>
+                                <asp:TextBox ID="txtFechaDeAnalisis" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" Text="05/01/2021 02:16 PM" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
                         <div class="form-group">
-                            <label>Observaciones y/o comentarios de la referencia personal <strong id="lblNombreReferenciaModal"></strong></label>
+                            <label class="d-block">Observaciones/Comentarios</label>
                             <textarea id="txtObservacionesReferencia" required="required" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="observacionesReferenciaPersonal"></textarea>
+                        </div>
+                        <div class="m-0 p-0">
+                            <label class="col-form-label font-weight-bold">Sin comunicación&nbsp;</label>
+                            <input type="checkbox" id="cbSinComunicacion" switch="danger" class="align-bottom mb-1" />
+                            <label for="cbSinComunicacion" data-on-label="ON" data-off-label="OFF" class="align-bottom mb-1"></label>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <div class="button-items pb-2">
-                            <button type="button" id="btnReferenciaSinComunicacion" class="btn btn-danger validador">
-                                Sin comunicación
-                            </button>
-                            <button type="button" id="btnActualizarObservacionReferencia" class="btn btn-primary validador">
-                                Actualizar observaciones
+                            <button type="button" id="btnActualizarObservacionReferencia" class="btn btn-info validador">
+                                Actualizar
                             </button>
                             <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                                 Cancelar

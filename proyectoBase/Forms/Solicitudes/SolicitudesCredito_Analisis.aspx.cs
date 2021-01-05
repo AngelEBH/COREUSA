@@ -89,7 +89,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     #endregion
 
     #region Cargar información del cliente, de la solicitud y de la garantía *Listo*
-    
+
     public void CargarInformacionClienteSolicitud()
     {
         try
@@ -600,11 +600,11 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             while (sqlResultado.Read())
                             {
 
-                                stringDatas = "data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-analista = '" + sqlResultado["fcNombreCorto"] + "' data-sincomunicacion = '" + sqlResultado["fbSinComunicacion"] + "' data-fechaanalisis= ' " + "1" == "1" ? "1" : "1" + "'";
+                                stringDatas = "data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-analista = '" + sqlResultado["fcNombreCorto"] + "' data-sincomunicacion = " + sqlResultado["fbSinComunicacion"] + " data-fechaanalisis= '" + (DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()) == procesoPendiente ? (sqlResultado["fcNombreCorto"].ToString() != "" ? "Fecha no disponible" : "") : DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()).ToString("MM/dd/yyyy hh:mm tt")) + "'";
 
-                                btnComentarioReferenciaPersonal = "<button type='button' id='btnComentarioReferencia' class='btn btn-sm btn-info far fa-comments' title='Ver observaciones del depto. de crédito'></button>";
-                                btnActualizarReferencia = "<button type='button' id='btnActualizarReferencia' class='btn btn-sm btn-info far fa-edit' title='Editar'></button>";
-                                btnEliminarReferencia = "<button type='button' id='btnEliminarReferencia' class='btn btn-sm btn-danger far fa-trash-alt' title='Eliminar'></button>";
+                                btnComentarioReferenciaPersonal = "<button type='button' id='btnComentarioReferencia' " + stringDatas + " class='btn btn-sm btn-info far fa-comments' title='Ver observaciones del depto. de crédito'></button>";
+                                btnActualizarReferencia = "<button type='button' id='btnActualizarReferencia' " + stringDatas + " class='btn btn-sm btn-info far fa-edit' title='Editar'></button>";
+                                btnEliminarReferencia = "<button type='button' id='btnEliminarReferencia' " + stringDatas + " class='btn btn-sm btn-danger far fa-trash-alt' title='Eliminar'></button>";
 
                                 tRowReferencias = new TableRow();
                                 tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcNombreCompletoReferencia"].ToString() });
@@ -612,9 +612,9 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTiempoDeConocer"].ToString() });
                                 tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTelefonoReferencia"].ToString() });
                                 tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcDescripcionParentesco"].ToString() });
-                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? sqlResultado["fcComentarioDeptoCredito"].ToString() != "Sin comunicacion" ? "<i class='far fa-check-circle' title='Validación realizada'></i>" : "<i class='fas fa-phone-slash' title='Sin comunicación'></i>" : "<i class='fas fa-phone' title='Validación pendiente'></i>", HorizontalAlign = HorizontalAlign.Center });
+                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? bool.Parse(sqlResultado["fbSinComunicacion"].ToString()) != true ? "<i class='far fa-check-circle' title='Validación realizada'></i>" : "<i class='fas fa-phone-slash' title='Sin comunicación'></i>" : "<i class='fas fa-phone' title='Validación pendiente'></i>", HorizontalAlign = HorizontalAlign.Center });
                                 tRowReferencias.Cells.Add(new TableCell() { Text = btnComentarioReferenciaPersonal + " " + btnActualizarReferencia + " " + btnEliminarReferencia, HorizontalAlign = HorizontalAlign.Center });
-                                colorClass = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? sqlResultado["fcComentarioDeptoCredito"].ToString() != "Sin comunicacion" ? "tr-exito" : "text-danger" : "";
+                                colorClass = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? bool.Parse(sqlResultado["fbSinComunicacion"].ToString()) != true ? "tr-exito" : "text-danger" : "";
 
                                 tRowReferencias.Attributes.Add("class", colorClass);
                                 tblReferenciasPersonales.Rows.Add(tRowReferencias);
@@ -632,7 +632,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             ex.Message.ToString();
         }
     }
-    
+
     public void CargarInformacionGarantia()
     {
         try
@@ -1428,7 +1428,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     #endregion
 
     #region Administrar condiciones de la solicitud *Listo*
-    
+
     [WebMethod]
     public static CatalogoCondiciones_SolicitudCondiciones_ViewModel ObtenerCatalogoCondicionesYSolicitudCondiciones(string dataCrypt)
     {
@@ -1623,7 +1623,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     #region Administracion de referencias personales *Listo | Pendiente frontend *
 
     [WebMethod]
-    public static bool ActualizarObservacionesReferenciaPersonal(int idReferencia, string observaciones, string dataCrypt)
+    public static bool ActualizarObservacionesReferenciaPersonal(int idReferencia, string observaciones, bool sinComunicacion, string dataCrypt)
     {
         var resultadoProceso = false;
         try
@@ -1643,6 +1643,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDReferencia", idReferencia);
                     sqlComando.Parameters.AddWithValue("@pcObservacionesDeCredito", observaciones);
+                    sqlComando.Parameters.AddWithValue("@pbSinComunicacion", sinComunicacion);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);

@@ -351,7 +351,7 @@ $(document).ready(function () {
                 //}
 
                 if (PRECALIFICADO.PermitirIngresarSolicitud == false && PRECALIFICADO.MensajePermitirIngresarSolicitud != null) {
-                    MensajeExito(PRECALIFICADO.MensajePermitirIngresarSolicitud);
+                    MensajeAdvertencia(PRECALIFICADO.MensajePermitirIngresarSolicitud);
                     state = false;
                 }
 

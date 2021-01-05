@@ -671,30 +671,37 @@ $(document).on('click', 'button#btnAnularCondicion', function () {
 // #region Administrar referencias personales
 
 /* Actualizar comentario sobre una referencia personal radiofaro */
-var observacionesReferenciaPersonal = '';
 var idReferenciaPersonalSeleccionada = '';
 var btnReferenciaPersonalSeleccionada = '';
+var observacionesReferenciaPersonal = '';
+var sinComunicacion = false;
+var analistaDeCreditoReferencia = '';
+var fechaAnalisisReferencia = '';
 
 $(document).on('click', 'button#btnComentarioReferencia', function () {
 
     btnReferenciaPersonalSeleccionada = $(this);
-    observacionesReferenciaPersonal = btnReferenciaPersonalSeleccionada.data('observaciones');
     idReferenciaPersonalSeleccionada = btnReferenciaPersonalSeleccionada.data('id');
+    observacionesReferenciaPersonal = btnReferenciaPersonalSeleccionada.data('observaciones');
+    sinComunicacion = btnReferenciaPersonalSeleccionada.data('sincomunicacion').toLowerCase();
+    analistaDeCreditoReferencia = btnReferenciaPersonalSeleccionada.data('analista');
+    fechaAnalisisReferencia = btnReferenciaPersonalSeleccionada.data('fechaanalisis');
 
+    $("#txtNombreReferenciaModal").val(btnReferenciaPersonalSeleccionada.data('nombrereferencia'));
+    $("#txtAnalistaDeCredito").val(analistaDeCreditoReferencia);
+    $("#txtFechaDeAnalisis").val(fechaAnalisisReferencia);
     $("#txtObservacionesReferencia").val(observacionesReferenciaPersonal);
-    $("#lblNombreReferenciaModal").text(btnReferenciaPersonalSeleccionada.data('nombrereferencia'));
 
-    if (observacionesReferenciaPersonal == 'Sin comunicacion') {
-        $("#txtObservacionesReferencia").prop('disabled', false);
-        $("#btnReferenciaSinComunicacion").prop('disabled', true);
-        $("#btnActualizarObservacionReferencia").prop('disabled', false).removeClass('btn-secondary').addClass('btn-primary');
+    if (sinComunicacion === 'true') {
+        $("#cbSinComunicacion").prop('checked', true);
     }
     else {
-        $("#txtObservacionesReferencia").prop('disabled', false);
-        $("#btnActualizarObservacionReferencia,#btnReferenciaSinComunicacion").prop('disabled', false);
+        $("#cbSinComunicacion").prop('checked', false);
     }
     $("#modalObservacionesReferenciaPersonal").modal();
 });
+
+
 
 $("#btnActualizarObservacionReferencia").click(function () {
 
@@ -705,7 +712,7 @@ $("#btnActualizarObservacionReferencia").click(function () {
         $.ajax({
             type: "POST",
             url: 'SolicitudesCredito_Analisis.aspx/ActualizarObservacionesReferenciaPersonal',
-            data: JSON.stringify({ idReferencia: idReferenciaPersonalSeleccionada, observaciones: observacionesReferenciaPersonal, dataCrypt: window.location.href }),
+            data: JSON.stringify({ idReferencia: idReferenciaPersonalSeleccionada, observaciones: observacionesReferenciaPersonal, sinComunicacion: $("#cbSinComunicacion").prop('checked'), dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
 
@@ -745,6 +752,7 @@ $("#btnReferenciaSinComunicacion").click(function () {
             MensajeError('Error al actualizar estado de la referencia personal');
         },
         success: function (data) {
+
             if (data.d == true) {
                 $("#modalObservacionesReferenciaPersonal").modal('hide');
                 MensajeExito('Estado de la referencia personal actualizado correctamente');
@@ -752,7 +760,9 @@ $("#btnReferenciaSinComunicacion").click(function () {
                 btnReferenciaPersonalSeleccionada.removeClass('far fa-check-circle tr-exito').removeClass('far fa-edit').addClass('fas fa-phone-slash text-danger');
                 btnReferenciaPersonalSeleccionada.closest('tr').addClass('text-danger');
             }
-            else { MensajeError('Error al actualizar estado de la referencia personal'); }
+            else {
+                MensajeError('Error al actualizar estado de la referencia personal');
+            }
         }
     });
 });
