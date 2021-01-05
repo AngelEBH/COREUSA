@@ -40,10 +40,10 @@
                                     Más opciones
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <button type="button" class="dropdown-item pl-3" id="btnResumen" data-toggle="modal" data-target="#modalResumen"><i class="far fa-file-alt"></i> Resumen solicitud</button>
-                                    <button type="button" class="dropdown-item pl-3" id="btnImprimirReporte" onclick="ExportHtmlToPdf('#ReporteSolicitud','Reporte_Solitud','Reporte de la Solicitud')"><i class="far fa-file-pdf"></i> Generar PDF</button>
-                                    <button type="button" class="dropdown-item pl-3" id="btnHistorialInterno" title="Ver Historial interno del cliente" disabled="disabled"><i class="fas fa-history"></i> Historial Interno </button>
-                                    <button type="button" class="dropdown-item pl-3" id="btnCondicionarSolicitud"><i class="far fa-edit"></i> Condicionar solicitud</button>
+                                    <button type="button" class="dropdown-item pl-3" id="btnResumen" data-toggle="modal" data-target="#modalResumen"><i class="far fa-file-alt"></i>Resumen solicitud</button>
+                                    <button type="button" class="dropdown-item pl-3" id="btnImprimirReporte" onclick="ExportHtmlToPdf('#ReporteSolicitud','Reporte_Solitud','Reporte de la Solicitud')"><i class="far fa-file-pdf"></i>Generar PDF</button>
+                                    <button type="button" class="dropdown-item pl-3" id="btnHistorialInterno" title="Ver Historial interno del cliente" disabled="disabled"><i class="fas fa-history"></i>Historial Interno </button>
+                                    <button type="button" class="dropdown-item pl-3" id="btnCondicionarSolicitud"><i class="far fa-edit"></i>Condicionar solicitud</button>
                                 </div>
                             </div>
                             <div class="button-items pb-2">
@@ -441,10 +441,15 @@
                             </div>
                         </div>
                         <div id="collapseReferenciasPersonales" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-                            <div class="panel-body">
-                                <div class="row mb-0" id="divReferenciasPersonales" runat="server">
-                                    <div class="col-12">
+                            <div class="panel-body pt-2">
+                                <div class="row justify-content-between" id="divReferenciasPersonales" runat="server">
+                                    <div class="col-auto">
                                         <h6>Lista de referencias personales</h6>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="button" id="btnNuevaReferenciaPersonal" class="btn btn-info"><i class="fas fa-plus-circle"></i>Agregar nuevo</button>
+                                    </div>
+                                    <div class="col-12">
                                         <div class="table-responsive">
                                             <asp:Table runat="server" ID="tblReferenciasPersonales" CssClass="table table-sm table-bordered table-hover cursor-pointer">
                                                 <asp:TableHeaderRow TableSection="TableHeader" CssClass="thead-light">
@@ -818,7 +823,6 @@ Rechazar solicitud
                         <div id="collapsePrestamoRequerido" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
                             <div class="panel-body">
                                 <div class="row mb-0">
-
                                     <!-- Capacidad de pago del cliente -->
                                     <div class="col-lg-6 col-md-6 col-12" id="divCapacidadDePagoPrecalificado" runat="server">
 
@@ -927,7 +931,6 @@ Rechazar solicitud
                                                 <label class="col-form-label">Valor de la prima</label>
                                                 <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-
                                             <div class="col-6">
                                                 <label class="col-form-label">Plazo <span id="lblTipoDePlazo_Solicitado" class="font-weight-bold" runat="server"></span></label>
                                                 <asp:TextBox ID="txtPlazoSeleccionado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
@@ -1439,7 +1442,7 @@ Rechazar solicitud
             </div>
         </div>
 
-        <!-- modal estado del resumen de la solicitud -->
+        <!-- modal resumen de la solicitud -->
         <div id="modalResumen" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalResumenLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">

@@ -12,7 +12,7 @@ using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 {
-    #region Propiedades
+    #region Propiedades *Listo*
 
     public string pcID = "";
     public string pcIDApp = "";
@@ -733,7 +733,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Funciones de analisis
+    #region Funciones de analisis *Pendiente*
 
     public SolicitudesCredito_Analisis_Calculo_ViewModel CargarPrestamoSolicitadoVehiculo(string idProducto, decimal valorPrestamo, decimal valorPrima, int plazo, SqlConnection sqlConexion)
     {
@@ -775,8 +775,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 TasaMensualAplicada = (decimal)sqlResultado["fnTasaDeInteresMensual"]
                             };
                         }
-                    }
-                }
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
             }
             else
             {
@@ -810,8 +810,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 TasaMensualAplicada = (decimal)sqlResultado["fnTasaMensualAplicada"] < 0 ? ((decimal)sqlResultado["fnTasaMensualAplicada"] * 100) : (decimal)sqlResultado["fnTasaMensualAplicada"]
                             };
                         }
-                    }
-                }
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
             }
         }
         catch (Exception ex)
@@ -1618,7 +1618,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Administracion de referencias personales
+    #region Administracion de referencias personales *Listo | Pendiente frontend *
 
     [WebMethod]
     public static bool ActualizarObservacionesReferenciaPersonal(int idReferencia, string observaciones, string dataCrypt)
