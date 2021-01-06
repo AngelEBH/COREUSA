@@ -188,8 +188,8 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                         {
                             preSolicitud.Documentos.Add(new PreSolicitudDocumentosSolicitud_ViewModel()
                             {
-                                //IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                //IdSolicitudDocumento = (int)sqlResultado["fiIDSolicitudDocs"],
+                                IdPreSolicitudDocumento = (int)sqlResultado["fiIDPreSolicitudDocumento"],
+                                IdPreSolicitud = (int)sqlResultado["fiIDPreSolicitud"],
                                 NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
                                 Extension = sqlResultado["fcTipoArchivo"].ToString(),
                                 RutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),

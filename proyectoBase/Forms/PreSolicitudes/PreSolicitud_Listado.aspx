@@ -16,6 +16,8 @@
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
         #datatable-presolicitudes tbody tr {
@@ -173,6 +175,13 @@
                             <textarea id="txtReferenciasDireccionDetallada" disabled="disabled" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
+                    <div class="form-group form-row">
+                        <div class="col-sm-12">
+                            <label class="col-form-label font-weight-bold">Documentos adjuntados</label>
+                            <div id="divDocumentosPreSolicitud" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <h6 class="border-bottom pb-1">Información de gestoría &nbsp; <span id="lblEstadoPreSolicitud" class="btn"></span></h6>
@@ -197,6 +206,13 @@
                         <div class="col-12">
                             <label class="col-form-label">Observaciones</label>
                             <textarea id="txtObservacionesGestoria" disabled="disabled" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group form-row">
+                        <div class="col-sm-12">
+                            <label class="col-form-label font-weight-bold">Fotografías de la investigación de campo</label>
+                            <div id="divDocumentosInvestigacionDeCampo" style="display: none;">
+                            </div>
                         </div>
                     </div>
 
@@ -256,6 +272,9 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="/Scripts/app/Solicitudes/PreSolicitud_Listado.js?V=202026115484185"></script>
+    <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
+    <script src="/Scripts/app/Solicitudes/PreSolicitud_Listado.js?V=20210106162452"></script>
 </body>
 </html>

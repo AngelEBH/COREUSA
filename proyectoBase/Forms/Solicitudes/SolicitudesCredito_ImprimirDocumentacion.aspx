@@ -96,7 +96,7 @@
                                 <button type="button" id="btnBasicoCPI" onclick="ExportToPDF('BASICO_CPI','divContenedorBasicoCPI','divBasicoCPIPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/vehicle_insurance_40px.png');">
                                     Básico + CPI
                                 </button>
-                                <button type="button" id="btnNotaDeEntrega" onclick="ExportToPDF('NOTA_DE_ENTREHA', 'divContenedorNotaDeEntrega', 'divNotaDeEntregaPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
+                                <button type="button" id="btnNotaDeEntrega" onclick="ExportToPDF('NOTA_DE_ENTREGA', 'divContenedorNotaDeEntrega', 'divNotaDeEntregaPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
                                     Nota de entrega
                                 </button>
                                 <button type="button" id="btnEnviarCorreoLiquidacion" onclick="EnviarCorreo('Liquidación', 'Liquidación', 'divCorreoLiquidacionPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
@@ -1633,7 +1633,7 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                                 <b>
                                     <asp:Label runat="server" ID="lblPropietarioGarantia_NotaEntrega"></asp:Label>,
                                 </b>
-                                por este medio hacemos de su conocimiento que la clienta
+                                por este medio hacemos de su conocimiento que el cliente
                                 <asp:Label runat="server" ID="lblNombreCliente_NotaEntrega"></asp:Label>,
                                 cuenta con un crédito aprobado con PRESTADITO por la cantidad de
                                 <asp:Label runat="server" ID="lblValorAPrestarEnPalabras_NotaEntrega"></asp:Label>

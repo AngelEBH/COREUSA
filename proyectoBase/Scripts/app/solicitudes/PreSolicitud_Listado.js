@@ -199,6 +199,56 @@ $(document).on('click', 'button#btnDetalles', function () {
                     $("#lblTipoDeUbicacion").text('Investigación de trabajo');
                 }
 
+                /* Documentos adjuntados en la presolicitud */
+                var divDocumentosPreSolicitud = $("#divDocumentosPreSolicitud").empty();
+                var divDocumentosInvestigacionDeCampo = $("#divDocumentosInvestigacionDeCampo").empty();
+                var templateDocumentos = '';
+                var templateDocumentosInvestigacionDeCampo = '';
+                var documentos = preSolicitud.Documentos;
+
+                if (preSolicitud.Documentos != null) {
+
+                    if (preSolicitud.Documentos.length > 0) {
+
+                        for (var i = 0; i < documentos.length; i++) {
+
+                            if (documentos[i].IdTipoDocumento != 8 && documentos[i].IdTipoDocumento != 9) {
+
+                                templateDocumentos += '<img alt="' + documentos[i].DescripcionTipoDocumento + '" src="' + documentos[i].URLArchivo + '" data-image="' + documentos[i].URLArchivo + '" data-description="' + documentos[i].DescripcionTipoDocumento + '"/>';
+                            } else {
+                                templateDocumentosInvestigacionDeCampo += '<img alt="' + documentos[i].DescripcionTipoDocumento + '" src="' + documentos[i].URLArchivo + '" data-image="' + documentos[i].URLArchivo + '" data-description="' + documentos[i].DescripcionTipoDocumento + '"/>';
+                            }
+                        }
+                    }
+                }
+
+                var imgNoHayFotografiasDisponibles = '<img alt="No hay fotografías disponibles" src="/Imagenes/Imagen_no_disponible.png" data-image="/Imagenes/Imagen_no_disponible.png" data-description="No hay fotografías disponibles"/>';
+                templateDocumentos = templateDocumentos == '' ? imgNoHayFotografiasDisponibles : templateDocumentos;
+                templateDocumentosInvestigacionDeCampo = templateDocumentosInvestigacionDeCampo == '' ? imgNoHayFotografiasDisponibles : templateDocumentosInvestigacionDeCampo;
+
+                divDocumentosPreSolicitud.append(templateDocumentos);
+                divDocumentosInvestigacionDeCampo.append(templateDocumentosInvestigacionDeCampo);
+
+                $("#divDocumentosPreSolicitud").unitegallery({
+                    gallery_theme: "tilesgrid",
+                    tile_width: 170,
+                    tile_height: 120,
+                    lightbox_type: "compact",
+                    grid_num_rows: 15,
+                    tile_enable_textpanel: true,
+                    tile_textpanel_title_text_align: "center"
+                });
+
+                $("#divDocumentosInvestigacionDeCampo").unitegallery({
+                    gallery_theme: "tilesgrid",
+                    tile_width: 170,
+                    tile_height: 120,
+                    lightbox_type: "compact",
+                    grid_num_rows: 15,
+                    tile_enable_textpanel: true,
+                    tile_textpanel_title_text_align: "center"
+                });
+
                 // gestoria
                 $("#txtGestorAsignado").val(preSolicitud.IdGestorValidador == 0 ? 'No Asignado' : preSolicitud.GestorValidador);
                 $("#txtGestion").val(preSolicitud.GestionDeCampo);
