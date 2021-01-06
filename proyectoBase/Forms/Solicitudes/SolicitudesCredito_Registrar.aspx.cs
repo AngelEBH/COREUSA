@@ -15,7 +15,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using System.Net.Mail;
-//using System.Security.Cryptography;
+using System.Security.Cryptography;
 
 public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 {
@@ -1632,48 +1632,100 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
 
                     /* Registrar documentacion de la solicitud */
-                    int DocumentacionCliente = 1;
-                    string NombreCarpetaDocumentos = "Solicitud" + IdSolicitudInsertada;
-                    string NuevoNombreDocumento = "";
 
-                    /* lista de documentos ADJUNTADOS por el usuario */
+                    /* Lista de documentos que se va INGRESAR/GUARDAR en la base de datos y se va mover al nuevo directorio correspondiente a la solicitud */
+                    var listaDeDocumentosDeLaSolicitud = new List<SolicitudesDocumentosViewModel>();
+
+                    var documentacionCliente = 1;
+                    var nombreCarpetaDeDocumentos = "Solicitud" + IdSolicitudInsertada;
+                    var nuevoNombreDocumento = string.Empty;
+
+                    /* lista de documentos ADJUNTADOS por el usuario en el formulario de ingreso de solicitud y los documentos de la presolicitud en caso de que hayan */
                     var listaDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
 
-                    /* Lista de documentos que se va INGRESAR en la base de datos y se va mover al nuevo directorio */
-                    var solicitudesDocumentos = new List<SolicitudesDocumentosViewModel>();
 
+                    /* Documentos de la solicitud */
                     if (listaDocumentos != null)
                     {
+                        var listaDocumentosPreSolicitud = new List<SolicitudesDocumentosViewModel>();
+
+                        #region Obtener documentos de la pre solicitud en caso de que hayan
+
+                        using (SqlCommand sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_ObtenerPorIdentidad", sqlConexion))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                            using (var sqlResultado = sqlComando.ExecuteReader())
+                            {
+                                if (sqlResultado.HasRows)
+                                {
+                                    /****** Primer resultado: Información de la pre solicitud ******/
+                                    var idPreSolicitud = 0;
+
+                                    while (sqlResultado.Read())
+                                    {
+                                        idPreSolicitud = (int)sqlResultado["fiEstadoPreSolicitud"];
+                                    }
+
+                                    if (idPreSolicitud == 3) // Si la pre solicitud corresponde a este cliente y está en estado APROBADA (mirar CREDPreSolicitudes_Catalogo_Estados)
+                                    {
+                                        /****** Segundo resultado: Documentos de la pre solicitud ******/
+                                        sqlResultado.NextResult();
+
+                                        while (sqlResultado.Read())
+                                        {
+                                            listaDocumentos.Add(new SolicitudesDocumentosViewModel()
+                                            {
+                                                fcNombreArchivo = "",
+                                                NombreAntiguo = sqlResultado["fcNombreArchivo"].ToString(),
+                                                fcTipoArchivo = sqlResultado["fcTipoArchivo"].ToString(),
+                                                fcRutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),
+                                                URLArchivo = sqlResultado["fcURL"].ToString(),
+                                                fiTipoDocumento = (int)sqlResultado["fiTipoDocumento"]
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        #endregion
+
+
                         /* lista de bloques y la cantidad de documentos que contiene cada uno */
-                        var Bloques = listaDocumentos.GroupBy(TipoDocumento => TipoDocumento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
+                        var listaDeBloquesDeTiposDeDocumentos = listaDocumentos.GroupBy(documento => documento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
 
                         /* lista donde se guardara temporalmente los documentos adjuntados por el usuario dependiendo del tipo de documento en el iterador */
-                        List<SolicitudesDocumentosViewModel> DocumentosBloque = new List<SolicitudesDocumentosViewModel>();
+                        var documentosBloque = new List<SolicitudesDocumentosViewModel>();
 
-                        foreach (var Bloque in Bloques)
+                        foreach (var bloqueDeDocumentos in listaDeBloquesDeTiposDeDocumentos)
                         {
-                            int TipoDocumento = (int)Bloque.Key;
-                            int CantidadDocumentos = Bloque.Count;
+                            int tipoDocumento = (int)bloqueDeDocumentos.Key;
+                            int cantidadDocumentos = bloqueDeDocumentos.Count;
 
-                            DocumentosBloque = listaDocumentos.Where(x => x.fiTipoDocumento == TipoDocumento).ToList();// documentos de este bloque
-                            String[] NombresGenerador = Funciones.MultiNombres.GenerarNombreCredDocumento(DocumentacionCliente, IdSolicitudInsertada, TipoDocumento, CantidadDocumentos);
+                            documentosBloque = listaDocumentos.Where(x => x.fiTipoDocumento == tipoDocumento).ToList();// documentos de este bloque
+                            var nombresGeneradosParaBloqueActual = Funciones.MultiNombres.GenerarNombreCredDocumento(documentacionCliente, IdSolicitudInsertada, tipoDocumento, cantidadDocumentos);
 
-                            int ContadorNombre = 0;
-                            foreach (SolicitudesDocumentosViewModel file in DocumentosBloque)
+                            int contadorNombre = 0;
+                            foreach (SolicitudesDocumentosViewModel documento in documentosBloque)
                             {
-                                if (File.Exists(file.fcRutaArchivo + @"\" + file.NombreAntiguo)) /* si el archivo existe, que se agregue a la lista */
+                                if (File.Exists(documento.fcRutaArchivo + @"\" + documento.NombreAntiguo)) /* si el archivo existe, que se agregue a la lista */
                                 {
-                                    NuevoNombreDocumento = NombresGenerador[ContadorNombre];
-                                    solicitudesDocumentos.Add(new SolicitudesDocumentosViewModel()
+                                    nuevoNombreDocumento = nombresGeneradosParaBloqueActual[contadorNombre];
+                                    listaDeDocumentosDeLaSolicitud.Add(new SolicitudesDocumentosViewModel()
                                     {
-                                        fcNombreArchivo = NuevoNombreDocumento,
-                                        NombreAntiguo = file.NombreAntiguo,
-                                        fcTipoArchivo = file.fcTipoArchivo,
-                                        fcRutaArchivo = file.fcRutaArchivo.Replace("Temp", "") + NombreCarpetaDocumentos,
-                                        URLArchivo = "/Documentos/Solicitudes/" + NombreCarpetaDocumentos + "/" + NuevoNombreDocumento + ".png",
-                                        fiTipoDocumento = file.fiTipoDocumento
+                                        fcNombreArchivo = nuevoNombreDocumento,
+                                        NombreAntiguo = documento.NombreAntiguo,
+                                        fcTipoArchivo = documento.fcTipoArchivo,
+                                        fcRutaArchivo = documento.fcRutaArchivo.Replace("Temp", "").Replace("PreSolicitudes", "Solicitudes").Replace("PreSolicitud", "Solicitud") + nombreCarpetaDeDocumentos,
+                                        URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDeDocumentos + "/" + nuevoNombreDocumento + ".png",
+                                        fiTipoDocumento = documento.fiTipoDocumento
                                     });
-                                    ContadorNombre++;
+                                    contadorNombre++;
                                 }
                             }
                         }
@@ -1684,14 +1736,15 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         resultadoProceso.message = "Error al registrar la documentación, compruebe los documentos adjuntados o vuelva a cargarlos";
                         return resultadoProceso;
                     }
-                    if (solicitudesDocumentos.Count <= 0)
+                    if (listaDeDocumentosDeLaSolicitud.Count <= 0)
                     {
                         resultadoProceso.response = false;
                         resultadoProceso.message = "Error al guardar documentación, compruebe que haya cargado los documentos correctamente o vuelva a cargarlos";
                         return resultadoProceso;
                     }
 
-                    foreach (SolicitudesDocumentosViewModel documento in solicitudesDocumentos)
+
+                    foreach (SolicitudesDocumentosViewModel documento in listaDeDocumentosDeLaSolicitud)
                     {
                         using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Documentos_Guardar", sqlConexion, tran))
                         {
@@ -1725,7 +1778,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
 
                     /* Mover documentos al directorio de la solicitud */
-                    if (!FileUploader.GuardarSolicitudDocumentos(IdSolicitudInsertada, solicitudesDocumentos))
+                    if (!FileUploader.GuardarSolicitudDocumentos(IdSolicitudInsertada, listaDeDocumentosDeLaSolicitud))
                     {
                         resultadoProceso.response = false;
                         resultadoProceso.message = "Error al guardar la documentación de la solicitud";
@@ -1977,145 +2030,53 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     #region Importar documentos de la presolicitud
 
-    //public static bool ImportarDocumentosPreSolicitud(int idSolicitud, string pcIDSesion, string pcIDApp, string pcIDUsuario, SqlConnection sqlConexion, SqlTransaction tran)
-    //{
-    //    var resultadoProceso = false;
-    //    var listaDocumentosPreSolicitud = new List<SolicitudesDocumentosViewModel>();
+    /* Descargar y guardar los documentos de la presolicitud en su respectiva carpeta de documentos de la solicitud de credito */
+    public static bool GuadarDocumentosImportadosPreSolicitud(int idSolicitud, List<SolicitudesDocumentosViewModel> listaDocumentosPreSolicitud)
+    {
+        bool result;
+        try
+        {
+            var client = new WebClient();
+            var md5ArchivoDescargado = MD5.Create();
 
-    //    try
-    //    {
-    //        using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
-    //        {
-    //            sqlComando.CommandType = CommandType.StoredProcedure;
-    //            sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-    //            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-    //            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-    //            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+            if (listaDocumentosPreSolicitud != null)
+            {
+                /* Crear el nuevo directorio para los documentos de la solicitud  */
+                var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
+                var directorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentos + "\\";
 
-    //            using (var sqlResultado = sqlComando.ExecuteReader())
-    //            {
-    //                while (sqlResultado.Read())
-    //                {
-    //                    /* Lista de documentos de la solicitud de CANEX, que se deben mover a la carpeta de documentos de solicitudes */
-    //                    listaDocumentosPreSolicitud.Add(new SolicitudesDocumentosViewModel()
-    //                    {
-    //                        fiIDSolicitudDocs = (short)sqlResultado["fiIDImagen"],
-    //                        NombreAntiguo = (string)sqlResultado["fcNombreImagen"],
-    //                        URLAntiguoArchivo = "/Documentos/Solicitudes/Solicitud" + idSolicitud + "/" + nombreImagen,
-    //                        fiTipoDocumento = (short)sqlResultado["fiIDImagen"]
-    //                    });
-    //                }
-    //            } // using sqlComando.ExecuteReader()
-    //        }// using sqlComando
+                if (!Directory.Exists(directorioDocumentosSolicitud))
+                    Directory.CreateDirectory(directorioDocumentosSolicitud);
 
-    //        var documentacionCliente = 1;
-    //        var documentacionAval = 2;
-    //        var idsDocumentosAval = new int[] { 10, 11, 12, 13, 14, 15, 16, 17, 20, 21 };
-    //        var idsDocumentosCliente = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 19 };
+                foreach (SolicitudesDocumentosViewModel Documento in listaDocumentosPreSolicitud)
+                {
+                    var viejoDirectorio = Documento.URLAntiguoArchivo;
+                    var nuevoNombreDocumento = Documento.fcNombreArchivo;
+                    var nuevoDirectorio = directorioDocumentosSolicitud + nuevoNombreDocumento + ".png";
 
-    //        var tipoDocumentacion = idsDocumentosAval.Contains(documentacionAval) ? documentacionAval : documentacionCliente;
+                    if (File.Exists(nuevoDirectorio))
+                        File.Delete(nuevoDirectorio);
 
-    //        var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
-    //        var nuevoNombreDocumento = string.Empty;
+                    if (!File.Exists(nuevoDirectorio))
+                    {
+                        var lcURL = Documento.URLAntiguoArchivo;
 
-    //        /* Lista de documentos que se va registrar en la base de datos de credito y se va mover al nuevo directorio */
-    //        var listaDocumentosSolicitud = new List<SolicitudesDocumentosViewModel>();
-
-    //        if (listaDocumentosPreSolicitud != null)
-    //        {
-    //            /* lista de bloques y la cantidad de documentos que contiene cada uno */
-    //            var bloques = listaDocumentosPreSolicitud.GroupBy(TipoDocumento => TipoDocumento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
-
-    //            /* lista donde se guardara temporalmente los documentos dependiendo del tipo de documento en el iterador */
-    //            var documentosBloque = new List<SolicitudesDocumentosViewModel>();
-
-    //            var nombreCarpetaDocumentosCANEX = "Solicitud" + idSolicitud;
-    //            var directorioDocumentosSolicitudCANEX = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentosCANEX + "\\";
-
-    //            foreach (var bloque in bloques)
-    //            {
-    //                int tipoDocumento = (int)bloque.Key;
-    //                int cantidadDocumentos = bloque.Count;
-
-    //                documentosBloque = listaDocumentosPreSolicitud.Where(x => x.fiTipoDocumento == tipoDocumento).ToList();// documentos de este bloque
-    //                string[] nombresGenerador = Funciones.MultiNombres.GenerarNombreCredDocumento(documentacionCliente, idSolicitud, tipoDocumento, cantidadDocumentos);
-
-    //                int contadorNombre = 0;
-
-    //                foreach (SolicitudesDocumentosViewModel file in documentosBloque)
-    //                {
-    //                    nuevoNombreDocumento = nombresGenerador[contadorNombre];
-
-    //                    listaDocumentosSolicitud.Add(new SolicitudesDocumentosViewModel()
-    //                    {
-    //                        fcNombreArchivo = nuevoNombreDocumento,
-    //                        NombreAntiguo = file.NombreAntiguo,
-    //                        fcRutaArchivo = directorioDocumentosSolicitudCANEX,
-    //                        URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDocumentos + "/" + nuevoNombreDocumento + ".png",
-    //                        URLAntiguoArchivo = file.URLAntiguoArchivo,
-    //                        fiTipoDocumento = file.fiTipoDocumento
-    //                    });
-    //                    contadorNombre++;
-    //                }
-    //            } // foreach bloques
-    //        } // using listaDocumentosPreSolicitud != null
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        ex.Message.ToString();
-    //        resultadoProceso = false;
-    //    }
-
-    //    return resultadoProceso;
-    //}
-
-    ///* Descargar y guardar los documentos de la presolicitud en su respectiva carpeta de documentos de la solicitud de credito */
-    //public static bool GuadarDocumentosImportadosPreSolicitud(int idSolicitud, List<SolicitudesDocumentosViewModel> listaDocumentosPreSolicitud)
-    //{
-    //    bool result;
-    //    try
-    //    {
-    //        var client = new WebClient();
-    //        var md5ArchivoDescargado = MD5.Create();
-
-    //        if (listaDocumentosPreSolicitud != null)
-    //        {
-    //            /* Crear el nuevo directorio para los documentos de la solicitud  */
-    //            var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
-    //            var directorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentos + "\\";
-
-    //            if (!Directory.Exists(directorioDocumentosSolicitud))
-    //                Directory.CreateDirectory(directorioDocumentosSolicitud);
-
-    //            foreach (SolicitudesDocumentosViewModel Documento in listaDocumentosPreSolicitud)
-    //            {
-    //                var viejoDirectorio = Documento.URLAntiguoArchivo;
-    //                var nuevoNombreDocumento = Documento.fcNombreArchivo;
-    //                var nuevoDirectorio = directorioDocumentosSolicitud + nuevoNombreDocumento + ".png";
-
-    //                if (File.Exists(nuevoDirectorio))
-    //                    File.Delete(nuevoDirectorio);
-
-    //                if (!File.Exists(nuevoDirectorio))
-    //                {
-    //                    var lcURL = Documento.URLAntiguoArchivo;
-
-    //                    client.DownloadFile(new Uri(lcURL), nuevoDirectorio);
-    //                    client.Dispose();
-    //                    client = null;
-    //                    client = new WebClient();
-    //                }
-    //            }
-    //        }
-    //        result = true;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        ex.Message.ToString();
-    //        result = false;
-    //    }
-    //    return result;
-    //}
+                        client.DownloadFile(new Uri(lcURL), nuevoDirectorio);
+                        client.Dispose();
+                        client = null;
+                        client = new WebClient();
+                    }
+                }
+            }
+            result = true;
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            result = false;
+        }
+        return result;
+    }
 
     #endregion
 
@@ -2422,11 +2383,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public int RequiereGPS { get; set; }
         public int RequierePrima { get; set; }
         public int RequiereOrigen { get; set; }
-
         public int IdTipoDePlazo { get; set; }
         public int PlazoMinimo { get; set; }
         public int PlazoMaximo { get; set; }
-
         public int? PlazoMaximoCliente { get; set; }
         public decimal? MontoFinanciarMaximoCliente { get; set; }
 
@@ -2601,12 +2560,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public decimal ValorPrima { get; set; }
         public decimal ValorFinanciado { get; set; }
         public decimal GastosDeCierre { get; set; }
-
         public string IdentidadPropietario { get; set; }
         public string NombrePropietario { get; set; }
         public int IdNacionalidadPropietario { get; set; }
         public int IdEstadoCivilPropietario { get; set; }
-
         public string IdentidadVendedor { get; set; }
         public string NombreVendedor { get; set; }
         public int IdNacionalidadVendedor { get; set; }
