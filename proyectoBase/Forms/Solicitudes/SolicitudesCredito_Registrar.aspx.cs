@@ -1651,7 +1651,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                         #region Obtener documentos de la pre solicitud en caso de que hayan
 
-                        using (SqlCommand sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_ObtenerPorIdentidad", sqlConexion))
+                        using (SqlCommand sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_ObtenerPorIdentidad", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -1689,9 +1689,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                             });
                                         }
                                     }
-                                }
-                            }
-                        }
+                                } // if sqlResultado.HasRows
+                            } // using sqlComando.ExecuteReader() 
+                        } // using sqlComando sp_CREDPreSolicitudes_Maestro_ObtenerPorIdentidad
 
                         #endregion
 
@@ -2009,7 +2009,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    tran.Commit();
+                    //tran.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
