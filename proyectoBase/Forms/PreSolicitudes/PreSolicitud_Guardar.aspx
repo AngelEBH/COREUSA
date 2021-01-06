@@ -61,7 +61,7 @@
                             <div class="form-group form-row">
                                 <div class="col-12">
                                     <label class="col-form-label">Cliente</label>
-                                    <asp:TextBox ID="txtNombreCliente" Enabled="false" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="txtNombreCliente" ReadOnly="true" required="required" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
                                 </div>
                                 <div class="col-6">
                                     <label class="col-form-label">Identidad</label>

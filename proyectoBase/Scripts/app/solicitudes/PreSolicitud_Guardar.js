@@ -300,8 +300,6 @@ $("#ddlCiudadPoblado").change(function () {
 
 $("#ddlTipoInvestigacionDeCampo").on('change', function () {
 
-    debugger;
-
     let tipoDeInvestigacion = $("#ddlTipoInvestigacionDeCampo :selected").val();
 
     if (tipoDeInvestigacion == 1) {

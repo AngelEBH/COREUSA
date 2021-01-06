@@ -260,6 +260,11 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                             pcIDProducto = sqlResultado["fiIDProducto"].ToString();
                             pcIDTipoDeSolicitud = sqlResultado["fiTipoSolicitudCliente"].ToString();
                         }
+
+                        if (txtNombreCliente.Text == "")
+                        {
+                            MostrarMensaje("No se puede ingresar una pre solicitud de un cliente sin nombre, contacte al administrador. ");
+                        }
                     }
                 }
             }
@@ -661,7 +666,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
     public void MostrarMensaje(string mensaje)
     {
         lblMensajeError.Visible = true;
-        lblMensajeError.InnerText = mensaje;
+        lblMensajeError.InnerText += mensaje;
     }
 
     #region View Models
