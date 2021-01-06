@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
-    <link href="/CSS/SolicitudesCredito_ImprimirDocumentacion.css?v=20201222251721" rel="stylesheet" />
+    <link href="/CSS/SolicitudesCredito_ImprimirDocumentacion.css?v=20210106150602" rel="stylesheet" />
 </head>
 <body class="EstiloBody">
     <form id="frmGuardarPreSolicitud" runat="server">
@@ -383,13 +383,18 @@ por concepto de seguro de vehiculo debiendo hacer efectivo el pago de la <b>prim
                             </p>
                             <p>
                                 <b>- G) OTROS GASTOS:</b>
-                                Los gastos que se incurra por matricula, mantenimiento, reparación y todas las relacionadas para conservación del vehículo en perfecto estado, deberá ser pagadas por el <b>CLIENTE</b>, así como también los gastos que se ocasione en la recuperación del vehículo en caso de mora.
+                                <b>I-</b> Los gastos que se incurra por matricula, mantenimiento, reparación y todas las relacionadas para conservación del vehículo en perfecto estado, deberá ser pagadas por el <b>CLIENTE</b>, 
+                                <b>II-</b> Los gastos que se ocasione en la recuperación del vehículo en caso de mora será de 3,000.00 Lempiras por concepto de grúa más lo generado por concepto de parqueo, Una vez recuperado el vehículo cuando se encuentre en mora, Prestadito lo tendrá en custodia un máximo de 2 meses para que el cliente se ponga al día y pague todo lo adeudo, pasado ese tiempo Prestadito podrá vender el vehículo para poder recuperar el dinero invertido.
+                                <b>III-</b> En caso que un gestor se movilice a traer el dinero del pago de una o más cuotas, bien sea al domicilio o  lugar de trabajo, tendrá un costo de 250.00 Lempiras.                                
                                 <b>- TERCERO: AUTORIZACIONES ESPECIALES: EL CLIENTE</b>
                                 por este acto, en tanto no haya cumplido con el pago total de su obligación, autoriza a <b>PRESTADITO</b> expresamente y sin ser necesario la notificación previa para:
+                                
                                 <span class="page-break"></span>
                                 <b>A)</b> Vender, Ceder o de cualquier otra forma traspasar, o celebrar contratos de participación, de descuentos con relación al crédito y derechos consignados en este documento o títulos valores relacionados a este mismo;
                                 <b>B)</b> Autorizar a <b>PRESTADITO</b> para que en cualquier tiempo pueda acceder a la información de la Central de Riesgos de la Comisión Nacional de Bancos y Seguros u otra central de riesgo pública o privada, para gestionar y conocer la situación crediticia de <b>EL CLIENTE</b> frente a las demás instituciones del sistema financiero nacional.
-                                <b>- C) EL CLIENTE</b> Autoriza de manera Irrevocable, a que <b>PRESTADITO</b> pueda entrar en su domicilio, para solo efecto de retirar el vehículo comprado con este préstamo, o que lo retire de una tercera persona sin necesidad de intervención judicial, esta cláusula solo se ejecutara en caso de mora de 2 o más cuotas vencidas y mientras no haya sido cancelado el total adeudado.
+                                <b>- C) EL CLIENTE</b> Autoriza de manera Irrevocable, a que <b>PRESTADITO</b> pueda entrar en su domicilio, para solo efecto de retirar el vehículo comprado con este préstamo, o que lo retire de una tercera persona sin necesidad de intervención judicial, esta cláusula solo se ejecutara en caso de mora de 1 o más cuotas vencidas y mientras no haya sido cancelado el total adeudado.
+                                <b>D- El cliente</b> Autoriza que Prestadito pueda revisar el funcionamiento del GPS mientras no se haya cancelado la totalidad del prestamo.
+                                
                                 <b>- CUARTO: OBLIGACIONES GENERALES.- EL CLIENTE</b> durante la vigencia del presente contrato también se obliga a:
                                 <b>A)</b> Permitir que <b>PRESTADITO</b> ejerza los controles que juzgue convenientes, para asegurarse que los fondos de este crédito se inviertan en los fines que se han indicado anteriormente y condiciones que se estipulan en este contrato.
                                 <b>- B) DE LA GARANTIA:</b>
@@ -409,17 +414,21 @@ La excepción anterior <b>no faculta al CLIENTE</b> a conducir el vehiculo sin s
                                 <b>EL CLIENTE: 1)</b> De manera general y sin necesidad de especificarlo individualmente, las condiciones contractuales pactadas, por cualquier medio impreso de circulación nacional, o el medio de comunicación que las partes hayan designado, en los casos de los efectos de la aplicación de la vigencia de una ley, con 30 días calendario de anticipación a la aplicación de dicho cambio;
                                 <b>2)</b> Para el caso que las tasas de intereses y otros cargos sea modificada, se aplicará conforme a un factor variable que considera la tasa de interés que se concede para los depósitos a plazo, más el costo de la intermediación y sumándole un diferencial del veinte por ciento. La tasa de interés se revisará cada 3 meses. En el caso que las tasas de interés sean reguladas por el Banco Central de Honduras conforme al artículo 55 de la Ley del Sistema Financiero, se aplicará la tasa máxima permitida por dicha Institución, o la que fije y aplique <b>PRESTADITO</b>, notificándolo a <b>EL CLIENTE</b> con 15 días calendario de anticipación por lo menos por cualquiera de los medios de comunicación descritos en este contrato o los otros establecidos por la Ley, siendo entendido que cualquier ajuste resultante de la modificación de la tasa de interés será cubierto por <b>EL CLIENTE</b> quedando <b>PRESTADITO</b> autorizado para efectuar y cobrar tales ajustes y modificar la cuota quincenal o mensual del financiamiento de acuerdo al plazo que reste para la cancelación del mismo, así mismo las partes acuerdan incorporar como vinculante el principio <b>“ceteris paribus”</b>, respecto a modificaciones atinentes al contrato o los convenios incorporados.
                                 <b>-SEPTIMO: RECLAMOS.-</b>Cuando se presente algún evento por el cual <b>EL CLIENTE</b> desee hacer un reclamo, se dispondrá de un plazo de 10 días hábiles para realizarlo, transcurrido éste, es entendido que caduca su derecho para reclamar y se declara vencido. Cuando sea reclamos por cuestiones de garantía deberá presentarlas al distribuidor autorizado y en caso de ser bienes usados no podrá presentar reclamos después de 30 dias de realizada la compra, es entendido que <b>PRESTADITO</b> no está obligado a resolver cuestiones de garantía puesto que solo es quien financia la compra.
+                                
                                 <b>- OCTAVO: DEL VENCIMIENTO ANTICIPADO DEL PLAZO DE PAGO.- </b>Además de los casos establecidos por la ley, <b>PRESTADITO</b> podrá dar por vencido el plazo establecido para el pago del préstamo concedido en este contrato, y en consecuencia exigir el pago inmediato del saldo del capital, intereses, comisiones, recargos y gastos, ya sea por la vía judicial o extra judicial, por cualquiera de los siguientes eventos:
-                                <b>a)</b> Por falta de pago de dos o más de las cuotas pactadas, de los intereses, o de cualquier otro cargo pendiente a favor de <b>PRESTADITO</b>;
-                                <span class="page-break"></span>
+                                <b>a)</b> Por falta de pago de una o más de las cuotas pactadas, de los intereses, o de cualquier otro cargo pendiente a favor de <b>PRESTADITO</b>;
+
+                                
                                 <b>b)</b> Por el conocimiento de la ejecución judicial iniciada por terceros, o por el mismo <b>PRESTADITO</b>, en contra de <b>EL CLIENTE</b>, originada por otros créditos;
                                 <b>c)</b> Por no destinar el presente préstamo para el fin o fines para los cuales ha sido concedido;
                                 <b>d)</b> Por la declaración del estado de suspensión de pagos, de quiebra o de concurso de <b>EL CLIENTE</b>, así como por su inhabilitación para el ejercicio del comercio, o por el ejercicio de acción penal en su contra o de su representante legal que derivare en sentencia de privación de libertad;
                                 <b>e)</b> Por el incumplimiento o negativa por parte de <b>EL CLIENTE</b> a proporcionar la información requerida por <b>PRESTADITO</b> en forma escrita;
+                                <span class="page-break"></span>
                                 <b>f)</b> Por actuación fraudulenta o haber proporcionado a <b>PRESTADITO</b> información o datos falsos o incompletos para obtener el préstamo;
                                 <b>g)</b> Por ser del conocimiento de <b>PRESTADITO</b>, la existencia de obligaciones de <b>EL CLIENTE</b> pendientes de pago con el Estado, en tal cantidad que a su criterio ponga en peligro la recuperación de los adeudos debido a la preferencia del Estado para obtener el pago a su favor antes que <b>PRESTADITO</b>;
                                 <b>h)</b> El incumplimiento de parte de <b>EL CLIENTE</b> de cualquiera de las obligaciones contraídas en este contrato.
-                                <b>i)</b> Retirar, desconectar, adulterar, o de cualquier forma hacer que el GPS del Vehiculo no funcione correctamente.
+                                <b>i)</b> Por retirar, desconectar, adulterar, o de cualquier forma hacer que el GPS del Vehiculo no funcione correctamente.
+                                
                                 <b>- NOVENO: COBROS EXTRAJUDICIALES.-</b> En caso de ser necesarias las gestiones de cobranzas extrajudiciales por la mora en el pago o el vencimiento anticipado del contrato, estas se realizarán de la siguiente manera:
                                 <b>1)</b> Para Mora de 1 a 180 días: alternativamente podrán ser llamadas telefónicas, correos electrónicos, mensajes por cualquier medio electrónico, visitas por gestores, cartas de cobro escritas solicitando el pago y dirigidas a las direcciones indicadas. Estas gestiones tendrán un costo de doscientos cincuenta lempiras (L250.00), cargados al estado de cuenta del préstamo otorgado, son acumulables por cada cuota vencida y serán pagados por <b>EL CLIENTE</b> en todos los casos y sin excepción;
                                 <b>2)</b> Si su caso fuere trasladado a Profesionales del Derecho, cuyas gestiones iniciales podrán ser: llamadas telefónicas, envió de correos electrónicos, cartas de cobro escritas, y visitas, causaran el cobro de honorarios
@@ -434,8 +443,14 @@ profesionales según el Arancel del Profesional del Derecho vigente, y se calcul
                                 <b>D)</b> o a las direcciones indicadas en cualquiera de los documentos suscritos con <b>“ PRESTADITO ”</b>. Cualquier cambio de dirección o número telefónico deberá notificarse fehacientemente, con una anticipación razonable a <b>PRESTADITO</b> y hasta entonces se considera efectiva.
                                 <b>.-DÉCIMO SEGUNDA: DE LAS AUTORIZACIONES ESPECIALES. EL CLIENTE </b>otorga de manera expresa, voluntaria e irrevocable su consentimiento para que en caso de mora, <b>PRESTADITO</b> o sus representantes puedan ingresar a su domicilio a retirar el vehículo, y por lo tanto lo exime de toda responsabilidad que pueda incurrir según el artículo 99 de la Constitución de la Republica.
 Así como faculta a <b>“ PRESTADITO ”</b>, sus distintas dependencias, así como también a su personal, que mediante visitas a su domicilio se le puedan presentar y ofrecer las diferentes propuestas de negocio, servicios, catálogos de nuevos productos; a su vez, faculta otros canales, sean estos telefónicos o electrónicos, a que se comuniquen y a que le informen en los días de semana, así como también en los días llamados vacaciones, o festivos, en los diferentes horarios abiertos, incluso fin de semana, exonerándole de cualquier perjuicio a la empresa o de ser estas visitas catalogadas como “hostigamiento”.
-                                <b>- El CLIENTE:</b> autoriza de manera expresa y voluntaria que en caso de que PRESTADITO retire el vehículo, pueda ser subastado al mejor postor y el dinero recibido de la misma se abonara a la deuda, si existiera un excedente se le dará al <b>CLIENTE</b> y en caso que no cubriese el total adeudado, <b>PRESTADITO</b> se reserva el derecho de ejercer acciones legales contra el <b>CLIENTE</b> por el pago de saldo total adeudado, que incluye capital, intereses y otros cargos o gastos que incurra.
-                                <b>- DÉCIMO TERCERA: COMPROBACION DE HABER RECIBIDO INSTRUCCIÓN Y ORIENTACION DEL PRODUCTO Y ENTREGA DE COPIA DEL CONVENIO Y PLAN DE PAGO.- EL CLIENTE</b> por este acto acepta que previo a la celebración de este contrato, ha recibido toda la orientación y explicación necesaria sobre las condiciones del convenio, las consecuencias legales y judiciales de su incumplimiento, así como que ha recibido una copia íntegra de este documento y del plan de pagos respectivo.
+                                <b>- El CLIENTE:</b> autoriza de manera expresa y voluntaria que en caso de que PRESTADITO retire el vehículo, pueda ser subastado al mejor postor cuando el PRESTAMO presente 60 dias de mora y el dinero recibido de la misma se abonara a la deuda, si existiera un excedente se le dará al <b>CLIENTE</b> y en caso que no cubriese el total adeudado, <b>PRESTADITO</b> se reserva el derecho de ejercer acciones legales contra el <b>CLIENTE</b> por el pago de saldo total adeudado, que incluye capital, intereses, otros cargos o gastos que incurra por recuperacion, reparacion, impuestos u otros.
+
+                                <b>- DÉCIMO TERCERA: PROHIBICIONES PARA EL CLIENTE:</b> Mientras este contrato no haya sido cancelado en su totalidad es se le Prohibe realizar las siguientes acciones:
+                                <b>A)</b> utilizar el vehiculo para transporte publico como ser taxi en todas sus modalidades incluyendo VIP, 
+                                <b>B)</b> utilzar el vehiculo como transporte de carga comercial.
+                                <b>-C)</b>, Adulterar el GPS o mandarlo a retirar o negarse.
+                                <b>D)</b> Enajenar, vender, permutar, donar, gravar, alquilar, rentar, prestar o dar en prenda el vehículo dado en propiedad, sin la autorización por escrito otorgada por PRESTADITO, la inobservacias de las prohibiciones faculta a PRESTADITO a dar por vencido el plazo y podra retirar el vehículo, sin intervencion JudiciaL o institucion reguladora.
+                                <b>- DÉCIMO CUARTO: COMPROBACION DE HABER RECIBIDO INSTRUCCIÓN Y ORIENTACION DEL PRODUCTO Y ENTREGA DE COPIA DEL CONVENIO Y PLAN DE PAGO.- EL CLIENTE</b> por este acto acepta que previo a la celebración de este contrato, ha recibido toda la orientación y explicación necesaria sobre las condiciones del convenio, las consecuencias legales y judiciales de su incumplimiento, así como que ha recibido una copia íntegra de este documento y del plan de pagos respectivo.
 .- Finalmente las partes declaramos que es cierto todo lo anteriormente expresado, y que por ser ello lo convenido, aceptamos libre y voluntariamente, todas estipulaciones, condiciones y cláusulas contenidas en el presente contrato de préstamo.
 En fe de lo cual firmamos en la ciudad de
                                 <span class="lblCiudad_Firma"></span>,
@@ -449,7 +464,7 @@ a los
                         </div>
                     </div>
                     <!-- Firma del cliente -->
-                    <div class="row">
+                    <div class="row mt-5">
                         <div class="col-1"></div>
                         <div class="col-5 text-center">
                             <label class="mt-3 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
@@ -1606,7 +1621,9 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                             <img src="/Imagenes/LogoPrestadito.png" class="pt-4" />
                         </div>
                         <div class="col-12">
-                            <h4 class="text-center pt-2 pb-4"><b>NOTA DE ENTREGA <br /> POR APROBACIÓN DE CRÉDITO</b></h4>
+                            <h4 class="text-center pt-2 pb-4"><b>NOTA DE ENTREGA
+                                <br />
+                                POR APROBACIÓN DE CRÉDITO</b></h4>
                         </div>
                     </div>
                     <div class="row">
@@ -1627,7 +1644,7 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                         </div>
                         <div class="col-2"></div>
                         <div class="col-auto">
-                            <table class="table table-sm table-bordered" style="width:400px;">
+                            <table class="table table-sm table-bordered" style="width: 400px;">
                                 <tr>
                                     <th>ESTADO</th>
                                     <td>
@@ -1684,7 +1701,8 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                                 </tr>
                                 <tr>
                                     <th>PLACA</th>
-                                    <td><asp:Label runat="server" ID="lblPlaca_NotaEntrega"></asp:Label></td>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblPlaca_NotaEntrega"></asp:Label></td>
                                 </tr>
                             </table>
                         </div>

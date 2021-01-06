@@ -46,7 +46,7 @@ p {
 }
 
 #divContratoPDF p {
-    font-size: 11px !important;
+    font-size: 10px !important;
     text-align: justify !important;
     text-justify: inter-word !important;
     color: black;
