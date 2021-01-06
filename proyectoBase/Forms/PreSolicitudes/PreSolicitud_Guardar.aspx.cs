@@ -261,7 +261,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                             pcIDTipoDeSolicitud = sqlResultado["fiTipoSolicitudCliente"].ToString();
                         }
 
-                        if (txtNombreCliente.Text == "")
+                        if (txtNombreCliente.Text.Trim() == string.Empty)
                         {
                             MostrarMensaje("No se puede ingresar una pre solicitud de un cliente sin nombre, contacte al administrador. ");
                         }
