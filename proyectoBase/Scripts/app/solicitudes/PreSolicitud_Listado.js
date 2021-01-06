@@ -55,7 +55,7 @@ $(document).ready(function () {
                 "data": "FechaCreacion",
                 "render": function (value) {
                     if (value === '/Date(-2208967200000)/') return "";
-                    return moment(value).locale('es').format('YYYY/MM/DD h:mm:ss a');
+                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a');
                 }
             },
             { "data": "Agencia" },
@@ -202,16 +202,16 @@ $(document).on('click', 'button#btnDetalles', function () {
                 // gestoria
                 $("#txtGestorAsignado").val(preSolicitud.IdGestorValidador == 0 ? 'No Asignado' : preSolicitud.GestorValidador);
                 $("#txtGestion").val(preSolicitud.GestionDeCampo);
-                $("#txtFechaDescargadoPorGestor").val(preSolicitud.FechaDescargadoPorGestor == '/Date(-2208967200000)/' ? 'Aún no recibido' : moment(preSolicitud.FechaDescargadoPorGestor).locale('es').format('YYYY/MM/DD h:mm:ss a'));
-                $("#txtFechaValidacion").val(preSolicitud.FechaValidacion == '/Date(-2208967200000)/' ? 'Áún no validado' : moment(preSolicitud.FechaValidacion).locale('es').format('YYYY/MM/DD h:mm:ss a'));
+                $("#txtFechaDescargadoPorGestor").val(preSolicitud.FechaDescargadoPorGestor == '/Date(-2208967200000)/' ? 'Aún no recibido' : moment(preSolicitud.FechaDescargadoPorGestor).locale('es').format('YYYY/MM/DD hh:mm:ss a'));
+                $("#txtFechaValidacion").val(preSolicitud.FechaValidacion == '/Date(-2208967200000)/' ? 'Áún no validado' : moment(preSolicitud.FechaValidacion).locale('es').format('YYYY/MM/DD hh:mm:ss a'));
                 $("#txtObservacionesGestoria").val(preSolicitud.ObservacionesDeCampo);
 
                 // auditoria
                 $("#txtUsuarioCreacion").val(preSolicitud.UsuarioCrea);
-                $("#txtFechaCreacion").val(moment(preSolicitud.FechaCreacion).locale('es').format('YYYY/MM/DD h:mm:ss a'));
+                $("#txtFechaCreacion").val(moment(preSolicitud.FechaCreacion).locale('es').format('YYYY/MM/DD hh:mm:ss a'));
 
                 $("#txtUsuarioUltimaModificacion").val(preSolicitud.UsuarioUltimaMoficiacion == '' ? 'Sin Modificaciones' : preSolicitud.UsuarioUltimaMoficiacion);
-                $("#txtFechaUltimaModificacion").val(preSolicitud.FechaUltimaModificacion == '/Date(-2208967200000)/' ? 'Sin Modificaciones' : moment(preSolicitud.FechaUltimaModificacion).locale('es').format('YYYY/MM/DD h:mm:ss a'));
+                $("#txtFechaUltimaModificacion").val(preSolicitud.FechaUltimaModificacion == '/Date(-2208967200000)/' ? 'Sin Modificaciones' : moment(preSolicitud.FechaUltimaModificacion).locale('es').format('YYYY/MM/DD hh:mm:ss a'));
 
                 $("#modalDetalles").modal();
             }

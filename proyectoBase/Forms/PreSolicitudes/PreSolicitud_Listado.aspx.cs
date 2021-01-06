@@ -54,60 +54,57 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<PreSolicitud_Listado_ViewModel> CargarPreSolicitudes()
+    public static List<PreSolicitud_ViewModel> CargarPreSolicitudes()
     {
-        var preSolicitudes = new List<PreSolicitud_Listado_ViewModel>();
+        var listadoDePreSolicitudes = new List<PreSolicitud_ViewModel>();
         try
         {
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_Listado", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_Listado", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                    using (var reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
-                            preSolicitudes.Add(new PreSolicitud_Listado_ViewModel()
+                            listadoDePreSolicitudes.Add(new PreSolicitud_ViewModel()
                             {
-                                IdPreSolicitud = int.Parse(reader["fiIDPreSolicitud"].ToString()),
-                                IdPais = int.Parse(reader["fiIDPais"].ToString()),
-                                IdCanal = int.Parse(reader["fiIDCanal"].ToString()),
-                                CentroDeCosto = reader["fcCentrodeCosto"].ToString(),
-                                Agencia = reader["fcNombreAgencia"].ToString(),
-                                IdentidadCliente = reader["fcIdentidad"].ToString(),
-                                NombreCliente = reader["fcNombreCliente"].ToString(),
-                                IdGestorValidador = int.Parse(reader["fiIDGestorValidador"].ToString()),
-                                GestorValidador = reader["fcGestorValidador"].ToString(),
-
-                                IdUsuarioCra = int.Parse(reader["fiIDUsuarioCreador"].ToString()),
-                                UsuarioCrea = reader["fcUsuarioCrea"].ToString(),
-                                FechaCreacion = DateTime.Parse(reader["fdFechaCreado"].ToString()),
-
-                                IdUsuarioUltimaModificacion = int.Parse(reader["fiIDUsuarioUltimaModificacion"].ToString()),
-                                UsuarioUltimaMoficiacion = reader["fcUsuarioModifica"].ToString(),
-                                FechaUltimaModificacion = DateTime.Parse(reader["fdFechaUltimaModificacion"].ToString()),
-
-                                IdEstadoPreSolicitud = int.Parse(reader["fiEstadoPreSolicitud"].ToString()),
-                                EstadoPreSolicitud = reader["fcEstadoPreSolicitud"].ToString(),
-                                EstadoFavorable = byte.Parse(reader["fiFavorable"].ToString())
+                                IdPreSolicitud = int.Parse(sqlResultado["fiIDPreSolicitud"].ToString()),
+                                IdPais = int.Parse(sqlResultado["fiIDPais"].ToString()),
+                                IdCanal = int.Parse(sqlResultado["fiIDCanal"].ToString()),
+                                CentroDeCosto = sqlResultado["fcCentrodeCosto"].ToString(),
+                                Agencia = sqlResultado["fcNombreAgencia"].ToString(),
+                                IdentidadCliente = sqlResultado["fcIdentidad"].ToString(),
+                                NombreCliente = sqlResultado["fcNombreCliente"].ToString(),
+                                IdGestorValidador = int.Parse(sqlResultado["fiIDGestorValidador"].ToString()),
+                                GestorValidador = sqlResultado["fcGestorValidador"].ToString(),
+                                IdUsuarioCrea = int.Parse(sqlResultado["fiIDUsuarioCreador"].ToString()),
+                                UsuarioCrea = sqlResultado["fcUsuarioCrea"].ToString(),
+                                FechaCreacion = DateTime.Parse(sqlResultado["fdFechaCreado"].ToString()),
+                                IdUsuarioUltimaModificacion = int.Parse(sqlResultado["fiIDUsuarioUltimaModificacion"].ToString()),
+                                UsuarioUltimaMoficiacion = sqlResultado["fcUsuarioModifica"].ToString(),
+                                FechaUltimaModificacion = DateTime.Parse(sqlResultado["fdFechaUltimaModificacion"].ToString()),
+                                IdEstadoPreSolicitud = int.Parse(sqlResultado["fiEstadoPreSolicitud"].ToString()),
+                                EstadoPreSolicitud = sqlResultado["fcEstadoPreSolicitud"].ToString(),
+                                EstadoFavorable = byte.Parse(sqlResultado["fiFavorable"].ToString())
                             });
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return preSolicitudes;
+        return listadoDePreSolicitudes;
     }
 
     [WebMethod]
@@ -128,67 +125,79 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                    using (var reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
                             preSolicitud = new PreSolicitud_Detalles_ViewModel()
                             {
-                                IdPreSolicitud = int.Parse(reader["fiIDPreSolicitud"].ToString()),
-                                IdPais = int.Parse(reader["fiIDPais"].ToString()),
-                                IdCanal = int.Parse(reader["fiIDCanal"].ToString()),
-                                IdTipoDeUbicacion = int.Parse(reader["fiIDTipoDeUbicacion"].ToString()),
-                                CentroDeCosto = reader["fcCentrodeCosto"].ToString(),
-                                Agencia = reader["fcNombreAgencia"].ToString(),
-                                IdentidadCliente = reader["fcIdentidad"].ToString(),
-                                NombreCliente = reader["fcNombreCliente"].ToString(),
-                                Telefono = reader["fcTelefono"].ToString(),
-                                NombreTrabajo = reader["fcNombreTrabajo"].ToString(),
-                                TelefonoAdicional = reader["fcTelefonoAdicional"].ToString(),
-                                ExtensionRecursosHumanos = reader["fcExtensionRecursosHumanos"].ToString(),
-                                ExtensionCliente = reader["fcExtensionCliente"].ToString(),
-
-
-
-                                IdDepartamento = int.Parse(reader["fiIDDepartamento"].ToString()),
-                                Departamento = reader["fcDepartamento"].ToString(),
-                                IdMunicipio = int.Parse(reader["fiIDMunicipio"].ToString()),
-                                Municipio = reader["fcMunicipio"].ToString(),
-                                IdCiudadPoblado = int.Parse(reader["fiIDCiudad"].ToString()),
-                                CiudadPoblado = reader["fcPoblado"].ToString(),
-                                IdBarrioColonia = int.Parse(reader["fiIDBarrioColonia"].ToString()),
-                                BarrioColonia = reader["fcBarrio"].ToString(),
-                                DireccionDetallada = reader["fcDireccionDetallada"].ToString(),
-                                ReferenciasDireccionDetallada = reader["fcReferenciasDireccionDetallada"].ToString(),
-
+                                IdPreSolicitud = int.Parse(sqlResultado["fiIDPreSolicitud"].ToString()),
+                                IdPais = int.Parse(sqlResultado["fiIDPais"].ToString()),
+                                IdCanal = int.Parse(sqlResultado["fiIDCanal"].ToString()),
+                                IdTipoDeUbicacion = int.Parse(sqlResultado["fiIDTipoDeUbicacion"].ToString()),
+                                CentroDeCosto = sqlResultado["fcCentrodeCosto"].ToString(),
+                                Agencia = sqlResultado["fcNombreAgencia"].ToString(),
+                                IdentidadCliente = sqlResultado["fcIdentidad"].ToString(),
+                                NombreCliente = sqlResultado["fcNombreCliente"].ToString(),
+                                Telefono = sqlResultado["fcTelefono"].ToString(),
+                                NombreTrabajo = sqlResultado["fcNombreTrabajo"].ToString(),
+                                TelefonoAdicional = sqlResultado["fcTelefonoAdicional"].ToString(),
+                                ExtensionRecursosHumanos = sqlResultado["fcExtensionRecursosHumanos"].ToString(),
+                                ExtensionCliente = sqlResultado["fcExtensionCliente"].ToString(),
+                                IdDepartamento = int.Parse(sqlResultado["fiIDDepartamento"].ToString()),
+                                Departamento = sqlResultado["fcDepartamento"].ToString(),
+                                IdMunicipio = int.Parse(sqlResultado["fiIDMunicipio"].ToString()),
+                                Municipio = sqlResultado["fcMunicipio"].ToString(),
+                                IdCiudadPoblado = int.Parse(sqlResultado["fiIDCiudad"].ToString()),
+                                CiudadPoblado = sqlResultado["fcPoblado"].ToString(),
+                                IdBarrioColonia = int.Parse(sqlResultado["fiIDBarrioColonia"].ToString()),
+                                BarrioColonia = sqlResultado["fcBarrio"].ToString(),
+                                DireccionDetallada = sqlResultado["fcDireccionDetallada"].ToString(),
+                                ReferenciasDireccionDetallada = sqlResultado["fcReferenciasDireccionDetallada"].ToString(),
                                 // usuario crea
-                                IdUsuarioCra = int.Parse(reader["fiIDUsuarioCreador"].ToString()),
-                                UsuarioCrea = reader["fcUsuarioCreador"].ToString(),
-                                FechaCreacion = DateTime.Parse(reader["fdFechaCreado"].ToString()),
+                                IdUsuarioCrea = int.Parse(sqlResultado["fiIDUsuarioCreador"].ToString()),
+                                UsuarioCrea = sqlResultado["fcUsuarioCreador"].ToString(),
+                                FechaCreacion = DateTime.Parse(sqlResultado["fdFechaCreado"].ToString()),
                                 // usuario modifica
-                                IdUsuarioUltimaModificacion = int.Parse(reader["fiIDUsuarioUltimaModificacion"].ToString()),
-                                UsuarioUltimaMoficiacion = reader["fcUsuarioUltimaModificacion"].ToString(),
-                                FechaUltimaModificacion = DateTime.Parse(reader["fdFechaUltimaModificacion"].ToString()),
-
+                                IdUsuarioUltimaModificacion = int.Parse(sqlResultado["fiIDUsuarioUltimaModificacion"].ToString()),
+                                UsuarioUltimaMoficiacion = sqlResultado["fcUsuarioUltimaModificacion"].ToString(),
+                                FechaUltimaModificacion = DateTime.Parse(sqlResultado["fdFechaUltimaModificacion"].ToString()),
                                 // gestor
-                                IdGestorValidador = int.Parse(reader["fiIDGestorValidador"].ToString()),
-                                GestorValidador = reader["fcGestorValidador"].ToString(),
+                                IdGestorValidador = int.Parse(sqlResultado["fiIDGestorValidador"].ToString()),
+                                GestorValidador = sqlResultado["fcGestorValidador"].ToString(),
                                 // validacion de gestoria
-                                Latitud = reader["fcLatitud"].ToString(),
-                                Longitud = reader["fcLongitud"].ToString(),
-                                IdInvestigacionDeCampo = byte.Parse(reader["fiIDInvestigacionDeCampo"].ToString()),
-
-                                TipoResultadoDeCampo = int.Parse(reader["fiTipodeResultado"].ToString()), // para poner clase text danger, success, warining, etc
-                                GestionDeCampo = reader["fcGestion"].ToString(), // Del Catalogo de investigaciones
-                                FechaValidacion = (DateTime)reader["fdFechaValidacion"],
-                                FechaDescargadoPorGestor = (DateTime)reader["fdFechaDescargadaPorGestor"],
-                                ObservacionesDeCampo = reader["fcObservacionesCampo"].ToString(),
-
-                                IdEstadoDeGestion = byte.Parse(reader["fiIDEstadoDeGestion"].ToString()), // para cuestiones internas de la bbdd
-                                IdEstadoPreSolicitud = byte.Parse(reader["fiEstadoPreSolicitud"].ToString()), // id estado pre solicitud
-                                EstadoPreSolicitud = reader["fcEstadoPreSolicitud"].ToString(), // del catalogo de estados de presolucitud
-                                EstadoFavorable = byte.Parse(reader["fiFavorable"].ToString()) // para poner clase text danger, success, warining, etc
+                                Latitud = sqlResultado["fcLatitud"].ToString(),
+                                Longitud = sqlResultado["fcLongitud"].ToString(),
+                                IdInvestigacionDeCampo = byte.Parse(sqlResultado["fiIDInvestigacionDeCampo"].ToString()),
+                                TipoResultadoDeCampo = int.Parse(sqlResultado["fiTipodeResultado"].ToString()), // para poner clase text danger, success, warining, etc
+                                GestionDeCampo = sqlResultado["fcGestion"].ToString(), // Del Catalogo de investigaciones
+                                FechaValidacion = (DateTime)sqlResultado["fdFechaValidacion"],
+                                FechaDescargadoPorGestor = (DateTime)sqlResultado["fdFechaDescargadaPorGestor"],
+                                ObservacionesDeCampo = sqlResultado["fcObservacionesCampo"].ToString(),
+                                IdEstadoDeGestion = byte.Parse(sqlResultado["fiIDEstadoDeGestion"].ToString()), // para cuestiones internas de la bbdd
+                                IdEstadoPreSolicitud = byte.Parse(sqlResultado["fiEstadoPreSolicitud"].ToString()), // id estado pre solicitud
+                                EstadoPreSolicitud = sqlResultado["fcEstadoPreSolicitud"].ToString(), // del catalogo de estados de presolucitud
+                                EstadoFavorable = byte.Parse(sqlResultado["fiFavorable"].ToString()) // para poner clase text danger, success, warining, etc
                             };
+                        }
+
+                        /****** Documentos de la solicitud ******/
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            preSolicitud.Documentos.Add(new PreSolicitudDocumentosSolicitud_ViewModel()
+                            {
+                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
+                                IdSolicitudDocumento = (int)sqlResultado["fiIDSolicitudDocs"],
+                                NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
+                                Extension = sqlResultado["fcTipoArchivo"].ToString(),
+                                RutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),
+                                URLArchivo = sqlResultado["fcURL"].ToString(),
+                                IdTipoDocumento = (int)sqlResultado["fiTipoDocumento"],
+                                DescripcionTipoDocumento = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
+                                ArchivoActivo = (byte)sqlResultado["fiArchivoActivo"]
+                            });
                         }
                     }
                 }
@@ -234,7 +243,7 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
     }
 }
 
-public class PreSolicitud_Listado_ViewModel
+public class PreSolicitud_ViewModel
 {
     public int IdPreSolicitud { get; set; }
     public int IdPais { get; set; }
@@ -245,7 +254,7 @@ public class PreSolicitud_Listado_ViewModel
     public string NombreCliente { get; set; }
     public int? IdGestorValidador { get; set; }
     public string GestorValidador { get; set; }
-    public int IdUsuarioCra { get; set; }
+    public int IdUsuarioCrea { get; set; }
     public string UsuarioCrea { get; set; }
     public DateTime? FechaCreacion { get; set; }
     public int IdUsuarioUltimaModificacion { get; set; }
@@ -283,7 +292,7 @@ public class PreSolicitud_Detalles_ViewModel
     public string DireccionDetallada { get; set; }
     public string ReferenciasDireccionDetallada { get; set; }
     // usuario crea
-    public int IdUsuarioCra { get; set; }
+    public int IdUsuarioCrea { get; set; }
     public string UsuarioCrea { get; set; }
     public DateTime? FechaCreacion { get; set; }
     // usuario ultima modificacion
@@ -307,4 +316,24 @@ public class PreSolicitud_Detalles_ViewModel
     public int IdEstadoPreSolicitud { get; set; }
     public string EstadoPreSolicitud { get; set; }
     public int EstadoFavorable { get; set; }
+    public List<PreSolicitudDocumentosSolicitud_ViewModel> Documentos { get; set; }
+
+    public PreSolicitud_Detalles_ViewModel()
+    {
+        Documentos = new List<PreSolicitudDocumentosSolicitud_ViewModel>();
+    }
+}
+
+
+public class PreSolicitudDocumentosSolicitud_ViewModel
+{
+    public int IdPreSolicitudDocumento { get; set; }
+    public int IdPreSolicitud { get; set; }
+    public string NombreArchivo { get; set; }
+    public int IdTipoDocumento { get; set; }
+    public string DescripcionTipoDocumento { get; set; }
+    public string Extension { get; set; }
+    public string RutaArchivo { get; set; }
+    public string URLArchivo { get; set; }
+    public byte ArchivoActivo { get; set; }
 }

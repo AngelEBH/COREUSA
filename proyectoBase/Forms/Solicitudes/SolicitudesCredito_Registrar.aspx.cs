@@ -1977,145 +1977,145 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     #region Importar documentos de la presolicitud
 
-    public static bool ImportarDocumentosPreSolicitud(int idSolicitud, string pcIDSesion, string pcIDApp, string pcIDUsuario, SqlConnection sqlConexion, SqlTransaction tran)
-    {
-        var resultadoProceso = false;
-        var listaDocumentosPreSolicitud = new List<SolicitudesDocumentosViewModel>();
+    //public static bool ImportarDocumentosPreSolicitud(int idSolicitud, string pcIDSesion, string pcIDApp, string pcIDUsuario, SqlConnection sqlConexion, SqlTransaction tran)
+    //{
+    //    var resultadoProceso = false;
+    //    var listaDocumentosPreSolicitud = new List<SolicitudesDocumentosViewModel>();
 
-        try
-        {
-            using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
-            {
-                sqlComando.CommandType = CommandType.StoredProcedure;
-                sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+    //    try
+    //    {
+    //        using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
+    //        {
+    //            sqlComando.CommandType = CommandType.StoredProcedure;
+    //            sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+    //            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+    //            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+    //            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                using (var sqlResultado = sqlComando.ExecuteReader())
-                {
-                    while (sqlResultado.Read())
-                    {
-                        /* Lista de documentos de la solicitud de CANEX, que se deben mover a la carpeta de documentos de solicitudes */
-                        listaDocumentosPreSolicitud.Add(new SolicitudesDocumentosViewModel()
-                        {
-                            fiIDSolicitudDocs = (short)sqlResultado["fiIDImagen"],
-                            NombreAntiguo = (string)sqlResultado["fcNombreImagen"],
-                            URLAntiguoArchivo = "/Documentos/Solicitudes/Solicitud" + idSolicitud + "/" + nombreImagen,
-                            fiTipoDocumento = (short)sqlResultado["fiIDImagen"]
-                        });
-                    }
-                } // using sqlComando.ExecuteReader()
-            }// using sqlComando
+    //            using (var sqlResultado = sqlComando.ExecuteReader())
+    //            {
+    //                while (sqlResultado.Read())
+    //                {
+    //                    /* Lista de documentos de la solicitud de CANEX, que se deben mover a la carpeta de documentos de solicitudes */
+    //                    listaDocumentosPreSolicitud.Add(new SolicitudesDocumentosViewModel()
+    //                    {
+    //                        fiIDSolicitudDocs = (short)sqlResultado["fiIDImagen"],
+    //                        NombreAntiguo = (string)sqlResultado["fcNombreImagen"],
+    //                        URLAntiguoArchivo = "/Documentos/Solicitudes/Solicitud" + idSolicitud + "/" + nombreImagen,
+    //                        fiTipoDocumento = (short)sqlResultado["fiIDImagen"]
+    //                    });
+    //                }
+    //            } // using sqlComando.ExecuteReader()
+    //        }// using sqlComando
 
-            var documentacionCliente = 1;
-            var documentacionAval = 2;
-            var idsDocumentosAval = new int[] { 10, 11, 12, 13, 14, 15, 16, 17, 20, 21 };
-            var idsDocumentosCliente = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 19 };
+    //        var documentacionCliente = 1;
+    //        var documentacionAval = 2;
+    //        var idsDocumentosAval = new int[] { 10, 11, 12, 13, 14, 15, 16, 17, 20, 21 };
+    //        var idsDocumentosCliente = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 19 };
 
-            var tipoDocumentacion = idsDocumentosAval.Contains(documentacionAval) ? documentacionAval : documentacionCliente;
+    //        var tipoDocumentacion = idsDocumentosAval.Contains(documentacionAval) ? documentacionAval : documentacionCliente;
 
-            var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
-            var nuevoNombreDocumento = string.Empty;
+    //        var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
+    //        var nuevoNombreDocumento = string.Empty;
 
-            /* Lista de documentos que se va registrar en la base de datos de credito y se va mover al nuevo directorio */
-            var listaDocumentosSolicitud = new List<SolicitudesDocumentosViewModel>();
+    //        /* Lista de documentos que se va registrar en la base de datos de credito y se va mover al nuevo directorio */
+    //        var listaDocumentosSolicitud = new List<SolicitudesDocumentosViewModel>();
 
-            if (listaDocumentosPreSolicitud != null)
-            {
-                /* lista de bloques y la cantidad de documentos que contiene cada uno */
-                var bloques = listaDocumentosPreSolicitud.GroupBy(TipoDocumento => TipoDocumento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
+    //        if (listaDocumentosPreSolicitud != null)
+    //        {
+    //            /* lista de bloques y la cantidad de documentos que contiene cada uno */
+    //            var bloques = listaDocumentosPreSolicitud.GroupBy(TipoDocumento => TipoDocumento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
 
-                /* lista donde se guardara temporalmente los documentos dependiendo del tipo de documento en el iterador */
-                var documentosBloque = new List<SolicitudesDocumentosViewModel>();
+    //            /* lista donde se guardara temporalmente los documentos dependiendo del tipo de documento en el iterador */
+    //            var documentosBloque = new List<SolicitudesDocumentosViewModel>();
 
-                var nombreCarpetaDocumentosCANEX = "Solicitud" + idSolicitud;
-                var directorioDocumentosSolicitudCANEX = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentosCANEX + "\\";
+    //            var nombreCarpetaDocumentosCANEX = "Solicitud" + idSolicitud;
+    //            var directorioDocumentosSolicitudCANEX = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentosCANEX + "\\";
 
-                foreach (var bloque in bloques)
-                {
-                    int tipoDocumento = (int)bloque.Key;
-                    int cantidadDocumentos = bloque.Count;
+    //            foreach (var bloque in bloques)
+    //            {
+    //                int tipoDocumento = (int)bloque.Key;
+    //                int cantidadDocumentos = bloque.Count;
 
-                    documentosBloque = listaDocumentosPreSolicitud.Where(x => x.fiTipoDocumento == tipoDocumento).ToList();// documentos de este bloque
-                    string[] nombresGenerador = Funciones.MultiNombres.GenerarNombreCredDocumento(documentacionCliente, idSolicitud, tipoDocumento, cantidadDocumentos);
+    //                documentosBloque = listaDocumentosPreSolicitud.Where(x => x.fiTipoDocumento == tipoDocumento).ToList();// documentos de este bloque
+    //                string[] nombresGenerador = Funciones.MultiNombres.GenerarNombreCredDocumento(documentacionCliente, idSolicitud, tipoDocumento, cantidadDocumentos);
 
-                    int contadorNombre = 0;
+    //                int contadorNombre = 0;
 
-                    foreach (SolicitudesDocumentosViewModel file in documentosBloque)
-                    {
-                        nuevoNombreDocumento = nombresGenerador[contadorNombre];
+    //                foreach (SolicitudesDocumentosViewModel file in documentosBloque)
+    //                {
+    //                    nuevoNombreDocumento = nombresGenerador[contadorNombre];
 
-                        listaDocumentosSolicitud.Add(new SolicitudesDocumentosViewModel()
-                        {
-                            fcNombreArchivo = nuevoNombreDocumento,
-                            NombreAntiguo = file.NombreAntiguo,
-                            fcRutaArchivo = directorioDocumentosSolicitudCANEX,
-                            URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDocumentos + "/" + nuevoNombreDocumento + ".png",
-                            URLAntiguoArchivo = file.URLAntiguoArchivo,
-                            fiTipoDocumento = file.fiTipoDocumento
-                        });
-                        contadorNombre++;
-                    }
-                } // foreach bloques
-            } // using listaDocumentosPreSolicitud != null
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            resultadoProceso = false;
-        }
+    //                    listaDocumentosSolicitud.Add(new SolicitudesDocumentosViewModel()
+    //                    {
+    //                        fcNombreArchivo = nuevoNombreDocumento,
+    //                        NombreAntiguo = file.NombreAntiguo,
+    //                        fcRutaArchivo = directorioDocumentosSolicitudCANEX,
+    //                        URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDocumentos + "/" + nuevoNombreDocumento + ".png",
+    //                        URLAntiguoArchivo = file.URLAntiguoArchivo,
+    //                        fiTipoDocumento = file.fiTipoDocumento
+    //                    });
+    //                    contadorNombre++;
+    //                }
+    //            } // foreach bloques
+    //        } // using listaDocumentosPreSolicitud != null
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ex.Message.ToString();
+    //        resultadoProceso = false;
+    //    }
 
-        return resultadoProceso;
-    }
+    //    return resultadoProceso;
+    //}
 
-    /* Descargar y guardar los documentos de la presolicitud en su respectiva carpeta de documentos de la solicitud de credito */
-    public static bool GuadarDocumentosImportadosPreSolicitud(int idSolicitud, List<SolicitudesDocumentosViewModel> listaDocumentosPreSolicitud)
-    {
-        bool result;
-        try
-        {
-            var client = new WebClient();
-            var md5ArchivoDescargado = MD5.Create();
+    ///* Descargar y guardar los documentos de la presolicitud en su respectiva carpeta de documentos de la solicitud de credito */
+    //public static bool GuadarDocumentosImportadosPreSolicitud(int idSolicitud, List<SolicitudesDocumentosViewModel> listaDocumentosPreSolicitud)
+    //{
+    //    bool result;
+    //    try
+    //    {
+    //        var client = new WebClient();
+    //        var md5ArchivoDescargado = MD5.Create();
 
-            if (listaDocumentosPreSolicitud != null)
-            {
-                /* Crear el nuevo directorio para los documentos de la solicitud  */
-                var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
-                var directorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentos + "\\";
+    //        if (listaDocumentosPreSolicitud != null)
+    //        {
+    //            /* Crear el nuevo directorio para los documentos de la solicitud  */
+    //            var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
+    //            var directorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentos + "\\";
 
-                if (!Directory.Exists(directorioDocumentosSolicitud))
-                    Directory.CreateDirectory(directorioDocumentosSolicitud);
+    //            if (!Directory.Exists(directorioDocumentosSolicitud))
+    //                Directory.CreateDirectory(directorioDocumentosSolicitud);
 
-                foreach (SolicitudesDocumentosViewModel Documento in listaDocumentosPreSolicitud)
-                {
-                    var viejoDirectorio = Documento.URLAntiguoArchivo;
-                    var nuevoNombreDocumento = Documento.fcNombreArchivo;
-                    var nuevoDirectorio = directorioDocumentosSolicitud + nuevoNombreDocumento + ".png";
+    //            foreach (SolicitudesDocumentosViewModel Documento in listaDocumentosPreSolicitud)
+    //            {
+    //                var viejoDirectorio = Documento.URLAntiguoArchivo;
+    //                var nuevoNombreDocumento = Documento.fcNombreArchivo;
+    //                var nuevoDirectorio = directorioDocumentosSolicitud + nuevoNombreDocumento + ".png";
 
-                    if (File.Exists(nuevoDirectorio))
-                        File.Delete(nuevoDirectorio);
+    //                if (File.Exists(nuevoDirectorio))
+    //                    File.Delete(nuevoDirectorio);
 
-                    if (!File.Exists(nuevoDirectorio))
-                    {
-                        var lcURL = Documento.URLAntiguoArchivo;
+    //                if (!File.Exists(nuevoDirectorio))
+    //                {
+    //                    var lcURL = Documento.URLAntiguoArchivo;
 
-                        client.DownloadFile(new Uri(lcURL), nuevoDirectorio);
-                        client.Dispose();
-                        client = null;
-                        client = new WebClient();
-                    }
-                }
-            }
-            result = true;
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            result = false;
-        }
-        return result;
-    }
+    //                    client.DownloadFile(new Uri(lcURL), nuevoDirectorio);
+    //                    client.Dispose();
+    //                    client = null;
+    //                    client = new WebClient();
+    //                }
+    //            }
+    //        }
+    //        result = true;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ex.Message.ToString();
+    //        result = false;
+    //    }
+    //    return result;
+    //}
 
     #endregion
 
