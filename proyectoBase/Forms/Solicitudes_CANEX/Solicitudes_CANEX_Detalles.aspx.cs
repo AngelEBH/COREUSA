@@ -662,7 +662,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                 nombreSocio = sqlResultado["fcNombreSocio"].ToString();
                                 nombreImagen = sqlResultado["fcNombreImagen"].ToString();
 
-                                /* Lista de documentos canex, que se deben mover a la carpeta de documentos de solicitudes */
+                                /* Lista de documentos de la solicitud de CANEX, que se deben mover a la carpeta de documentos de solicitudes */
                                 ListadoDocumentosCANEX.Add(new SolicitudesDocumentosViewModel()
                                 {
                                     fiIDSolicitudDocs = (short)sqlResultado["fiIDImagen"],
@@ -671,8 +671,8 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     fiTipoDocumento = (short)sqlResultado["fiIDImagen"]
                                 });
                             }
-                        }
-                    }// using cmd
+                        } // using sqlComando.ExecuteReader()
+                    }// using sqlComando
 
                     int documentacionCliente = 1;
                     int documentacionAval = 2;
@@ -693,17 +693,13 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     string nombreCarpetaDocumentos = "Solicitud" + idSolicitudPrestadito;
                     string nuevoNombreDocumento = "";
 
-                    /* lista de documentos de la solicitud de canex */
-                    var listaDocumentos = ListadoDocumentosCANEX;
-
                     /* Lista de documentos que se va registrar en la base de datos de credito y se va mover al nuevo directorio */
-                    var solicitudesDocumentos = new List<SolicitudesDocumentosViewModel>();
+                    var listaDocumentosSolicitud = new List<SolicitudesDocumentosViewModel>();
 
-
-                    if (listaDocumentos != null)
+                    if (ListadoDocumentosCANEX != null)
                     {
                         /* lista de bloques y la cantidad de documentos que contiene cada uno */
-                        var bloques = listaDocumentos.GroupBy(TipoDocumento => TipoDocumento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
+                        var bloques = ListadoDocumentosCANEX.GroupBy(TipoDocumento => TipoDocumento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
 
                         /* lista donde se guardara temporalmente los documentos dependiendo del tipo de documento en el iterador */
                         var documentosBloque = new List<SolicitudesDocumentosViewModel>();
@@ -716,7 +712,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             int tipoDocumento = (int)bloque.Key;
                             int cantidadDocumentos = bloque.Count;
 
-                            documentosBloque = listaDocumentos.Where(x => x.fiTipoDocumento == tipoDocumento).ToList();// documentos de este bloque
+                            documentosBloque = ListadoDocumentosCANEX.Where(x => x.fiTipoDocumento == tipoDocumento).ToList();// documentos de este bloque
                             string[] nombresGenerador = Funciones.MultiNombres.GenerarNombreCredDocumento(documentacionCliente, idSolicitudPrestadito, tipoDocumento, cantidadDocumentos);
 
                             int contadorNombre = 0;
@@ -725,7 +721,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             {
                                 nuevoNombreDocumento = nombresGenerador[contadorNombre];
 
-                                solicitudesDocumentos.Add(new SolicitudesDocumentosViewModel()
+                                listaDocumentosSolicitud.Add(new SolicitudesDocumentosViewModel()
                                 {
                                     fcNombreArchivo = nuevoNombreDocumento,
                                     NombreAntiguo = file.NombreAntiguo,
@@ -744,14 +740,14 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         resultadoProceso.message = "Error al registrar la documentación";
                         return resultadoProceso;
                     }
-                    if (solicitudesDocumentos.Count <= 0)
+                    if (listaDocumentosSolicitud.Count <= 0)
                     {
                         resultadoProceso.response = false;
                         resultadoProceso.message = "Error al guardar documentación, compruebe que los documentos se hayan cargado correctamente";
                         return resultadoProceso;
                     }
 
-                    foreach (SolicitudesDocumentosViewModel documento in solicitudesDocumentos)
+                    foreach (SolicitudesDocumentosViewModel documento in listaDocumentosSolicitud)
                     {
                         using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Documentos_Guardar", sqlConexion))
                         {
@@ -783,7 +779,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         }
                     }
                     /* Mover documentos al directorio de la solicitud */
-                    if (!ImportarDocumentosCANEX(idSolicitudPrestadito, solicitudesDocumentos))
+                    if (!ImportarDocumentosCANEX(idSolicitudPrestadito, listaDocumentosSolicitud))
                     {
                         resultadoProceso.response = false;
                         resultadoProceso.message = "Error al guardar la documentación de la solicitud";
