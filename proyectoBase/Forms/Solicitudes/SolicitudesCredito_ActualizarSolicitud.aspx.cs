@@ -304,6 +304,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             switch (IdProducto)
                             {
                                 case 202:
+                                case 204:
 
                                     lblTituloMontoPrestmo.Text = "Valor del vehiculo";
                                     divCotizadorAutos.Visible = true;
@@ -330,7 +331,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     break;
 
                                 case 203:
-                                case 204:
 
                                     lblTituloMontoPrestmo.Text = "Valor del vehiculo";
                                     lblTituloPrima.InnerText = "Valor del empeño";
@@ -432,7 +432,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                         tblCondicionesReferenciasPersonales.Rows.Add(tRowCondicionAcciones);
                                     }
                                     /* condiciones de la información de la solicitud */
-                                    else if (sqlResultado["fiIDCondicion"].ToString() == "9" && estadoCondicion == true || 1 == 1)
+                                    else if (sqlResultado["fiIDCondicion"].ToString() == "9" && estadoCondicion == true)
                                     {
                                         liInformacionPrestamoSolicitado.Visible = true;
                                         tblCondicionesInformacionSolicitud.Rows.Add(tRowCondicionAcciones);
@@ -1681,8 +1681,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                 using (var sqlComando = new SqlCommand("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
                 {
-                    var montoPrestamo = (idProducto == 203 || idProducto == 204) ? valorPrima : valorGlobal - valorPrima;
-                    valorPrima = (idProducto == 203 || idProducto == 204) ? valorGlobal - valorPrima : valorPrima;
+                    var montoPrestamo = (idProducto == 203) ? valorPrima : valorGlobal - valorPrima;
+                    valorPrima = (idProducto == 203) ? valorGlobal - valorPrima : valorPrima;
 
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
