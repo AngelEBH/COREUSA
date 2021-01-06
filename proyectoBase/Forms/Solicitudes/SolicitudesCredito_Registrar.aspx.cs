@@ -89,6 +89,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 switch (Precalificado.IdProducto)
                 {
                     case 202:
+                    case 204:
                         lblTituloMontoPrestmo.Text = "Valor del vehiculo";
                         divCotizadorAutos.Visible = true;
                         ddlTipoGastosDeCierre.Enabled = true;
@@ -111,7 +112,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         break;
 
                     case 203:
-                    case 204:
 
                         lblTituloMontoPrestmo.Text = "Valor del vehiculo";
                         lblTituloPrima.InnerText = "Valor del empeño";
@@ -1283,8 +1283,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                 using (var sqlComando = new SqlCommand("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
                 {
-                    var montoPrestamo = (idProducto == 203 || idProducto == 204) ? valorPrima : valorGlobal - valorPrima;
-                    valorPrima = (idProducto == 203 || idProducto == 204) ? valorGlobal - valorPrima : valorPrima;
+                    var montoPrestamo = (idProducto == 203) ? valorPrima : valorGlobal - valorPrima;
+                    valorPrima = (idProducto == 203) ? valorGlobal - valorPrima : valorPrima;
 
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -2103,6 +2103,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             //pmmMensaje.To.Add("willian.diaz@miprestadito.com");
             pmmMensaje.CC.Add(buzonCorreoUsuario);
             pmmMensaje.CC.Add("edwin.aguilar@miprestadito.com");
+            pmmMensaje.CC.Add("keyla.hernandez@miprestadito.com");
             pmmMensaje.IsBodyHtml = true;
 
             string htmlString = @"<!DOCTYPE html> " +
