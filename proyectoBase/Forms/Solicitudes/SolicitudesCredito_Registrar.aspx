@@ -893,6 +893,6 @@
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_CoreFinanciero.js?v=20201228103737"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_CoreFinanciero.js?v=20210107052205"></script>
 </body>
 </html>
