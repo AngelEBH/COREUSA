@@ -277,7 +277,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 } // using sp consulta ejecutivos
 
                 /* Obtener el préstamo máximo que se le puede ofertar al cliente para validaciones */
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CotizadorProductos", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CotizadorProductos", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -333,7 +333,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 /* Verificar el tipo de cliente cuando se trate de renoviaciones y refinanciamiento para validar que solo se ingresen clientes excelentes y muy buenos*/
                 if (Precalificado.IdClienteSAF != "")
                 {
-                    using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.Sp_Creditos_ClienteClasificacion", sqlConexion))
+                    using (var sqlComando = new SqlCommand("Sp_Creditos_ClienteClasificacion", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -512,7 +512,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlResultado.Read();
 
                             var idTipoInvestigacion = sqlResultado["fiIDTipoDeUbicacion"].ToString(); // 1 = Domicilio, 2 = Trabajo
-                            var estadoPreSolicitud = sqlResultado["fiEstadoPreSolicitud"].ToString();
+                            var estadoPreSolicitud = sqlResultado["fiEstadoPreSolicitud"].ToString(); // ver CREDPreSolicitudes_Catalogo_Estados
 
                             switch (estadoPreSolicitud)
                             {
@@ -536,7 +536,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                     break;
 
                                 default:
-
                                     Precalificado.PermitirIngresarSolicitud = false;
                                     Precalificado.MensajePermitirIngresarSolicitud += "Esta solicitud no puede ser ingresada porque hay una Pre Solicitud con estado indefinido asociada a este cliente, contacte con el administrador.";
                                     lblMensaje.InnerText = "(Esta solicitud no puede ser ingresada porque hay una Pre Solicitud con estado indefinido asociada a este cliente, contacte con el administrador)";
@@ -669,7 +668,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_Guardar_LlenarListas", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitud_Guardar_LlenarListas", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -842,7 +841,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredCatalogo_Origenes", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CredCatalogo_Origenes", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDProducto", Precalificado.IdProducto);
@@ -875,7 +874,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_ObtenerInformacionPorIdentidad", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDCliente_ObtenerInformacionPorIdentidad", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", pcID);
@@ -1060,7 +1059,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoMunicipio", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_GeoMunicipio", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piPais", 1);
@@ -1099,7 +1098,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoPoblado", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_GeoPoblado", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piPais", 1);
@@ -1140,7 +1139,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoBarrios", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_GeoBarrios", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piPais", 1);
@@ -1403,7 +1402,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
 
                         /* Registrar cliente maestro */
-                        using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Insert", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CREDCliente_Maestro_Insert", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@fiTipoCliente", 1);
@@ -1465,6 +1464,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 while (sqlResultado.Read())
@@ -1480,7 +1480,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             return resultadoProceso;
                         }
                     }
-
 
                     /* Obtener documentos que se van a guardar de la solicitud */
                     var listaDeDocumentos = new List<SolicitudesDocumentosViewModel>();
@@ -1550,7 +1549,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     /* Registrar solicitud maestro */
                     int idSolicitudInsertada = 0;
 
-                    using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_Maestro_Insert", sqlConexion, tran))
+                    using (var sqlComando = new SqlCommand("sp_CREDSolicitud_Maestro_Insert", sqlConexion, tran))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@fiIDPais", 1);
@@ -1770,7 +1769,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     #endregion
 
                     /* Registrar informacion laboral del cliente */
-                    using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionLaboral_Insert", sqlConexion, tran))
+                    using (var sqlComando = new SqlCommand("sp_CREDCliente_InformacionLaboral_Insert", sqlConexion, tran))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
@@ -1813,7 +1812,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
 
                     /* Registrar información del domicilio del cliente */
-                    using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionDomiciliar_Insert", sqlConexion, tran))
+                    using (var sqlComando = new SqlCommand("sp_CREDCliente_InformacionDomiciliar_Insert", sqlConexion, tran))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
@@ -1850,7 +1849,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     /* Registrar información conyugal del cliente */
                     if (cliente.InformacionConyugal.IndentidadConyugue != null)
                     {
-                        using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_InformacionConyugal_Insert", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CREDCliente_InformacionConyugal_Insert", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
@@ -1890,9 +1889,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     {
                         if (cliente.ListaReferenciasPersonales.Count != 0)
                         {
-                            foreach (var referenciaPersonal in cliente.ListaReferenciasPersonales)
+                            foreach (Cliente_ReferenciaPersonal_ViewModel referenciaPersonal in cliente.ListaReferenciasPersonales)
                             {
-                                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Referencias_Insert", sqlConexion, tran))
+                                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Insert", sqlConexion, tran))
                                 {
                                     sqlComando.CommandType = CommandType.StoredProcedure;
                                     sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
@@ -2070,8 +2069,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     {
         decimal interesAnual = tasaInteresAnual > 1 ? (totalAFinanciar * tasaInteresAnual) / 100 : totalAFinanciar * tasaInteresAnual;
 
-        /* Determinar si el plazo es mensual o quincenal para calcular el interés anual */
-        var tipoDePlazo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? 12 : 24;
+        var tipoDePlazo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? 12 : 24; /* Determinar si el plazo es mensual o quincenal para calcular el interés anual */
 
         var interesesTotal = interesAnual * (plazoSeleccionado / tipoDePlazo);
 
@@ -2269,6 +2267,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     #endregion
 
     #region View Models
+
     public class Origenes_ViewModel
     {
         public int IdOrigen { get; set; }

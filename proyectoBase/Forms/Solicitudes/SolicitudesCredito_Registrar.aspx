@@ -219,7 +219,7 @@
                                             <asp:TextBox ID="txtBuscarVIN" placeholder="Buscar VIN" CssClass="form-control form-control-sm mascara-vin" type="text" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-auto pl-1">
-                                            <button type="button" id="btnBuscarVIN" class="btn btn-sm btn-secondary text-center"><i class="fas fa-search"></i></button>
+                                            <button type="button" id="btnBuscarVIN" onclick="BuscarVIN()" class="btn btn-sm btn-secondary text-center"><i class="fas fa-search"></i></button>
                                         </div>
                                     </div>
                                 </div>

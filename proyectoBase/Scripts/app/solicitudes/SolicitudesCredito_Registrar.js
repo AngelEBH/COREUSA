@@ -159,12 +159,10 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                     ValorPrima: valorPrima,
                     ValorFinanciado: valorFinanciado,
                     GastosDeCierre: 0,
-
                     IdentidadPropietario: $("#txtIdentidadPropietario").val(),
                     NombrePropietario: $("#txtNombrePropietario").val(),
                     IdNacionalidadPropietario: $("#ddlNacionalidadPropietario :selected").val(),
                     IdEstadoCivilPropietario: $("#ddlEstadoCivilPropietario :selected").val(),
-
                     IdentidadVendedor: $("#txtIdentidadVendedor").val(),
                     NombreVendedor: $("#txtNombreVendedor").val(),
                     IdNacionalidadVendedor: $("#ddlNacionalidadVendedor :selected").val(),
@@ -753,8 +751,6 @@ function CargarDocumentosRequeridos() {
 /* Cargar prestamos disponibles consultados en el cotizador */
 function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
-    debugger;
-
     if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203 || PRECALIFICADO.IdProducto == 204) {
 
         var lcSeguro = '';
@@ -1208,7 +1204,6 @@ function GuardarRespaldoinformacionDomicilio() {
         txtTelefonoCasa: $("#txtTelefonoCasa").val(),
         txtDireccionDetalladaDomicilio: $("#txtDireccionDetalladaDomicilio").val(),
         txtReferenciasDelDomicilio: $("#txtReferenciasDelDomicilio").val(),
-
         ddlTipoDeVivienda: $("#ddlTipoDeVivienda :selected").val(),
         ddlTiempoDeResidir: $("#ddlTiempoDeResidir :selected").val()
     }
@@ -1273,13 +1268,11 @@ function GuardarRespaldoInformacionGarantia() {
         txtSerieDos: $("#txtSerieDos").val(),
         txtGPS: $("#txtGPS").val(),
         txtComentario: $("#txtComentario").val(),
-
         /* Informacion propietario de la garantia */
         txtIdentidadPropietario: $("#txtIdentidadPropietario").val(),
         txtNombrePropietario: $("#txtNombrePropietario").val(),
         ddlNacionalidadPropietario: $("#ddlNacionalidadPropietario :selected").val(),
         ddlEstadoCivilPropietario: $("#ddlEstadoCivilPropietario :selected").val(),
-
         /* Informacion vendedor de la garantia */
         txtIdentidadVendedor: $("#txtIdentidadVendedor").val(),
         txtNombreVendedor: $("#txtNombreVendedor").val(),
@@ -1351,7 +1344,6 @@ function RecuperarRespaldos() {
         $("#txtTelefonoCasa").val(respaldoinformacionDomicilio.txtTelefonoCasa);
         $("#txtDireccionDetalladaDomicilio").val(respaldoinformacionDomicilio.txtDireccionDetalladaDomicilio);
         $("#txtReferenciasDelDomicilio").val(respaldoinformacionDomicilio.txtReferenciasDelDomicilio);
-
         $("#ddlTipoDeVivienda").val(respaldoinformacionDomicilio.ddlTipoDeVivienda);
         $("#ddlTiempoDeResidir").val(respaldoinformacionDomicilio.ddlTiempoDeResidir);
     }
@@ -1419,13 +1411,11 @@ function RecuperarRespaldos() {
         $("#txtSerieDos").val(respaldoInformacionGarantia.txtSerieDos);
         $("#txtGPS").val(respaldoInformacionGarantia.txtGPS);
         $("#txtComentario").val(respaldoInformacionGarantia.txtComentario);
-
         /* Informacion propietario de la garantia */
         $("#txtIdentidadPropietario").val(respaldoInformacionGarantia.txtIdentidadPropietario);
         $("#txtNombrePropietario").val(respaldoInformacionGarantia.txtNombrePropietario);
         $("#ddlNacionalidadPropietario").val(respaldoInformacionGarantia.ddlNacionalidadPropietario);
         $("#ddlEstadoCivilPropietario").val(respaldoInformacionGarantia.ddlEstadoCivilPropietario);
-
         /* Informacion vendedor de la garantia */
         $("#txtIdentidadVendedor").val(respaldoInformacionGarantia.txtIdentidadVendedor);
         $("#txtNombreVendedor").val(respaldoInformacionGarantia.txtNombreVendedor);
@@ -1481,11 +1471,6 @@ function RecuperarRespaldos() {
 
     //OcultarLoader();
 }
-
-$("#btnBuscarVIN").click(function () {
-
-    BuscarVIN();
-});
 
 function BuscarVIN() {
 
@@ -1576,7 +1561,6 @@ $("#btnSolicitarCambioScore").click(function () {
             },
             success: function (data) {
 
-
                 data.d == true ? MensajeExito('Solicitud de cambio de score enviada por correo exitosamente!') : MensajeError('No se pudo enviar el correo, contacte al administrador.');
 
                 $("#txtNuevoScore,#txtCambiarScoreComentarioAdicional").val('');
@@ -1585,7 +1569,6 @@ $("#btnSolicitarCambioScore").click(function () {
         });
 
         MensajeInformacion('Enviando solicitud por correo...');
-
         $("#modalCambiarScore").modal('hide');
     }
     else {
