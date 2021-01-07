@@ -15,7 +15,6 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using System.Net.Mail;
-using System.Security.Cryptography;
 
 public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 {
@@ -168,13 +167,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-                { "limit", 1 },
-                { "title", "auto" },
-                { "uploadDir", uploadDir },
-                { "extensions", new string[] { "jpg", "png", "jpeg"} },
-                { "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
-                { "fileMaxSize", 10 }, //peso máximo por archivo
-            });
+{ "limit", 1 },
+{ "title", "auto" },
+{ "uploadDir", uploadDir },
+{ "extensions", new string[] { "jpg", "png", "jpeg"} },
+{ "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
+{ "fileMaxSize", 10 }, //peso máximo por archivo
+});
 
             switch (type)
             {
@@ -1341,7 +1340,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         {
             sqlConexion.Open();
 
-            using (SqlTransaction tran = sqlConexion.BeginTransaction())
+            using (SqlTransaction sqlTransaction = sqlConexion.BeginTransaction())
             {
                 try
                 {
@@ -1355,13 +1354,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     var contadorErrores = 0;
                     var idClienteInsertado = 0;
 
-                    /* si es cliente nuevo, validar  que no haya duplicidad de identidad y RTN */
+                    /* si es cliente nuevo, validar que no haya duplicidad de identidad y RTN */
                     if (esClienteNuevo == true)
                     {
                         var duplicidadIdentidad = 0;
                         var duplicidadRTN = 0;
 
-                        using (var sqlComando = new SqlCommand("sp_CredCliente_ValidarDuplicidadIdentidades", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CredCliente_ValidarDuplicidadIdentidades", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", precalificado.Identidad);
@@ -1402,7 +1401,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
 
                         /* Registrar cliente maestro */
-                        using (var sqlComando = new SqlCommand("sp_CREDCliente_Maestro_Insert", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CREDCliente_Maestro_Insert", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@fiTipoCliente", 1);
@@ -1451,12 +1450,11 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         solicitud.IdCliente = idClienteInsertado;
                     }
 
-                    /* Si el cliente no es nuevo, validar que no tenga solicitudes de crédito activas */
-                    if (esClienteNuevo == false)
+                    if (esClienteNuevo == false) /* Si el cliente no es nuevo, validar que no tenga solicitudes de crédito activas */
                     {
                         int solicitudesActivas = 0;
 
-                        using (var sqlComando = new SqlCommand("sp_CredSolicitud_ValidarClienteSolicitudesActivas", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CredSolicitud_ValidarClienteSolicitudesActivas", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
@@ -1481,16 +1479,21 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    /* Obtener documentos que se van a guardar de la solicitud */
-                    var listaDeDocumentos = new List<SolicitudesDocumentosViewModel>();
+                    /****** Obtener todos los documentos que se van a guardar asociadas a la solicitud de credito. ******/
+                    /****** Se obtienen antes de guardar la solicitud para poder obtener los documentos de la pre solicitud antes de que esta se actualice a estado 5 (SOLICITUD INGRESADA) ******/
 
                     /* Obtener documentos adjuntados por el usuario en el formulario del ingreso de la solicitud */
-                    listaDeDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
+                    var listaDeDocumentosAdjuntadosYPreSolicitud = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
 
-                    if (listaDeDocumentos != null)
+                    /* Documentos de la pre solicitud en caso de que exista una */
+                    var listaDeDocumentosPreSolicitud = new List<SolicitudesDocumentosViewModel>();
+                    var idPreSolicitud = 0;
+                    var idEstadoPreSolicitud = 0;
+
+                    if (listaDeDocumentosAdjuntadosYPreSolicitud != null) /* Si no se adjuntaron documentos en el formulario de ingreso, mostrar mensaje de error porque es requerido por lo menos un documento */
                     {
                         /* Obtener documentos de la PRE SOLICITUD en caso de que exista una */
-                        using (var sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_ObtenerPorIdentidad", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_ObtenerPorIdentidad", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -1503,21 +1506,31 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 if (sqlResultado.HasRows)
                                 {
                                     /****** Primer resultado: Información de la pre solicitud ******/
-                                    var idPreSolicitud = 0;
 
                                     while (sqlResultado.Read())
                                     {
-                                        idPreSolicitud = (byte)sqlResultado["fiEstadoPreSolicitud"];
+                                        idPreSolicitud = (int)sqlResultado["fiIDPreSolicitud"];
+                                        idEstadoPreSolicitud = (byte)sqlResultado["fiEstadoPreSolicitud"];
                                     }
 
-                                    if (idPreSolicitud == 3) // Si la pre solicitud corresponde a este cliente y está en estado APROBADA (mirar CREDPreSolicitudes_Catalogo_Estados)
+                                    if (idEstadoPreSolicitud == 3) // Si la pre solicitud corresponde a este cliente y está en estado APROBADA (mirar CREDPreSolicitudes_Catalogo_Estados)
                                     {
                                         /****** Segundo resultado: Documentos de la pre solicitud ******/
                                         sqlResultado.NextResult();
 
                                         while (sqlResultado.Read())
                                         {
-                                            listaDeDocumentos.Add(new SolicitudesDocumentosViewModel()
+                                            listaDeDocumentosPreSolicitud.Add(new SolicitudesDocumentosViewModel()
+                                            {
+                                                fcNombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
+                                                NombreAntiguo = sqlResultado["fcNombreArchivo"].ToString(),
+                                                fcTipoArchivo = sqlResultado["fcTipoArchivo"].ToString(),
+                                                fcRutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),
+                                                URLArchivo = sqlResultado["fcURL"].ToString(),
+                                                fiTipoDocumento = (int)sqlResultado["fiTipoDocumento"]
+                                            });
+
+                                            listaDeDocumentosAdjuntadosYPreSolicitud.Add(new SolicitudesDocumentosViewModel()
                                             {
                                                 fcNombreArchivo = "",
                                                 NombreAntiguo = sqlResultado["fcNombreArchivo"].ToString(),
@@ -1529,9 +1542,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                         }
                                     }
                                 } // if sqlResultado.HasRows
-                            } // using sqlComando.ExecuteReader() 
+                            } // using sqlComando.ExecuteReader()
                         } // using sqlComando sp_CREDPreSolicitudes_Maestro_ObtenerPorIdentidad
-                    } // if listaDeDocumentos != null
+                    } // if listaDeDocumentosAdjuntadosYPreSolicitud != null
                     else
                     {
                         resultadoProceso.response = false;
@@ -1539,17 +1552,18 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         return resultadoProceso;
                     }
 
-                    if (listaDeDocumentos.Count <= 0) // si no hay ningun documento de la solicitud, mostrar mensaje de error.
+                    if (listaDeDocumentosAdjuntadosYPreSolicitud.Count <= 0) // si no hay ningun documento de la solicitud, mostrar mensaje de error.
                     {
                         resultadoProceso.response = false;
                         resultadoProceso.message = "Error al guardar documentación, compruebe que haya cargado los documentos correctamente o vuelva a cargarlos";
                         return resultadoProceso;
                     }
 
+
                     /* Registrar solicitud maestro */
                     int idSolicitudInsertada = 0;
 
-                    using (var sqlComando = new SqlCommand("sp_CREDSolicitud_Maestro_Insert", sqlConexion, tran))
+                    using (var sqlComando = new SqlCommand("sp_CREDSolicitud_Maestro_Insert", sqlConexion, sqlTransaction))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@fiIDPais", 1);
@@ -1587,6 +1601,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             }
                         }
                     }
+
                     if (contadorErrores > 0)
                     {
                         resultadoProceso.response = false;
@@ -1626,7 +1641,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         decimal tasaInteresMensual = tasaInteresAnual / 12;
                         decimal totalAFinanciarConIntereses = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204) ? cotizador.TotalFinanciadoConIntereses : CalcularTotalAFinanciarConIntereses(cotizador.TotalAFinanciar, solicitud.PlazoSeleccionado, tasaInteresAnual, precalificado.IdProducto);
 
-                        using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Guardar", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Guardar", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
@@ -1670,69 +1685,22 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    #region Renombrar documentos de la solicitud, determinar nuevo directorio y GUARDAR los registros en la base de datos
+
+
+                    #region Guardar los documentos de la solicitud (Adjuntados en el formulario de ingreso de solicitud)
 
                     /* Lista de documentos de la solicitud que van a guardar en la base de datos y se van a mover al nuevo directorio correspondiente de la solicitud */
-                    var listaDeDocumentosDeLaSolicitud = new List<SolicitudesDocumentosViewModel>();
-
-                    var documentacionCliente = 1;
-                    var nombreCarpetaDeDocumentos = "Solicitud" + idSolicitudInsertada;
-                    var nuevoNombreDocumento = string.Empty;
-                    var rutaDocumento = string.Empty;
-
-                    /* lista de bloques y la cantidad de documentos que contiene cada uno */
-                    var listaDeBloquesDeTiposDeDocumentos = listaDeDocumentos.GroupBy(documento => documento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
-
-                    /* lista donde se guardara temporalmente los documentos adjuntados por el usuario dependiendo del tipo de documento en el iterador */
-                    var documentosBloque = new List<SolicitudesDocumentosViewModel>();
-
-                    /* renombrar los documentos y determinar nuevo directorio */
-                    foreach (var bloqueDeDocumentos in listaDeBloquesDeTiposDeDocumentos)
-                    {
-                        int tipoDocumento = (int)bloqueDeDocumentos.Key;
-                        int cantidadDocumentos = bloqueDeDocumentos.Count;
-
-                        documentosBloque = listaDeDocumentos.Where(x => x.fiTipoDocumento == tipoDocumento).ToList();// documentos de este bloque
-                        var nombresGeneradosParaBloqueActual = Funciones.MultiNombres.GenerarNombreCredDocumento(documentacionCliente, idSolicitudInsertada, tipoDocumento, cantidadDocumentos);
-
-                        int contadorNombre = 0;
-                        foreach (SolicitudesDocumentosViewModel documento in documentosBloque)
-                        {
-                            if (documento.fcRutaArchivo.Contains(".jpg") || documento.fcRutaArchivo.Contains(".png") || documento.fcRutaArchivo.Contains(".jpeg"))
-                            {
-                                rutaDocumento = documento.fcRutaArchivo;
-                            }
-                            else
-                            {
-                                rutaDocumento = documento.fcRutaArchivo + @"\" + documento.NombreAntiguo;
-                            }
-
-                            if (File.Exists(rutaDocumento)) /* si el archivo existe, que se agregue a la lista */
-                            {
-                                nuevoNombreDocumento = nombresGeneradosParaBloqueActual[contadorNombre];
-                                listaDeDocumentosDeLaSolicitud.Add(new SolicitudesDocumentosViewModel()
-                                {
-                                    fcNombreArchivo = nuevoNombreDocumento,
-                                    NombreAntiguo = documento.NombreAntiguo,
-                                    fcTipoArchivo = documento.fcTipoArchivo,
-                                    fcRutaArchivo = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDeDocumentos,
-                                    URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDeDocumentos + "/" + nuevoNombreDocumento + ".png",
-                                    fiTipoDocumento = documento.fiTipoDocumento
-                                });
-                                contadorNombre++;
-                            }
-                        }
-                    }
+                    var listaDeDocumentosAdjuntadosPreSolicitudRenombrados = RenombrarListaDocumentos(idSolicitudInsertada, "Solicitud" + idSolicitudInsertada, listaDeDocumentosAdjuntadosYPreSolicitud);
 
                     /* Guardar los registros de los documentos en la base de datos */
-                    foreach (SolicitudesDocumentosViewModel documento in listaDeDocumentosDeLaSolicitud)
+                    foreach (SolicitudesDocumentosViewModel documento in listaDeDocumentosAdjuntadosPreSolicitudRenombrados)
                     {
-                        using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Documentos_Guardar", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Documentos_Guardar", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitudInsertada);
                             sqlComando.Parameters.AddWithValue("@pcNombreArchivo", documento.fcNombreArchivo);
-                            sqlComando.Parameters.AddWithValue("@pcTipoArchivo", ".png");
+                            sqlComando.Parameters.AddWithValue("@pcTipoArchivo", (documento.fiTipoDocumento == 8 || documento.fiTipoDocumento == 9) ? "jpg" : ".png");
                             sqlComando.Parameters.AddWithValue("@pcRutaArchivo", documento.fcRutaArchivo);
                             sqlComando.Parameters.AddWithValue("@pcURL", documento.URLArchivo);
                             sqlComando.Parameters.AddWithValue("@piTipoDocumento", documento.fiTipoDocumento);
@@ -1758,18 +1726,26 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    /* Mover documentos al nuevo directorio de la solicitud */
-                    if (!FileUploader.GuardarSolicitudDocumentos(idSolicitudInsertada, listaDeDocumentosDeLaSolicitud))
+                    /* Mover documentos adjuntados renombrados al nuevo directorio de la solicitud */
+                    if (!FileUploader.GuardarSolicitudDocumentos(idSolicitudInsertada, listaDeDocumentosAdjuntadosPreSolicitudRenombrados))
                     {
                         resultadoProceso.response = false;
                         resultadoProceso.message = "Error al guardar la documentación de la solicitud";
                         return resultadoProceso;
                     }
 
+                    /* Mover documentos adjuntados renombrados al nuevo directorio de la solicitud */
+                    if (!MoverDocumentosPreSolicitud(listaDeDocumentosAdjuntadosPreSolicitudRenombrados, listaDeDocumentosPreSolicitud, "Solicitud" + idSolicitudInsertada))
+                    {
+                        resultadoProceso.response = false;
+                        resultadoProceso.message = "Error al importar los documentos de la pre solicitud, contacte al administrador.";
+                        return resultadoProceso;
+                    }
+
                     #endregion
 
                     /* Registrar informacion laboral del cliente */
-                    using (var sqlComando = new SqlCommand("sp_CREDCliente_InformacionLaboral_Insert", sqlConexion, tran))
+                    using (var sqlComando = new SqlCommand("sp_CREDCliente_InformacionLaboral_Insert", sqlConexion, sqlTransaction))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
@@ -1812,7 +1788,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
 
                     /* Registrar información del domicilio del cliente */
-                    using (var sqlComando = new SqlCommand("sp_CREDCliente_InformacionDomiciliar_Insert", sqlConexion, tran))
+                    using (var sqlComando = new SqlCommand("sp_CREDCliente_InformacionDomiciliar_Insert", sqlConexion, sqlTransaction))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
@@ -1849,7 +1825,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     /* Registrar información conyugal del cliente */
                     if (cliente.InformacionConyugal.IndentidadConyugue != null)
                     {
-                        using (var sqlComando = new SqlCommand("sp_CREDCliente_InformacionConyugal_Insert", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CREDCliente_InformacionConyugal_Insert", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
@@ -1891,7 +1867,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             foreach (Cliente_ReferenciaPersonal_ViewModel referenciaPersonal in cliente.ListaReferenciasPersonales)
                             {
-                                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Insert", sqlConexion, tran))
+                                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Insert", sqlConexion, sqlTransaction))
                                 {
                                     sqlComando.CommandType = CommandType.StoredProcedure;
                                     sqlComando.Parameters.AddWithValue("@fiIDCliente", solicitud.IdCliente);
@@ -1932,7 +1908,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     /* Si se requere garantía */
                     if (garantia != null)
                     {
-                        using (var sqlComando = new SqlCommand("sp_CREDGarantias_Guardar", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CREDGarantias_Guardar", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
@@ -1992,14 +1968,14 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    //tran.Commit();
+                    sqlTransaction.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
                 }
                 catch (Exception ex)
                 {
-                    tran.Rollback();
+                    sqlTransaction.Rollback();
                     ex.Message.ToString();
                     resultadoProceso.response = false;
                     resultadoProceso.message = "Error al guardar solicitud, contacte al administrador";
@@ -2007,58 +1983,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             }
         }
         return resultadoProceso;
-    }
-
-    #endregion
-
-    #region Importar documentos de la presolicitud
-
-    /* Descargar y guardar los documentos de la presolicitud en su respectiva carpeta de documentos de la solicitud de credito */
-    public static bool GuadarDocumentosImportadosPreSolicitud(int idSolicitud, List<SolicitudesDocumentosViewModel> listaDocumentosPreSolicitudx)
-    {
-        bool result;
-        try
-        {
-            var client = new WebClient();
-            var md5ArchivoDescargado = MD5.Create();
-
-            if (listaDocumentosPreSolicitudx != null)
-            {
-                /* Crear el nuevo directorio para los documentos de la solicitud  */
-                var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
-                var directorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentos + "\\";
-
-                if (!Directory.Exists(directorioDocumentosSolicitud))
-                    Directory.CreateDirectory(directorioDocumentosSolicitud);
-
-                foreach (SolicitudesDocumentosViewModel Documento in listaDocumentosPreSolicitudx)
-                {
-                    var viejoDirectorio = Documento.URLAntiguoArchivo;
-                    var nuevoNombreDocumento = Documento.fcNombreArchivo;
-                    var nuevoDirectorio = directorioDocumentosSolicitud + nuevoNombreDocumento + ".png";
-
-                    if (File.Exists(nuevoDirectorio))
-                        File.Delete(nuevoDirectorio);
-
-                    if (!File.Exists(nuevoDirectorio))
-                    {
-                        var lcURL = Documento.URLAntiguoArchivo;
-
-                        client.DownloadFile(new Uri(lcURL), nuevoDirectorio);
-                        client.Dispose();
-                        client = null;
-                        client = new WebClient();
-                    }
-                }
-            }
-            result = true;
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            result = false;
-        }
-        return result;
     }
 
     #endregion
@@ -2106,6 +2030,97 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         }
 
         return tasaInteresAnual;
+    }
+
+    public static List<SolicitudesDocumentosViewModel> RenombrarListaDocumentos(int idMaestro, string nombreCarpetaDestino, List<SolicitudesDocumentosViewModel> listaDocumentos)
+    {
+        var listaDeDocumentosDeLaSolicitud = new List<SolicitudesDocumentosViewModel>();
+
+        var documentacionCliente = 1;
+        var nuevoNombreDocumento = string.Empty;
+        var rutaDocumento = string.Empty;
+
+        /* lista de bloques y la cantidad de documentos que contiene cada uno */
+        var listaDeBloquesDeTiposDeDocumentos = listaDocumentos.GroupBy(documento => documento.fiTipoDocumento).Select(x => new { x.Key, Count = x.Count() });
+
+        /* lista donde se guardara temporalmente los documentos adjuntados por el usuario dependiendo del tipo de documento en el iterador */
+        var documentosBloque = new List<SolicitudesDocumentosViewModel>();
+
+        /* renombrar los documentos y determinar nuevo directorio */
+        foreach (var bloqueDeDocumentos in listaDeBloquesDeTiposDeDocumentos)
+        {
+            int tipoDocumento = (int)bloqueDeDocumentos.Key;
+            int cantidadDocumentos = bloqueDeDocumentos.Count;
+
+            documentosBloque = listaDocumentos.Where(x => x.fiTipoDocumento == tipoDocumento).ToList();// documentos de este bloque
+            var nombresGeneradosParaBloqueActual = Funciones.MultiNombres.GenerarNombreCredDocumento(documentacionCliente, idMaestro, tipoDocumento, cantidadDocumentos);
+
+            int contadorNombre = 0;
+            foreach (SolicitudesDocumentosViewModel documento in documentosBloque)
+            {
+                if (documento.fcRutaArchivo.Contains(".jpg") || documento.fcRutaArchivo.Contains(".png") || documento.fcRutaArchivo.Contains(".jpeg"))
+                {
+                    rutaDocumento = documento.fcRutaArchivo;
+                }
+                else
+                {
+                    rutaDocumento = documento.fcRutaArchivo + @"\" + documento.NombreAntiguo;
+                }
+
+                if (File.Exists(rutaDocumento)) /* si el archivo existe, que se agregue a la lista */
+                {
+                    nuevoNombreDocumento = nombresGeneradosParaBloqueActual[contadorNombre];
+                    listaDeDocumentosDeLaSolicitud.Add(new SolicitudesDocumentosViewModel()
+                    {
+                        fcNombreArchivo = nuevoNombreDocumento,
+                        NombreAntiguo = documento.NombreAntiguo,
+                        fcTipoArchivo = documento.fcTipoArchivo,
+                        fcRutaArchivo = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDestino + (documento.fiTipoDocumento == 8 || documento.fiTipoDocumento == 9 ? (@"\" + nuevoNombreDocumento + "." + documento.fcTipoArchivo) : ""),
+                        URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDestino + "/" + nuevoNombreDocumento + (documento.fiTipoDocumento == 8 || documento.fiTipoDocumento == 9 ? "" : ".png"),
+                        fiTipoDocumento = documento.fiTipoDocumento
+                    });
+                    contadorNombre++;
+                }
+            }
+        }
+        return listaDeDocumentosDeLaSolicitud;
+    }
+
+    public static bool MoverDocumentosPreSolicitud(List<SolicitudesDocumentosViewModel> ListaDocumentosRenombrados, List<SolicitudesDocumentosViewModel> ListaDocumentosPreSolicitud, string nombreCarpetaDestino)
+    {
+        bool result;
+        try
+        {
+            if (ListaDocumentosPreSolicitud != null)
+            {
+                if (ListaDocumentosPreSolicitud.Count > 0)
+                {
+                    var directorioViejo = string.Empty;
+                    var directorioDestino = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDestino + "\\";
+                    var nuevoNombreDocumento = string.Empty;
+
+                    if (!Directory.Exists(directorioDestino))
+                        Directory.CreateDirectory(directorioDestino);
+
+                    foreach (SolicitudesDocumentosViewModel documentoPreSolicitud in ListaDocumentosPreSolicitud)
+                    {
+                        directorioViejo = (documentoPreSolicitud.fiTipoDocumento == 8 || documentoPreSolicitud.fiTipoDocumento == 9) ? documentoPreSolicitud.fcRutaArchivo : documentoPreSolicitud.fcRutaArchivo + @"\" + documentoPreSolicitud.fcNombreArchivo + documentoPreSolicitud.fcTipoArchivo;
+                        nuevoNombreDocumento = ListaDocumentosRenombrados.Where(x => x.NombreAntiguo == documentoPreSolicitud.fcNombreArchivo).Select(x => x.fcNombreArchivo).FirstOrDefault();
+                        directorioDestino += nuevoNombreDocumento + ((documentoPreSolicitud.fiTipoDocumento == 8 || documentoPreSolicitud.fiTipoDocumento == 9) ? ".jpg" : ".png");
+
+                        if (File.Exists(directorioViejo))
+                            File.Move(directorioViejo, directorioDestino);
+                    }
+                }
+            }
+            result = true;
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            result = false;
+        }
+        return result;
     }
 
     public static Uri DesencriptarURL(string Url)

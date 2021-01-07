@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Ingresar solicitud de crédito</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style>
@@ -60,7 +60,6 @@
                         <li><a href="#step-7" class="pt-3 pb-2 font-12">Documentación</a></li>
                     </ul>
                     <div>
-
                         <!-- Información principal -->
                         <div id="step-1" class="form-section">
 
@@ -415,10 +414,10 @@
                                             <div id="error-ddlEstadoCivil"></div>
                                         </div>
                                         <%--<div class="col-md-3">
-<label class="col-form-label">Tipo de cliente</label>
-<asp:DropDownList ID="ddlTipoDeCliente" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlTipoDeCliente"></asp:DropDownList>
-<div id="error-ddlTipoDeCliente"></div>
-</div>--%>
+                                        <label class="col-form-label">Tipo de cliente</label>
+                                        <asp:DropDownList ID="ddlTipoDeCliente" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="informacionPersonal" data-parsley-errors-container="#error-ddlTipoDeCliente"></asp:DropDownList>
+                                        <div id="error-ddlTipoDeCliente"></div>
+                                    </div>--%>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-md-3">
@@ -815,7 +814,6 @@
                             <br />
                             Al recibir la <strong>respuesta</strong> de dicha solicitud, <strong>actualiza la pantalla</strong>.
                         </div>
-
                         <div class="form-group row mb-0">
                             <div class="col-sm-3">
                                 <label class="col-form-label font-weight-bold">Nuevo score</label>
@@ -824,7 +822,6 @@
                                 <asp:TextBox ID="txtNuevoScore" CssClass="form-control form-control-sm mascara-score" type="text" required="required" data-parsley-group="cambiarScore" runat="server"></asp:TextBox>
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <div class="col-12">
                                 <label class="col-form-label">Comentario adicional</label>
@@ -900,6 +897,6 @@
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar.js?v=20201228102685"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar.js?v=20210107034625"></script>
 </body>
 </html>

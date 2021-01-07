@@ -374,8 +374,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <table id="tblDocumenacionSolicitud" class="table tabla-compacta table-striped table-bordered">
-                                <thead>
+                            <table id="tblDocumenacionSolicitud" class="table table-sm table-bordered table-hover cursor-pointer">
+                                <thead class="thead-light">
                                     <tr>
                                         <th>Tipo de documento</th>
                                         <th>Nombre</th>
