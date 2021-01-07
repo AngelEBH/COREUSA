@@ -398,7 +398,7 @@ namespace adminfiles
         }
 
         // guardar documentos de la solicitud en su respectiva carpeta de documentos
-        public static bool GuardarSolicitudDocumentos(int IDSolicitud, List<SolicitudesDocumentosViewModel> ListaDocumentos)
+        public static bool GuardarSolicitudDocumentos(int idSolicitud, List<SolicitudesDocumentosViewModel> ListaDocumentos)
         {
             bool result;
             try
@@ -407,7 +407,7 @@ namespace adminfiles
                 {
                     /* CREAR EL NUEVO DIRECTORIO PARA LOS DOCUMENTOS DE LA SOLICITUD */
                     string DirectorioTemporal = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
-                    string NombreCarpetaDocumentos = "Solicitud" + IDSolicitud;
+                    string NombreCarpetaDocumentos = "Solicitud" + idSolicitud;
                     string DirectorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + NombreCarpetaDocumentos + "\\";
                     bool CarpetaExistente = System.IO.Directory.Exists(DirectorioDocumentosSolicitud);
 

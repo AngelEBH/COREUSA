@@ -715,7 +715,7 @@
                                 </button>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered dt-responsive nowrap table table-condensed" id="tblReferenciasPersonales">
+                                <table class="table table-sm table-bordered table-hover cursor-pointer" id="tblReferenciasPersonales">
                                     <thead>
                                         <tr>
                                             <th>Nombre completo</th>
