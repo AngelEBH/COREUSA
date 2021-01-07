@@ -2064,7 +2064,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 }
                 else
                 {
-                    rutaDocumento = documento.fcRutaArchivo + @"\" + documento.NombreAntiguo;
+                    rutaDocumento = documento.fcRutaArchivo + @"\" + ((documento.NombreAntiguo.Contains(".jpg") || documento.NombreAntiguo.Contains(".png") || documento.NombreAntiguo.Contains(".jpeg")) ? documento.NombreAntiguo : documento.NombreAntiguo + (documento.fcTipoArchivo.Contains(".") ? documento.fcTipoArchivo : "." + documento.fcTipoArchivo));
                 }
 
                 if (File.Exists(rutaDocumento)) /* si el archivo existe, que se agregue a la lista */
