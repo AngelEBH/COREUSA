@@ -10,6 +10,9 @@ var ID_ESTADO_SOLICITUD = '0';
 /* ====== Se utiliza para realizar validaciones durante todo el analisis ============== */
 var ESTADO_SOLICITUD = [];
 
+/* ====== Esta variable se utiliza para validar si el valor de una fecha es nula ============== */
+var PROCESO_PENDIENTE = '/Date(-2208967200000)/';
+
 /* ====== Esta variable almacena durante el analisis el monto final por el que se va a autorizar la solicitud ============== */
 /* ====== Esta variable almacena durante el analisis el plazo final por el que se va a autorizar la solicitud ============== */
 var gMontoFinal = 0;
@@ -673,41 +676,30 @@ $(document).on('click', 'button#btnAnularCondicion', function () {
 /* Actualizar comentario sobre una referencia personal radiofaro */
 var idReferenciaPersonalSeleccionada = '';
 var btnReferenciaPersonalSeleccionada = '';
-var observacionesReferenciaPersonal = '';
-var sinComunicacion = false;
-var analistaDeCreditoReferencia = '';
-var fechaAnalisisReferencia = '';
 
 $(document).on('click', 'button#btnComentarioReferencia', function () {
 
     btnReferenciaPersonalSeleccionada = $(this);
     idReferenciaPersonalSeleccionada = btnReferenciaPersonalSeleccionada.data('id');
-    observacionesReferenciaPersonal = btnReferenciaPersonalSeleccionada.data('observaciones');
-    sinComunicacion = btnReferenciaPersonalSeleccionada.data('sincomunicacion').toLowerCase();
-    analistaDeCreditoReferencia = btnReferenciaPersonalSeleccionada.data('analista');
-    fechaAnalisisReferencia = btnReferenciaPersonalSeleccionada.data('fechaanalisis');
 
     $("#txtNombreReferenciaModal").val(btnReferenciaPersonalSeleccionada.data('nombrereferencia'));
-    $("#txtAnalistaDeCredito").val(analistaDeCreditoReferencia);
-    $("#txtFechaDeAnalisis").val(fechaAnalisisReferencia);
-    $("#txtObservacionesReferencia").val(observacionesReferenciaPersonal);
+    $("#txtAnalistaDeCredito").val(btnReferenciaPersonalSeleccionada.data('analista'));
+    $("#txtFechaDeAnalisis").val(btnReferenciaPersonalSeleccionada.data('fechaanalisis'));
+    $("#txtObservacionesReferencia").val(btnReferenciaPersonalSeleccionada.data('observaciones'));
 
-    if (sinComunicacion === 'true') {
+    if (btnReferenciaPersonalSeleccionada.data('sincomunicacion') == true)
         $("#cbSinComunicacion").prop('checked', true);
-    }
-    else {
+    else
         $("#cbSinComunicacion").prop('checked', false);
-    }
+
     $("#modalObservacionesReferenciaPersonal").modal();
 });
-
-
 
 $("#btnActualizarObservacionReferencia").click(function () {
 
     if ($($("#txtObservacionesReferencia")).parsley().isValid()) {
 
-        observacionesReferenciaPersonal = $('#txtObservacionesReferencia').val();
+        let observacionesReferenciaPersonal = $('#txtObservacionesReferencia').val();
 
         $.ajax({
             type: "POST",
@@ -723,48 +715,16 @@ $("#btnActualizarObservacionReferencia").click(function () {
                 if (data.d == true) {
 
                     $("#modalObservacionesReferenciaPersonal").modal('hide');
-                    MensajeExito('Las observaciones de la referencia personal se actualizaron correctamente.');
-                    btnReferenciaPersonalSeleccionada.data('observaciones', observacionesReferenciaPersonal);
-                    btnReferenciaPersonalSeleccionada.closest('tr').removeClass('text-danger').addClass('tr-exito');
-                    btnReferenciaPersonalSeleccionada.removeClass('far fa-edit').removeClass('fas fa-phone-slash text-danger').addClass('far fa-check-circle tr-exito');
+                    MensajeExito('Las observaciones/comentarios se actualizaron correctamente. Actualizando listado...');
+                    CargarReferenciasPersonales();
                 }
-                else {
+                else 
                     MensajeError('Error al actualizar observaciones de la referencia personal');
-                }
             }
         });
     }
-    else {
+    else
         $($("#txtObservacionesReferencia")).parsley().validate();
-    }
-});
-
-$("#btnReferenciaSinComunicacion").click(function () {
-
-    observacionesReferenciaPersonal = 'Sin comunicacion';
-
-    $.ajax({
-        type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/ActualizarObservacionesReferenciaPersonal',
-        data: JSON.stringify({ idReferenciaPersonal: idReferenciaPersonalSeleccionada, comentario: observacionesReferenciaPersonal, dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al actualizar estado de la referencia personal');
-        },
-        success: function (data) {
-
-            if (data.d == true) {
-                $("#modalObservacionesReferenciaPersonal").modal('hide');
-                MensajeExito('Estado de la referencia personal actualizado correctamente');
-                btnReferenciaPersonalSeleccionada.data('observaciones', observacionesReferenciaPersonal);
-                btnReferenciaPersonalSeleccionada.removeClass('far fa-check-circle tr-exito').removeClass('far fa-edit').addClass('fas fa-phone-slash text-danger');
-                btnReferenciaPersonalSeleccionada.closest('tr').addClass('text-danger');
-            }
-            else {
-                MensajeError('Error al actualizar estado de la referencia personal');
-            }
-        }
-    });
 });
 
 $("#btnEliminarReferencia").click(function () {
@@ -792,6 +752,50 @@ $("#btnEliminarReferenciaConfirmar").click(function () {
         }
     });
 });
+
+/* Cargar referencias personales de la solicitud */
+function CargarReferenciasPersonales() {
+
+    $.ajax({
+        type: "POST",
+        url: 'SolicitudesCredito_Analisis.aspx/ListadoReferenciasPersonalesPorIdSolicitud',
+        data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+
+            MensajeError('Error al cargar las referencias personales de la solicitud, contacte al administrador.');
+        },
+        success: function (data) {
+
+            var listaReferenciasPersonales = data.d;
+            var tblReferenciasPersonales = $("#tblReferenciasPersonales tbody").empty().append('<tr><td class="text-center" colspan="7">No hay registros disponibles...</td></tr>');
+
+            if (listaReferenciasPersonales != null) {
+
+                if (listaReferenciasPersonales.length > 0) {
+
+                    let templateReferenciasPersonales = '';
+                    let btnComentarioReferenciaPersonal, btnEliminarReferencia, btnActualizarReferencia = '';
+                    let estado, colorClass, stringDatas = '';
+                    tblReferenciasPersonales.empty();
+
+                    for (var i = 0; i < listaReferenciasPersonales.length; i++) {
+                        stringDatas = 'data-id="' + listaReferenciasPersonales[i].IdReferencia + '" data-observaciones="' + listaReferenciasPersonales[i].ComentarioDeptoCredito + '" data-nombrereferencia="' + listaReferenciasPersonales[i].NombreCompleto + '" data-analista="' + listaReferenciasPersonales[i].AnalistaComentario + '" data-sincomunicacion="' + listaReferenciasPersonales[i].SinComunicacion + '" data-fechaanalisis="' + (listaReferenciasPersonales[i].FechaAnalisis == PROCESO_PENDIENTE ? (listaReferenciasPersonales[i].AnalistaComentario != '' ? 'Fecha no disponible' : '') : moment(listaReferenciasPersonales[i].FechaAnalisis).format('YYYY/MM/DD hh:mm A')) + '"';
+
+                        btnComentarioReferenciaPersonal = '<button type="button" id="btnComentarioReferencia" ' + stringDatas + ' class="btn btn-sm btn-info far fa-comments" title="Ver observaciones del departamento de crédito"></button>';
+                        btnActualizarReferencia = '<button id="btnActualizarReferencia" ' + stringDatas + ' class="btn btn-sm btn-info far fa-edit" type="button" title="Editar"></button>';
+                        btnEliminarReferencia = '<button id="btnEliminarReferencia" ' + stringDatas + ' class="btn btn-sm btn-danger far fa-trash-alt" type="button" title="Eliminar"></button>';
+                        colorClass = listaReferenciasPersonales[i].ComentarioDeptoCredito != '' ? listaReferenciasPersonales[i].SinComunicacion != true ? 'tr-exito' : 'text-danger' : '';
+                        estado = listaReferenciasPersonales[i].ComentarioDeptoCredito != '' ? listaReferenciasPersonales[i].SinComunicacion != true ? '<i class="far fa-check-circle" title="Validación realizada"></i>' : '<i class="fas fa-phone-slash" title="Sin comunicación"></i>' : '<i class="fas fa-phone" title="Validación pendiente"></i>';
+
+                        templateReferenciasPersonales += '<tr class=' + colorClass + '><td>' + listaReferenciasPersonales[i].NombreCompleto + '</td><td>' + listaReferenciasPersonales[i].LugarTrabajo + '</td><td>' + listaReferenciasPersonales[i].TiempoDeConocer + '</td><td>' + listaReferenciasPersonales[i].TelefonoReferencia + '</td><td>' + listaReferenciasPersonales[i].DescripcionParentesco + '</td><td class="text-center">' + estado + '</td><td class="text-center">' + btnComentarioReferenciaPersonal + ' ' + btnActualizarReferencia + ' ' + btnEliminarReferencia + '</td></tr>';
+                    }
+                    tblReferenciasPersonales.append(templateReferenciasPersonales);
+                }
+            }
+        }
+    });
+}
 
 // #endregion
 
@@ -959,19 +963,19 @@ $("#btnValidarTipoDocConfirmar").click(function () {
 
     switch (tipoDoc) {
         case 1:
-            validacion = 'ValidacionDocumentcionIdentidades';
+            validacion = 'ValidarDocumentosIdentidad';
             btn = 1;
             break;
         case 2:
-            validacion = 'ValidacionDocumentacionDomicilio';
+            validacion = 'ValidarDocumentosDomicilio';
             btn = 2;
             break;
         case 3:
-            validacion = 'ValidacionDocumentacionLaboral';
+            validacion = 'ValidarDocumentosLaboral';
             btn = 3;
             break;
         case 4:
-            validacion = 'ValidacionDocumentacionSolicitudFisica';
+            validacion = 'ValidarDocumentosSolicitudFisica';
             btn = 4;
             break;
         default:
@@ -1477,8 +1481,8 @@ function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
 
 /* Enviar solicitud a campo */
 $("#btnEnviarCampo").click(function () {
-    /* Verificar si la solicitud ya fue enivada a campo antes */
-    if (ESTADO_SOLICITUD.fiEstadoDeCampo == 0) {
+
+    if (ESTADO_SOLICITUD.fiEstadoDeCampo == 0) { /* Verificar si la solicitud ya fue enivada a campo antes */
         $("#modalEnviarCampo").modal();
     }
 });
@@ -1645,7 +1649,9 @@ $("#btnConfirmarRechazar").click(function () {
             }
         });
     }
-    else { $($("#comentarioRechazar")).parsley().validate(); }
+    else {
+        $($("#comentarioRechazar")).parsley().validate();
+    }
 });
 
 /* Cuando la nueva capacidad de pago es insuficiente */
@@ -1721,13 +1727,11 @@ function InicializarContador(fechaInicio, fechaFin, identificadorEtiqueta) {
 
         document.getElementById('' + identificadorEtiqueta + '').innerHTML = '-';
     }
-    /* Verificar si el proceso todavía no ha empezado */
-    else if (fechaFin == '/Date(-2208967200000)/' && fechaInicio == '/Date(-2208967200000)/') {
+    else if (fechaFin == '/Date(-2208967200000)/' && fechaInicio == '/Date(-2208967200000)/') { /* Verificar si el proceso todavía no ha empezado */
 
         document.getElementById('' + identificadorEtiqueta + '').innerHTML = '-';
     }
-    /* Verificar si el proceso ya empezó y finalizó */
-    else if (fechaFin != '/Date(-2208967200000)/' && fechaInicio != '/Date(-2208967200000)/') {
+    else if (fechaFin != '/Date(-2208967200000)/' && fechaInicio != '/Date(-2208967200000)/') { /* Verificar si el proceso ya empezó y finalizó */
 
         document.getElementById('' + identificadorEtiqueta + '').innerHTML = countdown(
             fechaInicial,
@@ -1735,8 +1739,7 @@ function InicializarContador(fechaInicio, fechaFin, identificadorEtiqueta) {
             countdown.YEARS | countdown.MONTHS | countdown.WEEKS | countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS
         ).toHTML("");
     }
-    /* Verificar si el proceso ya empezó y todavía no ha finalizado */
-    else if (fechaInicio != '/Date(-2208967200000)/') {
+    else if (fechaInicio != '/Date(-2208967200000)/') { /* Verificar si el proceso ya empezó y todavía no ha finalizado */
 
         countdown(
             fechaInicial,
@@ -1760,18 +1763,6 @@ function ValidarFecha(fecha) {
     return fecha == '/Date(-2208967200000)/' ? null : fecha;
 }
 
-function ConvertirAFormatoNumerico(nStr) {
-    nStr += '';
-    x = nStr.split('.');
-    x1 = x[0];
-    x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
-}
-
 function MensajeInformacion(mensaje) {
     iziToast.info({
         title: 'Info',
@@ -1793,13 +1784,24 @@ function MensajeError(mensaje) {
     });
 }
 
+function ConvertirAFormatoNumerico(nStr) {
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+
 //#endregion Funciones utilitarias
 
 
 // #region Otras funciones
 
-$(window).on('hide.bs.modal', function () {
-    /* cuando se abra un modal, ocultar el scroll del BODY y deja solo el del modal (en caso de que este tenga scroll) */
+$(window).on('hide.bs.modal', function () { /* cuando se abra un modal, ocultar el scroll del BODY y deja solo el del modal (en caso de que este tenga scroll) */
     const body = document.body;
     const scrollY = body.style.top;
     body.style.position = '';
@@ -1808,8 +1810,7 @@ $(window).on('hide.bs.modal', function () {
     $("body").css('padding-right', '0');
 });
 
-$(window).on('show.bs.modal', function () {
-    /* Cuando se cierre el modal */
+$(window).on('show.bs.modal', function () { /* Cuando se cierre el modal */
     const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
     const body = document.body;
     body.style.position = 'fixed';

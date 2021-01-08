@@ -117,7 +117,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body pr-3 pl-3">
                 <div class="collapse-group">
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingOne">

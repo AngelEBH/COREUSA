@@ -2227,15 +2227,6 @@ public partial class SolicitudesCredito_Analisis
     protected global::System.Web.UI.WebControls.TextBox txtLugarTrabajoReferencia;
 
     /// <summary>
-    /// Control txtObservacionesNuevaReferencia.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesNuevaReferencia;
-
-    /// <summary>
     /// Control txtObservacionesEliminarReferenciaPersonal.
     /// </summary>
     /// <remarks>
@@ -2288,13 +2279,4 @@ public partial class SolicitudesCredito_Analisis
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtLugarDeTrabajoReferencia_Editar;
-
-    /// <summary>
-    /// Control txtObservacionesEditarReferenciaPersonal.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesEditarReferenciaPersonal;
 }

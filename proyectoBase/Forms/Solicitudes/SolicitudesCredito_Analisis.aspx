@@ -119,7 +119,6 @@
             </div>
             <div class="card-body">
                 <div class="collapse-group">
-
                     <!-- Informacion personal -->
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingOne">
@@ -277,7 +276,6 @@
                                 <div class="row mb-0" id="divInformacionConyugal" runat="server">
                                     <div class="col-lg-6 col-md-12 border-right border-gray">
                                         <div class="form-group row">
-
                                             <div class="col-12">
                                                 <label class="col-form-label">Nombre completo</label>
                                                 <asp:TextBox ID="txtNombreDelConyugue" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
@@ -302,7 +300,6 @@
                                                 <label class="col-form-label">Ingreso mensual</label>
                                                 <asp:TextBox ID="txtIngresosMensualesConyugue" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-
                                             <div class="col-6">
                                                 <label class="col-form-label">Teléfono del trabajo</label>
                                                 <asp:TextBox ID="txtTelefonoTrabajoConyugue" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
@@ -483,9 +480,7 @@
                             <div class="panel-body">
                                 <div class="row mb-0" id="divInformacionGarantia" runat="server">
                                     <div class="col-lg-6">
-
                                         <h6 class="font-weight-bold">Características físicas</h6>
-
                                         <div class="form-group row">
                                             <div class="col-sm-4 col-12">
                                                 <label class="col-form-label">VIN</label>
@@ -532,9 +527,7 @@
                                                 <asp:TextBox ID="txtGPS" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                                             </div>
                                         </div>
-
                                         <h6 class="font-weight-bold m-0 pt-2">Características mecánicas</h6>
-
                                         <div class="form-group row">
                                             <div class="col-sm-4">
                                                 <label class="col-form-label">Cilindraje</label>
@@ -567,9 +560,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6 border-left border-gray">
-
                                         <h6 class="font-weight-bold">Fotografías de la garantía</h6>
-
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de la garantía-->
@@ -580,7 +571,6 @@
                                     </div>
                                     <div class="col-lg-6 border-gray">
                                         <h6 class="m-0 pt-2 font-weight-bold border-top border-gray">Propietario de la garantía</h6>
-
                                         <div class="form-group row">
                                             <div class="col-sm-6">
                                                 <label class="col-form-label">Nombre</label>
@@ -825,9 +815,7 @@ Rechazar solicitud
                                 <div class="row mb-0">
                                     <!-- Capacidad de pago del cliente -->
                                     <div class="col-lg-6 col-md-6 col-12" id="divCapacidadDePagoPrecalificado" runat="server">
-
                                         <h6 class="font-weight-bold">Capacidad de Pago - Precalificado</h6>
-
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <label class="col-form-label">Ingresos</label>
@@ -850,13 +838,10 @@ Rechazar solicitud
                                                 <asp:TextBox ID="txtCapacidadDePagoQuincenal" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                         </div>
-
                                         <!-- Recalculo de capacidad de pago cuando se modifiquen los ingresos -->
-
                                         <div runat="server" id="divRecalculoCapacidadDePago" visible="false">
 
                                             <label class="font-weight-bold">Recalculo capacidad de pago - Ingresos reales</label>
-
                                             <div class="form-group row">
                                                 <div class="col-12">
                                                     <label class="col-form-label">Ingresos</label>
@@ -882,7 +867,6 @@ Rechazar solicitud
                                         </div>
 
                                         <div id="divPrestamosSueridos_CapacidadDePagoReal" runat="server" visible="false">
-
                                             <h6 class="font-weight-bold">Préstamos sugeridos - Capacidad de pago real</h6>
 
                                             <div class="form-group row">
@@ -911,7 +895,6 @@ Rechazar solicitud
 
                                     <!-- Préstamo solicitado -->
                                     <div class="col-lg-6 col-md-6 col-12 border-left border-gray" id="divPrestamoSolicitado" runat="server">
-
                                         <h6 class="font-weight-bold">Préstamo inicial solicitado</h6>
 
                                         <div class="form-group row">
@@ -942,7 +925,6 @@ Rechazar solicitud
                                         </div>
 
                                         <div id="divCalculoPrestamoSolicitado" runat="server">
-
                                             <label class="font-weight-bold">Cálculo del préstamo solicitado</label>
 
                                             <!-- Calculo del prestamo -->
@@ -991,7 +973,6 @@ Rechazar solicitud
                                         </div>
 
                                         <div id="divPrestamoFinalAprobado" runat="server">
-
                                             <h6 class="font-weight-bold">Monto final a financiar <span class="font-weight-bold" runat="server" id="lblEstadoDelMontoFinalAFinanciar">(En análisis)</span></h6>
 
                                             <div class="form-group row">
@@ -1248,42 +1229,88 @@ Rechazar solicitud
 
         <!-- modal documentacion de la solicitud -->
         <div id="modalDocumentacion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDocumentacionLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalDocumentacionLabel">Documentación de la solicitud</h6>
+                        <h6 class="modal-title mt-0" id="modalDocumentacionLabel">Documentación de la solicitud de crédito</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación identidad</label>
-                                <div class="align-self-center" id="divDocumentacionCedulaModal" runat="server">
+                    <div class="modal-body pt-0">
+                        <div class="row border-bottom justify-content-between bg-light pt-2">
+                            <div class="col-auto">
+                                <label class="header-title font-weight-bold">Documentación identidad</label>
+                            </div>
+                            <div class="col-auto">
+                                <button id="btnValidarDocumentacionIdentidad" type="button" class="btn btn-warning btn-block" data-tipovalidacion="ValidarDocumentosIdentidad">
+                                    <i class="far fa-check-square"></i>
+                                    Validar documentación
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <div id="divDocumentacionCedulaModal" runat="server">
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación domicilio</label>
-                                <div class="align-self-center" id="divDocumentacionDomicilioModal" runat="server">
+                        </div>
+                        <div class="row border-bottom justify-content-between pt-2">
+                            <div class="col-auto">
+                                <label class="header-title font-weight-bold">Documentación domicilio</label>
+                            </div>
+                            <div class="col-auto">
+                                <button id="btnValidarDocumentacionDomicilio" type="button" class="btn btn-warning btn-block" data-tipovalidacion="ValidarDocumentosDomicilio">
+                                    <i class="far fa-check-square"></i>
+                                    Validar documentación
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <div id="divDocumentacionDomicilioModal" runat="server">
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación laboral</label>
-                                <div class="align-self-center" id="divDocumentacionLaboralModal" runat="server">
+                        </div>
+                        <div class="row border-bottom justify-content-between bg-light pt-2">
+                            <div class="col-auto">
+                                <label class="header-title font-weight-bold">Documentación laboral</label>
+                            </div>
+                            <div class="col-auto">
+                                <button id="btnValidarDocumentacionLaboral" type="button" class="btn btn-warning btn-block" data-tipovalidacion="ValidarDocumentosLaboral">
+                                    <i class="far fa-check-square"></i>
+                                    Validar documentación
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <div id="divDocumentacionLaboralModal" runat="server">
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Solicitud fisica</label>
-                                <div class="align-self-center" id="divDocumentacionSoliFisicaModal" runat="server">
+                        </div>
+                        <div class="row justify-content-between pt-2">
+                            <div class="col-auto">
+                                <label class="header-title font-weight-bold">Solicitud física</label>
+                            </div>
+                            <div class="col-auto">
+                                <button id="btnValidarDocumentacionSolicitudFisica" type="button" class="btn btn-warning btn-block" data-tipovalidacion="ValidarDocumentosSolicitudFisica">
+                                    <i class="far fa-check-square"></i>
+                                    Validar documentación
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <div id="divDocumentacionSoliFisicaModal" runat="server">
                                 </div>
                             </div>
-                            <div class="col-sm-12" id="divContenedorCampoDomicilioModal" runat="server" visible="false">
-                                <label class="mt-0 header-title text-center">Documentación de campo (Domicilio)</label>
-                                <div class="align-self-center" id="divDocumentacionCampoDomicilioModal" runat="server">
+                        </div>
+                        <div class="row border-top justify-content-between bg-light pt-2" id="divContenedorCampoDomicilioModal" runat="server" visible="false">
+                            <div class="col-auto">
+                                <label class="header-title font-weight-bold">Documentación de campo (Domicilio)</label>
+                            </div>
+                            <div class="col-12">
+                                <div id="divDocumentacionCampoDomicilioModal" runat="server">
                                 </div>
                             </div>
-                            <div class="col-sm-12" id="divContenedorCampoTrabajoModal" runat="server" visible="false">
-                                <label class="mt-0 header-title text-center">Documentación de campo (Trabajo)</label>
-                                <div class="align-self-center" id="divDocumentacionCampoTrabajoModal" runat="server">
+                        </div>
+                        <div class="row border-top justify-content-between pt-2" id="divContenedorCampoTrabajoModal" runat="server" visible="false">
+                            <div class="col-auto">
+                                <label class="header-title font-weight-bold">Documentación de campo (Trabajo)</label>
+                            </div>
+                            <div class="col-12">
+                                <div id="divDocumentacionCampoTrabajoModal" runat="server">
                                 </div>
                             </div>
                         </div>
@@ -1677,7 +1704,7 @@ Rechazar solicitud
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalRechazarLabel">Resolución final</h6>
+                        <h6 class="modal-title mt-0 font-weight-bold" id="modalRechazarLabel">Resolución final</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
@@ -1705,7 +1732,7 @@ Rechazar solicitud
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalAprobarLabel">Resolución final</h6>
+                        <h6 class="modal-title mt-0 font-weight-bold" id="modalAprobarLabel">Aprobar solicitud de crédito</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
@@ -1744,21 +1771,21 @@ Rechazar solicitud
                             </div>
                             <div class="col-4">
                                 <label class="col-form-label">Analista de crédito</label>
-                                <asp:TextBox ID="txtAnalistaDeCredito" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server" Text="Willian Diaz"></asp:TextBox>
+                                <asp:TextBox ID="txtAnalistaDeCredito" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server" Text=""></asp:TextBox>
                             </div>
                             <div class="col-4">
                                 <label class="col-form-label">Fecha de análisis</label>
-                                <asp:TextBox ID="txtFechaDeAnalisis" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" Text="05/01/2021 02:16 PM" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtFechaDeAnalisis" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" Text="" runat="server"></asp:TextBox>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="d-block">Observaciones/Comentarios</label>
-                            <textarea id="txtObservacionesReferencia" required="required" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="observacionesReferenciaPersonal"></textarea>
+                            <textarea id="txtObservacionesReferencia" required="required" class="form-control" data-parsley-maxlength="500" rows="2"></textarea>
                         </div>
                         <div class="m-0 p-0">
                             <label class="col-form-label font-weight-bold">Sin comunicación&nbsp;</label>
                             <input type="checkbox" id="cbSinComunicacion" switch="danger" class="align-bottom mb-1" />
-                            <label for="cbSinComunicacion" data-on-label="ON" data-off-label="OFF" class="align-bottom mb-1"></label>
+                            <label for="cbSinComunicacion" data-on-label="SI" data-off-label="NO" class="align-bottom mb-1"></label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -1834,7 +1861,7 @@ Rechazar solicitud
             </div>
         </div>
 
-        <!-- modal establecer monto a financiar-->
+        <!-- modal establecer monto a financiar de la lista de montos ofertados -->
         <div id="modalMontoFinanciar" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalMontoFinanciarLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -1843,8 +1870,7 @@ Rechazar solicitud
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        ¿Está seguro de seleccionar este plazo y monto a financiar?<br />
-                        <br />
+                        ¿Está seguro de seleccionar este plazo y monto a financiar?
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="btnConfirmarPrestamoAprobado" class="btn btn-primary mr-1 validador">
@@ -1863,7 +1889,7 @@ Rechazar solicitud
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalValidarTipoDocsLabel">Terminar validación</h6>
+                        <h6 class="modal-title mt-0">Terminar validación</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
@@ -1881,99 +1907,7 @@ Rechazar solicitud
             </div>
         </div>
 
-        <!-- modal detalles del aval -->
-        <div id="modalDetallesAval" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalDetallesAvalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalDetallesAvalLabel">Detalles del aval</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group text-center">
-                            <label class="h6">Identidad:</label>
-                            <label class="h6" id="lblIdentidadAval"></label>
-
-                            <label class="h6 pl-3">Registrado:</label>
-                            <label class="h6" id="lblFechaCreacionAval"></label>
-
-                            <label class="h6 pl-3">Estado:</label>
-                            <label class="h6" id="lblEstadoAval"></label>
-                        </div>
-                        <div class="form-group row">
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">RNT</label>
-                                <input id="txtRTNAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                            <div class="form-group col-sm-9">
-                                <label class="col-form-label">Nombre completo</label>
-                                <input id="txtNombreCompletoAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">Teléfono</label>
-                                <input id="txtTelefonoAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">FechaNacimiento</label>
-                                <input id="txtFechaNacimientoAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">Sexo</label>
-                                <input id="txtSexoAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">Correo</label>
-                                <input id="txtCorreoAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">Trabajo</label>
-                                <input id="txtLugarTrabajoAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">Fecha ingreso</label>
-                                <input id="txtFechaIngresoAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">Puesto</label>
-                                <input id="txtPuestoAsignadoAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">Ingresos Mensuales</label>
-                                <input id="txtIngresosMensualesAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">Tel. empresa</label>
-                                <input id="txtTelEmpresaAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">Extensión RRHH</label>
-                                <input id="txtExtensionRRHHAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="col-form-label">Extensión Aval</label>
-                                <input id="txtExtensionAval" readonly="readonly" class="form-control" type="text" value="" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="btnMasDetallesAval" data-id="0" class="btn btn-primary mr-1">
-                            Más detalles
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
-                            Cerrar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal rechazar por incapacidad de pago -->
+        <!-- modal rechazar por incapacidad de pago (pendiente) -->
         <div id="modalRechazarPorIncapcidadPago" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalRechazarPorIncapcidadPagoLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -1996,7 +1930,7 @@ Rechazar solicitud
             </div>
         </div>
 
-        <!-- modal digitar monto a financiar manualmente -->
+        <!-- modal digitar monto a financiar manualmente (pendiente) -->
         <div id="modalDigitarMontoManualmente" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDigitarMontoManualmenteLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -2023,7 +1957,7 @@ Rechazar solicitud
                                 <input class="form-control col-form-label MascaraEnteros" id="txtValorPlazoManual" required="required" type="text" value="" />
                             </div>
                         </div>
-                        <div class="form-group row" id="divCalculandoCuotaManual" style="display: none;">
+                        <div class="form-group row" id="divCalculandoCuotaManual" style="/*display: none; */">
                             <div class="col-sm-12 text-center">
                                 <div class="spinner-border" role="status">
                                     <span class="sr-only">Cargando</span>
@@ -2032,13 +1966,12 @@ Rechazar solicitud
                                 Calculando Cuota...
                             </div>
                         </div>
-                        <div class="form-group row" id="divMostrarCalculoCuotaManual" style="display: none;">
+                        <div class="form-group row" id="divMostrarCalculoCuotaManual" style="/*display: none; */">
                             <label class="col-sm-4 col-form-label">Monto a Financiar</label>
                             <div class="col-sm-8">
                                 <input class="form-control col-form-label MascaraCantidad" id="txtMontoaFinanciarManual" readonly="readonly" required="required" type="text" value="" />
                                 <br />
                             </div>
-
                             <label class="col-sm-4 col-form-label" id="lblTituloCantidadCuotaManual">X Cuotas</label>
                             <div class="col-sm-8">
                                 <input class="form-control col-form-label MascaraCantidad" id="txtValorCuotaManual" disabled="disabled" required="required" type="text" value="" />
@@ -2057,11 +1990,9 @@ Rechazar solicitud
             </div>
         </div>
 
-        <!--#region main Administración de referencias personales  -->
-
         <!-- Agregar referencia personal -->
         <div class="modal fade" id="modalAgregarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarReferenciaPersonalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header pb-1 pt-1">
                         <h6 class="modal-title" id="modalAgregarReferenciaPersonalLabel">Agregar referencia personal</h6>
@@ -2097,12 +2028,6 @@ Rechazar solicitud
                             <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
                             <div class="col-sm-8">
                                 <asp:TextBox ID="txtLugarTrabajoReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-12">
-                                <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesNuevaReferencia" runat="server" class="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -2148,7 +2073,7 @@ Rechazar solicitud
 
         <!-- Editar referencia personal -->
         <div class="modal fade" id="modalEditarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalEditarReferenciaPersonalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header pb-1 pt-1">
                         <h6 class="modal-title" id="modalEditarReferenciaPersonalLabel">Editar referencia personal</h6>
@@ -2186,12 +2111,6 @@ Rechazar solicitud
                                 <asp:TextBox ID="txtLugarDeTrabajoReferencia_Editar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-12">
-                                <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesEditarReferenciaPersonal" runat="server" class="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
-                            </div>
-                        </div>
                     </div>
                     <div class="modal-footer pt-2 pb-2">
                         <button id="btnEditarReferenciaConfirmar" type="button" class="btn btn-primary waves-effect waves-light mr-1">
@@ -2205,12 +2124,7 @@ Rechazar solicitud
             </div>
         </div>
 
-        <!--#endregion -->
-        
-
-
     </form>
-
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
@@ -2231,29 +2145,17 @@ Rechazar solicitud
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Analisis.js?v=20200903152956"></script>
     <script>
-
         InicializarGaleria('divDocumentacionCedula');
-
         InicializarGaleria('divDocumentacionCedulaModal');
-
         InicializarGaleria('divDocumentacionDomicilio');
-
         InicializarGaleria('divDocumentacionDomicilioModal');
-
         InicializarGaleria('divDocumentacionLaboral');
-
         InicializarGaleria('divDocumentacionLaboralModal');
-
         InicializarGaleria('divDocumentacionSoliFisicaModal');
-
         InicializarGaleria('divDocumentacionCampoDomicilio');
-
         InicializarGaleria('divDocumentacionCampoDomicilioModal');
-
         InicializarGaleria('divDocumentacionCampoTrabajo');
-
         InicializarGaleria('divDocumentacionCampoTrabajoModal');
-
         $("#divGaleriaGarantia").unitegallery({
             tile_width: 180,
             tile_height: 120

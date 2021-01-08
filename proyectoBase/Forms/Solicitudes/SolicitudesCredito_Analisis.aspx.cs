@@ -12,20 +12,20 @@ using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 {
-    #region Propiedades *Listo*
+    #region Propiedades
 
-    public string pcID = "";
-    public string pcIDApp = "";
-    public string IdProducto = "";
-    public string pcIDSesion = "";
-    public string pcIDUsuario = "";
-    public string pcIDSolicitud = "";
+    public string pcID = ""; /* Identidad del cliente */
+    public string pcIDApp = ""; /* Id de la aplicacion */
+    public string IdProducto = ""; /* Id del producto ver tabla Catalogo_Productos*/
+    public string pcIDSesion = ""; /* Id de la sesión*/
+    public string pcIDUsuario = ""; /* Id del usuario logueado */
+    public string pcIDSolicitud = ""; /* Id de la solicitud */
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-    public int IdCliente = 0;
+    public int IdCliente = 0; /* Id del cliente */
 
     #endregion
 
-    #region Page load *Listo*
+    #region Page load
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -66,8 +66,6 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
                     CargarInformacionClienteSolicitud();
                     CargarInformacionGarantia();
-
-                    divPanelInformacionConyugal.Visible = true;
                 }
                 else
                 {
@@ -88,7 +86,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Cargar información del cliente, de la solicitud y de la garantía *Listo*
+    #region Cargar información del cliente, de la solicitud y de la garantía
 
     public void CargarInformacionClienteSolicitud()
     {
@@ -600,7 +598,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             while (sqlResultado.Read())
                             {
 
-                                stringDatas = "data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-analista = '" + sqlResultado["fcNombreCorto"] + "' data-sincomunicacion = " + sqlResultado["fbSinComunicacion"] + " data-fechaanalisis= '" + (DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()) == procesoPendiente ? (sqlResultado["fcNombreCorto"].ToString() != "" ? "Fecha no disponible" : "") : DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()).ToString("MM/dd/yyyy hh:mm tt")) + "'";
+                                stringDatas = "data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-analista = '" + sqlResultado["fcNombreCorto"] + "' data-sincomunicacion = " + sqlResultado["fbSinComunicacion"].ToString().ToLower() + " data-fechaanalisis= '" + (DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()) == procesoPendiente ? (sqlResultado["fcNombreCorto"].ToString() != "" ? "Fecha no disponible" : "") : DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()).ToString("MM/dd/yyyy hh:mm tt")) + "'";
 
                                 btnComentarioReferenciaPersonal = "<button type='button' id='btnComentarioReferencia' " + stringDatas + " class='btn btn-sm btn-info far fa-comments' title='Ver observaciones del depto. de crédito'></button>";
                                 btnActualizarReferencia = "<button type='button' id='btnActualizarReferencia' " + stringDatas + " class='btn btn-sm btn-info far fa-edit' title='Editar'></button>";
@@ -704,7 +702,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                     txtEstadoCivilVendedorGarantia.Text = sqlResultado["fcEstadoCivilVendedorGarantia"].ToString();
                                 }
 
-                                /* Fotografías de la garantía */
+                                /* El tercer resultado son las fotografías de la garantía */
                                 sqlResultado.NextResult();
 
                                 if (!sqlResultado.HasRows)
@@ -917,7 +915,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 ComentarioValidacionDocumentacion = (string)sqlResultado["fcComentarioValidacionDocumentacion"],
                                 FechaValidacionReferenciasPersonales = (DateTime)sqlResultado["fdAnalisisTiempoValidacionReferenciasPersonales"],
                                 ComentarioValidacionReferenciasPersonales = (string)sqlResultado["fcComentarioValidacionReferenciasPersonales"],
-                                FechaValidacionInformacionLaboral = (DateTime)sqlResultado["fdAnalisisTiempoValidacionReferenciasPersonales"],
+                                FechaValidacionInformacionLaboral = (DateTime)sqlResultado["fdAnalisisTiempoValidarInformacionLaboral"],
                                 ComentarioValidacionInformacionLaboral = (string)sqlResultado["fcComentarioValidacionInfoLaboral"],
                                 ComentarioResolucion = (string)sqlResultado["fcComentarioResolucion"],
                                 TiempoTomaDecisionFinal = (DateTime)sqlResultado["fdTiempoTomaDecisionFinal"],
@@ -1427,7 +1425,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Administrar condiciones de la solicitud *Listo*
+    #region Administrar condiciones de la solicitud
 
     [WebMethod]
     public static CatalogoCondiciones_SolicitudCondiciones_ViewModel ObtenerCatalogoCondicionesYSolicitudCondiciones(string dataCrypt)
@@ -1620,49 +1618,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Administracion de referencias personales *Listo | Pendiente frontend *
-
-    [WebMethod]
-    public static bool ActualizarObservacionesReferenciaPersonal(int idReferencia, string observaciones, bool sinComunicacion, string dataCrypt)
-    {
-        var resultadoProceso = false;
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_ActualizarObservacionesDeCredito", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDReferencia", idReferencia);
-                    sqlComando.Parameters.AddWithValue("@pcObservacionesDeCredito", observaciones);
-                    sqlComando.Parameters.AddWithValue("@pbSinComunicacion", sinComunicacion);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var reader = sqlComando.ExecuteReader())
-                    {
-                        reader.Read();
-
-                        resultadoProceso = !reader["MensajeError"].ToString().StartsWith("-1") ? true : false;
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return resultadoProceso;
-    }
+    #region Administracion de referencias personales *Pendiente frontend *
 
     [WebMethod]
     public static List<SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel> ListadoReferenciasPersonalesPorIdSolicitud(string dataCrypt)
@@ -1706,6 +1662,10 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 DescripcionParentesco = sqlResultado["fcDescripcionParentesco"].ToString(),
                                 ReferenciaActivo = (bool)sqlResultado["fbReferenciaActivo"],
                                 RazonInactivo = sqlResultado["fcRazonInactivo"].ToString(),
+                                AnalistaComentario = sqlResultado["fcAnalistaComentario"].ToString(),
+                                ComentarioDeptoCredito = sqlResultado["fcComentarioDeptoCredito"].ToString(),
+                                SinComunicacion = (bool)sqlResultado["fbSinComunicacion"],
+                                FechaAnalisis = (DateTime)sqlResultado["fdFechaAnalisis"]
                             });
                         }
                     } // using sqlComando.ExecuteReader()
@@ -1718,6 +1678,48 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             listadoReferenciasPersonales = null;
         }
         return listadoReferenciasPersonales;
+    }
+
+    [WebMethod]
+    public static bool ActualizarObservacionesReferenciaPersonal(int idReferencia, string observaciones, bool sinComunicacion, string dataCrypt)
+    {
+        var resultadoProceso = false;
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_ActualizarObservacionesDeCredito", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDReferencia", idReferencia);
+                    sqlComando.Parameters.AddWithValue("@pcObservacionesDeCredito", observaciones);
+                    sqlComando.Parameters.AddWithValue("@pbSinComunicacion", sinComunicacion);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var reader = sqlComando.ExecuteReader())
+                    {
+                        reader.Read();
+
+                        resultadoProceso = !reader["MensajeError"].ToString().StartsWith("-1") ? true : false;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultadoProceso;
     }
 
     [WebMethod]
@@ -1957,8 +1959,12 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         public string DescripcionParentesco { get; set; }
         public bool ReferenciaActivo { get; set; }
         public string RazonInactivo { get; set; }
+
+        public string AnalistaComentario { get; set; }
         public string ComentarioDeptoCredito { get; set; }
-        public int AnalistaComentario { get; set; }
+        public bool SinComunicacion { get; set; }
+        public DateTime FechaAnalisis { get; set; }
+
     }
 
     public class SolicitudesCredito_Analisis_Calculo_ViewModel
@@ -2047,6 +2053,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         public bool EstadoCondicion { get; set; }
     }
 
+    /* View Model listado del catalogo de condiciones y listado de condicionamientos de una solicitud */
     public class CatalogoCondiciones_SolicitudCondiciones_ViewModel
     {
         public List<Solicitudes_Credito_Analisis_Condicion_ViewModel> CatalogoCondiciones { get; set; }
