@@ -19,7 +19,7 @@
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
 </head>
 <body>
-    <form id="frmPrincipal" runat="server">
+    <form id="frmPrincipal" runat="server" data-parsley-excluded="[disabled]">
         <div class="card">
             <div class="card-header">
                 <div class="row justify-content-between align-items-end">
@@ -444,7 +444,7 @@
                                         <h6>Lista de referencias personales</h6>
                                     </div>
                                     <div class="col-auto">
-                                        <button type="button" id="btnNuevaReferenciaPersonal" class="btn btn-info"><i class="fas fa-plus-circle"></i>&nbsp; Agregar nuevo</button>
+                                        <button type="button" id="btnAgregarReferencia" data-toggle="modal" data-target="#modalAgregarReferenciaPersonal" class="btn btn-info"><i class="fas fa-plus-circle"></i>&nbsp;Agregar nuevo</button>
                                     </div>
                                     <div class="col-12">
                                         <div class="table-responsive">
@@ -929,9 +929,9 @@ Rechazar solicitud
 
                                             <!-- Calculo del prestamo -->
                                             <!--
-                                                EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-                                                MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
-                                            -->
+EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+-->
                                             <div class="form-group row">
                                                 <div class="col-sm-12 col-6">
                                                     <label class="col-form-label">Monto total a financiar</label>
@@ -2123,7 +2123,6 @@ Rechazar solicitud
                 </div>
             </div>
         </div>
-
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -2143,6 +2142,9 @@ Rechazar solicitud
     <script src="/Scripts/plugins/kendo/PrintHtmlToPDF.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js"></script>
+    <script>
+        const ID_CLIENTE = <%=this.IdCliente%>;
+    </script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Analisis.js?v=20200903152956"></script>
     <script>
         InicializarGaleria('divDocumentacionCedula');
@@ -2175,15 +2177,15 @@ Rechazar solicitud
         }
     </script>
     <script type="x/kendo-template" id="page-template">
-        <div class="page-template">
-            <div class="header">
-                <img src="/Imagenes/LogoPrestaditoMediano.png" style="width:150px; float:left;" />
-                <h3 id="titleTemplate"></h3>
-            </div>
-            <div class="footer">
-                Pagina #: pageNum # de #: totalPages #
-            </div>
+    <div class="page-template">
+        <div class="header">
+            <img src="/Imagenes/LogoPrestaditoMediano.png" style="width:150px; float:left;" />
+            <h3 id="titleTemplate"></h3>
         </div>
+        <div class="footer">
+            Pagina #: pageNum # de #: totalPages #
+        </div>
+    </div>
     </script>
 </body>
 </html>

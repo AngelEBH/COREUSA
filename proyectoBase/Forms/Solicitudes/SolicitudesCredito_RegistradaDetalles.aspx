@@ -1195,27 +1195,16 @@
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_RegistradaDetalles.js?v=202012111057"></script>
     <script>
         InicializarGaleria('divDocumentacionCedula');
-
         InicializarGaleria('divDocumentacionCedulaModal');
-
         InicializarGaleria('divDocumentacionDomicilio');
-
         InicializarGaleria('divDocumentacionDomicilioModal');
-
         InicializarGaleria('divDocumentacionLaboral');
-
         InicializarGaleria('divDocumentacionLaboralModal');
-
         InicializarGaleria('divDocumentacionSoliFisicaModal');
-
         InicializarGaleria('divDocumentacionCampoDomicilio');
-
         InicializarGaleria('divDocumentacionCampoDomicilioModal');
-
         InicializarGaleria('divDocumentacionCampoTrabajo');
-
         InicializarGaleria('divDocumentacionCampoTrabajoModal');
-
         $("#divGaleriaGarantia").unitegallery({
             tile_width: 180,
             tile_height: 120

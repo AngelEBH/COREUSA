@@ -42,7 +42,7 @@
                     <div class="form-group mx-sm-3 mb-0">
                         <asp:TextBox ID="txtNoSolicitud" type="tel" CssClass="form-control mascara-enteros text-left" Enabled="true" runat="server"></asp:TextBox>
                     </div>
-                    <button type="button" id="btnBuscarSolicitud" class="btn btn-md btn-secondary" runat="server">
+                    <button type="button" id="btnBuscarSolicitud" onclick="BuscarSolicitud()" class="btn btn-md btn-secondary" runat="server">
                         Buscar
                     </button>
                 </div>

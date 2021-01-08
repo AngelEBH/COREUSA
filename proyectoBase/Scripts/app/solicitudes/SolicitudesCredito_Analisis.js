@@ -1,4 +1,4 @@
-﻿// #region variables globales *Listo*
+﻿// #region variables globales
 
 /* ====== Esta variable almacena el ID del estado actual de la solicitud ============== */
 /* ====== Se actualiza cada vez que se cargan los detalles de la solicitud ============ */
@@ -24,8 +24,7 @@ var resolucion = false;
 
 // #endregion
 
-
-// #region Cargar detalles de la solicitud *Listo de momento*
+// #region Cargar detalles de la solicitud
 
 /* ====== Carga el estado actual del procesamiento de la solicitud =============================== */
 /* ====== Muestra el procesamiento de la solicitud en el modal "modalEstadoSolicitud" ============ */
@@ -454,8 +453,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
 
 // #endregion Cargar detalles de la solicitud
 
-
-// #region Administrar condiciones de la solicitud *Listo*
+// #region Administrar condiciones de la solicitud
 
 /* ====== Almacena la cantidad de nuevas condiciones que se estan agregando ================ */
 /* ====== Se utiliza para validar que se agregue por lo menos una condición ================ */
@@ -670,13 +668,13 @@ $(document).on('click', 'button#btnAnularCondicion', function () {
 
 // #endregion Administrar condiciones de la solicitud
 
-
 // #region Administrar referencias personales
 
 /* Actualizar comentario sobre una referencia personal radiofaro */
 var idReferenciaPersonalSeleccionada = '';
 var btnReferenciaPersonalSeleccionada = '';
 
+/* Actualizar comentario de la referencia */
 $(document).on('click', 'button#btnComentarioReferencia', function () {
 
     btnReferenciaPersonalSeleccionada = $(this);
@@ -714,12 +712,13 @@ $("#btnActualizarObservacionReferencia").click(function () {
 
                 if (data.d == true) {
 
-                    $("#modalObservacionesReferenciaPersonal").modal('hide');
                     MensajeExito('Las observaciones/comentarios se actualizaron correctamente. Actualizando listado...');
                     CargarReferenciasPersonales();
                 }
                 else 
                     MensajeError('Error al actualizar observaciones de la referencia personal');
+
+                $("#modalObservacionesReferenciaPersonal").modal('hide');
             }
         });
     }
@@ -727,10 +726,72 @@ $("#btnActualizarObservacionReferencia").click(function () {
         $($("#txtObservacionesReferencia")).parsley().validate();
 });
 
-$("#btnEliminarReferencia").click(function () {
-    $("#modalObservacionesReferenciaPersonal").modal('hide');
-    $("#modalEliminarReferencia").modal('show');
+/* Agregar referencia personal */
+$("#btnAgregarReferencia").click(function () {
+
+    $("#txtNombreReferencia,#txtTelefonoReferencia,#ddlTiempoDeConocerReferencia, #ddlParentescos, #txtLugarTrabajoReferencia, #txtObservacionesNuevaReferencia").val('');
+    $('#modalAgregarReferenciaPersonal').parsley().reset();
+    $("#modalAgregarReferenciaPersonal").modal();
 });
+
+$("#btnAgregarReferenciaConfirmar").click(function () {
+
+    debugger;
+
+    /* Validar formulario de agregar referencia personal */
+    if ($($('#frmPrincipal')).parsley().isValid({ group: 'referenciasPersonales' })) {
+
+        var NombreCompletoReferencia = $("#txtNombreReferencia").val();
+        var TelefonoReferencia = $("#txtTelefonoReferencia").val();
+        var LugarTrabajoReferencia = $("#txtLugarTrabajoReferencia").val();
+        var IdTiempoConocerReferencia = $("#ddlTiempoDeConocerReferencia :selected").val();
+        var IdParentescoReferencia = $("#ddlParentescos :selected").val();
+
+        /* Objeto referencia */
+        var referenciaPersonal = {
+            IdCliente: ID_CLIENTE,
+            NombreCompleto: NombreCompletoReferencia,
+            TelefonoReferencia: TelefonoReferencia,
+            LugarTrabajo: LugarTrabajoReferencia,
+            IdTiempoDeConocer: IdTiempoConocerReferencia,
+            IdParentescoReferencia: IdParentescoReferencia,
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Mantenimiento.aspx/RegistrarReferenciaPersonal",
+            data: JSON.stringify({ referenciaPersonal: referenciaPersonal, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError("No se pudo agregar la referencia personal, contacte al administrador.");
+            },
+            success: function (data) {
+
+                if (data.d == true) {
+
+                    MensajeExito('La referencia personal se agregó correctamente.');
+                    CargarReferenciasPersonales();
+                }
+                else {
+                    MensajeError("No se pudo agregar la referencia personal, contacte al administrador.");
+                }
+
+                $("#modalAgregarReferenciaPersonal").modal('hide');
+            }
+        });
+    }
+    else {
+        $('#frmPrincipal').parsley().validate({ group: 'referenciasPersonales', force: true });
+    }
+});
+
+
+/* Eliminar referencia personal */
+function AbrirModalEliminarReferenciaPersonal(idReferenciaPersonal) {
+
+    idReferenciaPersonalSeleccionada = idReferenciaPersonal;
+    $("#modalEliminarReferencia").modal('show');
+}
 
 $("#btnEliminarReferenciaConfirmar").click(function () {
 
@@ -740,20 +801,22 @@ $("#btnEliminarReferenciaConfirmar").click(function () {
         data: JSON.stringify({ idReferenciaPersonal: idReferenciaPersonalSeleccionada, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al eliminar referencia personal');
+            MensajeError('Error al eliminar la referencia personal, contacte al administrador.');
         },
         success: function (data) {
             if (data.d == true) {
-                $(btnReferenciaSeleccionada).closest('tr').remove();
-                $("#modalEliminarReferencia").modal('hide');
-                MensajeExito('La referencia personal ha sido eliminada correctamente');
+
+                MensajeExito('La referencia personal se eliminó correctamente');
+                CargarReferenciasPersonales();
             }
-            else { MensajeError('Error al eliminar referencia personal'); }
+            else 
+                MensajeError('Error al eliminar referencia personal');
+
+            $("#modalEliminarReferencia").modal('hide');
         }
     });
 });
 
-/* Cargar referencias personales de la solicitud */
 function CargarReferenciasPersonales() {
 
     $.ajax({

@@ -66,6 +66,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
                     CargarInformacionClienteSolicitud();
                     CargarInformacionGarantia();
+                    CargarListados();
                 }
                 else
                 {
@@ -86,7 +87,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Cargar información del cliente, de la solicitud y de la garantía
+    #region Cargar información del cliente, de la solicitud, de la garantía, cargar listados
 
     public void CargarInformacionClienteSolicitud()
     {
@@ -119,6 +120,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                         while (sqlResultado.Read())
                         {
                             /****** Informacion de la solicitud ******/
+                            IdCliente = (int)sqlResultado["fiIDCliente"];
                             idEstadoSolicitud = sqlResultado["fiEstadoSolicitud"].ToString();
                             estadoSolicitud = sqlResultado["fcEstadoSolicitud"].ToString();
                             var fechaEnInvestigacionInicio = (DateTime)sqlResultado["fdEnRutaDeInvestigacionInicio"];
@@ -602,7 +604,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
                                 btnComentarioReferenciaPersonal = "<button type='button' id='btnComentarioReferencia' " + stringDatas + " class='btn btn-sm btn-info far fa-comments' title='Ver observaciones del depto. de crédito'></button>";
                                 btnActualizarReferencia = "<button type='button' id='btnActualizarReferencia' " + stringDatas + " class='btn btn-sm btn-info far fa-edit' title='Editar'></button>";
-                                btnEliminarReferencia = "<button type='button' id='btnEliminarReferencia' " + stringDatas + " class='btn btn-sm btn-danger far fa-trash-alt' title='Eliminar'></button>";
+                                btnEliminarReferencia = "<button type='button' id='btnEliminarReferencia' onclick='AbrirModalEliminarReferenciaPersonal(" + sqlResultado["fiIDReferencia"].ToString()  + ")' class='btn btn-sm btn-danger far fa-trash-alt' title='Eliminar'></button>";
 
                                 tRowReferencias = new TableRow();
                                 tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcNombreCompletoReferencia"].ToString() });
@@ -724,6 +726,74 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     } // using sqlComando.ExecuteReader()
                 } // using sqlComando
             } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+    }
+
+    public void CargarListados()
+    {
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDCatalogo_Parentescos_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDParentesco", 0);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlParentescos.Items.Clear();
+                        ddlParentescos.Items.Add(new ListItem("Seleccionar", ""));
+
+                        ddlParentesco_Editar.Items.Clear();
+                        ddlParentesco_Editar.Items.Add(new ListItem("Seleccionar", ""));
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlParentescos.Items.Add(new ListItem(sqlResultado["fcDescripcionParentesco"].ToString(), sqlResultado["fiIDParentesco"].ToString()));
+                                ddlParentesco_Editar.Items.Add(new ListItem(sqlResultado["fcDescripcionParentesco"].ToString(), sqlResultado["fiIDParentesco"].ToString()));
+                            }
+                        }
+                    }
+                } // using cammnd catalogo parentescos
+
+                using (var sqlComando = new SqlCommand("sp_CREDCatalogo_TiempoDeConocer_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlTiempoDeConocerReferencia.Items.Clear();
+                        ddlTiempoDeConocerReferencia.Items.Add(new ListItem("Seleccionar", ""));
+
+                        ddlTiempoDeConocerReferencia_Editar.Items.Clear();
+                        ddlTiempoDeConocerReferencia_Editar.Items.Add(new ListItem("Seleccionar", ""));
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlTiempoDeConocerReferencia.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
+                                ddlTiempoDeConocerReferencia_Editar.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
+                            }
+                        }
+                    }
+                } // using cammnd catalogo tiempo de conocer
+            } // using connection
         }
         catch (Exception ex)
         {

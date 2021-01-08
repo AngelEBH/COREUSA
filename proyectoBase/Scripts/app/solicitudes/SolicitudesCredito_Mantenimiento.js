@@ -2,15 +2,6 @@
 var idCliente = 0;
 var idEstadoSolicitud = 0;
 
-$(document).ready(function () {
-
-    $('#btnBuscarSolicitud').click(function () {
-
-        BuscarSolicitud();
-
-    });
-});
-
 $("#btnResolucionCampo").click(function (e) {
 
     $("#ddlResolucionCampo").val('');
