@@ -781,7 +781,7 @@ $("#btnAgregarReferenciaConfirmar").click(function () {
         });
     }
     else {
-        $('#frmPrincipal').parsley().validate({ group: 'referenciasPersonales', force: true });
+        $($("#frmPrincipal")).parsley().validate({ group: 'referenciasPersonales', force: true });
     }
 });
 

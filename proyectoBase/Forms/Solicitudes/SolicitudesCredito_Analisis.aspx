@@ -1998,6 +1998,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         <h6 class="modal-title" id="modalAgregarReferenciaPersonalLabel">Agregar referencia personal</h6>
                     </div>
                     <div class="modal-body">
+                        <form id="frmAgregarReferenciaPersonal">
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Nombre completo</label>
                             <div class="col-sm-8">
@@ -2030,9 +2031,10 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 <asp:TextBox ID="txtLugarTrabajoReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
                             </div>
                         </div>
+                        </form>
                     </div>
                     <div class="modal-footer pt-2 pb-2">
-                        <button id="btnAgregarReferenciaConfirmar" type="button" class="btn btn-primary waves-effect waves-light mr-1">
+                        <button id="btnAgregarReferenciaConfirmar" type="button" class="btn btn-primary mr-1">
                             Agregar
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -2060,7 +2062,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnEliminarReferenciaPersonalConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                        <button id="btnEliminarReferenciaPersonalConfirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -2113,7 +2115,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         </div>
                     </div>
                     <div class="modal-footer pt-2 pb-2">
-                        <button id="btnEditarReferenciaConfirmar" type="button" class="btn btn-primary waves-effect waves-light mr-1">
+                        <button id="btnEditarReferenciaConfirmar" type="button" class="btn btn-primary mr-1">
                             Confirmar
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">

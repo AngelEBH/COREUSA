@@ -142,6 +142,72 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitudes_ListadoGestores", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlGestores.Items.Clear();
+                        ddlGestores.Items.Add(new ListItem("Seleccionar", ""));
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlGestores.Items.Add(new ListItem(sqlResultado["fcNombreCorto"].ToString(), sqlResultado["fiIDUsuario"].ToString()));
+                            }
+                        }
+                    }
+                } // using command listado gestores
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_ListadoVendedores", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlVendedores.Items.Clear();
+                        ddlVendedores.Items.Add(new ListItem("Seleccionar", ""));
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlVendedores.Items.Add(new ListItem(sqlResultado["fcNombreCorto"].ToString(), sqlResultado["fiIDUsuario"].ToString()));
+                            }
+                        }
+                    }
+                } // using commnado listado de vendedores
+
+                using (var sqlComando = new SqlCommand("sp_CredCatalogo_SolicitudEstados", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlCatalogoResoluciones.Items.Clear();
+                        ddlCatalogoResoluciones.Items.Add(new ListItem("Seleccionar", ""));
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlCatalogoResoluciones.Items.Add(new ListItem(sqlResultado["fcEstadoSolicitud"].ToString(), sqlResultado["fiIDEstadoSolicitud"].ToString()));
+                            }
+                        }
+                    }
+                } // using cammnd catalogo estados solicitudes
+
                 using (var sqlComando = new SqlCommand("sp_CREDCatalogo_Parentescos_Listar", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
