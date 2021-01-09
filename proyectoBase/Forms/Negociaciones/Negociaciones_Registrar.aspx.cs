@@ -977,7 +977,7 @@ public partial class Negociaciones_Registrar : System.Web.UI.Page
                             }
                             catch (Exception ex)
                             {
-                                MostrarMensaje("No se pudo cargar la ultima cotización del cliente: " + pcID);
+                                MostrarMensaje("No se pudo cargar la ultima cotización del cliente: " + pcID + ". Error: " + ex.Message.ToString());
                             }
                         }
                     }

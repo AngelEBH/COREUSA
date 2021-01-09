@@ -1802,7 +1802,141 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
             </div>
         </div>
 
-        <!-- modal aprobar una solicitud -->
+        <!-- Agregar referencia personal -->
+        <div class="modal fade" id="modalAgregarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarReferenciaPersonalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-1 pt-1">
+                        <h6 class="modal-title" id="modalAgregarReferenciaPersonalLabel">Agregar referencia personal</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Nombre completo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtNombreReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Telefono</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtTelefonoReferencia" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Tiempo de conocer</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlTiempoDeConocerReferencia" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" data-parsley-errors-container="#error-ddlTiempoDeConocerReferencia"></asp:DropDownList>
+                                <div id="error-ddlTiempoDeConocerReferencia"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Parentesco</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlParentescos" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" data-parsley-errors-container="#error-ddlParentescos"></asp:DropDownList>
+                                <div id="error-ddlParentescos"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtLugarTrabajoReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer pt-2 pb-2">
+                        <button id="btnAgregarReferenciaConfirmar" type="button" class="btn btn-primary mr-1">
+                            Agregar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eliminar referencia personal con comentario -->
+        <div id="modalEliminarReferenciaPersonal" class="modal fade" role="dialog" aria-labelledby="modalEliminarReferenciaPersonalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalEliminarReferenciaPersonalLabel">Eliminar referencia personal</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Observaciones</label>
+                                <textarea id="txtObservacionesEliminarReferenciaPersonal" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnEliminarReferenciaPersonalConfirmar" type="button" class="btn btn-danger">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Editar referencia personal -->
+        <div class="modal fade" id="modalEditarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalEditarReferenciaPersonalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-1 pt-1">
+                        <h6 class="modal-title" id="modalEditarReferenciaPersonalLabel">Editar referencia personal</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Nombre completo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtNombreReferenciaPersonal_Editar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Telefono</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtTelefonoReferenciaPersonal_Editar" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Tiempo de conocer</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlTiempoDeConocerReferencia_Editar" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-errors-container="#error-ddlTiempoDeConocerReferencia_Editar"></asp:DropDownList>
+                                <div id="error-ddlTiempoDeConocerReferencia_Editar"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Parentesco</label>
+                            <div class="col-sm-8">
+                                <asp:DropDownList ID="ddlParentesco_Editar" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-errors-container="#error-ddlParentesco_Editar"></asp:DropDownList>
+                                <div id="error-ddlParentesco_Editar"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtLugarDeTrabajoReferencia_Editar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer pt-2 pb-2">
+                        <button id="btnEditarReferenciaConfirmar" type="button" class="btn btn-primary mr-1">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eliminar referencia personal sin comentario -->
         <div id="modalEliminarReferencia" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEliminarReferenciaLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -1829,34 +1963,32 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
         <div id="modalActualizarIngresos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalActualizarIngresosLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form id="formActualizarIngresos" action="#">
-                        <div class="modal-header">
-                            <h6 class="modal-title mt-0" id="modalActualizarIngresosLabel">Editar ingresos</h6>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Ingresos reales</label>
-                                <div class="col-sm-8">
-                                    <input class="form-control col-form-label MascaraCantidad" id="txtIngresosReales" required="required" type="text" value="" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Bonos y comisiones</label>
-                                <div class="col-sm-8">
-                                    <input class="form-control col-form-label MascaraCantidad" id="txtBonosComisiones" required="required" type="text" value="" />
-                                </div>
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalActualizarIngresosLabel">Editar ingresos</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Ingresos reales</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtIngresosReales" CssClass="form-control form-control-sm mascara-cantidad" type="text" required="required" data-parsley-group="actualizarIngresosCliente" runat="server"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary mr-1 validador">
-                                Confirmar
-                            </button>
-                            <button type="reset" data-dismiss="modal" class="btn btn-secondary">
-                                Cancelar
-                            </button>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Bonos y comisiones</label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="txtBonosComisiones" CssClass="form-control form-control-sm mascara-cantidad" type="text" required="required" data-parsley-group="actualizarIngresosCliente" runat="server"></asp:TextBox>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary mr-1 validador">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                            Cancelar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1990,141 +2122,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
             </div>
         </div>
 
-        <!-- Agregar referencia personal -->
-        <div class="modal fade" id="modalAgregarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarReferenciaPersonalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header pb-1 pt-1">
-                        <h6 class="modal-title" id="modalAgregarReferenciaPersonalLabel">Agregar referencia personal</h6>
-                    </div>
-                    <div class="modal-body">
-                        <form id="frmAgregarReferenciaPersonal">
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Nombre completo</label>
-                            <div class="col-sm-8">
-                                <asp:TextBox ID="txtNombreReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Telefono</label>
-                            <div class="col-sm-8">
-                                <asp:TextBox ID="txtTelefonoReferencia" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Tiempo de conocer</label>
-                            <div class="col-sm-8">
-                                <asp:DropDownList ID="ddlTiempoDeConocerReferencia" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" data-parsley-errors-container="#error-ddlTiempoDeConocerReferencia"></asp:DropDownList>
-                                <div id="error-ddlTiempoDeConocerReferencia"></div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Parentesco</label>
-                            <div class="col-sm-8">
-                                <asp:DropDownList ID="ddlParentescos" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonales" data-parsley-errors-container="#error-ddlParentescos"></asp:DropDownList>
-                                <div id="error-ddlParentescos"></div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
-                            <div class="col-sm-8">
-                                <asp:TextBox ID="txtLugarTrabajoReferencia" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonales" runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer pt-2 pb-2">
-                        <button id="btnAgregarReferenciaConfirmar" type="button" class="btn btn-primary mr-1">
-                            Agregar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Eliminar referencia personal -->
-        <div id="modalEliminarReferenciaPersonal" class="modal fade" role="dialog" aria-labelledby="modalEliminarReferenciaPersonalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalEliminarReferenciaPersonalLabel">Eliminar referencia personal</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <div class="col-12">
-                                <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesEliminarReferenciaPersonal" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="btnEliminarReferenciaPersonalConfirmar" type="button" class="btn btn-danger">
-                            Confirmar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Editar referencia personal -->
-        <div class="modal fade" id="modalEditarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalEditarReferenciaPersonalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header pb-1 pt-1">
-                        <h6 class="modal-title" id="modalEditarReferenciaPersonalLabel">Editar referencia personal</h6>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Nombre completo</label>
-                            <div class="col-sm-8">
-                                <asp:TextBox ID="txtNombreReferenciaPersonal_Editar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Telefono</label>
-                            <div class="col-sm-8">
-                                <asp:TextBox ID="txtTelefonoReferenciaPersonal_Editar" CssClass="form-control form-control-sm mascara-telefono" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Tiempo de conocer</label>
-                            <div class="col-sm-8">
-                                <asp:DropDownList ID="ddlTiempoDeConocerReferencia_Editar" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-errors-container="#error-ddlTiempoDeConocerReferencia_Editar"></asp:DropDownList>
-                                <div id="error-ddlTiempoDeConocerReferencia_Editar"></div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Parentesco</label>
-                            <div class="col-sm-8">
-                                <asp:DropDownList ID="ddlParentesco_Editar" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="referenciasPersonalesEditar" data-parsley-errors-container="#error-ddlParentesco_Editar"></asp:DropDownList>
-                                <div id="error-ddlParentesco_Editar"></div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Lugar de trabajo</label>
-                            <div class="col-sm-8">
-                                <asp:TextBox ID="txtLugarDeTrabajoReferencia_Editar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-group="referenciasPersonalesEditar" runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer pt-2 pb-2">
-                        <button id="btnEditarReferenciaConfirmar" type="button" class="btn btn-primary mr-1">
-                            Confirmar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>

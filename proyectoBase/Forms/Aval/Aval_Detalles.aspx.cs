@@ -12,8 +12,8 @@ namespace proyectoBase.Forms.Aval
     public partial class Aval_Detalles : System.Web.UI.Page
     {
         private string pcIDApp = "";
-        private string pcIDSesion = "";
-        private string pcIDUsuario = "";
+        //private string pcIDSesion = "";
+        //private string pcIDUsuario = "";
         public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
         protected void Page_Load(object sender, EventArgs e)

@@ -600,7 +600,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             while (sqlResultado.Read())
                             {
 
-                                stringDatas = "data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-analista = '" + sqlResultado["fcNombreCorto"] + "' data-sincomunicacion = " + sqlResultado["fbSinComunicacion"].ToString().ToLower() + " data-fechaanalisis= '" + (DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()) == procesoPendiente ? (sqlResultado["fcNombreCorto"].ToString() != "" ? "Fecha no disponible" : "") : DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()).ToString("MM/dd/yyyy hh:mm tt")) + "'";
+                                stringDatas = "data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-telefono='" + sqlResultado["fcTelefonoReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-analista = '" + sqlResultado["fcNombreCorto"] + "' data-sincomunicacion = " + sqlResultado["fbSinComunicacion"].ToString().ToLower() + " data-fechaanalisis= '" + (DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()) == procesoPendiente ? (sqlResultado["fcNombreCorto"].ToString() != "" ? "Fecha no disponible" : "") : DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()).ToString("MM/dd/yyyy hh:mm tt")) + "'";
 
                                 btnComentarioReferenciaPersonal = "<button type='button' id='btnComentarioReferencia' " + stringDatas + " class='btn btn-sm btn-info far fa-comments' title='Ver observaciones del depto. de crédito'></button>";
                                 btnActualizarReferencia = "<button type='button' id='btnActualizarReferencia' " + stringDatas + " class='btn btn-sm btn-info far fa-edit' title='Editar'></button>";
@@ -1799,9 +1799,10 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1811,7 +1812,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDCliente", referenciaPersonal.IdCliente);
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", referenciaPersonal.IdSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
                     sqlComando.Parameters.AddWithValue("@pcNombreCompletoReferencia", referenciaPersonal.NombreCompleto.Trim());
                     sqlComando.Parameters.AddWithValue("@pcLugarTrabajoReferencia", referenciaPersonal.LugarTrabajo.Trim());
                     sqlComando.Parameters.AddWithValue("@piTiempoConocerReferencia", referenciaPersonal.IdTiempoDeConocer);
@@ -1831,50 +1832,6 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             }
                         }
                     }
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            resultado = false;
-        }
-        return resultado;
-    }
-
-    [WebMethod]
-    public static bool EliminarReferenciaPersonal(int idReferenciaPersonal, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Eliminar", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@fiIDReferencia", idReferenciaPersonal);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                            {
-                                resultado = true;
-                            }
-                        }
-                    } // using sqlComando.ExecuteReader()
                 } // using sqlComando
             } // using sqlConexion
         }
@@ -1927,6 +1884,50 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool EliminarReferenciaPersonal(int idReferenciaPersonal, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Eliminar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDReferencia", idReferenciaPersonal);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {

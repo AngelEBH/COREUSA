@@ -736,30 +736,21 @@ $("#btnAgregarReferencia").click(function () {
 
 $("#btnAgregarReferenciaConfirmar").click(function () {
 
-    debugger;
-
     /* Validar formulario de agregar referencia personal */
     if ($($('#frmPrincipal')).parsley().isValid({ group: 'referenciasPersonales' })) {
 
-        var NombreCompletoReferencia = $("#txtNombreReferencia").val();
-        var TelefonoReferencia = $("#txtTelefonoReferencia").val();
-        var LugarTrabajoReferencia = $("#txtLugarTrabajoReferencia").val();
-        var IdTiempoConocerReferencia = $("#ddlTiempoDeConocerReferencia :selected").val();
-        var IdParentescoReferencia = $("#ddlParentescos :selected").val();
-
-        /* Objeto referencia */
         var referenciaPersonal = {
             IdCliente: ID_CLIENTE,
-            NombreCompleto: NombreCompletoReferencia,
-            TelefonoReferencia: TelefonoReferencia,
-            LugarTrabajo: LugarTrabajoReferencia,
-            IdTiempoDeConocer: IdTiempoConocerReferencia,
-            IdParentescoReferencia: IdParentescoReferencia,
+            NombreCompleto: $("#txtNombreReferencia").val(),
+            TelefonoReferencia: $("#txtTelefonoReferencia").val(),
+            LugarTrabajo: $("#txtLugarTrabajoReferencia").val(),
+            IdTiempoDeConocer: $("#ddlTiempoDeConocerReferencia :selected").val(),
+            IdParentescoReferencia: $("#ddlParentescos :selected").val(),
         }
 
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Mantenimiento.aspx/RegistrarReferenciaPersonal",
+            url: "SolicitudesCredito_Analisis.aspx/RegistrarReferenciaPersonal",
             data: JSON.stringify({ referenciaPersonal: referenciaPersonal, dataCrypt: window.location.href }),
             contentType: "application/json; charset=utf-8",
             error: function (xhr, ajaxOptions, thrownError) {
@@ -772,17 +763,69 @@ $("#btnAgregarReferenciaConfirmar").click(function () {
                     MensajeExito('La referencia personal se agregó correctamente.');
                     CargarReferenciasPersonales();
                 }
-                else {
+                else 
                     MensajeError("No se pudo agregar la referencia personal, contacte al administrador.");
-                }
 
                 $("#modalAgregarReferenciaPersonal").modal('hide');
             }
         });
     }
-    else {
+    else 
         $($("#frmPrincipal")).parsley().validate({ group: 'referenciasPersonales', force: true });
+});
+
+/* Actualizar referencia personal */
+$(document).on('click', 'button#btnActualizarReferencia', function () {
+
+    idReferenciaPersonalSeleccionada = $(this).data('id');
+
+    $("#txtNombreReferenciaPersonal_Editar").val($(this).data('nombrereferencia'));
+    $("#txtTelefonoReferenciaPersonal_Editar").val($(this).data('telefono'));
+    $("#ddlTiempoDeConocerReferencia_Editar").val($(this).data('idtiempodeconocer'));
+    $("#ddlParentesco_Editar").val($(this).data('idparentesco'));
+    $("#txtLugarDeTrabajoReferencia_Editar").val($(this).data('trabajo'));
+
+    $("#modalEditarReferenciaPersonal").modal();
+});
+
+$("#btnEditarReferenciaConfirmar").click(function (e) {
+
+    /* Validar formulario de actualizar referencia personal */
+    if ($('#frmPrincipal').parsley().isValid({ group: 'referenciasPersonalesEditar' })) {
+
+        var referenciaPersonal = {
+            IdReferencia: idReferenciaPersonalSeleccionada,
+            NombreCompleto: $("#txtNombreReferenciaPersonal_Editar").val(),
+            TelefonoReferencia: $("#txtTelefonoReferenciaPersonal_Editar").val(),
+            LugarTrabajo: $("#txtLugarDeTrabajoReferencia_Editar").val(),
+            IdTiempoDeConocer: $("#ddlTiempoDeConocerReferencia_Editar :selected").val(),
+            IdParentescoReferencia: $("#ddlParentesco_Editar :selected").val()
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Analisis.aspx/ActualizarReferenciaPersonal",
+            data: JSON.stringify({ referenciaPersonal: referenciaPersonal, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError("No se pudo editar la referencia personal, contacte al administrador.");
+            },
+            success: function (data) {
+
+                if (data.d == true) {
+
+                    MensajeExito('La referencia personal se editó correctamente.');
+                    CargarReferenciasPersonales();
+                }
+                else
+                    MensajeError("No se pudo editar la referencia personal, contacte al administrador.");
+
+                $("#modalEditarReferenciaPersonal").modal('hide');
+            }
+        });
     }
+    else 
+        $('#frmPrincipal').parsley().validate({ group: 'referenciasPersonalesEditar', force: true });
 });
 
 
@@ -810,7 +853,7 @@ $("#btnEliminarReferenciaConfirmar").click(function () {
                 CargarReferenciasPersonales();
             }
             else 
-                MensajeError('Error al eliminar referencia personal');
+                MensajeError('Error al eliminar la referencia personal, contacte al administrador.');
 
             $("#modalEliminarReferencia").modal('hide');
         }
@@ -847,7 +890,7 @@ function CargarReferenciasPersonales() {
 
                         btnComentarioReferenciaPersonal = '<button type="button" id="btnComentarioReferencia" ' + stringDatas + ' class="btn btn-sm btn-info far fa-comments" title="Ver observaciones del departamento de crédito"></button>';
                         btnActualizarReferencia = '<button id="btnActualizarReferencia" ' + stringDatas + ' class="btn btn-sm btn-info far fa-edit" type="button" title="Editar"></button>';
-                        btnEliminarReferencia = '<button id="btnEliminarReferencia" ' + stringDatas + ' class="btn btn-sm btn-danger far fa-trash-alt" type="button" title="Eliminar"></button>';
+                        btnEliminarReferencia = '<button id="btnEliminarReferencia" ' + stringDatas + ' onclick="AbrirModalEliminarReferenciaPersonal(' + listaReferenciasPersonales[i].IdReferencia  + ')" class="btn btn-sm btn-danger far fa-trash-alt" type="button" title="Eliminar"></button>';
                         colorClass = listaReferenciasPersonales[i].ComentarioDeptoCredito != '' ? listaReferenciasPersonales[i].SinComunicacion != true ? 'tr-exito' : 'text-danger' : '';
                         estado = listaReferenciasPersonales[i].ComentarioDeptoCredito != '' ? listaReferenciasPersonales[i].SinComunicacion != true ? '<i class="far fa-check-circle" title="Validación realizada"></i>' : '<i class="fas fa-phone-slash" title="Sin comunicación"></i>' : '<i class="fas fa-phone" title="Validación pendiente"></i>';
 
