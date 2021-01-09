@@ -89,13 +89,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     txtValorPrima.Enabled = true;
                 }
 
-                if (Precalificado.Identidad == "1627198800467")
-                {
-                    Precalificado.PrestamoMaximoSugerido.MontoOfertado = 200000;
-                    Constantes.MontoFinanciarMaximoCliente = 200000;
-                    Constantes.PrestamoMaximo_Monto = 200000;
-                }
-
                 switch (Precalificado.IdProducto)
                 {
                     case 202:
