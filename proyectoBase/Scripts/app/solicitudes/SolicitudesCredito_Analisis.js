@@ -24,6 +24,14 @@ var resolucion = false;
 
 // #endregion
 
+// #region Document Ready
+
+$(document).ready(function () {
+    CargarDetallesDelProcesamientoDeLaSolicitud();
+});
+
+// #endregion
+
 // #region Cargar detalles de la solicitud
 
 /* ====== Carga el estado actual del procesamiento de la solicitud =============================== */
@@ -39,16 +47,18 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la información, contacte al administrador');
         },
+        beforeSend: function () {
+            MostrarLoader();
+        },
         success: function (data) {
 
             if (data.d != null) {
 
                 var informacionSolicitud = data.d;
+                var tablaEstatusSolicitud = $('#tblDetalleEstado tbody').empty();
 
                 ID_ESTADO_SOLICITUD = informacionSolicitud.IdEstadoSolicitud;
                 ESTADO_SOLICITUD = informacionSolicitud;
-
-                var tablaEstatusSolicitud = $('#tblDetalleEstado tbody').empty();
 
                 /* En ingreso */
                 var enIngresoInicio = ObtenerFechaFormateada(informacionSolicitud.EnIngresoInicio);
@@ -447,7 +457,10 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
             else {
                 MensajeError('Error al cargar estado de la solicitud, contacte al administrador');
             }
-        } // success
+        }, // success
+        complete: function () {
+            OcultarLoader()
+        }
     }); // $.ajax
 }
 
@@ -697,6 +710,8 @@ $("#btnActualizarObservacionReferencia").click(function () {
 
     if ($($("#txtObservacionesReferencia")).parsley().isValid()) {
 
+        DeshabilitarElementoPorId('btnActualizarObservacionReferencia');
+
         let observacionesReferenciaPersonal = $('#txtObservacionesReferencia').val();
 
         $.ajax({
@@ -715,10 +730,13 @@ $("#btnActualizarObservacionReferencia").click(function () {
                     MensajeExito('Las observaciones/comentarios se actualizaron correctamente. Actualizando listado...');
                     CargarReferenciasPersonales();
                 }
-                else 
+                else
                     MensajeError('Error al actualizar observaciones de la referencia personal');
 
                 $("#modalObservacionesReferenciaPersonal").modal('hide');
+            },
+            complete: function (data) {
+                HabilitarElementoPorId('btnActualizarObservacionReferencia');
             }
         });
     }
@@ -738,6 +756,8 @@ $("#btnAgregarReferenciaConfirmar").click(function () {
 
     /* Validar formulario de agregar referencia personal */
     if ($($('#frmPrincipal')).parsley().isValid({ group: 'referenciasPersonales' })) {
+
+        DeshabilitarElementoPorId('btnAgregarReferenciaConfirmar');
 
         var referenciaPersonal = {
             IdCliente: ID_CLIENTE,
@@ -763,14 +783,17 @@ $("#btnAgregarReferenciaConfirmar").click(function () {
                     MensajeExito('La referencia personal se agregó correctamente.');
                     CargarReferenciasPersonales();
                 }
-                else 
+                else
                     MensajeError("No se pudo agregar la referencia personal, contacte al administrador.");
 
                 $("#modalAgregarReferenciaPersonal").modal('hide');
+            },
+            complete: function (data) {
+                HabilitarElementoPorId('btnAgregarReferenciaConfirmar');
             }
         });
     }
-    else 
+    else
         $($("#frmPrincipal")).parsley().validate({ group: 'referenciasPersonales', force: true });
 });
 
@@ -783,7 +806,7 @@ $(document).on('click', 'button#btnActualizarReferencia', function () {
     $("#txtTelefonoReferenciaPersonal_Editar").val($(this).data('telefono'));
     $("#ddlTiempoDeConocerReferencia_Editar").val($(this).data('idtiempodeconocer'));
     $("#ddlParentesco_Editar").val($(this).data('idparentesco'));
-    $("#txtLugarDeTrabajoReferencia_Editar").val($(this).data('trabajo'));
+    $("#txtLugarDeTrabajoReferencia_Editar").val($(this).data('lugardetrabajo'));
 
     $("#modalEditarReferenciaPersonal").modal();
 });
@@ -792,6 +815,8 @@ $("#btnEditarReferenciaConfirmar").click(function (e) {
 
     /* Validar formulario de actualizar referencia personal */
     if ($('#frmPrincipal').parsley().isValid({ group: 'referenciasPersonalesEditar' })) {
+
+        DeshabilitarElementoPorId('btnEditarReferenciaConfirmar');
 
         var referenciaPersonal = {
             IdReferencia: idReferenciaPersonalSeleccionada,
@@ -821,10 +846,13 @@ $("#btnEditarReferenciaConfirmar").click(function (e) {
                     MensajeError("No se pudo editar la referencia personal, contacte al administrador.");
 
                 $("#modalEditarReferenciaPersonal").modal('hide');
+            },
+            complete: function (data) {
+                HabilitarElementoPorId('btnEditarReferenciaConfirmar');
             }
         });
     }
-    else 
+    else
         $('#frmPrincipal').parsley().validate({ group: 'referenciasPersonalesEditar', force: true });
 });
 
@@ -837,6 +865,8 @@ function AbrirModalEliminarReferenciaPersonal(idReferenciaPersonal) {
 }
 
 $("#btnEliminarReferenciaConfirmar").click(function () {
+
+    DeshabilitarElementoPorId('btnEliminarReferenciaConfirmar');
 
     $.ajax({
         type: "POST",
@@ -852,10 +882,13 @@ $("#btnEliminarReferenciaConfirmar").click(function () {
                 MensajeExito('La referencia personal se eliminó correctamente');
                 CargarReferenciasPersonales();
             }
-            else 
+            else
                 MensajeError('Error al eliminar la referencia personal, contacte al administrador.');
 
             $("#modalEliminarReferencia").modal('hide');
+        },
+        complete: function (data) {
+            HabilitarElementoPorId('btnEliminarReferenciaConfirmar');
         }
     });
 });
@@ -886,11 +919,11 @@ function CargarReferenciasPersonales() {
                     tblReferenciasPersonales.empty();
 
                     for (var i = 0; i < listaReferenciasPersonales.length; i++) {
-                        stringDatas = 'data-id="' + listaReferenciasPersonales[i].IdReferencia + '" data-observaciones="' + listaReferenciasPersonales[i].ComentarioDeptoCredito + '" data-nombrereferencia="' + listaReferenciasPersonales[i].NombreCompleto + '" data-analista="' + listaReferenciasPersonales[i].AnalistaComentario + '" data-sincomunicacion="' + listaReferenciasPersonales[i].SinComunicacion + '" data-fechaanalisis="' + (listaReferenciasPersonales[i].FechaAnalisis == PROCESO_PENDIENTE ? (listaReferenciasPersonales[i].AnalistaComentario != '' ? 'Fecha no disponible' : '') : moment(listaReferenciasPersonales[i].FechaAnalisis).format('YYYY/MM/DD hh:mm A')) + '"';
+                        stringDatas = 'data-id="' + listaReferenciasPersonales[i].IdReferencia + '" data-nombrereferencia="' + listaReferenciasPersonales[i].NombreCompleto + '" data-telefono="' + listaReferenciasPersonales[i].TelefonoReferencia + '" data-idtiempodeconocer="' + listaReferenciasPersonales[i].IdTiempoDeConocer + '" data-idparentesco="' + listaReferenciasPersonales[i].IdParentescoReferencia + '" data-lugardetrabajo="' + listaReferenciasPersonales[i].LugarTrabajo + '" data-observaciones="' + listaReferenciasPersonales[i].ComentarioDeptoCredito + '" data-analista="' + listaReferenciasPersonales[i].AnalistaComentario + '" data-sincomunicacion="' + listaReferenciasPersonales[i].SinComunicacion + '" data-fechaanalisis="' + (listaReferenciasPersonales[i].FechaAnalisis == PROCESO_PENDIENTE ? (listaReferenciasPersonales[i].AnalistaComentario != '' ? 'Fecha no disponible' : '') : moment(listaReferenciasPersonales[i].FechaAnalisis).format('YYYY/MM/DD hh:mm A')) + '"';
 
                         btnComentarioReferenciaPersonal = '<button type="button" id="btnComentarioReferencia" ' + stringDatas + ' class="btn btn-sm btn-info far fa-comments" title="Ver observaciones del departamento de crédito"></button>';
                         btnActualizarReferencia = '<button id="btnActualizarReferencia" ' + stringDatas + ' class="btn btn-sm btn-info far fa-edit" type="button" title="Editar"></button>';
-                        btnEliminarReferencia = '<button id="btnEliminarReferencia" ' + stringDatas + ' onclick="AbrirModalEliminarReferenciaPersonal(' + listaReferenciasPersonales[i].IdReferencia  + ')" class="btn btn-sm btn-danger far fa-trash-alt" type="button" title="Eliminar"></button>';
+                        btnEliminarReferencia = '<button id="btnEliminarReferencia" ' + stringDatas + ' onclick="AbrirModalEliminarReferenciaPersonal(' + listaReferenciasPersonales[i].IdReferencia + ')" class="btn btn-sm btn-danger far fa-trash-alt" type="button" title="Eliminar"></button>';
                         colorClass = listaReferenciasPersonales[i].ComentarioDeptoCredito != '' ? listaReferenciasPersonales[i].SinComunicacion != true ? 'tr-exito' : 'text-danger' : '';
                         estado = listaReferenciasPersonales[i].ComentarioDeptoCredito != '' ? listaReferenciasPersonales[i].SinComunicacion != true ? '<i class="far fa-check-circle" title="Validación realizada"></i>' : '<i class="fas fa-phone-slash" title="Sin comunicación"></i>' : '<i class="fas fa-phone" title="Validación pendiente"></i>';
 
@@ -905,252 +938,99 @@ function CargarReferenciasPersonales() {
 
 // #endregion
 
-
 // #region validaciones de analisis
 
-$("#btnValidoInfoPersonalModal").click(function () {
-    /* Verificar si la informacion personal ya fue validada antes */
-    if (ESTADO_SOLICITUD.ftAnalisisTiempoValidarInformacionPersonal == '/Date(-2208967200000)/') {
-        $("#modalFinalizarValidarPersonal").modal();
+var tipoDeValidacion = '';
+var btnValidacion = '';
+
+/* Validaciones de analisis, información del cliente y la solicitud */
+function ValidacionDeAnalisis(element) {
+
+    btnValidacion = $(element);
+    tipoDeValidacion = btnValidacion.data('validacion');
+    $("#txtComentarioValidacionDeAnalisis").val('');
+    $("#modalValidacionDeAnalisis").modal();
+    $($("#frmPrincipal")).parsley().reset({ group: 'validacionDeAnalisis' });
+}
+
+/* Validaciones de la documentación de la solicitud */
+function ValidacionDeDocumentacion(element) {
+
+    btnValidacion = $(element);
+    tipoDeValidacion = btnValidacion.data('validacion');
+
+    let documentosPendientesDeValidar = 0;
+
+    if (ESTADO_SOLICITUD.DocumentacionIdentidadesValidada != 1)
+        documentosPendientesDeValidar++;
+
+    if (ESTADO_SOLICITUD.DocumentacionDomicilioValidada != 1)
+        documentosPendientesDeValidar++;
+
+    if (ESTADO_SOLICITUD.DocumentacionLaboralValidada != 1)
+        documentosPendientesDeValidar++;
+
+    if (ESTADO_SOLICITUD.DocumentacionSolicitudFisicaValidada != 1)
+        documentosPendientesDeValidar++;
+
+    /* Si unicamente falta validar un tipo de documentación mostrar modal y solicitar comentario */
+    if (documentosPendientesDeValidar == 1) {
+
+        $("#txtComentarioValidacionDeAnalisis").val('');
+        $("#modalDocumentacion").modal('hide');
+        $("#modalValidacionDeAnalisis").modal();
+        $($("#frmPrincipal")).parsley().reset({ group: 'validacionDeAnalisis' });
     }
+    else
+        RealizarValidacion();
+}
+
+$("#btnValidacionDeAnalisisConfirmar").click(function () {
+
+    if ($($('#frmPrincipal')).parsley().isValid({ group: 'validacionDeAnalisis' }))
+        RealizarValidacion();
+    else
+        $($("#frmPrincipal")).parsley().validate({ group: 'validacionDeAnalisis', force: true });
 });
 
-$("#btnValidoInfoPersonalConfirmar").click(function () {
+function RealizarValidacion() {
 
-    if ($($("#comentariosInfoPersonal")).parsley().isValid()) {
-
-        var observacion = $("#comentariosInfoPersonal").val();
-        var validacion = 'InformacionPersonal';
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
-            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo cargar la información, contacte al administrador');
-            },
-            success: function (data) {
-                if (data.d != false) {
-                    $("#modalFinalizarValidarPersonal").modal('hide');
-                    $("#btnValidoInfoPersonalModal, #btnValidoInfoPersonalConfirmar").prop('disabled', true);
-                    $("#btnValidoInfoPersonalModal, #btnValidoInfoPersonalConfirmar").removeClass('btn-warning').addClass('btn-success');
-                    $("#btnValidoInfoPersonalModal, #btnValidoInfoPersonalConfirmar").prop('title', 'La información personal ya fue validada');
-                    MensajeExito('Estado de la solicitud actualizado');
-                    actualizarEstadoSolicitud();
-                }
-                else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
-            }
-        });
-    } else { $($("#comentariosInfoPersonal")).parsley().validate(); }
-});
-
-$("#btnValidoInfoLaboralModal").click(function () {
-    /* Verificar si la informacion laboral ya fue validada antes */
-    if (ESTADO_SOLICITUD.ftAnalisisTiempoValidarInformacionLaboral == '/Date(-2208967200000)/') {
-        $("#modalFinalizarValidarLaboral").modal();
-    }
-});
-
-$("#btnValidoInfoLaboralConfirmar").click(function () {
-
-    if ($($("#comentariosInfoLaboral")).parsley().isValid()) {
-
-        var observacion = $("#comentariosInfoLaboral").val();
-        var validacion = 'InformacionLaboral';
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
-            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo cargar la información, contacte al administrador');
-            },
-            success: function (data) {
-                if (data.d != false) {
-                    $("#modalFinalizarValidarLaboral").modal('hide');
-                    $("#btnValidoInfoLaboralModal, #btnValidoInfoLaboralConfirmar").prop('disabled', true);
-                    $("#btnValidoInfoLaboralModal, #btnValidoInfoLaboralConfirmar").removeClass('btn-warning').addClass('btn-success');
-                    $("#btnValidoInfoLaboralModal, #btnValidoInfoLaboralConfirmar").prop('title', 'La información laboral ya fue validada');
-                    MensajeExito('Estado de la solicitud actualizado');
-                    actualizarEstadoSolicitud();
-                }
-                else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
-            }
-        });
-    }
-    else { $($("#comentariosInfoLaboral")).parsley().validate(); }
-});
-
-$("#btnValidoReferenciasModal").click(function () {
-    if (ESTADO_SOLICITUD.ftAnalisisTiempoValidacionReferenciasPersonales == '/Date(-2208967200000)/') {
-        $("#modalFinalizarValidarReferencias").modal();
-    }
-});
-
-$("#btnValidoReferenciasConfirmar").click(function () {
-
-    if ($($("#comentarioReferenciasPersonales")).parsley().isValid()) {
-
-        var observacion = $("#comentarioReferenciasPersonales").val();
-        var validacion = 'Referencias';
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
-            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo cargar la información, contacte al administrador');
-            },
-            success: function (data) {
-                if (data.d != 0) {
-                    $("#btnValidoReferenciasModal, #btnValidoReferenciasConfirmar").prop('disabled', true);
-                    $("#btnValidoReferenciasModal, #btnValidoReferenciasConfirmar").removeClass('btn-warning').addClass('btn-success');
-                    $("#btnValidoReferenciasModal, #btnValidoReferenciasConfirmar").prop('title', 'Las referencias personales ya fueron validadas');
-                    $("#modalFinalizarValidarReferencias").modal('hide');
-                    MensajeExito('Estado de la solicitud actualizado');
-                    actualizarEstadoSolicitud();
-                }
-                else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
-            }
-        });
-    } else { $($("#comentarioReferenciasPersonales")).parsley().validate(); }
-});
-
-$("#btnValidoDocumentacionModal").click(function () {
-    $("#modalFinalizarValidarDocumentacion").modal();
-});
-
-$("#btnValidoDocumentacionConfirmar").click(function () {
-
-    if ($($("#comentariosDocumentacion")).parsley().isValid() && ESTADO_SOLICITUD.ftAnalisisTiempoValidarDocumentos == '/Date(-2208967200000)/') {
-
-        var observacion = $("#comentariosDocumentacion").val();
-        var validacion = 'Documentacion';
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
-            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo cargar la información, contacte al administrador');
-            },
-            success: function (data) {
-                if (data.d != 0) {
-                    $("#btnValidoDocumentacionModal").removeClass('btn-warning').addClass('btn-success');
-                    $("#btnValidoDocumentacionConfirmar").removeClass('btn-warning').addClass('btn-primary');
-                    $("#btnValidoDocumentacionConfirmar").prop('title', 'La documentación ya fue validada');
-                    $("#btnValidoDocumentacionModal").text('Ver docs');
-                    $("#btnValidoDocumentacionConfirmar,#btnValidarSoliFisica,#btnValidarLaboral,#btnValidarDomiciliar,#btnValidarIdentidades").prop('disabled', true);
-                    $("#btnValidarSoliFisica,#btnValidarLaboral,#btnValidarDomiciliar,#btnValidarIdentidades").prop('title', 'La documentación ya fue validada');
-                    $("#modalFinalizarValidarDocumentacion").modal('hide');
-                    MensajeExito('Estado de la solicitud actualizado');
-                    actualizarEstadoSolicitud();
-                }
-                else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
-            }
-        });
-    } else { $($("#comentariosDocumentacion")).parsley().validate(); }
-});
-
-var tipoDoc = 0;
-$(document).on('click', 'button#btnValidarIdentidades,#btnValidarDomiciliar,#btnValidarLaboral,#btnValidarSoliFisica', function () {
-
-    tipoDoc = $(this).data('id');
-    $("#modalFinalizarValidarDocumentacion").modal('hide');
-    $("#modalValidarTipoDocs").modal();
-});
-
-$("#btnValidarTipoDocConfirmar").click(function () {
-
-    var btn = 0;
-    var validacion = '';
-
-    switch (tipoDoc) {
-        case 1:
-            validacion = 'ValidarDocumentosIdentidad';
-            btn = 1;
-            break;
-        case 2:
-            validacion = 'ValidarDocumentosDomicilio';
-            btn = 2;
-            break;
-        case 3:
-            validacion = 'ValidarDocumentosLaboral';
-            btn = 3;
-            break;
-        case 4:
-            validacion = 'ValidarDocumentosSolicitudFisica';
-            btn = 4;
-            break;
-        default:
-            MensajeError('Error al validar tipo de documentación');
-    }
+    btnValidacion.prop('disabled', true);
+    DeshabilitarElementoPorId('btnValidacionDeAnalisisConfirmar');
 
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
-        data: JSON.stringify({ validacion: validacion, observacion: '', dataCrypt: window.location.href }),
+        url: 'SolicitudesCredito_Analisis.aspx/ValidacionesDeAnalisis',
+        data: JSON.stringify({ tipoDeValidacion: tipoDeValidacion, comentario: $("#txtComentarioValidacionDeAnalisis").val(), dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudo realizar la validacion, contacte al administrador');
-            $("#modalValidarTipoDocs").modal('hide');
-            $("#modalFinalizarValidarDocumentacion").modal();
+            MensajeError('Error al realizar validación, contacte al administrador.');
         },
         success: function (data) {
-            if (data.d != 0) {
-                $("#modalValidarTipoDocs").modal('hide');
-                $("#modalFinalizarValidarDocumentacion").modal();
+            if (data.d == true) {
 
-                switch (btn) {
-                    case 1:
-                        $("#btnValidarIdentidades").prop('disabled', true);
-                        $("#btnValidarIdentidades").addClass('text-success');
-                        $("#btnValidarIdentidades").prop('title', 'Documentación validada');
-                        break;
-                    case 2:
-                        $("#btnValidarDomiciliar").prop('disabled', true);
-                        $("#btnValidarDomiciliar").addClass('text-success');
-                        $("#btnValidarDomiciliar").prop('title', 'Documentación validada');
-                        break;
-                    case 3:
-                        $("#btnValidarLaboral").prop('disabled', true);
-                        $("#btnValidarLaboral").addClass('text-success');
-                        $("#btnValidarLaboral").prop('title', 'Documentación validada');
-                        break;
-                    case 4:
-                        $("#btnValidarSoliFisica").prop('disabled', true);
-                        $("#btnValidarSoliFisica").addClass('text-success');
-                        $("#btnValidarSoliFisica").prop('title', 'Documentación validada');
-                        break;
-                }
-                MensajeExito('Estado de la solicitud actualizado');
+                MensajeExito('La validación se realizó correctamente.');
+                CargarDetallesDelProcesamientoDeLaSolicitud();
             }
-            else {
-                MensajeError('Error al actualizar estado de la solicitud, contacte al administrador');
-                $("#modalValidarTipoDocs").modal('hide');
-                $("#modalFinalizarValidarDocumentacion").modal();
-            }
+            else
+                MensajeError('Error al realizar validación, contacte al administrador.');
+
+            $("#modalValidacionDeAnalisis").modal('hide');
+        },
+        complete: function (data) {
+            btnValidacion.prop('disabled', false);
+            HabilitarElementoPorId('btnValidacionDeAnalisisConfirmar');
         }
     });
-});
+}
 
 // #endregion
 
 
 //#region Funciones de analisis
 
-$("#btnMasDetalles").click(function () {
+function CargarBuroExterno() {
 
-    CargarDetallesDelProcesamientoDeLaSolicitud(true);
-
-});
-
-/* Cargar buro externo */
-$("#btnHistorialExterno").click(function () {
-
-    MensajeInformacion('Cargando buro externo');
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_Analisis.aspx/ObtenerUrlEncriptado',
@@ -1160,14 +1040,50 @@ $("#btnHistorialExterno").click(function () {
             MensajeError('Error al cargar buro externo');
         },
         success: function (data) {
-            var parametros = data.d;
-            window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + parametros, "_blank",
-                "toolbar=yes, scrollbars=yes,resizable=yes," +
-                "top=0,left=window.screen.availWidth/2," +
-                "window.screen.availWidth/2,window.screen.availHeight");
+            window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + data.d, "_blank",
+                "toolbar=yes, scrollbars=yes, resizable=yes, top=0, left=window.screen.availWidth/2, window.screen.availWidth/2,window.screen.availHeight");
         }
     });
-});
+}
+
+function ValidarInformacionDePerfil() {
+
+    if ($("#ddlTipoDeEmpresa option:selected").val() != '' && $("#ddlTipoDePerfil option:selected").val() != '' && $("#ddlTipoDeEmpleo option:selected").val() != '' && $("#ddlBuroActual option:selected").val() != '')
+        $("#modalActualizarInformacionPerfil").modal();
+}
+
+function ActualizarInformacionDePerfil() {
+
+    let ddlTipoDeEmpresa = $("#ddlTipoDeEmpresa option:selected").val();
+    let ddlTipoDePerfil = $("#ddlTipoDePerfil option:selected").val();
+    let ddlTipoDeEmpleo = $("#ddlTipoDeEmpleo option:selected").val();
+    let ddlBuroActual = $("#ddlBuroActual option:selected").val();
+
+    if (ddlTipoDeEmpresa != '' && ddlTipoDePerfil != '' && ddlTipoDeEmpleo != '' && ddlBuroActual != '') {
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Analisis.aspx/ActualizarInformacionPerfil",
+            data: JSON.stringify({ tipoEmpresa: ddlTipoDeEmpresa, tipoPerfil: ddlTipoDePerfil, tipoEmpleo: ddlTipoDeEmpleo, buroActual: ddlBuroActual, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('No se pudo guardar la información de perfil, contacte al administrador');
+            },
+            success: function (data) {
+
+                if (data.d != false) {
+
+                    $("#ddlTipoDeEmpresa,#ddlTipoDePerfil,#ddlTipoDeEmpleo,#ddlBuroActual").prop('disabled', true);
+                    $("#modalActualizarInformacionPerfil").modal('hide');
+                    MensajeExito('La información de perfil se guardó correctamente');
+                    CargarDetallesDelProcesamientoDeLaSolicitud();
+                }
+                else
+                    MensajeError('No se pudo guardar la información de perfil, contacte al administrador');
+            }
+        });
+    }
+}
 
 /* Actualizar ingresos del cliente */
 $("#actualizarIngresosCliente").click(function () {
@@ -1271,36 +1187,6 @@ $('#txtValorGlobalManual,#txtValorPrimaManual,#txtValorPlazoManual').blur(functi
                 $('#btnActualizarMontoManualmente').prop('disabled', false);
             }
         });
-    }
-});
-
-/* Guardar Informacion del Perfil */
-$("#tipoEmpresa, #tipoPerfil, #tipoEmpleo, #buroActual").change(function () {
-
-    var tipoEmpresa = $("#tipoEmpresa :selected").val();
-    var tipoPerfil = $("#tipoPerfil :selected").val();
-    var tipoEmpleo = $("#tipoEmpleo :selected").val();
-    var buroActual = $("#buroActual :selected").val();
-
-    if (tipoEmpresa != '' && tipoPerfil != '' && tipoEmpleo != '' && buroActual != '') {
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/GuardarInformacionAnalisis",
-            data: JSON.stringify({ tipoEmpresa: tipoEmpresa, tipoPerfil: tipoPerfil, tipoEmpleo: tipoEmpleo, buroActual: buroActual, dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo guardar la información de perfil, contacte al administrador');
-            },
-            success: function (data) {
-                if (data.d != false) {
-                    MensajeExito('Informacion de perfil guardada correctamente');
-                    actualizarEstadoSolicitud();
-                }
-                MensajeError('No se pudo guardar la información de perfil, contacte al administrador');
-            }
-        });
-
     }
 });
 
@@ -1585,40 +1471,41 @@ function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
 
 // #region Enviar a campo
 
-/* Enviar solicitud a campo */
-$("#btnEnviarCampo").click(function () {
+$("#btnEnviarACampo").click(function () {
 
-    if (ESTADO_SOLICITUD.fiEstadoDeCampo == 0) { /* Verificar si la solicitud ya fue enivada a campo antes */
-        $("#modalEnviarCampo").modal();
-    }
+    if (ESTADO_SOLICITUD.FechaEnvioARuta == PROCESO_PENDIENTE)
+        $("#modalEnviarACampo").modal();
 });
 
-$("#btnEnviarCampoConfirmar").click(function () {
+$("#btnEnviarACampoConfirmar").click(function () {
 
-    if ($($("#comentarioAdicional")).parsley().isValid()) {
+    if ($($("#txtComentariosParaGestoria")).parsley().isValid()) {
 
-        var fcObservacionesDeCredito = $("#comentarioAdicional").val();
         $.ajax({
             type: "POST",
             url: "SolicitudesCredito_Analisis.aspx/EnviarACampo",
-            data: JSON.stringify({ fcObservacionesDeCredito: fcObservacionesDeCredito, dataCrypt: window.location.href }),
+            data: JSON.stringify({ observacionesDeCredito: $("#txtComentariosParaGestoria").val(), dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo cargar la información, contacte al administrador');
+                MensajeError('No se pudo enviar a investigación de campo, contacte al administrador');
             },
             success: function (data) {
+
                 if (data.d != false) {
-                    $("#modalEnviarCampo").modal('hide');
-                    $("#btnEnviarCampo, #btnEnviarCampoConfirmar").prop('disabled', true);
-                    $("#btnEnviarCampo, #btnEnviarCampoConfirmar").removeClass('btn-warning').addClass('btn-success');
-                    $("#btnEnviarCampo, #btnEnviarCampoConfirmar").prop('title', 'La solicitud ya fue enviada a campo');
-                    MensajeExito('La solicitud ha sido enviada a campo correctamente');
-                    actualizarEstadoSolicitud();
+
+                    //$("#btnEnviarACampo, #btnEnviarACampoConfirmar").prop('disabled', true).removeClass('btn-warning').addClass('btn-success').prop('title', 'La solicitud ya fue enviada a investigación de campo');
+
+                    $("#modalEnviarACampo").modal('hide');
+                    MensajeExito('La solicitud se envió a investigación de campo correctamente.');
+                    CargarDetallesDelProcesamientoDeLaSolicitud();
                 }
-                else { MensajeError('Error al enviar la solicitud a campo, contacte al administrador'); }
+                else
+                    MensajeError('Error al enviar la solicitud a investigación de campo, contacte al administrador');
             }
         });
-    } else { $($("#comentarioAdicional")).parsley().validate(); }
+    }
+    else
+        $($("#txtComentariosParaGestoria")).parsley().validate();
 });
 
 // #endregion
@@ -1900,6 +1787,24 @@ function ConvertirAFormatoNumerico(nStr) {
         x1 = x1.replace(rgx, '$1' + ',' + '$2');
     }
     return x1 + x2;
+}
+
+function DeshabilitarElementoPorId(idElemento) {
+    $('#' + idElemento + '').prop('disabled', true);
+};
+
+function HabilitarElementoPorId(idElemento) {
+    $('#' + idElemento + '').prop('disabled', false);
+};
+
+function MostrarLoader() {
+    $("#imgLogo").css('display', 'none');
+    $("#divCargandoAnalisis").css('display', '');
+}
+
+function OcultarLoader() {
+    $("#divCargandoAnalisis").css('display', 'none');
+    $("#imgLogo").css('display', '');
 }
 
 //#endregion Funciones utilitarias

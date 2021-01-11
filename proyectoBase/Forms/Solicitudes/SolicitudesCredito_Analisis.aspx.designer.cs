@@ -1291,40 +1291,40 @@ public partial class SolicitudesCredito_Analisis
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInformacionPerfil;
 
     /// <summary>
-    /// Control txtTipoDeEmpresa.
+    /// Control ddlTipoDeEmpresa.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtTipoDeEmpresa;
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeEmpresa;
 
     /// <summary>
-    /// Control txtTipoDePerfil.
+    /// Control ddlTipoDePerfil.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtTipoDePerfil;
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDePerfil;
 
     /// <summary>
-    /// Control txtTipoDeEmpleo.
+    /// Control ddlTipoDeEmpleo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtTipoDeEmpleo;
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeEmpleo;
 
     /// <summary>
-    /// Control txtBuroActual.
+    /// Control ddlBuroActual.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtBuroActual;
+    protected global::System.Web.UI.WebControls.DropDownList ddlBuroActual;
 
     /// <summary>
     /// Control divInformaciondeCampo.
@@ -1703,24 +1703,6 @@ public partial class SolicitudesCredito_Analisis
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblResumenCuota;
-
-    /// <summary>
-    /// Control lblResumenMontoFinalFinanciar.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblResumenMontoFinalFinanciar;
-
-    /// <summary>
-    /// Control lblResumenCuotaFinalFinanciar.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblResumenCuotaFinalFinanciar;
 
     /// <summary>
     /// Control lblResumenTipoEmpresa.

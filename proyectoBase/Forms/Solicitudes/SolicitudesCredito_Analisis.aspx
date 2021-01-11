@@ -40,10 +40,10 @@
                                     Más opciones
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <button type="button" class="dropdown-item pl-3" id="btnResumen" data-toggle="modal" data-target="#modalResumen"><i class="far fa-file-alt"></i>Resumen solicitud</button>
-                                    <button type="button" class="dropdown-item pl-3" id="btnImprimirReporte" onclick="ExportHtmlToPdf('#ReporteSolicitud','Reporte_Solitud','Reporte de la Solicitud')"><i class="far fa-file-pdf"></i>Generar PDF</button>
-                                    <button type="button" class="dropdown-item pl-3" id="btnHistorialInterno" title="Ver Historial interno del cliente" disabled="disabled"><i class="fas fa-history"></i>Historial Interno </button>
-                                    <button type="button" class="dropdown-item pl-3" id="btnCondicionarSolicitud"><i class="far fa-edit"></i>Condicionar solicitud</button>
+                                    <button type="button" class="dropdown-item pl-3" id="btnResumen" data-toggle="modal" data-target="#modalResumen"><i class="far fa-file-alt"></i>&nbsp;Resumen solicitud</button>
+                                    <button type="button" class="dropdown-item pl-3" id="btnImprimirReporte" onclick="ExportHtmlToPdf('#ReporteSolicitud','Reporte_Solitud','Reporte de la Solicitud')"><i class="far fa-file-pdf"></i>&nbsp;Generar PDF</button>
+                                    <button type="button" class="dropdown-item pl-3" id="btnHistorialInterno" title="Ver Historial interno del cliente" disabled="disabled"><i class="fas fa-history"></i>&nbsp;Historial Interno </button>
+                                    <button type="button" class="dropdown-item pl-3" id="btnCondicionarSolicitud"><i class="far fa-edit"></i>&nbsp;Condicionar solicitud</button>
                                 </div>
                             </div>
                             <div class="button-items pb-2">
@@ -51,15 +51,15 @@
                                     <i class="far fa-edit"></i>
                                     Resolución
                                 </button>
-                                <button runat="server" id="btnHistorialExterno" type="button" class="btn btn-secondary">
+                                <button runat="server" id="btnHistorialExterno" onclick="CargarBuroExterno()" type="button" class="btn btn-secondary">
                                     <i class="far fa-credit-card"></i>
                                     Buró Externo
                                 </button>
-                                <button runat="server" id="btnDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentacion" class="btn btn-warning">
+                                <button runat="server" id="btnDocumentacionModal" type="button" onclick="CargarDetallesDelProcesamientoDeLaSolicitud()" data-toggle="modal" data-target="#modalDocumentacion" class="btn btn-warning">
                                     <i class="far fa-file-alt"></i>
                                     Documentos
                                 </button>
-                                <button runat="server" id="btnMasDetalles" type="button" class="btn btn-secondary">
+                                <button runat="server" id="btnMasDetalles" onclick="CargarDetallesDelProcesamientoDeLaSolicitud(true)" type="button" class="btn btn-secondary">
                                     <i class="fas fa-info-circle"></i>
                                     Más detalles
                                 </button>
@@ -132,7 +132,7 @@
                                     </h6>
                                 </div>
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
-                                    <button id="btnValidarInformacionPersonal" type="button" class="btn btn-sm btn-warning btn-block" data-tipovalidacion="ValidarInformacionPersonal">
+                                    <button id="btnValidarInformacionPersonal" type="button" onclick="ValidacionDeAnalisis(this)" class="btn btn-sm btn-warning btn-block btnValidacionDeAnalisis" data-validacion="InformacionPersonal">
                                         <i class="far fa-check-square"></i>
                                         Validar información personal
                                     </button>
@@ -324,7 +324,7 @@
                                     </h6>
                                 </div>
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
-                                    <button id="btnValidarInformacionLaboral" type="button" class="btn btn-sm btn-warning btn-block" data-tipovalidacion="ValidarInformacionLaboral">
+                                    <button id="btnValidarInformacionLaboral" type="button" onclick="ValidacionDeAnalisis(this)" class="btn btn-sm btn-warning btn-block btnValidacionDeAnalisis" data-validacion="InformacionLaboral">
                                         <i class="far fa-check-square"></i>
                                         Validar información laboral
                                     </button>
@@ -430,7 +430,7 @@
                                     </h6>
                                 </div>
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
-                                    <button id="btnValidarReferenciasPersonales" type="button" class="btn btn-sm btn-warning btn-block" data-tipovalidacion="ValidarInformacionLaboral">
+                                    <button id="btnValidarReferenciasPersonales" type="button" onclick="ValidacionDeAnalisis(this)" class="btn btn-sm btn-warning btn-block btnValidacionDeAnalisis" data-validacion="ReferenciasPersonales">
                                         <i class="far fa-check-square"></i>
                                         Validar referencias personales
                                     </button>
@@ -1036,7 +1036,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                     </h6>
                                 </div>
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
-                                    <button id="btnEnviarACampo" type="button" class="btn btn-sm btn-warning btn-block" data-tipovalidacion="ValidarInformacionLaboral">
+                                    <button id="btnEnviarACampo" type="button" class="btn btn-sm btn-warning btn-block">
                                         <i class="far fa-check-square"></i>
                                         Enviar a campo
                                     </button>
@@ -1050,19 +1050,19 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <label class="col-form-label">Tipo de empresa</label>
-                                                <asp:TextBox ID="txtTipoDeEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:DropDownList ID="ddlTipoDeEmpresa" onchange="ValidarInformacionDePerfil()" CssClass="form-control form-control-sm" runat="server"></asp:DropDownList>
                                             </div>
                                             <div class="col-12">
                                                 <label class="col-form-label">Tipo de perfil</label>
-                                                <asp:TextBox ID="txtTipoDePerfil" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:DropDownList ID="ddlTipoDePerfil" onchange="ValidarInformacionDePerfil()" CssClass="form-control form-control-sm" runat="server"></asp:DropDownList>
                                             </div>
                                             <div class="col-12">
                                                 <label class="col-form-label">Tipo de empleo</label>
-                                                <asp:TextBox ID="txtTipoDeEmpleo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:DropDownList ID="ddlTipoDeEmpleo" onchange="ValidarInformacionDePerfil()" CssClass="form-control form-control-sm" runat="server"></asp:DropDownList>
                                             </div>
                                             <div class="col-12">
                                                 <label class="col-form-label">Buro actual</label>
-                                                <asp:TextBox ID="txtBuroActual" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <asp:DropDownList ID="ddlBuroActual" onchange="ValidarInformacionDePerfil()" CssClass="form-control form-control-sm" runat="server"></asp:DropDownList>
                                             </div>
                                         </div>
                                     </div>
@@ -1173,50 +1173,22 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
         </div>
         <!--/ card -->
 
-        <!-- modal validar informacion personal -->
-        <div id="modalFinalizarValidarPersonal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarValidarPersonalLabel" aria-hidden="true">
+        <!-- modal validaciones de analisis -->
+        <div id="modalValidacionDeAnalisis" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalValidacionDeAnalisisLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalFinalizarValidarPersonalLabel">Terminar validación</h6>
+                        <h6 class="modal-title mt-0" id="modalValidacionDeAnalisisLabel">Terminar validación</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        ¿Está seguro de que desea terminar la validación de la información personal del cliente?<br />
                         <div class="form-group">
-                            <label class="col-form-label">Observaciones</label>
-                            <input id="comentariosInfoPersonal" class="form-control" data-parsley-maxlength="150" type="text" value="" />
+                            <label>Observaciones/Comentarios</label>
+                            <textarea id="txtComentarioValidacionDeAnalisis" required="required" class="form-control form-control-sm" placeholder="" data-parsley-maxlength="500" data-parsley-minlength="15" data-parsley-group="validacionDeAnalisis"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btnValidoInfoPersonalConfirmar" class="btn btn-primary mr-1 validador">
-                            Confirmar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal validar informacion laboral -->
-        <div id="modalFinalizarValidarLaboral" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarValidarLaboralLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalFinalizarValidarLaboralLabel">Terminar validación</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-                        ¿Está seguro de que desea terminar la validación de la información laboral del cliente?<br />
-                        <div class="form-group">
-                            <label class="col-form-label">Observaciones</label>
-                            <input id="comentariosInfoLaboral" class="form-control" type="text" data-parsley-maxlength="150" value="" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="btnValidoInfoLaboralConfirmar" class="btn btn-primary mr-1 validador">
+                        <button type="button" id="btnValidacionDeAnalisisConfirmar" class="btn btn-info">
                             Confirmar
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary">
@@ -1241,7 +1213,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 <label class="header-title font-weight-bold">Documentación identidad</label>
                             </div>
                             <div class="col-auto">
-                                <button id="btnValidarDocumentacionIdentidad" type="button" class="btn btn-warning btn-block" data-tipovalidacion="ValidarDocumentosIdentidad">
+                                <button id="btnValidarDocumentacionIdentidad" type="button" onclick="ValidacionDeDocumentacion(this)" class="btn btn-warning btn-block btnValidacionDeAnalisis" data-validacion="DocumentosIdentidad">
                                     <i class="far fa-check-square"></i>
                                     Validar documentación
                                 </button>
@@ -1256,7 +1228,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 <label class="header-title font-weight-bold">Documentación domicilio</label>
                             </div>
                             <div class="col-auto">
-                                <button id="btnValidarDocumentacionDomicilio" type="button" class="btn btn-warning btn-block" data-tipovalidacion="ValidarDocumentosDomicilio">
+                                <button id="btnValidarDocumentacionDomicilio" type="button" onclick="ValidacionDeDocumentacion(this)" class="btn btn-warning btn-block btnValidacionDeAnalisis" data-validacion="DocumentosDomicilio">
                                     <i class="far fa-check-square"></i>
                                     Validar documentación
                                 </button>
@@ -1271,7 +1243,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 <label class="header-title font-weight-bold">Documentación laboral</label>
                             </div>
                             <div class="col-auto">
-                                <button id="btnValidarDocumentacionLaboral" type="button" class="btn btn-warning btn-block" data-tipovalidacion="ValidarDocumentosLaboral">
+                                <button id="btnValidarDocumentacionLaboral" type="button" onclick="ValidacionDeDocumentacion(this)" class="btn btn-warning btn-block btnValidacionDeAnalisis" data-validacion="DocumentosLaboral">
                                     <i class="far fa-check-square"></i>
                                     Validar documentación
                                 </button>
@@ -1286,7 +1258,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 <label class="header-title font-weight-bold">Solicitud física</label>
                             </div>
                             <div class="col-auto">
-                                <button id="btnValidarDocumentacionSolicitudFisica" type="button" class="btn btn-warning btn-block" data-tipovalidacion="ValidarDocumentosSolicitudFisica">
+                                <button id="btnValidarDocumentacionSolicitudFisica" type="button" onclick="ValidacionDeDocumentacion(this)" class="btn btn-warning btn-block btnValidacionDeAnalisis" data-validacion="DocumentosSolicitudFisica">
                                     <i class="far fa-check-square"></i>
                                     Validar documentación
                                 </button>
@@ -1318,33 +1290,6 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                     <div class="modal-footer">
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal validar referencias -->
-        <div id="modalFinalizarValidarReferencias" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarValidarReferenciasLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalFinalizarValidarReferenciasLabel">Terminar validación</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-                        ¿Está seguro de que desea terminar la validación de las referencias personales del cliente?<br />
-                        <div class="form-group">
-                            <label>Observaciones</label>
-                            <input id="comentarioReferenciasPersonales" class="form-control" type="text" value="" data-parsley-maxlength="150" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="btnValidoReferenciasConfirmar" class="btn btn-primary mr-1 validador">
-                            Confirmar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
-                            Cancelar
                         </button>
                     </div>
                 </div>
@@ -1443,22 +1388,21 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
         </div>
 
         <!-- modal enviar solicitud a campo -->
-        <div id="modalEnviarCampo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEnviarCampoLabel" aria-hidden="true">
+        <div id="modalEnviarACampo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEnviarCampoLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalEnviarCampoLabel">Enviar a campo</h6>
+                        <h6 class="modal-title mt-0" id="modalEnviarCampoLabel">Enviar a investigación de campo</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        ¿Está seguro de que desea enviar a campo la solicitud?<br />
                         <div class="form-group">
-                            <label>Comentario adicional para gestor</label>
-                            <input id="comentarioAdicional" class="form-control" type="text" value="" data-parsley-maxlength="150" />
+                            <label>Observaciones/comentarios para gestoría</label>
+                            <textarea id="txtComentariosParaGestoria" required="required" class="form-control form-control-sm" placeholder="" data-parsley-maxlength="500" data-parsley-minlength="15" data-parsley-group="enviarACampo"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btnEnviarCampoConfirmar" class="btn btn-primary mr-1 validador">
+                        <button type="button" id="btnEnviarACampoConfirmar" class="btn btn-info">
                             Confirmar
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary">
@@ -1479,76 +1423,71 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                     </div>
                     <div class="modal-body" id="ResumenSolicitud">
                         <div class="form-group row">
-                            <h6 class="col-sm-12 text-center mt-0">Información del cliente</h6>
-                            <label class="col-sm-6 EliminarEspacios">Cliente</label>
-                            <asp:Label ID="lblResumenCliente" CssClass="col-sm-6 EliminarEspacios" runat="server"></asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Edad</label>
-                            <asp:Label ID="lblResumenEdad" CssClass="col-sm-6 EliminarEspacios" runat="server"></asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Trabajo</label>
-                            <asp:Label ID="lblResumenTrabajo" CssClass="col-sm-6 EliminarEspacios" runat="server"></asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Puesto</label>
-                            <asp:Label ID="lblResumenPuesto" CssClass="col-sm-6 EliminarEspacios" runat="server"></asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Capacidad de Pago Mensual</label>
-                            <asp:Label ID="lblResumenCapacidadPagoMensual" CssClass="col-sm-6 EliminarEspacios" runat="server"></asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Capacidad de Pago Quincenal</label>
-                            <asp:Label ID="lblResumenCapacidadPagoQuincenal" CssClass="col-sm-6 EliminarEspacios" runat="server"></asp:Label>
+                            <h6 class="col-sm-12 text-center mt-0">Información del Cliente</h6>
+                            <label class="col-6 m-0">Cliente</label>
+                            <asp:Label ID="lblResumenCliente" CssClass="col-6 m-0" runat="server">Willian Onandy Diaz Serrano</asp:Label>
+                            <label class="col-6 m-0">Edad</label>
+                            <asp:Label ID="lblResumenEdad" CssClass="col-6 m-0" runat="server">20 años</asp:Label>
+                            <label class="col-6 m-0">Trabajo</label>
+                            <asp:Label ID="lblResumenTrabajo" CssClass="col-6 m-0" runat="server">Prestadito SA de CV</asp:Label>
+                            <label class="col-6 m-0">Puesto</label>
+                            <asp:Label ID="lblResumenPuesto" CssClass="col-6 m-0" runat="server">Programador</asp:Label>
+                            <label class="col-6 m-0">Capacidad de Pago Mensual</label>
+                            <asp:Label ID="lblResumenCapacidadPagoMensual" CssClass="col-6 m-0" runat="server">37.25 LPS</asp:Label>
+                            <label class="col-6 m-0">Capacidad de Pago Quincenal</label>
+                            <asp:Label ID="lblResumenCapacidadPagoQuincenal" CssClass="col-6 m-0" runat="server">11.35 LPS</asp:Label>
                         </div>
                         <hr />
                         <div class="form-group row">
-                            <h6 class="col-sm-12 text-center mt-0">Información del domicilio</h6>
-                            <label class="col-sm-6 EliminarEspacios">Departamento</label>
-                            <asp:Label ID="lblResumenDeptoResidencia" CssClass="col-sm-6 EliminarEspacios" runat="server"></asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Municipio Residencia</label>
-                            <asp:Label ID="lblResumenMuniResidencia" CssClass="col-sm-6 EliminarEspacios" runat="server"></asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Bo. o Colonia</label>
-                            <asp:Label ID="lblResumenColResidencia" CssClass="col-sm-6 EliminarEspacios" runat="server"></asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Vivienda</label>
-                            <asp:Label ID="lblResumenTipoVivienda" CssClass="col-sm-6 EliminarEspacios" runat="server"></asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Tiempo de Residir</label>
-                            <asp:Label ID="lblResumenTiempoResidir" CssClass="col-sm-6 EliminarEspacios" runat="server"></asp:Label>
+                            <h6 class="col-sm-12 text-center mt-0">Información del Domicilio</h6>
+                            <label class="col-6 m-0">Departamento</label>
+                            <asp:Label ID="lblResumenDeptoResidencia" CssClass="col-6 m-0" runat="server">Cortés</asp:Label>
+                            <label class="col-6 m-0">Municipio Residencia</label>
+                            <asp:Label ID="lblResumenMuniResidencia" CssClass="col-6 m-0" runat="server">Choloma</asp:Label>
+                            <label class="col-6 m-0">Bo. o Colonia</label>
+                            <asp:Label ID="lblResumenColResidencia" CssClass="col-6 m-0" runat="server">Col. Edilberto Zolano</asp:Label>
+                            <label class="col-6 m-0">Vivienda</label>
+                            <asp:Label ID="lblResumenTipoVivienda" CssClass="col-6 m-0" runat="server">Propia</asp:Label>
+                            <label class="col-6 m-0">Tiempo de Residir</label>
+                            <asp:Label ID="lblResumenTiempoResidir" CssClass="col-6 m-0" runat="server">Más de 3 años</asp:Label>
                         </div>
                         <hr />
                         <div class="form-group row">
-                            <h6 class="col-sm-12 text-center mt-0">Información del Préstamo</h6>
-                            <label class="col-sm-6 EliminarEspacios">Préstamo Aprobado (Asesor de ventas)</label>
-                            <asp:Label ID="lblResumenPrestamoSugeridoSeleccionado" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
-                            <label id="lblResumenValorGarantiaTitulo" class="col-sm-6 EliminarEspacios" style="display: none;">Valor de la Garantía</label>
-                            <asp:Label ID="lblResumenValorGarantia" CssClass="col-sm-6 EliminarEspacios" runat="server" Style="display: none;"> - </asp:Label>
-                            <label id="lblResumenValorPrimaTitulo" class="col-sm-6 EliminarEspacios" style="display: none;">Valor de la Prima</label>
-                            <asp:Label ID="lblResumenValorPrima" CssClass="col-sm-6 EliminarEspacios" runat="server" Style="display: none;"> - </asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Monto a Financiar (Asesor de ventas)</label>
-                            <asp:Label ID="lblResumenValorFinanciar" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
-                            <label id="lblResumenCuotaTitulo" class="col-sm-6 EliminarEspacios">N Cuotas</label>
-                            <asp:Label ID="lblResumenCuota" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
-
-                            <label class="col-sm-6 EliminarEspacios">Monto Final a Financiar</label>
-                            <asp:Label ID="lblResumenMontoFinalFinanciar" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
-                            <label id="lblResumenCuotaFinalFinanciarTitulo" class="col-sm-6 EliminarEspacios">Cuotas</label>
-                            <asp:Label ID="lblResumenCuotaFinalFinanciar" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
+                            <h6 class="col-sm-12 text-center mt-0">Información del Préstamo Solicitado</h6>
+                            <label class="col-6 m-0">Monto a financiar</label>
+                            <asp:Label ID="lblResumenPrestamoSugeridoSeleccionado" CssClass="col-6 m-0" runat="server"> 520.96 LPS </asp:Label>
+                            <label id="lblResumenValorGarantiaTitulo" class="col-6 m-0" style="display: none;">Valor del vehículo</label>
+                            <asp:Label ID="lblResumenValorGarantia" CssClass="col-6 m-0" runat="server" Style="display: none;"> 1,000 LPS </asp:Label>
+                            <label id="lblResumenValorPrimaTitulo" class="col-6 m-0" style="display: none;">Valor de la Prima</label>
+                            <asp:Label ID="lblResumenValorPrima" CssClass="col-6 m-0" runat="server" Style="display: none;"> 479.04 </asp:Label>
+                            <label class="col-6 m-0">Plazo mensual</label>
+                            <asp:Label ID="lblResumenValorFinanciar" CssClass="col-6 m-0" runat="server"> 36 </asp:Label>
+                            <label id="lblResumenCuotaTitulo" class="col-6 m-0">36 Cuotas</label>
+                            <asp:Label ID="lblResumenCuota" CssClass="col-6 m-0" runat="server"> 22.48 LPS </asp:Label>
                         </div>
                         <hr />
                         <div class="form-group row">
                             <h6 class="col-sm-12 text-center mt-0">Información de Perfil</h6>
-                            <label class="col-sm-6 EliminarEspacios">Tipo de Empresa</label>
-                            <asp:Label ID="lblResumenTipoEmpresa" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Tipo de Perfil</label>
-                            <asp:Label ID="lblResumenTipoPerfil" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Tipo de Empleo</label>
-                            <asp:Label ID="lblResumenTipoEmpleo" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Buro Actual</label>
-                            <asp:Label ID="lblResumenBuroActual" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
+                            <label class="col-6 m-0">Tipo de Empresa</label>
+                            <asp:Label ID="lblResumenTipoEmpresa" CssClass="col-6 m-0" runat="server"> Privada </asp:Label>
+                            <label class="col-6 m-0">Tipo de Perfil</label>
+                            <asp:Label ID="lblResumenTipoPerfil" CssClass="col-6 m-0" runat="server"> Asalariado </asp:Label>
+                            <label class="col-6 m-0">Tipo de Empleo</label>
+                            <asp:Label ID="lblResumenTipoEmpleo" CssClass="col-6 m-0" runat="server"> Formal </asp:Label>
+                            <label class="col-6 m-0">Buro Actual</label>
+                            <asp:Label ID="lblResumenBuroActual" CssClass="col-6 m-0" runat="server"> Sin Historial </asp:Label>
                         </div>
                         <hr />
                         <div class="form-group row">
-                            <h6 class="col-sm-12 text-center mt-0">Personal validador</h6>
-                            <label class="col-sm-6 EliminarEspacios">Asesor de Ventas</label>
-                            <asp:Label ID="lblResumenVendedor" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Analista</label>
-                            <asp:Label ID="lblResumenAnalista" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Gestor Domicilio</label>
-                            <asp:Label ID="lblResumenGestorDomicilio" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
-                            <label class="col-sm-6 EliminarEspacios">Gestor Trabajo</label>
-                            <asp:Label ID="lblResumenGestorTrabajo" CssClass="col-sm-6 EliminarEspacios" runat="server"> - </asp:Label>
+                            <h6 class="col-sm-12 text-center mt-0">Personal Validador</h6>
+                            <label class="col-6 m-0">Asesor de Ventas</label>
+                            <asp:Label ID="lblResumenVendedor" CssClass="col-6 m-0" runat="server"> Willian D </asp:Label>
+                            <label class="col-6 m-0">Analista</label>
+                            <asp:Label ID="lblResumenAnalista" CssClass="col-6 m-0" runat="server"> Willian D </asp:Label>
+                            <label class="col-6 m-0">Gestor Domicilio</label>
+                            <asp:Label ID="lblResumenGestorDomicilio" CssClass="col-6 m-0" runat="server"> Willian D </asp:Label>
+                            <label class="col-6 m-0">Gestor Trabajo</label>
+                            <asp:Label ID="lblResumenGestorTrabajo" CssClass="col-6 m-0" runat="server"> Willian D </asp:Label>
 
                         </div>
                     </div>
@@ -2122,6 +2061,28 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
             </div>
         </div>
 
+        <!-- modal aprobar una solicitud -->
+        <div id="modalActualizarInformacionPerfil" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalActualizarInformacionPerfilLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0 font-weight-bold" id="modalActualizarInformacionPerfilLabel">Actualizar información de perfil</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <label>¿Está seguro de actualizar la información de perfil?</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="ActualizarInformacionDePerfil()" class="btn btn-info">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>

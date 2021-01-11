@@ -64,9 +64,9 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
+                    CargarListados();
                     CargarInformacionClienteSolicitud();
                     CargarInformacionGarantia();
-                    CargarListados();
                 }
                 else
                 {
@@ -391,11 +391,29 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 }
                             }
 
-                            txtTipoDeEmpresa.Text = sqlResultado["fcTipoEmpresa"].ToString();
-                            txtTipoDePerfil.Text = sqlResultado["fcTipoPerfil"].ToString();
-                            txtTipoDeEmpleo.Text = sqlResultado["fcTipoEmpleado"].ToString();
-                            txtBuroActual.Text = sqlResultado["fcBuroActual"].ToString();
-                            txtOrigen.Text = sqlResultado["fcOrigen"].ToString();
+                            if (sqlResultado["fcTipoEmpresa"].ToString() != "")
+                            {
+                                ddlTipoDeEmpresa.SelectedValue = sqlResultado["fcTipoEmpresa"].ToString();
+                                ddlTipoDeEmpresa.Enabled = false;
+                            }
+
+                            if (sqlResultado["fcTipoPerfil"].ToString() != "")
+                            {
+                                ddlTipoDePerfil.SelectedValue = sqlResultado["fcTipoPerfil"].ToString();
+                                ddlTipoDePerfil.Enabled = false;
+                            }
+
+                            if (sqlResultado["fcTipoEmpleado"].ToString() != "")
+                            {
+                                ddlTipoDeEmpleo.SelectedValue = sqlResultado["fcTipoEmpleado"].ToString();
+                                ddlTipoDeEmpleo.Enabled = false;
+                            }
+
+                            if (sqlResultado["fcBuroActual"].ToString() != "")
+                            {
+                                ddlBuroActual.SelectedValue = sqlResultado["fcBuroActual"].ToString();
+                                ddlBuroActual.Enabled = false;
+                            }
 
                             /****** Comentarios del procesamiento de la solicitud *SE HACE EN EL FRONTEND* ******/
 
@@ -600,11 +618,10 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                             while (sqlResultado.Read())
                             {
 
-                                stringDatas = "data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-telefono='" + sqlResultado["fcTelefonoReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-analista = '" + sqlResultado["fcNombreCorto"] + "' data-sincomunicacion = " + sqlResultado["fbSinComunicacion"].ToString().ToLower() + " data-fechaanalisis= '" + (DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()) == procesoPendiente ? (sqlResultado["fcNombreCorto"].ToString() != "" ? "Fecha no disponible" : "") : DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()).ToString("MM/dd/yyyy hh:mm tt")) + "'";
-
+                                stringDatas = "data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-telefono='" + sqlResultado["fcTelefonoReferencia"].ToString() + "' data-idtiempodeconocer='" + sqlResultado["fiTiempoConocerReferencia"].ToString() + "' data-idparentesco='" + sqlResultado["fiIDParentescoReferencia"].ToString() + "' data-lugardetrabajo='" + sqlResultado["fcLugarTrabajoReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-analista='" + sqlResultado["fcNombreCorto"] + "' data-sincomunicacion=" + sqlResultado["fbSinComunicacion"].ToString().ToLower() + " data-fechaanalisis='" + (DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()) == procesoPendiente ? (sqlResultado["fcNombreCorto"].ToString() != "" ? "Fecha no disponible" : "") : DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()).ToString("MM/dd/yyyy hh:mm tt")) + "'";
                                 btnComentarioReferenciaPersonal = "<button type='button' id='btnComentarioReferencia' " + stringDatas + " class='btn btn-sm btn-info far fa-comments' title='Ver observaciones del depto. de crédito'></button>";
                                 btnActualizarReferencia = "<button type='button' id='btnActualizarReferencia' " + stringDatas + " class='btn btn-sm btn-info far fa-edit' title='Editar'></button>";
-                                btnEliminarReferencia = "<button type='button' id='btnEliminarReferencia' onclick='AbrirModalEliminarReferenciaPersonal(" + sqlResultado["fiIDReferencia"].ToString()  + ")' class='btn btn-sm btn-danger far fa-trash-alt' title='Eliminar'></button>";
+                                btnEliminarReferencia = "<button type='button' id='btnEliminarReferencia' onclick='AbrirModalEliminarReferenciaPersonal(" + sqlResultado["fiIDReferencia"].ToString() + ")' class='btn btn-sm btn-danger far fa-trash-alt' title='Eliminar'></button>";
 
                                 tRowReferencias = new TableRow();
                                 tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcNombreCompletoReferencia"].ToString() });
@@ -794,6 +811,23 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     }
                 } // using cammnd catalogo tiempo de conocer
             } // using connection
+
+            ddlTipoDeEmpresa.Items.Add(new ListItem("Seleccionar", ""));
+            ddlTipoDeEmpresa.Items.Add(new ListItem("Privada", "Privada"));
+            ddlTipoDeEmpresa.Items.Add(new ListItem("Publica", "Publica"));
+            ddlTipoDeEmpresa.Items.Add(new ListItem("Propia", "Propia"));
+
+            ddlTipoDePerfil.Items.Add(new ListItem("Seleccionar", ""));
+            ddlTipoDePerfil.Items.Add(new ListItem("Formal", "Formal"));
+            ddlTipoDePerfil.Items.Add(new ListItem("Informal", "Informal"));
+
+            ddlTipoDeEmpleo.Items.Add(new ListItem("Seleccionar", ""));
+            ddlTipoDeEmpleo.Items.Add(new ListItem("Asalariado", "Asalariado"));
+            ddlTipoDeEmpleo.Items.Add(new ListItem("Comerciante", "Comerciante"));
+
+            ddlBuroActual.Items.Add(new ListItem("Seleccionar", ""));
+            ddlBuroActual.Items.Add(new ListItem("Con Historial", "Con Historial"));
+            ddlBuroActual.Items.Add(new ListItem("Sin Historial", "Sin Historial"));
         }
         catch (Exception ex)
         {
@@ -979,6 +1013,10 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 EnColaFin = (DateTime)sqlResultado["fdEnColaFin"],
                                 EnAnalisisInicio = (DateTime)sqlResultado["fdEnAnalisisInicio"],
                                 UsuarioAnalista = (string)sqlResultado["fcUsuarioAnalista"],
+                                DocumentacionIdentidadesValidada = (byte)sqlResultado["fbValidacionDocumentcionIdentidades"],
+                                DocumentacionDomicilioValidada = (byte)sqlResultado["fbValidacionDocumentacionDomiciliar"],
+                                DocumentacionLaboralValidada = (byte)sqlResultado["fbValidacionDocumentacionLaboral"],
+                                DocumentacionSolicitudFisicaValidada = (byte)sqlResultado["fbValidacionDocumentacionSolicitudFisica"],
                                 FechaValidacionInformacionPersonal = (DateTime)sqlResultado["fdAnalisisTiempoValidarInformacionPersonal"],
                                 ComentarioValidacionInformacionPersonal = (string)sqlResultado["fcComentarioValidacionInfoPersonal"],
                                 FechaValidacionDocumentacion = (DateTime)sqlResultado["fdAnalisisTiempoValidarDocumentos"],
@@ -1061,7 +1099,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1072,7 +1110,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                     sqlComando.Parameters.AddWithValue("@pcTipoDeValidacion", tipoDeValidacion);
-                    sqlComando.Parameters.AddWithValue("@pcComentario", comentario);
+                    sqlComando.Parameters.AddWithValue("@pcComentario", comentario.Trim());
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -1101,7 +1139,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
@@ -1140,7 +1178,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
@@ -1177,18 +1215,6 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string ObtenerUrlEncriptado(string dataCrypt)
-    {
-        Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-        string pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
-        string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-        string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-        string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-
-        return DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
-    }
-
-    [WebMethod]
     public static bool ActualizarIngresosDelCliente(int idCliente, decimal sueldoBaseReal, decimal bonosComisionesReal, string dataCrypt)
     {
         var resultado = false;
@@ -1197,7 +1223,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
@@ -1239,7 +1265,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
@@ -1282,7 +1308,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
             string pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
@@ -1407,7 +1433,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             string identidad = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1459,7 +1485,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
             using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1688,7 +1714,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Administracion de referencias personales *Pendiente frontend *
+    #region Administracion de referencias personales
 
     [WebMethod]
     public static List<SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel> ListadoReferenciasPersonalesPorIdSolicitud(string dataCrypt)
@@ -1824,12 +1850,11 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (sqlResultado.Read())
+                        sqlResultado.Read();
+
+                        if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                         {
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                            {
-                                resultado = true;
-                            }
+                            resultado = true;
                         }
                     }
                 } // using sqlComando
@@ -1874,12 +1899,11 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (sqlResultado.Read())
+                        sqlResultado.Read();
+
+                        if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                         {
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                            {
-                                resultado = true;
-                            }
+                            resultado = true;
                         }
                     }
                 }
@@ -1918,12 +1942,11 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (sqlResultado.Read())
+                        sqlResultado.Read();
+
+                        if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                         {
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                            {
-                                resultado = true;
-                            }
+                            resultado = true;
                         }
                     } // using sqlComando.ExecuteReader()
                 } // using sqlComando
@@ -1980,6 +2003,18 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         return Math.Abs(monthsApart);
     }
 
+    [WebMethod]
+    public static string ObtenerUrlEncriptado(string dataCrypt)
+    {
+        Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+        string pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
+        string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+        string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+        string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+        return DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
+    }
+
     #endregion
 
     #region View Models
@@ -2030,7 +2065,6 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         public string DescripcionParentesco { get; set; }
         public bool ReferenciaActivo { get; set; }
         public string RazonInactivo { get; set; }
-
         public string AnalistaComentario { get; set; }
         public string ComentarioDeptoCredito { get; set; }
         public bool SinComunicacion { get; set; }
@@ -2065,6 +2099,13 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         public DateTime EnColaFin { get; set; }
         public DateTime EnAnalisisInicio { get; set; }
         public string UsuarioAnalista { get; set; }
+
+        public int DocumentacionIdentidadesValidada { get; set; }
+        public int DocumentacionDomicilioValidada { get; set; }
+        public int DocumentacionLaboralValidada { get; set; }
+        public int DocumentacionSolicitudFisicaValidada { get; set; }
+
+
         public DateTime FechaValidacionInformacionPersonal { get; set; }
         public string ComentarioValidacionInformacionPersonal { get; set; }
         public DateTime FechaValidacionDocumentacion { get; set; }
@@ -2136,6 +2177,5 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
             CondicionesDeLaSolicitud = new List<SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel>();
         }
     }
-
     #endregion
 }
