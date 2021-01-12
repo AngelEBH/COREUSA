@@ -982,6 +982,31 @@
     <Content Include="Documentos\Solicitudes\Solicitud885\G_885_5NPDH4AE0GH725364_d712b5a9-5b01-4a00-a577-a00b44c7ace7.png" />
     <Content Include="Documentos\Solicitudes\Solicitud885\G_885_5NPDH4AE0GH725364_db3a537b-666a-41c2-a0ed-18299ecc455c.png" />
     <Content Include="Documentos\Solicitudes\Solicitud885\G_885_5NPDH4AE0GH725364_ffdadbf4-9bdd-4f7d-be3e-1a4cae59732c.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\.png.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\.png.png.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D1-20214509T104512-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D18-20214509T104512-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D19-20214509T104512-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D2-20214509T104512-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D3-20214509T104512-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D4-20214509T104512-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D4-20214509T104512-1.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D4-20214509T104512-2.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D4-20214509T104512-3.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D5-20214509T104512-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D6-20214509T104512-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D7-20214509T104512-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\CTES959D8-20214509T104512-0.jpg" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\G_959_5XYPG4A39GG002117_26e9b606-a06f-40fe-b0a7-f4708df85499.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\G_959_5XYPG4A39GG002117_3569f68d-5b26-4091-b6f1-45c32e3143b8.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\G_959_5XYPG4A39GG002117_413a62bf-0e49-43cd-b871-9230422cb8eb.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\G_959_5XYPG4A39GG002117_5b9cab3a-fd82-4a7e-9d09-a058632a9d9c.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\G_959_5XYPG4A39GG002117_85f09152-c3b0-420b-add7-b4045216a587.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\G_959_5XYPG4A39GG002117_882acae0-19d0-4559-b76a-9e78c4ca27fa.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\G_959_5XYPG4A39GG002117_95c77e8c-14d7-40cc-af99-ecbb0bd5a68c.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\G_959_5XYPG4A39GG002117_c02a4ca6-889a-4d06-9469-749c0a874d86.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\G_959_5XYPG4A39GG002117_dafa4b23-b26d-4395-9736-f063079ade92.png" />
     <Content Include="favicon.ico" />
     <Content Include="Forms\Aval\Aval_Actualizar.aspx" />
     <Content Include="Forms\Aval\Aval_Detalles.aspx" />
@@ -990,6 +1015,8 @@
     <Content Include="Forms\Clientes\GestionCobranzaClienteDocumentos.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
     <Content Include="Forms\Movil\CotizadorCarros.aspx" />
+    <Content Include="Forms\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.aspx" />
+    <Content Include="Forms\SolicitudesGPS\SolicitudesGPS_Listado.aspx" />
     <Content Include="Forms\Solicitudes\Garantia_Actualizar.aspx" />
     <Content Include="Forms\Solicitudes\GarantiaSinSolicitud_Detalles.aspx" />
     <Content Include="Forms\Solicitudes\Garantia_Registrar.aspx" />
@@ -1352,6 +1379,8 @@
     <Content Include="Scripts\app\CoreMovil\BandejaMisSolicitudes.js" />
     <Content Include="Scripts\app\CoreMovil\Clientes_BandejaPrecalificados.js" />
     <Content Include="Scripts\app\CoreMovil\CotizadorMovil.js" />
+    <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.js" />
+    <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_Listado.js" />
     <Content Include="Scripts\app\solicitudes\Garantia_Actualizar.js" />
     <Content Include="Scripts\app\solicitudes\PreSolicitud_Guardar.js" />
     <Content Include="Scripts\app\solicitudes\Garantia_Registrar.js" />
@@ -1822,6 +1851,20 @@
     <Compile Include="Forms\Movil\CotizadorCarros.aspx.designer.cs">
       <DependentUpon>CotizadorCarros.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.aspx.cs">
+      <DependentUpon>SolicitudesGPS_RevisionGarantia.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.aspx.designer.cs">
+      <DependentUpon>SolicitudesGPS_RevisionGarantia.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SolicitudesGPS\SolicitudesGPS_Listado.aspx.cs">
+      <DependentUpon>SolicitudesGPS_Listado.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SolicitudesGPS\SolicitudesGPS_Listado.aspx.designer.cs">
+      <DependentUpon>SolicitudesGPS_Listado.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Solicitudes\Garantia_Actualizar.aspx.cs">
       <DependentUpon>Garantia_Actualizar.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2240,6 +2283,7 @@
     <Content Include="Content\css\bootstrap.min.css.map" />
     <Content Include="Content\fonts\DejaVu\DejaVuSans-Bold.ttf" />
     <Content Include="Documentos\Recursos\INSPECCION DE VEHICULO.pdf" />
+    <Content Include="Documentos\Solicitudes\Solicitud959\Thumbs.db" />
     <None Include="packages.config" />
     <Content Include="Scripts\plugins\datatables\json\scroller-demo.json" />
     <Content Include="Scripts\plugins\dropzone\dist\readme.md" />

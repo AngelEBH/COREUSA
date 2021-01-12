@@ -277,7 +277,6 @@ $(document).ready(function () {
         }
     });
 
-    /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
 
         if (tabActivo == 'tab_Listado_Solicitudes_Garantias') {
