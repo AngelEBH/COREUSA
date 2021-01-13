@@ -274,15 +274,6 @@ public partial class SolicitudesGPS_RevisionGarantia
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesResultadoRevision;
 
     /// <summary>
-    /// Control btnAceptarSolicitud.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlButton btnAceptarSolicitud;
-
-    /// <summary>
     /// Control btnRechazar.
     /// </summary>
     /// <remarks>

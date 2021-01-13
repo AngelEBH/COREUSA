@@ -79,3 +79,19 @@ p {
     text-justify: inter-word !important;
     color: black;
 }
+
+.pl-100px{
+    padding-left: 100px !important;
+}
+
+.pl-80px {
+    padding-left: 80px !important;
+}
+
+.pl-60px {
+    padding-left: 60px !important;
+}
+
+.pl-70px {
+    padding-left: 70px !important;
+}

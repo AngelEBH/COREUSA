@@ -57,7 +57,7 @@
             <div class="row mb-0">
                 <div class="col-md-12">
                     <div class="form-group row">
-                        <div class="col-lg-3 col-sm-6 col-6">
+                        <%--<div class="col-lg-3 col-sm-6 col-6">
                             <label class="col-form-label">Búsqueda por Mes</label>
                             <select id="ddlMes" class="form-control form-control-sm">
                                 <option value="" selected="selected">Seleccionar</option>
@@ -78,7 +78,7 @@
                         <div class="col-lg-3 col-sm-6 col-6">
                             <label class="col-form-label">Búsqueda por Año</label>
                             <input id="añoIngreso" class="form-control form-control-sm" type="text" />
-                        </div>
+                        </div>--%>
 
                         <div class="col-lg-6 col-sm-6 col-12">
                             <label class="col-form-label">Búsqueda por Fecha</label>

@@ -34,10 +34,10 @@
             white-space: nowrap
         }
 
-        .scroll-area-sm {
+        /*.scroll-area-sm {
             height: 50vh;
             overflow-x: hidden
-        }
+        }*/
 
         .todo-indicator {
             position: absolute;
@@ -71,8 +71,8 @@
             background-color: #fff
         }
 
-        .sw-theme-default .sw-toolbar{
-            background:#fff;
+        .sw-theme-default .sw-toolbar {
+            background: #fff;
         }
     </style>
 </head>
@@ -278,8 +278,8 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="widget-content-right">
-                                                                        <button class="border-0 btn-transition btn btn-outline-success" type="button"><i class="fas fa-check"></i></button>
-                                                                        <button class="border-0 btn-transition btn btn-outline-danger" type="button"><i class="fas fa-times"></i></button>
+                                                                        <button class="border-0 btn-transition btn btn-outline-success" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-check"></i></button>
+                                                                        <button class="border-0 btn-transition btn btn-outline-danger" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-times"></i></button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -296,8 +296,8 @@
                                                                         <%--<div class="widget-subheading">Confirmación del estado mecánico de la garantía</div>--%>
                                                                     </div>
                                                                     <div class="widget-content-right">
-                                                                        <button class="border-0 btn-transition btn btn-outline-success" type="button"><i class="fas fa-check"></i></button>
-                                                                        <button class="border-0 btn-transition btn btn-outline-danger" type="button"><i class="fas fa-times"></i></button>
+                                                                        <button class="border-0 btn-transition btn btn-outline-success" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-check"></i></button>
+                                                                        <button class="border-0 btn-transition btn btn-outline-danger" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-times"></i></button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -314,8 +314,8 @@
                                                                         <%--<div class="widget-subheading"> Confirmación del estado estético de la garantía </div>--%>
                                                                     </div>
                                                                     <div class="widget-content-right">
-                                                                        <button class="border-0 btn-transition btn btn-outline-success" type="button"><i class="fas fa-check"></i></button>
-                                                                        <button class="border-0 btn-transition btn btn-outline-danger" type="button"><i class="fas fa-times"></i></button>
+                                                                        <button class="border-0 btn-transition btn btn-outline-success" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-check"></i></button>
+                                                                        <button class="border-0 btn-transition btn btn-outline-danger" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-times"></i></button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -324,9 +324,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <%--<div class="d-block text-right card-footer">
-                                            <button class="btn btn-info">Finalizar revisión</button>
-                                        </div>--%>
+                                        <div class="d-block text-center">
+                                            <button class="btn btn-info">Confirmar y enviar</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -355,10 +355,10 @@
                             </div>
                             <div class="col-12 text-center">
                                 <div class="button-items pb-2">
-                                    <button runat="server" id="btnAceptarSolicitud" type="button" data-toggle="modal" disabled="disabled" data-target="#modalResolucionAprobar" title="" class="btn btn-success waves-effect waves-light validador">
+                                    <%--<button runat="server" id="btnAceptarSolicitud" type="button" data-toggle="modal" disabled="disabled" data-target="#modalResolucionAprobar" title="" class="btn btn-success waves-effect waves-light validador">
                                         <i class="fas fa-thumbs-up"></i>
                                         Aceptar
-                                    </button>
+                                    </button>--%>
                                     <button runat="server" id="btnRechazar" type="button" data-toggle="modal" data-target="#modalResolucionRechazar" class="btn btn-danger waves-effect waves-light validador">
                                         <i class="fas fa-thumbs-down"></i>
                                         Rechazar

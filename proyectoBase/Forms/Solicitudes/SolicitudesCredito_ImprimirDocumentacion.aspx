@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -18,7 +18,7 @@
     <form id="frmGuardarPreSolicitud" runat="server">
         <div class="card m-0">
             <div class="card-header pb-1 pt-1">
-                <div class="float-right p-1" id="Loader" style="display: none;">
+                <div class="float-right p-1 qrCode" id="Loader" style="display: none;">
                     <div class="spinner-border" role="status">
                         <span class="sr-only"></span>
                     </div>
@@ -773,12 +773,10 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDF">
                 <div class="card-body pt-0">
                     <div class="row">
-                        <div class="col-12 m-0 p-0">
-                            <img src="/Imagenes/LogoPrestadito.png" />
-                        </div>
-                        <div class="col-12">
-                            <h5 class="text-center font-weight-bold">INSPECCIÓN SEGURO DE VEHÍCULO</h5>
-                            <hr />
+                        <div class="col-12 p-0 text-center mb-3">
+                            <div class="float-left"><img src="/Imagenes/LogoPrestadito.png" /></div>
+                            <div class="float-right" id="qrCode_InspeccionSeguro"></div>
+                            <div class="pt-5"><h5 class="text-center pl-70px font-weight-bold">INSPECCIÓN SEGURO DE VEHÍCULO</h5></div>
                         </div>
                     </div>
                     <div class="row">
@@ -1750,8 +1748,13 @@ de lo acá establecido se firma y se estampa huella digital en fecha
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
+    <script src="/Scripts/plugins/qrcode/qrcode.js"></script>
+    <script src="/Scripts/plugins/qrious/qrious.min.js"></script>
     <script>
 
+        const idSolicitud = '<%=pcIDSolicitud%>';
+
+        /* Incializar galerias */
         $("#divGaleriaGarantia").unitegallery({
             gallery_width: 900,
             gallery_height: 600
@@ -1767,18 +1770,36 @@ de lo acá establecido se firma y se estampa huella digital en fecha
         $("#divContenedorInspeccionSeguro").css('margin-top', '999px').css('display', 'none');
         $("#divInspeccionSeguroPDF").css('display', 'none');
 
-        const departamentoFirma = '<%=DepartamentoFirma%>';
-        const ciudadFirma = '<%=CiudadFirma%>';
-        const diafirma = '<%=DiasFirma%>';
-        const mesFirma = ' <%=MesFirma%>';
-        const anioFirma = ' <%=AnioFirma%>';
-        const idSolicitud = '<%=pcIDSolicitud%>';
+        /* Información de los documentos */
+        $('.lblDepartamento_Firma').text('<%=DepartamentoFirma%>');
+        $('.lblCiudad_Firma').text('<%=CiudadFirma%>');
+        $('.lblNumeroDia_Firma').text('<%=DiasFirma%>');
+        $('.lblMes_Firma').text('<%=MesFirma%>');
+        $('.lblAnio_Firma').text('<%=AnioFirma%>');
 
-        $('.lblDepartamento_Firma').text(departamentoFirma);
-        $('.lblCiudad_Firma').text(ciudadFirma);
-        $('.lblNumeroDia_Firma').text(diafirma);
-        $('.lblMes_Firma').text(mesFirma);
-        $('.lblAnio_Firma').text(anioFirma);
+
+        $(document).ready(function () {
+
+            InicializarCodigosQR();
+        });
+
+        function InicializarCodigosQR() {
+
+            GenerarCodigoQR('qrCode_InspeccionSeguro');
+        };
+
+        /* Generar QR */
+        function GenerarCodigoQR(idElemento) {
+
+            let textQr = '<%=UrlCodigoQR%>';
+
+            let qrcode = new QRCode(document.getElementById('' + idElemento + ''), {
+                width: 70,
+                height: 70
+            });
+
+            qrcode.makeCode(textQr);
+        }
 
         function ExportToPDF(fileName, divContenedor, divPDF) {
 
@@ -1844,6 +1865,27 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                 message: mensaje
             });
         }
+
+        // prueba nuevo qr
+
+        var qr;
+        (function () {
+            qr = new QRious({
+                element: document.getElementById('qrCode_InspeccionSeguro'),
+                size: 200,
+                value: '<%=UrlCodigoQR%>'
+            });
+        })();
+
+        function generateQRCode() {
+            var qrtext = '<%=UrlCodigoQR%>';
+            qr.set({
+                foreground: 'black',
+                size: 200,
+                value: qrtext
+            });
+        }
+
     </script>
 </body>
 </html>
