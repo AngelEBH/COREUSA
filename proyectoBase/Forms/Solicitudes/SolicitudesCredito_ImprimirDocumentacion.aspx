@@ -1739,6 +1739,35 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                 </div>
             </div>
         </div>
+
+
+        <div id="divContenedorCorreoLiquidacionx" style="/*display: none;*/">
+            <div id="divCorreoLiquidacionPDFx">
+                <table border='1' style='width: 600px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;'>
+                    <thead>
+                        <tr>
+                            <th colspan='2' style='text-align:center; font-weight:bold'>REVISIONES REALIZADAS</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <th colspan='2' style='text-align: left; font-weight: bold;'><b>REVISIÓN MECÁNICA</b></th>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>Estado</th>
+                        <td>
+                            APROBADO
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style='text-align: left;'>Observaciones</th>
+                        <td>
+                            NO SE ENCONTRARON DESPERFECTOS MECÁNICOS. VEHICULO EN PERFECTO ESTADO
+                        </td>
+                    </tr>                    
+                </table>
+            </div>
+        </div>
+
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>

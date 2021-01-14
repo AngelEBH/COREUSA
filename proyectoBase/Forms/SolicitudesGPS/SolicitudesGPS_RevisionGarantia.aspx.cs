@@ -1,17 +1,33 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Web;
+using System.Web.Services;
 
 public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
 {
+    #region Propiedades
+
     public string pcIDApp = "";
     public string pcIDSesion = "";
     public string pcIDUsuario = "";
-    public string pcIDSolicitud = "";
+    public string pcIDGarantia = "";
+    public string pcIDSolicitudCredito = "";
+    public string pcIDSolicitudSolicitudGPS = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+
+    public List<Garantia_Revision_ViewModel> RevisionesDeLaGarantia = new List<Garantia_Revision_ViewModel>();
+    public string RevisionesDeLaGarantiaJSON = ""; // Serializar a formato JSON el listado de revisiones de la garantia para pasarlo a variable JS en el .aspx
+
+    #endregion
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -43,9 +59,15 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
+                    pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    pcIDSolicitudSolicitudGPS = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSolicitudGPS") ?? "0";
 
+                    /* Cagrar información de la garantía y el listado de revisiones de la garantía */
                     CargarInformacion();
+
+                    /* Serializar a formato JSON el listado de revisiones de la garantia para pasarlo a variable JS en el .aspx */
+                    RevisionesDeLaGarantiaJSON = JsonConvert.SerializeObject(RevisionesDeLaGarantia);
                 }
             }
             catch (Exception ex)
@@ -69,14 +91,14 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitudCredito);
                     sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         if (!sqlResultado.HasRows)
                         {
-                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitud + "&IDApp=" + pcIDApp) + "','_self')";
+                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitudCredito + "&IDApp=" + pcIDApp) + "','_self')";
                             Response.Write("<script>");
                             Response.Write(lcScript);
                             Response.Write("</script>");
@@ -95,7 +117,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
 
                             if (!sqlResultado.HasRows)
                             {
-                                string lcScript = "window.open('Garantia_Registrar.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitud + "&IDApp=" + pcIDApp + "&IDSOL=" + pcIDSolicitud) + "','_self')";
+                                string lcScript = "window.open('Garantia_Registrar.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitudCredito + "&IDApp=" + pcIDApp + "&IDSOL=" + pcIDSolicitudCredito) + "','_self')";
                                 Response.Write("<script>");
                                 Response.Write(lcScript);
                                 Response.Write("</script>");
@@ -138,15 +160,81 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                                 else
                                 {
                                     var imagenesGarantia = new StringBuilder();
+                                    var url = string.Empty;
 
                                     while (sqlResultado.Read())
                                     {
-                                        imagenesGarantia.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
+                                        url = @"http://172.20.3.140/" + sqlResultado["fcURL"].ToString();
+
+                                        imagenesGarantia.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + url + "' data-image='" + url + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
                                     }
                                     divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
                                 }
                             } // else !sqlResultado.HasRows
                         } // while sqlResultado.Read()
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
+
+                using (var sqlComando = new SqlCommand("sp_CREDGarantias_Revisiones_ListarPorIdGarantia", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        var templateRevisiones = new StringBuilder();
+                        var idEstadoRevision = 0;
+                        var estadoRevision = string.Empty;
+                        var estadoRevisionClassName = string.Empty;
+                        var dataString = string.Empty;
+                        var btnResultadoRevision = string.Empty;
+
+                        while (sqlResultado.Read())
+                        {
+                            idEstadoRevision = (int)sqlResultado["fiIDEstadoRevision"];
+                            estadoRevision = sqlResultado["fcEstadoRevision"].ToString();
+                            estadoRevisionClassName = sqlResultado["fcEstadoRevisionClassName"].ToString();
+                            dataString = "data-id='" + sqlResultado["fiIDRevision"].ToString() + "' data-revision='" + sqlResultado["fcNombreRevision"] + "' data-descripcion='" + sqlResultado["fcDescripcionRevision"] + "' data-observaciones='" + sqlResultado["fcObservaciones"] + "' ";
+
+                            btnResultadoRevision = "<button id='btnResultadoRevision' class='border-0 btn-transition btn btn-outline-warning' " + dataString + " type='button'><i class='fas fa-edit'></i></button>";
+
+                            templateRevisiones.Append(
+                                "<li class='list-group-item'>" +
+                                    "<div class='todo-indicator bg-" + estadoRevisionClassName + "' id='todo-indicator-revision-" + sqlResultado["fiIDRevision"] + "'></div>" +
+                                    "<div class='widget-content p-0'>" +
+                                        "<div class='widget-content-wrapper'>" +
+                                            "<div class='widget-content-left flex2'>" +
+                                                "<div class='widget-heading'>" +
+                                                    sqlResultado["fcNombreRevision"].ToString() +
+                                                    "<div class='badge badge-" + estadoRevisionClassName + " ml-2' id='badge-revision-" + sqlResultado["fiIDRevision"] + "'>" + estadoRevision + "</div>" +
+                                                "</div>" +
+                                            "</div>" +
+                                            "<div class='widget-content-right'>" +
+                                                btnResultadoRevision +
+                                            "</div>" +
+                                        "</div>" +
+                                    "</div>" +
+                                "</li>");
+
+                            RevisionesDeLaGarantia.Add(new Garantia_Revision_ViewModel()
+                            {
+                                IdGarantiaRevision = (int)sqlResultado["fiIDGarantiaRevision"],
+                                IdGarantia = int.Parse(pcIDGarantia),
+                                IdRevision = (int)sqlResultado["fiIDRevision"],
+                                Revision = sqlResultado["fcNombreRevision"].ToString(),
+                                IdSolicitudGPS = int.Parse(pcIDSolicitudCredito),
+                                IdEstadoRevision = (int)sqlResultado["fiEstadoRevision"],
+                                EstadoRevision = estadoRevision,
+                                Observaciones = sqlResultado["fcObservaciones"].ToString()
+                            });
+                        }
+
+                        divRevisionesDeLaGarantia.InnerHtml += templateRevisiones.ToString();
+
                     } // using sqlComando.ExecuteReader()
                 } // using sqlComando
             } // using sqlConexion
@@ -157,10 +245,355 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
         }
     }
 
+    [WebMethod]
+    public static Resultado_ViewModel FinalizarRevisionGarantia(List<Garantia_Revision_ViewModel> revisionesGarantia, decimal recorrido, string unidadDeDistancia, string dataCrypt)
+    {
+        var resultado = new Resultado_ViewModel() { ResultadoExitoso = true };
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
+            var pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDSolicitudSolicitudGPS = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSolicitudGPS") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlTransaccion = sqlConexion.BeginTransaction("revisionGarantia"))
+                {
+                    try
+                    {
+                        foreach (Garantia_Revision_ViewModel item in revisionesGarantia)
+                        {
+                            using (var sqlComando = new SqlCommand("sp_CREDGarantias_Revisiones_Guardar", sqlConexion, sqlTransaccion))
+                            {
+                                sqlComando.CommandType = CommandType.StoredProcedure;
+                                sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
+                                sqlComando.Parameters.AddWithValue("@piIDRevision", item.IdRevision);
+                                sqlComando.Parameters.AddWithValue("@piIDAutoGPSInstalacion", pcIDSolicitudSolicitudGPS);
+                                sqlComando.Parameters.AddWithValue("@piEstadoRevision", item.IdEstadoRevision);
+                                sqlComando.Parameters.AddWithValue("@pcObservaciones", item.Observaciones.Trim());
+                                sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                                sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                                sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                                using (var sqlResultado = sqlComando.ExecuteReader())
+                                {
+                                    sqlResultado.Read();
+
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                    {
+                                        sqlTransaccion.Rollback();
+
+                                        resultado.ResultadoExitoso = false;
+                                        resultado.MensajeResultado = "Error al guardar resultado de la revisión: " + item.Revision + ", contacte al aministrador.";
+                                        resultado.MensajeDebug = "_Revisiones_Guardar";
+                                        return resultado;
+                                    }
+                                }
+                            }
+                        }
+
+                        using (var sqlComando = new SqlCommand("sp_CREDGarantias_Revisiones_ActualizarMillaje", sqlConexion, sqlTransaccion))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
+                            sqlComando.Parameters.AddWithValue("@pnRecorrido", recorrido);
+                            sqlComando.Parameters.AddWithValue("@pcUnidadDeDistancia", unidadDeDistancia);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                            using (var sqlResultado = sqlComando.ExecuteReader())
+                            {
+                                sqlResultado.Read();
+
+                                if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                {
+                                    sqlTransaccion.Rollback();
+
+                                    resultado.ResultadoExitoso = false;
+                                    resultado.MensajeResultado = "Error al actualizar millaje de la garantía, contacte al aministrador.";
+                                    resultado.MensajeDebug = "_Revisiones_ActualizarMillaje";
+                                    return resultado;
+                                }
+                            }
+                        }
+
+                        if (resultado.ResultadoExitoso == true)
+                        {
+                            sqlTransaccion.Commit();
+
+                            resultado.MensajeResultado = "Las revisiones se guardaron exitosamente";
+                            resultado.MensajeDebug = "";
+
+                            if (!EnviarCorreoRevisionDeGarantia(pcIDSolicitudCredito, revisionesGarantia, recorrido, unidadDeDistancia, pcIDUsuario, pcIDApp, pcIDSesion))
+                            {
+                                resultado.MensajeResultado = "Las revisiones se guardaron correctamente pero ocurrió un error al enviar el correo de confirmación.";
+                                resultado.MensajeDebug = "EnviarCorreoRevisionDeGarantia";
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        sqlTransaccion.Rollback();
+
+                        resultado.ResultadoExitoso = false;
+                        resultado.MensajeResultado = "Error al guardar resultado de la revisión: " + ex.Message.ToString() + ". Contacte al aministrador.";
+                        resultado.MensajeDebug = "_Revisiones_Guardar";
+                    }
+                } // using sqlTransacciomn
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado.ResultadoExitoso = false;
+            resultado.MensajeResultado = "Error al guardar resultado de la revisión: " + ex.Message.ToString() + ". Contacte al aministrador.";
+            resultado.MensajeDebug = "_Revisiones_Guardar";
+        }
+        return resultado;
+    }
+
+    public static Uri DesencriptarURL(string URL)
+    {
+        Uri lURLDesencriptado = null;
+        try
+        {
+            var liParamStart = 0;
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
+            liParamStart = URL.IndexOf("?");
+
+            if (liParamStart > 0)
+            {
+                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
+            }
+            else
+            {
+                lcParametros = string.Empty;
+            }
+
+            if (lcParametros != string.Empty)
+            {
+                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return lURLDesencriptado;
+    }
+
     protected void MostrarMensaje(string mensaje)
     {
         PanelMensajeErrores.Visible = true;
         lblMensaje.Visible = true;
         lblMensaje.Text = mensaje;
+    }
+
+    public static bool EnviarCorreoRevisionDeGarantia(string idSolicitudCredito, List<Garantia_Revision_ViewModel> revisionesGarantia, decimal recorrido, string unidadDeDistancia, string idUsuario, string idApp, string idSesion)
+    {
+        var resultado = false;
+
+        try
+        {
+            var usuarioVendedor = string.Empty;
+            var correoUsuarioVendedor = string.Empty;
+            var usuarioValidador = string.Empty;
+            var correoUsuarioValidador = string.Empty;
+            var VIN = string.Empty;
+            var marca = string.Empty;
+            var modelo = string.Empty;
+            var anio = string.Empty;
+            var color = string.Empty;
+            var nombreCliente = string.Empty;
+            var identidadCliente = string.Empty;
+            var contenidoCorreo = new StringBuilder();
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDGarantias_Revisiones_ObtenerDatosCorreo", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitudCredito", idSolicitudCredito);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", idSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", idApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        /* Información del vendedor de la solicitud y el usuario que validó la garantía */
+                        while (sqlResultado.Read())
+                        {
+                            usuarioVendedor = sqlResultado["fcUsuarioVendedor"].ToString();
+                            correoUsuarioVendedor = sqlResultado["fcCorreoUsuarioVendedor"].ToString();
+                            usuarioValidador = sqlResultado["fcUsuarioValidador"].ToString();
+                            correoUsuarioValidador = sqlResultado["fcCorreoUsuarioValidador"].ToString();
+                        }
+
+                        /* Información de la garantía */
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            VIN = sqlResultado["fcVin"].ToString();
+                            marca = sqlResultado["fcMarca"].ToString();
+                            modelo = sqlResultado["fcModelo"].ToString();
+                            anio = sqlResultado["fiAnio"].ToString();
+                            color = sqlResultado["fcColor"].ToString();
+                        }
+
+                        /* Información del cliente */
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            nombreCliente = sqlResultado["fcNombreCliente"].ToString();
+                            identidadCliente = sqlResultado["fcIdentidadCliente"].ToString();
+                        }
+
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+
+            /* Información basico y datos del cliente */
+            contenidoCorreo.Append("<table border='1' style='width: 600px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;'>" +
+                    "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>INFORMACIÓN BÁSICA</b></th></tr>" +
+                    "<tr><th style='text-align: left;'>Vendedor</th><td>" + usuarioVendedor + "</td></tr>" +
+                    "<tr><th style='text-align: left;'>Validado por</th><td>" + usuarioValidador + "</td></tr>" +
+                    "<tr><th style='text-align: left;'>VIN</th><td>" + VIN + "</td></tr>" +
+                    "<tr><th style='text-align: left;'>Marca</th><td>" + marca + "</td></tr><tr>" +
+                    "<th style='text-align: left;'>Modelo</th><td>" + modelo + "</td></tr>" +
+                    "<tr><th style='text-align: left;'>Año</th><td>" + anio + "</td></tr>" +
+                    "<tr><th style='text-align: left;'>Color</th><td>" + color + "</td></tr>" +
+                    "<tr><th colspan='2'><br /></th></tr>" +
+                    "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>DATOS DEL CLIENTE</b></th></tr>" +
+                    "<tr><th style='text-align: left;'>Nombre</th><td>" + nombreCliente + "</td></tr>" +
+                    "<tr><th style='text-align: left;'>Identidad</th><td>" + identidadCliente + "</td></tr>" +
+                    "</table>" +
+                    "<br />" +
+                    /* Inicio de la tabla de revisiones de la garantia y millaje actualizado */
+                    "<table border='1' style='width: 600px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;'>" +
+                    "<thead><tr><th colspan='2' style='text-align:center; font-weight:bold'>REVISIONES REALIZADAS</th></tr></thead>" +
+                    "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>Actualización de millaje</b></th></tr>" +
+                    "<tr><th style='text-align: left;'>Nuevo millaje</th><td>" + recorrido.ToString("N") + "</td></tr>" +
+                    "<tr><th style='text-align: left;'>Unidad de medida</th><td>" + unidadDeDistancia + "</td></tr>");
+
+
+            /* Revisiones realizadas */
+            foreach (var item in revisionesGarantia)
+            {
+                contenidoCorreo.Append(
+                    "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>" + item.Revision + "</b></th></tr>" +
+                    "<tr><th style='text-align: left;'>Estado</th><td>" + item.EstadoRevision + "</td></tr>" +
+                    "<tr><th style='text-align: left;'>Observaciones</th><td>" + item.Observaciones + "</td></tr>");
+            }
+
+            contenidoCorreo.Append("</table>");
+
+            resultado = EnviarCorreo("Revisión de garantía | Solicitud de crédito " + idSolicitudCredito, contenidoCorreo.ToString(), correoUsuarioVendedor);
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultado;
+    }
+
+    public static bool EnviarCorreo(string pcTituloGeneral, string pcContenidodelMensaje, string buzonCorreoUsuario)
+    {
+        var resultado = false;
+        try
+        {
+            var pmmMensaje = new MailMessage();
+            var smtpCliente = new SmtpClient();
+
+            smtpCliente.Host = "mail.miprestadito.com";
+            smtpCliente.Port = 587;
+            smtpCliente.Credentials = new System.Net.NetworkCredential("systembot@miprestadito.com", "iPwf@p3q");
+            smtpCliente.EnableSsl = true;
+
+            pmmMensaje.Subject = "Revisión de garantía";
+            pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
+            //pmmMensaje.To.Add("sistemas@miprestadito.com");
+            pmmMensaje.CC.Add("willian.diaz@miprestadito.com");
+            //pmmMensaje.CC.Add(buzonCorreoUsuario);
+            pmmMensaje.IsBodyHtml = true;
+
+            string htmlString = @"<!DOCTYPE html> " +
+                        "<html>" +
+                        "<body>" +
+                        "    <div style=\"width: 500px;\">" +
+                        "        <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
+                        "            <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
+                        "                <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                        "                <td>&nbsp;</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                        "                <td style=\"background-color:whitesmoke; text-align:center;\">Resultados de la revisión</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                        "                <td>&nbsp;</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                        "                <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                        "                <td>&nbsp;</td>" +
+                        "            </tr>" +
+                        "            <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
+                        "                <td>System Bot Prestadito</td>" +
+                        "            </tr>" +
+                        "        </table>" +
+                        "    </div>" +
+                        "</body> " +
+                        "</html> ";
+
+            pmmMensaje.Body = htmlString;
+
+            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+            smtpCliente.Send(pmmMensaje);
+            smtpCliente.Dispose();
+
+            resultado = true;
+        }
+        catch (Exception ex)
+        {
+            ExceptionLogging.SendExcepToDB(ex);
+            resultado = false;
+        }
+
+        return resultado;
+    }
+
+    public class Garantia_Revision_ViewModel
+    {
+        public int IdGarantiaRevision { get; set; }
+        public int IdGarantia { get; set; }
+        public int IdRevision { get; set; }
+        public string Revision { get; set; }
+        public int IdSolicitudGPS { get; set; }
+        public int IdEstadoRevision { get; set; }
+        public string EstadoRevision { get; set; }
+        public string Observaciones { get; set; }
+    }
+
+    public class Resultado_ViewModel
+    {
+        public bool ResultadoExitoso { get; set; }
+        public string MensajeResultado { get; set; }
+        public string MensajeDebug { get; set; }
     }
 }

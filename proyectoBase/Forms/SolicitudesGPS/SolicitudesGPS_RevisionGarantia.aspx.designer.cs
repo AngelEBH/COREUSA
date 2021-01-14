@@ -256,13 +256,13 @@ public partial class SolicitudesGPS_RevisionGarantia
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divGaleriaGarantia;
 
     /// <summary>
-    /// Control txtDescripcionRevision.
+    /// Control divRevisionesDeLaGarantia.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtDescripcionRevision;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divRevisionesDeLaGarantia;
 
     /// <summary>
     /// Control txtObservacionesResultadoRevision.
@@ -274,11 +274,47 @@ public partial class SolicitudesGPS_RevisionGarantia
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesResultadoRevision;
 
     /// <summary>
-    /// Control btnRechazar.
+    /// Control btnRechazarRevisionConfirmar.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlButton btnRechazar;
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnRechazarRevisionConfirmar;
+
+    /// <summary>
+    /// Control btnAprobarRevisionConfirmar.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnAprobarRevisionConfirmar;
+
+    /// <summary>
+    /// Control txtDistanciaRecorrida.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtDistanciaRecorrida;
+
+    /// <summary>
+    /// Control ddlUnidadDeMedida.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlUnidadDeMedida;
+
+    /// <summary>
+    /// Control btnActualizarMillajeConfirmar.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnActualizarMillajeConfirmar;
 }

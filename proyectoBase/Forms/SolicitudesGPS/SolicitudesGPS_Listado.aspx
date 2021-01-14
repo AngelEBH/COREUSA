@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesGPS_Listado.aspx.cs" Inherits="SolicitudesGPS_Listado" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesGPS_Listado.aspx.cs" Inherits="SolicitudesGPS_Listado" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">

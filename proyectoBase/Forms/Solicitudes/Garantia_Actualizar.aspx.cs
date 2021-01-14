@@ -312,17 +312,14 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@pnValorPrima", garantia.ValorPrima);
                         sqlComando.Parameters.AddWithValue("@pnValorFinanciado", garantia.ValorFinanciado);
                         sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", garantia.GastosDeCierre);
-
                         sqlComando.Parameters.AddWithValue("@pcNombrePropietarioGarantia", garantia.NombrePropietario);
                         sqlComando.Parameters.AddWithValue("@pcIdentidadPropietarioGarantia", garantia.IdentidadPropietario);
                         sqlComando.Parameters.AddWithValue("@piIDNacionalidadPropietarioGarantia", garantia.IdNacionalidadPropietario);
                         sqlComando.Parameters.AddWithValue("@piIDEstadoCivilPropietarioGarantia", garantia.IdEstadoCivilPropietario);
-
                         sqlComando.Parameters.AddWithValue("@pcNombreVendedorGarantia", garantia.NombreVendedor);
                         sqlComando.Parameters.AddWithValue("@pcIdentidadVendedorGarantia", garantia.IdentidadVendedor);
                         sqlComando.Parameters.AddWithValue("@piIDNacionalidadVendedorGarantia", garantia.IdNacionalidadVendedor);
                         sqlComando.Parameters.AddWithValue("@piIDEstadoCivilVendedorGarantia", garantia.IdEstadoCivilVendedor);
-
                         sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
                         sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.EsDigitadoManualmente);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);

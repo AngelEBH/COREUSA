@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesGPS_RevisionGarantia.aspx.cs" Inherits="SolicitudesGPS_RevisionGarantia" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesGPS_RevisionGarantia.aspx.cs" Inherits="SolicitudesGPS_RevisionGarantia" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -34,10 +34,10 @@
             white-space: nowrap
         }
 
-        /*.scroll-area-sm {
+        .scroll-area-sm {
             height: 50vh;
             overflow-x: hidden
-        }*/
+        }
 
         .todo-indicator {
             position: absolute;
@@ -68,11 +68,49 @@
         }
 
         .card-footer {
-            background-color: #fff
+            /*background-color: #fff*/
         }
 
         .sw-theme-default .sw-toolbar {
             background: #fff;
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: transparent;
+        }
+
+        .loader {
+            left: 50%;
+            margin-left: -4em;
+            font-size: 10px;
+            border: .8em solid rgba(218, 219, 223, 1);
+            border-left: .8em solid rgba(58, 166, 165, 1);
+            animation: spin 1.1s infinite linear;
+        }
+
+            .loader, .loader:after {
+                border-radius: 50%;
+                width: 8em;
+                height: 8em;
+                display: block;
+                position: absolute;
+                top: 50%;
+                margin-top: -4.05em;
+            }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(360deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
         }
     </style>
 </head>
@@ -80,11 +118,6 @@
     <form id="frmPrincipal" runat="server">
         <div class="card m-0">
             <div class="card-header pb-1 pt-1">
-                <div class="float-right p-1" id="Loader" style="display: none;">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only"></span>
-                    </div>
-                </div>
                 <h6>Confirmación de garantía</h6>
             </div>
             <div class="card-body p-0">
@@ -95,7 +128,6 @@
                         <li><a href="#step-2" class="pt-3 pb-2 font-12">Revisiones</a></li>
                     </ul>
                     <div>
-                        <!-- Información principal -->
                         <div id="step-1" class="form-section">
                             <div class="row mb-0">
                                 <div class="col-12">
@@ -255,8 +287,6 @@
                             </div>
                         </div>
                         <div id="step-2" class="form-section">
-                            <h6 class="mt-1"></h6>
-
                             <div class="row d-flex justify-content-center container p-0 m-0">
                                 <div class="col-12 p-0">
                                     <div class="card-hover-shadow-2x mb-3 card">
@@ -266,56 +296,19 @@
                                         <div class="scroll-area-sm">
                                             <div style="position: static;" class="ps ps--active-y">
                                                 <div class="ps-content">
-                                                    <ul class=" list-group list-group-flush">
+                                                    <ul class=" list-group list-group-flush" runat="server" id="divRevisionesDeLaGarantia">
                                                         <li class="list-group-item">
-                                                            <div class="todo-indicator bg-warning"></div>
+                                                            <div class="todo-indicator bg-warning" id="todo-indicator-actualizar-millaje"></div>
                                                             <div class="widget-content p-0">
                                                                 <div class="widget-content-wrapper">
                                                                     <div class="widget-content-left flex2">
                                                                         <div class="widget-heading">
-                                                                            Confirmación de datos
-                                                                            <div class="badge badge-warning ml-2">Pendiente</div>
+                                                                            Actualizar millaje
+                                                                            <div class="badge badge-warning ml-2" id="bg-actualizar-millaje">Pendiente</div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="widget-content-right">
-                                                                        <button class="border-0 btn-transition btn btn-outline-success" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-check"></i></button>
-                                                                        <button class="border-0 btn-transition btn btn-outline-danger" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-times"></i></button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <div class="todo-indicator bg-success"></div>
-                                                            <div class="widget-content p-0">
-                                                                <div class="widget-content-wrapper">
-                                                                    <div class="widget-content-left">
-                                                                        <div class="widget-heading">
-                                                                            Revisión mecánica
-                                                                            <div class="badge badge-success ml-2">Aprobado</div>
-                                                                        </div>
-                                                                        <%--<div class="widget-subheading">Confirmación del estado mecánico de la garantía</div>--%>
-                                                                    </div>
-                                                                    <div class="widget-content-right">
-                                                                        <button class="border-0 btn-transition btn btn-outline-success" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-check"></i></button>
-                                                                        <button class="border-0 btn-transition btn btn-outline-danger" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-times"></i></button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <div class="todo-indicator bg-warning"></div>
-                                                            <div class="widget-content p-0">
-                                                                <div class="widget-content-wrapper">
-                                                                    <div class="widget-content-left">
-                                                                        <div class="widget-heading">
-                                                                            Revisión estética
-                                                                            <div class="badge badge-pill badge-warning ml-2">Pendiente</div>
-                                                                        </div>
-                                                                        <%--<div class="widget-subheading"> Confirmación del estado estético de la garantía </div>--%>
-                                                                    </div>
-                                                                    <div class="widget-content-right">
-                                                                        <button class="border-0 btn-transition btn btn-outline-success" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-check"></i></button>
-                                                                        <button class="border-0 btn-transition btn btn-outline-danger" data-toggle="modal" data-target="#modalResultadoRevision" type="button"><i class="fas fa-times"></i></button>
+                                                                        <button id="btnActualizarMillaje" class="border-0 btn-transition btn btn-outline-warning" type="button"><i class="fas fa-edit"></i></button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -325,7 +318,7 @@
                                             </div>
                                         </div>
                                         <div class="d-block text-center">
-                                            <button class="btn btn-info">Confirmar y enviar</button>
+                                            <button id="btnConfirmarYEnviar" class="btn btn-info" type="button"><i class="fas fa-envelope"></i>&nbsp;Confirmar y enviar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -336,44 +329,85 @@
             </div>
         </div>
 
-
-        <div id="modalResultadoRevision" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalResultadoRevisionLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <div id="modalActualizarRevision" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalActualizarRevisionLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalResultadoRevisionLabel">Resultado de <b>Revisión mecánica</b></h6>
+                        <h6 class="modal-title mt-0" id="modalActualizarRevisionLabel">Resultado de <b id="lblRevision"></b></h6>
                     </div>
                     <div class="modal-body">
                         <div class="form-group row mb-1">
                             <div class="col-12 mb-2">
-                                <label>Descripción de la revisión:</label>
-                                <textarea id="txtDescripcionRevision" runat="server" class="form-control form-control-sm" readonly="readonly">Confirmación del estado mecánico de la garantía</textarea>
+                                <div class="alert alert-info bg-info text-white mb-0" role="alert">
+                                    <i class="fas fa-exclamation-circle text-white"></i>
+                                    <span id="lblDescripcionRevision"></span>
+                                </div>
                             </div>
                             <div class="col-12 mb-2">
                                 <label>Observaciones</label>
-                                <textarea id="txtObservacionesResultadoRevision" runat="server" class="form-control form-control-sm" data-parsley-maxlength="300" rows="2"></textarea>
-                            </div>
-                            <div class="col-12 text-center">
-                                <div class="button-items pb-2">
-                                    <%--<button runat="server" id="btnAceptarSolicitud" type="button" data-toggle="modal" disabled="disabled" data-target="#modalResolucionAprobar" title="" class="btn btn-success waves-effect waves-light validador">
-                                        <i class="fas fa-thumbs-up"></i>
-                                        Aceptar
-                                    </button>--%>
-                                    <button runat="server" id="btnRechazar" type="button" data-toggle="modal" data-target="#modalResolucionRechazar" class="btn btn-danger waves-effect waves-light validador">
-                                        <i class="fas fa-thumbs-down"></i>
-                                        Rechazar
-                                    </button>
-                                </div>
+                                <textarea id="txtObservacionesResultadoRevision" runat="server" class="form-control form-control-sm" required="required" data-parsley-minlength="15" data-parsley-maxlength="500" rows="4"></textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer pt-2 pb-2">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cancelar
-                        </button>
+                    <div class="modal-footer pt-2 pb-2 justify-content-center">
+                        <div class="button-items pb-2">
+                            <button runat="server" id="btnRechazarRevisionConfirmar" type="button" class="btn btn-danger">
+                                <i class="fas fa-thumbs-down"></i>
+                                Rechazar
+                            </button>
+                            <button runat="server" id="btnAprobarRevisionConfirmar" type="button" class="btn btn-success">
+                                <i class="fas fa-thumbs-up"></i>
+                                Aprobar
+                            </button>
+                            <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                                Cancelar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div id="modalActualizarMillaje" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalActualizarMillajeLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalActualizarMillajeLabel">Actualizar millaje</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row mb-1">
+                            <div class="col-6">
+                                <label class="col-form-label">Recorrido</label>
+                                <asp:TextBox ID="txtDistanciaRecorrida" CssClass="form-control form-control-sm mascara-distancia-recorrida" type="tel" required="required" runat="server" data-parsley-group="actualizarMillaje"></asp:TextBox>
+                            </div>
+                            <div class="col-6">
+                                <label class="col-form-label">Unidad de medida</label>
+                                <asp:DropDownList ID="ddlUnidadDeMedida" CssClass="form-control form-control-sm col-form-label" required="required" runat="server" data-parsley-group="actualizarMillaje" data-parsley-errors-container="#error-ddlUnidadDeMedida">
+                                    <asp:ListItem Text="Seleccionar" Value="" Selected="True"></asp:ListItem>
+                                    <asp:ListItem Text="Kilómetros" Value="KM"></asp:ListItem>
+                                    <asp:ListItem Text="Millas" Value="M"></asp:ListItem>
+                                </asp:DropDownList>
+                                <div id="error-ddlUnidadDeMedida"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer pt-2 pb-2 justify-content-center">
+                        <div class="button-items pb-2">
+                            <button runat="server" id="btnActualizarMillajeConfirmar" type="button" class="btn btn-success">
+                                <i class="fas fa-pencil-alt"></i>
+                                Actualizar
+                            </button>
+                            <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading" id="divLoader" style="display: none;">
+            <div class="loader"></div>
         </div>
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
@@ -384,11 +418,26 @@
     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
+    <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script>
         $("#divGaleriaGarantia").unitegallery({
             gallery_width: 900,
             gallery_height: 600
         });
+
+        $(".mascara-distancia-recorrida").inputmask("decimal", {
+            alias: 'numeric',
+            groupSeparator: ',',
+            digits: 0,
+            integerDigits: 11,
+            digitsOptional: false,
+            placeholder: '0',
+            radixPoint: ".",
+            autoGroup: true,
+            min: 0.00
+        });
+
+        var REVISIONES_GARANTIA = <%=this.RevisionesDeLaGarantiaJSON%>;
     </script>
     <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_RevisionGarantia.js?v=20201216081425"></script>
 </body>

@@ -1,6 +1,7 @@
 ﻿/* Variables generales */
-var idSolicitudInstalacionGPS = 0; /* Id de la solicitud de instalacion de gps para garantia registrada de una solicitud aprobada */
+var idSolicitudGPS = 0; /* Id de la solicitud de instalacion de gps para garantia registrada de una solicitud aprobada */
 var idSolicitudCredito = 0; /* No. solicitud seleccionado de cualquiera de las listas */
+var idGarantia = 0; /* Id garantia seleccionado de cualquiera de las listas */
 var identidad = ''; /* Identidad del cliente seleccionado del listado */
 var nombreCliente = ''; /* Nombre del cliente seleccionado del listado */
 
@@ -68,7 +69,7 @@ $(document).ready(function () {
         dtListado_SolicitudesGPS_Pendientes.draw();
     });
 
-    /* Agregar Filtros */
+    /* Agregar filtros a los datatables */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
 
         if (filtroActual == 'rangoFechas' && tabActivo == 'tab_Listado_SolicitudesGPS_Pendientes') {
@@ -108,12 +109,13 @@ $(document).ready(function () {
 
         var row = dtListado_SolicitudesGPS_Pendientes.row(this).data();
 
-        idSolicitudInstalacionGPS = row.IdSolicitudGPS;
+        idSolicitudGPS = row.IdSolicitudGPS;
         idSolicitudCredito = row.IdSolicitudCredito;
+        idGarantia = row.IdGarantia;
         nombreCliente = row.NombreCliente;
         identidad = row.Identidad;
 
-        if (idSolicitudInstalacionGPS != 0) {
+        if (idSolicitudGPS != 0) {
 
             $(".lblNombreCliente").val(nombreCliente);
             $(".lblMarca").val(row.Marca);
@@ -126,12 +128,13 @@ $(document).ready(function () {
 
         var row = dtListado_SolicitudesGPS_Completadas.row(this).data();
 
-        idSolicitudInstalacionGPS = row.IdSolicitudGPS;
+        idSolicitudGPS = row.IdSolicitudGPS;
         idSolicitudCredito = row.IdSolicitudCredito;
+        idGarantia = row.IdGarantia;
         nombreCliente = row.NombreCliente;
         identidad = row.Identidad;
 
-        if (idSolicitudInstalacionGPS != 0) {
+        if (idSolicitudGPS != 0) {
 
             $(".lblNombreCliente").val(nombreCliente);
             $(".lblMarca").val(row.Marca);
@@ -152,7 +155,7 @@ $(document).on('click', 'button#btnCompletarSolicitud', function () {
 
 $("#btnCompletarSolicitud_Confirmar").click(function (e) {
 
-    RedirigirAccion('SolicitudesCredito_ImprimirDocumentacion.aspx', 'imprimir documentación de la solicitud');
+    RedirigirAccion('SolicitudesGPS_RevisionGarantia.aspx', 'Completar revisión de garantía');
 });
 
 function RedirigirAccion(nombreFormulario, accion) {
@@ -160,7 +163,7 @@ function RedirigirAccion(nombreFormulario, accion) {
     $.ajax({
         type: "POST",
         url: "SolicitudesGPS_Listado.aspx/EncriptarParametros",
-        data: JSON.stringify({ idSolicitudCredito: idSolicitudCredito, idGarantia: idGarantia, dataCrypt: window.location.href }),
+        data: JSON.stringify({ idSolicitudCredito: idSolicitudCredito, idGarantia: idGarantia, idSolicitudGPS: idSolicitudGPS, dataCrypt: window.location.href }),
         contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError("No se pudo redireccionar a " + accion);

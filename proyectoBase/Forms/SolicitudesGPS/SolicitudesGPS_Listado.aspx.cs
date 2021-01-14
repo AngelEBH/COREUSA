@@ -145,7 +145,7 @@ public partial class SolicitudesGPS_Listado : System.Web.UI.Page
     #region Funciones utilitarias
 
     [WebMethod]
-    public static string EncriptarParametros(int idSolicitud, int idGarantia, string dataCrypt)
+    public static string EncriptarParametros(int idSolicitudCredito, int idGarantia, int idSolicitudGPS, string dataCrypt)
     {
         string resultado;
         try
@@ -158,8 +158,9 @@ public partial class SolicitudesGPS_Listado : System.Web.UI.Page
             var lcParametros = "usr=" + pcIDUsuario +
             "&IDApp=" + pcIDApp +
             "&SID=" + pcIDSesion +
-            "&IDSOL=" + idSolicitud +
-            "&IDGarantia=" + idGarantia;
+            "&IDSOL=" + idSolicitudCredito +
+            "&IDGarantia=" + idGarantia +
+            "&IDSolicitudGPS=" + idSolicitudGPS;
 
             resultado = DSC.Encriptar(lcParametros);
         }
