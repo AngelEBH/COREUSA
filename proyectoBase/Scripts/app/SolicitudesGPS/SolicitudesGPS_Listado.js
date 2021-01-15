@@ -237,17 +237,20 @@ function CargarSolicitudesGPS() {
                                     '</div >';
                             }
                         },
-                        { "data": "NombreCliente" },
+                        { "data": "NombreCliente" },             
                         {
-                            "data": "FechaInstalacion",
+                            "data": "RevisionesGarantia", "className": "text-center",
+                        },
+                        { "data": "UsuarioCreador" },
+                        {
+                            "data": "FechaCreacion",
                             "render": function (value) {
                                 if (value === null) return "";
                                 return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
                             }
                         },
-                        { "data": "UsuarioCreador" },
                         {
-                            "data": "FechaCreacion",
+                            "data": "FechaInstalacion",
                             "render": function (value) {
                                 if (value === null) return "";
                                 return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
@@ -264,12 +267,6 @@ function CargarSolicitudesGPS() {
                                 return '<span class="badge badge-' + row["EstadoSolicitudGPSClassName"] + ' p-1">' + row["EstadoSolicitudGPS"] + '</span>';
                             }
                         },
-                        {
-                            "data": "IdGarantia", "className": "text-center",
-                            "render": function (data, type, row) {
-                                return (row["IdGarantia"] != 0 ? row["VIN"] != '' ? iconoExito : iconoWarning : iconoPendiente);
-                            }
-                        }
                     ],
                     columnDefs: [
                         { targets: [0, 1, 9], orderable: false, "width": "0%" }
@@ -327,7 +324,10 @@ function CargarSolicitudesGPS() {
                                     '</div >';
                             }
                         },
-                        { "data": "NombreCliente" },                        
+                        { "data": "NombreCliente" }, 
+                        {
+                            "data": "RevisionesGarantia", "className": "text-center",
+                        },
                         { "data": "UsuarioCreador" },
                         {
                             "data": "FechaCreacion",
@@ -354,12 +354,6 @@ function CargarSolicitudesGPS() {
                                 return '<span class="badge badge-' + row["EstadoSolicitudGPSClassName"] + ' p-1">' + row["EstadoSolicitudGPS"] + '</span>';
                             }
                         },
-                        {
-                            "data": "IdGarantia", "className": "text-center",
-                            "render": function (data, type, row) {
-                                return (row["IdGarantia"] != 0 ? row["VIN"] != '' ? iconoExito : iconoWarning : iconoPendiente);
-                            }
-                        }
                     ],
                     columnDefs: [
                         { targets: [0, 1, 9], orderable: false, "width": "0%" }

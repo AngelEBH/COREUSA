@@ -101,6 +101,9 @@ public partial class SolicitudesGPS_Listado : System.Web.UI.Page
                                     Marca = sqlResultado["fcMarca"].ToString(),
                                     Modelo = sqlResultado["fcModelo"].ToString(),
                                     Anio = sqlResultado["fiAnio"].ToString(),
+                                    CantidadRevisiones = (int)sqlResultado["fiCantidadRevisiones"],
+                                    CantidadRevisionesCompletadas = (int)sqlResultado["fiCantidadRevisionesCompletadas"],
+                                    RevisionesGarantia = sqlResultado["fcRevisionesGarantia"].ToString()
                                 });
                             }
                             else
@@ -127,6 +130,9 @@ public partial class SolicitudesGPS_Listado : System.Web.UI.Page
                                     Marca = sqlResultado["fcMarca"].ToString(),
                                     Modelo = sqlResultado["fcModelo"].ToString(),
                                     Anio = sqlResultado["fiAnio"].ToString(),
+                                    CantidadRevisiones = (int)sqlResultado["fiCantidadRevisiones"],
+                                    CantidadRevisionesCompletadas = (int)sqlResultado["fiCantidadRevisionesCompletadas"],
+                                    RevisionesGarantia = sqlResultado["fcRevisionesGarantia"].ToString()
                                 });
                             }
                         }
@@ -251,6 +257,10 @@ public partial class SolicitudesGPS_Listado : System.Web.UI.Page
         public string Marca { get; set; }
         public string Modelo { get; set; }
         public string Anio { get; set; }
+
+        public int CantidadRevisiones { get; set; }
+        public int CantidadRevisionesCompletadas { get; set; }
+        public string RevisionesGarantia { get; set; }
     }
     #endregion
 }

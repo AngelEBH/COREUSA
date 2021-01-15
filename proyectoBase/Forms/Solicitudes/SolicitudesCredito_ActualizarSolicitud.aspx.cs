@@ -361,15 +361,18 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                                 case 101:
                                     lblTituloMontoPrestmo.Text = "Valor de efectivo solicitado";
+                                    txtValorPrima.Enabled = false;
                                     break;
 
                                 case 201:
                                     lblTituloMontoPrestmo.Text = "Valor de la moto";
+                                    txtValorPrima.Enabled = true;
                                     break;
 
                                 case 301:
                                 case 302:
                                     lblTituloMontoPrestmo.Text = "Valor del artículo";
+                                    txtValorPrima.Enabled = true;
                                     break;
                             }
 

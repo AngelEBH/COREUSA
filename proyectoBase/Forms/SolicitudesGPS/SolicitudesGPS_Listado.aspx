@@ -114,8 +114,9 @@
                             <tr>
                                 <th></th>
                                 <th>Acciones</th>
-                                <th>Cliente</th>                                
-                                <th>creado por</th>                                
+                                <th>Cliente</th>
+                                <th>Revisiones</th>
+                                <th>creado por</th>
                                 <th>F. creado</th>
                                 <th>F. instalación</th>
                                 <th>Marca</th>
@@ -123,8 +124,7 @@
                                 <th>Año</th>
                                 <%--<th>Instalar en</th>--%>
                                 <%--<th>Comentario</th>--%>
-                                <th>Estado instalación</th>
-                                <th></th>
+                                <th>Instalacion GPS</th>                                
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -138,7 +138,8 @@
                             <tr>
                                 <th></th>
                                 <th>Acciones</th>
-                                <th>Cliente</th>                                
+                                <th>Cliente</th>
+                                <th>Revisiones</th>
                                 <th>creado por</th>
                                 <th>F. creado</th>
                                 <th>F. instalación</th>
@@ -147,8 +148,7 @@
                                 <th>Año</th>
                                 <%--<th>Instalar en</th>--%>
                                 <%--<th>Comentario</th>--%>
-                                <th>Estado instalación</th>
-                                <th></th>
+                                <th>Instalacion GPS</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -217,6 +217,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_Listado.js?v=20201207152325"></script>
+    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_Listado.js?v=20210115105352"></script>
 </body>
 </html>

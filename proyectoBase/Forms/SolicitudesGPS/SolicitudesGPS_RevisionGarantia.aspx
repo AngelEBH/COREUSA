@@ -345,7 +345,7 @@
                             </div>
                             <div class="col-12 mb-2">
                                 <label>Observaciones</label>
-                                <textarea id="txtObservacionesResultadoRevision" runat="server" class="form-control form-control-sm" required="required" data-parsley-minlength="15" data-parsley-maxlength="500" rows="4"></textarea>
+                                <textarea id="txtObservacionesResultadoRevision" runat="server" class="form-control form-control-sm" data-parsley-maxlength="500" rows="4"></textarea>
                             </div>
                         </div>
                     </div>
