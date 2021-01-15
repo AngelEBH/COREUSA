@@ -1,9 +1,9 @@
 ﻿/* Variables generales */
-var idSolicitudGPS = 0; /* Id de la solicitud de instalacion de gps para garantia registrada de una solicitud aprobada */
-var idSolicitudCredito = 0; /* No. solicitud seleccionado de cualquiera de las listas */
-var idGarantia = 0; /* Id garantia seleccionado de cualquiera de las listas */
-var identidad = ''; /* Identidad del cliente seleccionado del listado */
-var nombreCliente = ''; /* Nombre del cliente seleccionado del listado */
+var idSolicitudGPS = 0;
+var idSolicitudCredito = 0;
+var idGarantia = 0;
+var identidad = '';
+var nombreCliente = '';
 
 /* Iconos de estado para el listado */
 var iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">estadoListo</label></i>';
@@ -22,21 +22,16 @@ $(document).ready(function () {
 
         if (this.value != '') {
 
-            if (tabActivo == 'tab_Listado_SolicitudesGPS_Pendientes') {
+            if (tabActivo == 'tab_Listado_SolicitudesGPS_Pendientes')
                 dtListado_SolicitudesGPS_Pendientes.columns(3).search('/' + this.value + '/').draw();
-            }
-            else {
+            else
                 dtListado_SolicitudesGPS_Completadas.columns(3).search('/' + this.value + '/').draw();
-            }
         }
         else {
-
-            if (tabActivo == 'tab_Listado_SolicitudesGPS_Pendientes') {
+            if (tabActivo == 'tab_Listado_SolicitudesGPS_Pendientes')
                 dtListado_SolicitudesGPS_Pendientes.columns(3).search('').draw();
-            }
-            else {
+            else
                 dtListado_SolicitudesGPS_Completadas.columns(3).search('').draw();
-            }
         }
     });
 
@@ -261,8 +256,8 @@ function CargarSolicitudesGPS() {
                         { "data": "Marca" },
                         { "data": "Modelo" },
                         { "data": "Anio", "className": "text-center" },
-                        { "data": "AgenciaInstalacion" },
-                        { "data": "ComentarioInstalacion" },
+                        //{ "data": "AgenciaInstalacion" },
+                        //{ "data": "ComentarioInstalacion" },
                         {
                             "data": "EstadoSolicitudGPS", "className": "text-center",
                             "render": function (data, type, row) {
@@ -277,7 +272,7 @@ function CargarSolicitudesGPS() {
                         }
                     ],
                     columnDefs: [
-                        { targets: [0, 1, 11], orderable: false, "width": "0%" }
+                        { targets: [0, 1, 9], orderable: false, "width": "0%" }
                     ]
                 });
 
@@ -332,14 +327,7 @@ function CargarSolicitudesGPS() {
                                     '</div >';
                             }
                         },
-                        { "data": "NombreCliente" },
-                        {
-                            "data": "FechaInstalacion",
-                            "render": function (value) {
-                                if (value === null) return "";
-                                return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
-                            }
-                        },
+                        { "data": "NombreCliente" },                        
                         { "data": "UsuarioCreador" },
                         {
                             "data": "FechaCreacion",
@@ -348,11 +336,18 @@ function CargarSolicitudesGPS() {
                                 return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
                             }
                         },
+                        {
+                            "data": "FechaInstalacion",
+                            "render": function (value) {
+                                if (value === null) return "";
+                                return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
+                            }
+                        },
                         { "data": "Marca" },
                         { "data": "Modelo" },
                         { "data": "Anio", "className": "text-center" },
-                        { "data": "AgenciaInstalacion" },
-                        { "data": "ComentarioInstalacion" },
+                        //{ "data": "AgenciaInstalacion" },
+                        //{ "data": "ComentarioInstalacion" },
                         {
                             "data": "EstadoSolicitudGPS", "className": "text-center",
                             "render": function (data, type, row) {
@@ -367,7 +362,7 @@ function CargarSolicitudesGPS() {
                         }
                     ],
                     columnDefs: [
-                        { targets: [0, 1, 11], orderable: false, "width": "0%" }
+                        { targets: [0, 1, 9], orderable: false, "width": "0%" }
                     ]
                 });
             }

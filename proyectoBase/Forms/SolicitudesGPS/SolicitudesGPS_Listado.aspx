@@ -114,15 +114,15 @@
                             <tr>
                                 <th></th>
                                 <th>Acciones</th>
-                                <th>Cliente</th>
-                                <th>Instalación</th>
-                                <th>U. creador</th>
+                                <th>Cliente</th>                                
+                                <th>creado por</th>                                
                                 <th>F. creado</th>
+                                <th>F. instalación</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
                                 <th>Año</th>
-                                <th>Instalar en</th>
-                                <th>Comentario</th>
+                                <%--<th>Instalar en</th>--%>
+                                <%--<th>Comentario</th>--%>
                                 <th>Estado instalación</th>
                                 <th></th>
                             </tr>
@@ -138,15 +138,15 @@
                             <tr>
                                 <th></th>
                                 <th>Acciones</th>
-                                <th>Cliente</th>
-                                <th>Instalación</th>
-                                <th>U. creador</th>
+                                <th>Cliente</th>                                
+                                <th>creado por</th>
                                 <th>F. creado</th>
+                                <th>F. instalación</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
                                 <th>Año</th>
-                                <th>Instalar en</th>
-                                <th>Comentario</th>
+                                <%--<th>Instalar en</th>--%>
+                                <%--<th>Comentario</th>--%>
                                 <th>Estado instalación</th>
                                 <th></th>
                             </tr>
@@ -163,7 +163,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title mt-0" id="modalCompletarSolicitudGPSLabel">Completar solicitud</h6>
+                    <h6 class="modal-title mt-0" id="modalCompletarSolicitudGPSLabel">Revisión de garantía</h6>
                 </div>
                 <div class="modal-body">
                     <div class="form-group row">
