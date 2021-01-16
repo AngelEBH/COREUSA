@@ -57,29 +57,6 @@
             <div class="row mb-0">
                 <div class="col-md-12">
                     <div class="form-group row">
-                        <%--<div class="col-lg-3 col-sm-6 col-6">
-                            <label class="col-form-label">Búsqueda por Mes</label>
-                            <select id="ddlMes" class="form-control form-control-sm">
-                                <option value="" selected="selected">Seleccionar</option>
-                                <option value="01">Enero</option>
-                                <option value="02">Febrero</option>
-                                <option value="03">Marzo</option>
-                                <option value="04">Abril</option>
-                                <option value="05">Mayo</option>
-                                <option value="06">Junio</option>
-                                <option value="07">Julio</option>
-                                <option value="08">Agosto</option>
-                                <option value="09">Septiembre</option>
-                                <option value="10">Octubre</option>
-                                <option value="11">Noviembre</option>
-                                <option value="12">Diciembre</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-6">
-                            <label class="col-form-label">Búsqueda por Año</label>
-                            <input id="añoIngreso" class="form-control form-control-sm" type="text" />
-                        </div>--%>
-
                         <div class="col-lg-6 col-sm-6 col-12">
                             <label class="col-form-label">Búsqueda por Fecha</label>
                             <div class="input-daterange input-group" id="date-range">
@@ -114,17 +91,13 @@
                             <tr>
                                 <th></th>
                                 <th>Acciones</th>
-                                <th>Cliente</th>
+                                <th>Garantía/Revisiones</th>
                                 <th>Revisiones</th>
+                                <th>Cliente</th>
                                 <th>creado por</th>
                                 <th>F. creado</th>
                                 <th>F. instalación</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Año</th>
-                                <%--<th>Instalar en</th>--%>
-                                <%--<th>Comentario</th>--%>
-                                <th>Instalacion GPS</th>                                
+                                <th>Instalacion GPS</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -138,16 +111,12 @@
                             <tr>
                                 <th></th>
                                 <th>Acciones</th>
-                                <th>Cliente</th>
+                                <th>Garantía/Revisiones</th>
                                 <th>Revisiones</th>
+                                <th>Cliente</th>
                                 <th>creado por</th>
                                 <th>F. creado</th>
                                 <th>F. instalación</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Año</th>
-                                <%--<th>Instalar en</th>--%>
-                                <%--<th>Comentario</th>--%>
                                 <th>Instalacion GPS</th>
                             </tr>
                         </thead>
@@ -163,7 +132,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title mt-0" id="modalCompletarSolicitudGPSLabel">Revisión de garantía</h6>
+                    <h6 class="modal-title mt-0" id="modalCompletarSolicitudGPSLabel">Revisar garantía</h6>
                 </div>
                 <div class="modal-body">
                     <div class="form-group row">
@@ -171,17 +140,25 @@
                             <label>Cliente</label>
                             <input class="lblNombreCliente form-control form-control-sm" readonly="readonly" />
                         </div>
-                        <div class="col-12 mb-2">
+                        <div class="col-6 mb-2 pr-0">
                             <label>Marca</label>
                             <input class="lblMarca form-control form-control-sm" readonly="readonly" />
                         </div>
-                        <div class="col-7 mb-2 pr-0">
+                        <div class="col-6 mb-2">
                             <label>Modelo</label>
                             <input class="lblModelo form-control form-control-sm" readonly="readonly" />
                         </div>
-                        <div class="col-5 mb-2">
+                        <div class="col-6 mb-2 pr-0">
                             <label>Año</label>
                             <input class="lblAnio form-control form-control-sm" readonly="readonly" />
+                        </div>
+                        <div class="col-6 mb-2">
+                            <label>Revisiones</label>
+                            <input class="lblRevisionesGarantia form-control form-control-sm" readonly="readonly" value="0/3" />
+                        </div>
+                        <div class="col-12 mb-0">
+                            <label>Comentarios de la solicitud de GPS</label>
+                            <textarea class="txtComentarioSolicitudGPS form-control form-control-sm" readonly="readonly"></textarea>
                         </div>
                     </div>
                 </div>
@@ -217,6 +194,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_Listado.js?v=20210115105352"></script>
+    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_Listado.js?v=20210116095835"></script>
 </body>
 </html>

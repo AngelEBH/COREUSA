@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Security;
@@ -203,22 +204,22 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                             btnResultadoRevision = "<button id='btnResultadoRevision' class='border-0 btn-transition btn btn-outline-warning' " + dataString + " type='button'><i class='fas fa-edit'></i></button>";
 
                             templateRevisiones.Append(
-                                "<li class='list-group-item'>" +
-                                    "<div class='todo-indicator bg-" + estadoRevisionClassName + "' id='todo-indicator-revision-" + sqlResultado["fiIDRevision"] + "'></div>" +
-                                    "<div class='widget-content p-0'>" +
-                                        "<div class='widget-content-wrapper'>" +
-                                            "<div class='widget-content-left flex2'>" +
-                                                "<div class='widget-heading'>" +
-                                                    sqlResultado["fcNombreRevision"].ToString() +
-                                                    "<div class='badge badge-" + estadoRevisionClassName + " ml-2' id='badge-revision-" + sqlResultado["fiIDRevision"] + "'>" + estadoRevision + "</div>" +
-                                                "</div>" +
-                                            "</div>" +
-                                            "<div class='widget-content-right'>" +
-                                                btnResultadoRevision +
-                                            "</div>" +
-                                        "</div>" +
-                                    "</div>" +
-                                "</li>");
+                            "<li class='list-group-item'>" +
+                            "<div class='todo-indicator bg-" + estadoRevisionClassName + "' id='todo-indicator-revision-" + sqlResultado["fiIDRevision"] + "'></div>" +
+                            "<div class='widget-content p-0'>" +
+                            "<div class='widget-content-wrapper'>" +
+                            "<div class='widget-content-left flex2'>" +
+                            "<div class='widget-heading'>" +
+                            sqlResultado["fcNombreRevision"].ToString() +
+                            "<div class='badge badge-" + estadoRevisionClassName + " ml-2' id='badge-revision-" + sqlResultado["fiIDRevision"] + "'>" + estadoRevision + "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='widget-content-right'>" +
+                            btnResultadoRevision +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</li>");
 
                             RevisionesDeLaGarantia.Add(new Garantia_Revision_ViewModel()
                             {
@@ -331,11 +332,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                             resultado.MensajeResultado = "Las revisiones se guardaron exitosamente";
                             resultado.MensajeDebug = "";
 
-                            if (!EnviarCorreoRevisionDeGarantia(pcIDSolicitudCredito, revisionesGarantia, recorrido, unidadDeDistancia, pcIDUsuario, pcIDApp, pcIDSesion))
-                            {
-                                resultado.MensajeResultado = "Las revisiones se guardaron correctamente pero ocurrió un error al enviar el correo de confirmación.";
-                                resultado.MensajeDebug = "EnviarCorreoRevisionDeGarantia";
-                            }
+                            EnviarCorreoYSMSRevisionDeGarantia(pcIDSolicitudCredito, revisionesGarantia, recorrido, unidadDeDistancia, pcIDUsuario, pcIDApp, pcIDSesion);
                         }
                     }
                     catch (Exception ex)
@@ -399,14 +396,13 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
         lblMensaje.Text = mensaje;
     }
 
-    public static bool EnviarCorreoRevisionDeGarantia(string idSolicitudCredito, List<Garantia_Revision_ViewModel> revisionesGarantia, decimal recorrido, string unidadDeDistancia, string idUsuario, string idApp, string idSesion)
+    public static void EnviarCorreoYSMSRevisionDeGarantia(string idSolicitudCredito, List<Garantia_Revision_ViewModel> revisionesGarantia, decimal recorrido, string unidadDeDistancia, string idUsuario, string idApp, string idSesion)
     {
-        var resultado = false;
-
         try
         {
             var usuarioVendedor = string.Empty;
             var correoUsuarioVendedor = string.Empty;
+            var telefonoUsuarioVendedor = string.Empty;
             var usuarioValidador = string.Empty;
             var correoUsuarioValidador = string.Empty;
             var VIN = string.Empty;
@@ -437,6 +433,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                         {
                             usuarioVendedor = sqlResultado["fcUsuarioVendedor"].ToString();
                             correoUsuarioVendedor = sqlResultado["fcCorreoUsuarioVendedor"].ToString();
+                            telefonoUsuarioVendedor = sqlResultado["fcTelefonoUsuarioVendedor"].ToString();
                             usuarioValidador = sqlResultado["fcUsuarioValidador"].ToString();
                             correoUsuarioValidador = sqlResultado["fcCorreoUsuarioValidador"].ToString();
                         }
@@ -466,48 +463,57 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                 } // using sqlComando
             } // using sqlConexion
 
+            /* COMENTADO PORQUE DE MOMENTO NO SE REQUIERE QUE SE ENVÍE EL CORREO */
+
             /* Información basico y datos del cliente */
-            contenidoCorreo.Append("<table border='1' style='width: 600px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;'>" +
-                    "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>INFORMACIÓN BÁSICA</b></th></tr>" +
-                    "<tr><th style='text-align: left;'>Vendedor</th><td>" + usuarioVendedor + "</td></tr>" +
-                    "<tr><th style='text-align: left;'>Validado por</th><td>" + usuarioValidador + "</td></tr>" +
-                    "<tr><th style='text-align: left;'>VIN</th><td>" + VIN + "</td></tr>" +
-                    "<tr><th style='text-align: left;'>Marca</th><td>" + marca + "</td></tr><tr>" +
-                    "<th style='text-align: left;'>Modelo</th><td>" + modelo + "</td></tr>" +
-                    "<tr><th style='text-align: left;'>Año</th><td>" + anio + "</td></tr>" +
-                    "<tr><th style='text-align: left;'>Color</th><td>" + color + "</td></tr>" +
-                    "<tr><th colspan='2'><br /></th></tr>" +
-                    "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>DATOS DEL CLIENTE</b></th></tr>" +
-                    "<tr><th style='text-align: left;'>Nombre</th><td>" + nombreCliente + "</td></tr>" +
-                    "<tr><th style='text-align: left;'>Identidad</th><td>" + identidadCliente + "</td></tr>" +
-                    "</table>" +
-                    "<br />" +
-                    /* Inicio de la tabla de revisiones de la garantia y millaje actualizado */
-                    "<table border='1' style='width: 600px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;'>" +
-                    "<thead><tr><th colspan='2' style='text-align:center; font-weight:bold'>REVISIONES REALIZADAS</th></tr></thead>" +
-                    "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>Actualización de millaje</b></th></tr>" +
-                    "<tr><th style='text-align: left;'>Nuevo millaje</th><td>" + recorrido.ToString("N") + "</td></tr>" +
-                    "<tr><th style='text-align: left;'>Unidad de medida</th><td>" + unidadDeDistancia + "</td></tr>");
+            //contenidoCorreo.Append("<table border='1' style='width: 600px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;'>" +
+            // "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>INFORMACIÓN BÁSICA</b></th></tr>" +
+            // "<tr><th style='text-align: left;'>Vendedor</th><td>" + usuarioVendedor + "</td></tr>" +
+            // "<tr><th style='text-align: left;'>Validado por</th><td>" + usuarioValidador + "</td></tr>" +
+            // "<tr><th style='text-align: left;'>VIN</th><td>" + VIN + "</td></tr>" +
+            // "<tr><th style='text-align: left;'>Marca</th><td>" + marca + "</td></tr><tr>" +
+            // "<th style='text-align: left;'>Modelo</th><td>" + modelo + "</td></tr>" +
+            // "<tr><th style='text-align: left;'>Año</th><td>" + anio + "</td></tr>" +
+            // "<tr><th style='text-align: left;'>Color</th><td>" + color + "</td></tr>" +
+            // "<tr><th colspan='2'><br /></th></tr>" +
+            // "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>DATOS DEL CLIENTE</b></th></tr>" +
+            // "<tr><th style='text-align: left;'>Nombre</th><td>" + nombreCliente + "</td></tr>" +
+            // "<tr><th style='text-align: left;'>Identidad</th><td>" + identidadCliente + "</td></tr>" +
+            // "</table>" +
+            // "<br />" +
+            // /* Inicio de la tabla de revisiones de la garantia y millaje actualizado */
+            // "<table border='1' style='width: 600px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;'>" +
+            // "<thead><tr><th colspan='2' style='text-align:center; font-weight:bold'>REVISIONES REALIZADAS</th></tr></thead>" +
+            // "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>Actualización de millaje</b></th></tr>" +
+            // "<tr><th style='text-align: left;'>Nuevo millaje</th><td>" + recorrido.ToString("N") + "</td></tr>" +
+            // "<tr><th style='text-align: left;'>Unidad de medida</th><td>" + unidadDeDistancia + "</td></tr>");
 
 
             /* Revisiones realizadas */
-            foreach (var item in revisionesGarantia)
+            //foreach (var item in revisionesGarantia)
+            //{
+            // contenidoCorreo.Append(
+            // "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>" + item.Revision + "</b></th></tr>" +
+            // "<tr><th style='text-align: left;'>Estado</th><td>" + item.EstadoRevision + "</td></tr>" +
+            // "<tr><th style='text-align: left;'>Observaciones</th><td>" + item.Observaciones + "</td></tr>");
+            //}
+
+            //contenidoCorreo.Append("</table>");
+
+            //resultado = EnviarCorreo("Revisión de garantía | Solicitud de crédito " + idSolicitudCredito, contenidoCorreo.ToString(), correoUsuarioVendedor);
+
+            /* ENIVAR SMS AL TELEFONO DEL VENDEDOR*/
+            if (telefonoUsuarioVendedor != "")
             {
-                contenidoCorreo.Append(
-                    "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>" + item.Revision + "</b></th></tr>" +
-                    "<tr><th style='text-align: left;'>Estado</th><td>" + item.EstadoRevision + "</td></tr>" +
-                    "<tr><th style='text-align: left;'>Observaciones</th><td>" + item.Observaciones + "</td></tr>");
+                string resultadoRevisionGarantia = revisionesGarantia.Where(x => x.IdEstadoRevision == 2).Any() ? "rechazada" : "aprobada";
+                string mensajeResultado = "La garantía de la solicitud de crédito " + idSolicitudCredito + " ha sido " + resultadoRevisionGarantia + " por " + usuarioValidador;
+                EnviarSMS(telefonoUsuarioVendedor, mensajeResultado);
             }
-
-            contenidoCorreo.Append("</table>");
-
-            resultado = EnviarCorreo("Revisión de garantía | Solicitud de crédito " + idSolicitudCredito, contenidoCorreo.ToString(), correoUsuarioVendedor);
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return resultado;
     }
 
     public static bool EnviarCorreo(string pcTituloGeneral, string pcContenidodelMensaje, string buzonCorreoUsuario)
@@ -525,41 +531,40 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
 
             pmmMensaje.Subject = "Revisión de garantía";
             pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
-            //pmmMensaje.To.Add("sistemas@miprestadito.com");
-            pmmMensaje.CC.Add("willian.diaz@miprestadito.com");
-            //pmmMensaje.CC.Add(buzonCorreoUsuario);
+            pmmMensaje.To.Add("sistemas@miprestadito.com");
+            pmmMensaje.CC.Add(buzonCorreoUsuario);
             pmmMensaje.IsBodyHtml = true;
 
             string htmlString = @"<!DOCTYPE html> " +
-                        "<html>" +
-                        "<body>" +
-                        "    <div style=\"width: 500px;\">" +
-                        "        <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
-                        "            <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
-                        "                <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td>&nbsp;</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td style=\"background-color:whitesmoke; text-align:center;\">Resultados de la revisión</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td>&nbsp;</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td>&nbsp;</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
-                        "                <td>System Bot Prestadito</td>" +
-                        "            </tr>" +
-                        "        </table>" +
-                        "    </div>" +
-                        "</body> " +
-                        "</html> ";
+            "<html>" +
+            "<body>" +
+            " <div style=\"width: 500px;\">" +
+            " <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
+            " <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
+            " <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td style=\"background-color:whitesmoke; text-align:center;\">Resultados de la revisión</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
+            " <td>System Bot Prestadito</td>" +
+            " </tr>" +
+            " </table>" +
+            " </div>" +
+            "</body> " +
+            "</html> ";
 
             pmmMensaje.Body = htmlString;
 
@@ -576,6 +581,25 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
         }
 
         return resultado;
+    }
+
+    public static void EnviarSMS(string numeroReceptor, string mensajeDeTexto)
+    {
+        string url;
+        try
+        {
+            using (var client = new WebClient())
+            {
+                numeroReceptor = numeroReceptor == "" ? "96116376" : numeroReceptor;
+
+                url = "http://172.20.3.177/default/en_US/send.html?u=admin&p=admin&l=1&n=" + numeroReceptor.Replace("-", "") + "&m=" + mensajeDeTexto;
+                client.DownloadString(new Uri(url));
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
     }
 
     public class Garantia_Revision_ViewModel

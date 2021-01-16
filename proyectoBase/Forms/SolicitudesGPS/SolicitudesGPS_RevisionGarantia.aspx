@@ -291,7 +291,7 @@
                                 <div class="col-12 p-0">
                                     <div class="card-hover-shadow-2x mb-3 card">
                                         <div class="card-header-tab card-header">
-                                            <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="fa fa-tasks"></i>&nbsp;Revisiones de la garantía</div>
+                                            <div class="card-header-title font-size-lg font-weight-normal"><i class="fa fa-tasks"></i>&nbsp;Revisiones de la garantía</div>
                                         </div>
                                         <div class="scroll-area-sm">
                                             <div style="position: static;" class="ps ps--active-y">
@@ -439,7 +439,7 @@
 
         var REVISIONES_GARANTIA = <%=this.RevisionesDeLaGarantiaJSON%>;
     </script>
-    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_RevisionGarantia.js?v=20201216081425"></script>
+    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_RevisionGarantia.js?v=20210116115525"></script>
 </body>
 </html>
 

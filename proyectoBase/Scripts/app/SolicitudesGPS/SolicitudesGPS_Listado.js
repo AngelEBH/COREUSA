@@ -116,6 +116,8 @@ $(document).ready(function () {
             $(".lblMarca").val(row.Marca);
             $(".lblModelo").val(row.Modelo);
             $(".lblAnio").val(row.Anio);
+            $(".lblRevisionesGarantia").val(row.RevisionesGarantia);
+            $(".txtComentarioSolicitudGPS").val(row.ComentarioInstalacion);
         }
     });
 
@@ -135,6 +137,8 @@ $(document).ready(function () {
             $(".lblMarca").val(row.Marca);
             $(".lblModelo").val(row.Modelo);
             $(".lblAnio").val(row.Anio);
+            $(".lblRevisionesGarantia").val(row.RevisionesGarantia);
+            $(".txtComentarioSolicitudGPS").val(row.ComentarioInstalacion);
         }
     });
 
@@ -221,9 +225,9 @@ function CargarSolicitudesGPS() {
                     },
                     data: solicitudesGPS_Pendientes,
                     "columns": [
-                        { defaultContent: '' },
+                        { defaultContent: '' }, // boton + de expandir detalles
                         {
-                            "data": "IdGarantia", "className": "text-center",
+                            "data": "IdGarantia", "className": "text-center", // boton de acciones
                             "render": function (data, type, row) {
 
                                 return '<div class="dropdown mo-mb-0">' +
@@ -231,16 +235,19 @@ function CargarSolicitudesGPS() {
                                     '<i class="fa fa-bars"></i>' +
                                     '</button >' +
                                     '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
-                                    '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="far fa-edit"></i> Completar</button>'
-                                //(row["IdGarantia"] == 0 ? '<button type="button" class="dropdown-item" id="btnGuardar"><i class="fas fa-plus"></i> Agregar</button>' : '') +
+                                    '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Revisar garantía</button>'
                                 '</div>' +
                                     '</div >';
                             }
                         },
-                        { "data": "NombreCliente" },             
                         {
-                            "data": "RevisionesGarantia", "className": "text-center",
+                            "data": "Marca", // Garantia
+                            "render": function (data, type, row) {
+                                return row["Marca"] + ' ' + row["Modelo"] + ' <small>' + row["Anio"] + '</small> <span class="badge badge-info p-1">' + row["RevisionesGarantia"] + '</span>';
+                            }
                         },
+                        { "data": "RevisionesGarantia", "className": "text-center", }, // revisiones
+                        { "data": "NombreCliente" },
                         { "data": "UsuarioCreador" },
                         {
                             "data": "FechaCreacion",
@@ -256,11 +263,6 @@ function CargarSolicitudesGPS() {
                                 return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
                             }
                         },
-                        { "data": "Marca" },
-                        { "data": "Modelo" },
-                        { "data": "Anio", "className": "text-center" },
-                        //{ "data": "AgenciaInstalacion" },
-                        //{ "data": "ComentarioInstalacion" },
                         {
                             "data": "EstadoSolicitudGPS", "className": "text-center",
                             "render": function (data, type, row) {
@@ -269,7 +271,7 @@ function CargarSolicitudesGPS() {
                         },
                     ],
                     columnDefs: [
-                        { targets: [0, 1, 9], orderable: false, "width": "0%" }
+                        { targets: [0, 1, 8], orderable: false, "width": "0%" }
                     ]
                 });
 
@@ -308,9 +310,9 @@ function CargarSolicitudesGPS() {
                     },
                     data: solicitudesGPS_Completadas,
                     "columns": [
-                        { defaultContent: '' },
+                        { defaultContent: '' }, // boton + de expandir detalles
                         {
-                            "data": "IdGarantia", "className": "text-center",
+                            "data": "IdGarantia", "className": "text-center", // boton de acciones
                             "render": function (data, type, row) {
 
                                 return '<div class="dropdown mo-mb-0">' +
@@ -318,16 +320,19 @@ function CargarSolicitudesGPS() {
                                     '<i class="fa fa-bars"></i>' +
                                     '</button >' +
                                     '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
-                                    '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="far fa-edit"></i> Completar</button>'
-                                //(row["IdGarantia"] == 0 ? '<button type="button" class="dropdown-item" id="btnGuardar"><i class="fas fa-plus"></i> Agregar</button>' : '') +
+                                    '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Revisar garantía</button>'
                                 '</div>' +
                                     '</div >';
                             }
                         },
-                        { "data": "NombreCliente" }, 
                         {
-                            "data": "RevisionesGarantia", "className": "text-center",
+                            "data": "Marca", // Garantia
+                            "render": function (data, type, row) {
+                                return row["Marca"] + ' ' + row["Modelo"] + ' <small>' + row["Anio"] + '</small> <span class="badge badge-info p-1">' + row["RevisionesGarantia"] + '</span>';
+                            }
                         },
+                        { "data": "RevisionesGarantia", "className": "text-center", }, // revisiones
+                        { "data": "NombreCliente" },
                         { "data": "UsuarioCreador" },
                         {
                             "data": "FechaCreacion",
@@ -343,11 +348,6 @@ function CargarSolicitudesGPS() {
                                 return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
                             }
                         },
-                        { "data": "Marca" },
-                        { "data": "Modelo" },
-                        { "data": "Anio", "className": "text-center" },
-                        //{ "data": "AgenciaInstalacion" },
-                        //{ "data": "ComentarioInstalacion" },
                         {
                             "data": "EstadoSolicitudGPS", "className": "text-center",
                             "render": function (data, type, row) {
@@ -356,7 +356,7 @@ function CargarSolicitudesGPS() {
                         },
                     ],
                     columnDefs: [
-                        { targets: [0, 1, 9], orderable: false, "width": "0%" }
+                        { targets: [0, 1, 8], orderable: false, "width": "0%" }
                     ]
                 });
             }
