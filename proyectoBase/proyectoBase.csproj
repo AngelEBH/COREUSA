@@ -1046,6 +1046,7 @@
     <Content Include="Forms\Clientes\GestionCobranzaClienteDocumentos.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
     <Content Include="Forms\Movil\CotizadorCarros.aspx" />
+    <Content Include="Forms\SolicitudesGPS\SolicitudesGPS_RegistroInstalacionGPS.aspx" />
     <Content Include="Forms\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.aspx" />
     <Content Include="Forms\SolicitudesGPS\SolicitudesGPS_Listado.aspx" />
     <Content Include="Forms\Solicitudes\Garantia_Actualizar.aspx" />
@@ -1883,6 +1884,13 @@
     </Compile>
     <Compile Include="Forms\Movil\CotizadorCarros.aspx.designer.cs">
       <DependentUpon>CotizadorCarros.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SolicitudesGPS\SolicitudesGPS_RegistroInstalacionGPS.aspx.cs">
+      <DependentUpon>SolicitudesGPS_RegistroInstalacionGPS.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\SolicitudesGPS\SolicitudesGPS_RegistroInstalacionGPS.aspx.designer.cs">
+      <DependentUpon>SolicitudesGPS_RegistroInstalacionGPS.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.aspx.cs">
       <DependentUpon>SolicitudesGPS_RevisionGarantia.aspx</DependentUpon>
