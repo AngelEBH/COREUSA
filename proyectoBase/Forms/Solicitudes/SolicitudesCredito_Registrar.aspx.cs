@@ -1575,7 +1575,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@fnValorSeleccionado", solicitud.ValorSeleccionado);
                         sqlComando.Parameters.AddWithValue("@fiMoneda", 1);
                         sqlComando.Parameters.AddWithValue("@fiPlazoSeleccionado", solicitud.PlazoSeleccionado);
-                        sqlComando.Parameters.AddWithValue("@fnValorPrima", solicitud.ValorPrima);
+                        sqlComando.Parameters.AddWithValue("@fnValorPrima", precalificado.IdProducto == 203 ? 0 : solicitud.ValorPrima);
                         sqlComando.Parameters.AddWithValue("@fnValorGarantia", solicitud.ValorPrima == 0 ? 0 : solicitud.ValorGlobal);
                         sqlComando.Parameters.AddWithValue("@fiIDOrigen", solicitud.IdOrigen);
                         sqlComando.Parameters.AddWithValue("@fdFechaIngresoLaborarCliente", cliente.InformacionLaboral.FechaIngreso);
@@ -1614,7 +1614,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     {
                         var fechaPrimerPago = ObtenerFechaPrimerPago(precalificado.IdProducto.ToString());
                         decimal totalAFinanciar = cotizador.TotalAFinanciar;
-                        decimal valorAPrestar = garantia.ValorMercado - garantia.ValorPrima;
+                        //decimal valorAPrestar = garantia.ValorMercado - garantia.ValorPrima;
+                        decimal valorAPrestar = precalificado.IdProducto != 203 ? garantia.ValorMercado - garantia.ValorPrima : garantia.ValorPrima;
                         decimal tasaInteresAnual = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204) ? cotizador.TasaInteresAnual : ObtenerTasaInteresAnualPorIdProducto(precalificado.IdProducto);
                         decimal tasaInteresMensual = tasaInteresAnual / 12;
                         decimal totalAFinanciarConIntereses = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204) ? cotizador.TotalFinanciadoConIntereses : CalcularTotalAFinanciarConIntereses(cotizador.TotalAFinanciar, solicitud.PlazoSeleccionado, tasaInteresAnual, precalificado.IdProducto);
