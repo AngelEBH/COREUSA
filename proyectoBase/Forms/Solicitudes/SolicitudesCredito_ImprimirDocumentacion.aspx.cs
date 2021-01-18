@@ -29,8 +29,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     public string MesPrimerPago { get; set; }
     public string AnioPrimerPago { get; set; }
 
-    public string UrlCodigoQR { get; set; }
-
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -63,9 +61,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL") ?? "";
-
-                    //UrlCodigoQR = "http://190.92.0.76/Operaciones/Confirmaciones.aspx?" + DSC.Encriptar("IDSOL=" + pcIDSolicitud);
-                    UrlCodigoQR = "http://190.92.0.76/OPS/CFRM.aspx?" + DSC.Encriptar("S=" + pcIDSolicitud);
 
                     var hoy = DateTime.Today;
 
@@ -452,7 +447,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblNumeroPrestamo_CorreoSeguro.Text = "";
 
                                         /* Nota de entrega */
-                                        lblPropietarioGarantia_NotaEntrega.Text = nombrePropietarioGarantia;
+                                        lblVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
                                         lblNombreCliente_NotaEntrega.Text = nombreCliente;
                                         lblValorAPrestarEnPalabras_NotaEntrega.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString());
                                         lblValorAPrestar_NotaEntrega.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");

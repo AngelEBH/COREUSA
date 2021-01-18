@@ -18,7 +18,7 @@
     <form id="frmGuardarPreSolicitud" runat="server">
         <div class="card m-0">
             <div class="card-header pb-1 pt-1">
-                <div class="float-right p-1 qrCode" id="Loader" style="display: none;">
+                <div class="float-right p-1" id="Loader" style="display: none;">
                     <div class="spinner-border" role="status">
                         <span class="sr-only"></span>
                     </div>
@@ -773,10 +773,12 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDF">
                 <div class="card-body pt-0">
                     <div class="row">
-                        <div class="col-12 p-0 text-center mb-3">
-                            <div class="float-left"><img src="/Imagenes/LogoPrestadito.png" /></div>
-                            <div class="float-right" id="qrCode_InspeccionSeguro"></div>
-                            <div class="pt-5"><h5 class="text-center pl-70px font-weight-bold">INSPECCIÓN SEGURO DE VEHÍCULO</h5></div>
+                        <div class="col-12 m-0 p-0">
+                            <img src="/Imagenes/LogoPrestadito.png" />
+                        </div>
+                        <div class="col-12">
+                            <h5 class="text-center font-weight-bold">INSPECCIÓN SEGURO DE VEHÍCULO</h5>
+                            <hr />
                         </div>
                     </div>
                     <div class="row">
@@ -1629,7 +1631,7 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                             <p>
                                 Estimado (s)
                                 <b>
-                                    <asp:Label runat="server" ID="lblPropietarioGarantia_NotaEntrega"></asp:Label>,
+                                    <asp:Label runat="server" ID="lblVendedorGarantia_NotaEntrega"></asp:Label>,
                                 </b>
                                 por este medio hacemos de su conocimiento que el cliente
                                 <asp:Label runat="server" ID="lblNombreCliente_NotaEntrega"></asp:Label>,
@@ -1748,13 +1750,8 @@ de lo acá establecido se firma y se estampa huella digital en fecha
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
-    <script src="/Scripts/plugins/qrcode/qrcode.js"></script>
-    <script src="/Scripts/plugins/qrious/qrious.min.js"></script>
     <script>
 
-        const idSolicitud = '<%=pcIDSolicitud%>';
-
-        /* Incializar galerias */
         $("#divGaleriaGarantia").unitegallery({
             gallery_width: 900,
             gallery_height: 600
@@ -1767,39 +1764,21 @@ de lo acá establecido se firma y se estampa huella digital en fecha
             grid_num_rows: 15
         });
 
-        //$("#divContenedorInspeccionSeguro").css('margin-top', '999px').css('display', 'none');
-        //$("#divInspeccionSeguroPDF").css('display', 'none');
+        $("#divContenedorInspeccionSeguro").css('margin-top', '999px').css('display', 'none');
+        $("#divInspeccionSeguroPDF").css('display', 'none');
 
-        /* Información de los documentos */
-        $('.lblDepartamento_Firma').text('<%=DepartamentoFirma%>');
-        $('.lblCiudad_Firma').text('<%=CiudadFirma%>');
-        $('.lblNumeroDia_Firma').text('<%=DiasFirma%>');
-        $('.lblMes_Firma').text('<%=MesFirma%>');
-        $('.lblAnio_Firma').text('<%=AnioFirma%>');
+        const departamentoFirma = '<%=DepartamentoFirma%>';
+        const ciudadFirma = '<%=CiudadFirma%>';
+        const diafirma = '<%=DiasFirma%>';
+        const mesFirma = ' <%=MesFirma%>';
+        const anioFirma = ' <%=AnioFirma%>';
+        const idSolicitud = '<%=pcIDSolicitud%>';
 
-
-        $(document).ready(function () {
-
-            InicializarCodigosQR();
-        });
-
-        function InicializarCodigosQR() {
-
-            GenerarCodigoQR('qrCode_InspeccionSeguro');
-        };
-
-        /* Generar QR */
-        function GenerarCodigoQR(idElemento) {
-
-            let textQr = '<%=UrlCodigoQR%>';
-
-            let qrcode = new QRCode(document.getElementById('' + idElemento + ''), {
-                width: 70,
-                height: 70
-            });
-
-            qrcode.makeCode(textQr);
-        }
+        $('.lblDepartamento_Firma').text(departamentoFirma);
+        $('.lblCiudad_Firma').text(ciudadFirma);
+        $('.lblNumeroDia_Firma').text(diafirma);
+        $('.lblMes_Firma').text(mesFirma);
+        $('.lblAnio_Firma').text(anioFirma);
 
         function ExportToPDF(fileName, divContenedor, divPDF) {
 

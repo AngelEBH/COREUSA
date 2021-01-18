@@ -1612,36 +1612,14 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     /* Guardar informacion del cotizador para imprimir documentos... si,esto va a fallar también */
                     if (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204 || precalificado.IdProducto == 201)
                     {
-                        var hoy = DateTime.Today;
-                        DateTime fechaPrimerPago;
-
-                        /* Determinar fecha del primer pago */
-                        var mesPrimerPago = hoy;
-                        var anioPrimerPago = hoy.AddMonths(1).Year;
-                        var diaPrimerPago = hoy.Day;
-
-                        if (hoy.Day >= 6 && hoy.Day <= 21)
-                        {
-                            mesPrimerPago = hoy.AddMonths(1);
-                            diaPrimerPago = 15;
-                        }
-
-                        else if (hoy.Day < 6 || hoy.Day > 21)
-                        {
-                            var fecha = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-
-                            diaPrimerPago = fecha.Day;
-                        }
-
-                        fechaPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago.Month, diaPrimerPago);
-
+                        var fechaPrimerPago = ObtenerFechaPrimerPago();
                         decimal totalAFinanciar = cotizador.TotalAFinanciar;
                         decimal valorAPrestar = garantia.ValorMercado - garantia.ValorPrima;
                         decimal tasaInteresAnual = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204) ? cotizador.TasaInteresAnual : ObtenerTasaInteresAnualPorIdProducto(precalificado.IdProducto);
                         decimal tasaInteresMensual = tasaInteresAnual / 12;
                         decimal totalAFinanciarConIntereses = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204) ? cotizador.TotalFinanciadoConIntereses : CalcularTotalAFinanciarConIntereses(cotizador.TotalAFinanciar, solicitud.PlazoSeleccionado, tasaInteresAnual, precalificado.IdProducto);
 
-                        using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Guardar", sqlConexion, sqlTransaction))
+                        using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Actualizar", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
@@ -2030,6 +2008,30 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         }
 
         return tasaInteresAnual;
+    }
+
+    private static DateTime ObtenerFechaPrimerPago()
+    {
+        var hoy = DateTime.Today;
+        DateTime fechaPrimerPago;
+        
+        var mesPrimerPago = hoy.AddMonths(1).Month;
+        var anioPrimerPago = hoy.AddMonths(1).Year;
+        var diaPrimerPago = hoy.Day;
+
+        if (hoy.Day >= 6 && hoy.Day <= 20)
+        {
+            var fecha = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month)); // ultimo dia del mes
+            diaPrimerPago = fecha.Day > 30 ? 30 : fecha.Day;
+        }
+        else if (hoy.Day >= 21 || hoy.Day <= 5)
+        {
+            diaPrimerPago = 15;
+        }
+
+        fechaPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
+
+        return fechaPrimerPago;
     }
 
     public static List<SolicitudesDocumentosViewModel> RenombrarListaDocumentos(int idMaestro, string nombreCarpetaDestino, List<SolicitudesDocumentosViewModel> listaDocumentos)

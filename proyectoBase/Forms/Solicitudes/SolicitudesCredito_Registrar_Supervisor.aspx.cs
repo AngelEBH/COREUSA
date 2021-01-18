@@ -1529,29 +1529,7 @@ public partial class SolicitudesCredito_Registrar_Supervisor : System.Web.UI.Pag
                     /* Guardar informacion del cotizador para imprimir documentos... si,esto va a fallar también */
                     if (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204 || precalificado.IdProducto == 201)
                     {
-                        var hoy = DateTime.Today;
-                        DateTime fechaPrimerPago;
-
-                        /* Determinar fecha del primer pago */
-                        var MesPrimerPago = hoy;
-                        var AnioPrimerPago = hoy.AddMonths(1).Year;
-                        var DiaPrimerPago = hoy.Day;
-
-                        if (hoy.Day >= 6 && hoy.Day <= 21)
-                        {
-                            MesPrimerPago = hoy.AddMonths(1);
-                            DiaPrimerPago = 15;
-                        }
-
-                        else if (hoy.Day < 6 || hoy.Day > 21)
-                        {
-                            var fecha = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-
-                            DiaPrimerPago = fecha.Day;
-                        }
-
-                        fechaPrimerPago = new DateTime(AnioPrimerPago, MesPrimerPago.Month, DiaPrimerPago);
-
+                        var fechaPrimerPago = ObtenerFechaPrimerPago();
                         decimal totalAFinanciar = cotizador.TotalAFinanciar;
                         decimal valorAPrestar = garantia.ValorMercado - garantia.ValorPrima;
                         decimal tasaInteresAnual = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204) ? cotizador.TasaInteresAnual : ObtenerTasaInteresAnualPorIdProducto(precalificado.IdProducto);
@@ -2164,6 +2142,30 @@ public partial class SolicitudesCredito_Registrar_Supervisor : System.Web.UI.Pag
         }
 
         return resultado;
+    }
+
+    private static DateTime ObtenerFechaPrimerPago()
+    {
+        var hoy = DateTime.Today;
+        DateTime fechaPrimerPago;
+
+        var mesPrimerPago = hoy.AddMonths(1).Month;
+        var anioPrimerPago = hoy.AddMonths(1).Year;
+        var diaPrimerPago = hoy.Day;
+
+        if (hoy.Day >= 6 && hoy.Day <= 20)
+        {
+            var fecha = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month)); // ultimo dia del mes
+            diaPrimerPago = fecha.Day > 30 ? 30 : fecha.Day;
+        }
+        else if (hoy.Day >= 21 || hoy.Day <= 5)
+        {
+            diaPrimerPago = 15;
+        }
+
+        fechaPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
+
+        return fechaPrimerPago;
     }
 
     #region View Models
