@@ -1331,7 +1331,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                     sqlComando.Parameters.AddWithValue("@pnValorSeleccionado", informacionSolicitud.ValorSeleccionado);
                     sqlComando.Parameters.AddWithValue("@piPlazoSeleccionado", informacionSolicitud.PlazoSeleccionado);
-                    sqlComando.Parameters.AddWithValue("@pnValorPrima", informacionSolicitud.ValorPrima);
+                    //sqlComando.Parameters.AddWithValue("@pnValorPrima", informacionSolicitud.ValorPrima);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", informacionSolicitud.IdProducto == 203 ? 0 : informacionSolicitud.ValorPrima);
                     sqlComando.Parameters.AddWithValue("@pnValorGarantia", informacionSolicitud.ValorGarantia);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -1352,6 +1353,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 {
                     var fechaPrimerPago = ObtenerFechaPrimerPago(informacionSolicitud.IdProducto.ToString());
 
+                    var valorAPrestar = informacionSolicitud.IdProducto != 203 ? informacionSolicitud.ValorGarantia - informacionSolicitud.ValorPrima : informacionSolicitud.ValorPrima;
+
                     using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Actualizar", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
@@ -1360,7 +1363,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@pcNumeroPrestamo", "No disponible");
                         sqlComando.Parameters.AddWithValue("@pdFechaPrimerCuota", fechaPrimerPago);
                         sqlComando.Parameters.AddWithValue("@pnValorTotalFinanciamiento", cotizador.TotalAFinanciar);
-                        sqlComando.Parameters.AddWithValue("@pnValorAPrestar", informacionSolicitud.ValorGarantia - informacionSolicitud.ValorPrima);
+                        sqlComando.Parameters.AddWithValue("@pnValorAPrestar", valorAPrestar);
                         sqlComando.Parameters.AddWithValue("@pnCostoGPS", cotizador.CostoGPS);
                         sqlComando.Parameters.AddWithValue("@pnValorTotalSeguro", cotizador.TotalSeguroVehiculo);
                         sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", cotizador.GastosdeCierre);

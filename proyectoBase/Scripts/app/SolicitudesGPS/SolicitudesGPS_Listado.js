@@ -235,7 +235,9 @@ function CargarSolicitudesGPS() {
                                     '<i class="fa fa-bars"></i>' +
                                     '</button >' +
                                     '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
-                                    '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Revisar garantía</button>'
+                                    (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Actualizar revisiones</button>' : '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Revisar garantía</button>') +
+                                    (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? '<button id="btnInstalarGPS" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Instalar GPS</button>' : '')+
+
                                 '</div>' +
                                     '</div >';
                             }
@@ -320,7 +322,8 @@ function CargarSolicitudesGPS() {
                                     '<i class="fa fa-bars"></i>' +
                                     '</button >' +
                                     '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
-                                    '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Revisar garantía</button>'
+                                    (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Actualizar revisiones</button>' : '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Revisar garantía</button>') +
+                                    (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? '<button id="btnInstalarGPS" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fas fa-map-marker-alt"></i> Instalar GPS</button>' : '') +
                                 '</div>' +
                                     '</div >';
                             }
