@@ -1334,29 +1334,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 /* Guardar informacion del cotizador para imprimir documentos... */
                 if (informacionSolicitud.IdProducto == 202 || informacionSolicitud.IdProducto == 203 || informacionSolicitud.IdProducto == 204 || informacionSolicitud.IdProducto == 201)
                 {
-                    var hoy = DateTime.Today;
-                    DateTime fechaPrimerPago;
-
-                    /* Determinar fecha del primer pago */
-                    var MesPrimerPago = hoy;
-                    var AnioPrimerPago = hoy.AddMonths(1).Year;
-                    var DiaPrimerPago = hoy.Day;
-
-                    if (hoy.Day >= 6 && hoy.Day <= 25)
-                    {
-                        MesPrimerPago = hoy.AddMonths(1);
-                        DiaPrimerPago = 15;
-                    }
-
-                    else if (hoy.Day < 6 || hoy.Day > 25)
-                    {
-                        var fecha = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-
-                        DiaPrimerPago = fecha.Day;
-                    }
-
-                    fechaPrimerPago = new DateTime(AnioPrimerPago, MesPrimerPago.Month, DiaPrimerPago);
-
+                    var fechaPrimerPago = ObtenerFechaPrimerPago();
 
                     using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Actualizar", sqlConexion))
                     {
@@ -1780,69 +1758,99 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return lUrlDesencriptado;
     }
 
-    public static DateTime ObtenerFechaPrimerPagoPorProducto(string idProducto)
+    //public static DateTime ObtenerFechaPrimerPagoPorProducto(string idProducto)
+    //{
+    //    var fechaPrimerPago = DateTime.Today;
+    //    var hoy = DateTime.Today;
+    //    var mesPrimerPago = hoy.Month;
+    //    var anioPrimerPago = hoy.Year;
+    //    var diaPrimerPago = hoy.Day;
+
+    //    /* ================================================== */
+    //    /* ================= Quincenalmente ================= */
+    //    /* ======= Del 06 al 20 = prox. 30 quincenal ======== */
+    //    /* ======= Del 21 al 05 = prox. 15 quincenal ======== */
+    //    /* ================================================== */
+    //    if (idProducto == "101" || idProducto == "201" || idProducto == "301" || idProducto == "302")
+    //    {
+    //        /* Próximo 30 */
+    //        if (hoy.Day >= 6 && hoy.Day <= 20)
+    //        {
+    //            var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
+
+    //            diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
+    //        }
+    //        /* Próximo 15 */
+    //        else if (hoy.Day >= 21 || hoy.Day <= 5)
+    //        {
+    //            diaPrimerPago = 15;
+
+    //            if (hoy.Day >= 21)
+    //            {
+    //                mesPrimerPago = hoy.AddMonths(1).Month;
+    //                anioPrimerPago = hoy.AddMonths(1).Year;
+    //            }
+    //        }
+    //    }
+    //    /* ================================================== */
+    //    /* ================== Mensualmente ================== */
+    //    /* ========= Del 06 - 20 = prox. 30 mensual ========= */
+    //    /* ========= Del 21 - 05 = prox. 15 mensual ========= */
+    //    /* ================================================== */
+    //    else if (idProducto == "202" || idProducto == "203" || idProducto == "204")
+    //    {
+    //        /* Próximo 30 */
+    //        if (hoy.Day >= 6 && hoy.Day <= 20)
+    //        {
+    //            var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
+    //            diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
+    //        }
+    //        /* Próximo 15 */
+    //        else if (hoy.Day >= 21 || hoy.Day <= 5)
+    //        {
+    //            diaPrimerPago = 15;
+
+    //            if (hoy.Day >= 21)
+    //            {
+    //                mesPrimerPago = hoy.AddMonths(1).Month;
+    //                anioPrimerPago = hoy.AddMonths(1).Year;
+    //            }
+    //        }
+    //    }
+
+    //    fechaPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
+
+    //    return fechaPrimerPago;
+    //}
+
+    private static DateTime ObtenerFechaPrimerPago()
     {
-        var fechaPrimerPago = DateTime.Today;
-        var hoy = DateTime.Today;
-        var mesPrimerPago = hoy.Month;
-        var anioPrimerPago = hoy.Year;
-        var diaPrimerPago = hoy.Day;
+        var hoy = DateTime.Now;
+        int diaPrimerPago = hoy.Day;
+        int mesPrimerPago = hoy.Month;
+        int anioPrimerPago = hoy.Year;
 
-        /* ================================================== */
-        /* ================= Quincenalmente ================= */
-        /* ======= Del 06 al 20 = prox. 30 quincenal ======== */
-        /* ======= Del 21 al 05 = prox. 15 quincenal ======== */
-        /* ================================================== */
-        if (idProducto == "101" || idProducto == "201" || idProducto == "301" || idProducto == "302")
+        DateTime fechaDelPrimerPago;
+
+        if (hoy.Day >= 6 && hoy.Day <= 20)
         {
-            /* Próximo 30 */
-            if (hoy.Day >= 6 && hoy.Day <= 20)
-            {
-                var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-
-                diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
-            }
-            /* Próximo 15 */
-            else if (hoy.Day >= 21 || hoy.Day <= 5)
-            {
-                diaPrimerPago = 15;
-
-                if (hoy.Day >= 21)
-                {
-                    mesPrimerPago = hoy.AddMonths(1).Month;
-                    anioPrimerPago = hoy.AddMonths(1).Year;
-                }
-            }
+            var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month)).Day; // ultimo dia del mes
+            diaPrimerPago = ultimoDiaDelMes > 30 ? 30 : ultimoDiaDelMes;
         }
-        /* ================================================== */
-        /* ================== Mensualmente ================== */
-        /* ========= Del 06 - 20 = prox. 30 mensual ========= */
-        /* ========= Del 21 - 05 = prox. 15 mensual ========= */
-        /* ================================================== */
-        else if (idProducto == "202" || idProducto == "203" || idProducto == "204")
+        else if (hoy.Day >= 21 || hoy.Day <= 5)
         {
-            /* Próximo 30 */
-            if (hoy.Day >= 6 && hoy.Day <= 20)
+            if (hoy.Day > 5)
             {
-                var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-                diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
+                mesPrimerPago = hoy.AddMonths(1).Month;
+                anioPrimerPago = hoy.AddMonths(1).Year;
             }
-            /* Próximo 15 */
-            else if (hoy.Day >= 21 || hoy.Day <= 5)
-            {
-                diaPrimerPago = 15;
 
-                if (hoy.Day >= 21)
-                {
-                    mesPrimerPago = hoy.AddMonths(1).Month;
-                    anioPrimerPago = hoy.AddMonths(1).Year;
-                }
-            }
+            diaPrimerPago = 15;
         }
 
-        fechaPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
+        fechaDelPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
 
-        return fechaPrimerPago;
+        return fechaDelPrimerPago;
     }
 
     #endregion
