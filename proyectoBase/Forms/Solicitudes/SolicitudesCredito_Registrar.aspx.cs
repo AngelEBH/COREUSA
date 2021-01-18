@@ -799,25 +799,25 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             ddlTiempoDeConocerReferencia.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
                         }
 
-                        sqlResultado.NextResult();
-
                         /* Moneda */
-                        ddlMoneda.Items.Clear();
-                        ddlMoneda.Items.Add(new ListItem("Seleccionar", ""));
-                        while (sqlResultado.Read())
-                        {
-                            ddlMoneda.Items.Add(new ListItem(sqlResultado["fcNombreMoneda"].ToString(), sqlResultado["fiMoneda"].ToString()));
-                        }
-
                         sqlResultado.NextResult();
+
+                        //ddlMoneda.Items.Clear();
+                        //ddlMoneda.Items.Add(new ListItem("Seleccionar", ""));
+                        //while (sqlResultado.Read())
+                        //{
+                        // ddlMoneda.Items.Add(new ListItem(sqlResultado["fcNombreMoneda"].ToString(), sqlResultado["fiMoneda"].ToString()));
+                        //}
 
                         /* Tipo de cliente */
-                        ddlTipoDeCliente.Items.Clear();
-                        ddlTipoDeCliente.Items.Add(new ListItem("Seleccionar", ""));
-                        while (sqlResultado.Read())
-                        {
-                            ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
-                        }
+                        sqlResultado.NextResult();
+
+                        //ddlTipoDeCliente.Items.Clear();
+                        //ddlTipoDeCliente.Items.Add(new ListItem("Seleccionar", ""));
+                        //while (sqlResultado.Read())
+                        //{
+                        // ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
+                        //}
                     }
                 }
 
@@ -913,7 +913,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 rbSexoMasculino.Checked = true;
                             }
                             ddlEstadoCivil.SelectedValue = sqlResultado["fiIDEstadoCivil"].ToString();
-                            ddlTipoDeCliente.SelectedValue = sqlResultado["fiTipoCliente"].ToString();
+                            //ddlTipoDeCliente.SelectedValue = sqlResultado["fiTipoCliente"].ToString();
                             ddlTipoDeVivienda.SelectedValue = sqlResultado["fiIDVivienda"].ToString();
                             ddlTiempoDeResidir.SelectedValue = sqlResultado["fiTiempoResidir"].ToString();
                         }
@@ -1404,7 +1404,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         using (var sqlComando = new SqlCommand("sp_CREDCliente_Maestro_Insert", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", cliente.IdTipoCliente);
+                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", 1);
                             sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", precalificado.Identidad);
                             sqlComando.Parameters.AddWithValue("@fcRTN", cliente.RtnCliente);
                             sqlComando.Parameters.AddWithValue("@fcPrimerNombreCliente", precalificado.PrimerNombre);
@@ -1573,7 +1573,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@fiTipoSolicitud", precalificado.IdTipoDeSolicitud);
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@fnValorSeleccionado", solicitud.ValorSeleccionado);
-                        sqlComando.Parameters.AddWithValue("@fiMoneda", solicitud.IdTipoMoneda);
+                        sqlComando.Parameters.AddWithValue("@fiMoneda", 1);
                         sqlComando.Parameters.AddWithValue("@fiPlazoSeleccionado", solicitud.PlazoSeleccionado);
                         sqlComando.Parameters.AddWithValue("@fnValorPrima", solicitud.ValorPrima);
                         sqlComando.Parameters.AddWithValue("@fnValorGarantia", solicitud.ValorPrima == 0 ? 0 : solicitud.ValorGlobal);
@@ -1612,7 +1612,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     /* Guardar informacion del cotizador para imprimir documentos... si,esto va a fallar también */
                     if (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204 || precalificado.IdProducto == 201)
                     {
-                        var fechaPrimerPago = ObtenerFechaPrimerPago();
+                        var fechaPrimerPago = ObtenerFechaPrimerPago(precalificado.IdProducto.ToString());
                         decimal totalAFinanciar = cotizador.TotalAFinanciar;
                         decimal valorAPrestar = garantia.ValorMercado - garantia.ValorPrima;
                         decimal tasaInteresAnual = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204) ? cotizador.TasaInteresAnual : ObtenerTasaInteresAnualPorIdProducto(precalificado.IdProducto);
@@ -2010,28 +2010,67 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         return tasaInteresAnual;
     }
 
-    private static DateTime ObtenerFechaPrimerPago()
+    private static DateTime ObtenerFechaPrimerPago(string idProducto)
     {
-        var hoy = DateTime.Today;
-        DateTime fechaPrimerPago;
+        DateTime fechaDelPrimerPago;
 
-        var mesPrimerPago = hoy.AddMonths(1).Month;
-        var anioPrimerPago = hoy.AddMonths(1).Year;
-        var diaPrimerPago = hoy.Day;
+        var hoy = DateTime.Now;
+        int diaPrimerPago = hoy.Day;
+        int mesPrimerPago = hoy.Month;
+        int anioPrimerPago = hoy.Year;
 
-        if (hoy.Day >= 6 && hoy.Day <= 20)
+        /* ================================================== */
+        /* ================= Quincenalmente ================ */
+        /* ======= Del 06 al 20 = 30 del mismo mes ========== */
+        /* ======= Del 21 al 05 = proximo 15 ================ */
+        /* ================================================== */
+        if (idProducto == "101" || idProducto == "201" || idProducto == "301" || idProducto == "302")
         {
-            var fecha = new DateTime(anioPrimerPago, mesPrimerPago, DateTime.DaysInMonth(anioPrimerPago, mesPrimerPago)); // ultimo dia del mes
-            diaPrimerPago = fecha.Day > 30 ? 30 : fecha.Day;
+            if (hoy.Day >= 6 && hoy.Day <= 20)
+            {
+                var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month)).Day; // ultimo dia del mes
+                diaPrimerPago = ultimoDiaDelMes > 30 ? 30 : ultimoDiaDelMes;
+            }
+            else if (hoy.Day >= 21 || hoy.Day <= 5)
+            {
+                if (hoy.Day > 5)
+                {
+                    mesPrimerPago = hoy.AddMonths(1).Month;
+                    anioPrimerPago = hoy.AddMonths(1).Year;
+                }
+
+                diaPrimerPago = 15;
+            }
         }
-        else if (hoy.Day >= 21 || hoy.Day <= 5)
+        /* ================================================== */
+        /* ================== Mensualmente ================== */
+        /* ========= Del 06 - 20 = prox. 30 mensual ========= */
+        /* ========= Del 21 - 05 = prox. 15 mensual ========= */
+        /* ================================================== */
+        else if (idProducto == "202" || idProducto == "203" || idProducto == "204")
         {
-            diaPrimerPago = 15;
+            if (hoy.Day >= 6 && hoy.Day <= 20)
+            {
+                anioPrimerPago = hoy.AddMonths(1).Year;
+                mesPrimerPago = hoy.AddMonths(1).Month;
+                diaPrimerPago = 15;
+            }
+            else if (hoy.Day >= 21 || hoy.Day <= 5)
+            {
+                if (hoy.Day > 5)
+                {
+                    mesPrimerPago = hoy.AddMonths(1).Month;
+                    anioPrimerPago = hoy.AddMonths(1).Year;
+                }
+
+                var ultimoDiaDelMes = new DateTime(anioPrimerPago, mesPrimerPago, DateTime.DaysInMonth(anioPrimerPago, mesPrimerPago)).Day; // ultimo dia del mes
+                diaPrimerPago = ultimoDiaDelMes > 30 ? 30 : ultimoDiaDelMes;
+            }
         }
 
-        fechaPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
+        fechaDelPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
 
-        return fechaPrimerPago;
+        return fechaDelPrimerPago;
     }
 
     public static List<SolicitudesDocumentosViewModel> RenombrarListaDocumentos(int idMaestro, string nombreCarpetaDestino, List<SolicitudesDocumentosViewModel> listaDocumentos)
