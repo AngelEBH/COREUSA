@@ -1350,7 +1350,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 /* Guardar informacion del cotizador para imprimir documentos... */
                 if (informacionSolicitud.IdProducto == 202 || informacionSolicitud.IdProducto == 203 || informacionSolicitud.IdProducto == 204 || informacionSolicitud.IdProducto == 201)
                 {
-                    var fechaPrimerPago = ObtenerFechaPrimerPago(idSolicitud);
+                    var fechaPrimerPago = ObtenerFechaPrimerPago(informacionSolicitud.IdProducto.ToString());
 
                     using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Actualizar", sqlConexion))
                     {
@@ -1786,7 +1786,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         int anioPrimerPago = hoy.Year;
 
         /* ================================================== */
-        /* ================= Quincenalmente  ================ */
+        /* ================= Quincenalmente ================ */
         /* ======= Del 06 al 20 = 30 del mismo mes ========== */
         /* ======= Del 21 al 05 = proximo 15 ================ */
         /* ================================================== */

@@ -996,6 +996,6 @@
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=202101182021103725"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ActualizarSolicitud.js?v=20210118014152"></script>
 </body>
 </html>
