@@ -16,6 +16,8 @@ using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 {
+    #region Propiedades
+
     private string pcEncriptado = "";
     private string pcIDUsuario = "";
     private string pcIDSesion = "";
@@ -25,10 +27,13 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     public string pcID = "";
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
     public SolicitudesCredito_ActualizarSolicitud_Precalificado_ViewModel Precalificado;
-    public List<TipoDocumento_ViewModel> DocumentosRequeridos = new List<TipoDocumento_ViewModel>();
+    public List<CoreFinanciero_TipoDocumento_ViewModel> DocumentosRequeridos = new List<CoreFinanciero_TipoDocumento_ViewModel>();
     public string jsonPrecalicado;
-
     public int IdProducto { get; set; }
+
+    #endregion
+
+    #region Page_Load, CargarListas, CargarInformacion, CargarPrecalificado
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -84,10 +89,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
             Session["tipoDoc"] = tipoDocumento;
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-                { "limit", 1 },
-                { "title", "auto" },
-                { "uploadDir", uploadDir }
-            });
+{ "limit", 1 },
+{ "title", "auto" },
+{ "uploadDir", uploadDir }
+});
 
             switch (type)
             {
@@ -193,7 +198,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                         while (sqlResultado.Read())
                         {
-                            DocumentosRequeridos.Add(new TipoDocumento_ViewModel()
+                            DocumentosRequeridos.Add(new CoreFinanciero_TipoDocumento_ViewModel()
                             {
                                 IdTipoDocumento = (short)sqlResultado["fiIDTipoDocumento"],
                                 DescripcionTipoDocumento = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
@@ -731,6 +736,9 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         }
     }
 
+    #endregion
+
+    #region Cargar Municipios, poblados y barrios
 
     public static List<Municipios_ViewModel> CargarMunicipios(int idDepartamento)
     {
@@ -855,10 +863,14 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return barriosColonias;
     }
 
+    #endregion
+
+    #region WebMethods Cargar Municipios, poblados, colonias y documentos requeridos
+
     [WebMethod]
-    public static List<TipoDocumento_ViewModel> CargarDocumentosRequeridos()
+    public static List<CoreFinanciero_TipoDocumento_ViewModel> CargarDocumentosRequeridos()
     {
-        return (List<TipoDocumento_ViewModel>)HttpContext.Current.Session["DocumentosRequeridos"];
+        return (List<CoreFinanciero_TipoDocumento_ViewModel>)HttpContext.Current.Session["DocumentosRequeridos"];
     }
 
     [WebMethod]
@@ -878,6 +890,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     {
         return CargarBarriosColonias(idDepartamento, idMunicipio, idCiudadPoblado);
     }
+
+    #endregion
+
+    #region Actualizar condiciones
 
     [WebMethod]
     public static bool ActualizarCondicionamiento(int idSolicitudCondicion, int idCliente, int idTipoDeCondicion, string objSeccion, string dataCrypt, SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel cotizador)
@@ -1334,7 +1350,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 /* Guardar informacion del cotizador para imprimir documentos... */
                 if (informacionSolicitud.IdProducto == 202 || informacionSolicitud.IdProducto == 203 || informacionSolicitud.IdProducto == 204 || informacionSolicitud.IdProducto == 201)
                 {
-                    var fechaPrimerPago = ObtenerFechaPrimerPago();
+                    var fechaPrimerPago = ObtenerFechaPrimerPago(idSolicitud);
 
                     using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Actualizar", sqlConexion))
                     {
@@ -1379,6 +1395,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         }
         return resultado;
     }
+
+    #endregion
 
     #region Administracion de referencias personales
 
@@ -1716,7 +1734,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
     #endregion
 
-    #region Otras funciones
+    #region Funciones utilitarias
 
     [WebMethod]
     public static string ObtenerUrlEncriptado(int idCliente, string dataCrypt)
@@ -1758,94 +1776,62 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         return lUrlDesencriptado;
     }
 
-    //public static DateTime ObtenerFechaPrimerPagoPorProducto(string idProducto)
-    //{
-    //    var fechaPrimerPago = DateTime.Today;
-    //    var hoy = DateTime.Today;
-    //    var mesPrimerPago = hoy.Month;
-    //    var anioPrimerPago = hoy.Year;
-    //    var diaPrimerPago = hoy.Day;
-
-    //    /* ================================================== */
-    //    /* ================= Quincenalmente ================= */
-    //    /* ======= Del 06 al 20 = prox. 30 quincenal ======== */
-    //    /* ======= Del 21 al 05 = prox. 15 quincenal ======== */
-    //    /* ================================================== */
-    //    if (idProducto == "101" || idProducto == "201" || idProducto == "301" || idProducto == "302")
-    //    {
-    //        /* Próximo 30 */
-    //        if (hoy.Day >= 6 && hoy.Day <= 20)
-    //        {
-    //            var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-
-    //            diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
-    //        }
-    //        /* Próximo 15 */
-    //        else if (hoy.Day >= 21 || hoy.Day <= 5)
-    //        {
-    //            diaPrimerPago = 15;
-
-    //            if (hoy.Day >= 21)
-    //            {
-    //                mesPrimerPago = hoy.AddMonths(1).Month;
-    //                anioPrimerPago = hoy.AddMonths(1).Year;
-    //            }
-    //        }
-    //    }
-    //    /* ================================================== */
-    //    /* ================== Mensualmente ================== */
-    //    /* ========= Del 06 - 20 = prox. 30 mensual ========= */
-    //    /* ========= Del 21 - 05 = prox. 15 mensual ========= */
-    //    /* ================================================== */
-    //    else if (idProducto == "202" || idProducto == "203" || idProducto == "204")
-    //    {
-    //        /* Próximo 30 */
-    //        if (hoy.Day >= 6 && hoy.Day <= 20)
-    //        {
-    //            var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-    //            diaPrimerPago = ultimoDiaDelMes.Day > 30 ? 30 : ultimoDiaDelMes.Day;
-    //        }
-    //        /* Próximo 15 */
-    //        else if (hoy.Day >= 21 || hoy.Day <= 5)
-    //        {
-    //            diaPrimerPago = 15;
-
-    //            if (hoy.Day >= 21)
-    //            {
-    //                mesPrimerPago = hoy.AddMonths(1).Month;
-    //                anioPrimerPago = hoy.AddMonths(1).Year;
-    //            }
-    //        }
-    //    }
-
-    //    fechaPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
-
-    //    return fechaPrimerPago;
-    //}
-
-    private static DateTime ObtenerFechaPrimerPago()
+    private static DateTime ObtenerFechaPrimerPago(string idProducto)
     {
+        DateTime fechaDelPrimerPago;
+
         var hoy = DateTime.Now;
         int diaPrimerPago = hoy.Day;
         int mesPrimerPago = hoy.Month;
         int anioPrimerPago = hoy.Year;
 
-        DateTime fechaDelPrimerPago;
-
-        if (hoy.Day >= 6 && hoy.Day <= 20)
+        /* ================================================== */
+        /* ================= Quincenalmente  ================ */
+        /* ======= Del 06 al 20 = 30 del mismo mes ========== */
+        /* ======= Del 21 al 05 = proximo 15 ================ */
+        /* ================================================== */
+        if (idProducto == "101" || idProducto == "201" || idProducto == "301" || idProducto == "302")
         {
-            var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month)).Day; // ultimo dia del mes
-            diaPrimerPago = ultimoDiaDelMes > 30 ? 30 : ultimoDiaDelMes;
-        }
-        else if (hoy.Day >= 21 || hoy.Day <= 5)
-        {
-            if (hoy.Day > 5)
+            if (hoy.Day >= 6 && hoy.Day <= 20)
             {
-                mesPrimerPago = hoy.AddMonths(1).Month;
-                anioPrimerPago = hoy.AddMonths(1).Year;
+                var ultimoDiaDelMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month)).Day; // ultimo dia del mes
+                diaPrimerPago = ultimoDiaDelMes > 30 ? 30 : ultimoDiaDelMes;
             }
+            else if (hoy.Day >= 21 || hoy.Day <= 5)
+            {
+                if (hoy.Day > 5)
+                {
+                    mesPrimerPago = hoy.AddMonths(1).Month;
+                    anioPrimerPago = hoy.AddMonths(1).Year;
+                }
 
-            diaPrimerPago = 15;
+                diaPrimerPago = 15;
+            }
+        }
+        /* ================================================== */
+        /* ================== Mensualmente ================== */
+        /* ========= Del 06 - 20 = prox. 30 mensual ========= */
+        /* ========= Del 21 - 05 = prox. 15 mensual ========= */
+        /* ================================================== */
+        else if (idProducto == "202" || idProducto == "203" || idProducto == "204")
+        {
+            if (hoy.Day >= 6 && hoy.Day <= 20)
+            {
+                anioPrimerPago = hoy.AddMonths(1).Year;
+                mesPrimerPago = hoy.AddMonths(1).Month;
+                diaPrimerPago = 15;
+            }
+            else if (hoy.Day >= 21 || hoy.Day <= 5)
+            {
+                if (hoy.Day > 5)
+                {
+                    mesPrimerPago = hoy.AddMonths(1).Month;
+                    anioPrimerPago = hoy.AddMonths(1).Year;
+                }
+
+                var ultimoDiaDelMes = new DateTime(anioPrimerPago, mesPrimerPago, DateTime.DaysInMonth(anioPrimerPago, mesPrimerPago)).Day; // ultimo dia del mes
+                diaPrimerPago = ultimoDiaDelMes > 30 ? 30 : ultimoDiaDelMes;
+            }
         }
 
         fechaDelPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
@@ -1970,7 +1956,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         public string NombreMunicipio { get; set; }
     }
 
-    public class TipoDocumento_ViewModel
+    public class CoreFinanciero_TipoDocumento_ViewModel
     {
         public int IdTipoDocumento { get; set; }
         public string DescripcionTipoDocumento { get; set; }
@@ -2075,4 +2061,5 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         public int AnalistaComentario { get; set; }
     }
     #endregion
+
 }
