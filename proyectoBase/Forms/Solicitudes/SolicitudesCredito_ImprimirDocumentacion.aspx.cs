@@ -447,7 +447,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblNumeroPrestamo_CorreoSeguro.Text = "";
 
                                         /* Nota de entrega */
-                                        lblVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
+                                        //lblVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
                                         lblNombreCliente_NotaEntrega.Text = nombreCliente;
                                         lblValorAPrestarEnPalabras_NotaEntrega.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString());
                                         lblValorAPrestar_NotaEntrega.Text = monedaSimbolo + " " + valorParaCompraDeVehiculo.ToString("N");

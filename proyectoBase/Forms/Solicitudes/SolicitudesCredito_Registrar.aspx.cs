@@ -799,25 +799,25 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             ddlTiempoDeConocerReferencia.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
                         }
 
-                        sqlResultado.NextResult();
-
                         /* Moneda */
-                        ddlMoneda.Items.Clear();
-                        ddlMoneda.Items.Add(new ListItem("Seleccionar", ""));
-                        while (sqlResultado.Read())
-                        {
-                            ddlMoneda.Items.Add(new ListItem(sqlResultado["fcNombreMoneda"].ToString(), sqlResultado["fiMoneda"].ToString()));
-                        }
-
                         sqlResultado.NextResult();
+
+                        //ddlMoneda.Items.Clear();
+                        //ddlMoneda.Items.Add(new ListItem("Seleccionar", ""));
+                        //while (sqlResultado.Read())
+                        //{
+                        // ddlMoneda.Items.Add(new ListItem(sqlResultado["fcNombreMoneda"].ToString(), sqlResultado["fiMoneda"].ToString()));
+                        //}
 
                         /* Tipo de cliente */
-                        ddlTipoDeCliente.Items.Clear();
-                        ddlTipoDeCliente.Items.Add(new ListItem("Seleccionar", ""));
-                        while (sqlResultado.Read())
-                        {
-                            ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
-                        }
+                        sqlResultado.NextResult();
+
+                        //ddlTipoDeCliente.Items.Clear();
+                        //ddlTipoDeCliente.Items.Add(new ListItem("Seleccionar", ""));
+                        //while (sqlResultado.Read())
+                        //{
+                        // ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
+                        //}
                     }
                 }
 
@@ -913,7 +913,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 rbSexoMasculino.Checked = true;
                             }
                             ddlEstadoCivil.SelectedValue = sqlResultado["fiIDEstadoCivil"].ToString();
-                            ddlTipoDeCliente.SelectedValue = sqlResultado["fiTipoCliente"].ToString();
+                            //ddlTipoDeCliente.SelectedValue = sqlResultado["fiTipoCliente"].ToString();
                             ddlTipoDeVivienda.SelectedValue = sqlResultado["fiIDVivienda"].ToString();
                             ddlTiempoDeResidir.SelectedValue = sqlResultado["fiTiempoResidir"].ToString();
                         }
@@ -1404,7 +1404,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         using (var sqlComando = new SqlCommand("sp_CREDCliente_Maestro_Insert", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", cliente.IdTipoCliente);
+                            sqlComando.Parameters.AddWithValue("@fiTipoCliente", 1);
                             sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", precalificado.Identidad);
                             sqlComando.Parameters.AddWithValue("@fcRTN", cliente.RtnCliente);
                             sqlComando.Parameters.AddWithValue("@fcPrimerNombreCliente", precalificado.PrimerNombre);
@@ -1573,7 +1573,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@fiTipoSolicitud", precalificado.IdTipoDeSolicitud);
                         sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@fnValorSeleccionado", solicitud.ValorSeleccionado);
-                        sqlComando.Parameters.AddWithValue("@fiMoneda", solicitud.IdTipoMoneda);
+                        sqlComando.Parameters.AddWithValue("@fiMoneda", 1);
                         sqlComando.Parameters.AddWithValue("@fiPlazoSeleccionado", solicitud.PlazoSeleccionado);
                         sqlComando.Parameters.AddWithValue("@fnValorPrima", solicitud.ValorPrima);
                         sqlComando.Parameters.AddWithValue("@fnValorGarantia", solicitud.ValorPrima == 0 ? 0 : solicitud.ValorGlobal);
@@ -1619,7 +1619,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         decimal tasaInteresMensual = tasaInteresAnual / 12;
                         decimal totalAFinanciarConIntereses = (precalificado.IdProducto == 202 || precalificado.IdProducto == 203 || precalificado.IdProducto == 204) ? cotizador.TotalFinanciadoConIntereses : CalcularTotalAFinanciarConIntereses(cotizador.TotalAFinanciar, solicitud.PlazoSeleccionado, tasaInteresAnual, precalificado.IdProducto);
 
-                        using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Actualizar", sqlConexion, sqlTransaction))
+                        using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Guardar", sqlConexion, sqlTransaction))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
@@ -1946,7 +1946,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                     }
 
-                    sqlTransaction.Commit();
+                    //sqlTransaction.Commit();
                     resultadoProceso.idInsertado = 0;
                     resultadoProceso.response = true;
                     resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
@@ -2014,14 +2014,14 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     {
         var hoy = DateTime.Today;
         DateTime fechaPrimerPago;
-        
+
         var mesPrimerPago = hoy.AddMonths(1).Month;
         var anioPrimerPago = hoy.AddMonths(1).Year;
         var diaPrimerPago = hoy.Day;
 
         if (hoy.Day >= 6 && hoy.Day <= 20)
         {
-            var fecha = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month)); // ultimo dia del mes
+            var fecha = new DateTime(anioPrimerPago, mesPrimerPago, DateTime.DaysInMonth(anioPrimerPago, mesPrimerPago)); // ultimo dia del mes
             diaPrimerPago = fecha.Day > 30 ? 30 : fecha.Day;
         }
         else if (hoy.Day >= 21 || hoy.Day <= 5)
