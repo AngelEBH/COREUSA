@@ -95,3 +95,20 @@ p {
 .pl-70px {
     padding-left: 70px !important;
 }
+
+.contenedorPDF {
+    margin-top: 999px !important;
+    display: none !important;
+}
+
+#divExpedientePDF * {
+    font-size: 9px !important;
+    color: black !important;
+}
+
+table.table-bordered > thead > tr > th {
+    border: 0.1px solid black;
+}
+table.table-bordered > tbody > tr > td {
+    border: 0.1px solid black;
+}

@@ -29,6 +29,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     public string MesPrimerPago { get; set; }
     public string AnioPrimerPago { get; set; }
 
+    public string UrlCodigoQR { get; set; }
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -61,6 +63,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL") ?? "";
+
+                    UrlCodigoQR = "http://190.92.0.76/OPS/CFRM.aspx?S=" + pcIDSolicitud;
 
                     var hoy = DateTime.Today;
 
@@ -128,6 +132,18 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var profesionOficio = sqlResultado["fcProfesionOficioCliente"].ToString();
                             var estadoCivil = sqlResultado["fcDescripcionEstadoCivil"].ToString();
                             var nacionalidad = sqlResultado["fcDescripcionNacionalidad"].ToString();
+
+                            var nombreTrabajo = sqlResultado["fcNombreTrabajo"].ToString();
+                            var puestoAsignado = sqlResultado["fcPuestoAsignado"].ToString();
+                            var telefonoTrabajo = sqlResultado["fcTelefonoEmpresa"].ToString();
+                            var direccionTrabajo = sqlResultado["fcDireccionDetalladaEmpresa"].ToString();
+
+                            var fechaOtorgamiento = (DateTime)sqlResultado["fdTiempoTomaDecisionFinal"];
+                            var fechaVencimiento = "";
+
+                            var oficialDeNegocios = sqlResultado["fcOficialDeNegocios"].ToString();
+                            var gestorDeCobros = sqlResultado["fcGestorDeCobros"].ToString();
+
 
                             /* Direccion del cliente */
                             var departamentoResidencia = sqlResultado["fcDepartamento"].ToString();
@@ -463,6 +479,32 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         lblCilindraje_NotaEntrega.Text = cilindraje;
                                         lblPlaca_NotaEntrega.Text = matricula;
                                         lblNombreVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
+
+                                        /* Expediente */
+                                        lblNoSolicitudCredito_Expediente.InnerText = pcIDSolicitud;
+                                        lblFechaActual_Expediente.InnerText = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                        lblNombreCliente_Expediente.InnerText = nombreCliente;
+                                        lblIdentidadCliente_Expediente.InnerText = identidad;
+                                        lblDepartamento_Expediente.InnerText = departamentoResidencia;
+                                        lblDireccionCliente_Expediente.InnerText = direccionCliente;
+                                        lblTelefonoCliente_Expediente.InnerText = telefonoPrimario;
+
+                                        lblTipoDeTrabajo_Expediente.InnerText = nombreTrabajo;
+                                        lblPuestoAsignado_Expediente.InnerText = puestoAsignado;
+                                        lblTelefonoTrabajo_Expediente.InnerText = telefonoTrabajo;
+                                        lblDirecciónTrabajo_Expediente.InnerText = direccionTrabajo;
+
+                                        lblNoSolicitud_Expediente.InnerText = pcIDSolicitud;
+                                        lblFechaOtorgamiento_Expediente.InnerText = fechaOtorgamiento.ToString("dd/MM/yyyy");
+                                        lblCantidadCuotas_Expediente.InnerText = plazoFinalAprobado + " Cuotas";
+                                        lblMontoOtorgado_Expediente.InnerText = valorTotalFinanciamiento.ToString("N");
+                                        lblValorCuota_Expediente.InnerText = valorCuotaTotal.ToString("N");
+                                        lblFechaPrimerPago_Expediente.InnerText = fechaPrimerPago.ToString("dd/MM/yyyy");
+                                        lblFrecuenciaPlazo_Expediente.InnerText = tipoDePlazoSufijoAl;
+                                        lblFechaVencimiento_Expediente.InnerText = fechaVencimiento;
+                                        lblOficialNegocios_Expediente.InnerText = oficialDeNegocios;
+                                        lblGestor_Expediente.InnerText = gestorDeCobros;
+
                                     }
 
                                     sqlResultado.NextResult();

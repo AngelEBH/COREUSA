@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_ImprimirDocumentacion.aspx.cs" Inherits="SolicitudesCredito_ImprimirDocumentacion" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_ImprimirDocumentacion.aspx.cs" Inherits="SolicitudesCredito_ImprimirDocumentacion" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -259,7 +259,7 @@
         <!-- ********** DOCUMENTOS ********** -->
 
         <!-- Contrato -->
-        <div id="divContenedorContrato" style="margin-top: 999px; display: none;">
+        <div id="divContenedorContrato" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divContratoPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
@@ -485,7 +485,7 @@ a los
         </div>
 
         <!-- Pagaré -->
-        <div id="divContenedorPagare" style="margin-top: 999px; display: none;">
+        <div id="divContenedorPagare" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divPagarePDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
@@ -563,7 +563,7 @@ a los
         </div>
 
         <!-- Compromiso Legal -->
-        <div id="divContenedorCompromisoLegal" style="margin-top: 999px; display: none;">
+        <div id="divContenedorCompromisoLegal" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divCompromisoLegalPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
@@ -641,7 +641,7 @@ a los <span class="lblNumeroDia_Firma"></span>
         </div>
 
         <!-- Convenio de regulación de compra y venta de vehiculos para financiamiento a tercero -->
-        <div id="divContenedorConvenioCyV" style="margin-top: 999px; display: none;">
+        <div id="divContenedorConvenioCyV" class="contenedorPDF">
             <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divConevionCyVPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
@@ -834,7 +834,7 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
         </div>
 
         <!-- Recibo -->
-        <div id="divContenedorRecibo" runat="server" style="margin-top: 999px; display: none;">
+        <div id="divContenedorRecibo" runat="server" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divReciboPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
@@ -948,7 +948,7 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
         </div>
 
         <!-- Traspaso de vehiculo del cliente -->
-        <div id="divContenedorTraspaso" style="margin-top: 999px; display: none;">
+        <div id="divContenedorTraspaso" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divTraspasoPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
@@ -1100,7 +1100,7 @@ a los
         </div>
 
         <!-- Traspaso de vehiculo del propietario -->
-        <div id="divContenedorTraspasoVendedor" style="margin-top: 999px; display: none;">
+        <div id="divContenedorTraspasoVendedor" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divTraspasoVendedorPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
@@ -1252,7 +1252,7 @@ a los
         </div>
 
         <!-- Básico + CPI -->
-        <div id="divContenedorBasicoCPI" style="margin-top: 999px; display: none;">
+        <div id="divContenedorBasicoCPI" class="contenedorPDF">
             <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divBasicoCPIPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
@@ -1613,7 +1613,7 @@ de lo acá establecido se firma y se estampa huella digital en fecha
         </div>
 
         <!-- Nota de entrega -->
-        <div id="divContenedorNotaDeEntrega" style="margin-top: 999px; display: none;">
+        <div id="divContenedorNotaDeEntrega" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divNotaDeEntregaPDF" style="display: none;">
                 <div class="card-body pt-0 pr-5 pl-5">
                     <div class="row">
@@ -1741,6 +1741,294 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                 </div>
             </div>
         </div>
+        <!-- Expendiente -->
+        <div id="divContenedorExpediente" class="contenedorPDFx">
+            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divExpedientePDF" style="/*display: none; */">
+                <div class="card-body pt-0 pr-5 pl-5">
+                    <div class="row justify-content-between">
+                        <div class="col-auto">
+                            <label class="font-weight-bold d-block">PRESTADITO S.A. de C.V.</label>
+                            <label class="font-weight-bold d-block">PRESTADITO</label>
+                            <label class="font-weight-bold d-block">Solicitud de crédito N°:&nbsp;<b runat="server" id="lblNoSolicitudCredito_Expediente"></b></label>
+                            <small class="font-weight-bold">Fecha:&nbsp;<b runat="server" id="lblFechaActual_Expediente"></b> <%--12/01/2021 04:28:02 p.m.--%></small>
+                        </div>
+                        <div class="col-auto align-content-start pr-0">
+                            <div id="qr_Expediente"></div>                            
+                        </div>
+                    </div>
+                    <div class="row border border-gray mb-2 mt-2">
+                        <div class="col-7">
+                            <div class="form-group row mb-1">
+                                <div class="col-4">
+                                    <b>Nombre:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblNombreCliente_Expediente" runat="server"></label>
+                                </div>
+
+                                <div class="col-4">
+                                    <b>Identidad:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblIdentidadCliente_Expediente" runat="server"></label>
+                                </div>
+
+                                <div class="col-4">
+                                    <b>Departamento:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblDepartamento_Expediente" runat="server"></label>
+                                </div>
+
+                                <div class="col-4">
+                                    <b>Dirección:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblDireccionCliente_Expediente" runat="server"></label>
+                                </div>
+
+                                <div class="col-4">
+                                    <b>Tel. Celular:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblTelefonoCliente_Expediente" runat="server"></label>
+                                </div>
+                            </div>
+                            <u class="font-weight-bold">Datos laborales</u>
+                            <div class="form-group row mb-0">
+                                <div class="col-4">
+                                    <b>Tipo de trabajo:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblTipoDeTrabajo_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-4">
+                                    <b>Cargo:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblPuestoAsignado_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-4">
+                                    <b>Teléfono:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblTelefonoTrabajo_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-4">
+                                    <b>Dirección:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblDirecciónTrabajo_Expediente" runat="server"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 border-left border-gray">
+                            <div class="form-group row border-bottom border-gray mb-1">
+                                <u class="p-2 font-weight-bold">Datos del préstamo</u>
+                            </div>
+                            <div class="form-group row mb-0">
+                                <div class="col-6">
+                                    <b>N° Solicitud:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblNoSolicitud_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Fecha de otorgamiento:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblFechaOtorgamiento_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Plazo:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblCantidadCuotas_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Monto otorgado:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblMontoOtorgado_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Valor de la cuota:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblValorCuota_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Fecha primer pago:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblFechaPrimerPago_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Frecuencia:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblFrecuenciaPlazo_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Vencimiento</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblFechaVencimiento_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Oficial:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblOficialNegocios_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Gestor:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblGestor_Expediente" runat="server"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 p-0">
+                            <table class="table table-sm table-condensed table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo de documento</th>
+                                        <th class="text-center">SI</th>
+                                        <th class="text-center">NO</th>
+                                        <th class="text-center">N/A</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Solicitud de crédito</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Copia de identidades</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Recibo de servicios públicos</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Comprobante de ingresos</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Croquis</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Documentos del aval</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Documentos artículos</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Documentos vehículos</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pagaré</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Convenio de crédito</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Liquidación</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Autorización de deduc. planilla</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Poliza de seguros</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-6">
+                            <u class="font-weight-bold">TIPO DE RENEGOCIACIÓN</u>
+                            <table class="table-borderless mt-2">
+                                <tbody>
+                                    <tr>
+                                        <td class="font-weight-bold">NUEVO</td>
+                                        <td class="font-weight-bold">(X)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">RENOVACIÓN</td>
+                                        <td class="font-weight-bold">( )</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">REFINANCIAMIENTO</td>
+                                        <td class="font-weight-bold">( )</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">READECUACIÓN</td>
+                                        <td class="font-weight-bold">( )</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-12 p-0">
+                            <div class="form-group row">
+                                <label class="col-2 pr-0">Especifique otros:</label>
+                                <label class="col-10 border-top-0 border-left-0 border-right-0 border-bottom border-dark"></label>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="row pt-5 justify-content-center">
+                        <div class="col-5 text-center">
+                            <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
+                            <label class="mt-0 d-block">Firma oficial</label>
+                        </div>
+                        <div class="col-5 text-center">
+                            <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
+                            <label class="mt-0 d-block">Firma de Jefe/Supervisor</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -1750,6 +2038,7 @@ de lo acá establecido se firma y se estampa huella digital en fecha
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
+    <script src="/Scripts/plugins/qrcode/qrcode.js"></script>
     <script>
 
         $("#divGaleriaGarantia").unitegallery({
@@ -1787,7 +2076,7 @@ de lo acá establecido se firma y se estampa huella digital en fecha
             const cotizacion = this.document.getElementById(divPDF);
 
             var opt = {
-                margin: 0.3,
+                margin: [0.4, 0, 0, 0], //top, left, buttom, right,
                 filename: 'Solicitud_' + idSolicitud + '_' + fileName + '.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: {
@@ -1843,6 +2132,27 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                 title: 'Éxito',
                 message: mensaje
             });
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            InicializarCodigosQR();
+        });
+
+        function InicializarCodigosQR() {
+
+            GenerarCodigoQR('qr_Expediente');
+        };
+
+        function GenerarCodigoQR(idElemento) {
+
+            let qrcode = new QRCode(document.getElementById('' + idElemento + ''), {
+                width: 85,
+                height: 85
+            });
+
+            qrcode.makeCode('<%=UrlCodigoQR%>');
         }
     </script>
 </body>
