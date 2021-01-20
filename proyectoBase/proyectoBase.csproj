@@ -787,8 +787,6 @@
     <Content Include="Forms\Negociaciones\Negociaciones_Listado.aspx" />
     <Content Include="Forms\Negociaciones\Negociaciones_Registrar.aspx" />
     <Content Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx" />
-    <Content Include="Forms\Otros\CompromisoLegal.aspx" />
-    <Content Include="Forms\Otros\ContratoVehiculoClausulaLicencia.aspx" />
     <Content Include="Forms\CoreFinancieroMovil\ImprimirCotizacion.aspx" />
     <Content Include="Forms\PreSolicitudes\PreSolicitud_Guardar.aspx" />
     <Content Include="Forms\PreSolicitudes\PreSolicitud_Listado.aspx" />
@@ -1712,20 +1710,6 @@
     </Compile>
     <Compile Include="Forms\Operaciones\OperacionesRecuperaciondelDia.aspx.designer.cs">
       <DependentUpon>OperacionesRecuperaciondelDia.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Otros\CompromisoLegal.aspx.cs">
-      <DependentUpon>CompromisoLegal.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Otros\CompromisoLegal.aspx.designer.cs">
-      <DependentUpon>CompromisoLegal.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Otros\ContratoVehiculoClausulaLicencia.aspx.cs">
-      <DependentUpon>ContratoVehiculoClausulaLicencia.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Otros\ContratoVehiculoClausulaLicencia.aspx.designer.cs">
-      <DependentUpon>ContratoVehiculoClausulaLicencia.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\CoreFinancieroMovil\ImprimirCotizacion.aspx.cs">
       <DependentUpon>ImprimirCotizacion.aspx</DependentUpon>

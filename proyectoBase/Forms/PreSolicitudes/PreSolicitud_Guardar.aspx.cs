@@ -56,10 +56,10 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                    pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID") ?? "";
-                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+                    pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
+                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
                     HttpContext.Current.Session["ListaDocumentosRequeridosPreSolicitud"] = null;
                     HttpContext.Current.Session["ListaDocumentosAdjuntadosPreSolicitud"] = null;
@@ -112,6 +112,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                         break;
 
                     case "remove":
+
                         string file = Request.Form["file"];
 
                         if (file != null)
