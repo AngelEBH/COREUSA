@@ -1,6 +1,6 @@
-﻿var EsPrimeraCarga = true;
-var FiltroActual = "";
-var Actividad = 1;
+﻿var esPrimeraCarga = true;
+var filtroActual = "";
+var idActividad = 1;
 var lenguaje = {
     "sProcessing": "Cargando información...",
     "sLengthMenu": "Mostrar _MENU_ registros",
@@ -39,7 +39,7 @@ var lenguaje = {
 $(document).ready(function () {
 
     /* Al cargar la pagina por primera vez no es necesario que se carguen los registros de la tabla por actividades */
-    //if (!EsPrimeraCarga) {
+    //if (!esPrimeraCarga) {
     dtClientes = $('#datatable-clientes').DataTable({
         "responsive": true,
         "language": lenguaje,
@@ -56,16 +56,16 @@ $(document).ready(function () {
             },
             {
                 extend: 'excelHtml5',
-                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+                title: 'Seguimiento_Cola_de_Llamadas_' + filtroActual + '' + moment()
             },
             {
                 extend: 'pdf',
-                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+                title: 'Seguimiento_Cola_de_Llamadas_' + filtroActual + '' + moment()
             },
             {
                 extend: 'colvis',
                 text: 'Ocultar columnas',
-                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+                title: 'Seguimiento_Cola_de_Llamadas_' + filtroActual + '' + moment()
             }
         ],
         "ajax": {
@@ -73,7 +73,7 @@ $(document).ready(function () {
             url: "SeguimientoSupervisorColadeLlamadas.aspx/CargarRegistros",
             contentType: 'application/json; charset=utf-8',
             data: function (dtParms) {
-                return JSON.stringify({ dataCrypt: window.location.href, IDAgente: $("#ddlAgentesActivos :selected").val(), IDActividad: Actividad });
+                return JSON.stringify({ dataCrypt: window.location.href, IDAgente: $("#ddlAgentesActivos :selected").val(), IDActividad: idActividad });
             },
             "dataSrc": function (json) {
                 var return_data = json.d;
@@ -111,11 +111,9 @@ $(document).ready(function () {
         ]
     });
 
-    dtClientes.buttons().container()
-        .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+    dtClientes.buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
 
-    //} if !EsPrimeraCarga
-
+    //} if !esPrimeraCarga
 
     dtResumen = $('#datatable-resumenAgentes').DataTable({
         "responsive": true,
@@ -133,16 +131,16 @@ $(document).ready(function () {
             },
             {
                 extend: 'excelHtml5',
-                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+                title: 'Seguimiento_Cola_de_Llamadas_' + filtroActual + '' + moment()
             },
             {
                 extend: 'pdf',
-                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+                title: 'Seguimiento_Cola_de_Llamadas_' + filtroActual + '' + moment()
             },
             {
                 extend: 'colvis',
                 text: 'Ocultar columnas',
-                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+                title: 'Seguimiento_Cola_de_Llamadas_' + filtroActual + '' + moment()
             }
         ],
         "ajax": {
@@ -167,41 +165,43 @@ $(document).ready(function () {
         ]
     });
 
-    dtResumen.buttons().container()
-        .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+    dtResumen.buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
 
 
 
     $("input[type=radio][name=filtros]").change(function () {
+
         var filtro = this.value;
+
         switch (filtro) {
+
             case "hoy":
                 $("#tblClientes,#divFiltros").css('display', '');
                 $("#tblResumen").css('display', 'none');
                 $(".RangoFechas").css('display', 'none');
-                FiltroActual = "hoy";
-                Actividad = 1;
+                filtroActual = "hoy";
+                idActividad = 1;
                 FiltrarInformacion();
                 break;
+
             case "porHacer":
                 $("#tblClientes,#divFiltros").css('display', '');
                 $("#tblResumen").css('display', 'none');
                 $(".RangoFechas").css('display', 'none');
-                FiltroActual = "porHacer";
-                Actividad = 2;
+                filtroActual = "porHacer";
+                idActividad = 2;
                 FiltrarInformacion();
                 break;
+
             case "anteriores":
                 $("#tblClientes,#divFiltros").css('display', '');
                 $("#tblResumen").css('display', 'none');
 
                 $(".RangoFechas").css('display', '');
-                Actividad = 3;
-                FiltroActual = "anteriores";
+                idActividad = 3;
+                filtroActual = "anteriores";
                 FiltrarInformacion();
-
                 break;
-
 
             case "resumenAgentes":
                 $(".RangoFechas").css('display', '');
@@ -214,7 +214,7 @@ $(document).ready(function () {
 
     $("#min").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
@@ -222,20 +222,20 @@ $(document).ready(function () {
 
     $("#max").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
     });
 
     $("#min, #max").change(function () {
-        FiltroActual = 'rangoFechas';
+        filtroActual = 'rangoFechas';
         dtClientes.draw();
     });
 
     /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        if (FiltroActual == 'rangoFechas') {
+        if (filtroActual == 'rangoFechas') {
             var Desde = moment($("#min").datepicker("getDate")).format('YYYY/MM/DD'),
                 Hasta = moment($("#max").datepicker("getDate")).format('YYYY/MM/DD'),
                 FechaLlamada = moment(data[6]).format('YYYY/MM/DD');
@@ -258,10 +258,12 @@ $("#ddlAgentesActivos").change(function () {
 
 function FiltrarInformacion() {
 
-    if (Actividad != 0) {
+    if (idActividad != 0)
+    {
         dtClientes.ajax.reload(null, false);
     }
-    else {
+    else
+    {
         MensajeAdvertencia('Seleccione una actividad');
     }
 }

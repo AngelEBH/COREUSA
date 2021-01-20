@@ -1,6 +1,7 @@
-﻿var FiltroActual = "incumplidas";
+﻿var filtroActual = "incumplidas";
 
 $(document).ready(function () {
+
     dtClientes = $('#datatable-clientes').DataTable({
         "responsive": true,
         "language": {
@@ -31,7 +32,6 @@ $(document).ready(function () {
         },
         "pageLength": 10,
         "aaSorting": [],
-        //"processing": true,
         "dom": "<'row'<'col-sm-6'<'toolbar'>><'col-sm-6'T>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
@@ -44,9 +44,7 @@ $(document).ready(function () {
                         var val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
                         );
-                        column
-                            .search(val ? '^' + val + '$' : '', true, false)
-                            .draw();
+                        column.search(val ? '^' + val + '$' : '', true, false).draw();
                     });
                 column.data().unique().sort().each(function (d, j) {
                     select.append('<option value="' + d + '">' + d + '</option>')
@@ -105,28 +103,29 @@ $(document).ready(function () {
 
     /* Filtrar cuando se seleccione una opción */
     $("input[type=radio][name=filtros]").change(function () {
+
         var filtro = this.value;
         switch (filtro) {
             case "0":
-                FiltroActual = "";
+                filtroActual = "";
                 dtClientes.draw();
                 break;
             case "incumplidas":
-                FiltroActual = "incumplidas";
+                filtroActual = "incumplidas";
                 dtClientes.draw();
                 break;
             case "hoy":
-                FiltroActual = "hoy";
+                filtroActual = "hoy";
                 dtClientes.draw();
                 break;
             case "futuras":
-                FiltroActual = "futuras";
+                filtroActual = "futuras";
                 dtClientes.draw();
                 break;
         }
     });
 
-    /* Agregar Filtros */
+    /* Agregar filtros */
     $.fn.dataTable.ext.search.push(
         function (settings, data, dataIndex) {
 
@@ -134,16 +133,16 @@ $(document).ready(function () {
             var hoy = moment().format('YYYY/MM/DD');
             var promesaPago = data[6];
 
-            if (FiltroActual == "") {
+            if (filtroActual == "") {
                 EstadoRetornar = true;
             }
-            else if (FiltroActual == "incumplidas") {
+            else if (filtroActual == "incumplidas") {
                 EstadoRetornar = data[7] == 'Incumplida' ? true : false;
             }
-            else if (FiltroActual == "futuras" && (moment(promesaPago).isAfter(hoy))) {
+            else if (filtroActual == "futuras" && (moment(promesaPago).isAfter(hoy))) {
                 EstadoRetornar = true;
             }
-            else if (FiltroActual == "hoy" && (moment(promesaPago).isSame(hoy))) {
+            else if (filtroActual == "hoy" && (moment(promesaPago).isSame(hoy))) {
                 EstadoRetornar = true;
             }
             return EstadoRetornar;
@@ -154,20 +153,6 @@ $(document).ready(function () {
     $('#txtDatatableFilter').keyup(function () {
         dtClientes.search($(this).val()).draw();
     })
-
-    /* Buscador para listas seleccionables */
-    //$(".buscadorddl").select2({
-    // language: {
-    // errorLoading: function () { return "No se pudieron cargar los resultados" },
-    // inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-    // inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-    // loadingMore: function () { return "Cargando más resultados…" },
-    // maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
-    // noResults: function () { return "No se encontraron resultados" },
-    // searching: function () { return "Buscando…" },
-    // removeAllItems: function () { return "Eliminar todos los elementos" }
-    // }
-    //});
 });
 
 function MensajeError(mensaje) {

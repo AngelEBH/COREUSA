@@ -1,6 +1,6 @@
-﻿var IDAgente = 0;
-
+﻿
 $(document).ready(function () {
+
     dtClientes = $('#datatable-recuperacion').DataTable({
         "responsive": true,
         "language": {

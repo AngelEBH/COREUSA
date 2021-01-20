@@ -1,36 +1,35 @@
-﻿var lenguaje = {
-    "sProcessing": "Cargando registros...",
-    "sLengthMenu": "Mostrar _MENU_ registros",
-    "sZeroRecords": "No se encontraron resultados",
-    "sEmptyTable": "Ningún dato disponible en esta tabla",
-    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-    "sInfoPostFix": "",
-    "sSearch": "Buscar:",
-    "sUrl": "",
-    "sInfoThousands": ",",
-    "sLoadingRecords": "Cargando solicitudes...",
-    "oPaginate": {
-        "sFirst": "Primero",
-        "sLast": "Último",
-        "sNext": "Siguiente",
-        "sPrevious": "Anterior"
-    },
-    "oAria": {
-        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-    },
-    "decimal": ".",
-    "thousands": ","
-};
-
-var FiltroActual = "";
+﻿var filtroActual = "";
 
 $(document).ready(function () {
+
     dtClientes = $('#datatable-clientes').DataTable({
         "responsive": true,
-        "language": lenguaje,
+        "language": {
+            "sProcessing": "Cargando registros...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando solicitudes...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            },
+            "decimal": ".",
+            "thousands": ","
+        },
         "pageLength": 10,
         "aaSorting": [],
         "dom": "<'row'<'col-sm-6'<'toolbar'>><'col-sm-6'fT>>" +
@@ -45,9 +44,7 @@ $(document).ready(function () {
                         var val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
                         );
-                        column
-                            .search(val ? '^' + val + '$' : '', true, false)
-                            .draw();
+                        column.search(val ? '^' + val + '$' : '', true, false).draw();
                     });
                 column.data().unique().sort().each(function (d, j) {
                     select.append('<option value="' + d + '">' + d + '</option>')
@@ -107,19 +104,19 @@ $(document).ready(function () {
         var filtro = this.value;
         switch (filtro) {
             case "0":
-                FiltroActual = "";
+                filtroActual = "";
                 dtClientes.draw();
                 break;
             case "incumplidas":
-                FiltroActual = "incumplidas";
+                filtroActual = "incumplidas";
                 dtClientes.draw();
                 break;
             case "hoy":
-                FiltroActual = "hoy";
+                filtroActual = "hoy";
                 dtClientes.draw();
                 break;
             case "futuras":
-                FiltroActual = "futuras";
+                filtroActual = "futuras";
                 dtClientes.draw();
                 break;
         }
@@ -127,23 +124,23 @@ $(document).ready(function () {
     $.fn.dataTable.ext.search.push(
         function (settings, data, dataIndex) {
 
-            var EstadoRetornar = false;
+            var estadoRetornar = false;
             var hoy = moment().format('YYYY/MM/DD');
             var promesaPago = data[6];
 
-            if (FiltroActual == "") {
-                EstadoRetornar = true;
+            if (filtroActual == "") {
+                estadoRetornar = true;
             }
-            else if (FiltroActual == "incumplidas") {
-                EstadoRetornar = data[7] == 'Incumplida' ? true : false;
+            else if (filtroActual == "incumplidas") {
+                estadoRetornar = data[7] == 'Incumplida' ? true : false;
             }
-            else if (FiltroActual == "futuras" && (moment(promesaPago).isAfter(hoy))) {
-                EstadoRetornar = true;
+            else if (filtroActual == "futuras" && (moment(promesaPago).isAfter(hoy))) {
+                estadoRetornar = true;
             }
-            else if (FiltroActual == "hoy" && (moment(promesaPago).isSame(hoy))) {
-                EstadoRetornar = true;
+            else if (filtroActual == "hoy" && (moment(promesaPago).isSame(hoy))) {
+                estadoRetornar = true;
             }
-            return EstadoRetornar;
+            return estadoRetornar;
         }
     );
 });

@@ -1,7 +1,8 @@
-﻿var FiltroActual = "";
-var Actividad = 1;
+﻿var filtroActual = "";
+var idActividad = 1;
 
 $(document).ready(function () {
+
     dtClientes = $('#datatable-clientes').DataTable({
         "responsive": true,
         "language": {
@@ -47,7 +48,7 @@ $(document).ready(function () {
         buttons: [
             {
                 extend: 'excelHtml5',
-                title: 'Seguimiento_Cola_de_Llamadas_' + FiltroActual + '' + moment()
+                title: 'Seguimiento_Cola_de_Llamadas_' + filtroActual + '' + moment()
             }
         ],
         "ajax": {
@@ -101,20 +102,20 @@ $(document).ready(function () {
         switch (filtro) {
             case "hoy":
                 $(".RangoFechas").css('display', 'none');
-                FiltroActual = "hoy";
-                Actividad = 1;
+                filtroActual = "hoy";
+                idActividad = 1;
                 FiltrarInformacion();
                 break;
             case "porHacer":
                 $(".RangoFechas").css('display', 'none');
-                FiltroActual = "porHacer";
-                Actividad = 2;
+                filtroActual = "porHacer";
+                idActividad = 2;
                 FiltrarInformacion();
                 break;
             case "anteriores":
                 $(".RangoFechas").css('display', '');
-                Actividad = 3;
-                FiltroActual = "anteriores";
+                idActividad = 3;
+                filtroActual = "anteriores";
                 FiltrarInformacion();
                 break;
         }
@@ -122,19 +123,19 @@ $(document).ready(function () {
 
     $("#min").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         autoclose: true
     });
 
     $("#min").change(function () {
-        FiltroActual = 'rangoFechas';
+        filtroActual = 'rangoFechas';
         dtClientes.draw();
     });
 
     /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        if (FiltroActual == 'rangoFechas') {
+        if (filtroActual == 'rangoFechas') {
             var FechaFiltro = moment($("#min").datepicker("getDate")).format('YYYY/MM/DD'),
                 FechaLlamada = moment(data[6]).format('YYYY/MM/DD');
 
