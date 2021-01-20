@@ -391,15 +391,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblMensaje;
 
     /// <summary>
-    /// Control divContratoPDF.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divContratoPDF;
-
-    /// <summary>
     /// Control lblNombre_Contrato.
     /// </summary>
     /// <remarks>
@@ -589,13 +580,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblNumeroMotor_Contrato;
 
     /// <summary>
-    /// Control lblSerieChasis_Contato.
+    /// Control lblSerieChasis_Contrato.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblSerieChasis_Contato;
+    protected global::System.Web.UI.WebControls.Label lblSerieChasis_Contrato;
 
     /// <summary>
     /// Control lblTasaInteresSimpleMensual_Contrato.

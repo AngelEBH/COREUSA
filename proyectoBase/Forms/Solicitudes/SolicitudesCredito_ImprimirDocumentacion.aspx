@@ -29,19 +29,19 @@
                 <div class="row mb-0">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <div class="col-sm-12">
+                            <div class="col-6">
                                 <label class="col-form-label">Cliente</label>
                                 <asp:TextBox ID="txtNombreCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-4 col-6">
+                            <div class="col-6">
                                 <label class="col-form-label">Identidad</label>
                                 <asp:TextBox ID="txtIdentidadCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-4 col-6">
+                            <div class="col-6">
                                 <label class="col-form-label">RTN numérico</label>
                                 <asp:TextBox ID="txtRtn" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-6">
                                 <label class="col-form-label">Teléfono</label>
                                 <asp:TextBox ID="txtTelefonoCliente" type="tel" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
                             </div>
@@ -256,11 +256,15 @@
             </div>
         </div>
 
-        <!-- ********** DOCUMENTOS ********** -->
+        <!-- =============================================================================== -->
+        <!-- =============================================================================== -->
+        <!-- ========== HTML de los documentos que se exportan a PDF con Html2PDF ========== -->
+        <!-- =============================================================================== -->
+        <!-- =============================================================================== -->
 
-        <!-- Contrato -->
+        <!-- ================================== HTML Contrato =================================== -->
         <div id="divContenedorContrato" class="contenedorPDF">
-            <div class="card m-0 divImprimir" runat="server" visible="true" id="divContratoPDF" style="display: none;">
+            <div class="card m-0 divImprimir" id="divContratoPDF" style="/*display: none; */">
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
@@ -323,7 +327,7 @@ por concepto de gastos de cierre y papeleria todo en monda de curso legal en Hon
                                     con numero de motor
                                     <asp:Label runat="server" ID="lblNumeroMotor_Contrato"></asp:Label>
                                     y numero de chasís
-                                    <asp:Label runat="server" ID="lblSerieChasis_Contato"></asp:Label>
+                                    <asp:Label runat="server" ID="lblSerieChasis_Contrato"></asp:Label>
                                 </b>
                             </p>
                             <p>
@@ -1753,7 +1757,7 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                             <small class="font-weight-bold">Fecha:&nbsp;<b runat="server" id="lblFechaActual_Expediente"></b> <%--12/01/2021 04:28:02 p.m.--%></small>
                         </div>
                         <div class="col-auto align-content-start pr-0">
-                            <div id="qr_Expediente"></div>                            
+                            <div id="qr_Expediente"></div>
                         </div>
                     </div>
                     <div class="row border border-gray mb-2 mt-2">
@@ -2012,7 +2016,7 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                             <div class="form-group row">
                                 <label class="col-2 pr-0">Especifique otros:</label>
                                 <label class="col-10 border-top-0 border-left-0 border-right-0 border-bottom border-dark"></label>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                     <div class="row pt-5 justify-content-center">
@@ -2053,31 +2057,22 @@ de lo acá establecido se firma y se estampa huella digital en fecha
             grid_num_rows: 15
         });
 
-        $("#divContenedorInspeccionSeguro").css('margin-top', '999px').css('display', 'none');
-        $("#divInspeccionSeguroPDF").css('display', 'none');
+        $("#divContenedorInspeccionSeguro").css('margin-top', '999px');
+        $("#divInspeccionSeguroPDF,#divContenedorInspeccionSeguro").css('display', 'none');
 
-        const departamentoFirma = '<%=DepartamentoFirma%>';
-        const ciudadFirma = '<%=CiudadFirma%>';
-        const diafirma = '<%=DiasFirma%>';
-        const mesFirma = ' <%=MesFirma%>';
-        const anioFirma = ' <%=AnioFirma%>';
-        const idSolicitud = '<%=pcIDSolicitud%>';
+        $('.lblDepartamento_Firma').text('<%=DepartamentoFirma%>');
+        $('.lblCiudad_Firma').text('<%=CiudadFirma%>');
+        $('.lblNumeroDia_Firma').text('<%=DiasFirma%>');
+        $('.lblMes_Firma').text('<%=MesFirma%>');
+        $('.lblAnio_Firma').text('<%=AnioFirma%>');
 
-        $('.lblDepartamento_Firma').text(departamentoFirma);
-        $('.lblCiudad_Firma').text(ciudadFirma);
-        $('.lblNumeroDia_Firma').text(diafirma);
-        $('.lblMes_Firma').text(mesFirma);
-        $('.lblAnio_Firma').text(anioFirma);
-
-        function ExportToPDF(fileName, divContenedor, divPDF) {
+        function ExportToPDF(nombreDelArchivo, idDivContenedor, idDivPDF) {
 
             $("#Loader").css('display', '');
 
-            const cotizacion = this.document.getElementById(divPDF);
-
             var opt = {
                 margin: [0.4, 0, 0, 0], //top, left, buttom, right,
-                filename: 'Solicitud_' + idSolicitud + '_' + fileName + '.pdf',
+                filename: 'Solicitud_' + '<%=pcIDSolicitud%>' + '_' + nombreDelArchivo + '.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: {
                     dpi: 192,
@@ -2089,11 +2084,11 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                 pagebreak: { after: '.page-break', always: 'img' }
             };
 
-            $("#" + divContenedor + ",#" + divPDF + "").css('display', '');
+            $("#" + idDivContenedor + ",#" + idDivPDF + "").css('display', '');
             $("body,html").css("overflow", "hidden");
 
-            html2pdf().from(cotizacion).set(opt).save().then(function () {
-                $("#" + divContenedor + ",#" + divPDF + "").css('display', 'none');
+            html2pdf().from(this.document.getElementById(idDivPDF)).set(opt).save().then(function () {
+                $("#" + idDivContenedor + ",#" + idDivPDF + "").css('display', 'none');
                 $("body,html").css("overflow", "");
 
                 $("#Loader").css('display', 'none');
@@ -2134,6 +2129,7 @@ de lo acá establecido se firma y se estampa huella digital en fecha
             });
         }
     </script>
+
     <script>
         $(document).ready(function () {
 
@@ -2157,4 +2153,3 @@ de lo acá establecido se firma y se estampa huella digital en fecha
     </script>
 </body>
 </html>
-
