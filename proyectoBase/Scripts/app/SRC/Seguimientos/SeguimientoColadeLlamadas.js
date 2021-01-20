@@ -101,20 +101,26 @@ $(document).ready(function () {
     });
 
     $("input[type=radio][name=filtros]").change(function () {
+
         var filtro = this.value;
+
         switch (filtro) {
+
             case "0":
                 filtroActual = "";
                 dtClientes.draw();
                 break;
+
             case "incumplidas":
                 filtroActual = "incumplidas";
                 dtClientes.draw();
                 break;
+
             case "hoy":
                 filtroActual = "hoy";
                 dtClientes.draw();
                 break;
+
             case "futuras":
                 filtroActual = "futuras";
                 dtClientes.draw();

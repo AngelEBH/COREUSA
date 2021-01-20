@@ -99,16 +99,16 @@ $(document).ready(function () {
 
 /* Filtar por Agente */
 $("#ddlAgentesActivos").change(function () {
-    if ($("#ddlAgentesActivos :selected").val() != '') {
+
+    if ($("#ddlAgentesActivos :selected").val() != '')
         FiltrarInformacion();
-    }
 });
 
 /* Recargar DataTable */
 function FiltrarInformacion() {
-    if ($("#ddlAgentesActivos :selected").val() != '') {
+
+    if ($("#ddlAgentesActivos :selected").val() != '')
         dtClientes.ajax.reload(null, false);
-    }
 }
 
 function addFormatoNumerico(nStr) {

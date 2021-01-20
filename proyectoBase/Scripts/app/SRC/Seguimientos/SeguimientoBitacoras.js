@@ -94,24 +94,28 @@ $(document).ready(function () {
         ]
     });
 
-    dtClientes.buttons().container()
-        .appendTo('#btnFilter-container');
+    dtClientes.buttons().container().appendTo('#btnFilter-container');
 
     $("input[type=radio][name=filtros]").change(function () {
+
         var filtro = this.value;
+
         switch (filtro) {
+
             case "hoy":
                 $(".RangoFechas").css('display', 'none');
                 filtroActual = "hoy";
                 idActividad = 1;
                 FiltrarInformacion();
                 break;
+
             case "porHacer":
                 $(".RangoFechas").css('display', 'none');
                 filtroActual = "porHacer";
                 idActividad = 2;
                 FiltrarInformacion();
                 break;
+
             case "anteriores":
                 $(".RangoFechas").css('display', '');
                 idActividad = 3;
@@ -135,13 +139,15 @@ $(document).ready(function () {
 
     /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+
         if (filtroActual == 'rangoFechas') {
+
             var FechaFiltro = moment($("#min").datepicker("getDate")).format('YYYY/MM/DD'),
                 FechaLlamada = moment(data[6]).format('YYYY/MM/DD');
 
             return (FechaLlamada.isSame(FechaLlamada));
         }
-        else { return true; }
+        else return true;
     });
 
     /* Buscador */
@@ -151,19 +157,19 @@ $(document).ready(function () {
 });
 
 $("#ddlAgentesActivos").change(function () {
-    if ($("#ddlAgentesActivos :selected").val() != '0') {
+
+    if ($("#ddlAgentesActivos :selected").val() != '0')
+    {
         FiltrarInformacion();
     }
 });
 
 function FiltrarInformacion() {
 
-    if ($("#ddlAgentesActivos :selected").val() != '0') {
+    if ($("#ddlAgentesActivos :selected").val() != '0')
         dtClientes.ajax.reload(null, false);
-    }
-    else {
+    else
         MensajeAdvertencia('Seleccione un agente');
-    }
 }
 
 function pad(num) {

@@ -1,16 +1,15 @@
 ﻿COTIZADOR = null;
 
 if (PRECALIFICADO.PermitirIngresarSolicitud == false && (PRECALIFICADO.MensajePermitirIngresarSolicitud != '' && PRECALIFICADO.MensajePermitirIngresarSolicitud != null)) {
-    Swal.fire(
-        {
-            title: '¡Oh no!',
-            text: PRECALIFICADO.MensajePermitirIngresarSolicitud,
-            type: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: "#58db83",
-            confirmButtonText: "OMITIR"
-        }
-    )
+
+    Swal.fire({
+        title: '¡Oh no!',
+        text: PRECALIFICADO.MensajePermitirIngresarSolicitud,
+        type: 'warning',
+        showCancelButton: false,
+        confirmButtonColor: "#58db83",
+        confirmButtonText: "OMITIR"
+    });
 }
 
 var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>').text('Finalizar').addClass('btn btn-info').css('display', 'none')

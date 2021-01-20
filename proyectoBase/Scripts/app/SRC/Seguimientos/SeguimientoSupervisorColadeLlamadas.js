@@ -167,8 +167,6 @@ $(document).ready(function () {
 
     dtResumen.buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
 
-
-
     $("input[type=radio][name=filtros]").change(function () {
 
         var filtro = this.value;
@@ -259,13 +257,9 @@ $("#ddlAgentesActivos").change(function () {
 function FiltrarInformacion() {
 
     if (idActividad != 0)
-    {
         dtClientes.ajax.reload(null, false);
-    }
     else
-    {
         MensajeAdvertencia('Seleccione una actividad');
-    }
 }
 
 function pad(num) {

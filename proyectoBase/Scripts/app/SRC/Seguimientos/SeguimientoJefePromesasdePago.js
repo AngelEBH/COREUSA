@@ -105,19 +105,24 @@ $(document).ready(function () {
     $("input[type=radio][name=filtros]").change(function () {
 
         var filtro = this.value;
+
         switch (filtro) {
+
             case "0":
                 filtroActual = "";
                 dtClientes.draw();
                 break;
+
             case "incumplidas":
                 filtroActual = "incumplidas";
                 dtClientes.draw();
                 break;
+
             case "hoy":
                 filtroActual = "hoy";
                 dtClientes.draw();
                 break;
+
             case "futuras":
                 filtroActual = "futuras";
                 dtClientes.draw();
@@ -129,23 +134,23 @@ $(document).ready(function () {
     $.fn.dataTable.ext.search.push(
         function (settings, data, dataIndex) {
 
-            var EstadoRetornar = false;
+            var estadoRetornar = false;
             var hoy = moment().format('YYYY/MM/DD');
             var promesaPago = data[6];
 
             if (filtroActual == "") {
-                EstadoRetornar = true;
+                estadoRetornar = true;
             }
             else if (filtroActual == "incumplidas") {
-                EstadoRetornar = data[7] == 'Incumplida' ? true : false;
+                estadoRetornar = data[7] == 'Incumplida' ? true : false;
             }
             else if (filtroActual == "futuras" && (moment(promesaPago).isAfter(hoy))) {
-                EstadoRetornar = true;
+                estadoRetornar = true;
             }
             else if (filtroActual == "hoy" && (moment(promesaPago).isSame(hoy))) {
-                EstadoRetornar = true;
+                estadoRetornar = true;
             }
-            return EstadoRetornar;
+            return estadoRetornar;
         }
     );
 
