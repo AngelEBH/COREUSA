@@ -7,7 +7,6 @@ var estadoFuncionLlenarDDL = false;
 
 $(document).ready(function () {
 
-    // botón finalizar condicionamiento de la solicitud
     var btnFinish = $('<button type="button" id="btnGuardarSolicitud"></button>').text('Finalizar')
         .addClass('btn btn-info')
         .css('display', 'none')

@@ -155,8 +155,6 @@ $("#cbDigitarManualmente").on('change', function () {
         if (txtVin != '') {
             $("#txtBuscarVIN").val(txtVin);
         }
-
-        //$("#txtVIN,#txtTipoDeVehiculo,#txtMarca,#txtModelo,#txtAnio,#txtCilindraje,#txtTransmision,#txtTipoDeCombustible,#txtSerieUno").val('');
     }
 
     esDigitadoManualmente = digitarManualmente;
