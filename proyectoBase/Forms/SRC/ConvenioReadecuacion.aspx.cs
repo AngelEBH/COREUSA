@@ -5,44 +5,51 @@ using System.Web;
 
 public partial class ConvenioReadecuacion : System.Web.UI.Page
 {
-    private string pcIDUsuario = "";
     private string pcIDApp = "";
+    private string pcIDUsuario = "";
     private string pcIDConvenio = "";
     public string lcNombreArchivoPDF = "";
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        string lcIDCliente = "";
-        string lcParametros;
+        var DSC = new DSCore.DataCrypt();
+        var lcIDCliente = string.Empty;
+        var lcParametros = string.Empty;
 
-        string lcURL = Request.Url.ToString();
+        var lcURL = Request.Url.ToString();
         int liParamStart = lcURL.IndexOf("?");
 
         if (liParamStart > 0)
             lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
         else
-            lcParametros = String.Empty;
+            lcParametros = string.Empty;
 
-        if (lcParametros != String.Empty)
+        if (lcParametros != string.Empty)
         {
-            string lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-            string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-            Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-            lcIDCliente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDCliente");
-            pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            pcIDConvenio = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("Convenio");
-            string lcSQLInstruccion = "exec CoreFinanciero.dbo.sp_SRC_ClientesReadecuaciones_Consultar 1," + pcIDApp + "," + pcIDUsuario + ",'" + pcIDConvenio + "'";
+            var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+            var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+            var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            lcIDCliente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDCliente");
+            pcIDConvenio = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("Convenio");
+
+            try
             {
-                try
+                using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
                 {
                     sqlConexion.Open();
-                    using (SqlCommand sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion))
+
+                    using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_SRC_ClientesReadecuaciones_Consultar", sqlConexion))
                     {
-                        using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                        sqlComando.CommandType = System.Data.CommandType.StoredProcedure;
+                        sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                        sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                        sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                        sqlComando.Parameters.AddWithValue("@pcCodigoReadecuacion", pcIDConvenio);
+
+                        using (var sqlResultado = sqlComando.ExecuteReader())
                         {
                             if (sqlResultado.Read())
                             {
@@ -51,15 +58,18 @@ public partial class ConvenioReadecuacion : System.Web.UI.Page
                                 lblIdentidadCliente.Text = sqlResultado["fcIdentidad"].ToString().Trim();
                                 lblNoPrestamo.Text = sqlResultado["fcPrestamo"].ToString().Trim();
                                 lcNombreArchivoPDF = lblNombreCliente.Text.Replace(" ", "_") + "_" + sqlResultado["fcIDCliente"].ToString().Trim();
-
                                 lblAbonoInicial.Text = "L. " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnPagoInicial"].ToString().Trim()));
-                                string TipodeCuota = sqlResultado["fcTipodeCuota"].ToString().Trim();
+
+                                var TipodeCuota = sqlResultado["fcTipodeCuota"].ToString().Trim();
                                 lblTipoCuotaTabla.InnerText = "Cuota " + TipodeCuota;
+
                                 lblCantidadCuotas.Text = "L. " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnValorCuota"].ToString().Trim()));
                                 lblPlazoReadecuacion.Text = string.Format("{0:#,###0}", Convert.ToDecimal(sqlResultado["fiPlazoQuincenas"].ToString().Trim())) + " " + TipodeCuota;
                                 lblMontoReadecuar.Text = "L. " + string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnTotalReadecuacion"].ToString().Trim()));
-                                DateTime lcConvertirFecha = (DateTime)sqlResultado["fdInicioAcuerdo"];
+
+                                var lcConvertirFecha = (DateTime)sqlResultado["fdInicioAcuerdo"];
                                 lblFechaInicialContrato.Text = lcConvertirFecha.ToString("dd/MM/yyyy");
+
                                 lcConvertirFecha = (DateTime)sqlResultado["fdFinAcuerdo"];
                                 lblFechaFinalContrato.Text = lcConvertirFecha.ToString("dd/MM/yyyy");
                                 lblTipodeCuota.Text = TipodeCuota;
@@ -75,15 +85,16 @@ public partial class ConvenioReadecuacion : System.Web.UI.Page
                                 lblMes.Text = sqlResultado["fcMesFimar"].ToString().Trim();
                                 lblAnio.Text = sqlResultado["lblAnioFirma"].ToString().Trim();
                             }
-                        } // using reader
-                    } // using command
-                }
-                catch (Exception ex)
-                {
-                    ex.Message.ToString();
-                    lblNoAdendum.Text = ex.Message;
-                }
-            } // using connection
-        }
+                        } // using sqlResultado
+                    } // using sqlComando
+                } // using sqlConexion                
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+                lblNoAdendum.Text = ex.Message;
+            }
+        } // if lcParametros != string.empty
     } // page load
+
 }

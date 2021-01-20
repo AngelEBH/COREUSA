@@ -65,12 +65,12 @@
                     <div class="col-sm-12">
                         <p>
                             El señor(a)
-                            <asp:Label CssClass="Negrita" runat="server" ID="lblNombreCliente" Text="" />&nbsp;con
+                            <asp:Label CssClass="font-weight-bold" runat="server" ID="lblNombreCliente" Text="" />&nbsp;con
                             número de identidad
-                            <asp:Label runat="server" CssClass="Negrita" ID="lblIdentidadCliente" Text="" />&nbsp;y
-                            el acreedor <span class="Negrita">PRESTADITO S.A. de C.V.</span>
+                            <asp:Label runat="server" CssClass="font-weight-bold" ID="lblIdentidadCliente" Text="" />&nbsp;y
+                            el acreedor <span class="font-weight-bold">PRESTADITO S.A. de C.V.</span>
                             acuerdan hacer la readecuación de su préstamo No.
-                            <asp:Label CssClass="Negrita" runat="server" ID="lblNoPrestamo" Text="" />&nbsp;a
+                            <asp:Label CssClass="font-weight-bold" runat="server" ID="lblNoPrestamo" Text="" />&nbsp;a
                             un nuevo préstamo el cual tendrá las siguientes condiciones:
                         </p>
                     </div>
@@ -151,7 +151,6 @@
     </div>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
     <script src="/Scripts/plugins/kendo/jszip.min.js"></script>
     <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
