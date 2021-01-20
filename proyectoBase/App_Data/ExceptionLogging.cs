@@ -2,34 +2,41 @@
 using context = System.Web.HttpContext;
 using System.Data.SqlClient;
 using System.Data;
-/// <summary>  
-/// Summary description for ExceptionLogging  
-/// article by Vithal Wadje  
+using System.Configuration;
 
+/// <summary>  
+/// Guardar errores en tiempo de ejecución en la base de datos para tener registro de los mismos.
 /// </summary>  
 public static class ExceptionLogging
 {
     public static string SendExcepToDB(Exception exdb)
     {
-        string resultado = "(ExceptionLogging.cs/SendExcepToDB) INICIO";
+        var DSC = new DSCore.DataCrypt();
+        var resultado = "(ExceptionLogging.cs/SendExcepToDB) Paso 1: Inicio.";
         try
         {
-            string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-            SqlConnection sqlConexion = new SqlConnection(sqlConnectionString);
-            string exepurl = context.Current.Request.Url.ToString();
-            SqlCommand com = new SqlCommand("CoreFinanciero.dbo.CapturarExcepciones", sqlConexion);
-            com.CommandType = CommandType.StoredProcedure;
-            com.Parameters.AddWithValue("@ExceptionMsg", exdb.Message.ToString() + " | InnerException: " + exdb.InnerException.Message.ToString());
-            com.Parameters.AddWithValue("@ExceptionType", exdb.GetType().Name.ToString());
-            com.Parameters.AddWithValue("@ExceptionURL", exepurl);
-            com.Parameters.AddWithValue("@ExceptionSource", exdb.StackTrace.ToString());
-            sqlConexion.Open();
-            com.ExecuteNonQuery();
-            resultado = "(ExceptionLogging.cs/SendExcepToDB)LA EXCEPCION SE REGISTRÓ EN LA BD";
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                var urlActual = context.Current.Request.Url.ToString();
+
+                using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.CapturarExcepciones", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@ExceptionMsg", exdb.Message.ToString());
+                    sqlComando.Parameters.AddWithValue("@ExceptionType", exdb.GetType().Name.ToString());
+                    sqlComando.Parameters.AddWithValue("@ExceptionURL", urlActual);
+                    sqlComando.Parameters.AddWithValue("@ExceptionSource", exdb.StackTrace.ToString());
+                    sqlComando.ExecuteNonQuery();
+
+                    resultado = "(ExceptionLogging.cs/SendExcepToDB) Paso 2: La excepción se registró correctamente.";
+                }
+            }
         }
         catch (Exception ex)
         {
-            resultado = "(ExceptionLogging.cs/SendExcepToDB)ERROR AL REGISTRAR LA EXCEPCION EN LA BD" + ex.Message.ToString();
+            resultado = "(ExceptionLogging.cs/SendExcepToDB) Error al registrar la excepción: " + ex.Message.ToString();
         }
         return resultado;
     }
