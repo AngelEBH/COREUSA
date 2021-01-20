@@ -127,7 +127,7 @@ namespace proyectoBase.Forms.Aval
                         {
                             while (reader.Read())
                             {
-                                Aval.AvalMaster = new AvalMasterViewModel()
+                                Aval.AvalMaster = new AvalMaestroViewModel()
                                 {
                                     fiIDAval = (int)reader["fiIDAval"],
                                     fiIDSolicitud = (int)reader["fiIDSolicitud"],
@@ -240,7 +240,7 @@ namespace proyectoBase.Forms.Aval
                                 int fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"];
                                 DateTime fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"];
 
-                                Aval.AvalInformacionDomiciliar = new AvalInformacionDomiciliarViewModel()
+                                Aval.AvalInformacionDomiciliar = new AvalInformacionDomicilioViewModel()
                                 {
                                     fiIDInformacionDomicilioAval = (int)reader["fiIDInformacionDomicilioAval"],
                                     fiIDAval = (int)reader["fiIDAval"],

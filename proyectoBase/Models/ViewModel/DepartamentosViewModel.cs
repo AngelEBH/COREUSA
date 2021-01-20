@@ -4,7 +4,6 @@ namespace UI.Web.Models.ViewModel
 {
     public class DepartamentosViewModel
     {
-        // atritubutos
         public int fiIDDepto { get; set; }
         public string fcNombreDepto { get; set; }
         public bool fbDepartamentoActivo { get; set; }

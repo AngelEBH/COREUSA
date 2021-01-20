@@ -17,8 +17,8 @@ public class PrecalificadoViewModel
     public int tipoProducto { get; set; }
     public string Producto { get; set; }
     public List<cotizadorProductosViewModel> cotizadorProductos { get; set; }
-
 }
+
 public class cotizadorProductosViewModel
 {
     public int IDCotizacion { get; set; }

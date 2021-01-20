@@ -31,7 +31,7 @@ namespace proyectoBase.Models.ViewModel
         public string fcPrimerApellidoCliente { get; set; }
         public string fcSegundoApellidoCliente { get; set; }
 
-        //nacionalidad del cliente
+        // nacionalidad del cliente
         public string fcDescripcionNacionalidad { get; set; }
         public bool fbNacionalidadActivo { get; set; }
 

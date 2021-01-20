@@ -121,27 +121,5 @@ namespace proyectoBase.Models.ViewModel
         public int IDUsuarioPasoFinal { get; set; }
         public string ComentarioPasoFinal { get; set; }
         public Nullable<System.DateTime> PasoFinalFin { get; set; }
-
-
-        // propiedades que deben ser eliminadas
-        public string fcNoSolicitud { get; set; }
-        public string fcTipoSolicitud { get; set; }
-        public string fcNombreUsuarioCrea { get; set; }
-        public string fcNombreUsuarioModifica { get; set; }
-        public string fcNombreAgencia { get; set; }
-        public Nullable<short> fiClienteArraigoLaboralAños { get; set; }
-        public Nullable<short> fiClienteArraigoLaboralMeses { get; set; }
-        public Nullable<short> fiClienteArraigoLaboralDias { get; set; }
-        public string fcNoCliente { get; set; }
-        //informacion vendedor que ingreso la solicitud
-        public int? fiIDVendedor { get; set; }
-        public int? fiIDAgencia { get; set; }
-        public string usu_NombreUsuario { get; set; }
-        public string usu_Nombres { get; set; }
-        public string usu_Apellidos { get; set; }
-        public string usu_Correos { get; set; }
-        public bool? usu_EsActivo { get; set; }
-        public string usu_RazonInactivo { get; set; }
-        public bool? usu_EsAdministrador { get; set; }
     }
 }

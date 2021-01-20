@@ -166,11 +166,11 @@ namespace proyectoBase.Forms.Aval
                 switch (seccionFormulario)
                 {
                     case "Correccion Informacion Personal Aval":
-                        AvalMasterViewModel objInfoPersonal = json_serializer.Deserialize<AvalMasterViewModel>(objSeccion);
+                        AvalMaestroViewModel objInfoPersonal = json_serializer.Deserialize<AvalMaestroViewModel>(objSeccion);
                         resultadoActualizacion = obj.ActualizarInformacionPersonal(objInfoPersonal);
                         break;
                     case "Correccion Informacion Domiciliar Aval":
-                        AvalInformacionDomiciliarViewModel objInforDomiciliar = json_serializer.Deserialize<AvalInformacionDomiciliarViewModel>(objSeccion);
+                        AvalInformacionDomicilioViewModel objInforDomiciliar = json_serializer.Deserialize<AvalInformacionDomicilioViewModel>(objSeccion);
                         resultadoActualizacion = obj.ActualizarInformacionDomiciliar(objInforDomiciliar);
                         break;
                     case "Correccion Informacion Laboral Aval":
@@ -233,7 +233,7 @@ namespace proyectoBase.Forms.Aval
             return resultadoProceso;
         }
 
-        public string ActualizarInformacionPersonal(AvalMasterViewModel AvalMaster)
+        public string ActualizarInformacionPersonal(AvalMaestroViewModel AvalMaster)
         {
             SqlConnection sqlConexion = null;
             SqlDataReader reader = null;
@@ -303,7 +303,7 @@ namespace proyectoBase.Forms.Aval
             return MensajeError;
         }
 
-        public string ActualizarInformacionDomiciliar(AvalInformacionDomiciliarViewModel AvalInformacionDomiciliar)
+        public string ActualizarInformacionDomiciliar(AvalInformacionDomicilioViewModel AvalInformacionDomiciliar)
         {
             SqlConnection sqlConexion = null;
             SqlDataReader reader = null;

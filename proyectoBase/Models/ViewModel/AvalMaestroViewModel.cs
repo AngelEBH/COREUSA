@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace proyectoBase.Models.ViewModel
 {
-    public class AvalMasterViewModel
+    public class AvalMaestroViewModel
     {
         public int fiIDSolicitud { get; set; }
         public int TipoAval { get; set; }

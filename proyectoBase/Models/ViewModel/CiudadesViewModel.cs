@@ -1,23 +1,19 @@
-﻿using proyectoBase.Models.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System;
 
 namespace UI.Web.Models.ViewModel
 {
     public class CiudadesViewModel
     {
-        //municipio al que pertenece el barrio/colonia
+        // municipio al que pertenece el barrio/colonia
         public string fcNombreMunicipio { get; set; }
         public bool fbMunicipioActivo { get; set; }
 
-        //departamento al que pertenece el barrio/colonia
+        // departamento al que pertenece el barrio/colonia
         public int? fiIDDepto { get; set; }
         public string fcNombreDepto { get; set; }
         public bool fbDepartamentoActivo { get; set; }
 
-        //informacion de la ciudad
+        // informacion de la ciudad
         public int fiIDCiudad { get; set; }
         public int fiIDMunicipio { get; set; }
         public string fcCodigoPostal { get; set; }

@@ -216,7 +216,7 @@ namespace proyectoBase.Forms.Aval
         }
 
         [WebMethod]
-        public static ResponseEntitie RegistrarAval(AvalMasterViewModel avalMaster, AvalInformacionLaboralViewModel avalInformacionLaboral, AvalInformacionDomiciliarViewModel avalInformacionDomiciliar, AvalInformacionConyugalViewModel avalInformacionConyugal)
+        public static ResponseEntitie RegistrarAval(AvalMaestroViewModel avalMaster, AvalInformacionLaboralViewModel avalInformacionLaboral, AvalInformacionDomicilioViewModel avalInformacionDomiciliar, AvalInformacionConyugalViewModel avalInformacionConyugal)
         {
             SqlConnection sqlConexion = null;
             SqlDataReader reader = null;

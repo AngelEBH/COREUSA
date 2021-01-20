@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace proyectoBase.Models.ViewModel
 {
-    public class AvalInformacionDomiciliarViewModel
+    public class AvalInformacionDomicilioViewModel
     {
         public int fiIDInformacionDomicilioAval { get; set; }
         public int fiIDAval { get; set; }

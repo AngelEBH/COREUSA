@@ -19,13 +19,13 @@ namespace adminfiles
     {
         private readonly Dictionary<string, dynamic> default_options = new Dictionary<string, dynamic>()
         {
-            { "limit", 5 }, //limite de archivos a subir
-            { "maxSize", 10 }, //peso máximo de todos los archivos seleccionado en megas (MB)
-            { "fileMaxSize", 2 }, //peso máximo por archivo
-            { "extensions", new string[] { "jpg", "png", "jpeg"} },
-            { "disallowedExtensions", new string[] { "asp", "aspx", "cs" } },
+            { "limit", 5 }, /* Limite de archivos a subir */
+            { "maxSize", 10 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
+            { "fileMaxSize", 2 }, /* Peso máximo por archivo */
+            { "extensions", new string[] { "jpg", "png", "jpeg"} }, /* Extensiones de archivos permitidas */
+            { "disallowedExtensions", new string[] { "asp", "aspx", "cs" } }, /* Extensiones de archivos no permitidas */
             { "required", false },
-            { "uploadDir", @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\" },
+            { "uploadDir", @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\" }, /* Directorio por defecto */
             { "title", "auto" },
             { "replace", false },
             { "editor", null },

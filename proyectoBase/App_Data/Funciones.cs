@@ -6,9 +6,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Net;
 
-
 /// <summary>
-/// Summary description for Funciones
+/// Funciones utilitarias
 /// </summary>
 public class Funciones
 {
