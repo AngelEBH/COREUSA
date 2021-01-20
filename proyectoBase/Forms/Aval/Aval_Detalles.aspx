@@ -7,14 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles del Aval</title>
-    <!-- BOOTSTRAP -->
-    <link href="../../Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../../Content/css/icons.css" rel="stylesheet" />
-    <link href="../../Content/css/style.css" rel="stylesheet" />
-    <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
-    <link href="../../Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/magnific-popup/magnific-popup.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
 </head>
 <body class="EstiloBody">

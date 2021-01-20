@@ -25,6 +25,7 @@
             width: 100%;
             overflow: hidden;
             padding-top: 75%; /* 4:3 Aspect Ratio */
+            max-height: 50vh;
         }
 
         .responsive-iframe {
@@ -36,6 +37,7 @@
             width: 100%;
             height: 100%;
             border: none;
+            max-height: 80vh;
         }
     </style>
 </head>
@@ -48,8 +50,9 @@
                         <span class="sr-only"></span>
                     </div>
                 </div>
-                <h6>Documentos del cliente
-                    <asp:Label ID="lblCodigoCliente" class="font-weight-bold" runat="server"></asp:Label></h6>
+                <h6>
+                    Documentos del cliente&nbsp;<asp:Label ID="lblCodigoCliente" class="font-weight-bold" runat="server"></asp:Label>
+                </h6>
             </div>
             <div class="card-body">
                 <div class="row" id="divInformacionGarantia" runat="server">
@@ -74,7 +77,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group row mr-0 ml-0 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="false">
                     <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server"></asp:Label>
                 </div>

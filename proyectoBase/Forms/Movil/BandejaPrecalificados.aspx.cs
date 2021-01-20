@@ -9,61 +9,58 @@ using System.Web.Services;
 public partial class Clientes_BandejaPrecalificados : System.Web.UI.Page
 {
     private string pcIDApp = "";
-    private string pcIDSesion = "1";
+    private string pcIDSesion = "";
     private string pcIDUsuario = "";
-    private DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        /* INICIO de captura de parametros y desencriptado de cadena */
-        string lcURL = Request.Url.ToString();
+        var lcURL = Request.Url.ToString();
         int liParamStart = lcURL.IndexOf("?");
 
         string lcParametros;
+
         if (liParamStart > 0)
-        {
             lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-        }
         else
+            lcParametros = string.Empty;
+
+        if (lcParametros != string.Empty)
         {
-            lcParametros = String.Empty;
-        }
-        if (lcParametros != String.Empty)
-        {
-            string lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-            string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-            Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-            pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+            var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+            var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+            
             pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
         }
-        /* FIN de captura de parametros y desencriptado de cadena */
     }
 
     [WebMethod]
     public static List<Clientes_BandejaPrecalificadosViewModel> CargarLista(string dataCrypt, string pcEstado)
     {
-        List<Clientes_BandejaPrecalificadosViewModel> listaRegistros = new List<Clientes_BandejaPrecalificadosViewModel>();
+        var listaRegistros = new List<Clientes_BandejaPrecalificadosViewModel>();
 
-        /* Desencriptar parametros */
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-        Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-        string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-        string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+        var lURLDesencriptado = DesencriptarURL(dataCrypt);
+        var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+        var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-        using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+        using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
         {
             try
             {
                 sqlConexion.Open();
-                using (SqlCommand sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_Jefe_ListaClientesEstados", sqlConexion))
+
+                using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_Jefe_ListaClientesEstados", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario.Trim());
                     sqlComando.Parameters.AddWithValue("@piResultadoPrecalificado", pcEstado.Trim());
+                    sqlComando.CommandTimeout = 120;
 
-                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         while (sqlResultado.Read())
                         {
@@ -88,7 +85,7 @@ public partial class Clientes_BandejaPrecalificados : System.Web.UI.Page
             {
                 ex.Message.ToString();
             }
-        } // using connection
+        }
 
         return listaRegistros;
     }
@@ -96,19 +93,19 @@ public partial class Clientes_BandejaPrecalificados : System.Web.UI.Page
     [WebMethod]
     public static string EncriptarParametros(string Identidad, string dataCrypt)
     {
-        string resultado;
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        var resultado = string.Empty;
         try
         {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             string lcParametros = "usr=" + pcIDUsuario.Trim() +
             "&IDApp=" + pcIDApp.Trim() +
             "&SID=" + pcIDSesion.Trim() +
             "&ID=" + Identidad.Trim();
+
             resultado = DSC.Encriptar(lcParametros);
         }
         catch
@@ -118,25 +115,24 @@ public partial class Clientes_BandejaPrecalificados : System.Web.UI.Page
         return resultado;
     }
 
-    public static Uri DesencriptarURL(string URL)
+    public static Uri DesencriptarURL(string Url)
     {
         Uri lURLDesencriptado = null;
         try
         {
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            int liParamStart = 0;
-            string lcParametros = "";
-            String pcEncriptado = "";
-            liParamStart = URL.IndexOf("?");
-            if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            else
-                lcParametros = String.Empty;
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
+            var liParamStart = Url.IndexOf("?");
 
-            if (lcParametros != String.Empty)
+            if (liParamStart > 0)
+                lcParametros = Url.Substring(liParamStart, Url.Length - liParamStart);
+            else
+                lcParametros = string.Empty;
+
+            if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                pcEncriptado = Url.Substring((liParamStart + 1), Url.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }

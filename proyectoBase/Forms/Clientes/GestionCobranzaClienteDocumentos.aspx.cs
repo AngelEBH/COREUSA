@@ -19,7 +19,6 @@ public partial class GestionCobranzaClienteDocumentos : System.Web.UI.Page
         {
             try
             {
-                /* Captura de parametros y desencriptado de cadena */
                 var lcURL = Request.Url.ToString();
                 int liParamStart = lcURL.IndexOf("?");
 
@@ -32,14 +31,13 @@ public partial class GestionCobranzaClienteDocumentos : System.Web.UI.Page
 
                 if (lcParametros != string.Empty)
                 {
-                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                    lcEncriptado = lcEncriptado.Replace("%2f", "/");
+                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
                     var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDCliente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDCliente");
 
                     lblCodigoCliente.Text = pcIDCliente;
