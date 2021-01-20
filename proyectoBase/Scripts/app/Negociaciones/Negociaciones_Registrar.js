@@ -3,7 +3,7 @@
     InicializarCargaDeArchivos();
 });
 
-/* Exportar COTIZACIÓN a PDF */
+/* Exportar cotización a PDF */
 function ExportToPDF(fileName) {
 
     const cotizacion = this.document.getElementById("divCotizacionPDF");
@@ -24,7 +24,7 @@ function ExportToPDF(fileName) {
     });
 }
 
-/* Exportar NEGOCIACIÓN a PDF */
+/* Exportar negociación a PDF */
 function ExportarNegociacionAPDF(fileName) {
 
     const negociacion = this.document.getElementById("divContenedorNegociacion");

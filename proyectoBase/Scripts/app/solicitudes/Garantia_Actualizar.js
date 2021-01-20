@@ -56,11 +56,12 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
 
                     let resultado = data.d;
 
-                    if (resultado.ResultadoExitoso == true) {
-
+                    if (resultado.ResultadoExitoso == true)
+                    {
                         window.location = "SolicitudesCredito_ListadoGarantias.aspx?" + window.location.href.split('?')[1];
                     }
-                    else {
+                    else
+                    {
                         MensajeError(resultado.MensajeResultado);
                         console.log(resultado.DebugString);
                     }
@@ -136,7 +137,6 @@ $(document).ready(function () {
 $("#btnBuscarVIN").on('click', function () {
 
     BuscarVIN();
-
 });
 
 /* De momento no se utiliza debido a cambios solicitados */
@@ -174,7 +174,8 @@ function BuscarVIN() {
             data: { format: "json" },
             success: function (data) {
 
-                if (data.Results[0].ErrorCode != "0") {
+                if (data.Results[0].ErrorCode != "0")
+                {
                     MensajeError('Resultado de la búsqueda: ' + data.Results[0].ErrorText);
                 }
 
@@ -330,7 +331,6 @@ function CargarDocumentosRequeridos() {
                     captions: $.extend(true, {}, $.fn.fileuploader.languages['es'], LenguajeEspanol)
 
                 }); /* Termina fileUploader*/
-
             }); /* Termina .Each*/
         }
     }); /* Termina Ajax */

@@ -102,7 +102,7 @@ $(document).ready(function () {
                 { "data": "NombreUsuario" },
                 {
                     "data": "EstadoSolicitud",
-                    "render": function (data, type, row) {                        
+                    "render": function (data, type, row) {
                         return '<label class="btn btn-sm btn-block mb-0 btn-' + GetEstadoClass(row["IDEstadoSolicitud"]) + '">' + row["EstadoSolicitud"] + '</label>'
                     }
                 }
@@ -114,16 +114,16 @@ $(document).ready(function () {
 
     /* busqueda por mes de ingreso */
     $('#mesIngreso').on('change', function () {
-        if (this.value != '') {
+
+        if (this.value != '')
             tablaSolicitudes.columns(2).search('/' + this.value + '/').draw();
-        }
-        else {
+        else
             tablaSolicitudes.columns(2).search('').draw();
-        }
     });
 
     /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
+
         tablaSolicitudes.columns(2).search(this.value + '/').draw();
     });
 
@@ -150,6 +150,7 @@ $(document).ready(function () {
 
     /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
+
         if (filtroActual == 'rangoFechas') {
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
@@ -166,6 +167,7 @@ $(document).ready(function () {
     });
 
     $('#datatable-solicitudesCanex tbody').on('click', 'tr', function () {
+
         var data = tablaSolicitudes.row(this).data();
         if (data != undefined) {
             identidad = data.Identidad;
@@ -177,6 +179,7 @@ $(document).ready(function () {
         if (identidad != '') {
 
             idSolicitud = $(this).data('id');
+
             $.ajax({
                 type: "POST",
                 url: 'Solicitudes_CANEX.aspx/AbrirSolicitudDetalles',
@@ -186,12 +189,11 @@ $(document).ready(function () {
                     MensajeError('Error al cargar detalles de la solicitud');
                 },
                 success: function (data) {
-                    if (data.d != "-1") {
+
+                    if (data.d != "-1")
                         window.location = "Solicitudes_CANEX_Detalles.aspx?" + data.d;
-                    }
-                    else {
+                    else
                         MensajeError('No se pudo al redireccionar a pantalla de detalles');
-                    }
                 }
             });
         }
@@ -222,8 +224,10 @@ function addFormatoNumerico(nStr) {
     return x1 + x2;
 }
 
-function GetEstadoClass(IDEstado) {
-    switch (IDEstado) {
+function GetEstadoClass(idEstado) {
+
+    switch (idEstado) {
+
         case 1:
             return "primary"
             break;
@@ -233,7 +237,7 @@ function GetEstadoClass(IDEstado) {
         case 3:
         case 7:
         case 6:
-            return "warning"; 
+            return "warning";
             break;
         case 4:
             return "success";

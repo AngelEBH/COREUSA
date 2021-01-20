@@ -1,5 +1,5 @@
 ﻿$(function () {
-    $(".MascaraCantidad").inputmask("decimal", {
+    $(".mascara-cantidad").inputmask("decimal", {
         alias: "numeric",
         groupSeparator: ",",
         digits: 2,
@@ -10,7 +10,7 @@
         autoGroup: true,
         min: 0.0,
     });
-    $(".MascaraNumerica").inputmask("decimal", {
+    $(".mascara-numerica").inputmask("decimal", {
         alias: "numeric",
         groupSeparator: ",",
         digits: 0,
@@ -21,10 +21,8 @@
         autoGroup: true,
         min: 0.0,
     });
-    $(".identidad").inputmask("9999999999999");
+    $(".mascara-identidad").inputmask("9999999999999");
 });
-
-
 
 $("#ddlProducto").on('change', function () {
 
@@ -35,11 +33,11 @@ $("#ddlProducto").on('change', function () {
         $("#txtValorPrima").css('display', '');
         $("#lblPrima").css('display', '');
         $("#lblMonto").text("Valor a financiar del vehiculo");
-        $("#lblPorcentajedePrima").css('display','');
+        $("#lblPorcentajedePrima").css('display', '');
     }
     else {
-        $("#divValorDelVehiculo").removeClass('col-6').addClass('col-12');
 
+        $("#divValorDelVehiculo").removeClass('col-6').addClass('col-12');
         $("#txtMonto").prop('disabled', false);
         $("#txtValorPrima").css('display', 'none');
         $("#lblPrima").css('display', 'none');
@@ -49,28 +47,26 @@ $("#ddlProducto").on('change', function () {
 });
 
 
-function CalcularPrima()
-{
+function CalcularPrima() {
+
     var lcValorVehiculo = parseFloat($("#txtValorVehiculo").val().replace(/,/g, '') != '' ? $("#txtValorVehiculo").val().replace(/,/g, '') : 0);
     var lcValorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') != '' ? $("#txtValorPrima").val().replace(/,/g, '') : 0);
     var lcMontoaFinaciar = parseFloat($("#txtMonto").val().replace(/,/g, '') != '' ? $("#txtMonto").val().replace(/,/g, '') : 0);
 
-    if ($("#ddlProducto :selected").val() == "Finaciamiento") {
-
+    if ($("#ddlProducto :selected").val() == "Finaciamiento")
+    {
         $("#txtMonto").val(lcValorVehiculo - lcValorPrima);
         lcMontoaFinaciar = $("#txtMonto").val().replace(/,/g, '') != '' ? $("#txtMonto").val().replace(/,/g, '') : 0;
     }
-    else {
-
+    else
+    {
         $("#txtValorPrima").val(lcValorVehiculo - lcMontoaFinaciar);
         lcValorPrima = $("#txtValorPrima") ? "0" : txtValorPrima.Text;
     }
 
-
     lcMontoaFinaciar = $("#txtMonto").val().replace(/,/g, '') != '' ? $("#txtMonto").val().replace(/,/g, '') : 0;
 
     var ddlSeguro = $("#ddlSeguro");
-
     ddlSeguro.empty;
     ddlSeguro.add('<option value="">Seleccionar</option>');
 
@@ -91,14 +87,6 @@ function CalcularPrima()
     }
 }
 
-
-
-
-
-
-
-
-
 function IniciarDatatables() {
 
     $('#tblDatosParaSAF').DataTable({
@@ -107,10 +95,11 @@ function IniciarDatatables() {
     });
 }
 
-// Exportar cotización a PDF
+/* Exportar cotización a PDF */
 function ExportToPDF(fileName) {
 
     const cotizacion = this.document.getElementById("divCotizacionPDF");
+
     var opt = {
         margin: 0.3,
         filename: fileName + '.pdf',

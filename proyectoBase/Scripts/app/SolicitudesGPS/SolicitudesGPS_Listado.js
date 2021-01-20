@@ -5,11 +5,6 @@ var idGarantia = 0;
 var identidad = '';
 var nombreCliente = '';
 
-/* Iconos de estado para el listado */
-var iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">estadoListo</label></i>';
-var iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">estadoPendiente</label></i>';
-var iconoWarning = '<i class="mdi mdi-check-circle mdi-24px text-warning p-0"><label style="display:none;">estadoPendiente</label></i>';
-
 /* Para realizar filtros en ambas listas*/
 var filtroActual = '';
 var tabActivo = 'tab_Listado_SolicitudesGPS_Pendientes';

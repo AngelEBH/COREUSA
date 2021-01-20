@@ -60,8 +60,8 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
 
                     let resultado = data.d;
 
-                    if (resultado.ResultadoExitoso == true) {
-
+                    if (resultado.ResultadoExitoso == true)
+                    {
                         window.location = "SolicitudesCredito_ListadoGarantias.aspx?" + window.location.href.split('?')[1];
                     }
                     else {
@@ -137,7 +137,6 @@ $(document).ready(function () {
 $("#btnBuscarVIN").on('click', function () {
 
     BuscarVIN();
-
 });
 
 /* De momento no se utiliza debido a cambios solicitados */

@@ -1,4 +1,4 @@
-﻿var FiltroActual = "";
+﻿var filtroActual = "";
 var idPreSolicitud = 0;
 var identidadCliente = "";
 var telefonoCliente = '';
@@ -106,7 +106,7 @@ $(document).ready(function () {
 
     $("#min").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
@@ -114,20 +114,20 @@ $(document).ready(function () {
 
     $("#max").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
     });
 
     $("#min, #max").change(function () {
-        FiltroActual = 'rangoFechas';
+        filtroActual = 'rangoFechas';
         dtPreSolicitudes.draw();
     });
 
     /* Agregar Filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
-        if (FiltroActual == 'rangoFechas') {
+        if (filtroActual == 'rangoFechas') {
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
                 FechaIngreso = new Date(a[2]);
@@ -173,7 +173,6 @@ $(document).on('click', 'button#btnDetalles', function () {
 
                 var preSolicitud = data.d;
 
-                // estado pre solicitud
                 var classEstadoPreSolicitud = preSolicitud.EstadoFavorable == 0 ? 'warning' : preSolicitud.EstadoFavorable == 1 ? 'success' : preSolicitud.EstadoFavorable == 2 ? 'danger' : 'warning';
                 $("#lblEstadoPreSolicitud").text(preSolicitud.EstadoPreSolicitud);
                 $("#lblEstadoPreSolicitud").removeClass('btn-danger').removeClass('btn-success').removeClass('btn-warning').addClass('btn-' + classEstadoPreSolicitud);
@@ -191,11 +190,12 @@ $(document).on('click', 'button#btnDetalles', function () {
                 $("#txtExtensionRecursosHumanos").val(preSolicitud.ExtensionRecursosHumanos);
                 $("#txtExtensionCliente").val(preSolicitud.ExtensionCliente);
 
-                if (preSolicitud.IdTipoDeUbicacion == 1) {
-
+                if (preSolicitud.IdTipoDeUbicacion == 1)
+                {
                     $("#lblTipoDeUbicacion").text('Investigación de domicilio');
                 }
-                else if (preSolicitud.IdTipoDeUbicacion == 2) {
+                else if (preSolicitud.IdTipoDeUbicacion == 2)
+                {
                     $("#lblTipoDeUbicacion").text('Investigación de trabajo');
                 }
 
@@ -215,7 +215,8 @@ $(document).on('click', 'button#btnDetalles', function () {
                             if (documentos[i].IdTipoDocumento != 8 && documentos[i].IdTipoDocumento != 9) {
 
                                 templateDocumentos += '<img alt="' + documentos[i].DescripcionTipoDocumento + '" src="' + documentos[i].URLArchivo + '" data-image="' + documentos[i].URLArchivo + '" data-description="' + documentos[i].DescripcionTipoDocumento + '"/>';
-                            } else {
+                            }
+                            else {
                                 templateDocumentosInvestigacionDeCampo += '<img alt="' + documentos[i].DescripcionTipoDocumento + '" src="' + documentos[i].URLArchivo + '" data-image="' + documentos[i].URLArchivo + '" data-description="' + documentos[i].DescripcionTipoDocumento + '"/>';
                             }
                         }

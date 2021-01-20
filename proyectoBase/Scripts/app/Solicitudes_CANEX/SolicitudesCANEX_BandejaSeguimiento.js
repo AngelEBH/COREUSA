@@ -114,12 +114,11 @@ $(document).ready(function () {
 
     /* busqueda por mes de ingreso */
     $('#mesIngreso').on('change', function () {
-        if (this.value != '') {
+
+        if (this.value != '')
             tablaSolicitudes.columns(3).search('/' + this.value + '/').draw();
-        }
-        else {
+        else
             tablaSolicitudes.columns(3).search('').draw();
-        }
     });
 
     /* busqueda por año de ingreso */
@@ -148,9 +147,11 @@ $(document).ready(function () {
         tablaSolicitudes.draw();
     });
 
-    /* Agregar Filtros */
+    /* Agregar filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
+
         if (filtroActual == 'rangoFechas') {
+
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
                 FechaIngreso = new Date(a[3]);
@@ -177,6 +178,7 @@ $(document).ready(function () {
         if (identidad != '') {
 
             idSolicitud = $(this).data('id');
+
             $.ajax({
                 type: "POST",
                 url: 'SolicitudesCANEX_BandejaSeguimiento.aspx/AbrirSolicitudSeguimientoDetalles',
@@ -186,16 +188,14 @@ $(document).ready(function () {
                     MensajeError('Error al cargar detalles de la solicitud');
                 },
                 success: function (data) {
-                    if (data.d != "-1") {
+
+                    if (data.d != "-1")
                         window.location = "SolicitudesCANEX_SeguimientoDetalles.aspx?" + data.d;
-                    }
-                    else {
+                    else
                         MensajeError('No se pudo al redireccionar a pantalla de detalles');
-                    }
                 }
             });
         }
-
     });
 
     /* Buscador */
@@ -223,8 +223,9 @@ function addFormatoNumerico(nStr) {
     return x1 + x2;
 }
 
-function GetEstadoClass(IDEstado) {
-    switch (IDEstado) {
+function GetEstadoClass(idEstado) {
+
+    switch (idEstado) {
         case 1:
             return "primary"
             break;

@@ -76,7 +76,11 @@ $(document).ready(function () {
 
         idEstado = this.value;
         FiltrarPorEstado();
+    });
 
+    /* Buscador */
+    $('#txtDatatableFilter').keyup(function () {
+        dtBandejaPrecalificados.search($(this).val()).draw();
     });
 });
 

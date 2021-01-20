@@ -13,9 +13,7 @@
         success: function (data) {
             var parametros = data.d;
             window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + parametros, "_blank",
-                "toolbar=yes, scrollbars=yes,resizable=yes," +
-                "top=0,left=window.screen.availWidth/2," +
-                "window.screen.availWidth/2,window.screen.availHeight");
+                "toolbar=yes, scrollbars=yes,resizable=yes,top=0,left=window.screen.availWidth/2,window.screen.availWidth/2,window.screen.availHeight");
         }
     });
 });
@@ -107,7 +105,8 @@ $("#btnCondicionarSolicitudConfirmar").click(function () {
                 contadorCondiciones = 0;
                 $("#pestanaListaSolicitudCondiciones").css('display', '');
             }
-            else { MensajeError('Error al condicionar la solicitud, contacte al administrador'); }
+            else
+                MensajeError('Error al condicionar la solicitud, contacte al administrador');
         }
     });
 });
@@ -135,14 +134,14 @@ $("#btnRechazarConfirmar").click(function () {
             }
         });
     }
-    else {
+    else
         $($("#txtComentarioRechazar")).parsley().validate();
-    }
 });
 
 $("#btnAceptarSolicitudConfirmar").click(function () {
 
     if ($($("#txtComentarioAceptar")).parsley().isValid()) {
+
         $.ajax({
             type: "POST",
             url: "Solicitudes_CANEX_Detalles.aspx/ImportarSolicitud",
@@ -153,24 +152,21 @@ $("#btnAceptarSolicitudConfirmar").click(function () {
             },
             success: function (data) {
 
-                console.log(data.d);
-
                 if (data.d.response === true) {
 
-                    $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('disabled', true);
-                    $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('title', 'La solicitud ya fue rechazada');
+                    $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('disabled', true).prop('title', 'La solicitud ya fue rechazada');
 
                     $("#modalResolucionAprobar").modal('hide');
 
                     MensajeExito('¡Solicitud exportada a bandeja de crédito correctamente!');
                 }
-                else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
+                else
+                    MensajeError('Error al actualizar estado de la solicitud, contacte al administrador');
             }
         });
     }
-    else {
+    else
         $($("#txtComentarioAceptar")).parsley().validate();
-    }
 });
 
 function MensajeInformacion(mensaje) {

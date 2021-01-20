@@ -1,6 +1,6 @@
-﻿var FiltroActual = "";
+﻿var filtroActual = "";
 var idSolicitud = 0;
-estadoMasRelevante = '';
+var estadoMasRelevante = '';
 
 $(document).ready(function () {
 
@@ -110,28 +110,22 @@ $(document).ready(function () {
 
     /* busqueda por mes de ingreso */
     $('#mesIngreso').on('change', function () {
-        if (this.value != '') {
-            dtBandeja.columns(2)
-                .search('/' + this.value + '/')
-                .draw();
-        }
-        else {
-            dtBandeja.columns(2)
-                .search('')
-                .draw();
-        }
+
+        if (this.value != '')
+            dtBandeja.columns(2).search('/' + this.value + '/').draw();
+        else
+            dtBandeja.columns(2).search('').draw();
     });
 
     /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
-        dtBandeja.columns(2)
-            .search(this.value + '/')
-            .draw();
+
+        dtBandeja.columns(2).search(this.value + '/').draw();
     });
 
     $("#min").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
@@ -139,20 +133,21 @@ $(document).ready(function () {
 
     $("#max").datepicker({
         onSelect: function () {
-            FiltroActual = 'rangoFechas';
+            filtroActual = 'rangoFechas';
         },
         changeMonth: !0,
         changeYear: !0,
     });
 
     $("#min, #max").change(function () {
-        FiltroActual = 'rangoFechas';
+        filtroActual = 'rangoFechas';
         dtBandeja.draw();
     });
 
-    /* Agregar Filtros */
+    /* Agregar filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
-        if (FiltroActual == 'rangoFechas') {
+
+        if (filtroActual == 'rangoFechas') {
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
                 FechaIngreso = new Date(a[2]);
@@ -173,6 +168,7 @@ $(document).ready(function () {
     });
 
     $("#datatable-bandeja tbody").on("click", "tr", function () {
+
         var row = dtBandeja.row(this).data();
 
         idSolicitud = row.fiIDSolicitud;
@@ -194,19 +190,17 @@ $('#btnActualizar').click(function (e) {
         data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: idSolicitud }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
+
             MensajeError('No se pudo cargar la solicitud, contacte al administrador');
         },
         success: function (data) {
 
-            if (data.d != "-1") {
+            if (data.d != "-1")
                 window.location = "SolicitudesCredito_ActualizarSolicitud.aspx?" + data.d;
-            }
-            else {
+            else
                 MensajeError('No se pudo al redireccionar a pantalla de actualización');
-            }
         }
     });
-
 });
 
 $(document).on('click', 'button#btnDetalles', function () {
@@ -217,16 +211,15 @@ $(document).on('click', 'button#btnDetalles', function () {
         data: JSON.stringify({ dataCrypt: window.location.href, IDSOL: idSolicitud }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
+
             MensajeError('No se pudo cargar la solicitud, contacte al administrador');
         },
         success: function (data) {
 
-            if (data.d != "-1") {
+            if (data.d != "-1")
                 window.location = "SolicitudesCredito_RegistradaDetalles.aspx?" + data.d;
-            }
-            else {
+            else
                 MensajeError('No se pudo al redireccionar a pantalla de detalles');
-            }
         }
     });
 });

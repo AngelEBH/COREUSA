@@ -230,10 +230,12 @@ $(document).ready(function () {
 
     /* Filtrar cuando se seleccione una opción */
     $("input[type=radio][name=filtros]").change(function () {
+
         var filtro = this.value;
         dtBandeja.columns([6, 7, 8, 9, 10, 11, 12, 13]).search("").draw();
 
         switch (filtro) {
+
             case "0":
                 dtBandeja.columns([6, 7, 8, 9, 10, 11, 12, 13]).search("").draw();
                 break;
@@ -271,12 +273,11 @@ $(document).ready(function () {
 
     /* busqueda por mes de ingreso */
     $('#mesIngreso').on('change', function () {
-        if (this.value != '') {
+
+        if (this.value != '')
             dtBandeja.columns(5).search('/' + this.value + '/').draw();
-        }
-        else {
+        else
             dtBandeja.columns(5).search('').draw();
-        }
     });
 
     /* busqueda por año de ingreso */
@@ -315,9 +316,7 @@ $(document).ready(function () {
                 FechaIngreso = new Date(a[5]);
             return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaIngreso <= Hasta) || ("Invalid Date" == Hasta && FechaIngreso >= Desde) || (FechaIngreso <= Hasta && FechaIngreso >= Desde);
         }
-        else {
-            return true;
-        }
+        else return true;
     });
 
     $("#añoIngreso").datepicker({
@@ -332,6 +331,7 @@ $(document).ready(function () {
     });
 
     $("#datatable-bandeja tbody").on("click", "tr", function () {
+
         var row = dtBandeja.row(this).data();
         let idAnalistaSolicitud = row.fiIDUsuarioModifica;
         idSolicitud = row.fiIDSolicitud;

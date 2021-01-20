@@ -12,9 +12,6 @@ $(document).ready(function () {
         .addClass('btn btn-info')
         .css('display', 'none')
         .on('click', function () {
-            debugger;
-            //evitar postabck del formulario
-            $('#frmSolicitud').submit(function (e) { e.preventDefault() });
 
             $('#frmSolicitud').parsley().validate({ group: 'informacionPersonal', force: true });
             var modelStateFormPersonal = $('#frmSolicitud').parsley().isValid({ group: 'informacionPersonal' });
