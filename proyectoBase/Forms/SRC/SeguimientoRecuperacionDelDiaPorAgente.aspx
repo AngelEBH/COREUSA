@@ -7,10 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title></title>
-    <!-- BOOTSTRAP -->
     <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/CSS/Content/css/style.css" rel="stylesheet" />
-    <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
@@ -39,8 +37,7 @@
                         <h6 class="">Recuperación del Dia</h6>
                     </div>
                     <div class="col-4">
-                        <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
-                            aria-label="Buscar" />
+                        <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar" aria-label="Buscar" />
                     </div>
                 </div>
             </div>
@@ -73,7 +70,6 @@
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <!-- DATATABLES -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>

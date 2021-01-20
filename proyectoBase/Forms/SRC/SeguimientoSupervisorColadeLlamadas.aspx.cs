@@ -9,72 +9,70 @@ using System.Web.UI.WebControls;
 
 public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
 {
+    public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+
     protected void Page_Load(object sender, EventArgs e)
     {
-        /* INICIO de captura de parametros y desencriptado de cadena */
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        var lcURL = Request.Url.ToString();
+        var liParamStart = lcURL.IndexOf("?");
 
-        string lcURL = Request.Url.ToString();
-        int liParamStart = lcURL.IndexOf("?");
+        string lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
-        string lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : String.Empty;
-
-        if (lcParametros != String.Empty)
+        if (lcParametros != string.Empty)
         {
-            string lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-            string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-            Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+            var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+            var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-            /* Agentes Activos */
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            /* Agentes activos */
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
                 sqlConexion.Open();
 
-                using (SqlDataAdapter AdapterDDLCondiciones = new SqlDataAdapter(Comando, sqlConexion))
+                string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
+
+                using (var sqlDataAdapter = new SqlDataAdapter(Comando, sqlConexion))
                 {
                     DataTable dtAgentes = new DataTable();
-                    AdapterDDLCondiciones.Fill(dtAgentes);
+                    sqlDataAdapter.Fill(dtAgentes);
                     ddlAgentesActivos.DataSource = dtAgentes;
                     ddlAgentesActivos.DataBind();
                     ddlAgentesActivos.DataTextField = "fcNombreCorto";
                     ddlAgentesActivos.DataValueField = "fiIDUsuario";
                     ddlAgentesActivos.DataBind();
                     dtAgentes.Dispose();
-                    AdapterDDLCondiciones.Dispose();
+                    sqlDataAdapter.Dispose();
                     ddlAgentesActivos.Items.Insert(0, new ListItem("Todos los agentes", "0"));
                     ddlAgentesActivos.SelectedIndex = 0;
                 }
             }
         }
-        /* FIN de captura de parametros y desencriptado de cadena, realizar validaciones que se lleguen a necesitar */
     }
 
     [WebMethod]
     public static List<SeguimientoSupervisorColadeLlamadasViewModel> CargarRegistros(string dataCrypt, int IDAgente, int IDActividad)
     {
-        List<SeguimientoSupervisorColadeLlamadasViewModel> ListadoRegistros = new List<SeguimientoSupervisorColadeLlamadasViewModel>();
+        var ListadoRegistros = new List<SeguimientoSupervisorColadeLlamadasViewModel>();
 
         if (IDActividad == 0)
             return ListadoRegistros;
 
         try
         {
-            /* Desencriptar parametros */
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_ColaPorAgente", sqlConexion))
+                using (var sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_ColaPorAgente", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
@@ -82,28 +80,29 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDAgente", IDAgente);
                     sqlComando.Parameters.AddWithValue("@piIDActividad", IDActividad);
+                    sqlComando.CommandTimeout = 120;
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
                             ListadoRegistros.Add(new SeguimientoSupervisorColadeLlamadasViewModel()
                             {
-                                IDAgente = (int)reader["fiIDUsuario"],
-                                NombreAgente = (string)reader["fcNombreCorto"],
-                                IDCliente = (string)reader["fcIDCliente"],
-                                NombreCompletoCliente = (string)reader["fcNombreSAF"],
-                                TelefonoCliente = (string)reader["fcTelefono"],
-                                PrimerComentario = (string)reader["fcComentario1"],
-                                SegundoComentario = (string)reader["fcComentario2"],
-                                InicioLlamada = ConvertFromDBVal<DateTime>((object)reader["fdInicioLlamada"]),
-                                FinLlamada = ConvertFromDBVal<DateTime>((object)reader["fdFinLlamada"]),
-                                SegundosDuracionLlamada = ConvertFromDBVal<int>((object)reader["fiSegundos"])
+                                IDAgente = (int)sqlResultado["fiIDUsuario"],
+                                NombreAgente = sqlResultado["fcNombreCorto"].ToString(),
+                                IDCliente = sqlResultado["fcIDCliente"].ToString(),
+                                NombreCompletoCliente = sqlResultado["fcNombreSAF"].ToString(),
+                                TelefonoCliente = sqlResultado["fcTelefono"].ToString(),
+                                PrimerComentario = sqlResultado["fcComentario1"].ToString(),
+                                SegundoComentario = sqlResultado["fcComentario2"].ToString(),
+                                InicioLlamada = ConvertFromDBVal<DateTime>((object)sqlResultado["fdInicioLlamada"]),
+                                FinLlamada = ConvertFromDBVal<DateTime>((object)sqlResultado["fdFinLlamada"]),
+                                SegundosDuracionLlamada = ConvertFromDBVal<int>((object)sqlResultado["fiSegundos"])
                             });
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -115,69 +114,67 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
     [WebMethod]
     public static List<ResumenAgentesViewModel> CargarResumen(string dataCrypt)
     {
-        List<ResumenAgentesViewModel> ListadoRegistros = new List<ResumenAgentesViewModel>();
+        var ListadoResumen = new List<ResumenAgentesViewModel>();
 
         try
         {
-            /* Desencriptar parametros */
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_ColaPorAgente_ResumenLlamadas", sqlConexion))
+                using (var sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_ColaPorAgente_ResumenLlamadas", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
-                            ListadoRegistros.Add(new ResumenAgentesViewModel()
+                            ListadoResumen.Add(new ResumenAgentesViewModel()
                             {
-                                NombreAgente = (string)reader["fcAgente"],
-                                LlamadasPorHacer = (int)reader["fiClientesPorLlamar"],
-                                LlamadasHechas = (int)reader["fiClientesHechas"],
+                                NombreAgente = sqlResultado["fcAgente"].ToString(),
+                                LlamadasPorHacer = (int)sqlResultado["fiClientesPorLlamar"],
+                                LlamadasHechas = (int)sqlResultado["fiClientesHechas"],
                             });
                         }
                     }
-                }
-            }
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return ListadoRegistros;
+        return ListadoResumen;
     }
 
-    public static Uri DesencriptarURL(string URL)
+    public static Uri DesencriptarURL(string Url)
     {
         Uri lURLDesencriptado = null;
         try
         {
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            int liParamStart = 0;
-            string lcParametros = "";
-            String pcEncriptado = "";
-            liParamStart = URL.IndexOf("?");
-            if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            else
-                lcParametros = String.Empty;
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
+            var liParamStart = Url.IndexOf("?");
 
-            if (lcParametros != String.Empty)
+            if (liParamStart > 0)
+                lcParametros = Url.Substring(liParamStart, Url.Length - liParamStart);
+            else
+                lcParametros = string.Empty;
+
+            if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                pcEncriptado = Url.Substring((liParamStart + 1), Url.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
@@ -210,7 +207,6 @@ public class SeguimientoSupervisorColadeLlamadasViewModel
     public DateTime FinLlamada { get; set; }
     public int SegundosDuracionLlamada { get; set; }
 }
-
 
 public class ResumenAgentesViewModel
 {

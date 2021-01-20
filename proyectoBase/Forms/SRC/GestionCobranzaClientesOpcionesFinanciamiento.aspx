@@ -40,8 +40,6 @@
                         <asp:TextBox ID="txtIDCliente" runat="server" CssClass="FormatotxtRO" Style="left: 80px; top: 5px; width: 100px;" ReadOnly="True"></asp:TextBox>
                         <asp:TextBox ID="txtNombreCliente" runat="server" CssClass="FormatotxtRO" Style="left: 260px; top: 5px; width: 290px;" ReadOnly="True"></asp:TextBox>
                         <asp:TextBox ID="txtProducto" runat="server" CssClass="FormatotxtRO" Style="left: 640px; top: 5px; width: 240px;" ReadOnly="True"></asp:TextBox>
-
-
                         <asp:Label CssClass="Formatolbl" ID="lblIDCliente" runat="server" Style="left: 10px; top: 9px;">ID Cliente:</asp:Label>
                         <asp:Label CssClass="Formatolbl" ID="lblNombreCliente" runat="server" Style="left: 210px; top: 9px;">Cliente:</asp:Label>
                         <asp:Label CssClass="Formatolbl" ID="lblProducto" runat="server" Style="left: 580px; top: 9px;">Producto:</asp:Label>
@@ -78,10 +76,6 @@
                         <asp:Label CssClass="Formatolbl" ID="lblSaldoSeguros" runat="server" Style="left: 280px; top: 113px;">Seguros:</asp:Label>
                         <asp:Label CssClass="Formatolbl" ID="lblRecargos" runat="server" Style="left: 280px; top: 139px;">Gastos por cobranza:</asp:Label>
                         <asp:Label CssClass="Formatolbl" ID="lblCuotasAtrasadas" runat="server" Style="left: 280px; top: 165px;">Cuotas atrasadas:</asp:Label>
-
-
-
-
 
                         <asp:TextBox ID="txtTotalAtrasado" runat="server" CssClass="FormatotxtMonedaROBold" Style="left: 710px; top: 5px; width: 100px;" ReadOnly="True"></asp:TextBox>
                         <asp:TextBox ID="txtTotalAdeudado" runat="server" CssClass="FormatotxtMonedaRO" Style="left: 710px; top: 31px; width: 100px;" ReadOnly="True"></asp:TextBox>
@@ -158,8 +152,6 @@
                                 </tr>
                             </table>
                         </div>
-
-
                     </asp:Panel>
 
                 </asp:Panel>

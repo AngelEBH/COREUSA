@@ -8,24 +8,24 @@ using System.Web.Services;
 
 public partial class SeguimientoRecuperacionDelDiaPorAgente : System.Web.UI.Page
 {
+    public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+
     protected void Page_Load(object sender, EventArgs e)
     {
-        /* INICIO de captura de parametros y desencriptado de cadena */
-        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        var lcURL = Request.Url.ToString();
+        var liParamStart = lcURL.IndexOf("?");
 
-        string lcURL = Request.Url.ToString();
-        int liParamStart = lcURL.IndexOf("?");
+        string lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
-        string lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : String.Empty;
-
-        if (lcParametros != String.Empty)
+        if (lcParametros != string.Empty)
         {
-            string lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-            string lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-            Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+            var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+            var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
         }
         /* FIN de captura de parametros y desencriptado de cadena, realizar validaciones que se lleguen a necesitar */
     }
@@ -33,76 +33,73 @@ public partial class SeguimientoRecuperacionDelDiaPorAgente : System.Web.UI.Page
     [WebMethod]
     public static List<SeguimientoRecuperacionDelDiaPorAgenteViewModel> CargarRegistros(string dataCrypt)
     {
-        List<SeguimientoRecuperacionDelDiaPorAgenteViewModel> ListadoRegistros = new List<SeguimientoRecuperacionDelDiaPorAgenteViewModel>();
+        var listaSeguimiento = new List<SeguimientoRecuperacionDelDiaPorAgenteViewModel>();
         try
         {
-            /* Desencriptar parametros */
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            int pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_SRC_CallCenter_RecuperacionPorAgente", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_SRC_CallCenter_RecuperacionPorAgente", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuarioSupervisor", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDAgente", 0);
-                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
-                            ListadoRegistros.Add(new SeguimientoRecuperacionDelDiaPorAgenteViewModel()
+                            listaSeguimiento.Add(new SeguimientoRecuperacionDelDiaPorAgenteViewModel()
                             {
-                                IDUsuarioSupervisor = (int)reader["fiIDUsuarioSupervisor"],
-                                NombreSupervisor = (string)reader["fcNombreSupervisor"],
-                                IDAgente = (int)reader["fiIDUsuarioAgente"],
-                                NombreAgente = (string)reader["fcNombreAgente"],
-                                IDCliente = (string)reader["fcIDCliente"],
-                                NombreCompletoCliente = (string)reader["fcNombreSAF"],
-                                Descripcion = (string)reader["fcDescripcion"],
-                                DiasAtraso = (short)reader["fiDiasAtraso"],
-                                SaldoInicialPonerAlDia = (decimal)reader["fnInicialSaldoPonerAlDia"],
-                                AbonosHoy = (decimal)reader["fnAbonosdeHoy"],
+                                IDUsuarioSupervisor = (int)sqlResultado["fiIDUsuarioSupervisor"],
+                                NombreSupervisor = sqlResultado["fcNombreSupervisor"].ToString(),
+                                IDAgente = (int)sqlResultado["fiIDUsuarioAgente"],
+                                NombreAgente = sqlResultado["fcNombreAgente"].ToString(),
+                                IDCliente = sqlResultado["fcIDCliente"].ToString(),
+                                NombreCompletoCliente = sqlResultado["fcNombreSAF"].ToString(),
+                                Descripcion = sqlResultado["fcDescripcion"].ToString(),
+                                DiasAtraso = (short)sqlResultado["fiDiasAtraso"],
+                                SaldoInicialPonerAlDia = (decimal)sqlResultado["fnInicialSaldoPonerAlDia"],
+                                AbonosHoy = (decimal)sqlResultado["fnAbonosdeHoy"],
                                 Moneda = "L"
                             });
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return ListadoRegistros;
+        return listaSeguimiento;
     }
 
-    public static Uri DesencriptarURL(string URL)
+    public static Uri DesencriptarURL(string Url)
     {
         Uri lURLDesencriptado = null;
         try
         {
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-            int liParamStart = 0;
-            string lcParametros = "";
-            String pcEncriptado = "";
-            liParamStart = URL.IndexOf("?");
-            if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            else
-                lcParametros = String.Empty;
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
+            var liParamStart = Url.IndexOf("?");
 
-            if (lcParametros != String.Empty)
+            if (liParamStart > 0)
+                lcParametros = Url.Substring(liParamStart, Url.Length - liParamStart);
+            else
+                lcParametros = string.Empty;
+
+            if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                pcEncriptado = Url.Substring((liParamStart + 1), Url.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
