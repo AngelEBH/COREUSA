@@ -107,6 +107,9 @@
                                 <button type="button" id="btnEnviarCorreoSeguro" onclick="EnviarCorreo('Seguro', 'Seguro de garantía', 'divCorreoSeguroPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
                                     Correo Seguro
                                 </button>
+                                <button type="button" id="btnExpediente" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    Expediente
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -253,7 +256,6 @@
                         <h6>Fotografías de la garantía</h6>
                         <div class="form-group row">
                             <div class="col-12">
-                                <!-- Div donde se muestran las imágenes de la garantía-->
                                 <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;">
                                 </div>
                             </div>
@@ -273,8 +275,8 @@
         <!-- =============================================================================== -->
 
         <!-- ================================== HTML Contrato =================================== -->
-        <div id="divContenedorContrato" class="contenedorPDFx">
-            <div class="card m-0 divImprimir" id="divContratoPDF" style="/*display: none; */">
+        <div id="divContenedorContrato" class="contenedorPDF">
+            <div class="card m-0 divImprimir" id="divContratoPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
@@ -463,7 +465,6 @@
                             </p>
                         </div>
                     </div>
-                    <!-- Firma del cliente -->
                     <div class="row mt-5">
                         <div class="col-1"></div>
                         <div class="col-5 text-center">
@@ -494,7 +495,8 @@
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">PAGARÉ POR
-                                <asp:Label runat="server" ID="lblMontoTitulo_Pagare"></asp:Label></h5>
+                                <asp:Label runat="server" ID="lblMontoTitulo_Pagare"></asp:Label>
+                            </h5>
                             <hr />
                         </div>
                     </div>
@@ -603,19 +605,18 @@
                                 Me doy por enterado que el vehículo es
                                 <asp:Label runat="server" ID="lblGarantiaUsada_CompromisoLegal"></asp:Label>
                                 y está en buen estado y se entrega tal cual esta,
-y hago constar que lo vi, revisé y lo probé antes de comprarlo y es por eso que estoy satisfecho con dicha revisión.
+                                y hago constar que lo vi, revisé y lo probé antes de comprarlo y es por eso que estoy satisfecho con dicha revisión.
                                 <br />
-
                                 El seguro de daños que incluye el préstamo es válido única y exclusivamente
-durante el tiempo del financiamiento, siempre y cuando las cuotas estén al día.
+                                durante el tiempo del financiamiento, siempre y cuando las cuotas estén al día.
                                 <br />
-
                                 Doy fe de lo anterior y de recibir el vehículo y para esto firmo de forma libre y espontáneamente la presente constancia
-en la ciudad de
+                                en la ciudad de
                                 <span class="lblCiudad_Firma"></span>,
-departamento de
+                                departamento de
                                 <span class="lblDepartamento_Firma"></span>,
-a los <span class="lblNumeroDia_Firma"></span>
+                                a los
+                                <span class="lblNumeroDia_Firma"></span>
                                 días del mes de <span class="lblMes_Firma"></span>
                                 del año <span class="lblAnio_Firma"></span>.
                             </p>
@@ -657,20 +658,20 @@ a los <span class="lblNumeroDia_Firma"></span>
                         <div class="col-12">
                             <p>
                                 Nosotros ERICK GEOVANY MOLINA PADILLA, mayor de edad, casado, hondureño, Ingeniero Industrial y de este domicilio, quien actúa en condición de representante
-Legal de la Empresa Mercantil denominada “PRESTADITO S.A DE C.V. con Registro Tributario Nacional 05019016811399, Empresa Constituida mediante
-escritura pública Instrumento número 86 autorizada en esta Ciudad el día 18 de Diciembre del año 2,015 por el Notario Efraín Antonio Gutiérrez Ardon e inscrita
-bajo número de MATRICULA 96565 del Registro Mercantil del Centro Asociado de la Cámara de Comercio e Industria de Cortes,
-en este convenio se denominara <b>LA EMPRESA</b> y <b>AL SEÑOR(A)</b>
+                                Legal de la Empresa Mercantil denominada “PRESTADITO S.A DE C.V. con Registro Tributario Nacional 05019016811399, Empresa Constituida mediante
+                                escritura pública Instrumento número 86 autorizada en esta Ciudad el día 18 de Diciembre del año 2,015 por el Notario Efraín Antonio Gutiérrez Ardon e inscrita
+                                bajo número de MATRICULA 96565 del Registro Mercantil del Centro Asociado de la Cámara de Comercio e Industria de Cortes,
+                                en este convenio se denominara <b>LA EMPRESA</b> y <b>AL SEÑOR(A)</b>
                                 <asp:Label runat="server" ID="lblNombreCliente_ConvenioCyV"></asp:Label>
                                 mayor de edad,
                                 <asp:Label runat="server" ID="lblNacionalidad_ConvenioCyV"></asp:Label>,
                                 <asp:Label runat="server" ID="lblEstadoCivil_ConvenioCyV"></asp:Label>,
-con tarjeta de identidad número
+                                con tarjeta de identidad número
                                 <asp:Label runat="server" ID="lblIdentidad_ConvenioCyV"></asp:Label>
                                 y con domicilio en la ciudad de
                                 <asp:Label runat="server" ID="lblCiudadCliente_ConvenioCyV"></asp:Label>,
-quien actúa en calidad de propietario de un VEHICULO AUTOMOTOR
-MARCA:
+                                quien actúa en calidad de propietario de un VEHICULO AUTOMOTOR
+                                MARCA:
                                 <asp:Label runat="server" ID="lblMarca_ConvenioCyV"></asp:Label>
                                 MODELO:
                                 <asp:Label runat="server" ID="lblModelo_ConvenioCyV"></asp:Label>
@@ -691,9 +692,8 @@ MARCA:
                                 MOTOR:
                                 <asp:Label runat="server" ID="lblSerieMotor_ConvenioCyV"></asp:Label>,
 
-
-Ambos cuentan con la capacidad y facultades suficientes para poder contratar, quienes voluntariamente con plena libertad y
-sin presión de ninguna naturaleza manifestamos lo siguiente:
+                                Ambos cuentan con la capacidad y facultades suficientes para poder contratar, quienes voluntariamente con plena libertad y
+                                sin presión de ninguna naturaleza manifestamos lo siguiente:
                             </p>
                             <p>
                                 <b>Primero:</b>
@@ -845,78 +845,83 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                             <h4 class="text-center font-weight-bold">PRESTADITO S.A DE C.V</h4>
                         </div>
                         <div class="col-6">
-                            <table class="table table-bordered" style="border-width: 1px !important;">
-                                <tr>
-                                    <th class="bg-light font-weight-bold text-center pb-0">RTN</th>
-                                    <td class="p-0 text-center font-weight-bold">
-                                        <asp:Label runat="server" ID="lblRTNEmpresa_Recibo">05019016811399</asp:Label></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light font-weight-bold text-center pb-0">Fecha</th>
-                                    <td class="p-0 text-center">
-                                        <asp:Label runat="server" ID="lblFecha_Recibo"></asp:Label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light font-weight-bold text-center pb-0">Recibo</th>
-                                    <td class="p-0 text-center">
-                                        <asp:Label runat="server" ID="lblRecibo_Recibo"></asp:Label>
-                                    </td>
-                                </tr>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th class="bg-light font-weight-bold text-center pb-0">RTN</th>
+                                        <td class="p-0 text-center font-weight-bold">
+                                            <asp:Label runat="server" ID="lblRTNEmpresa_Recibo">05019016811399</asp:Label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light font-weight-bold text-center pb-0">Fecha</th>
+                                        <td class="p-0 text-center">
+                                            <asp:Label runat="server" ID="lblFecha_Recibo"></asp:Label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light font-weight-bold text-center pb-0">Recibo</th>
+                                        <td class="p-0 text-center">
+                                            <asp:Label runat="server" ID="lblRecibo_Recibo"></asp:Label>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
                     <div class="row mb-5">
                         <div class="col-12">
                             <table class="table table-bordered mb-0">
-                                <tr>
-                                    <th class="bg-light font-weight-bold p-1" style="width: 15%">Recibí de:</th>
-                                    <td class="p-1 font-weight-bold">
-                                        <asp:Label runat="server" ID="lblNombreEmpresa_Recibo">PRESTADITO SA DE CV</asp:Label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light font-weight-bold p-1" style="width: 15%">La suma de:</th>
-                                    <td class="p-1 font-weight-bold">
-                                        <asp:Label runat="server" ID="lblSumaRecibidaEnPalabras_Recibo"></asp:Label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light font-weight-bold p-1" style="width: 15%">Pago por:</th>
-                                    <td class="p-1 font-weight-bold">
-                                        <asp:Label runat="server" ID="lblConceptoPago_Recibo">FINANCIAMIENTO DE VEHICULO AUTOMOTOR MARCA:
-                                            <asp:Label runat="server" ID="lblMarca_Recibo"></asp:Label>
+                                <tbody>
+                                    <tr>
+                                        <th class="bg-light font-weight-bold p-1" style="width: 15%">Recibí de:</th>
+                                        <td class="p-1 font-weight-bold">
+                                            <asp:Label runat="server" ID="lblNombreEmpresa_Recibo">PRESTADITO SA DE CV</asp:Label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light font-weight-bold p-1" style="width: 15%">La suma de:</th>
+                                        <td class="p-1 font-weight-bold">
+                                            <asp:Label runat="server" ID="lblSumaRecibidaEnPalabras_Recibo"></asp:Label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light font-weight-bold p-1" style="width: 15%">Pago por:</th>
+                                        <td class="p-1 font-weight-bold">FINANCIAMIENTO DE VEHICULO AUTOMOTOR MARCA:
+                                        <asp:Label runat="server" ID="lblMarca_Recibo"></asp:Label>
                                             MODELO:
-                                            <asp:Label runat="server" ID="lblModelo_Recibo"></asp:Label>
+                                        <asp:Label runat="server" ID="lblModelo_Recibo"></asp:Label>
                                             AÑO:
-                                            <asp:Label runat="server" ID="lblAnio_Recibo"></asp:Label>
+                                        <asp:Label runat="server" ID="lblAnio_Recibo"></asp:Label>
                                             COLOR:
-                                            <asp:Label runat="server" ID="lblColor_Recibo"></asp:Label>
+                                        <asp:Label runat="server" ID="lblColor_Recibo"></asp:Label>
                                             TIPO:
-                                            <asp:Label runat="server" ID="lblTipo_Recibo"></asp:Label>
+                                        <asp:Label runat="server" ID="lblTipo_Recibo"></asp:Label>
                                             CILINDRAJE:
-                                            <asp:Label runat="server" ID="lblCilindraje_Recibo"></asp:Label>
+                                        <asp:Label runat="server" ID="lblCilindraje_Recibo"></asp:Label>
                                             Y CON REGISTRO DE MATRICULA MOTOR:
-                                            <asp:Label runat="server" ID="lblSerieMotor_Recibo"></asp:Label>
+                                        <asp:Label runat="server" ID="lblSerieMotor_Recibo"></asp:Label>
                                             VIN:
-                                            <asp:Label runat="server" ID="lblVIN_Recibo"></asp:Label>
+                                        <asp:Label runat="server" ID="lblVIN_Recibo"></asp:Label>
                                             CHASIS:
-                                            <asp:Label runat="server" ID="lblSerieChasis_Recibo"></asp:Label>
+                                        <asp:Label runat="server" ID="lblSerieChasis_Recibo"></asp:Label>
                                             PLACA:
-                                            <asp:Label runat="server" ID="lblPlaca_Recibo"></asp:Label>
+                                        <asp:Label runat="server" ID="lblPlaca_Recibo"></asp:Label>
                                             CLIENTE:
-                                            <asp:Label runat="server" ID="lblNombreCliente_Recibo"></asp:Label>
-                                        </asp:Label>
-                                    </td>
-                                </tr>
+                                        <asp:Label runat="server" ID="lblNombreCliente_Recibo"></asp:Label>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                             <table class="table table-bordered mb-5">
-                                <tr>
-                                    <th class="font-weight-bold p-1 text-right" style="width: 50%">TOTAL RECIBIDO</th>
-                                    <td class="p-1 font-weight-bold text-right" style="width: 50%">
-                                        <asp:Label runat="server" ID="lblTotalRecibido_Recibo"></asp:Label>
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th class="font-weight-bold p-1 text-right" style="width: 50%">TOTAL RECIBIDO</th>
+                                        <td class="p-1 font-weight-bold text-right" style="width: 50%">
+                                            <asp:Label runat="server" ID="lblTotalRecibido_Recibo"></asp:Label>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -964,15 +969,15 @@ sin presión de ninguna naturaleza manifestamos lo siguiente:
                         <div class="col-12">
                             <p>
                                 <b>YO,
-                                    <asp:Label runat="server" ID="lblNombreCliente_Traspaso"></asp:Label>,</b>
+                                    <asp:Label runat="server" ID="lblNombreCliente_Traspaso"></asp:Label>,
+                                </b>
                                 mayor de edad,
                                 <asp:Label runat="server" ID="lblNacionalidad_Traspaso"></asp:Label>,
-con número de identidad
+                                con número de identidad
                                 <asp:Label runat="server" ID="lblIdentidad_Traspaso"></asp:Label>
                                 y de este domicilio,
-en mi condición de propietario por medio de este documento hago formal traspaso del vehiculo que se describe de la forma siguiente
+                                en mi condición de propietario por medio de este documento hago formal traspaso del vehiculo que se describe de la forma siguiente
                             </p>
-
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group row">
@@ -1017,7 +1022,6 @@ en mi condición de propietario por medio de este documento hago formal traspaso
                                     </div>
                                 </div>
                                 <div class="col-6">
-
                                     <div class="form-group row">
                                         <div class="col-sm-4 font-weight-bold">
                                             Modelo:
@@ -1026,7 +1030,6 @@ en mi condición de propietario por medio de este documento hago formal traspaso
                                             <asp:Label runat="server" ID="lblModelo_Traspaso"></asp:Label>
                                         </div>
                                     </div>
-
                                     <div class="form-group row">
                                         <div class="col-sm-4 font-weight-bold">
                                             Color:
@@ -1065,9 +1068,9 @@ en mi condición de propietario por medio de este documento hago formal traspaso
                                 El cual cedo todos los deberes y derechos que antes ejercía sobre el vehículo antes mencionado a PRESTADITO SA, con Numero de RTN 0501-9016-811399, aceptando que el vehículo es
                                 <asp:Label runat="server" ID="lblGarantiaUsada_Traspaso"></asp:Label>
                                 y se encuentra de su entera satisfacción sin garantía alguna.
-Y para seguridad y constancia de las autoridades firmo en la ciudad de
+                                Y para seguridad y constancia de las autoridades firmo en la ciudad de
                                 <span class="lblCiudad_Firma"></span>,
-a los
+                                a los
                                 <span class="lblNumeroDia_Firma"></span>
                                 días del mes de
                                 <span class="lblMes_Firma"></span>
@@ -1076,7 +1079,6 @@ a los
                             </p>
                         </div>
                     </div>
-                    <!-- Firma del cliente -->
                     <div class="row mt-5">
                         <div class="col-1"></div>
                         <div class="col-5 text-center mt-5">
@@ -1116,15 +1118,15 @@ a los
                         <div class="col-12">
                             <p>
                                 <b>YO,
-                                    <asp:Label runat="server" ID="lblNombreCliente_TraspasoVendedor"></asp:Label>,</b>
+                                    <asp:Label runat="server" ID="lblNombreCliente_TraspasoVendedor"></asp:Label>,
+                                </b>
                                 mayor de edad,
                                 <asp:Label runat="server" ID="lblNacionalidad_TraspasoVendedor"></asp:Label>,
-con número de identidad
+                                con número de identidad
                                 <asp:Label runat="server" ID="lblIdentidad_TraspasoVendedor"></asp:Label>
                                 y de este domicilio,
-en mi condición de propietario por medio de este documento hago formal traspaso del vehiculo que se describe de la forma siguiente
+                                en mi condición de propietario por medio de este documento hago formal traspaso del vehiculo que se describe de la forma siguiente
                             </p>
-
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group row">
@@ -1215,9 +1217,9 @@ en mi condición de propietario por medio de este documento hago formal traspaso
                                 El cual cedo todos los deberes y derechos que antes ejercía sobre el vehículo antes mencionado a PRESTADITO SA, con Numero de RTN 0501-9016-811399, aceptando que el vehículo es
                                 <asp:Label runat="server" ID="lblGarantiaUsada_TraspasoVendedor"></asp:Label>
                                 y se encuentra de su entera satisfacción sin garantía alguna.
-Y para seguridad y constancia de las autoridades firmo en la ciudad de
+                                Y para seguridad y constancia de las autoridades firmo en la ciudad de
                                 <span class="lblCiudad_Firma"></span>,
-a los
+                                a los
                                 <span class="lblNumeroDia_Firma"></span>
                                 días del mes de
                                 <span class="lblMes_Firma"></span>
@@ -1226,7 +1228,6 @@ a los
                             </p>
                         </div>
                     </div>
-                    <!-- Firma del cliente -->
                     <div class="row mt-5">
                         <div class="col-1"></div>
                         <div class="col-5 text-center mt-5">
@@ -1264,10 +1265,10 @@ a los
                         <div class="col-12">
                             <p>
                                 Por una Parte, PRESTADITO. DE C.V. con domicilio en la ciudad de San Pedro Sula, Cortes, Honduras, C.A.
-representada por el señor ERICK GEOVANI MOLINA PADILLA, facultad otorgada mediante instrumento
-número 86 ante notario Efraín Antonio Gutiérrez Ardon, que en lo sucesivo se llamara &lt;LA COMPAÑÍA&gt;, de
-conformidad a la SOLICITUD presentada al cliente y las CONDICIONES GENERALES de la presente.
-Por la otra
+                                representada por el señor ERICK GEOVANI MOLINA PADILLA, facultad otorgada mediante instrumento
+                                número 86 ante notario Efraín Antonio Gutiérrez Ardon, que en lo sucesivo se llamara &lt;LA COMPAÑÍA&gt;, de
+                                conformidad a la SOLICITUD presentada al cliente y las CONDICIONES GENERALES de la presente.
+                                Por la otra
                                 <asp:Label Font-Bold="true" runat="server" ID="lblNombreCliente_BasicoCPI"></asp:Label>
                                 <b>(El cliente)</b>, con las generales mencionadas en el prestamo
                                 <asp:Label runat="server" Font-Bold="true" ID="lblNumeroPrestamo_BasicoCPI"></asp:Label>
@@ -1276,9 +1277,9 @@ Por la otra
                             <p>
                                 <b>FINALIDAD DEL CONVENIO:</b>
                                 El presente convenio tiene por objeto cubrir los siniestros en que pudiese verse
-involucrado El VEHICULO DADO EN GARANTIA DEL PRESTAMO, para lo cual se obliga por una parte a la
+                                involucrado El VEHICULO DADO EN GARANTIA DEL PRESTAMO, para lo cual se obliga por una parte a la
                                 <b>compañía</b> o la que esta contrate, a cubrir el saldo capital hasta la fecha en que pueda existir algún siniestro,
-y por la otra parte el contratante o cliente se obliga a pagar el servicio mediante cuotas.
+                                y por la otra parte el contratante o cliente se obliga a pagar el servicio mediante cuotas.
                             </p>
                             <p class="text-center">
                                 <b>CONDICIONES GENERALES</b>
@@ -1286,8 +1287,8 @@ y por la otra parte el contratante o cliente se obliga a pagar el servicio media
                             <p>
                                 <b>PRIMERA: CONSTITUCIÓN DEL CONTRATO</b>
                                 El convenio de GARANTÍA SOBRE EL VEHICULO DADO EN GARANTIA DEL PRESTAMO queda
-constituido mediante el presente contrato, el cual es firmado y se estampa la huella digital de ambas partes
-en señal de aceptación de todas las condiciones establecidas partes.
+                                constituido mediante el presente contrato, el cual es firmado y se estampa la huella digital de ambas partes
+                                en señal de aceptación de todas las condiciones establecidas partes.
                             </p>
                             <p>
                                 <b>SEGUNDA: OBJETO DE LA GARANTÍA SOBRE EL VEHICULO DADO EN GARANTIA</b>
@@ -1310,20 +1311,20 @@ en señal de aceptación de todas las condiciones establecidas partes.
                                 <li>Los siniestros mencionados en la cláusula anterior deben ocurrir en el territorio nacional para que sea cubierto.</li>
                                 <li>El vehículo debe de ser conducido por una persona debidamente acreditada, mayor de 18 años y menor a 75 años de lo contrario la garantía no cubre.</li>
                                 <li>Aplica única y exclusivamente para reparar los daños ocasionados al automóvil que se encuentre en arrendamiento con Compañía Financiera “PRESTADITO S.A.” o en su defecto los daños causados a un
-tercero hasta Lps 50,000 siempre y cuando el arrendamiento este vigente y con sus saldos al día, bajos los límites de cobertura indicados, el saldo capital adeudado a la fecha del siniestro.
+                                tercero hasta Lps 50,000 siempre y cuando el arrendamiento este vigente y con sus saldos al día, bajos los límites de cobertura indicados, el saldo capital adeudado a la fecha del siniestro.
                                 </li>
                                 <li>Para que los daños ocasionados sean cubiertos, el automóvil deberá ser conducido por El Arrendatario, esposa e hijos con licencia vigente y deberá estar al día en sus cuotas de arrendamiento,
-caso contrario los daños ocasionados serán reparados por cuenta del arrendatario.
+                                caso contrario los daños ocasionados serán reparados por cuenta del arrendatario.
                                 </li>
                                 <li>El Arrendatario debe contar con licencia de conducir vigente.</li>
                                 <li>Solo cubre colisiones debidamente acreditas con el parte de la policía de tránsito y cuando sea
-denuncia interpuesta sin parte de transito solo se reconoce como máximo el 50% del valor del siniestro previa inspección de ajustador.
+                                denuncia interpuesta sin parte de transito solo se reconoce como máximo el 50% del valor del siniestro previa inspección de ajustador.
                                 </li>
                                 <li>En caso de robo del vehículo en garantía será necesario acreditar dicho siniestro ante entidad
-competente en territorio Hondureño.
+                                competente en territorio Hondureño.
                                 </li>
                                 <li>El arrendatario se obliga a reportar en un plazo máximo de 24 hrs el siniestro a Prestadito SA al
-teléfono 2540 1050 o vía email a sac@miprestadito.com
+                                teléfono 2540 1050 o vía email a sac@miprestadito.com
                                 </li>
                                 <li>Mantener al día el pago del préstamo y la cuota del servicio del seguro y respectivo GPS.</li>
                             </ol>
@@ -1333,8 +1334,8 @@ teléfono 2540 1050 o vía email a sac@miprestadito.com
                             </p>
                             <ol type="a">
                                 <li>No se cubre los accidentes o daños ocasionados al automóvil por el arrendatario, sin que tenga
-implicación un tercero a excepción de Vuelcos Accidentales, Colisiones Accidentales, Incendio, Auto
-ignición, Rayo,Desbordamiento de Ríos, derrumbes de carretera y otros fenómenos de la naturaleza
+                                implicación un tercero a excepción de Vuelcos Accidentales, Colisiones Accidentales, Incendio, Auto
+                                ignición, Rayo,Desbordamiento de Ríos, derrumbes de carretera y otros fenómenos de la naturaleza
                                 </li>
                                 <li>No cubre rotura de cristales</li>
                                 <li>No cubre equipo especial que pueda ser instalado</li>
@@ -1354,25 +1355,25 @@ ignición, Rayo,Desbordamiento de Ríos, derrumbes de carretera y otros fenómen
                             </ol>
                             <p>
                                 Una vez completada la documentación de reclamación del siniestro el proceso de pago lo realizara la empresa
-en un plazo no mayor a 10 días de hábiles, conforme a reclamo
+                                en un plazo no mayor a 10 días de hábiles, conforme a reclamo
                             </p>
                             <p>
                                 <b>SEXTA: El contratante,</b>
                                 entiende y acepta que las coberturas anteriormente mencionadas están respaldas por
-una compañía de seguros local y que exclusivamente en caso de que la compañía aseguradora local no cubra
-el montó del siniestro debido a que este exceda el límite anual especificado en el contrato de crédito, este
-será cubierto por una empresa extranjera tercera contratada por Prestadito SA para este fin, misma que se
-limita al valor del saldo capital al momento en que se presenta el siniestro o al valor de mercado de la garantía.
+                                una compañía de seguros local y que exclusivamente en caso de que la compañía aseguradora local no cubra
+                                el montó del siniestro debido a que este exceda el límite anual especificado en el contrato de crédito, este
+                                será cubierto por una empresa extranjera tercera contratada por Prestadito SA para este fin, misma que se
+                                limita al valor del saldo capital al momento en que se presenta el siniestro o al valor de mercado de la garantía.
                             </p>
                             <p>
                                 <b>SEPTIMA: El contratante</b>
                                 acepta que las cuotas por la contratación de este servicio, sean cargadas a su plan de
-pago del préstamo que se otorgó para la compra del vehículo dado en garantía, cuotas que serán de valor fijo, para
-la cual se obliga a cumplir en tiempo y forma, para que la garantía le cubra los siniestros que pudiesen ocurrir.
+                                pago del préstamo que se otorgó para la compra del vehículo dado en garantía, cuotas que serán de valor fijo, para
+                                la cual se obliga a cumplir en tiempo y forma, para que la garantía le cubra los siniestros que pudiesen ocurrir.
                             </p>
                             <p>
                                 El contratante declara haber entendido en toda su amplitud y alcances la presente garantía, por lo cual en fe
-de lo acá establecido se firma y se estampa huella digital en fecha
+                                de lo acá establecido se firma y se estampa huella digital en fecha
                                 <span class="lblNumeroDia_Firma"></span>
                                 de
                                 <span class="lblMes_Firma"></span>
@@ -1381,7 +1382,6 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                             </p>
                         </div>
                     </div>
-                    <!-- Firma del cliente -->
                     <div class="row justify-content-center mt-1 pt-1">
                         <div class="col-5 text-center mt-1">
                             <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
@@ -1619,10 +1619,9 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                             <img src="/Imagenes/LogoPrestadito.png" class="pt-4" />
                         </div>
                         <div class="col-12">
-                            <h4 class="text-center pt-2 pb-4">
-                                <b>NOTA DE ENTREGA
-                                    <br />
-                                    POR APROBACIÓN DE CRÉDITO</b>
+                            <h4 class="text-center pt-2 pb-4 font-weight-bold">NOTA DE ENTREGA
+                                <br />
+                                POR APROBACIÓN DE CRÉDITO
                             </h4>
                         </div>
                     </div>
@@ -1631,13 +1630,13 @@ de lo acá establecido se firma y se estampa huella digital en fecha
                             <p>
                                 Estimado (s)
                                 <asp:Label runat="server" CssClass="font-weight-bold" ID="lblVendedorGarantia_NotaEntrega"></asp:Label>,
-por este medio hacemos de su conocimiento que el cliente
+                                por este medio hacemos de su conocimiento que el cliente
                                 <asp:Label runat="server" ID="lblNombreCliente_NotaEntrega"></asp:Label>,
-cuenta con un crédito aprobado con PRESTADITO por la cantidad de
+                                cuenta con un crédito aprobado con PRESTADITO por la cantidad de
                                 <asp:Label runat="server" ID="lblValorAPrestarEnPalabras_NotaEntrega"></asp:Label>
                                 (<asp:Label runat="server" ID="lblValorAPrestar_NotaEntrega" CssClass="font-weight-bold"></asp:Label>)
-solicitamos de su parte proceder con la entrega del vehículo al cliente en mención, así mismo se le pide entregar al Oficial de Prestadito la documentación
-original y completa del automóvil con las siguientes características:
+                                solicitamos de su parte proceder con la entrega del vehículo al cliente en mención, así mismo se le pide entregar al Oficial de Prestadito la documentación
+                                original y completa del automóvil con las siguientes características:
                             </p>
                         </div>
                         <div class="col-2"></div>
@@ -1700,7 +1699,8 @@ original y completa del automóvil con las siguientes características:
                                 <tr>
                                     <th>PLACA</th>
                                     <td>
-                                        <asp:Label runat="server" ID="lblPlaca_NotaEntrega"></asp:Label></td>
+                                        <asp:Label runat="server" ID="lblPlaca_NotaEntrega"></asp:Label>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -1708,17 +1708,17 @@ original y completa del automóvil con las siguientes características:
                         <div class="col-12">
                             <p>
                                 En virtud de lo anterior se le emite esta <b>NOTA DE ENTREGA</b> y al mismo tiempo ratificamos nuestro
-compromiso de hacer el pago correspondiente en efectivo o en Cheque al señor:
+                                compromiso de hacer el pago correspondiente en efectivo o en Cheque al señor:
                                 <asp:Label runat="server" ID="lblNombreVendedorGarantia_NotaEntrega"></asp:Label>
                                 en cinco (5) días hábiles mismos que serán para inscribir dicho vehículo en el Instituto de la Propiedad Mercantil a favor de Prestadito,
-salvo que la documentación entregada no se encuentre completa y/o no pueda ser inscrito en el IP.
+                                salvo que la documentación entregada no se encuentre completa y/o no pueda ser inscrito en el IP.
                             </p>
                             <p>
                                 Y para los fines que estime conveniente, se le extiende la presente en la ciudad de
                                 <span class="lblCiudad_Firma"></span>,
-departamento de
+                                departamento de
                                 <span class="lblDepartamento_Firma"></span>,
-a los
+                                a los
                                 <span class="lblNumeroDia_Firma"></span>
                                 días del mes de
                                 <span class="lblMes_Firma"></span>
@@ -1726,7 +1726,6 @@ a los
                             </p>
                         </div>
                     </div>
-                    <!-- Firma del cliente -->
                     <div class="row">
                         <div class="col-3"></div>
                         <div class="col-6 text-center p-0 mt-3">
@@ -1741,8 +1740,8 @@ a los
         </div>
 
         <!-- Expendiente -->
-        <div id="divContenedorExpediente" class="contenedorPDF">
-            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divExpedientePDF" style="display: none;">
+        <div id="divContenedorExpediente" class="contenedorPDFx">
+            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divExpedientePDF" style="/*display: none; */">
                 <div class="card-body pt-0 pr-5 pl-5">
                     <div class="row justify-content-between">
                         <div class="col-auto">
@@ -1889,124 +1888,21 @@ a los
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-6 p-0">
-                            <table class="table table-sm table-condensed table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Tipo de documento</th>
-                                        <th class="text-center">SI</th>
-                                        <th class="text-center">NO</th>
-                                        <th class="text-center">N/A</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Solicitud de crédito</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Copia de identidades</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Recibo de servicios públicos</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Comprobante de ingresos</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Croquis</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Documentos del aval</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Documentos artículos</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Documentos vehículos</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Pagaré</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Convenio de crédito</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Liquidación</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Autorización de deduc. planilla</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Poliza de seguros</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <asp:Table ID="tblDocumentos_Expediente" CssClass="table table-sm table-condensed table-bordered" runat="server">
+                                <asp:TableHeaderRow TableSection="TableHeader">
+                                    <asp:TableHeaderCell>Tipo de documento</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">SI</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">NO</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">N/A</asp:TableHeaderCell>
+                                </asp:TableHeaderRow>
+                            </asp:Table>
                         </div>
                         <div class="col-6">
                             <u class="font-weight-bold">TIPO DE RENEGOCIACIÓN</u>
-                            <table class="table-borderless mt-2">
-                                <tbody>
-                                    <tr>
-                                        <td class="font-weight-bold">NUEVO</td>
-                                        <td class="font-weight-bold">(X)</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-weight-bold">RENOVACIÓN</td>
-                                        <td class="font-weight-bold">( )</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-weight-bold">REFINANCIAMIENTO</td>
-                                        <td class="font-weight-bold">( )</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-weight-bold">READECUACIÓN</td>
-                                        <td class="font-weight-bold">( )</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <asp:Table ID="tblTipoDeSolicitud_Expediente" CssClass="font-weight-bold table-borderless mt-2" runat="server"></asp:Table>
                         </div>
-
                         <div class="col-12 p-0">
                             <div class="form-group row">
                                 <label class="col-2 pr-0">Especifique otros:</label>
@@ -2023,6 +1919,35 @@ a los
                             <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
                             <label class="mt-0 d-block">Firma de Jefe/Supervisor</label>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- modalGuardarExpedienteSolicitud -->
+        <div id="modalGuardarExpedienteSolicitud" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalGuardarExpedienteSolicitudLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalGuardarExpedienteSolicitudLabel">Expediente de la solicitud de crédito</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <label class="mb-3">Documentos del expediente:</label>
+                        <ul id="ulDocumentosDelExpediente"></ul>
+                        <div class="form-group mt-3">
+                            <label>Especifique otras</label>
+                            <textarea id="txtEspecifiqueOtras" class="form-control form-control-sm" data-parsley-maxlength="500" data-parsley-group="agregarCondiciones"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnCondicionarSolicitudConfirmar" class="btn btn-info mr-1 validador">
+                            Guardar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                            Cancelar
+                        </button>
                     </div>
                 </div>
             </div>
@@ -2066,7 +1991,7 @@ a los
             $("#Loader").css('display', '');
 
             var opt = {
-                margin: [0.4, 0, 0, 0], //top, left, buttom, right,
+                margin: [0.3, 0, 0, 0], //top, left, buttom, right,
                 filename: 'Solicitud_' + '<%=pcIDSolicitud%>' + '_' + nombreDelArchivo + '.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: {
@@ -2145,6 +2070,32 @@ a los
 
             qrcode.makeCode('<%=UrlCodigoQR%>');
         }
+    </script>
+
+    <script>
+
+        var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=listaDocumentosDelExpedienteJSON%>');
+
+
+        $("#btnExpediente").click(function () {
+
+            if (ValidarEstadoDocumentosExpediente()) {
+                ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
+            }
+            else {
+                $("#modalGuardarExpedienteSolicitud").modal();
+            }
+        });
+
+        function ValidarEstadoDocumentosExpediente() {
+
+            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
+                if (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 0)
+                    return false;
+            }
+            return true;
+        }
+
     </script>
 </body>
 </html>

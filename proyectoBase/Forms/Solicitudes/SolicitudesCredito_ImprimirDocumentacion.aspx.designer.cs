@@ -1300,15 +1300,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblSumaRecibidaEnPalabras_Recibo;
 
     /// <summary>
-    /// Control lblConceptoPago_Recibo.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblConceptoPago_Recibo;
-
-    /// <summary>
     /// Control lblMarca_Recibo.
     /// </summary>
     /// <remarks>
@@ -2324,4 +2315,22 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblGestor_Expediente;
+
+    /// <summary>
+    /// Control tblDocumentos_Expediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Table tblDocumentos_Expediente;
+
+    /// <summary>
+    /// Control tblTipoDeSolicitud_Expediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Table tblTipoDeSolicitud_Expediente;
 }
