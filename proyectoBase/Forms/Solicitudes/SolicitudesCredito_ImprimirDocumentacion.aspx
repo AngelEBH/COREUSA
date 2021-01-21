@@ -1934,7 +1934,31 @@
                     </div>
                     <div class="modal-body">
                         <label class="mb-3">Documentos del expediente:</label>
-                        <ul id="ulDocumentosDelExpediente"></ul>
+
+                        <ul id="ulDocumentosDelExpediente">
+                            <%--<li>
+                                <div class="form-group row border-bottom border-gray mb-2">
+                                    <div class="col-sm-4 font-weight-bold">
+                                        Solicitud Fisica
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="form-check form-check-inline">
+                                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
+                                          <label class="form-check-label" for="inlineRadio1">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" />
+                                          <label class="form-check-label" for="inlineRadio2">NO</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" />
+                                          <label class="form-check-label" for="inlineRadio3">N/A</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>--%>
+                        </ul>
+
                         <div class="form-group mt-3">
                             <label>Especifique otras</label>
                             <textarea id="txtEspecifiqueOtras" class="form-control form-control-sm" data-parsley-maxlength="500" data-parsley-group="agregarCondiciones"></textarea>
@@ -2083,9 +2107,63 @@
                 ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
             }
             else {
+
+                var ulDocumentosExpedientes = $("#ulDocumentosDelExpediente").empty();
+                var template = '';
+                var identificadorElemento = '';
+                var stringData = '';
+
+                for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
+
+                    identificadorElemento = 'radio_' + LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento;
+                    stringData = ' data-iddocumento="' + LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento +'" ';
+
+                    template +=
+                    '<li>'+
+                        '<div class="form-group row border-bottom border-gray mb-2">' +
+                            '<div class="col-sm-4 font-weight-bold">' +
+                                LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento +
+                            '</div>' +
+                            '<div class="col-sm-8">' +
+                                '<div class="form-check form-check-inline">' +
+                                    '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_si_' + identificadorElemento + '" ' + stringData + ' value="1" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 1 ? 'checked' : '') +' onclick="ActualizarEstadoDocumentoExpediente(this)"  />' +
+                                    '<label class="form-check-label" for="radio_si_' + identificadorElemento + '">SI</label>' +
+                                '</div>' +
+                                '<div class="form-check form-check-inline">' +
+                                    '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_no_' + identificadorElemento + '" ' + stringData + ' value="2" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 2 ? 'checked' : '') +' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
+                                    '<label class="form-check-label" for="radio_no_' + identificadorElemento + '">NO</label>' +
+                                '</div>' +
+                                '<div class="form-check form-check-inline">' +
+                                    '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_na_' + identificadorElemento + '" ' + stringData + ' value="3" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 3 ? 'checked' : '') +' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
+                                    '<label class="form-check-label" for="radio_na_' + identificadorElemento + '">N/A</label>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</li>';
+                }
+
+                ulDocumentosExpedientes.append(template);
+
                 $("#modalGuardarExpedienteSolicitud").modal();
             }
         });
+
+        function ActualizarEstadoDocumentoExpediente(elemento) {
+
+            let idDocumento = $(elemento).data('iddocumento');
+            let idEstado = $(elemento).val();
+
+            debugger;
+
+            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
+
+                if (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento == idDocumento) {
+
+                    LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento = idEstado;
+                    break;
+                }
+            }
+        }
 
         function ValidarEstadoDocumentosExpediente() {
 
