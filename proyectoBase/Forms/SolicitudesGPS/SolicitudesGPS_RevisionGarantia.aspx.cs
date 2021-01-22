@@ -292,7 +292,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
 
                                         resultado.ResultadoExitoso = false;
                                         resultado.MensajeResultado = "Error al guardar resultado de la revisión: " + item.Revision + ", contacte al aministrador.";
-                                        resultado.MensajeDebug = "_Revisiones_Guardar";
+                                        resultado.MensajeDebug = "_Revisiones_Guardar" + sqlResultado["MensajeError"].ToString();
                                         return resultado;
                                     }
                                 }
@@ -319,7 +319,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
 
                                     resultado.ResultadoExitoso = false;
                                     resultado.MensajeResultado = "Error al actualizar millaje de la garantía, contacte al aministrador.";
-                                    resultado.MensajeDebug = "_Revisiones_ActualizarMillaje";
+                                    resultado.MensajeDebug = "_Revisiones_ActualizarMillaje" + sqlResultado["MensajeError"].ToString();
                                     return resultado;
                                 }
                             }
@@ -328,7 +328,6 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                         if (resultado.ResultadoExitoso == true)
                         {
                             sqlTransaccion.Commit();
-
                             resultado.MensajeResultado = "Las revisiones se guardaron exitosamente";
                             resultado.MensajeDebug = "";
 
@@ -367,13 +366,9 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
             liParamStart = URL.IndexOf("?");
 
             if (liParamStart > 0)
-            {
                 lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            }
             else
-            {
                 lcParametros = string.Empty;
-            }
 
             if (lcParametros != string.Empty)
             {

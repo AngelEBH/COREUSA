@@ -23,9 +23,9 @@ public partial class Seguimientos_SeguimientoJefePromesasdePago : System.Web.UI.
             var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
             var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-            var lcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var lcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var lcIDEstado = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDEstado");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDEstado = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDEstado");
         }
     }
 

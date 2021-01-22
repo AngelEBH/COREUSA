@@ -769,8 +769,8 @@
         </div>
 
         <!-- Inspeccion del vehiculo -->
-        <div id="divContenedorInspeccionSegurox" runat="server" class="contenedorPDF">
-            <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDFx" style="display: none;">
+        <div id="divContenedorInspeccionSeguro" runat="server" class="contenedorPDF">
+            <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
@@ -1907,7 +1907,7 @@
                         <div class="col-12 p-0">
                             <div class="form-group row">
                                 <label class="col-2 pr-0">Especifique otros:</label>
-                                <label class="col-10 border-top-0 border-left-0 border-right-0 border-bottom border-dark"></label>
+                                <asp:Label runat="server" ID="lblEspecifiqueOtros_Expediente" CssClass="col-10 border-top-0 border-left-0 border-right-0 border-bottom border-dark"></asp:Label>
                             </div>
                         </div>
                     </div>
@@ -1934,40 +1934,18 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
+
                         <label class="mb-3">Documentos del expediente:</label>
 
-                        <ul id="ulDocumentosDelExpediente">
-                            <%--<li>
-                                <div class="form-group row border-bottom border-gray mb-2">
-                                    <div class="col-sm-4 font-weight-bold">
-                                        Solicitud Fisica
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <div class="form-check form-check-inline">
-                                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
-                                          <label class="form-check-label" for="inlineRadio1">SI</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" />
-                                          <label class="form-check-label" for="inlineRadio2">NO</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" />
-                                          <label class="form-check-label" for="inlineRadio3">N/A</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>--%>
-                        </ul>
+                        <ul id="ulDocumentosDelExpediente" style="max-height: 50vh; overflow-x: auto;"></ul>
 
                         <div class="form-group mt-3">
                             <label>Especifique otras</label>
-                            <textarea id="txtEspecifiqueOtras" class="form-control form-control-sm" data-parsley-maxlength="500" data-parsley-group="agregarCondiciones"></textarea>
+                            <textarea id="txtEspecifiqueOtras" class="form-control form-control-sm" data-parsley-maxlength="500" runat="server"></textarea>
                         </div>
-
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btnCondicionarSolicitudConfirmar" class="btn btn-info mr-1 validador">
+                        <button type="button" id="btnGuardarExpedienteSolicitud" class="btn btn-info mr-1">
                             Guardar
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary">
@@ -1977,7 +1955,6 @@
                 </div>
             </div>
         </div>
-
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -1986,6 +1963,7 @@
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
+    <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
     <script src="/Scripts/plugins/qrcode/qrcode.js"></script>
     <script>
@@ -2100,11 +2078,11 @@
     <script>
 
         var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=listaDocumentosDelExpedienteJSON%>');
-
+        var permitirImprimirExpediente = ValidarEstadoDeDocumentosExpediente();
 
         $("#btnExpediente").click(function () {
 
-            if (ValidarEstadoDeDocumentosExpediente()) {
+            if (ValidarEstadoDeDocumentosExpediente() && permitirImprimirExpediente == true) {
                 ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
             }
             else {
@@ -2121,25 +2099,25 @@
 
                     template +=
                         '<li>' +
-                            '<div class="form-group row border-bottom border-gray mb-2">' +
-                            '<div class="col-sm-4 font-weight-bold">' +
-                            LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento +
-                            '</div>' +
-                            '<div class="col-sm-8">' +
-                            '<div class="form-check form-check-inline">' +
-                            '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_si_' + identificadorElemento + '" ' + stringData + ' value="1" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 1 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)"  />' +
-                            '<label class="form-check-label" for="radio_si_' + identificadorElemento + '">SI</label>' +
-                            '</div>' +
-                            '<div class="form-check form-check-inline">' +
-                            '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_no_' + identificadorElemento + '" ' + stringData + ' value="2" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 2 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
-                            '<label class="form-check-label" for="radio_no_' + identificadorElemento + '">NO</label>' +
-                            '</div>' +
-                            '<div class="form-check form-check-inline">' +
-                            '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_na_' + identificadorElemento + '" ' + stringData + ' value="3" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 3 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
-                            '<label class="form-check-label" for="radio_na_' + identificadorElemento + '">N/A</label>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
+                        '<div class="form-group row border-bottom border-gray mb-2 mr-3">' +
+                        '<div class="col-sm-4 font-weight-bold pr-0">' +
+                        LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento +
+                        '</div>' +
+                        '<div class="col-sm-8 pr-0">' +
+                        '<div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_si_' + identificadorElemento + '" ' + stringData + ' value="1" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 1 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)"  />' +
+                        '<label class="form-check-label" for="radio_si_' + identificadorElemento + '">SI</label>' +
+                        '</div>' +
+                        '<div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_no_' + identificadorElemento + '" ' + stringData + ' value="2" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 2 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
+                        '<label class="form-check-label" for="radio_no_' + identificadorElemento + '">NO</label>' +
+                        '</div>' +
+                        '<div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_na_' + identificadorElemento + '" ' + stringData + ' value="3" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 3 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
+                        '<label class="form-check-label" for="radio_na_' + identificadorElemento + '">N/A</label>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
                         '</li>';
                 }
 
@@ -2149,18 +2127,75 @@
             }
         });
 
-        function ActualizarEstadoDocumentoExpediente(elemento) {
+        $("#btnGuardarExpedienteSolicitud").click(function () {
 
-            debugger;
+            var modelStateIsValid = true;
+
+            if (!ValidarEstadoDeDocumentosExpediente()) {
+                MensajeError('La lista de verificación está incompleta.');
+                modelStateIsValid = false;
+            }
+
+            if (modelStateIsValid) {
+
+                var especifiqueOtrosDocumentos = $("#txtEspecifiqueOtras").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: 'SolicitudesCredito_ImprimirDocumentacion.aspx/GuardarExpediente',
+                    data: JSON.stringify({ documentosExpediente: LISTA_DOCUMENTOS_EXPEDIENTES, especifiqueOtros: especifiqueOtrosDocumentos, dataCrypt: window.location.href }),
+                    contentType: 'application/json; charset=utf-8',
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        MensajeError('No se pudo guardar el expediente de la solicitud, contacte al administrador');
+                    },
+                    beforeSend: function () {
+                        MostrarLoader();
+                    },
+                    success: function (data) {
+
+                        if (data.d.ResultadoExitoso == true) {
+
+                            var tblDocumentos_Expediente = $("#tblDocumentos_Expediente tbody").empty();
+                            let template = '';
+
+                            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
+
+                                template += '<tr>' +
+                                    '<td>' + LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento + '</td>' +
+                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '1' ? 'X' : '') + '</td>' +
+                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '2' ? 'X' : '') + '</td>' +
+                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '3' ? 'X' : '') + '</td>' +
+                                    '</tr>';
+                            }
+
+                            tblDocumentos_Expediente.append(template);
+
+                            $("#lblEspecifiqueOtros_Expediente").val(especifiqueOtrosDocumentos);
+
+                            permitirImprimirExpediente = true;
+                            $("#modalGuardarExpedienteSolicitud").modal('hide');
+                            ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
+                        }
+                        else {
+                            MensajeError(data.d.MensajeResultado);
+                            console.log(data.d.MensajeDebug);
+                        }
+                    },
+                    complete: function () {
+                        OcultarLoader();
+                    }
+                });
+            }
+        });
+
+        function ActualizarEstadoDocumentoExpediente(elemento) {
 
             let idDocumento = $(elemento).data('iddocumento');
             let idEstado = $(elemento).val();
 
-
             for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
 
                 if (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento == idDocumento) {
-
                     LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento = idEstado;
                     break;
                 }
@@ -2176,6 +2211,13 @@
             return true;
         }
 
+        function MostrarLoader() {
+            $("#Loader").css('display', '');
+        }
+
+        function OcultarLoader() {
+            $("#Loader").css('display', 'none');
+        }
     </script>
 </body>
 </html>

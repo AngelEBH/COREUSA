@@ -39,8 +39,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
     #endregion
 
-    #region Page load
-
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -83,10 +81,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             }
         }
     }
-
-    #endregion
-
-    #region Cargar información de los documentos
 
     private void CargarInformacion()
     {
@@ -514,10 +508,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         }
     }
 
-    #endregion
-
-    #region Cargar información del expediente de la solicitud
-
     public void CargarExpedienteDeLaSolicitud()
     {
         try
@@ -538,6 +528,10 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         /* Primer resultado: Información principal del expediente*/
+                        sqlResultado.Read();
+
+                        lblEspecifiqueOtros_Expediente.Text = sqlResultado["fcComentarios"].ToString();
+                        txtEspecifiqueOtras.InnerText = sqlResultado["fcComentarios"].ToString();
 
                         /* Segundo resultado: Documentos del expediente */
                         sqlResultado.NextResult();
@@ -555,7 +549,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "3" ? "X" : "", HorizontalAlign = HorizontalAlign.Center });
                             tblDocumentos_Expediente.Rows.Add(tRowDocumentoExpediente);
 
-                            listaDocumentosExpediente.Add(new Expediente_Documento_ViewModel() 
+                            listaDocumentosExpediente.Add(new Expediente_Documento_ViewModel()
                             {
                                 IdDocumento = (int)sqlResultado["fiIDDocumento"],
                                 DescripcionDocumento = sqlResultado["fcDescripcionDocumento"].ToString(),
@@ -589,7 +583,111 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         }
     }
 
-    #endregion
+    [WebMethod]
+    public static Resultado_ViewModel GuardarExpediente(List<Expediente_Documento_ViewModel> documentosExpediente, string especifiqueOtros, string dataCrypt)
+    {
+        var resultado = new Resultado_ViewModel() { ResultadoExitoso = true };
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlTransaccion = sqlConexion.BeginTransaction("GuardarExpediente"))
+                {
+                    try
+                    {
+                        var idExpediente = string.Empty;
+
+                        using (var sqlComando = new SqlCommand("sp_Expedientes_Maestro_Guardar", sqlConexion, sqlTransaccion))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                            sqlComando.Parameters.AddWithValue("@pcComentarios", especifiqueOtros.Trim());
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.CommandTimeout = 120;
+
+                            using (var sqlResultado = sqlComando.ExecuteReader())
+                            {
+                                sqlResultado.Read();
+
+                                idExpediente = sqlResultado["MensajeError"].ToString();
+
+                                if (idExpediente.StartsWith("-1"))
+                                {
+                                    sqlTransaccion.Rollback();
+                                    resultado.ResultadoExitoso = false;
+                                    resultado.MensajeResultado = "Error al guardar información principal del expediente, contacte al administrador";
+                                    resultado.MensajeDebug = idExpediente;
+                                    return resultado;
+                                }
+                            } // using sqlResultado
+                        } // using sqlComando
+
+                        foreach (Expediente_Documento_ViewModel item in documentosExpediente)
+                        {
+                            using (var sqlComandoList = new SqlCommand("sp_Expedientes_Documentos_Guardar", sqlConexion, sqlTransaccion))
+                            {
+                                sqlComandoList.CommandType = CommandType.StoredProcedure;
+                                sqlComandoList.Parameters.AddWithValue("@piIDExpediente", idExpediente);
+                                sqlComandoList.Parameters.AddWithValue("@piIDDocumento", item.IdDocumento);
+                                sqlComandoList.Parameters.AddWithValue("@piIDEstadoDocumento", item.IdEstadoDocumento);
+                                sqlComandoList.Parameters.AddWithValue("@pcNombreArchivo", "");
+                                sqlComandoList.Parameters.AddWithValue("@pcExtension", "");
+                                sqlComandoList.Parameters.AddWithValue("@pcRutaArchivo", "");
+                                sqlComandoList.Parameters.AddWithValue("@pcURL", "");
+                                sqlComandoList.Parameters.AddWithValue("@pcComentarios", "");
+                                sqlComandoList.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                                sqlComandoList.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                                sqlComandoList.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                                sqlComandoList.CommandTimeout = 120;
+
+                                using (var sqlResultado = sqlComandoList.ExecuteReader())
+                                {
+                                    sqlResultado.Read();
+
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                    {
+                                        sqlTransaccion.Rollback();
+                                        resultado.ResultadoExitoso = false;
+                                        resultado.MensajeResultado = "Error al guardar información del documento " + item.DescripcionDocumento + " del expediente, contacte al administrador.";
+                                        resultado.MensajeDebug = sqlResultado["MensajeError"].ToString();
+                                        return resultado;
+                                    }
+                                } // using sqlResultado
+                            } // using sqlComandoList
+                        } // foreach documentos del expediente
+
+                        if (resultado.ResultadoExitoso != false)
+                            sqlTransaccion.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        sqlTransaccion.Rollback();
+                        resultado.ResultadoExitoso = false;
+                        resultado.MensajeResultado = "Error al guardar el expediente de la solicitud, contacte al administrador";
+                        resultado.MensajeDebug = ex.Message.ToString();
+                    }
+                } // using sqlTransaccion
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            resultado.ResultadoExitoso = false;
+            resultado.MensajeResultado = "Error al guardar el expediente de la solicitud, contacte al administrador";
+            resultado.MensajeDebug = ex.Message.ToString();
+        }
+        return resultado;
+    }
+
 
     #region Funciones utilitarias
 
@@ -757,16 +855,15 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         try
         {
             cantidadNumerica = Convert.ToDouble(cantidad);
+            entero = Convert.ToInt64(Math.Truncate(cantidadNumerica));
+            decimales = Convert.ToInt32(Math.Round((cantidadNumerica - entero) * 100, 2));
+            centavos = " CON " + PadNum(decimales) + "/100 CTVS";
+            resultado = ToText(Convert.ToDouble(entero)) + centavos;
         }
         catch
         {
             return "";
         }
-
-        entero = Convert.ToInt64(Math.Truncate(cantidadNumerica));
-        decimales = Convert.ToInt32(Math.Round((cantidadNumerica - entero) * 100, 2));
-        centavos = " CON " + PadNum(decimales) + "/100 CTVS";
-        resultado = ToText(Convert.ToDouble(entero)) + centavos;
 
         return resultado;
     }
@@ -853,6 +950,14 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         public int IdTipoDocumento { get; set; }
         public int IdEstadoDocumento { get; set; }
         public string EstadoDocumento { get; set; }
+    }
+
+    public class Resultado_ViewModel
+    {
+        public int IdInsertado { get; set; }
+        public bool ResultadoExitoso { get; set; }
+        public string MensajeResultado { get; set; }
+        public string MensajeDebug { get; set; }
     }
 
     #endregion
