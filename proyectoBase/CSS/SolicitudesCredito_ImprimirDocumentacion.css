@@ -109,6 +109,12 @@ p {
 table.table-bordered > thead > tr > th {
     border: 0.1px solid black;
 }
+table.table-bordered > thead > tr > td {
+    border: 0.1px solid black;
+}
 table.table-bordered > tbody > tr > td {
+    border: 0.1px solid black;
+}
+table.table-bordered > tbody > tr > th {
     border: 0.1px solid black;
 }

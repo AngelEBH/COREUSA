@@ -1147,22 +1147,22 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblNombre_ConvenioCyV;
 
     /// <summary>
-    /// Control divContenedorInspeccionSeguro.
+    /// Control divContenedorInspeccionSegurox.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divContenedorInspeccionSeguro;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divContenedorInspeccionSegurox;
 
     /// <summary>
-    /// Control divInspeccionSeguroPDF.
+    /// Control divInspeccionSeguroPDFx.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInspeccionSeguroPDF;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInspeccionSeguroPDFx;
 
     /// <summary>
     /// Control lblNombre_InspeccionSeguro.

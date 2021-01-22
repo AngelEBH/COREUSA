@@ -23,7 +23,7 @@
                         <span class="sr-only"></span>
                     </div>
                 </div>
-                <h6>Imprimir documentación solicitud de crédito No. <span id="lblIdSolicitud" class="font-weight-bold" runat="server"></span></h6>
+                <h6>Imprimir documentación solicitud de crédito N° <span id="lblIdSolicitud" class="font-weight-bold" runat="server"></span></h6>
             </div>
             <div class="card-body pt-0">
                 <div class="row mb-0">
@@ -769,8 +769,8 @@
         </div>
 
         <!-- Inspeccion del vehiculo -->
-        <div id="divContenedorInspeccionSeguro" runat="server">
-            <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDF">
+        <div id="divContenedorInspeccionSegurox" runat="server" class="contenedorPDF">
+            <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDFx" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
@@ -784,48 +784,49 @@
                     <div class="row">
                         <div class="col-12">
                             <table class="table table-bordered border-dark" style="border-width: 1px;">
-                                <tr>
-                                    <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Asegurado</th>
-                                    <td colspan="5" class="p-0">
-                                        <asp:Label runat="server" ID="lblNombre_InspeccionSeguro"></asp:Label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Marca</th>
-                                    <td class="p-0">
-                                        <asp:Label runat="server" ID="lblMarca_InspeccionSeguro"></asp:Label>
-                                    </td>
-                                    <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Modelo</th>
-                                    <td class="p-0">
-                                        <asp:Label runat="server" ID="lblModelo_InspeccionSeguro"></asp:Label>
-                                    </td>
-                                    <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Año</th>
-                                    <td class="p-0">
-                                        <asp:Label runat="server" ID="lblAnio_InspeccionSeguro"></asp:Label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Tipo</th>
-                                    <td class="p-0">
-                                        <asp:Label runat="server" ID="lblTipoDeVehiculo_InspeccionSeguro"></asp:Label>
-                                    </td>
-                                    <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Kilometraje</th>
-                                    <td class="p-0">
-                                        <asp:Label runat="server" ID="lblRecorrido_InspeccionSeguro"></asp:Label>
-                                    </td>
-                                    <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Placa</th>
-                                    <td class="p-0">
-                                        <asp:Label runat="server" ID="lblMatricula_InspeccionSeguro"></asp:Label>
-                                    </td>
-                                </tr>
+                                <thead>
+                                    <tr>
+                                        <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Asegurado</th>
+                                        <th colspan="5" class="p-0">
+                                            <asp:Label runat="server" ID="lblNombre_InspeccionSeguro"></asp:Label>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Marca</th>
+                                        <th class="p-0">
+                                            <asp:Label runat="server" ID="lblMarca_InspeccionSeguro"></asp:Label>
+                                        </th>
+                                        <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Modelo</th>
+                                        <th class="p-0">
+                                            <asp:Label runat="server" ID="lblModelo_InspeccionSeguro"></asp:Label>
+                                        </th>
+                                        <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Año</th>
+                                        <th class="p-0">
+                                            <asp:Label runat="server" ID="lblAnio_InspeccionSeguro"></asp:Label>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Tipo</th>
+                                        <th class="p-0">
+                                            <asp:Label runat="server" ID="lblTipoDeVehiculo_InspeccionSeguro"></asp:Label>
+                                        </th>
+                                        <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Kilometraje</th>
+                                        <th class="p-0">
+                                            <asp:Label runat="server" ID="lblRecorrido_InspeccionSeguro"></asp:Label>
+                                        </th>
+                                        <th class="bg-light font-weight-bold pt-0 pb-0 pr-0">Placa</th>
+                                        <th class="p-0">
+                                            <asp:Label runat="server" ID="lblMatricula_InspeccionSeguro"></asp:Label>
+                                        </th>
+                                    </tr>
+                                </thead>
                             </table>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 pl-0">
                             <div style="max-width: 794px !important; min-width: 794px !important; overflow-x: hidden;">
-                                <div id="divGaleriaInspeccionSeguroDeVehiculo" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden;" runat="server">
-                                </div>
+                                <div id="divGaleriaInspeccionSeguroDeVehiculo" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden;" runat="server"></div>
                             </div>
                         </div>
                     </div>
@@ -2103,7 +2104,7 @@
 
         $("#btnExpediente").click(function () {
 
-            if (ValidarEstadoDocumentosExpediente()) {
+            if (ValidarEstadoDeDocumentosExpediente()) {
                 ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
             }
             else {
@@ -2116,30 +2117,30 @@
                 for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
 
                     identificadorElemento = 'radio_' + LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento;
-                    stringData = ' data-iddocumento="' + LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento +'" ';
+                    stringData = ' data-iddocumento="' + LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento + '" ';
 
                     template +=
-                    '<li>'+
+                        '<li>' +
                         '<div class="form-group row border-bottom border-gray mb-2">' +
-                            '<div class="col-sm-4 font-weight-bold">' +
-                                LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento +
-                            '</div>' +
-                            '<div class="col-sm-8">' +
-                                '<div class="form-check form-check-inline">' +
-                                    '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_si_' + identificadorElemento + '" ' + stringData + ' value="1" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 1 ? 'checked' : '') +' onclick="ActualizarEstadoDocumentoExpediente(this)"  />' +
-                                    '<label class="form-check-label" for="radio_si_' + identificadorElemento + '">SI</label>' +
-                                '</div>' +
-                                '<div class="form-check form-check-inline">' +
-                                    '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_no_' + identificadorElemento + '" ' + stringData + ' value="2" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 2 ? 'checked' : '') +' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
-                                    '<label class="form-check-label" for="radio_no_' + identificadorElemento + '">NO</label>' +
-                                '</div>' +
-                                '<div class="form-check form-check-inline">' +
-                                    '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_na_' + identificadorElemento + '" ' + stringData + ' value="3" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 3 ? 'checked' : '') +' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
-                                    '<label class="form-check-label" for="radio_na_' + identificadorElemento + '">N/A</label>' +
-                                '</div>' +
-                            '</div>' +
+                        '<div class="col-sm-4 font-weight-bold">' +
+                        LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento +
                         '</div>' +
-                    '</li>';
+                        '<div class="col-sm-8">' +
+                        '<div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_si_' + identificadorElemento + '" ' + stringData + ' value="1" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 1 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)"  />' +
+                        '<label class="form-check-label" for="radio_si_' + identificadorElemento + '">SI</label>' +
+                        '</div>' +
+                        '<div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_no_' + identificadorElemento + '" ' + stringData + ' value="2" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 2 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
+                        '<label class="form-check-label" for="radio_no_' + identificadorElemento + '">NO</label>' +
+                        '</div>' +
+                        '<div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_na_' + identificadorElemento + '" ' + stringData + ' value="3" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 3 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
+                        '<label class="form-check-label" for="radio_na_' + identificadorElemento + '">N/A</label>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</li>';
                 }
 
                 ulDocumentosExpedientes.append(template);
@@ -2150,10 +2151,11 @@
 
         function ActualizarEstadoDocumentoExpediente(elemento) {
 
+            debugger;
+
             let idDocumento = $(elemento).data('iddocumento');
             let idEstado = $(elemento).val();
 
-            debugger;
 
             for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
 
@@ -2165,7 +2167,7 @@
             }
         }
 
-        function ValidarEstadoDocumentosExpediente() {
+        function ValidarEstadoDeDocumentosExpediente() {
 
             for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
                 if (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 0)
