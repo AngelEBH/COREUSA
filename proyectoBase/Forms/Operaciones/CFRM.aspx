@@ -6,194 +6,167 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
-    <title>Garantías de solicitudes aprobadas</title>
+    <title>Expediente</title>
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <style>
         html {
             background-color: rgb(255,255,255) !important;
         }
-
-        .opcion {
-            cursor: pointer;
-        }
-
-        .dataTable tbody tr {
-            cursor: pointer;
-        }
-
-        div.dt-buttons {
-            position: relative;
-            float: left;
-        }
-
-        .nav-tabs > li > .active {
-            background-color: whitesmoke !important;
-        }
     </style>
 </head>
-<body runat="server">
-    <div class="card mb-0">
-        <div class="card-header">
-            <div class="row justify-content-between">
-                <div class="col-sm-8 col-6">
-                    <h6>Solicitudes de GPS</h6>
-                </div>
-                <div class="col-sm-4 col-6">
-                    <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar" aria-label="Buscar" />
-                </div>
-                <div class="col-12">
-                    <asp:Label runat="server" ID="lblMensajeError" class="text-danger"></asp:Label>
-                </div>
+<body>
+    <form id="frmPrincipal" runat="server">
+        <div class="card shadow-none m-0">
+            <div class="card-header pb-1 pt-1">
+                <h6>Expediente solicitud de crédito N°
+                    <asp:Label ID="lblNoSolicitudCredito" CssClass="font-weight-bold" runat="server"></asp:Label>
+                </h6>
             </div>
-        </div>
-        <div class="card-body">
-            <div class="row mb-0">
-                <div class="col-md-12">
-                    <div class="form-group row">
-                        <div class="col-lg-6 col-sm-6 col-12">
-                            <label class="col-form-label">Búsqueda por Fecha</label>
-                            <div class="input-daterange input-group" id="date-range">
-                                <input type="text" class="form-control form-control-sm" name="min" id="min" />
-                                <input type="text" class="form-control form-control-sm" name="max" id="max" />
+            <div class="card-body">
+                <div class="row mb-0">
+                    <div class="col-12">
+                        <div class="form-group row mt-2 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="true">
+                            <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server">Pantalla en mantenimiento</asp:Label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Cliente</label>
+                                <asp:TextBox ID="txtNombreCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-12">
+                                <label class="col-form-label">Identidad</label>
+                                <asp:TextBox ID="txtIdentidadCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-6">
+                                <label class="col-form-label">RTN numérico</label>
+                                <asp:TextBox ID="txtRtn" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-6">
+                                <label class="col-form-label">Teléfono</label>
+                                <asp:TextBox ID="txtTelefonoCliente" type="tel" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist" runat="server" id="navTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tab_Informacion_Fisica" id="tab_InformacionFisica_link" role="tab" aria-selected="false">
+                                    <span class="d-block d-sm-none"><i class="fas fa-car"></i></span>
+                                    <span class="d-none d-sm-block">Solicitud de crédito</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tab_Informacion_Mecanica" id="tab_InformacionMecanica_link" role="tab" aria-selected="false">
+                                    <span class="d-block d-sm-none"><i class="fas fa-cogs"></i></span>
+                                    <span class="d-none d-sm-block">Expediente</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content" id="tabContent">
+
+                            <div class="tab-pane active" id="tab_Informacion_Fisica" role="tabpanel">
+                                <div class="row mb-0">
+                                    <div class="col-12">
+                                        <h6>Características físicas</h6>
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <label class="col-form-label">VIN</label>
+                                                <asp:TextBox ID="txtVIN" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Tipo de garantía</label>
+                                                <asp:TextBox ID="txtTipoDeGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Tipo de vehículo</label>
+                                                <asp:TextBox ID="txtTipoDeVehiculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-3 col-6">
+                                                <label class="col-form-label">Marca</label>
+                                                <asp:TextBox ID="txtMarca" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-3 col-6">
+                                                <label class="col-form-label">Modelo</label>
+                                                <asp:TextBox ID="txtModelo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-3 col-6">
+                                                <label class="col-form-label">Año</label>
+                                                <asp:TextBox ID="txtAnio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-3 col-6">
+                                                <label class="col-form-label">Color</label>
+                                                <asp:TextBox ID="txtColor" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-3 col-6">
+                                                <label class="col-form-label">Placa</label>
+                                                <asp:TextBox ID="txtMatricula" CssClass="form-control form-control-sm" ReadOnly="true" type="text" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-3 col-6">
+                                                <label class="col-form-label">Serie Motor</label>
+                                                <asp:TextBox ID="txtSerieMotor" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-3 col-12">
+                                                <label class="col-form-label">Serie Chasis</label>
+                                                <asp:TextBox ID="txtSerieChasis" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-3 col-12">
+                                                <label class="col-form-label">GPS</label>
+                                                <asp:TextBox ID="txtGPS" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab_Informacion_Mecanica" role="tabpanel">
+                                <div class="row mb-0">
+                                    <div class="col-12">
+                                        <h6>Características mecánicas</h6>
+                                        <div class="form-group row">
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Cilindraje</label>
+                                                <asp:TextBox ID="txtCilindraje" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Recorrido</label>
+                                                <asp:TextBox ID="txtRecorrido" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Transmisión</label>
+                                                <asp:TextBox ID="txtTransmision" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Tipo de combustible</label>
+                                                <asp:TextBox ID="txtTipoDeCombustible" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Serie 1</label>
+                                                <asp:TextBox ID="txtSerieUno" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-4 col-6">
+                                                <label class="col-form-label">Serie 2</label>
+                                                <asp:TextBox ID="txtSerieDos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Comentario</label>
+                                                <textarea id="txtComentario" runat="server" readonly="readonly" class="form-control form-control-sm"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist" runat="server" id="navTabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#tab_Listado_SolicitudesGPS_Pendientes" id="tab_Listado_SolicitudesGPS_Pendientes_Link" role="tab" aria-selected="false">
-                        <span class="d-block d-sm-none">Pendientes</span>
-                        <span class="d-none d-sm-block">Solicitudes GPS Pendientes</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab_Listado_SolicitudesGPS_Completadas" id="tab_Listado_SolicitudesGPS_Completadas_Link" role="tab" aria-selected="false">
-                        <span class="d-block d-sm-none">Completadas</span>
-                        <span class="d-none d-sm-block">Solicitudes GPS completadas</span>
-                    </a>
-                </li>
-            </ul>
-            <!-- Tab panes -->
-            <div class="tab-content" id="tabContent">
-                <div class="tab-pane active" id="tab_Listado_SolicitudesGPS_Pendientes" role="tabpanel">
-                    <table id="datatable_SolicitudesGPS_Pendientes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Acciones</th>
-                                <th>Garantía/Revisiones</th>
-                                <th>Revisiones</th>
-                                <th>Cliente</th>
-                                <th>creado por</th>
-                                <th>F. creado</th>
-                                <th>F. instalación</th>
-                                <th>Instalacion GPS</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot></tfoot>
-                    </table>
-                </div>
-                <!-- Listado garantías sin solicitudes -->
-                <div class="tab-pane" id="tab_Listado_SolicitudesGPS_Completadas" role="tabpanel">
-                    <table id="datatable_SolicitudesGPS_Completadas" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Acciones</th>
-                                <th>Garantía/Revisiones</th>
-                                <th>Revisiones</th>
-                                <th>Cliente</th>
-                                <th>creado por</th>
-                                <th>F. creado</th>
-                                <th>F. instalación</th>
-                                <th>Instalacion GPS</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot></tfoot>
-                    </table>
-                </div>
-            </div>
         </div>
-    </div>
-
-    <div id="modalCompletarSolicitudGPS" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCompletarSolicitudGPSLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title mt-0" id="modalCompletarSolicitudGPSLabel">Revisar garantía</h6>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group row">
-                        <div class="col-12 mb-2">
-                            <label>Cliente</label>
-                            <input class="lblNombreCliente form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2 pr-0">
-                            <label>Marca</label>
-                            <input class="lblMarca form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2">
-                            <label>Modelo</label>
-                            <input class="lblModelo form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2 pr-0">
-                            <label>Año</label>
-                            <input class="lblAnio form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2">
-                            <label>Revisiones</label>
-                            <input class="lblRevisionesGarantia form-control form-control-sm" readonly="readonly" value="0/3" />
-                        </div>
-                        <div class="col-12 mb-0">
-                            <label>Comentarios de la solicitud de GPS</label>
-                            <textarea class="txtComentarioSolicitudGPS form-control form-control-sm" readonly="readonly"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer pt-2 pb-2">
-                    <button type="button" id="btnCompletarSolicitud_Confirmar" class="btn btn-info waves-effect waves-light">
-                        Confirmar
-                    </button>
-                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                        Cancelar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <!-- datatable js -->
-    <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
-    <!-- Buttons -->
-    <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.bootstrap4.min.js"></script>
-    <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
-    <script src="/Scripts/plugins/datatables/pdfmake.min.js"></script>
-    <script src="/Scripts/plugins/datatables/vfs_fonts.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.print.min.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.colVis.min.js"></script>
-    <!-- Responsive -->
-    <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
-    <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
-    <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
-    <script src="/Scripts/plugins/moment/moment.js"></script>
-    <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_Listado.js?v=20210116095835"></script>
 </body>
 </html>
+
