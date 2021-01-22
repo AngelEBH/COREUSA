@@ -2121,25 +2121,25 @@
 
                     template +=
                         '<li>' +
-                        '<div class="form-group row border-bottom border-gray mb-2">' +
-                        '<div class="col-sm-4 font-weight-bold">' +
-                        LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento +
-                        '</div>' +
-                        '<div class="col-sm-8">' +
-                        '<div class="form-check form-check-inline">' +
-                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_si_' + identificadorElemento + '" ' + stringData + ' value="1" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 1 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)"  />' +
-                        '<label class="form-check-label" for="radio_si_' + identificadorElemento + '">SI</label>' +
-                        '</div>' +
-                        '<div class="form-check form-check-inline">' +
-                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_no_' + identificadorElemento + '" ' + stringData + ' value="2" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 2 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
-                        '<label class="form-check-label" for="radio_no_' + identificadorElemento + '">NO</label>' +
-                        '</div>' +
-                        '<div class="form-check form-check-inline">' +
-                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_na_' + identificadorElemento + '" ' + stringData + ' value="3" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 3 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
-                        '<label class="form-check-label" for="radio_na_' + identificadorElemento + '">N/A</label>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>' +
+                            '<div class="form-group row border-bottom border-gray mb-2">' +
+                            '<div class="col-sm-4 font-weight-bold">' +
+                            LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento +
+                            '</div>' +
+                            '<div class="col-sm-8">' +
+                            '<div class="form-check form-check-inline">' +
+                            '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_si_' + identificadorElemento + '" ' + stringData + ' value="1" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 1 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)"  />' +
+                            '<label class="form-check-label" for="radio_si_' + identificadorElemento + '">SI</label>' +
+                            '</div>' +
+                            '<div class="form-check form-check-inline">' +
+                            '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_no_' + identificadorElemento + '" ' + stringData + ' value="2" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 2 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
+                            '<label class="form-check-label" for="radio_no_' + identificadorElemento + '">NO</label>' +
+                            '</div>' +
+                            '<div class="form-check form-check-inline">' +
+                            '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_na_' + identificadorElemento + '" ' + stringData + ' value="3" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 3 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
+                            '<label class="form-check-label" for="radio_na_' + identificadorElemento + '">N/A</label>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
                         '</li>';
                 }
 
