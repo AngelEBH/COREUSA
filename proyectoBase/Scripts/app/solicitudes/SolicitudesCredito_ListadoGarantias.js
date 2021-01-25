@@ -94,11 +94,11 @@ $(document).ready(function () {
                     return value.split(' ')[1]
                 }
             },
-            { "data": "Identidad" },
+            //{ "data": "Identidad" },
             {
                 "data": "PrimerNombre",
                 "render": function (data, type, row) {
-                    return row["PrimerNombre"] + ' ' + row["SegundoNombre"] + ' ' + row["PrimerApellido"] + ' ' + row["SegundoApellido"] + ' ' + (row["IdCanal"] == 3 ? '<span class="btn btn-sm btn-info pt-0 pb-0 m-0">canex</span>' : '')
+                    return row["PrimerNombre"] + ' ' + row["SegundoNombre"] + ' ' + row["PrimerApellido"] + ' ' + row["SegundoApellido"] + '<br/>ID: ' + row["Identidad"] + ' ' + (row["IdCanal"] == 3 ? '<span class="btn btn-sm btn-info pt-0 pb-0 m-0">canex</span>' : '')
                 }
             },
             {
@@ -132,7 +132,7 @@ $(document).ready(function () {
                 autoFilter: true,
                 messageTop: 'Garantías de solicitudes de crédito' + moment().format('YYYY/MM/DD'),
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 8]
                 }
             },
             {
@@ -144,12 +144,12 @@ $(document).ready(function () {
                 text: 'Imprimir',
                 autoFilter: true,
                 exportOptions: {
-                    columns: [1, 3, 4, 5, 6, 7, 10]
+                    columns: [1, 3, 4, 5, 6, 7, 9]
                 }
             }
         ],
         columnDefs: [
-            { targets: [0, 11], orderable: false },
+            { targets: [0, 10], orderable: false },
             { "width": "1%", "targets": 1 }
         ]
     });

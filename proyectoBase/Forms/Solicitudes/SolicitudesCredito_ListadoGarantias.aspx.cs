@@ -555,7 +555,6 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 
             ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
             smtpCliente.Send(pmmMensaje);
-
             smtpCliente.Dispose();
         }
         catch (Exception ex)

@@ -145,10 +145,9 @@
                                     <th>Agencia</th>
                                     <th>Vendedor</th>
                                     <th>Prod.</th>
-                                    <th>Identidad</th>
-                                    <th>Nombre cliente</th>
+                                    <th>Nombre cliente/Identidad</th>
                                     <th>Fecha de ingreso</th>
-                                    <th>VIN</th>
+                                    <th>Garantía</th>
                                     <th>Docs</th>
                                     <th>GPS</th>
                                     <th>Estado</th>
@@ -168,7 +167,7 @@
                                     <th>Acciones</th>
                                     <th>Agencia</th>
                                     <th>Vendedor</th>
-                                    <th>VIN</th>
+                                    <th>Garantía</th>
                                     <th>T. Garantia</th>
                                     <th>T. Vehiculo</th>
                                     <th>Fecha creación</th>
