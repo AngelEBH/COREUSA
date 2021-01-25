@@ -177,43 +177,43 @@
                                 <label class="col-form-label">VIN</label>
                                 <asp:TextBox ID="txtVIN" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 pr-1">
                                 <label class="col-form-label">Tipo de garantía</label>
                                 <asp:TextBox ID="txtTipoDeGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 pl-1">
                                 <label class="col-form-label">Tipo de vehículo</label>
                                 <asp:TextBox ID="txtTipoDeVehiculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-3 col-6 pr-1">
                                 <label class="col-form-label">Marca</label>
                                 <asp:TextBox ID="txtMarca" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-3 col-6 pl-1 pr-1">
                                 <label class="col-form-label">Modelo</label>
                                 <asp:TextBox ID="txtModelo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-3 col-6 pl-1 pr-1">
                                 <label class="col-form-label">Año</label>
                                 <asp:TextBox ID="txtAnio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-3 col-6 pl-1">
                                 <label class="col-form-label">Color</label>
                                 <asp:TextBox ID="txtColor" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-3 col-6 pr-1">
                                 <label class="col-form-label">Matrícula</label>
                                 <asp:TextBox ID="txtMatricula" CssClass="form-control form-control-sm" ReadOnly="true" type="text" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-3 col-6 pl-1 pr-1">
                                 <label class="col-form-label">Serie Motor</label>
                                 <asp:TextBox ID="txtSerieMotor" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-3 col-6 pl-1 pr-1">
                                 <label class="col-form-label">Serie Chasis</label>
                                 <asp:TextBox ID="txtSerieChasis" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-3 col-6 pl-1">
                                 <label class="col-form-label">GPS</label>
                                 <asp:TextBox ID="txtGPS" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
@@ -222,27 +222,27 @@
                         <h6 class="m-0 pt-2">Características mecánicas</h6>
 
                         <div class="form-group row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-4 pr-1">
                                 <label class="col-form-label">Cilindraje</label>
                                 <asp:TextBox ID="txtCilindraje" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4 pl-1 pr-1">
                                 <label class="col-form-label">Recorrido</label>
                                 <asp:TextBox ID="txtRecorrido" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4 pl-1">
                                 <label class="col-form-label">Transmisión</label>
                                 <asp:TextBox ID="txtTransmision" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4 pr-1">
                                 <label class="col-form-label">Tipo de combustible</label>
                                 <asp:TextBox ID="txtTipoDeCombustible" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4 pl-1 pr-1">
                                 <label class="col-form-label">Serie 1</label>
                                 <asp:TextBox ID="txtSerieUno" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4 pl-1">
                                 <label class="col-form-label">Serie 2</label>
                                 <asp:TextBox ID="txtSerieDos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
@@ -1741,15 +1741,15 @@
         </div>
 
         <!-- Expendiente -->
-        <div id="divContenedorExpediente" class="contenedorPDFx">
-            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divExpedientePDF" style="/*display: none; */">
+        <div id="divContenedorExpediente" class="contenedorPDF">
+            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divExpedientePDF" style="display: none;">
                 <div class="card-body pt-0 pr-5 pl-5">
                     <div class="row justify-content-between">
                         <div class="col-auto">
                             <label class="font-weight-bold d-block">PRESTADITO S.A. de C.V.</label>
                             <label class="font-weight-bold d-block">PRESTADITO</label>
                             <label class="font-weight-bold d-block">Solicitud de crédito N°:&nbsp;<b runat="server" id="lblNoSolicitudCredito_Expediente"></b></label>
-                            <small class="font-weight-bold">Fecha:&nbsp;<b runat="server" id="lblFechaActual_Expediente"></b> <%--12/01/2021 04:28:02 p.m.--%></small>
+                            <small class="font-weight-bold">Fecha:&nbsp;<b runat="server" id="lblFechaActual_Expediente"></b></small>
                         </div>
                         <div class="col-auto align-content-start pr-0">
                             <div id="qr_Expediente"></div>
@@ -1925,6 +1925,108 @@
             </div>
         </div>
 
+        <div id="divContenedorPortadaExpediente" class="contenedorPDF">
+            <div class="card m-0 divImprimir" runat="server" visible="true" id="divPortadaExpedientePDF" style="display: none;">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4 align-self-end">
+                            <div class="form-group row pl-3">
+                                <div class="col-6 border border-dark">
+                                    <h6 class="m-0">FECHA</h6>
+                                </div>
+                                <div class="col-6 border border-dark text-right">
+                                    <h6 class="m-0">01/02/2021</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 text-center align-self-">
+                            <img src="/Imagenes/LogoPrestadito.png" class="img-fluid" />
+                        </div>
+                        <div class="col-4 align-self-end">
+                            <div class="form-group row pr-3">
+                                <div class="col-6 border border-dark">
+                                    <h6 class="m-0">MES</h6>
+                                </div>
+                                <div class="col-6 border border-dark">
+                                    <h6 class="m-0">ENERO</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <table class="table table-sm table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 10%" class="text-center">CLIENTE</td>
+                                        <td colspan="3" style="width: 90%" class="text-center">
+                                            <h4 class="font-weight-bold">JOSE FRANCISCO MORAZAN QUEZADA</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>IDENTIDAD</td>
+                                        <td class="text-center">0502-2000-02944</td>
+                                        <td>SOLICITUD</td>
+                                        <td class="text-center">1011</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-sm table-bordered mt-3">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 10%">OFICIAL</td>
+                                        <td class="text-center">ALEJANDRO FLORES</td>
+                                        <td>CENTRO DE COSTO</td>
+                                        <td class="text-center">VEHICULOS 0603</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-sm table-bordered mt-3">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 10%">MARCA</td>
+                                        <td class="text-center">HYUNDAI</td>
+                                        <td>COLOR</td>
+                                        <td class="text-center">ROJO</td>
+                                        <td>AÑO</td>
+                                        <td class="text-center">2015</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 10%">MODELO</td>
+                                        <td class="text-center">ROJO</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>PLACA</td>
+                                        <td class="text-center">HAH 0522</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-sm table-bordered mt-3" style="width: 70%">
+                                <tbody>
+                                    <tr>
+                                        <td>VENDEDOR</td>
+                                        <td class="text-center">JUAN PEREZ - 0502-2000-02944</td>
+                                    </tr>
+                                    <tr>
+                                        <td>DUEÑO ANTERIOR</td>
+                                        <td class="text-center">LUIS ALFREDO ZAMORA REYES - 0502-2000-02944</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mb-0">
+                            <%--<div style="max-width: 794px !important; min-width: 794px !important; overflow-x: hidden;">--%>
+                            <div id="divGaleriaPortadaExpediente" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden;" runat="server"></div>
+                            <%--</div>--%>
+                        </div>
+                        <div class="col-12 mt-0">
+                            <div id="divPortadaExpediente_Revision" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden;" runat="server"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- modalGuardarExpedienteSolicitud -->
         <div id="modalGuardarExpedienteSolicitud" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalGuardarExpedienteSolicitudLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -1977,6 +2079,19 @@
             gallery_theme: "tilesgrid",
             tile_width: 300,
             tile_height: 194,
+            grid_num_rows: 15
+        });
+
+        $("#divGaleriaPortadaExpediente").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 300,
+            tile_height: 180,
+            grid_num_rows: 15
+        });
+        $("#divPortadaExpediente_Revision").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 618,
+            tile_height: 300,
             grid_num_rows: 15
         });
 
@@ -2170,7 +2285,7 @@
 
                             tblDocumentos_Expediente.append(template);
 
-                            $("#lblEspecifiqueOtros_Expediente").val(especifiqueOtrosDocumentos);
+                            $("#lblEspecifiqueOtros_Expediente").text(especifiqueOtrosDocumentos);
 
                             permitirImprimirExpediente = true;
                             $("#modalGuardarExpedienteSolicitud").modal('hide');

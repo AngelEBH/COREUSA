@@ -482,6 +482,12 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                                         if ((bool)sqlResultado["fbApareceEnInspeccionDeSeguro"] == true)
                                             imagenesGarantiaParaInspeccionDeSeguro.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
+
+                                        if ((int)sqlResultado["fiIDSeccionGarantia"] == 3 || (int)sqlResultado["fiIDSeccionGarantia"] == 4)
+                                            divGaleriaPortadaExpediente.InnerHtml += "<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>";
+
+                                        if ((int)sqlResultado["fiIDSeccionGarantia"] == 9)
+                                            divPortadaExpediente_Revision.InnerHtml = "<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>";
                                     }
 
                                     divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
@@ -528,16 +534,16 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         /* Primer resultado: Información principal del expediente*/
-                        sqlResultado.Read();
-
-                        lblEspecifiqueOtros_Expediente.Text = sqlResultado["fcComentarios"].ToString();
-                        txtEspecifiqueOtras.InnerText = sqlResultado["fcComentarios"].ToString();
+                        while (sqlResultado.Read())
+                        {
+                            lblEspecifiqueOtros_Expediente.Text = sqlResultado["fcComentarios"].ToString();
+                            txtEspecifiqueOtras.InnerText = sqlResultado["fcComentarios"].ToString();
+                        }
 
                         /* Segundo resultado: Documentos del expediente */
                         sqlResultado.NextResult();
 
                         var listaDocumentosExpediente = new List<Expediente_Documento_ViewModel>();
-
                         TableRow tRowDocumentoExpediente = null;
 
                         while (sqlResultado.Read())

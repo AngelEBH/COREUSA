@@ -2344,6 +2344,33 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblEspecifiqueOtros_Expediente;
 
     /// <summary>
+    /// Control divPortadaExpedientePDF.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPortadaExpedientePDF;
+
+    /// <summary>
+    /// Control divGaleriaPortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divGaleriaPortadaExpediente;
+
+    /// <summary>
+    /// Control divPortadaExpediente_Revision.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPortadaExpediente_Revision;
+
+    /// <summary>
     /// Control txtEspecifiqueOtras.
     /// </summary>
     /// <remarks>
