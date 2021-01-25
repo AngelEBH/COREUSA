@@ -15,6 +15,54 @@
         html {
             background-color: rgb(255,255,255) !important;
         }
+
+        .card {
+            border: none;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+        }
+
+        .nav-tabs > li > .active {
+            background-color: whitesmoke !important;
+        }
+
+        .btn-actions-pane-right {
+            margin-left: auto;
+            white-space: nowrap
+        }
+
+        .scroll-area-sm {
+            height: 50vh;
+            overflow-x: hidden
+        }
+
+        .todo-indicator {
+            position: absolute;
+            width: 4px;
+            height: 60%;
+            border-radius: 0.3rem;
+            left: 0.625rem;
+            top: 20%;
+            opacity: .6;
+            transition: opacity .2s
+        }
+
+        .widget-content .widget-content-wrapper {
+            display: flex;
+            flex: 1;
+            position: relative;
+            align-items: center
+        }
+
+        .widget-content .widget-content-right.widget-content-actions {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity .2s
+        }
+
+        .widget-content .widget-content-right {
+            margin-left: auto
+        }
     </style>
 </head>
 <body>
@@ -28,131 +76,89 @@
             <div class="card-body">
                 <div class="row mb-0">
                     <div class="col-12">
-                        <div class="form-group row mt-2 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="true">
-                            <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server">Pantalla en mantenimiento</asp:Label>
+                        <div class="form-group row mt-2 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="false">
+                            <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server">asdasdasdasdasd</asp:Label>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-12">
-                                <label class="col-form-label">Cliente</label>
-                                <asp:TextBox ID="txtNombreCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-12">
-                                <label class="col-form-label">Identidad</label>
-                                <asp:TextBox ID="txtIdentidadCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-6">
-                                <label class="col-form-label">RTN numérico</label>
-                                <asp:TextBox ID="txtRtn" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-6">
-                                <label class="col-form-label">Teléfono</label>
-                                <asp:TextBox ID="txtTelefonoCliente" type="tel" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
-                            </div>
+                        <div class="form-group mt-2 text-center">
+                            <button class="btn btn-info" type="button">Cambiar estado a <span class="font-weight-bold">ENTREGADO</span></button>
                         </div>
-
                         <!-- Nav tabs -->
-                        <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist" runat="server" id="navTabs">
+                        <ul class="nav nav-tabs nav-justified" role="tablist" runat="server" id="navTabs">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#tab_Informacion_Fisica" id="tab_InformacionFisica_link" role="tab" aria-selected="false">
-                                    <span class="d-block d-sm-none"><i class="fas fa-car"></i></span>
-                                    <span class="d-none d-sm-block">Solicitud de crédito</span>
+                                <a class="nav-link active" data-toggle="tab" href="#tab_Cliente" role="tab" aria-selected="false">
+                                    <span class="d-block d-sm-none"><i class="fas fa-user"></i></span>
+                                    <span class="d-none d-sm-block">Cliente</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#tab_Informacion_Mecanica" id="tab_InformacionMecanica_link" role="tab" aria-selected="false">
-                                    <span class="d-block d-sm-none"><i class="fas fa-cogs"></i></span>
+                                <a class="nav-link" data-toggle="tab" href="#tab_Expediente" role="tab" aria-selected="false">
+                                    <span class="d-block d-sm-none"><i class="fas fa-folder"></i></span>
                                     <span class="d-none d-sm-block">Expediente</span>
                                 </a>
                             </li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content" id="tabContent">
-
-                            <div class="tab-pane active" id="tab_Informacion_Fisica" role="tabpanel">
+                            <div class="tab-pane active" id="tab_Cliente" role="tabpanel">
                                 <div class="row mb-0">
                                     <div class="col-12">
-                                        <h6>Características físicas</h6>
+                                        <h6>Información del cliente/solicitud</h6>
                                         <div class="form-group row">
                                             <div class="col-12">
-                                                <label class="col-form-label">VIN</label>
-                                                <asp:TextBox ID="txtVIN" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                <label class="col-form-label">Cliente</label>
+                                                <asp:TextBox ID="txtNombreCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-6">
-                                                <label class="col-form-label">Tipo de garantía</label>
-                                                <asp:TextBox ID="txtTipoDeGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Identidad</label>
+                                                <asp:TextBox ID="txtIdentidadCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-6">
-                                                <label class="col-form-label">Tipo de vehículo</label>
-                                                <asp:TextBox ID="txtTipoDeVehiculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            <div class="col-6 pr-1">
+                                                <label class="col-form-label">RTN numérico</label>
+                                                <asp:TextBox ID="txtRtn" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-sm-3 col-6">
-                                                <label class="col-form-label">Marca</label>
-                                                <asp:TextBox ID="txtMarca" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            <div class="col-6 pl-1">
+                                                <label class="col-form-label">Teléfono</label>
+                                                <asp:TextBox ID="txtTelefonoCliente" type="tel" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-sm-3 col-6">
-                                                <label class="col-form-label">Modelo</label>
-                                                <asp:TextBox ID="txtModelo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            <div class="col-12">
+                                                <label class="col-form-label">Producto</label>
+                                                <asp:TextBox ID="txtProducto" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-sm-3 col-6">
-                                                <label class="col-form-label">Año</label>
-                                                <asp:TextBox ID="txtAnio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            <div class="col-6 pr-1">
+                                                <label class="col-form-label">Monto a financiar</label>
+                                                <asp:TextBox ID="txtMontoAFinanciar" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-sm-3 col-6">
-                                                <label class="col-form-label">Color</label>
-                                                <asp:TextBox ID="txtColor" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            <div class="col-6 pl-1">
+                                                <label class="col-form-label">Plazo</label>
+                                                <asp:TextBox ID="txtPlazo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-sm-3 col-6">
-                                                <label class="col-form-label">Placa</label>
-                                                <asp:TextBox ID="txtMatricula" CssClass="form-control form-control-sm" ReadOnly="true" type="text" runat="server"></asp:TextBox>
+                                            <div class="col-6 pr-1">
+                                                <label class="col-form-label">Oficial de negocios</label>
+                                                <asp:TextBox ID="txtOficialDeNegocios" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-sm-3 col-6">
-                                                <label class="col-form-label">Serie Motor</label>
-                                                <asp:TextBox ID="txtSerieMotor" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-sm-3 col-12">
-                                                <label class="col-form-label">Serie Chasis</label>
-                                                <asp:TextBox ID="txtSerieChasis" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-sm-3 col-12">
-                                                <label class="col-form-label">GPS</label>
-                                                <asp:TextBox ID="txtGPS" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            <div class="col-6 pl-1">
+                                                <label class="col-form-label">Gestor de cobros</label>
+                                                <asp:TextBox ID="txtGestorDeCobros" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="tab_Informacion_Mecanica" role="tabpanel">
+                            <div class="tab-pane" id="tab_Expediente" role="tabpanel">
                                 <div class="row mb-0">
                                     <div class="col-12">
-                                        <h6>Características mecánicas</h6>
-                                        <div class="form-group row">
-                                            <div class="col-sm-4 col-6">
-                                                <label class="col-form-label">Cilindraje</label>
-                                                <asp:TextBox ID="txtCilindraje" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                        <h6>Expediente de la solicitud</h6>
+                                        <div class="scroll-area-sm border border-gray">
+                                            <div style="position: static;" class="ps ps--active-y">
+                                                <div class="ps-content">
+                                                    <ul class=" list-group list-group-flush" runat="server" id="ulDocumentosExpediente"></ul>
+                                                </div>
                                             </div>
-                                            <div class="col-sm-4 col-6">
-                                                <label class="col-form-label">Recorrido</label>
-                                                <asp:TextBox ID="txtRecorrido" CssClass="form-control form-control-sm" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-sm-4 col-6">
-                                                <label class="col-form-label">Transmisión</label>
-                                                <asp:TextBox ID="txtTransmision" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-sm-4 col-6">
-                                                <label class="col-form-label">Tipo de combustible</label>
-                                                <asp:TextBox ID="txtTipoDeCombustible" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-sm-4 col-6">
-                                                <label class="col-form-label">Serie 1</label>
-                                                <asp:TextBox ID="txtSerieUno" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-sm-4 col-6">
-                                                <label class="col-form-label">Serie 2</label>
-                                                <asp:TextBox ID="txtSerieDos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="col-form-label">Comentario</label>
-                                                <textarea id="txtComentario" runat="server" readonly="readonly" class="form-control form-control-sm"></textarea>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <div class="form-group row">
+                                                <label>Especifique otras</label>
+                                                <textarea id="txtEspecifiqueOtras" class="form-control form-control-sm" readonly="readonly" rows="3" runat="server"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -169,4 +175,3 @@
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
 </body>
 </html>
-

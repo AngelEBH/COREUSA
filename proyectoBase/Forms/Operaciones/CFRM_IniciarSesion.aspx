@@ -29,7 +29,7 @@
                     <h4 class="font-18 m-b-5 text-center">Bienvenido!</h4>
                     <p class="text-center">Inicia sesión para continuar.</p>
 
-                    <div class="alert alert-danger mb-0 text-center" role="alert" runat="server" id="divMensajeError" style="display:none;">
+                    <div class="alert alert-danger mb-0 text-center" role="alert" runat="server" id="divMensajeError" style="display: none;">
                         <asp:Label ID="lblMensajeError" runat="server"></asp:Label>
                     </div>
 
@@ -50,12 +50,12 @@
                                 </div>
                             </div>
                             <div class="col-6 text-right">
-                                <button id="btnIniciarSesion" class="btn btn-primary w-md waves-effect waves-light" type="button">Iniciar sesión</button>
+                                <button id="btnIniciarSesion" onclick="IniciarSesion()" class="btn btn-primary w-md waves-effect waves-light" type="button">Iniciar sesión</button>
                             </div>
                         </div>
                         <div class="form-group m-t-10 mb-0 row">
                             <div class="col-12 m-t-20">
-                                <a href="#"><i class="mdi mdi-lock"></i>Olvidé mi contraseña</a>
+                                <a href="#"><i class="mdi mdi-lock"></i>&nbsp;Olvidé mi contraseña</a>
                             </div>
                         </div>
                     </div>
@@ -68,7 +68,11 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script>
 
-        $("#btnIniciarSesion").click(function () {
+        $(function () {
+            CheckRememberMe();
+        });
+
+        function IniciarSesion() {
 
             if ($($("#frmPrincipal")).parsley().isValid()) {
 
@@ -81,12 +85,21 @@
                         MensajeError('No se pudo conectar al servidor, contacte al administrador');
                     },
                     beforeSend: function () {
-                        $("#btnIniciarSesion").prop('disabled',true);
+                        $("#btnIniciarSesion").prop('disabled', true);
                     },
                     success: function (data) {
 
-                        if (data.d.AccesoAutorizado == 1)
+                        if (data.d.AccesoAutorizado == 1) {
+                            if ($('#cbRecuerdame').is(':checked')) {
+                                SetCookie('usr', $("#txtUsuario").val(), 30);
+                                SetCookie('clv', $("#txtClave").val(), 30);
+                            }
+                            else {
+                                DeleteCookie('usr');
+                                DeleteCookie('clv');
+                            }
                             window.location = data.d.UrlRedireccion;
+                        }
                         else
                             MostrarMensajeError(data.d.Mensaje);
                     },
@@ -98,12 +111,57 @@
             else
                 $($("#frmPrincipal")).parsley().validate();
 
-        });
+        }
 
         function MostrarMensajeError(mensaje) {
             $("#divMensajeError").css('display', '');
             $("#lblMensajeError").text(mensaje);
         }
+
+
+        /* Recordar contraseña Vanilla JS*/
+        function SetCookie(cname, cvalue, exdays) {
+
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function DeleteCookie(cname) {
+
+            document.cookie = cname + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
+        function GetCookie(cname) {
+
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function CheckRememberMe() {
+
+            var user = GetCookie("usr");
+            var pass = GetCookie("clv");
+
+            if (user != "" && user != null && pass != "" && pass != null) {
+
+                $("#txtUsuario").val(user);
+                $("#txtClave").val(pass);
+            }
+        }
+
     </script>
 </body>
 </html>

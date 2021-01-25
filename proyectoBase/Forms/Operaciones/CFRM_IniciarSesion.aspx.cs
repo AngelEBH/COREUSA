@@ -36,7 +36,7 @@ public partial class CFRM_IniciarSesion : System.Web.UI.Page
             var idApp = "107";
 
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("S") ?? "";
+            var pcIDSolicitud = lURLDesencriptado != null ? HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("S") : "";
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
