@@ -31,6 +31,15 @@ public partial class CFRM
     protected global::System.Web.UI.WebControls.Label lblNoSolicitudCredito;
 
     /// <summary>
+    /// Control divEstadoExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divEstadoExpediente;
+
+    /// <summary>
     /// Control PanelMensajeErrores.
     /// </summary>
     /// <remarks>
@@ -47,6 +56,33 @@ public partial class CFRM
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMensaje;
+
+    /// <summary>
+    /// Control divCambiarEstadoExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divCambiarEstadoExpediente;
+
+    /// <summary>
+    /// Control btnCambiarEstadoExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnCambiarEstadoExpediente;
+
+    /// <summary>
+    /// Control lblSiguienteEstadoExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblSiguienteEstadoExpediente;
 
     /// <summary>
     /// Control navTabs.

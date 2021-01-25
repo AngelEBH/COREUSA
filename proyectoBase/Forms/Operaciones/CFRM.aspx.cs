@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using System.Web;
+using System.Web.Services;
 
 public partial class CFRM : System.Web.UI.Page
 {
@@ -35,17 +36,21 @@ public partial class CFRM : System.Web.UI.Page
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
                 pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("S");
+
+                lblNoSolicitudCredito.Text = pcIDSolicitud;
+
                 pcIDUsuario = HttpContext.Current.Session["usr"].ToString();
                 pcIDSesion = HttpContext.Current.Session["SID"].ToString();
                 pcIDApp = HttpContext.Current.Session["IDApp"].ToString();
-
-                lblNoSolicitudCredito.Text = pcIDSolicitud;
 
                 if (pcIDSolicitud != "" && pcIDSolicitud != "0")
                 {
                     CargarExpedienteDeLaSolicitud();
                 }
-
+                else
+                {
+                    MostrarMensaje("Parámetros inválidos.");
+                }
             }
         }
         catch (Exception ex)
@@ -86,12 +91,13 @@ public partial class CFRM : System.Web.UI.Page
                         txtOficialDeNegocios.Text = sqlResultado["fcUsuarioAsignado"].ToString();
                         txtGestorDeCobros.Text = sqlResultado["fcGestorAsignado"].ToString();
                         txtEspecifiqueOtras.InnerText = sqlResultado["fcComentarios"].ToString();
+                        divEstadoExpediente.InnerText = sqlResultado["fcEstadoExpediente"].ToString();
+                        divEstadoExpediente.Attributes.Add("class", "badge badge-"+ sqlResultado["fcEstadoExpedienteClassName"].ToString() +" ml-2 font-12 float-right");
 
                         /* Segundo resultado: Documentos del expediente */
                         sqlResultado.NextResult();
 
                         var templateDocumentosExpediente = new StringBuilder();
-
                         var idEstadoDocumento = 0;
                         var estadoDocumento = string.Empty;
                         var estadoDocumentoClassName = string.Empty;
@@ -124,6 +130,25 @@ public partial class CFRM : System.Web.UI.Page
 
                         /* Listado de tipos de solicitudes */
                         sqlResultado.NextResult();
+
+                        /* Siguiente estado del expediente */
+                        sqlResultado.NextResult();
+                        sqlResultado.Read();
+
+                        var idSiguienteEstadoExpediente = (int)sqlResultado["fiIDEstadoExpedienteSiguiente"];
+
+                        if (idSiguienteEstadoExpediente > 0)
+                        {
+                            divCambiarEstadoExpediente.Visible = true;
+                            btnCambiarEstadoExpediente.Attributes.Add("data-idsiguienteestado", idSiguienteEstadoExpediente.ToString());
+                            btnCambiarEstadoExpediente.Attributes.Add("class", "btn btn-" + sqlResultado["fcClassNameSiguiente"].ToString());
+                            lblSiguienteEstadoExpediente.InnerText = sqlResultado["fcEstadoExpedienteSiguiente"].ToString();
+                        }
+                        else
+                        {
+                            divCambiarEstadoExpediente.Visible = false;
+                            btnCambiarEstadoExpediente.Disabled = true;
+                        }
                     }
                 } // using sqlComando
             } // using sqlConexion
@@ -132,6 +157,71 @@ public partial class CFRM : System.Web.UI.Page
         {
             MostrarMensaje("Error al cargar el expediente de la solicitud " + pcIDSolicitud + ": " + ex.Message.ToString());
         }
+    }
+
+    [WebMethod]
+    public static Resultado_ViewModel CambiarEstadoExpediente(int idEstado, string dataCrypt)
+    {
+        var resultado = new Resultado_ViewModel() { SesionValida = true, ResultadoExitoso = true };
+        try
+        {
+
+            if (HttpContext.Current.Session["AccesoAutorizado"] != null)
+            {
+                if ((int)HttpContext.Current.Session["AccesoAutorizado"] != 1)
+                {
+                    resultado.ResultadoExitoso = false;
+                    resultado.SesionValida = false;
+                    resultado.MensajeResultado = "La sesión caducó, vuelve a iniciar sesión.";
+                    return resultado;
+                }
+            }
+            else
+            {
+                resultado.ResultadoExitoso = false;
+                resultado.SesionValida = false;
+                resultado.MensajeResultado = "La sesión caducó, vuelve a iniciar sesión.";
+                return resultado;
+            }
+
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("S");
+            var pcIDUsuario = HttpContext.Current.Session["usr"].ToString();
+            var pcIDSesion = HttpContext.Current.Session["SID"].ToString();
+            var pcIDApp = HttpContext.Current.Session["IDApp"].ToString();
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Expediente_CambiarEstadoExpediente", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;                    
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDEstadoExpediente", idEstado);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        sqlResultado.Read();
+
+                        if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                        {
+                            resultado.ResultadoExitoso = false;
+                            resultado.MensajeResultado = "No se pudo cambiar el estado del expediente: " + sqlResultado["MensajeError"].ToString() + ", contacte al administrador.";
+                        }
+                    } // using sqlComando.ExecuteReader()
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            resultado.ResultadoExitoso = false;
+            resultado.MensajeResultado = "No se pudo cambiar el estado del expediente: " + ex.Message.ToString() + ", contacte al administrador.";
+        }
+        return resultado;
     }
 
     private void ValidarInicioDeSesion()
@@ -200,5 +290,12 @@ public partial class CFRM : System.Web.UI.Page
         PanelMensajeErrores.Visible = true;
         lblMensaje.Visible = true;
         lblMensaje.Text = mensaje;
+    }
+
+    public class Resultado_ViewModel
+    {
+        public bool ResultadoExitoso { get; set; }
+        public bool SesionValida { get; set; }
+        public string MensajeResultado { get; set; }
     }
 }

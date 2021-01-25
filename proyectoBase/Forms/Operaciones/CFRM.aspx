@@ -8,8 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Expediente</title>
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <style>
         html {
@@ -68,19 +68,23 @@
 <body>
     <form id="frmPrincipal" runat="server">
         <div class="card shadow-none m-0">
-            <div class="card-header pb-1 pt-1">
-                <h6>Expediente solicitud de crédito N°
+            <div class="card-header">
+                <label class="mb-0">Expediente solicitud de crédito N°
                     <asp:Label ID="lblNoSolicitudCredito" CssClass="font-weight-bold" runat="server"></asp:Label>
-                </h6>
+                </label>
+                <div runat="server" id="divEstadoExpediente"></div>
             </div>
             <div class="card-body">
                 <div class="row mb-0">
                     <div class="col-12">
                         <div class="form-group row mt-2 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="false">
-                            <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server">asdasdasdasdasd</asp:Label>
+                            <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" runat="server"></asp:Label>
                         </div>
-                        <div class="form-group mt-2 text-center">
-                            <button class="btn btn-info" type="button">Cambiar estado a <span class="font-weight-bold">ENTREGADO</span></button>
+                        <div class="form-group mt-2 text-center" runat="server" id="divCambiarEstadoExpediente" visible="false">
+                            <button runat="server" id="btnCambiarEstadoExpediente" class="btn btn-info" type="button">
+                                Cambiar estado a
+                                <span class="font-weight-bold" runat="server" id="lblSiguienteEstadoExpediente"></span>
+                            </button>
                         </div>
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs nav-justified" role="tablist" runat="server" id="navTabs">
@@ -173,5 +177,51 @@
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
+    <script>
+        $("#btnCambiarEstadoExpediente").click(function () {
+
+            $.ajax({
+                type: "POST",
+                url: 'CFRM.aspx/CambiarEstadoExpediente',
+                data: JSON.stringify({ idEstado: $("#btnCambiarEstadoExpediente").data('idsiguienteestado'), dataCrypt: window.location.href }),
+                contentType: 'application/json; charset=utf-8',
+                error: function (xhr, ajaxOptions, thrownError) {
+                    MensajeError('No se pudo conectar al servidor, contacte al administrador');
+                },
+                success: function (data) {
+
+                    if (data.d.ResultadoExitoso == true) {
+                        $("#divEstadoExpediente").text($("#lblSiguienteEstadoExpediente").text());
+                        $("#divCambiarEstadoExpediente").remove();
+
+                        MensajeExito('El estado del expediente se cambió correctamente');
+                    }
+                    else if (data.d.SesionValida == false) {
+
+                        window.location = 'CFRM_IniciarSesion.aspx?' + window.location.href.split('?')[1];
+
+                    }
+                    else if (data.d.ResultadoExitoso == false) {
+                        MensajeError(data.d.MensajeResultado);
+                    }
+                }
+            });
+
+            function MensajeError(mensaje) {
+                iziToast.error({
+                    title: 'Error',
+                    message: mensaje
+                });
+            }
+
+            function MensajeExito(mensaje) {
+                iziToast.success({
+                    title: 'Éxito',
+                    message: mensaje
+                });
+            }
+
+        });
+    </script>
 </body>
 </html>
