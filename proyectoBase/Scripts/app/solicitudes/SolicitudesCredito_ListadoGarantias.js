@@ -10,9 +10,9 @@ var VIN = ''; /* VIN seleccionado del listado de garantias de solicitudes aproba
 var nombreCliente = ''; /* Nombre del cliente seleccionado del listado de garantias de solicitudes aprobadas */
 
 /* Iconos de estado para el listado de garantias de solicitudes aprobadas */
-var iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">estadoListo</label></i>';
-var iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">estadoPendiente</label></i>';
-var iconoWarning = '<i class="mdi mdi-check-circle mdi-24px text-warning p-0"><label style="display:none;">estadoPendiente</label></i>';
+var iconoExito = '<i class="mdi mdi-check-circle mdi-24px p-0 text-success"><label style="display:none;">estadoListo</label></i>';
+var iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px p-0 text-secondary"><label style="display:none;">estadoPendiente</label></i>';
+var iconoWarning = '<i class="mdi mdi-check-circle mdi-24px p-0 text-warning"><label style="display:none;">estadoPendiente</label></i>';
 
 /* Para realizar filtros en ambas listas*/
 var filtroActual = '';
@@ -85,43 +85,47 @@ $(document).ready(function () {
                         '</div >';
                 }
             },
-            { "data": "IdSolicitud", "className": "text-center" },
-            { "data": "Agencia" },
-            { "data": "UsuarioAsignado" },
             {
-                "data": "Producto",
-                "render": function (value) {
-                    return value.split(' ')[1]
+                "data": "IdSolicitud",
+                "render": function (data, type, row) {
+                    return row["IdSolicitud"] + '<br><span class="text-muted">' + moment(row["FechaCreacion"]).locale('es').format('YYYY/MM/DD hh:mm a') + '</span>';
                 }
             },
-            //{ "data": "Identidad" },
+            {
+                "data": "Agencia",
+                "render": function (data, type, row) {
+                    return row["Producto"] + '<br/><span class="text-muted">' + row["Agencia"] + ' | ' + row["UsuarioAsignado"] + '</span>'
+                }
+            },
             {
                 "data": "PrimerNombre",
                 "render": function (data, type, row) {
-                    return row["PrimerNombre"] + ' ' + row["SegundoNombre"] + ' ' + row["PrimerApellido"] + ' ' + row["SegundoApellido"] + '<br/>ID: ' + row["Identidad"] + ' ' + (row["IdCanal"] == 3 ? '<span class="btn btn-sm btn-info pt-0 pb-0 m-0">canex</span>' : '')
+                    return row["PrimerNombre"] + ' ' + row["SegundoNombre"] + ' ' + row["PrimerApellido"] + ' ' + row["SegundoApellido"] + '<br/><span class="text-muted">' + row["Identidad"] + "</span>" + (row["IdCanal"] == 3 ? ' <span class="btn btn-sm btn-info pt-0 pb-0 m-0">canex</span>' : '')
                 }
             },
             {
-                "data": "FechaCreacion",
-                "render": function (value) {
-                    if (value === null) return "";
-                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a');
-                }
-            },
-            { "data": "VIN" },
-            { "data": "DocumentosSubidos", "className": "text-center" },
-            {
-                "data": "EstadoSolicitudGPS", "className": "text-center",
+                "data": "VIN",
                 "render": function (data, type, row) {
-
-                    return '<span class="badge badge-' + row["EstadoSolicitudGPSClassName"] + ' p-1">' + row["EstadoSolicitudGPS"] + '</span>';
+                    return row["Marca"] + ' ' + row["Modelo"] + ' ' + row["Anio"] + '<br/><span class="text-muted">' + 'VIN: ' + (row["VIN"] != '' ? row["VIN"] : '') + '<span>'
                 }
             },
+            { "data": "DocumentosSubidos", "className": "text-center" },
             {
                 "data": "IdGarantia", "className": "text-center",
                 "render": function (data, type, row) {
-
                     return (row["IdGarantia"] != 0 ? row["VIN"] != '' ? iconoExito : iconoWarning : iconoPendiente);
+                }
+            },
+            {
+                "data": "IdEstadoRevisionFisicaGarantia", "className": "text-center",
+                "render": function (data, type, row) {
+                    return '<i class="mdi mdi-check-circle mdi-24px p-0 text-' + ObtenerRevisionFisicaClassName(row["IdEstadoRevisionFisicaGarantia"]) + '" onclick="MostrarRevisionGarantia(' + row["IdGarantia"] + ')"><label style="display:none;">' + ObtenerRevisionFisicaDescripcionEstado(row["IdEstadoRevisionFisicaGarantia"]) + '</label></i>';
+                }
+            },
+            {
+                "data": "EstadoSolicitudGPS", "className": "text-center",
+                "render": function (data, type, row) {
+                    return '<span class="badge badge-' + row["EstadoSolicitudGPSClassName"] + ' p-1">' + row["EstadoSolicitudGPS"] + '</span>';
                 }
             }
         ],
@@ -132,7 +136,7 @@ $(document).ready(function () {
                 autoFilter: true,
                 messageTop: 'Garantías de solicitudes de crédito' + moment().format('YYYY/MM/DD'),
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 8]
+                    columns: 'report-data'
                 }
             },
             {
@@ -144,13 +148,13 @@ $(document).ready(function () {
                 text: 'Imprimir',
                 autoFilter: true,
                 exportOptions: {
-                    columns: [1, 3, 4, 5, 6, 7, 9]
+                    columns: 'report-data'
                 }
             }
         ],
         columnDefs: [
-            { targets: [0, 10], orderable: false },
-            { "width": "1%", "targets": 1 }
+            { targets: 'no-sort', orderable: false },
+            { "width": "1%", "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8] }
         ]
     });
 
@@ -224,7 +228,7 @@ $(document).ready(function () {
                 "data": "FechaCreacion",
                 "render": function (value) {
                     if (value === null) return "";
-                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a');
+                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
                 }
             }
         ],
@@ -234,23 +238,23 @@ $(document).ready(function () {
     });
 
     /* Filtrar cuando se seleccione una opción */
-    $("input[type=radio][name=filtros]").change(function () {
+    $("input[type=radio][name=filtro-registro-garantia]").change(function () {
 
         let filtro = this.value;
         dtListado.columns().search("").draw();
 
         switch (filtro) {
             case "0":
-                dtListado.columns(11).search("").draw();
+                dtListado.columns(7).search("").draw();
                 break;
             case "1":
-                dtListado.columns(11).search("estadoPendiente").draw();
+                dtListado.columns(7).search("estadoPendiente").draw();
                 break;
             case "2":
-                dtListado.columns(11).search("estadoListo").draw();
+                dtListado.columns(7).search("estadoListo").draw();
                 break;
             default:
-                dtListado.columns(11).search("").draw();
+                dtListado.columns(7).search("").draw();
         }
     });
 
@@ -336,6 +340,7 @@ $(document).ready(function () {
 
     /* Buscador */
     $('#txtDatatableFilter').keyup(function () {
+
         if (tabActivo == 'tab_Listado_Solicitudes_Garantias') {
             dtListado.search($(this).val()).draw();
         }
@@ -358,7 +363,14 @@ $(document).ready(function () {
         nombreCliente = row["PrimerNombre"] + ' ' + row["SegundoNombre"] + ' ' + row["PrimerApellido"] + ' ' + row["SegundoApellido"];
         identidad = row["Identidad"]
 
+        $(".txtVIN").val(row.VIN);
+        $(".txtMarca").val(row.Marca);
+        $(".txtModelo").val(row.Modelo);
+        $(".txtAnio").val(row.Anio);
+        $(".lblNoSolicitudCredito").text(idSolicitud);
+
         if (idSolicitudInstalacionGPS != 0) {
+
             $("#ddlUbicacionInstalacion_Actualizar").val(row.IDAgenciaInstalacion);
             $("#txtComentario_Actualizar").val(row.Comentario_Instalacion);
             $("#txtFechaInstalacion_Actualizar").val(new Date(parseInt(row.FechaInstalacion.substr(6, 19))).toJSON().slice(0, 19));
@@ -451,22 +463,6 @@ $("#btnImprimirDocumentacion_Confirmar").click(function (e) {
     RedirigirAccion('SolicitudesCredito_ImprimirDocumentacion.aspx', 'imprimir documentación de la solicitud');
 });
 
-function RedirigirAccion(nombreFormulario, accion) {
-
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_ListadoGarantias.aspx/EncriptarParametros",
-        data: JSON.stringify({ idSolicitud: idSolicitud, idGarantia: idGarantia, dataCrypt: window.location.href }),
-        contentType: "application/json; charset=utf-8",
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError("No se pudo redireccionar a " + accion);
-        },
-        success: function (data) {
-            data.d != "-1" ? window.location = nombreFormulario + "?" + data.d : MensajeError("No se pudo redireccionar a" + accion);
-        }
-    });
-}
-
 /* Solicitar instalacion de GPS */
 var btnSolicitarGPS = '';
 $(document).on('click', 'button#btnSolicitarGPS', function () {
@@ -526,9 +522,8 @@ $("#btnSolicitarGPS_Confirmar").click(function (e) {
             }
         });
     }
-    else {
+    else
         $('#frmPrincipal').parsley().validate({ group: 'InstalacionGPS_Guardar', force: true });
-    }
 });
 
 /* Actualizar solicitud de GPS */
@@ -567,9 +562,8 @@ $(document).on('click', 'button#btnDetalleSolicitudGPS', function () {
 
                 $("#modalDetalleSolicitudGPS").modal();
             }
-            else {
+            else
                 MensajeError('No se pudo cargar la información de la solicitud de GPS, contacte al administrador.');
-            }
         }
     });
 });
@@ -578,7 +572,6 @@ $("#btnActualizarSolicitudGPS").click(function (e) {
 
     $("#modalDetalleSolicitudGPS").modal('hide');
     $("#modalActualizarSolicitudGPS").modal();
-
 });
 
 $("#btnActualizarSolicitudGPS_Confirmar").click(function (e) {
@@ -621,9 +614,8 @@ $("#btnActualizarSolicitudGPS_Confirmar").click(function (e) {
             }
         });
     }
-    else {
+    else
         $('#frmPrincipal').parsley().validate({ group: 'InstalacionGPS_Actualizar', force: true });
-    }
 });
 
 /* Otros */
@@ -639,6 +631,80 @@ jQuery("#date-range").datepicker({
     toggleActive: !0
 });
 
+function MostrarRevisionGarantia(idGarantia) {
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_ListadoGarantias.aspx/CargarRevisionesGarantia",
+        data: JSON.stringify({ idGarantia: idGarantia, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo cargar las revisiones de la garantía, contacte al administrador.');
+        },
+        success: function (data) {
+
+            if (data.d != null) {
+
+                var revisionesGarantia = data.d;
+
+                $("#modalRevisionesGarantia").modal();
+            }
+            else
+                MensajeError('No se pudo cargar las revisiones de la garantía, contacte al administrador.');
+        }
+    });
+}
+
+
+
+function FormatoDetalleRevision(revision) {
+
+
+    var acordion = '<div class="bg-light mb-1">' +
+    '<div class="p-3" id="headingOne"> '+
+    '<div class="row justify-content-between">' +
+    '<div class="col-auto">' +
+        '<a href="#' + revision.NombreRevision + '" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="' + revision.NombreRevision+'">' +
+        '<h6 class="m-0 font-14 font-weight-bold">' + revision.NombreRevision +'</h6>' +
+    '</a>' +
+    '</div>' +
+    '<div class="col-auto">' +
+        '<div class="badge badge-' + revision.EstadoRevisionClassName +' p-2 float-right">' + revision.EstadoRevision + '</div>' +
+    '</div>' +
+    '</div>' +
+    '</div>' +
+        '<div id="' + revision.NombreRevision + '" class="collapse" aria-labelledby="' + revision.NombreRevision +'" data-parent="#accordion-revisiones" style="">' +
+    '<div class="card-body p-0">' +
+    '<div class="form-group row">' +
+    '<div class="col-sm-12">' +
+    '<label class="col-form-label">Descripción de la revisión</label>' +
+        '<textarea class="form-control form-control-sm" type="text" readonly="readonly" required="required">' + revision.DescripcionRevision+'</textarea>' +
+    '</div>' +
+    '<div class="col-sm-6">' +
+    '<label class="col-form-label">Usuario validador</label>' +
+        '<input class="form-control form-control-sm" type="text" readonly="readonly" value="' + revision.UsuarioValidador+'" required="required"/>' +
+    '</div>' +
+    '<div class="col-sm-6">' +
+    '<label class="col-form-label">Fecha validación</label>' +
+    '<input class="form-control form-control-sm" type="text" readonly="readonly" value="'+revision.UsuarioValidador+'" required="required"/>' +
+    '</div>' +
+    '<div class="col-sm-12">' +
+    '<label class="col-form-label">Comentarios de la revisión</label>' +
+        '<textarea class="form-control form-control-sm" type="text" readonly="readonly" required="required">' + revision.Observaciones+'</textarea>' +
+    '</div>' +
+    '</div>' +
+                                    '</div>'+
+                                '</div>'+
+                            '</div>';
+
+
+    debugger;
+    return 'Descripción: ' + revision.DescripcionRevision + '<br>' +
+        'Usuario validador: ' + revision.UsuarioValidador + '<br>' +
+        'Comentarios/Observaciones: ' + revision.Observaciones + '<br>' +
+        'Fecha de validación: ' + (revision.IdEstadoRevision != 0 ? moment(revision.IdEstadoRevision).locale('es').format('YYYY/MM/DD hh:mm a') : 'PENDIENTE');
+}
+
 function MensajeError(mensaje) {
     iziToast.error({
         title: 'Error',
@@ -650,6 +716,30 @@ function MensajeExito(mensaje) {
     iziToast.success({
         title: 'Éxito',
         message: mensaje
+    });
+}
+
+function ObtenerRevisionFisicaClassName(idEstadoRevisionFisica) {
+    return idEstadoRevisionFisica == 0 ? 'secondary' : idEstadoRevisionFisica == 1 ? 'success' : idEstadoRevisionFisica == 2 ? 'danger' : 'secondary';
+}
+
+function ObtenerRevisionFisicaDescripcionEstado(idEstadoRevisionFisica) {
+    return idEstadoRevisionFisica == 0 ? 'revision pediente' : idEstadoRevisionFisica == 1 ? 'revision aprobada' : idEstadoRevisionFisica == 2 ? 'revision rechazada' : 'revision pendiente';
+}
+
+function RedirigirAccion(nombreFormulario, accion) {
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_ListadoGarantias.aspx/EncriptarParametros",
+        data: JSON.stringify({ idSolicitud: idSolicitud, idGarantia: idGarantia, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError("No se pudo redireccionar a " + accion);
+        },
+        success: function (data) {
+            data.d != "-1" ? window.location = nombreFormulario + "?" + data.d : MensajeError("No se pudo redireccionar a" + accion);
+        }
     });
 }
 

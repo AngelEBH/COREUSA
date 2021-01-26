@@ -72,8 +72,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                             pcBuzoCorreoUsuario = sqlResultado["fcBuzondeCorreo"].ToString();
                         }
                     }
-                } // using command
-            } // using connection
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -114,8 +114,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                             ddlUbicacionInstalacion_Detalle.Items.Add(new ListItem(sqlResultado["fcNombreAgencia"].ToString(), sqlResultado["fiIDAgencia"].ToString()));
                         }
                     }
-                } // using command
-            } // using  connection
+                } // using sqlComando
+            } // using  sqlConexion
         }
         catch (Exception ex)
         {
@@ -138,7 +138,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDGarantia_Solicitudes_Listado", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDGarantia_Solicitudes_Listado_Pruebas", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
@@ -175,6 +175,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 Modelo = sqlResultado["fcModelo"].ToString(),
                                 Anio = sqlResultado["fiAnio"].ToString(),
                                 DocumentosSubidos = sqlResultado["fcDocumentos"].ToString(),
+                                /* Estado revisión fisica de la garantia */
+                                IdEstadoRevisionFisicaGarantia = (int)sqlResultado["fiEstadoRevisionGarantia"],
                                 /* Solicitud de instalacion de GPS */
                                 IdAutoGPSInstalacion = (int)sqlResultado["fiIDAutoGPSInstalacion"],
                                 IDAgenciaInstalacion = (int)sqlResultado["fiIDAgenciaInstalacion"],
@@ -182,15 +184,14 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 Comentario_Instalacion = sqlResultado["fcComentarioInstalacionGPS"].ToString(),
                                 IdEstadoInstalacion = (int)sqlResultado["fiStatusGPSInstalacion"],
                                 EstadoActivoSolicitudGPS = (bool)sqlResultado["fiGPSInstalacionActivo"],
-
                                 /* Estado de solicitud de instalación de GPS*/
                                 EstadoSolicitudGPS = sqlResultado["fcInstalacionGPSEstatus"].ToString(),
                                 EstadoSolicitudGPSClassName = sqlResultado["fcInstalacionGPSEstatusClassName"].ToString()
                             });
                         }
-                    } // using reader
-                } // using command
-            } // using connection
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -221,24 +222,24 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                    using (var reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
                             listado.Add(new GarantiaSinSolicitud_ViewModel()
                             {
-                                IdGarantia = (int)reader["fiIDGarantia"],
-                                Vendedor = reader["fcNombreCorto"].ToString(),
-                                Agencia = reader["fcAgencia"].ToString(),
-                                VIN = reader["fcVin"].ToString(),
-                                TipoDeGarantia = reader["fcTipoGarantia"].ToString(),
-                                TipoDeVehiculo = reader["fcTipoVehiculo"].ToString(),
-                                FechaCreacion = (DateTime)reader["fdFechaCreado"],
+                                IdGarantia = (int)sqlResultado["fiIDGarantia"],
+                                Vendedor = sqlResultado["fcNombreCorto"].ToString(),
+                                Agencia = sqlResultado["fcAgencia"].ToString(),
+                                VIN = sqlResultado["fcVin"].ToString(),
+                                TipoDeGarantia = sqlResultado["fcTipoGarantia"].ToString(),
+                                TipoDeVehiculo = sqlResultado["fcTipoVehiculo"].ToString(),
+                                FechaCreacion = (DateTime)sqlResultado["fdFechaCreado"],
                             });
                         }
-                    } // using reader
-                } // using command
-            } // using connection
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -280,9 +281,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            var resultadoSP = sqlResultado["MensajeError"].ToString();
-
-                            if (!resultadoSP.StartsWith("-1"))
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                             {
                                 resultado = true;
 
@@ -302,9 +301,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 EnviarCorreo("Nueva solicitud de GPS", "Nueva solicitud de GPS", "Datos", contenidoCorreo, solicitudGPS.CorreoUsuario);
                             }
                         }
-                    } // using reader
-                } // using command
-            } // using connection
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -357,9 +356,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 EstadoActivoSolicitudGPS = (bool)sqlResultado["fiGPSInstalacionActivo"]
                             };
                         }
-                    } // using reader
-                } // using command
-            } // using connection
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -404,9 +403,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            var resultadoSP = sqlResultado["MensajeError"].ToString();
-
-                            if (!resultadoSP.StartsWith("-1"))
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                             {
                                 resultado = true;
 
@@ -426,9 +423,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 EnviarCorreo("Actualización de solicitud de GPS", "Actualización de solicitud de GPS", "Nuevos datos", contenidoCorreo, solicitudGPS.CorreoUsuario);
                             }
                         }
-                    } // using reader
-                } // using command
-            } // using connection
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -436,6 +433,63 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             resultado = false;
         }
         return resultado;
+    }
+
+    [WebMethod]
+    public static List<Garantia_Revision_ViewModel> CargarRevisionesGarantia(int idGarantia, string dataCrypt)
+    {
+        var revisionesGarantia = new List<Garantia_Revision_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDGarantias_Revisiones_ListarPorIdGarantia", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDGarantia", idGarantia);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            revisionesGarantia.Add(new Garantia_Revision_ViewModel()
+                            {
+                                IdRevision = (int)sqlResultado["fiIDRevision"],
+                                NombreRevision = sqlResultado["fcNombreRevision"].ToString(),
+                                DescripcionRevision = sqlResultado["fcDescripcionRevision"].ToString(),
+                                IdGarantiaRevision = (int)sqlResultado["fiIDGarantiaRevision"],
+                                IdGarantia = (int)sqlResultado["fiIDGarantia"],
+                                IdSolicitudGPS = (int)sqlResultado["fiIDAutoGPSInstalacion"],
+                                IdEstadoRevision = (int)sqlResultado["fiEstadoRevision"],
+                                EstadoRevision = sqlResultado["fcEstadoRevision"].ToString(),
+                                EstadoRevisionClassName = sqlResultado["fcEstadoRevisionClassName"].ToString(),
+                                Observaciones = sqlResultado["fcObservaciones"].ToString(),
+                                IdUsuarioValidador = (int)sqlResultado["fiIDUsuarioValidador"],
+                                UsuarioValidador = sqlResultado["fcUsuarioValidador"].ToString(),
+                                FechaValidacion = (DateTime)sqlResultado["fdFechaValidacion"],
+                            });
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            revisionesGarantia = null;
+        }
+        return revisionesGarantia;
     }
 
     [WebMethod]
@@ -474,13 +528,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             liParamStart = URL.IndexOf("?");
 
             if (liParamStart > 0)
-            {
                 lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            }
             else
-            {
                 lcParametros = string.Empty;
-            }
 
             if (lcParametros != string.Empty)
             {
@@ -586,12 +636,13 @@ public class SolicitudesCredito_ListadoGarantias_ViewModel
     public string SegundoApellido { get; set; }
     public int IdGarantia { get; set; }
     public string VIN { get; set; }
-    /* Estas propiedas se utilizan como parte de la información que se envía por correo al guardar o actualizar solucitudes de GPS */
     public string Marca { get; set; }
     public string Modelo { get; set; }
     public string Anio { get; set; }
-
     public string DocumentosSubidos { get; set; }
+
+    /* Estado de la revisión física de la garantía */
+    public int IdEstadoRevisionFisicaGarantia { get; set; }
 
     /* Solicitud de instalacion de GPS */
     public int IdAutoGPSInstalacion { get; set; }
@@ -648,4 +699,25 @@ public class Prueba_ViewModel
     public string Mensaje { get; set; }
     public string Inner { get; set; }
     public object Excepcion { get; set; }
+}
+
+public class Garantia_Revision_ViewModel
+{
+    public int IdRevision { get; set; }
+    public string NombreRevision { get; set; }
+    public string DescripcionRevision { get; set; }
+
+    public int IdGarantiaRevision { get; set; }
+    public int IdGarantia { get; set; }    
+    public int IdSolicitudGPS { get; set; }
+
+    public int IdEstadoRevision { get; set; }
+    public string EstadoRevision { get; set; }
+    public string EstadoRevisionClassName { get; set; }
+    public string Observaciones { get; set; }
+
+    public int IdUsuarioValidador { get; set; }
+    public string UsuarioValidador { get; set; }
+    public DateTime FechaValidacion { get; set; }
+
 }

@@ -95,15 +95,15 @@
                             <div class="table-responsive">
                                 <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
                                     <label class="btn btn-secondary active opcion">
-                                        <input id="general" type="radio" name="filtros" value="0" />
+                                        <input id="general" type="radio" name="filtro-registro-garantia" value="0" />
                                         General
                                     </label>
                                     <label class="btn btn-secondary opcion">
-                                        <input id="recepcion" type="radio" name="filtros" value="1" />
+                                        <input id="recepcion" type="radio" name="filtro-registro-garantia" value="1" />
                                         Pendientes
                                     </label>
                                     <label class="btn btn-secondary opcion">
-                                        <input id="analisis" type="radio" name="filtros" value="2" />
+                                        <input id="analisis" type="radio" name="filtro-registro-garantia" value="2" />
                                         Guardadas
                                     </label>
                                 </div>
@@ -140,17 +140,19 @@
                         <table id="datatable-listado" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
-                                    <th>Acciones</th>
-                                    <th>No</th>
-                                    <th>Agencia</th>
-                                    <th>Vendedor</th>
-                                    <th>Prod.</th>
-                                    <th>Nombre cliente/Identidad</th>
-                                    <th>Fecha de ingreso</th>
-                                    <th>Garantía</th>
-                                    <th>Docs</th>
-                                    <th>GPS</th>
-                                    <th>Estado</th>
+                                    <th class="no-sort">Acciones</th>
+                                    <th class="report-data">Solicitud N°<br />
+                                        Fecha de ingreso</th>
+                                    <th class="report-data">Producto / CC / Vendedor</th>
+                                    <th class="report-data">Cliente / Identidad</th>
+                                    <th class="report-data">Marca / Modelo / Año / VIN</th>
+                                    <th class="no-sort">Doc.</th>
+                                    <th class="no-sort">Registro<br />
+                                        Garantia</th>
+                                    <th class="no-sort">Revisión<br />
+                                        Física</th>
+                                    <th class="no-sort estado-instalacion-gps">Instalación<br />
+                                        GPS</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -167,7 +169,7 @@
                                     <th>Acciones</th>
                                     <th>Agencia</th>
                                     <th>Vendedor</th>
-                                    <th>Garantía</th>
+                                    <th>Garantia</th>
                                     <th>T. Garantia</th>
                                     <th>T. Vehiculo</th>
                                     <th>Fecha creación</th>
@@ -457,6 +459,85 @@
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
                             Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalRevisionesGarantia" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDetalleSolicitudGPSLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalRevisionesGarantiaLabel">Revisión física de la garantía | Solicitud de crédito N° <b class="lblNoSolicitudCredito"></b></h6>
+                        <span id="lblEstadoRevisionFisica" class="btn btn-sm btn-success float-right">Aprobado</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <label class="col-form-label">VIN</label>
+                                <asp:TextBox ID="txtVIN" CssClass="form-control form-control-sm txtVIN" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Marca</label>
+                                <asp:TextBox ID="txtMarca" CssClass="form-control form-control-sm txtMarca" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Modelo</label>
+                                <asp:TextBox ID="txtModelo" CssClass="form-control form-control-sm txtModelo" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Año</label>
+                                <asp:TextBox ID="txtAnio" CssClass="form-control form-control-sm txtAnio" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+
+                        <h6 class="border-top border-gray pt-2">Listado de revisiones</h6>                        
+
+                        <div id="accordion-revisiones">
+                            <div class="bg-light mb-1">
+                                <div class="p-3" id="headingOne">
+                                    <div class="row justify-content-between">
+                                        <div class="col-auto">
+                                            <a href="#collapseOne" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne">
+                                                <h6 class="m-0 font-14 font-weight-bold">Confirmación de datos</h6>
+                                            </a>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="badge badge-success p-2 float-right" id="bg-actualizar-millaje">APROBADA</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion" style="">
+                                    <div class="card-body p-0">
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+                                                <label class="col-form-label">Descripción de la revisión</label>
+                                                <textarea id="TextBox1" class="form-control form-control-sm txtVIN" type="text" readonly="readonly" required="required" runat="server"></textarea>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="col-form-label">Usuario validador</label>
+                                                <asp:TextBox ID="TextBox2" CssClass="form-control form-control-sm txtMarca" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="col-form-label">Fecha validación</label>
+                                                <asp:TextBox ID="TextBox3" CssClass="form-control form-control-sm txtModelo" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <label class="col-form-label">Comentarios de la revisión</label>
+                                                <textarea id="Textarea1" class="form-control form-control-sm txtVIN" type="text" readonly="readonly" required="required" runat="server"></textarea>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer pt-2 pb-2">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
                         </button>
                     </div>
                 </div>
