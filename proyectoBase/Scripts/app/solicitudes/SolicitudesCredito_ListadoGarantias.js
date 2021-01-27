@@ -117,9 +117,9 @@ $(document).ready(function () {
                 }
             },
             {
-                "data": "IdEstadoRevisionFisicaGarantia", "className": "text-center",
+                "data": "EstadoRevisionFisica", "className": "text-center",
                 "render": function (data, type, row) {
-                    return '<i class="mdi mdi-check-circle mdi-24px p-0 text-' + ObtenerRevisionFisicaClassName(row["IdEstadoRevisionFisicaGarantia"]) + '" onclick="MostrarRevisionGarantia(' + row["IdGarantia"] + ')"><label style="display:none;">' + ObtenerRevisionFisicaDescripcionEstado(row["IdEstadoRevisionFisicaGarantia"]) + '</label></i>';
+                    return '<i class="mdi mdi-check-circle mdi-24px p-0 text-' + row["EstadoRevisionFisicaClassName"] + '" onclick="MostrarRevisionGarantia(' + row["IdGarantia"] + ')"><label style="display:none;">' + row["EstadoRevisionFisica"] + '</label></i>';
                 }
             },
             {
@@ -368,7 +368,7 @@ $(document).ready(function () {
         $(".txtModelo").val(row.Modelo);
         $(".txtAnio").val(row.Anio);
         $(".lblNoSolicitudCredito").text(idSolicitud);
-        $("#lblEstadoRevisionFisica").removeClass('badge-success').removeClass('badge-warning').removeClass('badge-danger').addClass('badge-' + ObtenerRevisionFisicaClassName(row.IdEstadoRevisionFisicaGarantia)).text(ObtenerRevisionFisicaDescripcionEstado(row.IdEstadoRevisionFisicaGarantia));
+        $("#lblEstadoRevisionFisica").removeClass('badge-success').removeClass('badge-warning').removeClass('badge-danger').addClass('badge-' + row.EstadoRevisionFisicaClassName).text(row.EstadoRevisionFisica);
 
         if (idSolicitudInstalacionGPS != 0) {
 
@@ -717,14 +717,6 @@ function MensajeExito(mensaje) {
         title: 'Éxito',
         message: mensaje
     });
-}
-
-function ObtenerRevisionFisicaClassName(idEstadoRevisionFisica) {
-    return idEstadoRevisionFisica == 0 ? 'secondary' : idEstadoRevisionFisica == 1 ? 'success' : idEstadoRevisionFisica == 2 ? 'danger' : 'secondary';
-}
-
-function ObtenerRevisionFisicaDescripcionEstado(idEstadoRevisionFisica) {
-    return idEstadoRevisionFisica == 0 ? 'revision pediente' : idEstadoRevisionFisica == 1 ? 'revision aprobada' : idEstadoRevisionFisica == 2 ? 'revision rechazada' : 'revision pendiente';
 }
 
 function RedirigirAccion(nombreFormulario, accion) {

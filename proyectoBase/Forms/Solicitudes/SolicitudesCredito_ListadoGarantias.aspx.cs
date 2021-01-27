@@ -138,7 +138,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDGarantia_Solicitudes_Listado_Pruebas", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDGarantia_Solicitudes_Listado", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
@@ -176,7 +176,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 Anio = sqlResultado["fiAnio"].ToString(),
                                 DocumentosSubidos = sqlResultado["fcDocumentos"].ToString(),
                                 /* Estado revisión fisica de la garantia */
-                                IdEstadoRevisionFisicaGarantia = (int)sqlResultado["fiEstadoRevisionGarantia"],
+                                EstadoRevisionFisica = sqlResultado["fcEstadoRevisionFisica"].ToString(),
+                                EstadoRevisionFisicaClassName = sqlResultado["fcEstadoRevisionFisicaClassName"].ToString(),
                                 /* Solicitud de instalacion de GPS */
                                 IdAutoGPSInstalacion = (int)sqlResultado["fiIDAutoGPSInstalacion"],
                                 IDAgenciaInstalacion = (int)sqlResultado["fiIDAgenciaInstalacion"],
@@ -642,7 +643,8 @@ public class SolicitudesCredito_ListadoGarantias_ViewModel
     public string DocumentosSubidos { get; set; }
 
     /* Estado de la revisión física de la garantía */
-    public int IdEstadoRevisionFisicaGarantia { get; set; }
+    public string EstadoRevisionFisica { get; set; }
+    public string EstadoRevisionFisicaClassName { get; set; }
 
     /* Solicitud de instalacion de GPS */
     public int IdAutoGPSInstalacion { get; set; }

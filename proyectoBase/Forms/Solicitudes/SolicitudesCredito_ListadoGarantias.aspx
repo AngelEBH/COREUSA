@@ -530,6 +530,6 @@
         const NOMBRE_USUARIO = '<%=pcNombreUsuario %>';
         const CORREO_USUARIO = '<%=pcBuzoCorreoUsuario%>';
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20210127090652"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20210127105752"></script>
 </body>
 </html>
