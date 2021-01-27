@@ -115,7 +115,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                         }
                     }
                 } // using sqlComando
-            } // using  sqlConexion
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -233,8 +233,12 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 Vendedor = sqlResultado["fcNombreCorto"].ToString(),
                                 Agencia = sqlResultado["fcAgencia"].ToString(),
                                 VIN = sqlResultado["fcVin"].ToString(),
+                                Marca = sqlResultado["fcMarca"].ToString(),
+                                Modelo = sqlResultado["fcModelo"].ToString(),
+                                Anio = (int)sqlResultado["fiAnio"],
                                 TipoDeGarantia = sqlResultado["fcTipoGarantia"].ToString(),
                                 TipoDeVehiculo = sqlResultado["fcTipoVehiculo"].ToString(),
+                                Comentarios = sqlResultado["fcComentario"].ToString(),
                                 FechaCreacion = (DateTime)sqlResultado["fdFechaCreado"],
                             });
                         }
@@ -287,17 +291,17 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 resultado = true;
 
                                 var contenidoCorreo = "<table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
-                                    "<tr><th style='text-align:left;'>Cliente:</th> <td>" + solicitudGPS.NombreCliente + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Identidad:</th> <td>" + solicitudGPS.IdentidadCliente + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Fecha de instalación:</th> <td>" + solicitudGPS.FechaInstalacion.ToString("MM/dd/yyyy hh:mm tt") + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Ubicación:</th> <td>" + solicitudGPS.AgenciaInstalacion + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>VIN:</th> <td>" + solicitudGPS.VIN + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Marca:</th> <td>" + solicitudGPS.Marca + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Modelo:</th> <td>" + solicitudGPS.Modelo + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Año:</th> <td>" + solicitudGPS.Anio + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Solicitado por:</th> <td>" + solicitudGPS.NombreUsuario + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Comentario:</th> <td>" + solicitudGPS.Comentario_Instalacion + "</td></tr>" +
-                                    "</table>";
+                                "<tr><th style='text-align:left;'>Cliente:</th> <td>" + solicitudGPS.NombreCliente + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Identidad:</th> <td>" + solicitudGPS.IdentidadCliente + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Fecha de instalación:</th> <td>" + solicitudGPS.FechaInstalacion.ToString("MM/dd/yyyy hh:mm tt") + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Ubicación:</th> <td>" + solicitudGPS.AgenciaInstalacion + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>VIN:</th> <td>" + solicitudGPS.VIN + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Marca:</th> <td>" + solicitudGPS.Marca + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Modelo:</th> <td>" + solicitudGPS.Modelo + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Año:</th> <td>" + solicitudGPS.Anio + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Solicitado por:</th> <td>" + solicitudGPS.NombreUsuario + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Comentario:</th> <td>" + solicitudGPS.Comentario_Instalacion + "</td></tr>" +
+                                "</table>";
 
                                 EnviarCorreo("Nueva solicitud de GPS", "Nueva solicitud de GPS", "Datos", contenidoCorreo, solicitudGPS.CorreoUsuario);
                             }
@@ -409,17 +413,17 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 resultado = true;
 
                                 var contenidoCorreo = "<table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
-                                    "<tr><th style='text-align:left;'>Cliente:</th> <td>" + solicitudGPS.NombreCliente + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Identidad:</th> <td>" + solicitudGPS.IdentidadCliente + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Fecha de instalación:</th> <td>" + solicitudGPS.FechaInstalacion.ToString("MM/dd/yyyy hh:mm tt") + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Ubicación:</th> <td>" + solicitudGPS.AgenciaInstalacion + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>VIN:</th> <td>" + solicitudGPS.VIN + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Marca:</th> <td>" + solicitudGPS.Marca + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Modelo:</th> <td>" + solicitudGPS.Modelo + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Año:</th> <td>" + solicitudGPS.Anio + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Solicitado por:</th> <td>" + solicitudGPS.NombreUsuario + "</td></tr>" +
-                                    "<tr><th style='text-align:left;'>Comentario:</th> <td>" + solicitudGPS.Comentario_Instalacion + "</td></tr>" +
-                                    "</table>";
+                                "<tr><th style='text-align:left;'>Cliente:</th> <td>" + solicitudGPS.NombreCliente + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Identidad:</th> <td>" + solicitudGPS.IdentidadCliente + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Fecha de instalación:</th> <td>" + solicitudGPS.FechaInstalacion.ToString("MM/dd/yyyy hh:mm tt") + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Ubicación:</th> <td>" + solicitudGPS.AgenciaInstalacion + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>VIN:</th> <td>" + solicitudGPS.VIN + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Marca:</th> <td>" + solicitudGPS.Marca + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Modelo:</th> <td>" + solicitudGPS.Modelo + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Año:</th> <td>" + solicitudGPS.Anio + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Solicitado por:</th> <td>" + solicitudGPS.NombreUsuario + "</td></tr>" +
+                                "<tr><th style='text-align:left;'>Comentario:</th> <td>" + solicitudGPS.Comentario_Instalacion + "</td></tr>" +
+                                "</table>";
 
                                 EnviarCorreo("Actualización de solicitud de GPS", "Actualización de solicitud de GPS", "Nuevos datos", contenidoCorreo, solicitudGPS.CorreoUsuario);
                             }
@@ -504,11 +508,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            string lcParametros = "usr=" + pcIDUsuario +
-            "&IDApp=" + pcIDApp +
-            "&SID=" + pcIDSesion +
-            "&IDSOL=" + idSolicitud +
-            "&IDGarantia=" + idGarantia;
+            string lcParametros = "usr=" + pcIDUsuario + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion + "&IDSOL=" + idSolicitud + "&IDGarantia=" + idGarantia;
+
             resultado = DSC.Encriptar(lcParametros);
         }
         catch
@@ -572,35 +573,35 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             pmmMensaje.IsBodyHtml = true;
 
             string htmlString = @"<!DOCTYPE html> " +
-                        "<html>" +
-                        "<body>" +
-                        "    <div style=\"width: 500px;\">" +
-                        "        <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
-                        "            <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
-                        "                <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td>&nbsp;</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td style=\"background-color:whitesmoke; text-align:center;\">" + pcSubtitulo + "</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td>&nbsp;</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td>&nbsp;</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
-                        "                <td>System Bot Prestadito</td>" +
-                        "            </tr>" +
-                        "        </table>" +
-                        "    </div>" +
-                        "</body> " +
-                        "</html> ";
+            "<html>" +
+            "<body>" +
+            " <div style=\"width: 500px;\">" +
+            " <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
+            " <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
+            " <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td style=\"background-color:whitesmoke; text-align:center;\">" + pcSubtitulo + "</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
+            " <td>System Bot Prestadito</td>" +
+            " </tr>" +
+            " </table>" +
+            " </div>" +
+            "</body> " +
+            "</html> ";
 
             pmmMensaje.Body = htmlString;
 
@@ -692,6 +693,10 @@ public class GarantiaSinSolicitud_ViewModel
     public string TipoDeGarantia { get; set; }
     public string TipoDeVehiculo { get; set; }
     public string VIN { get; set; }
+    public string Marca { get; set; }
+    public string Modelo { get; set; }
+    public int Anio { get; set; }
+    public string Comentarios { get; set; }
     public DateTime FechaCreacion { get; set; }
 }
 
@@ -710,7 +715,7 @@ public class Garantia_Revision_ViewModel
     public string DescripcionRevision { get; set; }
 
     public int IdGarantiaRevision { get; set; }
-    public int IdGarantia { get; set; }    
+    public int IdGarantia { get; set; }
     public int IdSolicitudGPS { get; set; }
 
     public int IdEstadoRevision { get; set; }
@@ -721,5 +726,4 @@ public class Garantia_Revision_ViewModel
     public int IdUsuarioValidador { get; set; }
     public string UsuarioValidador { get; set; }
     public DateTime FechaValidacion { get; set; }
-
 }

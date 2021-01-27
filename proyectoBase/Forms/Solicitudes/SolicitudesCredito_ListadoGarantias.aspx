@@ -49,7 +49,7 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-8">
-                    <h6>Garantias de solicitudes aprobadas 
+                    <h6>Garantías de solicitudes crediticias
                         <small runat="server" id="lblMensajeError" class="text-danger"></small>
                     </h6>
                 </div>
@@ -162,16 +162,14 @@
                 <!-- Listado garantías sin solicitudes -->
                 <div class="tab-pane" id="tab_Listado_Garantias_SinSolicitud" role="tabpanel">
                     <div class="table-responsive mt-2">
-                        <table id="datatable-garantiasSinSolicutd" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                        <table id="datatable-garantiasSinSolicutd" class="table-bordered nowrap display compact table-condensed table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
                                     <th>Acciones</th>
-                                    <th>Agencia</th>
-                                    <th>Vendedor</th>
-                                    <th>Garantia</th>
-                                    <th>T. Garantia</th>
-                                    <th>T. Vehiculo</th>
-                                    <th>Fecha creación</th>
+                                    <th>Vendedor / CC</th>
+                                    <th>Marca / Modelo / Año / VIN</th>
+                                    <th>Tipo de Garantia / Tipo de vehículo</th>
+                                    <th>Fecha de creación</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -187,7 +185,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalActualizarGarantiaLabel">Actualizar garantía (Solicitud <span id="lblIdSolicitudActualizar"></span>)</h5>
+                    <h5 class="modal-title mt-0" id="modalActualizarGarantiaLabel">Actualizar garantía | Solicitud <span id="lblIdSolicitudActualizar"></span></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
@@ -212,7 +210,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalGuardarGarantiaLabel">Guardar garantía (Solicitud <span id="lblIdSolicitudGuardar"></span>)</h5>
+                    <h5 class="modal-title mt-0" id="modalGuardarGarantiaLabel">Guardar garantía | Solicitud <span id="lblIdSolicitudGuardar"></span></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
@@ -237,7 +235,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalDetallesGarantiaLabel">Detalles de la garantía (Solicitud <span id="lblIdSolicitudDetalles"></span>)</h5>
+                    <h5 class="modal-title mt-0" id="modalDetallesGarantiaLabel">Detalles de la garantía | Solicitud <span id="lblIdSolicitudDetalles"></span></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
@@ -306,7 +304,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalImprimirDocumentacionLabel">Imprimir documentación (Solicitud <span id="lblIdSolicitudImprimirDocumentacion"></span>)</h5>
+                    <h5 class="modal-title mt-0" id="modalImprimirDocumentacionLabel">Imprimir documentación | Solicitud <span id="lblIdSolicitudImprimirDocumentacion"></span></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
@@ -334,7 +332,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalSolicitarGPSLabel">Solicitar GPS (Solicitud <span id="lblIdSolicitudSolicitarGPS"></span>)</h6>
+                        <h6 class="modal-title mt-0" id="modalSolicitarGPSLabel">Solicitar Revisión/GPS | Solicitud <span id="lblIdSolicitudSolicitarGPS"></span></h6>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -378,7 +376,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalDetalleSolicitudGPSLabel">Detalles de la solicitud GPS (Solicitud <span id="lblIdSolicitudDetalleSolicitudGPS"></span>)</h6>
+                        <h6 class="modal-title mt-0" id="modalDetalleSolicitudGPSLabel">Detalles de la solicitud Revisión/GPS | Solicitud <span id="lblIdSolicitudDetalleSolicitudGPS"></span></h6>
                         <span id="lblEstadoSolicitudGPS_Detalle" class="btn btn-sm btn-warning float-right">Pendiente</span>
                     </div>
                     <div class="modal-body">
@@ -423,7 +421,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalActualizarSolicitudGPSLabel">Actualizar solicitud GPS (Solicitud <span id="lblIdSolicitudActualizarSolicitudGPS"></span>)</h6>
+                        <h6 class="modal-title mt-0" id="modalActualizarSolicitudGPSLabel">Actualizar solicitud Revisión/GPS | Solicitud <span id="lblIdSolicitudActualizarSolicitudGPS"></span></h6>
                         <span id="lblEstadoSolicitudGPS_Actualizar" class="btn btn-sm btn-warning float-right">Pendiente</span>
                     </div>
                     <div class="modal-body">
@@ -530,6 +528,6 @@
         const NOMBRE_USUARIO = '<%=pcNombreUsuario %>';
         const CORREO_USUARIO = '<%=pcBuzoCorreoUsuario%>';
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20210127105752"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=2021012703535222"></script>
 </body>
 </html>
