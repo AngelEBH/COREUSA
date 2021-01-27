@@ -107,11 +107,11 @@ $(document).ready(function () {
 
         if (idSolicitudGPS != 0) {
 
-            $(".lblNombreCliente").val(nombreCliente);
-            $(".lblMarca").val(row.Marca);
-            $(".lblModelo").val(row.Modelo);
-            $(".lblAnio").val(row.Anio);
-            $(".lblRevisionesGarantia").val(row.RevisionesGarantia);
+            $(".txtNombreCliente").val(nombreCliente);
+            $(".txtMarca").val(row.Marca);
+            $(".txtModelo").val(row.Modelo);
+            $(".txtAnio").val(row.Anio);
+            $(".txtRevisionesGarantia").val(row.RevisionesGarantia);
             $(".txtComentarioSolicitudGPS").val(row.ComentarioInstalacion);
         }
     });
@@ -128,11 +128,11 @@ $(document).ready(function () {
 
         if (idSolicitudGPS != 0) {
 
-            $(".lblNombreCliente").val(nombreCliente);
-            $(".lblMarca").val(row.Marca);
-            $(".lblModelo").val(row.Modelo);
-            $(".lblAnio").val(row.Anio);
-            $(".lblRevisionesGarantia").val(row.RevisionesGarantia);
+            $(".txtNombreCliente").val(nombreCliente);
+            $(".txtMarca").val(row.Marca);
+            $(".txtModelo").val(row.Modelo);
+            $(".txtAnio").val(row.Anio);
+            $(".txtRevisionesGarantia").val(row.RevisionesGarantia);
             $(".txtComentarioSolicitudGPS").val(row.ComentarioInstalacion);
         }
     });
@@ -143,13 +143,21 @@ $(document).ready(function () {
 });
 
 $(document).on('click', 'button#btnCompletarSolicitud', function () {
-    $("#lblNombreCliente").text(nombreCliente);
     $("#modalCompletarSolicitudGPS").modal();
 });
 
 $("#btnCompletarSolicitud_Confirmar").click(function (e) {
-
     RedirigirAccion('SolicitudesGPS_RevisionGarantia.aspx', 'Completar revisión de garantía');
+});
+
+
+$(document).on('click', 'button#btnInstalarGPS', function () {
+    $("#modalInstalarGPS").modal();
+});
+
+$("#btnInstalarGPS_Confirmar").click(function (e) {
+
+    RedirigirAccion('SolicitudesGPS_RegistroInstalacionGPS.aspx', 'registro de instalación de GPS');
 });
 
 function RedirigirAccion(nombreFormulario, accion) {
@@ -230,9 +238,8 @@ function CargarSolicitudesGPS() {
                                     '<i class="fa fa-bars"></i>' +
                                     '</button >' +
                                     '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
-                                    (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Actualizar revisiones</button>' : '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Revisar garantía</button>') +
-                                    (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? '<button id="btnInstalarGPS" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Instalar GPS</button>' : '')+
-
+                                    '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> ' + (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? 'Actualizar revisiones' : 'Revisar garantía') + '</button>' +
+                                    (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] || 1 == 1 ? '<button id="btnInstalarGPS" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fas fa-map-marker-alt"></i> Instalar GPS</button>' : '') +
                                 '</div>' +
                                     '</div >';
                             }
@@ -317,8 +324,8 @@ function CargarSolicitudesGPS() {
                                     '<i class="fa fa-bars"></i>' +
                                     '</button >' +
                                     '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
-                                    (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Actualizar revisiones</button>' : '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> Revisar garantía</button>') +
-                                    (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? '<button id="btnInstalarGPS" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fas fa-map-marker-alt"></i> Instalar GPS</button>' : '') +
+                                    '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> ' + (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? 'Actualizar revisiones' : 'Revisar garantía') + '</button>' +
+                                    (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] || 1 == 1 ? '<button id="btnInstalarGPS" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fas fa-map-marker-alt"></i> Instalar GPS</button>' : '') +
                                 '</div>' +
                                     '</div >';
                             }

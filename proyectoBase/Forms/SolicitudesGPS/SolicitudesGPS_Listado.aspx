@@ -138,23 +138,23 @@
                     <div class="form-group row">
                         <div class="col-12 mb-2">
                             <label>Cliente</label>
-                            <input class="lblNombreCliente form-control form-control-sm" readonly="readonly" />
+                            <input class="txtNombreCliente form-control form-control-sm" readonly="readonly" />
                         </div>
                         <div class="col-6 mb-2 pr-0">
                             <label>Marca</label>
-                            <input class="lblMarca form-control form-control-sm" readonly="readonly" />
+                            <input class="txtMarca form-control form-control-sm" readonly="readonly" />
                         </div>
                         <div class="col-6 mb-2">
                             <label>Modelo</label>
-                            <input class="lblModelo form-control form-control-sm" readonly="readonly" />
+                            <input class="txtModelo form-control form-control-sm" readonly="readonly" />
                         </div>
                         <div class="col-6 mb-2 pr-0">
                             <label>Año</label>
-                            <input class="lblAnio form-control form-control-sm" readonly="readonly" />
+                            <input class="txtAnio form-control form-control-sm" readonly="readonly" />
                         </div>
                         <div class="col-6 mb-2">
                             <label>Revisiones</label>
-                            <input class="lblRevisionesGarantia form-control form-control-sm" readonly="readonly" value="0/3" />
+                            <input class="txtRevisionesGarantia form-control form-control-sm" readonly="readonly" value="0/3" />
                         </div>
                         <div class="col-12 mb-0">
                             <label>Comentarios de la solicitud de GPS</label>
@@ -173,6 +173,53 @@
             </div>
         </div>
     </div>
+
+    <div id="modalInstalarGPS" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalInstalarGPSLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title mt-0" id="modalInstalarGPSLabel"><b>Registro de instalación de GPS</b></h6>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-12 mb-2">
+                            <label>Cliente</label>
+                            <input class="txtNombreCliente form-control form-control-sm" readonly="readonly" />
+                        </div>
+                        <div class="col-6 mb-2 pr-0">
+                            <label>Marca</label>
+                            <input class="txtMarca form-control form-control-sm" readonly="readonly" />
+                        </div>
+                        <div class="col-6 mb-2">
+                            <label>Modelo</label>
+                            <input class="txtModelo form-control form-control-sm" readonly="readonly" />
+                        </div>
+                        <div class="col-6 mb-2 pr-0">
+                            <label>Año</label>
+                            <input class="txtAnio form-control form-control-sm" readonly="readonly" />
+                        </div>
+                        <div class="col-6 mb-2">
+                            <label>Revisiones</label>
+                            <input class="txtRevisionesGarantia form-control form-control-sm" readonly="readonly" value="0/3" />
+                        </div>
+                        <div class="col-12 mb-0">
+                            <label>Comentarios de la solicitud de GPS</label>
+                            <textarea class="txtComentarioSolicitudGPS form-control form-control-sm" readonly="readonly"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-2 pb-2">
+                    <button type="button" id="btnInstalarGPS_Confirmar" class="btn btn-info waves-effect waves-light">
+                        Confirmar
+                    </button>
+                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>

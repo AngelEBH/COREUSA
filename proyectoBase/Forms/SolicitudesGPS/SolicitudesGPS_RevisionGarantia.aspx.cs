@@ -21,8 +21,8 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
     public string pcIDSesion = "";
     public string pcIDUsuario = "";
     public string pcIDGarantia = "";
-    public string pcIDSolicitudCredito = "";
-    public string pcIDSolicitudSolicitudGPS = "";
+    public string pcIDSolicitudGPS = "";
+    public string pcIDSolicitudCredito = "";    
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     public List<Garantia_Revision_ViewModel> RevisionesDeLaGarantia = new List<Garantia_Revision_ViewModel>();
@@ -61,8 +61,8 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
-                    pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                    pcIDSolicitudSolicitudGPS = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSolicitudGPS") ?? "0";
+                    pcIDSolicitudGPS = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSolicitudGPS") ?? "0";
+                    pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");                    
 
                     /* Cagrar información de la garantía y el listado de revisiones de la garantía */
                     CargarInformacion();
@@ -99,7 +99,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                     {
                         if (!sqlResultado.HasRows)
                         {
-                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitudCredito + "&IDApp=" + pcIDApp) + "','_self')";
+                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp) + "','_self')";
                             Response.Write("<script>");
                             Response.Write(lcScript);
                             Response.Write("</script>");
@@ -118,7 +118,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
 
                             if (!sqlResultado.HasRows)
                             {
-                                string lcScript = "window.open('Garantia_Registrar.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitudCredito + "&IDApp=" + pcIDApp + "&IDSOL=" + pcIDSolicitudCredito) + "','_self')";
+                                string lcScript = "window.open('Garantia_Registrar.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp + "&IDSOL=" + pcIDSolicitudCredito) + "','_self')";
                                 Response.Write("<script>");
                                 Response.Write(lcScript);
                                 Response.Write("</script>");
@@ -257,8 +257,8 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
-            var pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            var pcIDSolicitudSolicitudGPS = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSolicitudGPS") ?? "0";
+            var pcIDSolicitudGPS = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSolicitudGPS") ?? "0";
+            var pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");            
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -275,7 +275,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                                 sqlComando.CommandType = CommandType.StoredProcedure;
                                 sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
                                 sqlComando.Parameters.AddWithValue("@piIDRevision", item.IdRevision);
-                                sqlComando.Parameters.AddWithValue("@piIDAutoGPSInstalacion", pcIDSolicitudSolicitudGPS);
+                                sqlComando.Parameters.AddWithValue("@piIDAutoGPSInstalacion", pcIDSolicitudGPS);
                                 sqlComando.Parameters.AddWithValue("@piEstadoRevision", item.IdEstadoRevision);
                                 sqlComando.Parameters.AddWithValue("@pcObservaciones", item.Observaciones.Trim());
                                 sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
