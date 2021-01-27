@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Garantías de solicitudes aprobadas</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
@@ -470,7 +470,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h6 class="modal-title mt-0" id="modalRevisionesGarantiaLabel">Revisión física de la garantía | Solicitud de crédito N° <b class="lblNoSolicitudCredito"></b></h6>
-                        <span id="lblEstadoRevisionFisica" class="btn btn-sm btn-success float-right">Aprobado</span>
+                        <div id="lblEstadoRevisionFisica" class="badge p-2 float-right"></div>
                     </div>
                     <div class="modal-body">
                         <div class="form-group row">
@@ -491,49 +491,8 @@
                                 <asp:TextBox ID="txtAnio" CssClass="form-control form-control-sm txtAnio" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
                         </div>
-
-                        <h6 class="border-top border-gray pt-2">Listado de revisiones</h6>                        
-
-                        <div id="accordion-revisiones">
-                            <div class="bg-light mb-1">
-                                <div class="p-3" id="headingOne">
-                                    <div class="row justify-content-between">
-                                        <div class="col-auto">
-                                            <a href="#collapseOne" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne">
-                                                <h6 class="m-0 font-14 font-weight-bold">Confirmación de datos</h6>
-                                            </a>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="badge badge-success p-2 float-right" id="bg-actualizar-millaje">APROBADA</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion" style="">
-                                    <div class="card-body p-0">
-                                        <div class="form-group row">
-                                            <div class="col-sm-12">
-                                                <label class="col-form-label">Descripción de la revisión</label>
-                                                <textarea id="TextBox1" class="form-control form-control-sm txtVIN" type="text" readonly="readonly" required="required" runat="server"></textarea>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="col-form-label">Usuario validador</label>
-                                                <asp:TextBox ID="TextBox2" CssClass="form-control form-control-sm txtMarca" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="col-form-label">Fecha validación</label>
-                                                <asp:TextBox ID="TextBox3" CssClass="form-control form-control-sm txtModelo" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <label class="col-form-label">Comentarios de la revisión</label>
-                                                <textarea id="Textarea1" class="form-control form-control-sm txtVIN" type="text" readonly="readonly" required="required" runat="server"></textarea>
-                                            </div>
-                                        </div>                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
+                        <h6 class="border-top border-gray pt-2">Listado de revisiones</h6>
+                        <div id="accordion-revisiones"></div>
                     </div>
                     <div class="modal-footer pt-2 pb-2">
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -572,6 +531,6 @@
         const NOMBRE_USUARIO = '<%=pcNombreUsuario %>';
         const CORREO_USUARIO = '<%=pcBuzoCorreoUsuario%>';
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20201207152325"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20210127090652"></script>
 </body>
 </html>
