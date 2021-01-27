@@ -49,13 +49,12 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-8">
-                    <h6>Garantias de solicitudes aprobadas <small>
-                        <label runat="server" id="lblMensajeError" class="text-danger"></label>
-                    </small></h6>
+                    <h6>Garantias de solicitudes aprobadas 
+                        <small runat="server" id="lblMensajeError" class="text-danger"></small>
+                    </h6>
                 </div>
                 <div class="col-4">
-                    <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
-                        aria-label="Buscar" />
+                    <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar" aria-label="Buscar" />
                 </div>
             </div>
         </div>

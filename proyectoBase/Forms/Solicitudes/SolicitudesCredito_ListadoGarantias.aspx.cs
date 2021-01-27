@@ -13,9 +13,9 @@ using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 {
-    private string pcIDApp = "";
-    private string pcIDSesion = "";
-    private string pcIDUsuario = "";
+    public string pcIDApp = "";
+    public string pcIDSesion = "";
+    public string pcIDUsuario = "";
     public string pcNombreUsuario = "";
     public string pcBuzoCorreoUsuario = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();

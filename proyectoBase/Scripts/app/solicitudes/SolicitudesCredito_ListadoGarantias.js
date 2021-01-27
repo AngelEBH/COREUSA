@@ -113,7 +113,7 @@ $(document).ready(function () {
             {
                 "data": "IdGarantia", "className": "text-center",
                 "render": function (data, type, row) {
-                    return (row["IdGarantia"] != 0 ? row["VIN"] != '' ? iconoExito : iconoWarning : iconoPendiente);
+                    return (row["IdGarantia"] != 0 ? (row["VIN"] != '' && row["VIN"].length > 4) ? iconoExito : iconoWarning : iconoPendiente);
                 }
             },
             {
