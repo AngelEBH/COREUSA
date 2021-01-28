@@ -4,10 +4,11 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web;
-using System.Web.Services;
 
 public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
 {
+    #region Propiedades publicas
+
     public string pcIDApp = "";
     public string pcIDSesion = "";
     public string pcIDUsuario = "";
@@ -15,13 +16,19 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
     public string pcIDSolicitudGPS = "";
     public string pcIDSolicitudCredito = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public List<FotografiaInstalacion_ViewModel> ListaFotografiasInstalacion;
+
+    #endregion
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        var type = Request.QueryString["type"];
+
+        if (!IsPostBack && type == null)
         {
             try
             {
+
                 var lcURL = Request.Url.ToString();
                 var liParamStart = lcURL.IndexOf("?");
                 var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
@@ -78,7 +85,6 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
                             txtModeloGPS.Text = sqlResultado["fcGPSModel"].ToString();
                             txtCompania.Text = sqlResultado["fcGPSCompania"].ToString();
                             txtConRelay.Text = (bool)sqlResultado["fiConRelay"] == true ? "SI" : "NO";
-
                             txtVIN.Text = sqlResultado["fcVIN"].ToString();
                             txtTipoDeGarantia.Text = sqlResultado["fcTipoGarantia"].ToString();
                             txtTipoDeVehiculo.Text = sqlResultado["fcTipoVehiculo"].ToString();
@@ -98,113 +104,7 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
         }
     }
 
-    [WebMethod]
-    public static Resultado_ViewModel FinalizarRevisionGarantia(List<Garantia_Revision_ViewModel> revisionesGarantia, decimal recorrido, string unidadDeDistancia, string dataCrypt)
-    {
-        var resultado = new Resultado_ViewModel() { ResultadoExitoso = true };
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
-            var pcIDSolicitudGPS = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSolicitudGPS") ?? "0";
-            var pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-
-                using (var sqlTransaccion = sqlConexion.BeginTransaction("revisionGarantia"))
-                {
-                    try
-                    {
-                        foreach (Garantia_Revision_ViewModel item in revisionesGarantia)
-                        {
-                            using (var sqlComando = new SqlCommand("sp_CREDGarantias_Revisiones_Guardar", sqlConexion, sqlTransaccion))
-                            {
-                                sqlComando.CommandType = CommandType.StoredProcedure;
-                                sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
-                                sqlComando.Parameters.AddWithValue("@piIDRevision", item.IdRevision);
-                                sqlComando.Parameters.AddWithValue("@piIDAutoGPSInstalacion", pcIDSolicitudGPS);
-                                sqlComando.Parameters.AddWithValue("@piEstadoRevision", item.IdEstadoRevision);
-                                sqlComando.Parameters.AddWithValue("@pcObservaciones", item.Observaciones.Trim());
-                                sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                                sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                                sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                                using (var sqlResultado = sqlComando.ExecuteReader())
-                                {
-                                    sqlResultado.Read();
-
-                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                                    {
-                                        sqlTransaccion.Rollback();
-
-                                        resultado.ResultadoExitoso = false;
-                                        resultado.MensajeResultado = "Error al guardar resultado de la revisión: " + item.Revision + ", contacte al aministrador.";
-                                        resultado.MensajeDebug = "_Revisiones_Guardar";
-                                        return resultado;
-                                    }
-                                }
-                            }
-                        }
-
-                        using (var sqlComando = new SqlCommand("sp_CREDGarantias_Revisiones_ActualizarMillaje", sqlConexion, sqlTransaccion))
-                        {
-                            sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
-                            sqlComando.Parameters.AddWithValue("@pnRecorrido", recorrido);
-                            sqlComando.Parameters.AddWithValue("@pcUnidadDeDistancia", unidadDeDistancia);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                            using (var sqlResultado = sqlComando.ExecuteReader())
-                            {
-                                sqlResultado.Read();
-
-                                if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                                {
-                                    sqlTransaccion.Rollback();
-
-                                    resultado.ResultadoExitoso = false;
-                                    resultado.MensajeResultado = "Error al actualizar millaje de la garantía, contacte al aministrador.";
-                                    resultado.MensajeDebug = "_Revisiones_ActualizarMillaje";
-                                    return resultado;
-                                }
-                            }
-                        }
-
-                        if (resultado.ResultadoExitoso == true)
-                        {
-                            sqlTransaccion.Commit();
-
-                            resultado.MensajeResultado = "Las revisiones se guardaron exitosamente";
-                            resultado.MensajeDebug = "";
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        sqlTransaccion.Rollback();
-
-                        resultado.ResultadoExitoso = false;
-                        resultado.MensajeResultado = "Error al guardar resultado de la revisión: " + ex.Message.ToString() + ". Contacte al aministrador.";
-                        resultado.MensajeDebug = "_Revisiones_Guardar";
-                    }
-                } // using sqlTransacciomn
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            resultado.ResultadoExitoso = false;
-            resultado.MensajeResultado = "Error al guardar resultado de la revisión: " + ex.Message.ToString() + ". Contacte al aministrador.";
-            resultado.MensajeDebug = "_Revisiones_Guardar";
-        }
-        return resultado;
-    }
+    #region Funciones utilitarias
 
     public static Uri DesencriptarURL(string URL)
     {
@@ -236,17 +136,9 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
         lblMensaje.Text = mensaje;
     }
 
-    public class Garantia_Revision_ViewModel
-    {
-        public int IdGarantiaRevision { get; set; }
-        public int IdGarantia { get; set; }
-        public int IdRevision { get; set; }
-        public string Revision { get; set; }
-        public int IdSolicitudGPS { get; set; }
-        public int IdEstadoRevision { get; set; }
-        public string EstadoRevision { get; set; }
-        public string Observaciones { get; set; }
-    }
+    #endregion
+
+    #region View models
 
     public class Resultado_ViewModel
     {
@@ -254,4 +146,30 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
         public string MensajeResultado { get; set; }
         public string MensajeDebug { get; set; }
     }
+
+    public class FotografiaInstalacion_ViewModel
+    {
+        public int IdFotografia { get; set; }
+        public string DescripcionFotografia { get; set; }
+    }
+
+    public class InstalacionGPS_ViewModel
+    {
+        public string DescripcionUbicacion { get; set; }
+        public string Comentarios { get; set; }
+        public List<InstalacionGPS_Fotografia_ViewModel> Fotografias { get; set; }
+    }
+
+    public class InstalacionGPS_Fotografia_ViewModel
+    {
+        public int IdFotografia { get; set; }
+        public string NombreAntiguo { get; set; }
+        public string NombreArchivo { get; set; }
+        public string Extension { get; set; }
+        public string RutaArchivo { get; set; }
+        public string URL { get; set; }
+        public string Comentario { get; set; }
+    }
+
+    #endregion
 }

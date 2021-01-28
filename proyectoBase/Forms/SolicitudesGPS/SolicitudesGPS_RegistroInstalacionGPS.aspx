@@ -29,6 +29,10 @@
             background-color: whitesmoke !important;
         }
 
+        .sw-theme-default .sw-toolbar {
+            background: #fff;
+        }
+
         .loading {
             position: fixed;
             top: 0;
@@ -75,7 +79,6 @@
                 <h6>Instalación de GPS</h6>
             </div>
             <div class="card-body p-0">
-
                 <div id="smartwizard" class="h-100">
                     <ul>
                         <li><a href="#step-1" class="pt-3 pb-2 font-12">Información principal</a></li>
@@ -83,13 +86,11 @@
                     </ul>
                     <div>
                         <div id="step-1" class="form-section">
-
                             <div class="row mb-0">
                                 <div class="col-12">
                                     <div class="form-group row mt-2 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="false">
                                         <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server"></asp:Label>
                                     </div>
-
                                     <!-- Nav tabs -->
                                     <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist" runat="server" id="navTabs">
                                         <li class="nav-item">
@@ -107,7 +108,6 @@
                                     </ul>
                                     <!-- Tab panes -->
                                     <div class="tab-content" id="tabContent">
-
                                         <div class="tab-pane active" id="tab_Informacion_GPS" role="tabpanel">
                                             <div class="row mb-0">
                                                 <div class="col-12">
@@ -137,9 +137,7 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="tab-pane" id="tab_Informacion_Garantia" role="tabpanel">
-
                                             <div class="row mb-0">
                                                 <div class="col-12">
                                                     <h6>Información de la garantía</h6>
@@ -183,9 +181,30 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+                        <!-- Fotografías de la instalación -->
                         <div id="step-2" class="form-section">
+                            <div class="form-group row m-0 border-bottom border-gray mb-3">
+                                <div class="col-12 p-0">
+                                    <label class="mt-1">Fotografías de la instalación</label>
+                                </div>
+                            </div>
+                            <!-- Div donde se generan dinamicamente los inputs para las fotografías -->
+                            <div id="DivDocumentacion">
+                                <div class="form-group">
+                                    <label>Foto vehículo</label>
+                                    <input type="file" class="filestyle" data-buttonname="btn-secondary" id="filestyle-0" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);"/>
+                                    <div class="bootstrap-filestyle input-group">
+                                        <input type="text" class="form-control " placeholder="" disabled=""/>
+                                        <span class="group-span-filestyle input-group-append" tabindex="0">
+                                            <label for="filestyle-0" class="btn btn-secondary">
+                                                <span class="icon-span-filestyle fas fa-folder-open"></span>
+                                                <span class="buttonText">Subir archivo</span>
+                                            </label>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -204,4 +223,3 @@
     <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_RevisionGarantia.js?v=20210116115525"></script>
 </body>
 </html>
-
