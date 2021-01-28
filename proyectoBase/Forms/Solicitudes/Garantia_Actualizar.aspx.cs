@@ -13,104 +13,99 @@ using proyectoBase.Models.ViewModel;
 
 public partial class Garantia_Actualizar : System.Web.UI.Page
 {
-    private string pcIDApp = "";
-    private string pcIDSesion = "";
+    public string pcIDApp = "";
+    public string pcIDSesion = "";
     public string pcIDUsuario = "";
-    private string pcIDGarantia = "";
-    private string pcIDSolicitud = "";
+    public string pcIDGarantia = "";
+    public string pcIDSolicitud = "";
     public bool EsDigitadoManualmente;
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
     public List<SeccionGarantia_ViewModel> Documentos_Secciones_Garantia;
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        var type = Request.QueryString["type"];
-
-        /* Captura de parámetros encriptados */
-        if (!IsPostBack && type == null)
+        try
         {
-            var lcURL = Request.Url.ToString();
-            var liParamStart = lcURL.IndexOf("?");
+            var type = Request.QueryString["type"];
 
-            Documentos_Secciones_Garantia = new List<SeccionGarantia_ViewModel>();
-
-            string lcParametros;
-
-            if (liParamStart > 0)
+            if (!IsPostBack && type == null)
             {
-                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
+                var lcURL = Request.Url.ToString();
+                var liParamStart = lcURL.IndexOf("?");
+                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
+
+                Documentos_Secciones_Garantia = new List<SeccionGarantia_ViewModel>();
+
+                if (lcParametros != string.Empty)
+                {
+                    var pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                    var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
+                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                    pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
+                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    lblNoSolicitud.InnerText = pcIDSolicitud != "0" ? ("Solicitud de crédito No. " + pcIDSolicitud) : "Sin solicitud de crédito";
+
+                    HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
+                    HttpContext.Current.Session["ListaDocumentosGarantia_Actualizar"] = null;
+                    Session.Timeout = 10080;
+                }
+                LlenarListas();
             }
-            else
+
+            /* Guardar documentos de la solicitud */
+            if (type != null || Request.HttpMethod == "POST")
             {
-                lcParametros = string.Empty;
+                Session["tipoDoc"] = Convert.ToInt32(Request.QueryString["doc"]);
+                var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
+
+                var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
+                    { "limit", 1 },
+                    { "title", "auto" },
+                    { "uploadDir", uploadDir },
+                    { "extensions", new string[] { "jpg", "png", "jpeg"} },
+                    { "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
+                    { "fileMaxSize", 20 }, /* Peso máximo por archivo */
+                });
+
+                switch (type)
+                {
+                    case "upload": /* Guardar achivo en carpeta temporal y guardar la informacion del mismo en una variable de sesion */
+
+                        var data = fileUploader.Upload();
+
+                        if (data["files"].Count == 1)
+                            data["files"][0].Remove("file");
+                        Response.Write(JsonConvert.SerializeObject(data));
+
+                        /* Al subirse los archivos se guardan en este objeto de sesion general del helper fileuploader */
+                        var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
+
+                        /* Guardar listado de documentos en una session propia de esta pantalla */
+                        Session["ListaDocumentosGarantia_Actualizar"] = list;
+
+                        break;
+
+                    case "remove":
+                        string file = Request.Form["file"];
+
+                        if (file != null)
+                        {
+                            file = FileUploader.FullDirectory(uploadDir) + file;
+                            if (File.Exists(file))
+                                File.Delete(file);
+                        }
+                        break;
+                }
+                Response.End();
             }
-
-            if (lcParametros != string.Empty)
-            {
-                var pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-                var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-
-                pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
-                pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                lblNoSolicitud.InnerText = pcIDSolicitud != "0" ? ("Solicitud de crédito No. " + pcIDSolicitud) : "Sin solicitud de crédito";
-
-                HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
-                HttpContext.Current.Session["ListaDocumentosGarantia_Actualizar"] = null;
-                Session.Timeout = 10080;
-            }
-            LlenarListas();
         }
-
-        /* Guardar documentos de la solicitud */
-        if (type != null || Request.HttpMethod == "POST")
+        catch (Exception ex)
         {
-            Session["tipoDoc"] = Convert.ToInt32(Request.QueryString["doc"]);
-            var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
-
-            var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-{ "limit", 1 },
-{ "title", "auto" },
-{ "uploadDir", uploadDir },
-{ "extensions", new string[] { "jpg", "png", "jpeg"} },
-{ "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
-{ "fileMaxSize", 20 }, //peso máximo por archivo
-});
-
-            switch (type)
-            {
-                case "upload":
-                    /* Proceso de carga */
-                    var data = fileUploader.Upload();
-
-                    /* Resultado */
-                    if (data["files"].Count == 1)
-                        data["files"][0].Remove("file");
-                    Response.Write(JsonConvert.SerializeObject(data));
-
-                    /* Al subirse los archivos se guardan en este objeto de sesion general del helper fileuploader */
-                    var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
-
-                    /* Guardar listado de documentos en una session propia de esta pantalla */
-                    Session["ListaDocumentosGarantia_Actualizar"] = list;
-
-                    break;
-
-                case "remove":
-                    string file = Request.Form["file"];
-
-                    if (file != null)
-                    {
-                        file = FileUploader.FullDirectory(uploadDir) + file;
-                        if (File.Exists(file))
-                            File.Delete(file);
-                    }
-                    break;
-            }
-            Response.End();
+            ex.Message.ToString();
         }
     }
 
@@ -196,12 +191,10 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                             txtNumeroPrestamo.Text = sqlResultado["fcPrestamo"].ToString();
                             txtComentario.InnerText = sqlResultado["fcComentario"].ToString();
                             EsDigitadoManualmente = (bool)sqlResultado["fbDigitadoManualmente"];
-
                             txtIdentidadPropietario.Text = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
                             txtNombrePropietario.Text = sqlResultado["fcNombrePropietarioGarantia"].ToString();
                             idEstadoCivilPropietario = sqlResultado["fiIDEstadoCivilPropietarioGarantia"].ToString();
                             idNacionalidadPropietario = sqlResultado["fiIDNacionalidadPropietarioGarantia"].ToString();
-
                             txtIdentidadVendedor.Text = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
                             txtNombreVendedor.Text = sqlResultado["fcNombreVendedorGarantia"].ToString();
                             idEstadoCivilVendedor = sqlResultado["fiIDEstadoCivilVendedorGarantia"].ToString();
@@ -349,8 +342,8 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                                     }
                                     return resultado;
                                 }
-                            } // sqlResultado.Read()
-                        } // sqlComando.ExecuteReader()
+                            } // while sqlResultado.Read()
+                        } // sqlResultado
                     } // using sqlComando
 
                     /* Lista de documentos que se va ingresar en la base de datos y se va mover al nuevo directorio */
@@ -364,22 +357,22 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
 
                         if (listaDocumentos != null)
                         {
-                            string NombreCarpetaDocumentos = "Solicitud" + pcIDSolicitud;
-                            string NuevoNombreDocumento = "";
+                            string nombreCarpetaDocumentos = "Solicitud" + pcIDSolicitud;
+                            string nuevoNombreDocumento = "";
 
                             foreach (SolicitudesDocumentosViewModel file in listaDocumentos)
                             {
                                 if (File.Exists(file.fcRutaArchivo + @"\" + file.NombreAntiguo)) /* si el archivo existe, que se agregue a la lista */
                                 {
-                                    NuevoNombreDocumento = GenerarNombreDocumento(pcIDSolicitud, garantia.VIN);
+                                    nuevoNombreDocumento = GenerarNombreDocumento(pcIDSolicitud, garantia.VIN);
 
                                     garantiaDocumentos.Add(new SolicitudesDocumentosViewModel()
                                     {
-                                        fcNombreArchivo = NuevoNombreDocumento,
+                                        fcNombreArchivo = nuevoNombreDocumento,
                                         NombreAntiguo = file.NombreAntiguo,
                                         fcTipoArchivo = file.fcTipoArchivo,
-                                        fcRutaArchivo = file.fcRutaArchivo.Replace("Temp", "") + NombreCarpetaDocumentos,
-                                        URLArchivo = "/Documentos/Solicitudes/" + NombreCarpetaDocumentos + "/" + NuevoNombreDocumento + ".png",
+                                        fcRutaArchivo = file.fcRutaArchivo.Replace("Temp", "") + nombreCarpetaDocumentos,
+                                        URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDocumentos + "/" + nuevoNombreDocumento + ".png",
                                         fiTipoDocumento = file.fiTipoDocumento
                                     });
                                 } // if File.Exists
@@ -410,9 +403,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                                 while (sqlResultado.Read())
                                 {
                                     if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                                    {
                                         contadorErrores++;
-                                    }
                                 }
                             }
                         }
@@ -463,22 +454,22 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
             if (ListaDocumentos != null)
             {
                 /* Crear el nuevo directorio para los documentos de la garantia */
-                string DirectorioTemporal = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
-                string NombreCarpetaDocumentos = "Solicitud" + idSolicitud;
-                string DirectorioDocumentos = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + NombreCarpetaDocumentos + "\\";
-                bool CarpetaExistente = Directory.Exists(DirectorioDocumentos);
+                var directorioTemporal = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
+                var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
+                var directorioDocumentos = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentos + "\\";
+                bool carpetaExistente = Directory.Exists(directorioDocumentos);
 
-                if (!CarpetaExistente)
-                    Directory.CreateDirectory(DirectorioDocumentos);
+                if (!carpetaExistente)
+                    Directory.CreateDirectory(directorioDocumentos);
 
                 ListaDocumentos.ForEach(documento =>
                 {
-                    string ViejoDirectorio = DirectorioTemporal + documento.NombreAntiguo;
-                    string NuevoNombreDocumento = documento.fcNombreArchivo;
-                    string NuevoDirectorio = DirectorioDocumentos + NuevoNombreDocumento + ".png";
+                    string viejoDirectorio = directorioTemporal + documento.NombreAntiguo;
+                    string nuevoNombreDocumento = documento.fcNombreArchivo;
+                    string nuevoDirectorio = directorioDocumentos + nuevoNombreDocumento + ".png";
 
-                    if (File.Exists(ViejoDirectorio))
-                        File.Move(ViejoDirectorio, NuevoDirectorio);
+                    if (File.Exists(viejoDirectorio))
+                        File.Move(viejoDirectorio, nuevoDirectorio);
                 });
             }
             result = true;
@@ -496,22 +487,13 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var lcParametros = string.Empty;
             var pcEncriptado = string.Empty;
             var liParamStart = Url.IndexOf("?");
-
-            if (liParamStart > 0)
-            {
-                lcParametros = Url.Substring(liParamStart, Url.Length - liParamStart);
-            }
-            else
-            {
-                lcParametros = string.Empty;
-            }
+            var lcParametros = liParamStart > 0 ? Url.Substring(liParamStart, Url.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = Url.Substring((liParamStart + 1), Url.Length - (liParamStart + 1));
+                pcEncriptado = Url.Substring(liParamStart + 1, Url.Length - (liParamStart + 1));
 
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);

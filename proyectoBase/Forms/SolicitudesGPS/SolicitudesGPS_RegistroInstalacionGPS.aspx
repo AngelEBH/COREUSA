@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesGPS_RegistroInstalacionGPS.aspx.cs" Inherits="SolicitudesGPS_RegistroInstalacionGPS" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesGPS_RegistroInstalacionGPS.aspx.cs" Inherits="SolicitudesGPS_RegistroInstalacionGPS" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -11,7 +11,7 @@
     <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />    
+    <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
     <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
     <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
     <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
@@ -74,7 +74,7 @@
     </style>
 </head>
 <body>
-    <form id="frmPrincipal" runat="server">
+    <form id="frmPrincipal" runat="server" data-parsley-excluded="[disabled]">
         <div class="card m-0">
             <div class="card-header pb-1 pt-1">
                 <h6>Instalación de GPS</h6>
@@ -112,7 +112,7 @@
                                         <div class="tab-pane active" id="tab_Informacion_GPS" role="tabpanel">
                                             <div class="row mb-0">
                                                 <div class="col-12">
-                                                    <h6>Información del GPS asingnado</h6>
+                                                    <h6>Información del GPS asignado</h6>
                                                     <div class="form-group row">
                                                         <div class="col-sm-4 col-12">
                                                             <label class="col-form-label">IMEI</label>
@@ -185,43 +185,30 @@
                         </div>
                         <!-- Fotografías de la instalación -->
                         <div id="step-2" class="form-section">
-                            <div class="form-group row m-0 border-bottom border-gray mb-3">
-                                <div class="col-12 p-0">
-                                    <label class="mt-1">Detalles de la instalación</label>
-                                </div>
-                            </div>
 
-                            <div class="form-group row">
-                                <div class="col-12">
-                                    <label class="col-form-label">Ubicación de la instalación</label>
-                                    <textarea id="txtUbicacion" runat="server" class="form-control form-control-sm"></textarea>
-                                </div>
-                                <div class="col-12">
-                                    <label class="col-form-label">Comentarios de la instalación</label>
-                                    <textarea id="txtComentariosDeLaInstalacion" runat="server" class="form-control form-control-sm"></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group row m-0 border-bottom border-gray mb-3">
+                            <div class="form-group row m-0 border-bottom border-gray mb-2">
                                 <div class="col-12 p-0">
-                                    <label class="mt-1">Fotografías de la instalación</label>
+                                    <label class="mt-1 font-weight-bold">Fotografías de la instalación</label>
                                 </div>
                             </div>
 
                             <!-- Div donde se generan dinamicamente los inputs para las fotografías -->
-                            <div id="DivDocumentacion">
-                                <%--<div class="form-group">
-                                    <label>Foto vehículo</label>
-                                    <input type="file" class="filestyle" data-buttonname="btn-secondary" id="filestyle-0" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);"/>
-                                    <div class="bootstrap-filestyle input-group">
-                                        <input type="text" class="form-control " placeholder="" disabled=""/>
-                                        <span class="group-span-filestyle input-group-append" tabindex="0">
-                                            <label for="filestyle-0" class="btn btn-secondary">
-                                                <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                                <span class="buttonText">Subir archivo</span>
-                                            </label>
-                                        </span>
-                                    </div>
-                                </div>--%>
+                            <div class="mb-3" id="DivDocumentacion"></div>
+
+                            <div class="form-group row m-0 border-bottom border-gray mb-2">
+                                <div class="col-12 p-0">
+                                    <label class="mt-1 font-weight-bold">Detalles de la instalación</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label class="col-form-label">Ubicación de la instalación</label>
+                                    <textarea id="txtUbicacion" runat="server" class="form-control form-control-sm" data-parsley-maxlength="300" rows="3"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="col-form-label">Observaciones de la instalación</label>
+                                    <textarea id="txtComentariosDeLaInstalacion" runat="server" class="form-control form-control-sm" data-parsley-maxlength="300" rows="3"></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -238,6 +225,6 @@
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
-    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_RegistroInstalacionGPS.js?v=20210116115525"></script>
+    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_RegistroInstalacionGPS.js?v=20210128030852"></script>
 </body>
 </html>

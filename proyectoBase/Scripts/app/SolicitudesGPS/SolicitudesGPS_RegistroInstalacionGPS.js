@@ -13,7 +13,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarInstalacionGPS"></butt
 
             $.ajax({
                 type: "POST",
-                url: 'SolicitudesGPS_RegistroInstalacionGPS.aspx/CargarListaFotografiasRequeridas',
+                url: 'SolicitudesGPS_RegistroInstalacionGPS.aspx/RegistrarInstalacionGPS',
                 data: JSON.stringify({ instalacionGPS: instalacionGPS, dataCrypt: window.location.href }),
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -79,23 +79,6 @@ $(document).ready(function () {
         $("#next-btn").removeClass('disabled');
     });
 
-    $("#smartwizard").on("leaveStep", function (e, anchorObject, stepNumber, stepDirection) {
-
-        if (stepDirection == 'forward') {
-
-            if (stepNumber == 0) {
-
-                var state = ($('#frmPrincipal').parsley().isValid()) ? true : false;
-
-                if (state == false) {
-
-                    $('#frmPrincipal').parsley().validate();
-                }
-                return state;
-            }
-        }
-    });
-
     CargarDocumentosRequeridos();
 });
 
@@ -120,7 +103,7 @@ function CargarDocumentosRequeridos() {
                 cancel: 'Cancelar'
             }
 
-            var formatoInputFile = '<div class="form-group">' +
+            var formatoInputFile = '<div class="form-group mb-0">' +
                 '<input type="file" class="filestyle" data-buttonname="btn-secondary" id="filestyle-0" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);"/>' +
                 '<div class="bootstrap-filestyle input-group">' +
                 '<input type="text" class="form-control " placeholder="" disabled=""/>' +
@@ -140,9 +123,9 @@ function CargarDocumentosRequeridos() {
                 var idInput = 'Documento' + iter.IdFotografia;
 
                 divDocumentacion.append(
-                    '<form action="SolicitudesGPS_RegistroInstalacionGPS.aspx?type=upload&idfotografia=' + iter.IdFotografia + ' method="post" enctype="multipart/form-data">' +                    
-                    '<label class="font-weight-bold">' + iter.DescripcionFotografia + '</label>' +
-                    '<input type="file" class="filestyle" data-buttonname="btn-secondary" id="' + idInput + '" name="files" data-tipo="' + iter.IdFotografia + '"/>' +                    
+                    '<form action="SolicitudesGPS_RegistroInstalacionGPS.aspx?type=upload&idfotografia=' + iter.IdFotografia + ' method="post" enctype="multipart/form-data">' +
+                    '<label class="mb-1 mt-2">' + iter.DescripcionFotografia + '</label>' +
+                    '<input type="file" class="filestyle" data-buttonname="btn-secondary" id="' + idInput + '" name="files" data-tipo="' + iter.IdFotografia + '"/>' +
                     '</form>');
 
                 $('#' + idInput + '').fileuploader({
@@ -236,13 +219,6 @@ function CargarDocumentosRequeridos() {
     }); /* Termina Ajax */
 }
 
-function MensajeExito(mensaje) {
-    iziToast.success({
-        title: 'Exito',
-        message: mensaje
-    });
-}
-
 function MensajeError(mensaje) {
     iziToast.error({
         title: 'Error',
@@ -250,19 +226,12 @@ function MensajeError(mensaje) {
     });
 }
 
-function MensajeInformacion(mensaje) {
-    iziToast.info({
-        title: 'Info',
-        message: mensaje
-    });
-}
-
 function MostrarLoader() {
 
-    $("#Loader").css('display', '');
+    $("#divLoader").css('display', '');
 }
 
 function OcultarLoader() {
 
-    $("#Loader").css('display', 'none');
+    $("#divLoader").css('display', 'none');
 }

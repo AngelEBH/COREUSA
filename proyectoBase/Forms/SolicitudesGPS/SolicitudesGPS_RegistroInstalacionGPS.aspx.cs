@@ -148,6 +148,8 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
                             txtAnio.Text = sqlResultado["fiAnio"].ToString();
                             txtColor.Text = sqlResultado["fcColor"].ToString();
                             txtMatricula.Text = sqlResultado["fcMatricula"].ToString();
+                            txtUbicacion.InnerText = sqlResultado["fcDescripcionUbicacion"].ToString();
+                            txtComentariosDeLaInstalacion.InnerText = sqlResultado["fcObservacionesInstalacion"].ToString();
                         }
                     } // using sqlResultado
                 } // using sqlComando
@@ -264,6 +266,14 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
                             /* lista de fotografias adjuntados por el usuario */
                             var listaDeFotografias = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaFotografiasInstalacion"];
 
+                            if (listaDeFotografias.Count < 2)
+                            {
+                                resultado.ResultadoExitoso = false;
+                                resultado.MensajeResultado = "La fotografía del vehículo y del GPS es requerida.";
+                                resultado.MensajeDebug = "docs < 2";
+                                return resultado;
+                            }
+
                             if (listaDeFotografias != null)
                             {
                                 var nombreCarpetaDocumentos = "Solicitud" + pcIDSolicitudCredito;
@@ -288,6 +298,13 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
                                 } // foreach lista fotografias
                             } // if lista fotografias != null
                         } // if Session["ListaFotografiasInstalacion"] != null
+                        else
+                        {
+                            resultado.ResultadoExitoso = false;
+                            resultado.MensajeResultado = "Debes adjuntar minimo la fotografía del vehículo y del GPS es requerida.";
+                            resultado.MensajeDebug = "docs null";
+                            return resultado;
+                        }
 
                         /* Guardar los fotografias de la instalacion de GPS en la base de datos*/
                         int contadorErrores = 0;
