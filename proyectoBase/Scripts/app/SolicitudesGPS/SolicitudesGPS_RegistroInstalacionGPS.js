@@ -1,183 +1,239 @@
 ﻿
-InicializarWizard();
+var btnFinalizar = $('<button type="button" id="btnGuardarInstalacionGPS"></button>').text('Finalizar').addClass('btn btn-info').css('display', 'none')
+    .on('click', function () {
 
-$(function () {
+        var modelState = $('#frmPrincipal').parsley().isValid();
+
+        if (modelState) {
+
+            var instalacionGPS = {
+                DescripcionUbicacion: $("#txtUbicacion").val(),
+                Comentarios: $("#txtComentariosDeLaInstalacion").val()
+            }
+
+            $.ajax({
+                type: "POST",
+                url: 'SolicitudesGPS_RegistroInstalacionGPS.aspx/CargarListaFotografiasRequeridas',
+                data: JSON.stringify({ instalacionGPS: instalacionGPS, dataCrypt: window.location.href }),
+                contentType: 'application/json; charset=utf-8',
+                error: function (xhr, ajaxOptions, thrownError) {
+                    MensajeError('No se pudo conectar al servidor, contacte al administrador');
+                },
+                success: function (data) {
+
+                    let resultado = data.d;
+
+                    if (resultado.ResultadoExitoso == true) {
+
+                        window.location = "SolicitudesGPS_Listado.aspx?" + window.location.href.split('?')[1];
+                    }
+                    else {
+                        MensajeError(resultado.MensajeResultado);
+                        console.log(resultado.MensajeDebug);
+                    }
+                }
+            });
+        }
+        else
+            $('#frmPrincipal').parsley().validate();
+    });
+
+/* Inicalizar el Wizard */
+$('#smartwizard').smartWizard({
+    selected: 0,
+    theme: 'default',
+    transitionEffect: 'fade',
+    showStepURLhash: false,
+    autoAdjustHeight: false,
+    toolbarSettings: {
+        toolbarPosition: 'both',
+        toolbarButtonPosition: 'end',
+        toolbarExtraButtons: [btnFinalizar]
+    },
+    lang: {
+        next: 'Siguiente',
+        previous: 'Anterior'
+    }
+});
+
+$(document).ready(function () {
 
     $("#smartwizard").on("showStep", function (e, anchorObject, stepNumber, stepDirection, stepPosition) {
 
-        if (stepPosition === 'first') { /* Si es el primer paso, deshabilitar el boton "anterior" */
+        /* Si es el primer paso, deshabilitar el boton "anterior" */
+        if (stepPosition === 'first') {
             $("#prev-btn").addClass('disabled').css('display', 'none');
         }
         else if (stepPosition === 'final') { /* Si es el ultimo paso, deshabilitar el boton siguiente */
             $("#next-btn").addClass('disabled');
-            $("#btnGuardarRevision").css('display', '');
+            $("#btnGuardarInstalacionGPS").css('display', '');
         }
         else { /* Si no es ninguna de las anteriores, habilitar todos los botones */
             $("#prev-btn").removeClass('disabled');
             $("#next-btn").removeClass('disabled');
-            $("#btnGuardarRevision").css('display', 'none');
+            $("#btnGuardarInstalacionGPS").css('display', 'none');
         }
     });
 
     $("#smartwizard").on("endReset", function () {
         $("#next-btn").removeClass('disabled');
     });
-});
 
-var btnResultadoRevision = '';
-var idRevision = 0;
+    $("#smartwizard").on("leaveStep", function (e, anchorObject, stepNumber, stepDirection) {
 
-$(document).on('click', 'button#btnResultadoRevision', function () {
+        if (stepDirection == 'forward') {
 
-    btnResultadoRevision = $(this);
-    idRevision = btnResultadoRevision.data('id');
+            if (stepNumber == 0) {
 
-    $("#lblRevision").text(btnResultadoRevision.data('revision'));
-    $("#lblDescripcionRevision").text(btnResultadoRevision.data('descripcion'));
-    $("#txtObservacionesResultadoRevision").val(btnResultadoRevision.data('observaciones'));
-    $("#modalActualizarRevision").modal();
-});
+                var state = ($('#frmPrincipal').parsley().isValid()) ? true : false;
 
-$("#btnRechazarRevisionConfirmar").click(function () {
+                if (state == false) {
 
-    if ($('#txtObservacionesResultadoRevision').parsley().isValid()) {
-
-        ActualizarResultadoRevision(idRevision, 2, $("#txtObservacionesResultadoRevision").val());
-        $('#todo-indicator-revision-' + idRevision + ',#badge-revision-' + idRevision).removeClass('bg-warning').removeClass('bg-success').addClass('bg-danger');
-        $('#badge-revision-' + idRevision).text('Rechazado');
-        btnResultadoRevision.data('observaciones', $("#txtObservacionesResultadoRevision").val());
-
-        $("#modalActualizarRevision").modal('hide');
-    }
-    else
-        $('#txtObservacionesResultadoRevision').parsley().validate({ force: true });
-});
-
-$("#btnAprobarRevisionConfirmar").click(function () {
-
-    if ($('#txtObservacionesResultadoRevision').parsley().isValid()) {
-
-        ActualizarResultadoRevision(idRevision, 1, $("#txtObservacionesResultadoRevision").val());
-        $('#todo-indicator-revision-' + idRevision + ',#badge-revision-' + idRevision).removeClass('bg-warning').removeClass('bg-danger').addClass('bg-success');
-        $('#badge-revision-' + idRevision).text('Aprobado');
-        btnResultadoRevision.data('observaciones', $("#txtObservacionesResultadoRevision").val());
-
-        $("#modalActualizarRevision").modal('hide');
-    }
-    else
-        $('#txtObservacionesResultadoRevision').parsley().validate({ force: true });
-});
-
-
-distanciaRecorridaGarantia = '';
-unidadDeDistanciaGarantia = '';
-$("#btnActualizarMillaje").click(function () {
-
-    $("#txtDistanciaRecorrida").val(distanciaRecorridaGarantia);
-    $("#ddlUnidadDeMedida").val(unidadDeDistanciaGarantia);
-    $("#modalActualizarMillaje").modal();
-});
-
-$("#btnActualizarMillajeConfirmar").click(function () {
-
-    if ($('#frmPrincipal').parsley().isValid({ group: 'actualizarMillaje' })) {
-
-        distanciaRecorridaGarantia = $("#txtDistanciaRecorrida").val().replace(/,/g, '');
-        unidadDeDistanciaGarantia = $("#ddlUnidadDeMedida :selected").val();
-
-        $('#todo-indicator-actualizar-millaje,#bg-actualizar-millaje').removeClass('bg-danger').removeClass('bg-warning').addClass('bg-success');
-        $('#bg-actualizar-millaje').text('Actualizado');
-        $("#modalActualizarMillaje").modal('hide');
-    }
-    else
-        $('#frmPrincipal').parsley().validate({ group: 'actualizarMillaje', force: true });
-});
-
-$("#btnConfirmarYEnviar").click(function () {
-
-    var modelStateIsValid = true;
-
-    if (!ValidarTodasLasRevisiones()) {
-        MensajeError('Hay revisiones pendientes. Debe completarlas todas.');
-        modelStateIsValid = false;
-    }
-
-    if (distanciaRecorridaGarantia == '' || unidadDeDistanciaGarantia == '') {
-        MensajeError('El millaje todavía no ha sido actualizado.');
-        modelStateIsValid = false;
-    }
-
-    if (modelStateIsValid) {
-
-        $.ajax({
-            type: "POST",
-            url: 'SolicitudesGPS_RevisionGarantia.aspx/FinalizarRevisionGarantia',
-            data: JSON.stringify({ revisionesGarantia: REVISIONES_GARANTIA, recorrido: distanciaRecorridaGarantia, unidadDeDistancia: unidadDeDistanciaGarantia, dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo finalizar la revisión de garanía, contacte al administrador');
-            },
-            beforeSend: function () {
-                MostrarLoader();
-            },
-            success: function (data) {
-
-                if (data.d.ResultadoExitoso == true)
-                    window.location = "SolicitudesGPS_Listado.aspx?" + window.location.href.split('?')[1];
-                else
-                    MensajeError(data.d.MensajeResultado);
-            },
-            complete: function () {
-                OcultarLoader();
+                    $('#frmPrincipal').parsley().validate();
+                }
+                return state;
             }
-        });
-    }
-});
-
-function InicializarWizard() {
-
-    $('#smartwizard').smartWizard({
-        selected: 0,
-        theme: 'default',
-        transitionEffect: 'fade',
-        showStepURLhash: false,
-        autoAdjustHeight: false,
-        toolbarSettings: {
-            toolbarPosition: 'both',
-            toolbarButtonPosition: 'end'
-        },
-        lang: {
-            next: 'Siguiente',
-            previous: 'Anterior'
         }
     });
-}
 
-function ActualizarResultadoRevision(idRevision, idEstadoRevision, observaciones) {
+    CargarDocumentosRequeridos();
+});
 
-    let estadoRevision = idEstadoRevision == 1 ? 'Aprobado' : 'Rechazado';
+function CargarDocumentosRequeridos() {
 
-    for (var i = 0; i < REVISIONES_GARANTIA.length; i++) {
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesGPS_RegistroInstalacionGPS.aspx/CargarListaFotografiasRequeridas",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo cargar el listado de documentos requeridos, contacte al administrador');
+        },
+        success: function (data) {
 
-        if (REVISIONES_GARANTIA[i].IdRevision == idRevision) {
+            var LenguajeEspanol = {
+                feedback: 'Arrastra y suelta los archivos aqui',
+                feedback2: 'Arrastra y suelta los archivos aqui',
+                drop: 'Arrastra y suelta los archivos aqui',
+                button: 'Buscar archivos',
+                confirm: 'Confirmar',
+                cancel: 'Cancelar'
+            }
 
-            REVISIONES_GARANTIA[i].IdEstadoRevision = idEstadoRevision;
-            REVISIONES_GARANTIA[i].EstadoRevision = estadoRevision;
-            REVISIONES_GARANTIA[i].Observaciones = observaciones;
-            break;
+            var formatoInputFile = '<div class="form-group">' +
+                '<input type="file" class="filestyle" data-buttonname="btn-secondary" id="filestyle-0" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);"/>' +
+                '<div class="bootstrap-filestyle input-group">' +
+                '<input type="text" class="form-control " placeholder="" disabled=""/>' +
+                '<span class="group-span-filestyle input-group-append" tabindex="0">' +
+                '<label for="filestyle-0" class="btn btn-secondary">' +
+                '<span class="icon-span-filestyle fas fa-folder-open"></span>' +
+                '<span class="buttonText">Subir archivo</span>' +
+                '</label>' +
+                '</span>' +
+                '</div>' +
+                '</div>';
+
+            var divDocumentacion = $("#DivDocumentacion");
+
+            $.each(data.d, function (i, iter) {
+
+                var idInput = 'Documento' + iter.IdFotografia;
+
+                divDocumentacion.append(
+                    '<form action="SolicitudesGPS_RegistroInstalacionGPS.aspx?type=upload&idfotografia=' + iter.IdFotografia + ' method="post" enctype="multipart/form-data">' +                    
+                    '<label>' + iter.DescripcionFotografia + '</label>' +
+                    '<input type="file" class="filestyle" data-buttonname="btn-secondary" id="' + idInput + '" name="files" data-tipo="' + iter.IdFotografia + '"/>' +                    
+                    '</form>');
+
+                $('#' + idInput + '').fileuploader({
+                    inputNameBrackets: false,
+                    changeInput: formatoInputFile,
+                    theme: 'dragdrop',
+                    limit: 1, // Limite de archivos a subir
+                    maxSize: 200, // Peso máximo de todos los archivos seleccionado en megas (MB)
+                    fileMaxSize: 20, // Peso máximo de un archivo
+                    extensions: ['jpg', 'png', 'jpeg'],// Extensiones/formatos permitidos
+                    upload: {
+                        url: 'SolicitudesGPS_RegistroInstalacionGPS.aspx?type=upload&idfotografia=' + iter.IdFotografia,
+                        data: null,
+                        type: 'POST',
+                        enctype: 'multipart/form-data',
+                        start: true,
+                        synchron: true,
+                        beforeSend: null,
+                        onSuccess: function (result, item) {
+                            var data = {};
+                            try {
+                                data = JSON.parse(result);
+                            } catch (e) {
+                                data.hasWarnings = true;
+                            }
+
+                            /* Validar exito */
+                            if (data.isSuccess && data.files[0]) {
+                                item.name = data.files[0].name;
+                                item.html.find('.column-title > div:first-child').text(data.files[0].name).attr('title', data.files[0].name);
+                            }
+
+                            /* Validar si se produjo un error */
+                            if (data.hasWarnings) {
+                                for (var warning in data.warnings) {
+                                    alert(data.warnings);
+                                }
+                                item.html.removeClass('upload-successful').addClass('upload-failed');
+                                return this.onError ? this.onError(item) : null;
+                            }
+
+                            item.html.find('.fileuploader-action-remove').addClass('fileuploader-action-success');
+                            setTimeout(function () {
+                                item.html.find('.progress-bar2').fadeOut(400);
+                            }, 400);
+                        },
+                        onError: function (item) {
+                            var progressBar = item.html.find('.progress-bar2');
+
+                            if (progressBar.length) {
+                                progressBar.find('span').html(0 + "%");
+                                progressBar.find('.fileuploader-progressbar .bar').width(0 + "%");
+                                item.html.find('.progress-bar2').fadeOut(400);
+                            }
+
+                            item.upload.status != 'cancelled' && item.html.find('.fileuploader-action-retry').length == 0 ? item.html.find('.column-actions').prepend(
+                                '<button type="button" class="fileuploader-action fileuploader-action-retry" title="Retry"><i class="fileuploader-icon-retry"></i></button>'
+                            ) : null;
+                        },
+                        onProgress: function (data, item) {
+                            var progressBar = item.html.find('.progress-bar2');
+
+                            if (progressBar.length > 0) {
+                                progressBar.show();
+                                progressBar.find('span').html(data.percentage + "%");
+                                progressBar.find('.fileuploader-progressbar .bar').width(data.percentage + "%");
+                            }
+                        },
+                        onComplete: null,
+                    },
+                    onRemove: function (item) {
+                        $.post('SolicitudesGPS_RegistroInstalacionGPS.aspx?type=remove', { file: item.name });
+                    },
+                    dialogs: {
+                        alert: function (text) {
+                            return iziToast.warning({
+                                title: 'Atencion',
+                                message: text
+                            });
+                        },
+                        confirm: function (text, callback) {
+                            confirm(text) ? callback() : null;
+                        }
+                    },
+                    captions: $.extend(true, {}, $.fn.fileuploader.languages['es'], LenguajeEspanol)
+
+                }); /* Termina fileUploader*/
+
+            }); /* Termina .Each*/
         }
-    }
-}
-
-function ValidarTodasLasRevisiones() {
-
-    /* Validar que a todas las revisiones se les haya determinado un resultado */
-    for (var i = 0; i < REVISIONES_GARANTIA.length; i++) {
-
-        if (REVISIONES_GARANTIA[i].IdEstadoRevision == 0)
-            return false;
-    }
-    return true;
+    }); /* Termina Ajax */
 }
 
 function MensajeExito(mensaje) {
@@ -194,10 +250,19 @@ function MensajeError(mensaje) {
     });
 }
 
+function MensajeInformacion(mensaje) {
+    iziToast.info({
+        title: 'Info',
+        message: mensaje
+    });
+}
+
 function MostrarLoader() {
-    $("#divLoader").css('display','');
+
+    $("#Loader").css('display', '');
 }
 
 function OcultarLoader() {
-    $("#divLoader").css('display', 'none');
+
+    $("#Loader").css('display', 'none');
 }

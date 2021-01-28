@@ -1153,6 +1153,7 @@
     <Content Include="Scripts\app\CoreMovil\BandejaMisSolicitudes.js" />
     <Content Include="Scripts\app\CoreMovil\Clientes_BandejaPrecalificados.js" />
     <Content Include="Scripts\app\CoreMovil\CotizadorMovil.js" />
+    <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_RegistroInstalacionGPS.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_Listado.js" />
     <Content Include="Scripts\app\solicitudes\Garantia_Actualizar.js" />

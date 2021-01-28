@@ -6,14 +6,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
-    <title>Revisión de garantía</title>
+    <title>Instalación de GPS</title>
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
-    <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />    
+    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <style>
         html {
             background-color: rgb(255,255,255) !important;
@@ -72,7 +73,7 @@
         }
     </style>
 </head>
-<body class="EstiloBody">
+<body>
     <form id="frmPrincipal" runat="server">
         <div class="card m-0">
             <div class="card-header pb-1 pt-1">
@@ -186,12 +187,30 @@
                         <div id="step-2" class="form-section">
                             <div class="form-group row m-0 border-bottom border-gray mb-3">
                                 <div class="col-12 p-0">
+                                    <label class="mt-1">Detalles de la instalación</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label class="col-form-label">Ubicación de la instalación</label>
+                                    <textarea id="txtUbicacion" runat="server" class="form-control form-control-sm"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="col-form-label">Comentarios de la instalación</label>
+                                    <textarea id="txtComentariosDeLaInstalacion" runat="server" class="form-control form-control-sm"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group row m-0 border-bottom border-gray mb-3">
+                                <div class="col-12 p-0">
                                     <label class="mt-1">Fotografías de la instalación</label>
                                 </div>
                             </div>
+
                             <!-- Div donde se generan dinamicamente los inputs para las fotografías -->
                             <div id="DivDocumentacion">
-                                <div class="form-group">
+                                <%--<div class="form-group">
                                     <label>Foto vehículo</label>
                                     <input type="file" class="filestyle" data-buttonname="btn-secondary" id="filestyle-0" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);"/>
                                     <div class="bootstrap-filestyle input-group">
@@ -203,7 +222,7 @@
                                             </label>
                                         </span>
                                     </div>
-                                </div>
+                                </div>--%>
                             </div>
                         </div>
                     </div>
@@ -219,7 +238,7 @@
     <script src="/Scripts/plugins/steps/js/jquery.smartWizard.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
-    <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
-    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_RevisionGarantia.js?v=20210116115525"></script>
+    <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
+    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_RegistroInstalacionGPS.js?v=20210116115525"></script>
 </body>
 </html>
