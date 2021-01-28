@@ -201,7 +201,6 @@
                                     <textarea id="txtComentariosDeLaInstalacion" runat="server" class="form-control form-control-sm"></textarea>
                                 </div>
                             </div>
-
                             <div class="form-group row m-0 border-bottom border-gray mb-3">
                                 <div class="col-12 p-0">
                                     <label class="mt-1">Fotografías de la instalación</label>

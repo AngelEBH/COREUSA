@@ -141,7 +141,7 @@ function CargarDocumentosRequeridos() {
 
                 divDocumentacion.append(
                     '<form action="SolicitudesGPS_RegistroInstalacionGPS.aspx?type=upload&idfotografia=' + iter.IdFotografia + ' method="post" enctype="multipart/form-data">' +                    
-                    '<label>' + iter.DescripcionFotografia + '</label>' +
+                    '<label class="font-weight-bold">' + iter.DescripcionFotografia + '</label>' +
                     '<input type="file" class="filestyle" data-buttonname="btn-secondary" id="' + idInput + '" name="files" data-tipo="' + iter.IdFotografia + '"/>' +                    
                     '</form>');
 
