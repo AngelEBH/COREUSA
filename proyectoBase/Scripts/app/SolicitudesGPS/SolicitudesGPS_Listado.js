@@ -241,7 +241,7 @@ function CargarSolicitudesGPS() {
                                     '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> ' + (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? 'Actualizar revisiones' : 'Revisar garantía') + '</button>' +
                                     (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] && row["IdEstadoInstalacion"] != 3 ? '<button id="btnInstalarGPS" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fas fa-map-marker-alt"></i> Instalar GPS</button>' : '') +
                                     (row["IdEstadoInstalacion"] == 3 ? '<button id="btnInstalacionGPS" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fas fa-map-marker-alt"></i> Detalles instalación GPS</button>' : '') +
-                                '</div>' +
+                                    '</div>' +
                                     '</div >';
                             }
                         },
@@ -328,7 +328,7 @@ function CargarSolicitudesGPS() {
                                     '<button id="btnCompletarSolicitud" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fa fa-tasks"></i> ' + (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] ? 'Actualizar revisiones' : 'Revisar garantía') + '</button>' +
                                     (row["CantidadRevisionesCompletadas"] == row["CantidadRevisiones"] && row["IdEstadoInstalacion"] != 3 ? '<button id="btnInstalarGPS" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fas fa-map-marker-alt"></i> Instalar GPS</button>' : '') +
                                     (row["IdEstadoInstalacion"] == 3 ? '<button id="btnInstalacionGPS" data-id="' + row["IdSolicitudGPS"] + '" type="button" class="dropdown-item"><i class="fas fa-map-marker-alt"></i> Detalles instalación GPS</button>' : '') +
-                                '</div>' +
+                                    '</div>' +
                                     '</div >';
                             }
                         },

@@ -161,12 +161,7 @@ public partial class SolicitudesGPS_Listado : System.Web.UI.Page
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
 
-            var lcParametros = "usr=" + pcIDUsuario +
-            "&IDApp=" + pcIDApp +
-            "&SID=" + pcIDSesion +
-            "&IDSOL=" + idSolicitudCredito +
-            "&IDGarantia=" + idGarantia +
-            "&IDSolicitudGPS=" + idSolicitudGPS;
+            var lcParametros = "usr=" + pcIDUsuario + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion + "&IDSOL=" + idSolicitudCredito + "&IDGarantia=" + idGarantia + "&IDSolicitudGPS=" + idSolicitudGPS;
 
             resultado = DSC.Encriptar(lcParametros);
         }

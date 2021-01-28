@@ -241,6 +241,6 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_Listado.js?v=20210116095835"></script>
+    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_Listado.js?v=20210128032552"></script>
 </body>
 </html>
