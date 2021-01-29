@@ -16,6 +16,8 @@
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
@@ -48,12 +50,12 @@
     <div class="card">
         <div class="card-header">
             <div class="row">
-                <div class="col-8">
+                <div class="col-8 pr-0">
                     <h6>Garantías de solicitudes crediticias
                         <small runat="server" id="lblMensajeError" class="text-danger"></small>
                     </h6>
                 </div>
-                <div class="col-4">
+                <div class="col-4 pl-0">
                     <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar" aria-label="Buscar" />
                 </div>
             </div>
@@ -90,7 +92,7 @@
                                 <input type="text" class="form-control form-control-sm" name="max" id="max" />
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-3 align-self-end">
+                        <div class="col-lg-4 col-sm-3 align-self-end mt-2">
                             <div class="table-responsive">
                                 <div class="btn-group btn-group-toggle col-lg-12 p-0" data-toggle="buttons">
                                     <label class="btn btn-secondary active opcion">
@@ -136,7 +138,7 @@
                 <!-- Listado de solicitudes aprobadas que requieren garantías -->
                 <div class="tab-pane active" id="tab_Listado_Solicitudes_Garantias" role="tabpanel">
                     <div class="table-responsive mt-2">
-                        <table id="datatable-listado" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                        <table id="datatable-principal-garantias" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
                                     <th class="no-sort">Acciones</th>
@@ -185,14 +187,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalActualizarGarantiaLabel">Actualizar garantía | Solicitud <span id="lblIdSolicitudActualizar"></span></h5>
+                    <h6 class="modal-title mt-0" id="modalActualizarGarantiaLabel">Actualizar garantía | Solicitud <span class="lblNoSolicitudCredito"></span></h6>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
                     ¿Está seguro de actualizar la información de la garantía de esta solicitud?
                     <br />
                     <br />
-                    Cliente: <span class="font-weight-bold" id="lblNombreClienteActualizar"></span>
+                    Cliente: <span class="font-weight-bold lblNombreCliente"></span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="btnActualizarGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
@@ -210,14 +212,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalGuardarGarantiaLabel">Guardar garantía | Solicitud <span id="lblIdSolicitudGuardar"></span></h5>
+                    <h6 class="modal-title mt-0" id="modalGuardarGarantiaLabel">Guardar garantía | Solicitud <span class="lblNoSolicitudCredito"></span></h6>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
                     ¿Está seguro de guardar la información de la garantía de esta solicitud?
                     <br />
                     <br />
-                    Cliente: <span class="font-weight-bold" id="lblNombreClienteGuardar"></span>
+                    Cliente: <span class="font-weight-bold lblNombreCliente"></span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="btnGuardarGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
@@ -235,14 +237,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalDetallesGarantiaLabel">Detalles de la garantía | Solicitud <span id="lblIdSolicitudDetalles"></span></h5>
+                    <h6 class="modal-title mt-0" id="modalDetallesGarantiaLabel">Detalles de la garantía | Solicitud <span class="lblNoSolicitudCredito"></span></h6>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
                     ¿Está seguro de redirigir a los detalles de esta garantía?
                     <br />
                     <br />
-                    Cliente: <span class="font-weight-bold" id="lblNombreClienteDetalles"></span>
+                    Cliente: <span class="font-weight-bold lblNombreCliente"></span>
                 </div>
                 <div class="modal-footer pt-2 pb-2">
                     <button type="button" id="btnDetallesGarantia_Confirmar" class="btn btn-primary waves-effect waves-light">
@@ -260,7 +262,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalDetallesGarantia_SinSolicitudLabel">Detalles de la garantía</h5>
+                    <h6 class="modal-title mt-0" id="modalDetallesGarantia_SinSolicitudLabel">Detalles de la garantía</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
@@ -282,7 +284,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalActualizarGarantia_SinSolicitudLabel">Actualizar garantía</h5>
+                    <h6 class="modal-title mt-0" id="modalActualizarGarantia_SinSolicitudLabel">Actualizar garantía</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
@@ -304,14 +306,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalImprimirDocumentacionLabel">Imprimir documentación | Solicitud <span id="lblIdSolicitudImprimirDocumentacion"></span></h5>
+                    <h6 class="modal-title mt-0" id="modalImprimirDocumentacionLabel">Imprimir documentación | Solicitud <span class="lblNoSolicitudCredito"></span></h6>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
                     ¿Está seguro de redirigir a la impresión de documentación?
                     <br />
                     <br />
-                    Cliente: <span class="font-weight-bold" id="lblNombreClienteImprimirDocumentacion"></span>
+                    Cliente: <span class="font-weight-bold lblNombreCliente"></span>
                 </div>
                 <div class="modal-footer pt-2 pb-2">
                     <button type="button" id="btnImprimirDocumentacion_Confirmar" class="btn btn-primary waves-effect waves-light">
@@ -332,7 +334,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalSolicitarGPSLabel">Solicitar Revisión/GPS | Solicitud <span id="lblIdSolicitudSolicitarGPS"></span></h6>
+                        <h6 class="modal-title mt-0" id="modalSolicitarGPSLabel">Solicitar Revisión/GPS | Solicitud <span class="lblNoSolicitudCredito"></span></h6>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -499,6 +501,75 @@
                 </div>
             </div>
         </div>
+
+        <!-- modal detalles de la instalación de GPS -->
+        <div id="modalDetallesInstalacionGPS" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalDetallesInstalacionGPSLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalDetallesInstalacionGPSLabel">Detalles de la instalación GPS | Solicitud de crédito N° <b class="lblNoSolicitudCredito"></b></h6>
+                            </div>
+                            <div class="col-12 text-muted">
+                                Marca:
+                                <span class="lblMarca"></span>
+                                / Modelo:
+                                <span class="lblModelo"></span>
+                                / Año:
+                                <span class="lblAnio"></span>
+                                / Color:
+                                <span class="lblColor"></span>
+                                / VIN:
+                                <span class="lblVIN"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-0">
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label class="col-form-label d-block mb-0 pb-0">Información del GPS</label>
+                                        <label class="col-form-label pt-0">
+                                            IMEI: <span id="lblIMEI" class="font-weight-bold"></span>/
+                                            Serie: <span id="lblSerie" class="font-weight-bold"></span>/
+                                            Modelo: <span id="lblModelo" class="font-weight-bold"></span>/
+                                            Compañía: <span id="lblCompania" class="font-weight-bold"></span>/
+                                            <span id="lblRelay" class="font-weight-bold"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label class="col-form-label">Ubicación de la instalación</label>
+                                        <textarea id="txtUbicacion" runat="server" class="form-control form-control-sm" readonly="readonly" rows="3"></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="col-form-label">Observaciones de la instalación</label>
+                                        <textarea id="txtComentariosDeLaInstalacion" runat="server" class="form-control form-control-sm" readonly="readonly" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <h6>Fotografías de la instalación</h6>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <!-- Div donde se muestran las imágenes de la instalacion de GPS -->
+                                        <div class="align-self-center" id="divFotosInstalacionGPS" runat="server" style="display: none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 
     <script src="/Scripts/js/jquery.min.js"></script>
@@ -524,10 +595,13 @@
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
+    <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
     <script>
         const NOMBRE_USUARIO = '<%=pcNombreUsuario %>';
         const CORREO_USUARIO = '<%=pcBuzoCorreoUsuario%>';
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=2021012703535222"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20210129123650"></script>
 </body>
 </html>
