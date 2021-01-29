@@ -286,7 +286,7 @@ function CargarSolicitudesGPS() {
                         },
                     ],
                     columnDefs: [
-                        { targets: [0, 1, 8], orderable: false, "width": "0%" }
+                        { targets: [0, 1, 2, 3, 4, 5, 6, 7, 8], orderable: false, "width": "0%" }
                     ]
                 });
 
@@ -373,7 +373,7 @@ function CargarSolicitudesGPS() {
                         },
                     ],
                     columnDefs: [
-                        { targets: [0, 1, 8], orderable: false, "width": "0%" }
+                        { targets: [0, 1,2,3,4,5,6,7, 8], orderable: false, "width": "0%" }
                     ]
                 });
             }
