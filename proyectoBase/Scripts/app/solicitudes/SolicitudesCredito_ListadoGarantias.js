@@ -107,7 +107,12 @@ $(document).ready(function () {
                     return row["Marca"] + ' ' + row["Modelo"] + ' ' + row["Anio"] + ' <br/><span class="text-muted">' + 'VIN: ' + (row["VIN"] != '' ? row["VIN"] : '') + '<span>'
                 }
             },
-            { "data": "DocumentosSubidos", "className": "text-center" },
+            {
+                "data": "DocumentosSubidos", "className": "text-center",
+                "render": function (data, type, row) {
+                    return '<span onclick="MostrarDocumentosGarantia(' + row["IdGarantia"] + ')">' + row["DocumentosSubidos"] + '</span>'
+                }
+            },
             {
                 "data": "IdGarantia", "className": "text-center",
                 "render": function (data, type, row) {
@@ -628,6 +633,46 @@ function MostrarRevisionGarantia(idGarantia) {
     });
 }
 
+function FormatoDetalleRevision(revision) {
+
+    return '<div class="card bg-light mb-1">' +
+        '<div class="p-3" id="heading' + revision.IdRevision + '"> ' +
+        '<div class="row justify-content-between">' +
+        '<div class="col-auto">' +
+        '<a href="#collapse' + revision.IdRevision + '" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse' + revision.IdRevision + '">' +
+        '<h6 class="m-0 font-14 font-weight-bold">' + revision.NombreRevision + '</h6>' +
+        '</a>' +
+        '</div>' +
+        '<div class="col-auto">' +
+        '<div class="badge badge-' + revision.EstadoRevisionClassName + ' p-2 float-right">' + revision.EstadoRevision + '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div id="collapse' + revision.IdRevision + '" class="collapse" aria-labelledby="heading' + revision.IdRevision + '" data-parent="#accordion-revisiones" style="">' +
+        '<div class="card-body p-0">' +
+        '<div class="form-group row">' +
+        '<div class="col-sm-12">' +
+        '<label class="col-form-label">Descripción de la revisión</label>' +
+        '<textarea class="form-control form-control-sm" type="text" readonly="readonly" required="required">' + revision.DescripcionRevision + '</textarea>' +
+        '</div>' +
+        '<div class="col-sm-6">' +
+        '<label class="col-form-label">Usuario validador</label>' +
+        '<input class="form-control form-control-sm" type="text" readonly="readonly" value="' + revision.UsuarioValidador + '" required="required"/>' +
+        '</div>' +
+        '<div class="col-sm-6">' +
+        '<label class="col-form-label">Fecha validación</label>' +
+        '<input class="form-control form-control-sm" type="text" readonly="readonly" value="' + (revision.IdEstadoRevision != 0 ? moment(revision.FechaValidacion).locale('es').format('YYYY/MM/DD hh:mm a') : revision.EstadoRevision) + '" required="required"/>' +
+        '</div>' +
+        '<div class="col-sm-12">' +
+        '<label class="col-form-label">Comentarios de la revisión</label>' +
+        '<textarea class="form-control form-control-sm" type="text" readonly="readonly" required="required">' + revision.Observaciones + '</textarea>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+}
+
 function MostrarInstalacionGPS(idAutoInstalacionGPS) {
 
     $.ajax({
@@ -649,7 +694,6 @@ function MostrarInstalacionGPS(idAutoInstalacionGPS) {
                 $("#lblModelo").text(data.d.Modelo);
                 $("#lblCompania").text(data.d.Compania);
                 $("#lblRelay").text(data.d.ConRelay);
-
                 $("#txtUbicacion").val(data.d.ComentarioUbicacion);
                 $("#txtComentariosDeLaInstalacion").val(data.d.ObservacionesInstalacion);
 
@@ -693,44 +737,49 @@ function MostrarInstalacionGPS(idAutoInstalacionGPS) {
     });
 }
 
-function FormatoDetalleRevision(revision) {
+function MostrarDocumentosGarantia(idGarantia) {
 
-    return '<div class="card bg-light mb-1">' +
-        '<div class="p-3" id="heading' + revision.IdRevision + '"> ' +
-        '<div class="row justify-content-between">' +
-        '<div class="col-auto">' +
-        '<a href="#collapse' + revision.IdRevision + '" class="text-dark collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse' + revision.IdRevision + '">' +
-        '<h6 class="m-0 font-14 font-weight-bold">' + revision.NombreRevision + '</h6>' +
-        '</a>' +
-        '</div>' +
-        '<div class="col-auto">' +
-        '<div class="badge badge-' + revision.EstadoRevisionClassName + ' p-2 float-right">' + revision.EstadoRevision + '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '<div id="collapse' + revision.IdRevision + '" class="collapse" aria-labelledby="heading' + revision.IdRevision + '" data-parent="#accordion-revisiones" style="">' +
-        '<div class="card-body p-0">' +
-        '<div class="form-group row">' +
-        '<div class="col-sm-12">' +
-        '<label class="col-form-label">Descripción de la revisión</label>' +
-        '<textarea class="form-control form-control-sm" type="text" readonly="readonly" required="required">' + revision.DescripcionRevision + '</textarea>' +
-        '</div>' +
-        '<div class="col-sm-6">' +
-        '<label class="col-form-label">Usuario validador</label>' +
-        '<input class="form-control form-control-sm" type="text" readonly="readonly" value="' + revision.UsuarioValidador + '" required="required"/>' +
-        '</div>' +
-        '<div class="col-sm-6">' +
-        '<label class="col-form-label">Fecha validación</label>' +
-        '<input class="form-control form-control-sm" type="text" readonly="readonly" value="' + (revision.IdEstadoRevision != 0 ? moment(revision.FechaValidacion).locale('es').format('YYYY/MM/DD hh:mm a') : revision.EstadoRevision) + '" required="required"/>' +
-        '</div>' +
-        '<div class="col-sm-12">' +
-        '<label class="col-form-label">Comentarios de la revisión</label>' +
-        '<textarea class="form-control form-control-sm" type="text" readonly="readonly" required="required">' + revision.Observaciones + '</textarea>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_ListadoGarantias.aspx/CargarDocumentosGarantia",
+        data: JSON.stringify({ idGarantia: idGarantia, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudieron cargar los documentos de la garantía, contacte al administrador.');
+        },
+        success: function (data) {
+
+            if (data.d != null) {
+
+                var documentos = data.d;
+                var divGaleriaGarantia = $("#divGaleriaGarantia").empty();
+                var templateDocumentos = '';
+
+
+                if (documentos != null) {
+
+                    if (documentos.length > 0) {
+
+                        for (var i = 0; i < documentos.length; i++) {
+
+                            templateDocumentos += '<img alt="' + documentos[i].DescripcionTipoDocumento + '" src="' + documentos[i].URLArchivo + '" data-image="' + documentos[i].URLArchivo + '" data-description="' + documentos[i].DescripcionTipoDocumento + '"/>';
+                        }
+                    }
+                }
+
+                var imgNoHayFotografiasDisponibles = '<img alt="No hay fotografías disponibles" src="/Imagenes/Imagen_no_disponible.png" data-image="/Imagenes/Imagen_no_disponible.png" data-description="No hay fotografías disponibles"/>';
+                templateDocumentos = templateDocumentos == '' ? imgNoHayFotografiasDisponibles : templateDocumentos;
+
+                divGaleriaGarantia.append(templateDocumentos);
+
+                $("#divGaleriaGarantia").unitegallery();
+
+                $("#modalDocumentosDeLaGarantia").modal();
+            }
+            else
+                MensajeError('No se pudieron cargar los documentos de la garantía, contacte al administrador.');
+        }
+    });
 }
 
 function RedirigirAccion(nombreFormulario, accion) {

@@ -261,7 +261,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
@@ -576,6 +576,56 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         return instalacionGPS;
     }
 
+    [WebMethod]
+    public static List<Garantia_Documento> CargarDocumentosGarantia(int idGarantia, string dataCrypt)
+    {
+        var documentosDeLaGarantia = new List<Garantia_Documento>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDGarantias_Documentos_ObtenerPorIdGarantia", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDGarantia", idGarantia);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            documentosDeLaGarantia.Add(new Garantia_Documento()
+                            {
+                                NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
+                                Extension = sqlResultado["fcExtension"].ToString(),
+                                RutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),
+                                URLArchivo = sqlResultado["fcURL"].ToString(),
+                                IdTipoDocumento = (int)sqlResultado["fiIDSeccionGarantia"],
+                                DescripcionTipoDocumento = sqlResultado["fcSeccionGarantia"].ToString(),
+                                ArchivoActivo = (byte)sqlResultado["fiArchivoActivo"]
+                            });
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            documentosDeLaGarantia = null;
+        }
+        return documentosDeLaGarantia;
+    }
 
     [WebMethod]
     public static string EncriptarParametros(int idSolicitud, int idGarantia, string dataCrypt)
@@ -774,14 +824,6 @@ public class GarantiaSinSolicitud_ViewModel
     public DateTime FechaCreacion { get; set; }
 }
 
-public class Prueba_ViewModel
-{
-    public bool SeGeneroExcepcion { get; set; }
-    public string Mensaje { get; set; }
-    public string Inner { get; set; }
-    public object Excepcion { get; set; }
-}
-
 public class Garantia_Revision_ViewModel
 {
     public int IdRevision { get; set; }
@@ -802,6 +844,12 @@ public class Garantia_Revision_ViewModel
     public DateTime FechaValidacion { get; set; }
 }
 
+public class Garantia_Documento : InformacionDocumento
+{
+    public int IdGarantiaDocumento { get; set; }
+    public int IdGarantia { get; set; }
+}
+
 public class InstalacionGPS_ViewModel
 {
     public string IMEI { get; set; }
@@ -819,15 +867,24 @@ public class InstalacionGPS_ViewModel
     }
 }
 
-public class FotosInstalacionGPS
+public class FotosInstalacionGPS : InformacionDocumento
 {
     public int IdAutoGPSInstalacion { get; set; }
     public int IdCREDSolicitud { get; set; }
+}
+
+public class InformacionDocumento
+{
     public string NombreArchivo { get; set; }
     public int IdTipoDocumento { get; set; }
     public string DescripcionTipoDocumento { get; set; }
     public string Extension { get; set; }
     public string RutaArchivo { get; set; }
     public string URLArchivo { get; set; }
+    public string Comentario { get; set; }
     public byte ArchivoActivo { get; set; }
+    public int IdUsuarioCreador { get; set; }
+    public string UsuarioCreador { get; set; }
+    public DateTime FechaCreador { get; set; }
+    public string HashTag { get; set; }
 }

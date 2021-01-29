@@ -570,6 +570,50 @@
                 </div>
             </div>
         </div>
+
+        <!-- modal de documentos de la garantía -->
+        <div id="modalDocumentosDeLaGarantia" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalDocumentosDeLaGarantiaLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalDocumentosDeLaGarantiaLabel">Fotografías de la garantía | Solicitud de crédito N° <b class="lblNoSolicitudCredito"></b></h6>
+                            </div>
+                            <div class="col-12 text-muted">
+                                Marca:
+                                <span class="lblMarca"></span>
+                                / Modelo:
+                                <span class="lblModelo"></span>
+                                / Año:
+                                <span class="lblAnio"></span>
+                                / Color:
+                                <span class="lblColor"></span>
+                                / VIN:
+                                <span class="lblVIN"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-0">
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <!-- Div donde se muestran las fotografías de la garantía -->
+                                        <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 
     <script src="/Scripts/js/jquery.min.js"></script>
@@ -602,6 +646,6 @@
         const NOMBRE_USUARIO = '<%=pcNombreUsuario %>';
         const CORREO_USUARIO = '<%=pcBuzoCorreoUsuario%>';
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20210129123650"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=2021012952"></script>
 </body>
 </html>
