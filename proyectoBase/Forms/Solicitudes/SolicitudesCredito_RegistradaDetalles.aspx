@@ -87,6 +87,8 @@
                                         <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label></th>
                                     <th class="text-center pt-1 pb-1">Gestor:
                                         <asp:Label ID="lblNombreGestor" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                    <th class="text-center pt-1 pb-1">Score promedio:
+                                        <asp:Label ID="lblScorePromedio" CssClass="col-form-label" runat="server"></asp:Label></th>
                                 </tr>
                             </tbody>
                         </table>

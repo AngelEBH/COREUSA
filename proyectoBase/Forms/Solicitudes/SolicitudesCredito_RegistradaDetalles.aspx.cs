@@ -33,15 +33,7 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
             {
                 lcURL = Request.Url.ToString();
                 liParamStart = lcURL.IndexOf("?");
-
-                if (liParamStart > 0)
-                {
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                }
-                else
-                {
-                    lcParametros = string.Empty;
-                }
+                lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
                 if (lcParametros != string.Empty)
                 {
@@ -49,11 +41,11 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                     lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                     lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
                     CargarInformacionClienteSolicitud();
                     CargarInformacionGarantia();
@@ -485,6 +477,7 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
 
                             lblNombreCliente.Text = sqlResultado["fcPrimerNombreCliente"].ToString() + " " + sqlResultado["fcSegundoNombreCliente"].ToString() + " " + sqlResultado["fcPrimerApellidoCliente"].ToString() + " " + sqlResultado["fcSegundoApellidoCliente"].ToString();
                             lblIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
+                            lblScorePromedio.Text = sqlResultado["fiScorePromedio"].ToString();
                             txtRTNCliente.Text = sqlResultado["fcRTN"].ToString();
                             txtTelefonoCliente.Text = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
                             txtNacionalidad.Text = sqlResultado["fcDescripcionNacionalidad"].ToString();
@@ -677,7 +670,6 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                                     txtSerieUno.Text = sqlResultado["fcSerieUno"].ToString();
                                     txtSerieDos.Text = sqlResultado["fcSerieDos"].ToString();
                                     txtComentario.InnerText = sqlResultado["fcComentario"].ToString().Trim();
-
                                     txtNombrePropietarioGarantia.Text = sqlResultado["fcNombrePropietarioGarantia"].ToString();
                                     txtIdentidadPropietarioGarantia.Text = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
                                     txtNacionalidadPropietarioGarantia.Text = sqlResultado["fcNacionalidadPropietarioGarantia"].ToString();
@@ -880,7 +872,7 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
         try
         {
             /* Si la información */
-            if (int.Parse(pcIDSolicitud) < 802 && pcIDSolicitud != "773")
+            if (int.Parse(pcIDSolicitud) < 802 && pcIDSolicitud != "773" && pcIDSolicitud != "323")
             {
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_CalculoPrestamo", sqlConexion))
                 {
@@ -982,24 +974,14 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var liParamStart = 0;
-            var lcParametros = string.Empty;
             var pcEncriptado = string.Empty;
-            liParamStart = URL.IndexOf("?");
-
-            if (liParamStart > 0)
-            {
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            }
-            else
-            {
-                lcParametros = string.Empty;
-            }
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
+                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
