@@ -978,6 +978,7 @@
     <Content Include="Imagenes\inspection_50px.png" />
     <Content Include="Imagenes\motorcycle_40px.png" />
     <Content Include="Imagenes\not-available-es.png" />
+    <Content Include="Imagenes\percentage_40px.png" />
     <Content Include="Imagenes\place_marker_40px.png" />
     <Content Include="Imagenes\pruebaImagen.jpg" />
     <Content Include="Imagenes\PulgarAbajoIcon.png" />

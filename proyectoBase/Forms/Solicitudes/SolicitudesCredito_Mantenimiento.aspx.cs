@@ -90,11 +90,11 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                     btnReasignarGestor.Visible = false;
                                     break;
 
-                                case "104":
-                                    btnReasignarGestor.Visible = false;
+                                case "104": // jefe de créditos
+                                    //btnReasignarGestor.Visible = false;
                                     btnReiniciarReprogramacion.Visible = false;
                                     btnResolucionCampo.Visible = false;
-                                    btnReiniciarCampo.Visible = false;
+                                    //btnReiniciarCampo.Visible = false;
                                     break;
 
                                 case "103":

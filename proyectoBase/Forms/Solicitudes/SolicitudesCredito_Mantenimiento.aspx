@@ -106,6 +106,9 @@
                                     <button type="button" id="btnReiniciarResolucion" runat="server" class="FormatoBotonesIconoCuadrado40 disabled" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
                                         Cambiar Resolución
                                     </button>
+                                    <button type="button" id="btnCambiarTasaInteres" runat="server" class="FormatoBotonesIconoCuadrado40 disabled" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/percentage_40px.png');">
+                                        Cambiar Tasa Interes
+                                    </button>
                                     <button type="button" id="btnReiniciarAnalisis" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
                                         Reiniciar Analisis
                                     </button>
@@ -199,7 +202,6 @@
                 </div>
             </div>
         </div>
-
 
         <div id="modalResolucionCampo" class="modal fade" role="dialog" aria-labelledby="modalResolucionCampoLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -335,7 +337,6 @@
             </div>
         </div>
 
-
         <div id="modalAnularCondicionConfirmar" class="modal fade" role="dialog" aria-labelledby="modalAnularCondicionConfirmarLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -362,8 +363,6 @@
                 </div>
             </div>
         </div>
-
-
 
         <div id="modalDocumentacionSolicitud" class="modal fade" role="dialog" aria-labelledby="modalDocumentacionSolicitudLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -423,7 +422,6 @@
                 </div>
             </div>
         </div>
-
 
         <div id="modalReferenciasPersonales" class="modal fade" role="dialog" aria-labelledby="modalReferenciasPersonalesLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -508,13 +506,13 @@
                     <div class="modal-body">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoDomicilio" />
-                            <label class="form-check-label">
+                            <label class="form-check-label" for="cbReiniciarCampoDomicilio">
                                 Investigación del domicilio
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoTrabajo" />
-                            <label class="form-check-label">
+                            <label class="form-check-label" for="cbReiniciarCampoTrabajo">
                                 Investigación del trabajo
                             </label>
                         </div>
