@@ -110,7 +110,7 @@ $(document).ready(function () {
             {
                 "data": "DocumentosSubidos", "className": "text-center",
                 "render": function (data, type, row) {
-                    return '<span onclick="MostrarDocumentosGarantia(' + row["IdGarantia"] + ')">' + row["DocumentosSubidos"] + '</span>'
+                    return '<span class="btn btn-sm btn-secondary" onclick="MostrarDocumentosGarantia(' + row["IdGarantia"] + ')">' + row["DocumentosSubidos"] + ' <i class="fas fa-search"></i></span>'
                 }
             },
             {
