@@ -52,7 +52,7 @@ $(document).ready(function () {
             url: "SolicitudesCredito_Bandeja.aspx/CargarSolicitudes",
             contentType: 'application/json; charset=utf-8',
             data: function (dtParms) {
-                return JSON.stringify({ dataCrypt: window.location.href, idSolicitud: 0 });
+                return JSON.stringify({ dataCrypt: window.location.href });
             },
             "dataSrc": function (json) {
                 var return_data = json.d;
@@ -60,68 +60,68 @@ $(document).ready(function () {
             }
         },
         "columns": [
-            { "data": "fiIDSolicitud", "className": "text-center" },
-            { "data": "fcAgencia" },
+            { "data": "IdSoliciud", "className": "text-center" },
+            { "data": "Agencia" },
             {
-                "data": "fcDescripcion",
+                "data": "Producto",
                 "render": function (value) {
                     return value.split(' ')[1]
                 }
             },
-            { "data": "fcIdentidadCliente" },
+            { "data": "IdentidadCliente" },
             {
-                "data": "fcPrimerNombreCliente",
+                "data": "PrimerNombreCliente",
                 "render": function (data, type, row) {
-                    return row["fcPrimerNombreCliente"] + ' ' + row["fcSegundoNombreCliente"] + ' ' + row["fcPrimerApellidoCliente"] + ' ' + row["fcSegundoApellidoCliente"]
+                    return row["PrimerNombreCliente"] + ' ' + row["SegundoNombreCliente"] + ' ' + row["PrimerApellidoCliente"] + ' ' + row["SegundoApellidoCliente"]
                 }
             },
             {
-                "data": "fdFechaCreacionSolicitud",
+                "data": "FechaCreacionSolicitud",
                 "render": function (value) {
                     if (value === null) return "";
                     return moment(value).locale('es').format('YYYY/MM/DD hh:mm A');
                 }
             },
             {
-                "data": "fdEnIngresoInicio", "className": "text-center",
+                "data": "EnIngresoInicio", "className": "text-center",
                 "render": function (data, type, row) {
-                    return row["fdEnIngresoInicio"] != procesoPendiente ? row["fdEnIngresoFin"] != procesoPendiente ? iconoExito : iconoPendiente : '';
+                    return row["EnIngresoInicio"] != procesoPendiente ? row["EnIngresoFin"] != procesoPendiente ? iconoExito : iconoPendiente : '';
                 }
             },
             {
-                "data": "fdEnTramiteInicio", "className": "text-center",
+                "data": "EnTramiteInicio", "className": "text-center",
                 "render": function (data, type, row) {
-                    return row["fdEnTramiteInicio"] != procesoPendiente ? row["fdEnTramiteFin"] != procesoPendiente ? iconoExito : iconoPendiente : '';
+                    return row["EnTramiteInicio"] != procesoPendiente ? row["EnTramiteFin"] != procesoPendiente ? iconoExito : iconoPendiente : '';
                 }
             },
             {
-                "data": "fdEnAnalisisInicio", "className": "text-center",
+                "data": "EnAnalisisInicio", "className": "text-center",
                 "render": function (data, type, row) {
 
                     var Resultado = '';
-                    Resultado = row["fdEnAnalisisInicio"] != procesoPendiente ? row["fdEnAnalisisFin"] != procesoPendiente ? iconoExito : iconoPendiente : '';
+                    Resultado = row["EnAnalisisInicio"] != procesoPendiente ? row["EnAnalisisFin"] != procesoPendiente ? iconoExito : iconoPendiente : '';
 
-                    if (row["fdEnAnalisisFin"] == procesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7) && row["fdEnAnalisisInicio"] != procesoPendiente) {
-                        Resultado = row["fiEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
+                    if (row["EnAnalisisFin"] == procesoPendiente && (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7) && row["EnAnalisisInicio"] != procesoPendiente) {
+                        Resultado = row["IdEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
                     }
 
                     return Resultado;
                 }
             },
             {
-                "data": "fdEnvioARutaAnalista", "className": "text-center",
+                "data": "EnvioARutaAnalista", "className": "text-center",
                 "render": function (data, type, row) {
 
                     var Resultado = '';
 
-                    if (row["fdEnvioARutaAnalista"] != procesoPendiente) {
+                    if (row["EnvioARutaAnalista"] != procesoPendiente) {
 
-                        Resultado = (row["fdEnCampoFin"] != procesoPendiente || row["fiEstadoDeCampo"] == 2) ? iconoExito : iconoPendiente;
+                        Resultado = (row["EnCampoInicio"] != procesoPendiente || row["IdEstadoDeCampo"] == 2) ? iconoExito : iconoPendiente;
 
-                        if (row["fdEnCampoFin"] == procesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
-                            Resultado = row["fiEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
+                        if (row["EnCampoInicio"] == procesoPendiente && (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7)) {
+                            Resultado = row["IdEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
                         }
-                        else if (row["fiEstadoSolicitud"] == 5) {
+                        else if (row["IdEstadoSolicitud"] == 5) {
                             Resultado = iconoRojo;
                         }
                     }
@@ -130,35 +130,35 @@ $(document).ready(function () {
                 }
             },
             {
-                "data": "fdCondicionadoInicio", "className": "text-center",
+                "data": "CondicionadoInicio", "className": "text-center",
                 "render": function (data, type, row) {
 
                     var Resultado = '';
 
-                    if (row["fdCondicionadoInicio"] != procesoPendiente) {
+                    if (row["CondicionadoInicio"] != procesoPendiente) {
 
-                        Resultado = row["fdCondificionadoFin"] != procesoPendiente ? iconoExito : iconoPendiente;
+                        Resultado = row["CondificionadoFin"] != procesoPendiente ? iconoExito : iconoPendiente;
 
-                        if (row["fdCondificionadoFin"] == procesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
-                            Resultado = row["fiEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
+                        if (row["CondificionadoFin"] == procesoPendiente && (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7)) {
+                            Resultado = row["IdEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
                         }
                     }
                     return Resultado;
                 }
             },
             {
-                "data": "fdReprogramadoInicio", "className": "text-center",
+                "data": "ReprogramadoInicio", "className": "text-center",
                 "render": function (data, type, row) {
 
                     var Resultado = '';
 
-                    if (row["fdReprogramadoInicio"] != procesoPendiente) {
+                    if (row["ReprogramadoInicio"] != procesoPendiente) {
 
-                        Resultado = row["fdReprogramadoFin"] != procesoPendiente ? iconoExito : iconoPendiente;
+                        Resultado = row["ReprogramadoFin"] != procesoPendiente ? iconoExito : iconoPendiente;
 
 
-                        if (row["fdReprogramadoFin"] == procesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
-                            Resultado = row["fiEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
+                        if (row["ReprogramadoFin"] == procesoPendiente && (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7)) {
+                            Resultado = row["IdEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
                         }
                     }
                     return Resultado;
@@ -175,26 +175,26 @@ $(document).ready(function () {
                         Resultado = row["PasoFinalFin"] != procesoPendiente ? iconoExito : iconoPendiente;
 
 
-                        if (row["PasoFinalFin"] == procesoPendiente && (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7)) {
-                            Resultado = row["fiEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
+                        if (row["PasoFinalFin"] == procesoPendiente && (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7)) {
+                            Resultado = row["IdEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
                         }
                     }
                     return Resultado;
                 }
             },
             {
-                "data": "fiEstadoSolicitud", "className": "text-center",
+                "data": "IdEstadoSolicitud", "className": "text-center",
                 "render": function (data, type, row) {
 
                     var resolucionFinal = '<span class="btn-sm btn-block btn-warning">Pendiente</span>';
-                    if (row["fiEstadoSolicitud"] == 4 || row["fiEstadoSolicitud"] == 5 || row["fiEstadoSolicitud"] == 7) {
-                        resolucionFinal = row["fiEstadoSolicitud"] == 7 ? '<span class="btn btn-sm btn-block btn-success">Aprobada</span>' : '<span class="btn btn-sm btn-block btn-danger">Rechazada</span>';
+                    if (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7) {
+                        resolucionFinal = row["IdEstadoSolicitud"] == 7 ? '<span class="btn btn-sm btn-block btn-success">Aprobada</span>' : '<span class="btn btn-sm btn-block btn-danger">Rechazada</span>';
                     }
                     return resolucionFinal;
                 }
             },
             {
-                "data": "ftTiempoTomaDecisionFinal", "visible": false, "title": 'Fecha resolución',
+                "data": "FechaResolucion", "visible": false, "title": 'Fecha resolución',
                 "render": function (value) {
 
                     return value != procesoPendiente ? moment(value).locale('es').format('YYYY/MM/DD hh:mm A') : '';
@@ -334,10 +334,10 @@ $(document).ready(function () {
 
         var row = dtBandeja.row(this).data();
         let idAnalistaSolicitud = row.fiIDUsuarioModifica;
-        idSolicitud = row.fiIDSolicitud;
+        idSolicitud = row.IdSoliciud;
 
-        $("#lblCliente").text(row.fcPrimerNombreCliente + ' ' + row.fcSegundoNombreCliente + ' ' + row.fcPrimerApellidoCliente + ' ' + row.fcSegundoApellidoCliente + ' ');
-        $("#lblIdentidadCliente").text(row.fcIdentidadCliente);
+        $("#lblCliente").text(row.PrimerNombreCliente + ' ' + row.SegundoNombreCliente + ' ' + row.PrimerApellidoCliente + ' ' + row.SegundoApellidoCliente + ' ');
+        $("#lblIdentidadCliente").text(row.IdentidadCliente);
 
         if (idAnalistaSolicitud != 0 || 1 == 1) {
 
@@ -354,14 +354,14 @@ $(document).ready(function () {
                     //if (data.d == true) {
                     $("#modalAbrirSolicitud").modal({ backdrop: !1 });
                     idSolicitud = idSolicitud;
-                    identidad = row.fcIdentidadCliente;
+                    identidad = row.IdentidadCliente;
                     //}
                 }
             });
         }
         else {
             idSolicitud = idSolicitud;
-            identidad = row.fcIdentidadCliente;
+            identidad = row.IdentidadCliente;
             $("#modalAbrirSolicitud").modal({ backdrop: !1 });
         }
     });

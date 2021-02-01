@@ -112,7 +112,7 @@
                             <select id="mesIngreso" class="form-control form-control-sm">
                                 <option value="">Seleccionar</option>
                                 <option value="01">Enero</option>
-                                <option value="02">Febrero</option>
+                                <option value="02" selected="selected">Febrero</option>
                                 <option value="03">Marzo</option>
                                 <option value="04">Abril</option>
                                 <option value="05">Mayo</option>
@@ -122,7 +122,7 @@
                                 <option value="09">Septiembre</option>
                                 <option value="10">Octubre</option>
                                 <option value="11">Noviembre</option>
-                                <option value="12" selected="selected">Diciembre</option>
+                                <option value="12">Diciembre</option>
                             </select>
                         </div>
                         <div class="col-lg-4 col-md-3 col-sm-3 col-6">
