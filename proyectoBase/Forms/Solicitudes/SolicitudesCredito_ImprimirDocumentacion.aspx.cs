@@ -37,6 +37,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     public string UrlCodigoQR { get; set; }
     public string listaDocumentosDelExpedienteJSON { get; set; }
 
+    public string FondoPrestamoJSON { get; set; }
+
     #endregion
 
     protected void Page_Load(object sender, EventArgs e)
@@ -157,6 +159,34 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var monedaAbreviatura = sqlResultado["fcAbreviaturaMoneda"].ToString();
                             var tasaDeInteresSimpleMensual = decimal.Parse(sqlResultado["fnTasaMensualAplicada"].ToString());
                             var tasaDeInteresAnualAplicada = decimal.Parse(sqlResultado["fnTasaAnualAplicada"].ToString());
+
+                            /* Información de los fondos del préstamo y el representante legal del mismo */
+                            var fondosPrestamo = new Fondo_RepresentanteLegal_ViewModel()
+                            {
+                                IdFondo = (int)sqlResultado["fiIDFondo"],
+                                RazonSocial = sqlResultado["fcRazonSocial"].ToString().ToUpper(),
+                                NombreComercial = sqlResultado["fcNombreComercial"].ToString().ToUpper(),
+                                EmpresaRTN = sqlResultado["fcRTNEmpresa"].ToString(),
+                                EmpresaCiudadDomiciliada = sqlResultado["fcCiudadDomiciliada"].ToString(),
+                                EmpresaDepartamentoDomiciliada = sqlResultado["fcDepartamentoDomiciliada"].ToString(),
+                                Telefono = sqlResultado["fcTelefono"].ToString(),
+                                Email = sqlResultado["fcEmail"].ToString(),
+                                Constitucion = sqlResultado["fcConstitucionFondo"].ToString(),
+
+                                RepresentanteLegal = new RepresentanteLegal_ViewModel()
+                                {
+                                    IdRepresentanteLegal = (int)sqlResultado["fiIDFondo"],
+                                    NombreCompleto = sqlResultado["fcNombreRepresentanteLegal"].ToString().ToUpper(),
+                                    Identidad = sqlResultado["fcIdentidadRepresentanteLegal"].ToString(),
+                                    EstadoCivil = sqlResultado["fcEstadoCivilRepresentanteLegal"].ToString(),
+                                    Nacionalidad = sqlResultado["fcNacionalidadRepresentanteLegal"].ToString(),
+                                    Prefesion = sqlResultado["fcProfesionRepresentanteLegal"].ToString(),
+                                    CiudadDomicilio = sqlResultado["fcCiudadDomicilioRepresentanteLegal"].ToString(),
+                                    DepartamentoDomicilio = sqlResultado["fcDepartamentoDomicilioRepresentanteLegal"].ToString()
+                                }
+                            };
+
+                            FondoPrestamoJSON = JsonConvert.SerializeObject(fondosPrestamo);
 
                             lblIdSolicitud.InnerText = pcIDSolicitud;
                             txtNombreCliente.Text = nombreCliente;
@@ -443,27 +473,27 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblNombreVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
 
                                     /* Expediente */
-                                    lblNoSolicitudCredito_Expediente.InnerText = pcIDSolicitud;
-                                    lblFechaActual_Expediente.InnerText = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt");
-                                    lblNombreCliente_Expediente.InnerText = nombreCliente;
-                                    lblIdentidadCliente_Expediente.InnerText = identidad;
-                                    lblDepartamento_Expediente.InnerText = departamentoResidencia;
-                                    lblDireccionCliente_Expediente.InnerText = direccionCliente;
-                                    lblTelefonoCliente_Expediente.InnerText = telefonoPrimario;
-                                    lblTipoDeTrabajo_Expediente.InnerText = nombreTrabajo;
-                                    lblPuestoAsignado_Expediente.InnerText = puestoAsignado;
-                                    lblTelefonoTrabajo_Expediente.InnerText = telefonoTrabajo;
-                                    lblDirecciónTrabajo_Expediente.InnerText = direccionTrabajo;
-                                    lblNoSolicitud_Expediente.InnerText = pcIDSolicitud;
-                                    lblFechaOtorgamiento_Expediente.InnerText = fechaOtorgamiento.ToString("dd/MM/yyyy");
-                                    lblCantidadCuotas_Expediente.InnerText = plazoFinalAprobado + " Cuotas";
-                                    lblMontoOtorgado_Expediente.InnerText = DecimalToString(valorTotalFinanciamiento);
-                                    lblValorCuota_Expediente.InnerText = DecimalToString(valorCuotaTotal);
-                                    lblFechaPrimerPago_Expediente.InnerText = fechaPrimerPago.ToString("dd/MM/yyyy");
-                                    lblFrecuenciaPlazo_Expediente.InnerText = tipoDePlazoSufijoAl;
-                                    lblFechaVencimiento_Expediente.InnerText = fechaVencimiento;
-                                    lblOficialNegocios_Expediente.InnerText = oficialDeNegocios;
-                                    lblGestor_Expediente.InnerText = gestorDeCobros;
+                                    //lblNoSolicitudCredito_Expediente.InnerText = pcIDSolicitud;
+                                    //lblFechaActual_Expediente.InnerText = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                    //lblNombreCliente_Expediente.InnerText = nombreCliente;
+                                    //lblIdentidadCliente_Expediente.InnerText = identidad;
+                                    //lblDepartamento_Expediente.InnerText = departamentoResidencia;
+                                    //lblDireccionCliente_Expediente.InnerText = direccionCliente;
+                                    //lblTelefonoCliente_Expediente.InnerText = telefonoPrimario;
+                                    //lblTipoDeTrabajo_Expediente.InnerText = nombreTrabajo;
+                                    //lblPuestoAsignado_Expediente.InnerText = puestoAsignado;
+                                    //lblTelefonoTrabajo_Expediente.InnerText = telefonoTrabajo;
+                                    //lblDirecciónTrabajo_Expediente.InnerText = direccionTrabajo;
+                                    //lblNoSolicitud_Expediente.InnerText = pcIDSolicitud;
+                                    //lblFechaOtorgamiento_Expediente.InnerText = fechaOtorgamiento.ToString("dd/MM/yyyy");
+                                    //lblCantidadCuotas_Expediente.InnerText = plazoFinalAprobado + " Cuotas";
+                                    //lblMontoOtorgado_Expediente.InnerText = DecimalToString(valorTotalFinanciamiento);
+                                    //lblValorCuota_Expediente.InnerText = DecimalToString(valorCuotaTotal);
+                                    //lblFechaPrimerPago_Expediente.InnerText = fechaPrimerPago.ToString("dd/MM/yyyy");
+                                    //lblFrecuenciaPlazo_Expediente.InnerText = tipoDePlazoSufijoAl;
+                                    //lblFechaVencimiento_Expediente.InnerText = fechaVencimiento;
+                                    //lblOficialNegocios_Expediente.InnerText = oficialDeNegocios;
+                                    //lblGestor_Expediente.InnerText = gestorDeCobros;
                                 }
 
                                 /* Fotografías de la garantía */
@@ -516,6 +546,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         }
     }
 
+
+
+    /* Actualmente no se utiliza */
     public void CargarExpedienteDeLaSolicitud()
     {
         try
@@ -591,6 +624,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         }
     }
 
+    /* Actualmente no se utiliza */
     [WebMethod]
     public static Resultado_ViewModel GuardarExpediente(List<Expediente_Documento_ViewModel> documentosExpediente, string especifiqueOtros, string dataCrypt)
     {
@@ -695,7 +729,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         }
         return resultado;
     }
-
 
     #region Funciones utilitarias
 
@@ -967,6 +1000,32 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         public bool ResultadoExitoso { get; set; }
         public string MensajeResultado { get; set; }
         public string MensajeDebug { get; set; }
+    }
+
+    public class Fondo_RepresentanteLegal_ViewModel
+    {
+        public int IdFondo { get; set; }
+        public string RazonSocial { get; set; }
+        public string NombreComercial { get; set; }
+        public string EmpresaRTN { get; set; }
+        public string EmpresaCiudadDomiciliada { get; set; }
+        public string EmpresaDepartamentoDomiciliada { get; set; }
+        public string Telefono { get; set; }
+        public string Email { get; set; }
+        public string Constitucion { get; set; }
+        public RepresentanteLegal_ViewModel RepresentanteLegal { get; set; }
+    }
+
+    public class RepresentanteLegal_ViewModel
+    {
+        public int IdRepresentanteLegal { get; set; }
+        public string NombreCompleto { get; set; }
+        public string Identidad { get; set; }
+        public string EstadoCivil { get; set; }
+        public string Nacionalidad { get; set; }
+        public string Prefesion { get; set; }
+        public string CiudadDomicilio { get; set; }
+        public string DepartamentoDomicilio { get; set; }
     }
 
     #endregion

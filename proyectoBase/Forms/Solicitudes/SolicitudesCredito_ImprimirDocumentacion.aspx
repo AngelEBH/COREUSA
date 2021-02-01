@@ -2266,6 +2266,27 @@
         $('.lblMes_Firma').text('<%=MesFirma%>');
         $('.lblAnio_Firma').text('<%=AnioFirma%>');
 
+        const FONDOS_PRESTAMO = <%=this.FondoPrestamoJSON%>;
+
+        debugger;
+        $('.lblRazonSocial').text(FONDOS_PRESTAMO.RazonSocial);
+        $('.lblNombreComercial').text(FONDOS_PRESTAMO.NombreComercial);
+        $('.lblRTNEmpresa').text(FONDOS_PRESTAMO.EmpresaRTN);
+        $('.lblCiudadDomicilioEmpresa').text(FONDOS_PRESTAMO.EmpresaCiudadDomiciliada);
+        $('.lblDepartamentoDomicilioEmpresa').text(FONDOS_PRESTAMO.EmpresaDepartamentoDomiciliada);
+        $('.lblTelefonoEmpresa').text(FONDOS_PRESTAMO.Telefono);
+        $('.lblEmailEmpresa').text(FONDOS_PRESTAMO.Email);
+        $('.lblConstitucionFondo').text(FONDOS_PRESTAMO.Constitucion);
+        $('.lblNombreRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.NombreCompleto);
+        $('.lblIdentidadRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.Identidad);
+        $('.lblEstadoCivilRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.EstadoCivil);
+        $('.lblNacionalidadRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.Nacionalidad);
+        $('.lblProfesionRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.Prefesion);
+        $('.lblCiudadDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.CiudadDomicilio);
+        $('.lblDepartamentoDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.DepartamentoDomicilio);
+
+        // radiofaro
+
         function ExportToPDF(nombreDelArchivo, idDivContenedor, idDivPDF) {
 
             $("#Loader").css('display', '');
@@ -2353,7 +2374,7 @@
     </script>
 
     <script>
-
+        // Expedientes
         var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=listaDocumentosDelExpedienteJSON%>');
         var permitirImprimirExpediente = ValidarEstadoDeDocumentosExpediente();
 
