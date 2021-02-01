@@ -2268,7 +2268,6 @@
 
         const FONDOS_PRESTAMO = <%=this.FondoPrestamoJSON%>;
 
-        debugger;
         $('.lblRazonSocial').text(FONDOS_PRESTAMO.RazonSocial);
         $('.lblNombreComercial').text(FONDOS_PRESTAMO.NombreComercial);
         $('.lblRTNEmpresa').text(FONDOS_PRESTAMO.EmpresaRTN);
