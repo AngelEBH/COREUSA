@@ -72,7 +72,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     AnioFirma = hoy.Year.ToString();
 
                     CargarInformacion();
-                    CargarExpedienteDeLaSolicitud();
+                    //CargarExpedienteDeLaSolicitud();
                 }
             }
             catch (Exception ex)
@@ -136,6 +136,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var direccionCliente = sqlResultado["fcDireccionCliente"].ToString();
 
                             /* Información de la solicitud y prestamo */
+                            var idProducto = sqlResultado["fiIDProducto"].ToString();
                             var producto = sqlResultado["fcProducto"].ToString();
                             var montoTotalContrato = decimal.Parse(sqlResultado["fnValorTotalContrato"].ToString());
                             var plazoFinalAprobado = sqlResultado["fiPlazo"].ToString();
@@ -244,13 +245,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblIdentidad_Contrato.Text = identidad;
                                     lblDireccion_Contrato.Text = direccionCliente;
                                     lblCorreo_Contrato.Text = correoCliente;
-                                    lblMontoPrestamoEnPalabras_Contrato.Text = ConvertirCantidadAPalabras(valorTotalFinanciamiento.ToString()) + " " + moneda;
+                                    lblMontoPrestamoEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorTotalFinanciamiento.ToString()) + " " + moneda;
                                     lblMontoPrestamo_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
-                                    lblMontoParaCompraVehiculoEnPalabras_Contrato.Text = ConvertirCantidadAPalabras(valorParaCompraDeVehiculo.ToString()) + " " + moneda;
+                                    lblMontoParaCompraVehiculoEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString()) + " " + moneda;
                                     lblMontoParaCompraVehiculo_Contrato.Text = monedaSimbolo + " " + DecimalToString(valorParaCompraDeVehiculo);
-                                    lblMontoParaCompraGPSEnPalabras_Contrato.Text = ConvertirCantidadAPalabras(valorParaCompraDeGPS.ToString()) + " " + moneda;
+                                    lblMontoParaCompraGPSEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorParaCompraDeGPS.ToString()) + " " + moneda;
                                     lblMontoParaCompraGPS_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorParaCompraDeGPS);
-                                    lblMontoGastosDeCierreEnPalabras_Contrato.Text = ConvertirCantidadAPalabras(valorParaGastosDeCierre.ToString()) + " " + moneda;
+                                    lblMontoGastosDeCierreEnPalabras_Contrato.Text = ConvertirCantidadALetras(valorParaGastosDeCierre.ToString()) + " " + moneda;
                                     lblMontoGastosDeCierre_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorParaGastosDeCierre);
                                     lblMarca_Contrato.Text = marca;
                                     lblTipoVehiculo_Contrato.Text = tipoDeVehiculo;
@@ -262,23 +263,23 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblVIN_Contrato.Text = VIN;
                                     lblNumeroMotor_Contrato.Text = serieMotor;
                                     lblSerieChasis_Contrato.Text = serieChasis;
-                                    lblTasaInteresSimpleMensual_Contrato.Text = DecimalToString(tasaDeInteresSimpleMensual);
+                                    lblTasaInteresSimpleMensual_Contrato.Text = DecimalToString(tasaDeInteresSimpleMensual < 1 ? tasaDeInteresSimpleMensual * 100 : tasaDeInteresSimpleMensual);
                                     lblTipoDePlazo_Contrato.Text = tipoDePlazo;
-                                    lblCAT_Contrato.Text = DecimalToString(tasaDeInteresAnualAplicada);
+                                    lblCAT_Contrato.Text = DecimalToString((tasaDeInteresAnualAplicada < 1 ? tasaDeInteresAnualAplicada * 100 : tasaDeInteresAnualAplicada));
                                     lblMontoPrima_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorPrima));
                                     lblPlazo_Contrato.Text = plazoFinalAprobado;
                                     lblFrecuenciaPago_Contrato.Text = tipoDePlazo;
-                                    lblValorCuotaPalabras_Contrato.Text = ConvertirCantidadAPalabras(valorCuotaPrestamo.ToString()) + " " + moneda; // pendiente
+                                    lblValorCuotaPalabras_Contrato.Text = ConvertirCantidadALetras(valorCuotaPrestamo.ToString()) + " " + moneda; // pendiente
                                     lblValorCuota_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorCuotaPrestamo);
                                     lblPlazoGPS_Contrato.Text = plazoFinalAprobado;
-                                    lblValorCuotaGPSPalabras_Contrato.Text = ConvertirCantidadAPalabras(valorCuotaGPS.ToString()) + " " + moneda; // pendiente
+                                    lblValorCuotaGPSPalabras_Contrato.Text = ConvertirCantidadALetras(valorCuotaGPS.ToString()) + " " + moneda; // pendiente
                                     lblValorCuotaGPS_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorCuotaGPS);
                                     lblPlazoSeguro_Contrato.Text = plazoFinalAprobado;
-                                    lblValorCuotaSeguroPalabras_Contrato.Text = ConvertirCantidadAPalabras(valorCuotaSeguro.ToString()) + " " + moneda; ;
+                                    lblValorCuotaSeguroPalabras_Contrato.Text = ConvertirCantidadALetras(valorCuotaSeguro.ToString()) + " " + moneda; ;
                                     lblValorCuotaSeguro_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorCuotaSeguro);
                                     lblFechaPrimerCuota_Contrato.Text = DiaPrimerPago.ToString() + " de " + MesPrimerPago + " del " + AnioPrimerPago.ToString();
                                     lblPlazoPago_Contrato.Text = tipoDePlazo;
-                                    lblMontoTotalPrestamoPalabras_Contrato.Text = ConvertirCantidadAPalabras(montoTotalContrato.ToString()) + " " + moneda; ;
+                                    lblMontoTotalPrestamoPalabras_Contrato.Text = ConvertirCantidadALetras(montoTotalContrato.ToString()) + " " + moneda; ;
                                     lblMontoTotalPrestamo_Contrato.Text = monedaSimbolo + " " + DecimalToString(montoTotalContrato);
                                     lblNombreFirma_Contrato.Text = nombreCliente;
                                     lblIdentidadFirma_Contrato.Text = identidad;
@@ -291,12 +292,12 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblProfesion_Pagare.Text = profesionOficio;
                                     lblIdentidad_Pagare.Text = identidad;
                                     lblDireccion_Pagare.Text = direccionCliente;
-                                    lblMontoPalabras_Pagare.Text = ConvertirCantidadAPalabras(valorTotalFinanciamiento.ToString()) + " " + moneda; ;
+                                    lblMontoPalabras_Pagare.Text = ConvertirCantidadALetras(valorTotalFinanciamiento.ToString()) + " " + moneda; ;
                                     lblMontoDigitos_Pagare.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
                                     lblDiaPrimerPago_Pagare.Text = "________";
                                     lblMesPrimerPago_Pagare.Text = "________________";
                                     lblAnioPrimerPago_Pagare.Text = "________________";
-                                    lblPorcentajeInteresFluctuante_Pagare.Text = DecimalToString(tasaDeInteresSimpleMensual);
+                                    lblPorcentajeInteresFluctuante_Pagare.Text = DecimalToString(tasaDeInteresSimpleMensual < 1 ? tasaDeInteresSimpleMensual * 100 : tasaDeInteresSimpleMensual);
                                     lblInteresesMoratorios_Pagare.Text = "4.52";
                                     lblNombreFirma_Pagare.Text = nombreCliente;
                                     lblIdentidadFirma_Pagare.Text = identidad;
@@ -304,10 +305,11 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     /* Compromiso legal */
                                     lblNombreCliente_CompromisoLegal.Text = nombreCliente;
                                     lblCantidadCuotas_CompromisoLegal.Text = plazoFinalAprobado;
-                                    lblValorCuotaPalabras_CompromisoLegal.Text = ConvertirCantidadAPalabras(valorCuotaTotal.ToString()) + " " + moneda; ;
+                                    lblValorCuotaPalabras_CompromisoLegal.Text = ConvertirCantidadALetras(valorCuotaTotal.ToString()) + " " + moneda; ;
                                     lblValorCuota_CompromisoLegal.Text = monedaSimbolo + " " + DecimalToString(valorCuotaTotal);
-                                    lblGarantiaUsada_CompromisoLegal.Text = "usado";
+                                    lblGarantiaUsada_CompromisoLegal.Text = idProducto == "201" ? "NUEVO" : "USADO";
                                     lblIdentidadFirma_CompromisoLegal.Text = identidad;
+                                    /*lblNombreFirma_CompromisoLegal.Text = nombreCliente; */
 
                                     /* Convenio de compra y venta de vehiculos para financiamiento a tercero */
                                     lblNombreCliente_ConvenioCyV.Text = nombreVendedorGarantia;
@@ -340,6 +342,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblNombreCliente_Traspaso.Text = nombreCliente;
                                     lblIdentidad_Traspaso.Text = identidad;
                                     lblNacionalidad_Traspaso.Text = nacionalidad;
+                                    /*lblDireccion_Traspaso.Text = direccionCliente;*/
                                     lblMarca_Traspaso.Text = marca;
                                     lblModelo_Traspaso.Text = modelo;
                                     lblSerieMotor_Traspaso.Text = serieMotor;
@@ -350,7 +353,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblColor_Traspaso.Text = color;
                                     lblSerieChasis_Traspaso.Text = serieChasis;
                                     lblMatricula_Traspaso.Text = matricula;
-                                    lblGarantiaUsada_Traspaso.Text = "usado";
+                                    lblGarantiaUsada_Traspaso.Text = idProducto == "201" ? "NUEVO" : "USADO";
 
                                     /* Traspaso vendedor */
                                     lblNombreCliente_TraspasoVendedor.Text = nombrePropietarioGarantia;
@@ -366,7 +369,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblColor_TraspasoVendedor.Text = color;
                                     lblSerieChasis_TraspasoVendedor.Text = serieChasis;
                                     lblMatricula_TraspasoVendedor.Text = matricula;
-                                    lblGarantiaUsada_TraspasoVendedor.Text = "usado";
+                                    lblGarantiaUsada_TraspasoVendedor.Text = idProducto == "201" ? "NUEVO" : "USADO";
 
                                     /* Básico + CPI*/
                                     lblNombreCliente_BasicoCPI.Text = nombreCliente;
@@ -374,7 +377,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                                     /* Recibo */
                                     lblFecha_Recibo.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                                    lblSumaRecibidaEnPalabras_Recibo.Text = ConvertirCantidadAPalabras(valorParaCompraDeVehiculo.ToString());
+                                    lblSumaRecibidaEnPalabras_Recibo.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString());
                                     lblMarca_Recibo.Text = marca;
                                     lblModelo_Recibo.Text = modelo;
                                     lblAnio_Recibo.Text = anio;
@@ -406,7 +409,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblNombreVendedor_CorreoLiquidacion.Text = nombreVendedorGarantia;
                                     lblIdentidadVendedor_CorreoLiquidacion.Text = identidadVendedorGarantia;
                                     lblValorNumero_CorreoLiquidacion.Text = monedaSimbolo + " " + DecimalToString(valorParaCompraDeVehiculo);
-                                    lblValorLetra_CorreoLiquidacion.Text = ConvertirCantidadAPalabras(valorParaCompraDeVehiculo.ToString()) + " " + moneda;
+                                    lblValorLetra_CorreoLiquidacion.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString()) + " " + moneda;
 
                                     /* Correo seguro */
                                     lblAño_CorreoSeguro.Text = anio;
@@ -425,9 +428,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     /* Nota de entrega */
                                     lblVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
                                     lblNombreCliente_NotaEntrega.Text = nombreCliente;
-                                    lblValorAPrestarEnPalabras_NotaEntrega.Text = ConvertirCantidadAPalabras(valorParaCompraDeVehiculo.ToString());
+                                    lblValorAPrestarEnPalabras_NotaEntrega.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString());
                                     lblValorAPrestar_NotaEntrega.Text = monedaSimbolo + " " + DecimalToString(valorParaCompraDeVehiculo);
-                                    lblEstadoGarantia_NotaEntrega.Text = "usado";
+                                    lblEstadoGarantia_NotaEntrega.Text = idProducto == "201" ? "NUEVO" : "USADO";
                                     lblMarca_NotaEntrega.Text = marca;
                                     lblModelo_NotaEntrega.Text = modelo;
                                     lblAño_NotaEntrega.Text = anio;
@@ -440,27 +443,27 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblNombreVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
 
                                     /* Expediente */
-                                    lblNoSolicitudCredito_Expediente.InnerText = pcIDSolicitud;
-                                    lblFechaActual_Expediente.InnerText = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt");
-                                    lblNombreCliente_Expediente.InnerText = nombreCliente;
-                                    lblIdentidadCliente_Expediente.InnerText = identidad;
-                                    lblDepartamento_Expediente.InnerText = departamentoResidencia;
-                                    lblDireccionCliente_Expediente.InnerText = direccionCliente;
-                                    lblTelefonoCliente_Expediente.InnerText = telefonoPrimario;
-                                    lblTipoDeTrabajo_Expediente.InnerText = nombreTrabajo;
-                                    lblPuestoAsignado_Expediente.InnerText = puestoAsignado;
-                                    lblTelefonoTrabajo_Expediente.InnerText = telefonoTrabajo;
-                                    lblDirecciónTrabajo_Expediente.InnerText = direccionTrabajo;
-                                    lblNoSolicitud_Expediente.InnerText = pcIDSolicitud;
-                                    lblFechaOtorgamiento_Expediente.InnerText = fechaOtorgamiento.ToString("dd/MM/yyyy");
-                                    lblCantidadCuotas_Expediente.InnerText = plazoFinalAprobado + " Cuotas";
-                                    lblMontoOtorgado_Expediente.InnerText = DecimalToString(valorTotalFinanciamiento);
-                                    lblValorCuota_Expediente.InnerText = DecimalToString(valorCuotaTotal);
-                                    lblFechaPrimerPago_Expediente.InnerText = fechaPrimerPago.ToString("dd/MM/yyyy");
-                                    lblFrecuenciaPlazo_Expediente.InnerText = tipoDePlazoSufijoAl;
-                                    lblFechaVencimiento_Expediente.InnerText = fechaVencimiento;
-                                    lblOficialNegocios_Expediente.InnerText = oficialDeNegocios;
-                                    lblGestor_Expediente.InnerText = gestorDeCobros;
+                                    //lblNoSolicitudCredito_Expediente.InnerText = pcIDSolicitud;
+                                    //lblFechaActual_Expediente.InnerText = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                    //lblNombreCliente_Expediente.InnerText = nombreCliente;
+                                    //lblIdentidadCliente_Expediente.InnerText = identidad;
+                                    //lblDepartamento_Expediente.InnerText = departamentoResidencia;
+                                    //lblDireccionCliente_Expediente.InnerText = direccionCliente;
+                                    //lblTelefonoCliente_Expediente.InnerText = telefonoPrimario;
+                                    //lblTipoDeTrabajo_Expediente.InnerText = nombreTrabajo;
+                                    //lblPuestoAsignado_Expediente.InnerText = puestoAsignado;
+                                    //lblTelefonoTrabajo_Expediente.InnerText = telefonoTrabajo;
+                                    //lblDirecciónTrabajo_Expediente.InnerText = direccionTrabajo;
+                                    //lblNoSolicitud_Expediente.InnerText = pcIDSolicitud;
+                                    //lblFechaOtorgamiento_Expediente.InnerText = fechaOtorgamiento.ToString("dd/MM/yyyy");
+                                    //lblCantidadCuotas_Expediente.InnerText = plazoFinalAprobado + " Cuotas";
+                                    //lblMontoOtorgado_Expediente.InnerText = DecimalToString(valorTotalFinanciamiento);
+                                    //lblValorCuota_Expediente.InnerText = DecimalToString(valorCuotaTotal);
+                                    //lblFechaPrimerPago_Expediente.InnerText = fechaPrimerPago.ToString("dd/MM/yyyy");
+                                    //lblFrecuenciaPlazo_Expediente.InnerText = tipoDePlazoSufijoAl;
+                                    //lblFechaVencimiento_Expediente.InnerText = fechaVencimiento;
+                                    //lblOficialNegocios_Expediente.InnerText = oficialDeNegocios;
+                                    //lblGestor_Expediente.InnerText = gestorDeCobros;
                                 }
 
                                 /* Fotografías de la garantía */
@@ -493,7 +496,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
                                     divGaleriaInspeccionSeguroDeVehiculo.InnerHtml = imagenesGarantiaParaInspeccionDeSeguro.ToString();
                                 }
-
                                 divInformacionGarantia.Visible = true;
 
                             } // if requiereGarantia == 1
@@ -851,9 +853,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
     #region Convertir cantidad a palabras
 
-    public static string ConvertirCantidadAPalabras(string cantidad)
+    public static string ConvertirCantidadALetras(string cantidad)
     {
-        string resultado, centavos = "";
+        string resultado, centavos = string.Empty;
         Int64 entero;
         int decimales;
         double cantidadNumerica;
