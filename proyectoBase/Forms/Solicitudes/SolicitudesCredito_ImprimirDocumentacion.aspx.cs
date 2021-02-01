@@ -443,27 +443,27 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblNombreVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
 
                                     /* Expediente */
-                                    //lblNoSolicitudCredito_Expediente.InnerText = pcIDSolicitud;
-                                    //lblFechaActual_Expediente.InnerText = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt");
-                                    //lblNombreCliente_Expediente.InnerText = nombreCliente;
-                                    //lblIdentidadCliente_Expediente.InnerText = identidad;
-                                    //lblDepartamento_Expediente.InnerText = departamentoResidencia;
-                                    //lblDireccionCliente_Expediente.InnerText = direccionCliente;
-                                    //lblTelefonoCliente_Expediente.InnerText = telefonoPrimario;
-                                    //lblTipoDeTrabajo_Expediente.InnerText = nombreTrabajo;
-                                    //lblPuestoAsignado_Expediente.InnerText = puestoAsignado;
-                                    //lblTelefonoTrabajo_Expediente.InnerText = telefonoTrabajo;
-                                    //lblDirecciónTrabajo_Expediente.InnerText = direccionTrabajo;
-                                    //lblNoSolicitud_Expediente.InnerText = pcIDSolicitud;
-                                    //lblFechaOtorgamiento_Expediente.InnerText = fechaOtorgamiento.ToString("dd/MM/yyyy");
-                                    //lblCantidadCuotas_Expediente.InnerText = plazoFinalAprobado + " Cuotas";
-                                    //lblMontoOtorgado_Expediente.InnerText = DecimalToString(valorTotalFinanciamiento);
-                                    //lblValorCuota_Expediente.InnerText = DecimalToString(valorCuotaTotal);
-                                    //lblFechaPrimerPago_Expediente.InnerText = fechaPrimerPago.ToString("dd/MM/yyyy");
-                                    //lblFrecuenciaPlazo_Expediente.InnerText = tipoDePlazoSufijoAl;
-                                    //lblFechaVencimiento_Expediente.InnerText = fechaVencimiento;
-                                    //lblOficialNegocios_Expediente.InnerText = oficialDeNegocios;
-                                    //lblGestor_Expediente.InnerText = gestorDeCobros;
+                                    lblNoSolicitudCredito_Expediente.InnerText = pcIDSolicitud;
+                                    lblFechaActual_Expediente.InnerText = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                    lblNombreCliente_Expediente.InnerText = nombreCliente;
+                                    lblIdentidadCliente_Expediente.InnerText = identidad;
+                                    lblDepartamento_Expediente.InnerText = departamentoResidencia;
+                                    lblDireccionCliente_Expediente.InnerText = direccionCliente;
+                                    lblTelefonoCliente_Expediente.InnerText = telefonoPrimario;
+                                    lblTipoDeTrabajo_Expediente.InnerText = nombreTrabajo;
+                                    lblPuestoAsignado_Expediente.InnerText = puestoAsignado;
+                                    lblTelefonoTrabajo_Expediente.InnerText = telefonoTrabajo;
+                                    lblDirecciónTrabajo_Expediente.InnerText = direccionTrabajo;
+                                    lblNoSolicitud_Expediente.InnerText = pcIDSolicitud;
+                                    lblFechaOtorgamiento_Expediente.InnerText = fechaOtorgamiento.ToString("dd/MM/yyyy");
+                                    lblCantidadCuotas_Expediente.InnerText = plazoFinalAprobado + " Cuotas";
+                                    lblMontoOtorgado_Expediente.InnerText = DecimalToString(valorTotalFinanciamiento);
+                                    lblValorCuota_Expediente.InnerText = DecimalToString(valorCuotaTotal);
+                                    lblFechaPrimerPago_Expediente.InnerText = fechaPrimerPago.ToString("dd/MM/yyyy");
+                                    lblFrecuenciaPlazo_Expediente.InnerText = tipoDePlazoSufijoAl;
+                                    lblFechaVencimiento_Expediente.InnerText = fechaVencimiento;
+                                    lblOficialNegocios_Expediente.InnerText = oficialDeNegocios;
+                                    lblGestor_Expediente.InnerText = gestorDeCobros;
                                 }
 
                                 /* Fotografías de la garantía */

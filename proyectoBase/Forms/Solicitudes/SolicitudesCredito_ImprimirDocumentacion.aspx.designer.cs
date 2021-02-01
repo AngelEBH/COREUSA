@@ -1255,15 +1255,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divReciboPDF;
 
     /// <summary>
-    /// Control lblRTNEmpresa_Recibo.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblRTNEmpresa_Recibo;
-
-    /// <summary>
     /// Control lblFecha_Recibo.
     /// </summary>
     /// <remarks>
@@ -1280,15 +1271,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblRecibo_Recibo;
-
-    /// <summary>
-    /// Control lblNombreEmpresa_Recibo.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblNombreEmpresa_Recibo;
 
     /// <summary>
     /// Control lblSumaRecibidaEnPalabras_Recibo.
