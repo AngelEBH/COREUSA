@@ -49,16 +49,11 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             {
                 var lcURL = Request.Url.ToString();
                 var liParamStart = lcURL.IndexOf("?");
-                var lcParametros = string.Empty;
-
-                if (liParamStart > 0)
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                else
-                    lcParametros = string.Empty;
+                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
                 if (lcParametros != string.Empty)
                 {
-                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
+                    var lcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
                     var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
@@ -172,6 +167,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                 Telefono = sqlResultado["fcTelefono"].ToString(),
                                 Email = sqlResultado["fcEmail"].ToString(),
                                 Constitucion = sqlResultado["fcConstitucionFondo"].ToString(),
+                                UrlLogo = sqlResultado["fcUrlLogo"].ToString(),
 
                                 RepresentanteLegal = new RepresentanteLegal_ViewModel()
                                 {
@@ -1013,6 +1009,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         public string Telefono { get; set; }
         public string Email { get; set; }
         public string Constitucion { get; set; }
+        public string UrlLogo { get; set; }
         public RepresentanteLegal_ViewModel RepresentanteLegal { get; set; }
     }
 

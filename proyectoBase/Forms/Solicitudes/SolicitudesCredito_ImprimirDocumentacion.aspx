@@ -280,7 +280,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="/Imagenes/LogoPrestadito.png" />
+                            <img src="#" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h6 class="text-center font-weight-bold">CONTRATO DE CRÉDITO PARA COMPRA DE VEHÍCULO</h6>
@@ -609,7 +609,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="/Imagenes/LogoPrestadito.png" />
+                            <img src="#" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">PAGARÉ POR
@@ -692,7 +692,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="/Imagenes/LogoPrestadito.png" />
+                            <img src="#" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">COMPROMISO LEGAL</h5>
@@ -772,7 +772,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="/Imagenes/LogoPrestadito.png" class="mt-0 pt-0" />
+                            <img src="#" class="img-fluid mt-0 pt-0 img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h6 class="text-center font-weight-bold">Convenio de regulación de compra y venta de vehículos para financiamiento a Tercero</h6>
@@ -905,7 +905,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="/Imagenes/LogoPrestadito.png" />
+                            <img src="#" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">INSPECCIÓN SEGURO DE VEHÍCULO</h5>
@@ -971,7 +971,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 mb-5">
-                            <img src="/Imagenes/LogoPrestadito.png" />
+                            <img src="#" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-6 align-self-center">
                             <h4 class="text-center font-weight-bold lblRazonSocial"></h4>
@@ -1090,7 +1090,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="/Imagenes/LogoPrestadito.png" />
+                            <img src="#" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">TRASPASO DE VEHÍCULO</h5>
@@ -1243,7 +1243,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="/Imagenes/LogoPrestadito.png" />
+                            <img src="#" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">TRASPASO DE VEHÍCULO</h5>
@@ -1774,7 +1774,7 @@
                 <div class="card-body pt-0 pr-5 pl-5">
                     <div class="row">
                         <div class="col-12 m-0 p-0 text-center">
-                            <img src="/Imagenes/LogoPrestadito.png" class="pt-4" />
+                            <img src="#" class="img-fluid pt-4 img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h4 class="text-center pt-2 pb-4 font-weight-bold">NOTA DE ENTREGA
@@ -2102,7 +2102,7 @@
                             </div>
                         </div>
                         <div class="col-4 text-center align-self-">
-                            <img src="/Imagenes/LogoPrestadito.png" class="img-fluid" />
+                            <img src="#" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-4 align-self-end">
                             <div class="form-group row pr-3">
@@ -2232,6 +2232,8 @@
     <script src="/Scripts/plugins/qrcode/qrcode.js"></script>
     <script>
 
+        debugger;
+
         $("#divGaleriaGarantia").unitegallery({
             gallery_width: 900,
             gallery_height: 600
@@ -2268,6 +2270,7 @@
 
         const FONDOS_PRESTAMO = <%=this.FondoPrestamoJSON%>;
 
+        $(".img-logo-empresa").attr('src', FONDOS_PRESTAMO.UrlLogo);
         $('.lblRazonSocial').text(FONDOS_PRESTAMO.RazonSocial);
         $('.lblNombreComercial').text(FONDOS_PRESTAMO.NombreComercial);
         $('.lblRTNEmpresa').text(FONDOS_PRESTAMO.EmpresaRTN);
@@ -2284,14 +2287,13 @@
         $('.lblCiudadDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.CiudadDomicilio);
         $('.lblDepartamentoDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.DepartamentoDomicilio);
 
-        // radiofaro
 
         function ExportToPDF(nombreDelArchivo, idDivContenedor, idDivPDF) {
 
             $("#Loader").css('display', '');
 
             var opt = {
-                margin: [0.3, 0, 0, 0], //top, left, buttom, right,
+                margin: [0.3, 0.3, 0, 0.3], //top, left, buttom, right,
                 filename: 'Solicitud_' + '<%=pcIDSolicitud%>' + '_' + nombreDelArchivo + '.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: {

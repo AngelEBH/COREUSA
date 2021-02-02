@@ -106,8 +106,11 @@
                                     <button type="button" id="btnReiniciarResolucion" runat="server" class="FormatoBotonesIconoCuadrado40 disabled" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
                                         Cambiar Resolución
                                     </button>
-                                    <button type="button" id="btnCambiarTasaInteres" runat="server" class="FormatoBotonesIconoCuadrado40 disabled" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/percentage_40px.png');">
+                                    <%--<button type="button" id="btnCambiarTasaInteres" runat="server" class="FormatoBotonesIconoCuadrado40 disabled" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/percentage_40px.png');">
                                         Cambiar Tasa Interes
+                                    </button>--%>
+                                    <button type="button" id="btnCambiarFondos" runat="server" class="FormatoBotonesIconoCuadrado40" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/money_bag_40px.png');">
+                                        Cambiar Fondos
                                     </button>
                                     <button type="button" id="btnReiniciarAnalisis" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
                                         Reiniciar Analisis
@@ -174,6 +177,49 @@
             </div>
         </div>
 
+        <div id="modalCambiarFondos" class="modal fade" role="dialog" aria-labelledby="modalCambiarFondosLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalCambiarFondosLabel">Cambiar Fondos</h6>
+                            </div>
+                            <div class="col-12 text-muted">
+                                Fondo actual:
+                                <span class="text-muted" id="lblFondoActual"></span>
+                            </div>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <label class="col-form-label font-weight-bold">Fondos disponibles</label>
+                            </div>
+                            <div class="col-12">
+                                <asp:DropDownList ID="ddlFondos" runat="server" CssClass="form-control form-control-sm" required="required"></asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Observaciones</label>
+                                <textarea id="txtObservacionesCambiarFondos" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="500" data-parsley-minlength="15" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnCambiarFondosConfirmar" type="button" class="btn btn-danger">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="modalReiniciarProceso" class="modal fade" role="dialog" aria-labelledby="modalReiniciarProcesoLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -192,10 +238,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnReiniciarSolicitud" data-dismiss="modal" class="btn btn-danger waves-effect">
+                        <button id="btnReiniciarSolicitud" data-dismiss="modal" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -231,10 +277,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btnResolucionCampoConfirmar" class="btn btn-danger waves-effect">
+                        <button type="button" id="btnResolucionCampoConfirmar" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -262,10 +308,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnAsignarGestor_Confirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                        <button id="btnAsignarGestor_Confirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -293,10 +339,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnAsignarVendedores_Confirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                        <button id="btnAsignarVendedores_Confirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -329,7 +375,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
                         </button>
                     </div>
@@ -353,10 +399,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnAnularCondicionConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                        <button id="btnAnularCondicionConfirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -387,7 +433,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
                         </button>
                     </div>
@@ -412,10 +458,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnEliminarDocumentoConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                        <button id="btnEliminarDocumentoConfirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -452,7 +498,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
                         </button>
                     </div>
@@ -485,10 +531,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnCambiarResolucionConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                        <button id="btnCambiarResolucionConfirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -524,10 +570,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnReiniciarInvestigacionDeCampo" type="button" class="btn btn-danger waves-effect waves-light">
+                        <button id="btnReiniciarInvestigacionDeCampo" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -551,10 +597,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnReiniciarReprogramacionConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                        <button id="btnReiniciarReprogramacionConfirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -578,10 +624,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnReiniciarValidacionConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                        <button id="btnReiniciarValidacionConfirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -629,10 +675,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnReiniciarAnalisisConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                        <button id="btnReiniciarAnalisisConfirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -687,10 +733,10 @@
                         </div>
                     </div>
                     <div class="modal-footer pt-2 pb-2">
-                        <button id="btnAgregarReferenciaConfirmar" type="button" class="btn btn-primary waves-effect waves-light mr-1">
+                        <button id="btnAgregarReferenciaConfirmar" type="button" class="btn btn-primary mr-1">
                             Agregar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -714,10 +760,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnEliminarReferenciaPersonalConfirmar" type="button" class="btn btn-danger waves-effect waves-light">
+                        <button id="btnEliminarReferenciaPersonalConfirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -772,10 +818,10 @@
                         </div>
                     </div>
                     <div class="modal-footer pt-2 pb-2">
-                        <button id="btnEditarReferenciaConfirmar" type="button" class="btn btn-primary waves-effect waves-light mr-1">
+                        <button id="btnEditarReferenciaConfirmar" type="button" class="btn btn-primary mr-1">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -791,7 +837,7 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Mantenimiento.js?202011130949"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Mantenimiento.js?2021020212302585"></script>
     <script>
         $(document).ready(function () {
             $(".mascara-enteros").inputmask("decimal", {

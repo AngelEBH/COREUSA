@@ -9,48 +9,41 @@ using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
 {
-    public string pcIDUsuario = "";
     public string pcIDApp = "";
     public string pcIDSesion = "";
+    public string pcIDUsuario = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        try
         {
-            try
+            if (!IsPostBack)
             {
-                var lcURL = string.Empty;
-                var liParamStart = 0;
-                var lcParametros = string.Empty;
-                var lcParametroDesencriptado = string.Empty;
-                var pcEncriptado = string.Empty;
-
                 Uri lURLDesencriptado = null;
-                lcURL = Request.Url.ToString();
-                liParamStart = lcURL.IndexOf("?");
-
-                if (liParamStart > 0)
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                else
-                    lcParametros = string.Empty;
+                var lcURL = Request.Url.ToString();
+                var liParamStart = lcURL.IndexOf("?");
+                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
                 if (lcParametros != string.Empty)
                 {
-                    pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                    lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                    var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
+                    var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+
                     lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
                     ValidarPuesto();
                     CargarListados();
                 }
             }
-            catch (Exception ex)
-            {
-                ex.Message.ToString();
-            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
         }
     }
 
@@ -68,6 +61,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -124,9 +118,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                     break;
                             } // switch (idPuesto)
                         }
-                    }
-                } // using command listado gestores
-            } // using connection
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -148,6 +142,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -162,7 +157,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                             }
                         }
                     }
-                } // using command listado gestores
+                } // using sqlComando listado gestores
 
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_ListadoVendedores", sqlConexion))
                 {
@@ -170,6 +165,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -184,7 +180,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                             }
                         }
                     }
-                } // using commnado listado de vendedores
+                } // using sqlComando listado de vendedores
 
                 using (var sqlComando = new SqlCommand("sp_CredCatalogo_SolicitudEstados", sqlConexion))
                 {
@@ -192,6 +188,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -206,7 +203,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                             }
                         }
                     }
-                } // using cammnd catalogo estados solicitudes
+                } // using sqlComando catalogo estados solicitudes
 
                 using (var sqlComando = new SqlCommand("sp_CREDCatalogo_Parentescos_Listar", sqlConexion))
                 {
@@ -215,6 +212,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -233,7 +231,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                             }
                         }
                     }
-                } // using cammnd catalogo parentescos
+                } // using sqlComando catalogo parentescos
 
                 using (var sqlComando = new SqlCommand("sp_CREDCatalogo_TiempoDeConocer_Listar", sqlConexion))
                 {
@@ -241,6 +239,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -259,8 +258,30 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                             }
                         }
                     }
-                } // using cammnd catalogo tiempo de conocer
-            } // using connection
+                } // using sqlComando catalogo tiempo de conocer
+
+                using (var sqlComando = new SqlCommand("sp_Catalogo_Fondos_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlFondos.Items.Clear();
+
+                        if (sqlResultado.HasRows)
+                        {
+                            while (sqlResultado.Read())
+                            {
+                                ddlFondos.Items.Add(new ListItem(sqlResultado["fcRazonSocial"].ToString().ToUpper(), sqlResultado["fiIDFondo"].ToString()));
+                            }
+                        }
+                    }
+                } // using sqlComando catalogo tiempo de conocer
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -286,17 +307,18 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
 
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_SolicitudClientePorIdSolicitud", sqlConexion))
                 {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
+                        /****** Informacion de la solicitud ******/
                         while (sqlResultado.Read())
                         {
-                            /****** Informacion de la solicitud ******/
                             informacionDeClienteSolicitud.IdSolicitud = (int)sqlResultado["fiIDSolicitud"];
                             informacionDeClienteSolicitud.IdCliente = (int)sqlResultado["fiIDCliente"];
                             informacionDeClienteSolicitud.IdEstadoSolicitud = (byte)sqlResultado["fiEstadoSolicitud"];
@@ -308,110 +330,110 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                             informacionDeClienteSolicitud.IdGestorAsignado = (int)sqlResultado["fiIDGestor"];
                             informacionDeClienteSolicitud.GestorAsignado = sqlResultado["fcNombreGestor"].ToString();
                             informacionDeClienteSolicitud.Agencia = sqlResultado["fcNombreAgencia"].ToString();
-
-                            /****** Documentos de la solicitud ******/
-                            sqlResultado.NextResult();
-
-                            while (sqlResultado.Read())
-                            {
-                                informacionDeClienteSolicitud.Documentos.Add(new SolicitudesCredito_Mantenimiento_Documentos_Solicitud_ViewModel()
-                                {
-                                    IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                    IdSolicitudDocumento = (int)sqlResultado["fiIDSolicitudDocs"],
-                                    NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
-                                    Extension = sqlResultado["fcTipoArchivo"].ToString(),
-                                    RutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),
-                                    URLArchivo = sqlResultado["fcURL"].ToString(),
-                                    IdTipoDocumento = (int)sqlResultado["fiTipoDocumento"],
-                                    DescripcionTipoDocumento = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
-                                    ArchivoActivo = (byte)sqlResultado["fiArchivoActivo"]
-                                });
-                            }
-
-                            /****** Condicionamientos de la solicitud ******/
-                            sqlResultado.NextResult();
-
-                            if (sqlResultado.HasRows)
-                            {
-                                while (sqlResultado.Read())
-                                {
-                                    informacionDeClienteSolicitud.Condiciones.Add(new SolicitudesCredito_Mantenimiento_Solicitud_Condicion_ViewModel()
-                                    {
-
-                                        IdSolicitudCondicion = (int)sqlResultado["fiIDSolicitudCondicion"],
-                                        IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                        IdCondicion = (int)sqlResultado["fiIDCondicion"],
-                                        Condicion = sqlResultado["fcCondicion"].ToString(),
-                                        DescripcionCondicion = sqlResultado["fcDescripcionCondicion"].ToString(),
-                                        ComentarioAdicional = sqlResultado["fcComentarioAdicional"].ToString(),
-                                        EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"]
-                                    });
-                                }
-                            }
-
-                            /****** Información del cliente ******/
-                            sqlResultado.NextResult();
-                            sqlResultado.Read();
-
-                            informacionDeClienteSolicitud.NombreCliente = sqlResultado["fcPrimerNombreCliente"].ToString() + " " + sqlResultado["fcSegundoNombreCliente"].ToString() + " " + sqlResultado["fcPrimerApellidoCliente"].ToString() + " " + sqlResultado["fcSegundoApellidoCliente"].ToString();
-                            informacionDeClienteSolicitud.IdentidadCliente = sqlResultado["fcIdentidadCliente"].ToString();
-                            informacionDeClienteSolicitud.RtnCliente = sqlResultado["fcRTN"].ToString();
-                            informacionDeClienteSolicitud.Telefono = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
-
-                            /****** Información laboral ******/
-                            sqlResultado.NextResult();
-
-                            /****** Informacion domicilio ******/
-                            sqlResultado.NextResult();
-
-                            /****** Informacion del conyugue ******/
-                            sqlResultado.NextResult();
-
-                            /****** Referencias de la solicitud ******/
-                            sqlResultado.NextResult();
-
-                            while (sqlResultado.Read())
-                            {
-                                informacionDeClienteSolicitud.ReferenciasPersonales.Add(new SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewModel()
-                                {
-                                    IdReferencia = (int)sqlResultado["fiIDReferencia"],
-                                    IdCliente = (int)sqlResultado["fiIDCliente"],
-                                    IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                    NombreCompleto = sqlResultado["fcNombreCompletoReferencia"].ToString(),
-                                    LugarTrabajo = sqlResultado["fcLugarTrabajoReferencia"].ToString(),
-                                    TiempoDeConocer = sqlResultado["fcTiempoDeConocer"].ToString(),
-                                    IdTiempoDeConocer = (short)sqlResultado["fiTiempoConocerReferencia"],
-                                    TelefonoReferencia = sqlResultado["fcTelefonoReferencia"].ToString(),
-                                    IdParentescoReferencia = (int)sqlResultado["fiIDParentescoReferencia"],
-                                    DescripcionParentesco = sqlResultado["fcDescripcionParentesco"].ToString(),
-                                    ReferenciaActivo = (bool)sqlResultado["fbReferenciaActivo"],
-                                    RazonInactivo = sqlResultado["fcRazonInactivo"].ToString(),
-                                    ComentarioDeptoCredito = sqlResultado["fcComentarioDeptoCredito"].ToString(),
-                                    AnalistaComentario = (int)sqlResultado["fiAnalistaComentario"]
-                                });
-                            }
-
-                            /****** Historial de mantenimientos de la solicitud ******/
-                            sqlResultado.NextResult();
-
-                            while (sqlResultado.Read())
-                            {
-                                informacionDeClienteSolicitud.HistorialMantenimientos.Add(new SolicitudesCredito_Mantenimiento_HistorialMantenimiento_ViewModel()
-                                {
-                                    IdHistorialMantenimiento = (int)sqlResultado["fiIDHistorialMantenimiento"],
-                                    IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                    IdUsuario = (int)sqlResultado["fiIDUsuario"],
-                                    NombreUsuario = sqlResultado["fcNombreCorto"].ToString(),
-                                    AgenciaUsuario = sqlResultado["fcNombreAgencia"].ToString(),
-                                    FechaMantenimiento = (DateTime)sqlResultado["fdFechaMantenimiento"],
-                                    Observaciones = sqlResultado["fcObservaciones"].ToString(),
-                                    EstadoMantenimiento = (int)sqlResultado["fiEstadoMantenimiento"]
-                                });
-                            }
+                            informacionDeClienteSolicitud.IdFondo = (int)sqlResultado["fiIDFondo"];
+                            informacionDeClienteSolicitud.Fondo = sqlResultado["fcRazonSocial"].ToString().ToUpper();
                         }
-                    }
-                } // using command
-            }// using connection
+
+                        /****** Documentos de la solicitud ******/
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            informacionDeClienteSolicitud.Documentos.Add(new SolicitudesCredito_Mantenimiento_Documentos_Solicitud_ViewModel()
+                            {
+                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
+                                IdSolicitudDocumento = (int)sqlResultado["fiIDSolicitudDocs"],
+                                NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
+                                Extension = sqlResultado["fcTipoArchivo"].ToString(),
+                                RutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),
+                                URLArchivo = sqlResultado["fcURL"].ToString(),
+                                IdTipoDocumento = (int)sqlResultado["fiTipoDocumento"],
+                                DescripcionTipoDocumento = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
+                                ArchivoActivo = (byte)sqlResultado["fiArchivoActivo"]
+                            });
+                        }
+
+                        /****** Condicionamientos de la solicitud ******/
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            informacionDeClienteSolicitud.Condiciones.Add(new SolicitudesCredito_Mantenimiento_Solicitud_Condicion_ViewModel()
+                            {
+
+                                IdSolicitudCondicion = (int)sqlResultado["fiIDSolicitudCondicion"],
+                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
+                                IdCondicion = (int)sqlResultado["fiIDCondicion"],
+                                Condicion = sqlResultado["fcCondicion"].ToString(),
+                                DescripcionCondicion = sqlResultado["fcDescripcionCondicion"].ToString(),
+                                ComentarioAdicional = sqlResultado["fcComentarioAdicional"].ToString(),
+                                EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"]
+                            });
+                        }
+
+                        /****** Información del cliente ******/
+                        sqlResultado.NextResult();
+                        sqlResultado.Read();
+
+                        informacionDeClienteSolicitud.NombreCliente = sqlResultado["fcPrimerNombreCliente"].ToString() + " " + sqlResultado["fcSegundoNombreCliente"].ToString() + " " + sqlResultado["fcPrimerApellidoCliente"].ToString() + " " + sqlResultado["fcSegundoApellidoCliente"].ToString();
+                        informacionDeClienteSolicitud.IdentidadCliente = sqlResultado["fcIdentidadCliente"].ToString();
+                        informacionDeClienteSolicitud.RtnCliente = sqlResultado["fcRTN"].ToString();
+                        informacionDeClienteSolicitud.Telefono = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
+
+                        /****** Información laboral ******/
+                        sqlResultado.NextResult();
+
+                        /****** Informacion domicilio ******/
+                        sqlResultado.NextResult();
+
+                        /****** Informacion del conyugue ******/
+                        sqlResultado.NextResult();
+
+                        /****** Referencias de la solicitud ******/
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            informacionDeClienteSolicitud.ReferenciasPersonales.Add(new SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewModel()
+                            {
+                                IdReferencia = (int)sqlResultado["fiIDReferencia"],
+                                IdCliente = (int)sqlResultado["fiIDCliente"],
+                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
+                                NombreCompleto = sqlResultado["fcNombreCompletoReferencia"].ToString(),
+                                LugarTrabajo = sqlResultado["fcLugarTrabajoReferencia"].ToString(),
+                                TiempoDeConocer = sqlResultado["fcTiempoDeConocer"].ToString(),
+                                IdTiempoDeConocer = (short)sqlResultado["fiTiempoConocerReferencia"],
+                                TelefonoReferencia = sqlResultado["fcTelefonoReferencia"].ToString(),
+                                IdParentescoReferencia = (int)sqlResultado["fiIDParentescoReferencia"],
+                                DescripcionParentesco = sqlResultado["fcDescripcionParentesco"].ToString(),
+                                ReferenciaActivo = (bool)sqlResultado["fbReferenciaActivo"],
+                                RazonInactivo = sqlResultado["fcRazonInactivo"].ToString(),
+                                ComentarioDeptoCredito = sqlResultado["fcComentarioDeptoCredito"].ToString(),
+                                AnalistaComentario = (int)sqlResultado["fiAnalistaComentario"]
+                            });
+                        }
+
+                        /****** Historial de mantenimientos de la solicitud ******/
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            informacionDeClienteSolicitud.HistorialMantenimientos.Add(new SolicitudesCredito_Mantenimiento_HistorialMantenimiento_ViewModel()
+                            {
+                                IdHistorialMantenimiento = (int)sqlResultado["fiIDHistorialMantenimiento"],
+                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
+                                IdUsuario = (int)sqlResultado["fiIDUsuario"],
+                                NombreUsuario = sqlResultado["fcNombreCorto"].ToString(),
+                                AgenciaUsuario = sqlResultado["fcNombreAgencia"].ToString(),
+                                FechaMantenimiento = (DateTime)sqlResultado["fdFechaMantenimiento"],
+                                Observaciones = sqlResultado["fcObservaciones"].ToString(),
+                                EstadoMantenimiento = (int)sqlResultado["fiEstadoMantenimiento"]
+                            });
+                        }
+
+                    } // using sqlResultado
+                } // using sqlComando
+            }// using sqlConexion
         }
         catch (Exception ex)
         {
@@ -428,9 +450,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -445,6 +467,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -455,9 +478,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -470,12 +493,11 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool AsignarGestorSolicitud(int idSolicitud, int idGestor, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -492,6 +514,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -502,9 +525,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -517,12 +540,11 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool ReasignarVendedorSolicitud(int idSolicitud, int idUsuarioAsignado, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -539,6 +561,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -549,9 +572,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -564,12 +587,11 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool AnularCondicion(int idSolicitud, int idSolicitudCondicion, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -586,6 +608,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -596,9 +619,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -611,12 +634,11 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool EliminarDocumento(int idSolicitud, int idSolicitudDocumento, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -633,6 +655,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -643,9 +666,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -658,12 +681,11 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool CambiarResolucionSolicitud(int idSolicitud, int idNuevaResolucion, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -680,6 +702,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -690,9 +713,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -705,12 +728,11 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool ReiniciarCampo(int idSolicitud, bool reiniciarInvestigacionDomicilio, bool reiniciarInvestigacionTrabajo, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -728,6 +750,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -738,9 +761,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -753,12 +776,11 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool ReiniciarReprogramacion(int idSolicitud, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -774,6 +796,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -784,9 +807,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -799,12 +822,11 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool ReiniciarValidacion(int idSolicitud, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -820,6 +842,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -830,9 +853,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -845,12 +868,11 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool ReiniciarAnalisis(int idSolicitud, bool reiniciarInfoPersonal, bool reiniciarInfoLaboral, bool reiniciarReferencias, bool reiniciarDocumentacion, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
 
@@ -870,6 +892,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -880,9 +903,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -895,14 +918,13 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool RegistrarReferenciaPersonal(int idSolicitud, int idCliente, SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -922,6 +944,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -932,9 +955,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -947,14 +970,13 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool EliminarReferenciaPersonal(int idSolicitud, int idCliente, int idReferenciaPersonal, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -970,6 +992,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -980,9 +1003,9 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -995,14 +1018,13 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     [WebMethod]
     public static bool ActualizarReferenciaPersonal(int idSolicitud, int idCliente, SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string observaciones, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1023,6 +1045,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -1033,9 +1056,56 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                                 resultado = true;
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool CambiarFondosPrestamo(int idSolicitud, int idFondo, string observaciones, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_CambiarFondos", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDFondo", idFondo);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -1050,19 +1120,14 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var liParamStart = 0;
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
-            liParamStart = URL.IndexOf("?");
-            if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
@@ -1073,6 +1138,8 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
         return lURLDesencriptado;
     }
 }
+
+#region View Models
 
 public class SolicitudesCredito_Mantenimiento_ViewModel
 {
@@ -1091,6 +1158,8 @@ public class SolicitudesCredito_Mantenimiento_ViewModel
     public string GestorAsignado { get; set; }
     public int IdEstadoSolicitud { get; set; }
     public string EstadoSolicitud { get; set; }
+    public int IdFondo { get; set; }
+    public string Fondo { get; set; }
     public List<SolicitudesCredito_Mantenimiento_Documentos_Solicitud_ViewModel> Documentos { get; set; }
     public List<SolicitudesCredito_Mantenimiento_Solicitud_Condicion_ViewModel> Condiciones { get; set; }
     public List<SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewModel> ReferenciasPersonales { get; set; }
@@ -1158,3 +1227,5 @@ public class SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewMod
     public string ComentarioDeptoCredito { get; set; }
     public int AnalistaComentario { get; set; }
 }
+
+#endregion

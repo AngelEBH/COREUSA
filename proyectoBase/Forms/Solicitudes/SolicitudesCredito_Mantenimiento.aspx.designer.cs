@@ -130,13 +130,13 @@ public partial class SolicitudesCredito_Mantenimiento
     protected global::System.Web.UI.HtmlControls.HtmlButton btnReiniciarResolucion;
 
     /// <summary>
-    /// Control btnCambiarTasaInteres.
+    /// Control btnCambiarFondos.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlButton btnCambiarTasaInteres;
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnCambiarFondos;
 
     /// <summary>
     /// Control btnReiniciarAnalisis.
@@ -245,6 +245,24 @@ public partial class SolicitudesCredito_Mantenimiento
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblMensaje;
+
+    /// <summary>
+    /// Control ddlFondos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlFondos;
+
+    /// <summary>
+    /// Control txtObservacionesCambiarFondos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesCambiarFondos;
 
     /// <summary>
     /// Control txtObservacionesReiniciarResolucionSolicitud.

@@ -2,6 +2,7 @@
 var idCliente = 0;
 var idEstadoSolicitud = 0;
 
+/* Cambiar resultado de campo */
 $("#btnResolucionCampo").click(function (e) {
 
     $("#ddlResolucionCampo").val('');
@@ -89,6 +90,7 @@ $("#btnAsignarGestor_Confirmar").click(function (e) {
     }
 });
 
+
 /* Reasignar vendedor */
 $("#btnReasignarVendedor").on('click', function () {
 
@@ -131,13 +133,13 @@ $("#btnAsignarVendedores_Confirmar").click(function (e) {
     }
 });
 
+
 /* Anular condiciones */
 $("#btnCondiciones").on('click', function () {
 
     $("#modalAnularCondicion").modal();
 });
 
-/* Anular condiciones Confirmar */
 var idCondicionSeleccionada = 0;
 $(document).on('click', 'button#btnAnularCondicion', function () {
 
@@ -189,7 +191,6 @@ $("#btnSolicitudDocumentos").on('click', function () {
     $("#modalDocumentacionSolicitud").modal();
 });
 
-/* Eliminar documentos Confirmar */
 var idDocumentoSeleccionado = 0;
 $(document).on('click', 'button#btnEliminarDocumento', function () {
 
@@ -234,19 +235,12 @@ $("#btnEliminarDocumentoConfirmar").click(function (e) {
     }
 });
 
-/* Referencias personales */
-$("#btnReferenciasPersonales").on('click', function () {
-
-    $("#modalReferenciasPersonales").modal();
-});
-
 
 /* Cambiar resolucion */
 $("#btnReiniciarResolucion").on('click', function () {
 
     $("#modalCambiarResolucion").modal();
 });
-
 
 $("#btnCambiarResolucionConfirmar").click(function (e) {
 
@@ -301,7 +295,6 @@ $("#btnReiniciarCampo").on('click', function () {
     $("#modalReiniciarCampo").modal();
 });
 
-
 $("#btnReiniciarInvestigacionDeCampo").click(function (e) {
 
     if ($("#txtObservacionesReiniciarCampo").parsley().isValid()) {
@@ -352,7 +345,6 @@ $("#btnReiniciarReprogramacion").on('click', function () {
     $("#modalReiniciarReprogramacion").modal();
 });
 
-
 $("#btnReiniciarReprogramacionConfirmar").click(function (e) {
 
     if ($("#txtObservacionesReiniciarReprogramacion").parsley().isValid()) {
@@ -395,7 +387,6 @@ $("#btnReiniciarValidacion").on('click', function () {
     $("#modalReiniciarValidacion").modal();
 });
 
-
 $("#btnReiniciarValidacionConfirmar").click(function (e) {
 
     if ($("#txtObservacionesReiniciarValidacion").parsley().isValid()) {
@@ -431,6 +422,57 @@ $("#btnReiniciarValidacionConfirmar").click(function (e) {
 });
 
 
+/* Cambiar fondos del préstamo */
+$("#btnCambiarFondos").on('click', function () {
+
+    $("#txtObservacionesCambiarFondos").val('');
+    $("#modalCambiarFondos").modal();
+});
+
+$("#btnCambiarFondosConfirmar").click(function (e) {
+
+    if ($("#ddlFondos").parsley().isValid() && $("#txtObservacionesCambiarFondos").parsley().isValid()) {
+
+        if ($("#ddlFondos :selected").val()) {
+
+            let idNuevoFondo = $("#ddlFondos :selected").val();
+            let observaciones = $("#txtObservacionesCambiarFondos").val();
+
+            $.ajax({
+                type: "POST",
+                url: "SolicitudesCredito_Mantenimiento.aspx/CambiarFondosPrestamo",
+                data: JSON.stringify({ idSolicitud: idSolicitud, idFondo: idNuevoFondo, observaciones: observaciones, dataCrypt: window.location.href }),
+                contentType: "application/json; charset=utf-8",
+                error: function (xhr, ajaxOptions, thrownError) {
+                    MensajeError("No se pudo cambiar el origen de los fondos, contacte al administrador.");
+                },
+                success: function (data) {
+
+                    if (data.d == true)
+                    {
+                        MensajeExito('El origen de los fondos se cambió correctamente.');
+                        BuscarSolicitud();
+                    }
+                    else
+                    {
+                        MensajeError("No se pudo cambiar el origen de los fondos, contacte al administrador.");
+                    }
+
+                    $("#modalCambiarFondos").modal('hide');
+                }
+            });
+        }
+        else
+            MensajeError('La solicitud ya tiene esta resolución...');
+    }
+    else
+    {
+        $("#ddlFondos").parsley().validate();
+        $("#txtObservacionesCambiarFondos").parsley().validate();
+    }
+});
+
+
 /* Reiniciar analisis */
 $("#btnReiniciarAnalisis").on('click', function () {
 
@@ -438,7 +480,6 @@ $("#btnReiniciarAnalisis").on('click', function () {
     $("#txtObservacionesReiniciarAnalisis").val('');
     $("#modalReiniciarAnalisis").modal();
 });
-
 
 $("#btnReiniciarAnalisisConfirmar").click(function (e) {
 
@@ -482,6 +523,13 @@ $("#btnReiniciarAnalisisConfirmar").click(function (e) {
     else {
         $("#txtObservacionesReiniciarAnalisis").parsley().validate();
     }
+});
+
+
+/* Referencias personales */
+$("#btnReferenciasPersonales").on('click', function () {
+
+    $("#modalReferenciasPersonales").modal();
 });
 
 /* Manejo de referencias personales */
@@ -588,7 +636,6 @@ $("#btnEliminarReferenciaPersonalConfirmar").click(function (e) {
         $("#txtObservacionesEliminarReferenciaPersonal").parsley().validate();
     }
 });
-
 
 /* Actualizar referencia personal */
 $(document).on('click', 'button#btnEditarReferencia', function () {
@@ -701,6 +748,9 @@ function BuscarSolicitud() {
                     $("#txtAgencia").val(resultado.Agencia);
                     $("#txtAgenteAsignado").val(resultado.UsuarioAsignado);
                     $("#txtGestorAsignado").val(resultado.GestorAsignado);
+
+                    $("#lblFondoActual").text(resultado.Fondo);
+                    $("#ddlFondos").val(resultado.IdFondo);
 
                     /* Condiciones de la solicitud */
                     var tblCondiciones = $("#tblCondiciones tbody");
@@ -827,7 +877,6 @@ function BuscarSolicitud() {
         $("#txtNoSolicitud").focus();
     }
 }
-
 
 function MensajeError(mensaje) {
     iziToast.error({
