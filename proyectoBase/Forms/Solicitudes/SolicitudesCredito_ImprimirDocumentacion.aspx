@@ -453,13 +453,13 @@
                                 <b class="lblNombreComercial"></b>
                                 ejerza los controles que juzgue convenientes, para asegurarse que los fondos de este crédito se inviertan en los fines que se han indicado anteriormente y condiciones que se estipulan en este contrato.
                                 <b>- B) DE LA GARANTIA:</b>
-                                En calidad de Garantía para el Cumplimiento de la presente obligación <b>El CLIENTE</b> firmara una <b>PAGARE</b> sin protesto, así como también da en propiedad a
+                                En calidad de Garantía para el Cumplimiento de la presente obligación <b>El CLIENTE</b> firmara un <b>PAGARE</b> sin protesto, así como también da en propiedad a
                                 <b class="lblNombreComercial"></b>
                                 el vehículo comprado con el dinero objeto del presente préstamo, quedándose
                                 <b class="lblNombreComercial"></b>
                                 con la documentación original del vehículo y el <b>CLIENTE</b> en posesión del vehículo del cual será responsable mientras se encuentre en su poder y no se haya cancelado el precio total pactado para la terminación del presente contrato.
                                 Sin perjuicio de la <b>designación de garantías fiduciarias como ser Menaje de Hogar y demás bienes pertenecientes AL CLIENTE</b>, por lo que está terminantemente prohibido para el <b>CLIENTE</b> utilizar el vehículo para transporte público como ser taxi en todas sus modalidades incluyendo VIP,
-                                asi como también transporte de carga o similares, también se le porhibe enajenar, vender, permutar, donar, gravar, prestar o dar en prenda el vehículo dado en propiedad, sin la autorización por escrito otorgada por
+                                asi como también transporte de carga o similares, también se le prohibe enajenar, vender, permutar, donar, gravar, prestar o dar en prenda el vehículo dado en propiedad, sin la autorización por escrito otorgada por
                                 <b class="lblNombreComercial"></b>,
                                 el incumplimiento de las prohibiciones faculta a
                                 <b class="lblNombreComercial"></b>
@@ -489,7 +489,10 @@
                                 <b>1)</b> Contraiga deudas con otras instituciones financieras, no financieras, puestos de bolsa, proveedores, filiales y otros. <b>EL CLIENTE</b> aprueba libre y voluntariamente por ser válidas, todas las condiciones fijadas en este inciso, por entender que de tal manera
                                 <b class="lblNombreComercial"></b>
                                 se asegura de la solvencia de <b>EL CLIENTE</b> y del pago del crédito otorgado.
-                                <b>- SEXTO: DE LAS MODIFICACIONES DEL CONTRATO.- <span class="lblNombreComercial"></span></b>
+                                <b>
+                                    - SEXTO: DE LAS MODIFICACIONES DEL CONTRATO.-
+                                    <span class="lblNombreComercial"></span>
+                                </b>
                                 comunicará a
                                 <b>EL CLIENTE: 1)</b> De manera general y sin necesidad de especificarlo individualmente, las condiciones contractuales pactadas, por cualquier medio impreso de circulación nacional, o el medio de comunicación que las partes hayan designado, en los casos de los efectos de la aplicación de la vigencia de una ley, con 30 días calendario de anticipación a la aplicación de dicho cambio;
                                 <b>2)</b> Para el caso que las tasas de intereses y otros cargos sea modificada, se aplicará conforme a un factor variable que considera la tasa de interés que se concede para los depósitos a plazo, más el costo de la intermediación y sumándole un diferencial del veinte por ciento. La tasa de interés se revisará cada 3 meses. En el caso que las tasas de interés sean reguladas por el Banco Central de Honduras conforme al artículo 55 de la Ley del Sistema Financiero, se aplicará la tasa máxima permitida por dicha Institución, o la que fije y aplique
@@ -535,20 +538,25 @@
                                 ejerza las acciones judiciales correspondientes, quedando obligado el cliente a pago de gastos y honorarios que ocasione el procedimiento judicial. Así como para determinar el saldo adeudado El estado de cuenta certificado por el contador de
                                 <b class="lblNombreComercial"></b>
                                 o de quien haya adquirido los derechos, hará fe en juicio para establecer el saldo a cargo de <b>EL CLIENTE</b> y Constituirá junto con el presente contrato título ejecutivo, sin necesidad de reconocimiento de firma ni de otro requisito previo alguno, según lo establecido en la ley del sistema financiero. En caso de ejecución de la presente obligación las partes nos sometemos a la jurisdicción y competencia de los Juzgados de San Pedro Sula, Cortés.
-                                <b>.- DÉCIMO PRIMERA: MEDIOS PARA COMUNICACIONES.- EL CLIENTE y <span class="lblNombreComercial"></span></b>establecen y a la vez autorizan, que para las distintas notificaciones que se deban hacer conforme a lo estipulado por este contrato o por lo dispuesto por la ley, se harán efectivas a través de uno solo de los siguientes medios:
+                                <b>
+                                    .- DÉCIMO PRIMERA: MEDIOS PARA COMUNICACIONES.- EL CLIENTE y
+                                    <span class="lblNombreComercial"></span>
+                                </b>
+                                establecen y a la vez autorizan, que para las distintas notificaciones que se deban hacer conforme a lo estipulado por este contrato o por lo dispuesto por la ley, se harán efectivas a través de uno solo de los siguientes medios:
                                 <b>A)</b> Correspondencia ordinaria escrita dirigida a las direcciones indicadas en el preámbulo de este contrato;
                                 <b>B)</b> Notificación por la vía electrónica a su correo electrónico
                                 <asp:Label runat="server" ID="lblCorreo_Contrato"></asp:Label>
                                 <b>C)</b> Notificación mediante cualquier red sociales que pudiese pertenecer al Cliente,
                                 <b>D)</b> o a las direcciones indicadas en cualquiera de los documentos suscritos con
-                                <b>“ <span class="lblNombreComercial"></span>”</b>.
+                                <b>“ <span class="lblNombreComercial"></span> ”</b>.
                                 Cualquier cambio de dirección o número telefónico deberá notificarse fehacientemente, con una anticipación razonable a
                                 <b class="lblNombreComercial"></b>
                                 y hasta entonces se considera efectiva.
                                 <b>.-DÉCIMO SEGUNDA: DE LAS AUTORIZACIONES ESPECIALES. EL CLIENTE </b>otorga de manera expresa, voluntaria e irrevocable su consentimiento para que en caso de mora,
-                                <b class="lblNombreComercial"></b>o sus representantes puedan ingresar a su domicilio a retirar el vehículo, y por lo tanto lo exime de toda responsabilidad que pueda incurrir según el artículo 99 de la Constitución de la Republica.
+                                <b class="lblNombreComercial"></b>
+                                o sus representantes puedan ingresar a su domicilio a retirar el vehículo, y por lo tanto lo exime de toda responsabilidad que pueda incurrir según el artículo 99 de la Constitución de la Republica.
                                 Así como faculta a 
-                                <b>“ <span class="lblNombreComercial"></span>”</b>,
+                                <b>“ <span class="lblNombreComercial"></span> ”</b>,
                                 sus distintas dependencias, así como también a su personal, que mediante visitas a su domicilio se le puedan presentar y ofrecer las diferentes propuestas de negocio, servicios, catálogos de nuevos productos; a su vez, faculta otros canales, sean estos telefónicos o electrónicos, a que se comuniquen y a que le informen en los días de semana, así como también en los días llamados vacaciones, o festivos, en los diferentes horarios abiertos, incluso fin de semana, exonerándole de cualquier perjuicio a la empresa o de ser estas visitas catalogadas como “hostigamiento”.
                                 <b>- El CLIENTE:</b> autoriza de manera expresa y voluntaria que en caso de que
                                 <b class="lblNombreComercial"></b>
@@ -724,7 +732,7 @@
                             <p>
                                 La garantía de dicho vehículo corresponde exclusivamente al distribuidor o concesionario donde fue adquirido; por lo tanto,
                                 <b class="lblRazonSocial"></b>
-                                no se hace responsable de la garantía, la cual funciona de acuerdo a políticas y restricciones del distribuidor
+                                no se hace responsable de la garantía, la cual funciona de acuerdo a políticas y restricciones del distribuidor y/o vendedor.
                             </p>
                             <p>
                                 Me doy por enterado que el vehículo es
@@ -748,16 +756,16 @@
                         </div>
                     </div>
                     <!-- Firma del cliente -->
-                    <div class="row mt-5 justify-content-center">
-                        <div class="col-5 text-center mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-5 text-center">
                             <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
                             <label class="mt-0 d-block">Nombre</label>
                         </div>
-                        <div class="col-5 text-center mt-5">
+                        <div class="col-5 text-center">
                             <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
                             <label class="mt-0 d-block">Firma</label>
                         </div>
-                        <div class="col-5 text-center mt-5">
+                        <div class="col-5 text-center">
                             <asp:Label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" ForeColor="Black" Style="border-radius: 0px;" runat="server" ID="lblIdentidadFirma_CompromisoLegal"></asp:Label>
                             <label class="mt-0 d-block">Identidad</label>
                         </div>
@@ -792,7 +800,7 @@
                                 Legal de la Empresa Mercantil denominada 
                                 <b class="lblRazonSocial"></b>
                                 <span class="lblConstitucionFondo"></span>
-                                en este convenio se denominara <b>LA EMPRESA</b> y <b>AL SEÑOR(A)</b>
+                                que en este convenio se denominará <b>LA EMPRESA</b> y <b>AL SEÑOR(A)</b>
                                 <asp:Label runat="server" ID="lblNombreCliente_ConvenioCyV"></asp:Label>
                                 mayor de edad,
                                 <asp:Label runat="server" ID="lblNacionalidad_ConvenioCyV"></asp:Label>,
@@ -826,47 +834,47 @@
                                 Ambos cuentan con la capacidad y facultades suficientes para poder contratar, quienes voluntariamente con plena libertad y
                                 sin presión de ninguna naturaleza manifestamos lo siguiente:
                             </p>
-                            <p>
+                            <p class="mb-2">
                                 <b>Primero:</b>
                                 A la firma de este documento las partes reconocen que tienen relación contractual, la cual servirá de guía al momento en que la Empresa decida otorgar crédito a terceras personas y El cliente posea el vehículo a financiar.
                             </p>
-                            <p>
+                            <p class="mb-2">
                                 <b>Segundo:</b>
                                 El Cliente Jura que los recursos que utiliza para la compra de vehículos provienen de Actividades Licitas.
                             </p>
-                            <p>
+                            <p class="mb-2">
                                 <b>Tercero:</b>
                                 La Empresa se obliga a pagar con cheques a favor de El Cliente y se hará responsable de los daños y perjuicios ocasionados en el caso que no posea fondos suficientes.
                             </p>
-                            <p>
+                            <p class="mb-2">
                                 <b>Cuarto:</b>
                                 El Cliente declara que los vehículos no están denunciados por haber participado en accidentes de tránsitos o en cualquier actividad ilícita.
                             </p>
-                            <p>
+                            <p class="mb-2">
                                 <b>Quinto:</b>
                                 La Empresa manifiesta que los recursos utilizados para la compra de los vehículos provienen de actividades licitas.
                             </p>
-                            <p>
+                            <p class="mb-2">
                                 <b>Sexto:</b>
                                 El cliente se obliga a entregar el vehículo a la persona que la Empresa designe.
                             </p>
-                            <p>
+                            <p class="mb-2">
                                 <b>Séptimo:</b>
                                 El cliente garantiza que los vehículos están en perfecto estado tanto en condiciones físicas como mecánicas para circular y reúne todas las medidas de seguridad solicitadas por las Leyes Vigentes en el País.
                             </p>
-                            <p>
+                            <p class="mb-2">
                                 <b>Octavo:</b>
                                 El Cliente se compromete a traspasar el vehículo a favor de la Persona que La Empresa designe.
                             </p>
-                            <p>
+                            <p class="mb-2">
                                 <b>Noveno:</b>
                                 El Cliente se compromete a entregar todos los documentos del vehículo a La Empresa.
                             </p>
-                            <p>
+                            <p class="mb-2">
                                 <b>Décimo:</b>
                                 El Cliente se obliga a indemnizar en concepto de daños y perjuicios ocasionados a La Empresa en las Clausulas anteriores.
                             </p>
-                            <p>
+                            <p class="mb-2">
                                 <b>Décimo primero:</b>
                                 En caso de controversia se someten al centro de Conciliación y Arbitraje de la cámara de comercio e Industrias de Cortes.
                                 <br />
@@ -883,14 +891,14 @@
                         </div>
                     </div>
                     <!-- Firma del cliente -->
-                    <div class="row justify-content-center mt-1 pt-1">
+                    <div class="row justify-content-center mt-1">
                         <div class="col-5 text-center mt-1">
-                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                            <label class="mt-3 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
                             <label class="mt-0 d-block">Por la empresa <span class="lblRazonSocial"></span></label>
                             <label class="mt-0 d-block"><span class="lblNombreRepresentanteLegal"></span></label>
                         </div>
                         <div class="col-5 text-center mt-1">
-                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                            <label class="mt-3 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
                             <label class="mt-0 d-block">Por el cliente</label>
                             <asp:Label runat="server" ID="lblNombre_ConvenioCyV" class="mt-0 d-block"></asp:Label>
                         </div>
@@ -900,8 +908,8 @@
         </div>
 
         <!-- Inspeccion del vehiculo -->
-        <div id="divContenedorInspeccionSeguro" runat="server" class="contenedorPDF">
-            <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDF" style="display: none;">
+        <div id="divContenedorInspeccionSeguro" runat="server">
+            <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDF">
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
@@ -1215,7 +1223,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="row mt-5">
+                    <div class="row">
                         <div class="col-1"></div>
                         <div class="col-5 text-center mt-5">
                             <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
@@ -1368,7 +1376,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="row mt-5">
+                    <div class="row">
                         <div class="col-1"></div>
                         <div class="col-5 text-center mt-5">
                             <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
@@ -1419,7 +1427,7 @@
                                 <asp:Label Font-Bold="true" runat="server" ID="lblNombreCliente_BasicoCPI"></asp:Label>
                                 <b>(El cliente)</b>, con las generales mencionadas en el prestamo
                                 <asp:Label runat="server" Font-Bold="true" ID="lblNumeroPrestamo_BasicoCPI"></asp:Label>
-                                que en lo sucesivo se denominará &lt;EL CONTRATANTE&gt;.
+                                que en lo sucesivo se denominará &lt;EL CONTRATANTE&gt; o &lt;EL ARRENDATARIO&gt;.
                             </p>
                             <p>
                                 <b>FINALIDAD DEL CONVENIO:</b>
@@ -1442,7 +1450,7 @@
                                 <br />
                                 La GARANTÍA está destinada exclusivamente en cubrir el vehículo de los siguientes siniestros:
                             </p>
-                            <ol type="a">
+                            <ul>
                                 <li>Vuelcos Accidentales o Colisiones</li>
                                 <li>Incendio, Auto ignición y Rayo</li>
                                 <li>Robo Total.</li>
@@ -1450,25 +1458,26 @@
                                 <li>Responsabilidad Civil en sus Bienes (Daños a Terceros en sus Bienes, hasta Lps 50,000)</li>
                                 <li>Responsabilidad Civil en sus Personas (Daños a Terceros en sus Personas, hasta Lps 50,000)</li>
                                 <li>Desbordamiento de Ríos, derrumbes de carretera y otros fenómenos de la naturaleza.</li>
-                            </ol>
+                            </ul>
                             <p>
                                 <b>TERCERA: CONDICIONES ESPECIALES</b>
                             </p>
-                            <ol type="a">
+                            <ul>
                                 <li>Los siniestros mencionados en la cláusula anterior deben ocurrir en el territorio nacional para que sea cubierto.</li>
                                 <li>El vehículo debe de ser conducido por una persona debidamente acreditada, mayor de 18 años y menor a 75 años de lo contrario la garantía no cubre.</li>
-                                <li>Aplica única y exclusivamente para reparar los daños ocasionados al automóvil que se encuentre en arrendamiento con Compañía Financiera
+                                <li>Aplica única y exclusivamente para reparar los daños ocasionados al automóvil que se encuentre en arrendamiento con
                                 “<span class="lblRazonSocial"></span>”
                                 o en su defecto los daños causados a un tercero hasta Lps 50,000 siempre y cuando el arrendamiento este vigente y con sus saldos al día, bajos los límites de cobertura indicados, el saldo capital adeudado a la fecha del siniestro.
                                 </li>
-                                <li>Para que los daños ocasionados sean cubiertos, el automóvil deberá ser conducido por El Arrendatario, esposa e hijos con licencia vigente y deberá estar al día en sus cuotas de arrendamiento,
+                                <li>Para que los daños ocasionados sean cubiertos, el automóvil deberá ser conducido por El Arrendatario con licencia vigente y deberá estar al día en sus cuotas de arrendamiento,
                                 caso contrario los daños ocasionados serán reparados por cuenta del arrendatario.
                                 </li>
                                 <li>El Arrendatario debe contar con licencia de conducir vigente.</li>
-                                <li>Solo cubre colisiones debidamente acreditas con el parte de la policía de tránsito y cuando sea
+                                <li class="page-break">Solo cubre colisiones debidamente acreditas con el parte de la policía de tránsito y cuando sea
                                 denuncia interpuesta sin parte de transito solo se reconoce como máximo el 50% del valor del siniestro previa inspección de ajustador.
                                 </li>
-                                <li>En caso de robo del vehículo en garantía será necesario acreditar dicho siniestro ante entidad
+                                
+                                <li class="mt-5">En caso de robo del vehículo en garantía sera necesario acreditar dicho siniestro ante entidad
                                     competente en territorio Hondureño.
                                 </li>
                                 <li>El arrendatario se obliga a reportar en un plazo máximo de 24 hrs el siniestro a
@@ -1479,26 +1488,25 @@
                                     <span class="lblEmailEmpresa"></span>
                                 </li>
                                 <li>Mantener al día el pago del préstamo y la cuota del servicio del seguro y respectivo GPS.</li>
-                            </ol>
-                            <span class="page-break"></span>
-                            <p class="mt-5">
+                            </ul>                            
+                            <p>
                                 <b>CUARTA: SE EXCLUYE DE SINIESTROS</b>
                             </p>
-                            <ol type="a">
+                            <ul>
                                 <li>No se cubre los accidentes o daños ocasionados al automóvil por el arrendatario, sin que tenga
                                 implicación un tercero a excepción de Vuelcos Accidentales, Colisiones Accidentales, Incendio, Auto
-                                ignición, Rayo,Desbordamiento de Ríos, derrumbes de carretera y otros fenómenos de la naturaleza
+                                ignición, Rayo, Desbordamiento de Ríos, derrumbes de carretera y otros fenómenos de la naturaleza
                                 </li>
                                 <li>No cubre rotura de cristales</li>
                                 <li>No cubre equipo especial que pueda ser instalado</li>
-                            </ol>
+                            </ul>
                             <p>
                                 <b>QUINTA: PROCESO DE RECLAMO</b>
                                 <br />
                                 Al presentarse un reclamo el usuario deberá avocarse de manera personal al Oficial de Crédito de
                                 <span class="lblRazonSocial"></span>
                             </p>
-                            <ol type="a">
+                            <ul>
                                 <li>Presentar dos cotizaciones de los daños ocasionados al automóvil asegurado</li>
                                 <li>Certificación del Parte de Tránsito o Certificado de Denuncia interpuesta</li>
                                 <li>Fotografías a color de los daños del automóvil</li>
@@ -1508,7 +1516,7 @@
                                     <span class="lblRazonSocial"></span>
                                     optara por una tercera cotización, reservándose el derecho de autorizar la reparación del automóvil asegurado en el taller de su elección.
                                 </li>
-                            </ol>
+                            </ul>
                             <p>
                                 Una vez completada la documentación de reclamación del siniestro el proceso de pago lo realizara la empresa
                                 en un plazo no mayor a 10 días de hábiles, conforme a reclamo
@@ -1540,7 +1548,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="row justify-content-center mt-1 pt-1">
+                    <div class="row justify-content-center">
                         <div class="col-5 text-center mt-1">
                             <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
                             <label class="mt-0 d-block">Contratante o Cliente</label>
@@ -1783,7 +1791,7 @@
                             </h4>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="col-12">
                             <p>
                                 Estimado (s)
@@ -1800,9 +1808,9 @@
                                 la documentación original y completa del automóvil con las siguientes características:
                             </p>
                         </div>
-                        <div class="col-2"></div>
-                        <div class="col-auto">
-                            <table class="table table-sm table-bordered" style="width: 400px;">
+                        
+                        <div class="col-6">
+                            <table class="table table-sm table-bordered">
                                 <tr>
                                     <th>ESTADO</th>
                                     <td>
@@ -1865,7 +1873,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="col-3"></div>
+                        
                         <div class="col-12">
                             <p>
                                 En virtud de lo anterior se le emite esta <b>NOTA DE ENTREGA</b> y al mismo tiempo ratificamos nuestro
@@ -2293,7 +2301,7 @@
             $("#Loader").css('display', '');
 
             var opt = {
-                margin: [0.3, 0.3, 0, 0.3], //top, left, buttom, right,
+                margin: [0.3, 0.3, 0.3, 0.3], //top, left, buttom, right,
                 filename: 'Solicitud_' + '<%=pcIDSolicitud%>' + '_' + nombreDelArchivo + '.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: {

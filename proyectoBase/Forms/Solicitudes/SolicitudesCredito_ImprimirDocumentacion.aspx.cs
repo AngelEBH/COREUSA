@@ -138,8 +138,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var montoTotalContrato = decimal.Parse(sqlResultado["fnValorTotalContrato"].ToString());
                             var plazoFinalAprobado = sqlResultado["fiPlazo"].ToString();
                             var valorTotalFinanciamiento = decimal.Parse(sqlResultado["fnValorTotalFinanciamiento"].ToString());
+                            
+                            
                             var tipoDePlazo = sqlResultado["fcTipoDePlazo"].ToString();
-                            var tipoDePlazoSufijoAl = sqlResultado["fcTipoPlazo"].ToString();
+                            var tipoDePlazoSufijoAl = sqlResultado["fcTipoPlazoSufijoAl"].ToString();
+                            var tipoDePlazoSufijoMente = sqlResultado["fcTipoPlazoSufijoMente"].ToString();
+
+
                             var varlorGarantia = decimal.Parse(sqlResultado["fnValorGarantia"].ToString());
                             var valorPrima = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
                             var valorCuotaPrestamo = decimal.Parse(sqlResultado["fnCuotaMensualPrestamo"].ToString());
@@ -290,7 +295,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblNumeroMotor_Contrato.Text = serieMotor;
                                     lblSerieChasis_Contrato.Text = serieChasis;
                                     lblTasaInteresSimpleMensual_Contrato.Text = DecimalToString(tasaDeInteresSimpleMensual < 1 ? tasaDeInteresSimpleMensual * 100 : tasaDeInteresSimpleMensual);
-                                    lblTipoDePlazo_Contrato.Text = tipoDePlazo;
+                                    lblTipoDePlazo_Contrato.Text = tipoDePlazoSufijoMente;
                                     lblCAT_Contrato.Text = DecimalToString((tasaDeInteresAnualAplicada < 1 ? tasaDeInteresAnualAplicada * 100 : tasaDeInteresAnualAplicada));
                                     lblMontoPrima_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorPrima));
                                     lblPlazo_Contrato.Text = plazoFinalAprobado;
@@ -304,7 +309,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblValorCuotaSeguroPalabras_Contrato.Text = ConvertirCantidadALetras(valorCuotaSeguro.ToString()) + " " + moneda; ;
                                     lblValorCuotaSeguro_Contrato.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", valorCuotaSeguro);
                                     lblFechaPrimerCuota_Contrato.Text = DiaPrimerPago.ToString() + " de " + MesPrimerPago + " del " + AnioPrimerPago.ToString();
-                                    lblPlazoPago_Contrato.Text = tipoDePlazo;
+                                    lblPlazoPago_Contrato.Text = tipoDePlazoSufijoAl;
                                     lblMontoTotalPrestamoPalabras_Contrato.Text = ConvertirCantidadALetras(montoTotalContrato.ToString()) + " " + moneda; ;
                                     lblMontoTotalPrestamo_Contrato.Text = monedaSimbolo + " " + DecimalToString(montoTotalContrato);
                                     lblNombreFirma_Contrato.Text = nombreCliente;
