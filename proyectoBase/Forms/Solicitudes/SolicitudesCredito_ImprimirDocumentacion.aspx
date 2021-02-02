@@ -433,11 +433,11 @@
                                 <b class="lblNombreComercial"></b>
                                 podrá vender el vehículo para poder recuperar el dinero invertido.
                                 <b>III-</b> En caso que un gestor se movilice a traer el dinero del pago de una o más cuotas, bien sea al domicilio o lugar de trabajo, tendrá un costo de 250.00 Lempiras.
+                                <span class="page-break"></span>
                                 <b>- TERCERO: AUTORIZACIONES ESPECIALES: EL CLIENTE</b>
                                 por este acto, en tanto no haya cumplido con el pago total de su obligación, autoriza a
                                 <b class="lblNombreComercial"></b>
-                                expresamente y sin ser necesario la notificación previa para:
-                                <span class="page-break"></span>
+                                expresamente y sin ser necesario la notificación previa para:                                
                                 <b>A)</b> Vender, Ceder o de cualquier otra forma traspasar, o celebrar contratos de participación, de descuentos con relación al crédito y derechos consignados en este documento o títulos valores relacionados a este mismo;
                                 <b>B)</b> Autorizar a
                                 <b class="lblNombreComercial"></b>
@@ -511,12 +511,12 @@
                                 <b>b)</b> Por el conocimiento de la ejecución judicial iniciada por terceros, o por el mismo
                                 <b class="lblNombreComercial"></b>,
                                 en contra de <b>EL CLIENTE</b>, originada por otros créditos;
+                                <span class="page-break"></span>
                                 <b>c)</b> Por no destinar el presente préstamo para el fin o fines para los cuales ha sido concedido;
-                                <b>d)</b> Por la declaración del estado de suspensión de pagos, de quiebra o de concurso de <b>EL CLIENTE</b>, así como por su inhabilitación para el ejercicio del comercio, o por el ejercicio de acción penal en su contra o de su representante legal que derivare en sentencia de privación de libertad;
+                                <b>d)</b> Por la declaración del estado de suspensión de pagos, de quiebra o de concurso de <b>EL CLIENTE</b>, así como por su inhabilitación para el ejercicio del comercio, o por el ejercicio de acción penal en su contra o de su representante legal que derivare en sentencia de privación de libertad;                                
                                 <b>e)</b> Por el incumplimiento o negativa por parte de <b>EL CLIENTE</b> a proporcionar la información requerida por
                                 <b class="lblNombreComercial"></b>
-                                en forma escrita;
-                                <span class="page-break"></span>
+                                en forma escrita;                                
                                 <b>f)</b> Por actuación fraudulenta o haber proporcionado a
                                 <b class="lblNombreComercial"></b>
                                 información o datos falsos o incompletos para obtener el préstamo;
@@ -585,25 +585,19 @@
                             </p>
                         </div>
                     </div>
-                    <div class="row mt-5">
+                    <div class="row mt-2">
                         <div class="col-1"></div>
                         <div class="col-5 text-center">
-                            <label class="mt-3 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                            <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
                             <asp:Label class="mt-0 d-block" runat="server" ID="lblNombreFirma_Contrato"></asp:Label>
                             <asp:Label class="mt-0 d-block" runat="server" ID="lblIdentidadFirma_Contrato"></asp:Label>
                             <label class="mt-0 d-block">EL CLIENTE</label>
                         </div>
                         <div class="col-5 text-center">
-                            <label class="mt-3 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
-                            <label class="mt-0 d-block">
-                                <span class="lblNombreRepresentanteLegal"></span>
-                            </label>
-                            <label class="mt-0 d-block">
-                                <span class="lblIdentidadRepresentanteLegal"></span>
-                            </label>
-                            <label class="mt-0 d-block">
-                                <span class="lblNombreComercial"></span>
-                            </label>
+                            <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                            <label class="mt-0 d-block lblNombreRepresentanteLegal"></label>
+                            <label class="mt-0 d-block lblIdentidadRepresentanteLegal"></label>
+                            <label class="mt-0 d-block lblNombreComercial"></label>
                         </div>
                         <div class="col-1"></div>
                     </div>
