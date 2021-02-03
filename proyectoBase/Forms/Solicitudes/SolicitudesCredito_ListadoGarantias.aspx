@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Garantías de solicitudes aprobadas</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
@@ -19,6 +19,7 @@
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
+    <link href="/CSS/Content/css/bootstrap4-modal-fullscreen.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
         .opcion {
@@ -183,8 +184,26 @@
         </div>
     </div>
 
+
+    <div id="modalPantallaCompleta" class="modal fade modal-fullscreen" tabindex="-1" role="dialog" aria-labelledby="modalPantallaCompletaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+
+                    <iframe class="w-100 h-100" id="iframe-fullscreen" src="Garantia_Detalles.aspx?hFuYL/3BFCvrmaPQ+Jn7raBWiZZzDdR1rCp9U4CzMiHir1Y3dsMSqh4guMZqUYhpV7PvRlbKYRqtyPc/mQeXow=="></iframe>
+
+                </div>
+                <div class="modal-footer pt-2 pb-2">
+                    <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="modalActualizarGarantia" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalActualizarGarantiaLabel" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title mt-0" id="modalActualizarGarantiaLabel">Actualizar garantía | Solicitud <span class="lblNoSolicitudCredito"></span></h6>
@@ -646,6 +665,6 @@
         const NOMBRE_USUARIO = '<%=pcNombreUsuario %>';
         const CORREO_USUARIO = '<%=pcBuzoCorreoUsuario%>';
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=2021012952"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20210203031652"></script>
 </body>
 </html>

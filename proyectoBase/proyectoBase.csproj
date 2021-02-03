@@ -110,6 +110,7 @@
     <Content Include="Content\css\bandejaSolicitudes.css" />
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\bootstrap4-modal-fullscreen.min.css" />
     <Content Include="Content\css\Estilos.css" />
     <Content Include="Content\css\font\familyRoboto.css" />
     <Content Include="Content\css\font\font-fileuploader.css" />

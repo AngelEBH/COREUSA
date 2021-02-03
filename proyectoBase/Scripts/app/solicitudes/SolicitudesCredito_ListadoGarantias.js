@@ -419,7 +419,7 @@ $("#btnActualizarGarantia_Confirmar").click(function (e) {
 
 $("#btnDetallesGarantia_Confirmar").click(function (e) {
 
-    RedirigirAccion('Garantia_Detalles.aspx', 'detalles de la garantía');
+    MostrarContenidoEnModalFullScreen('Garantia_Detalles.aspx', 'detalles de la garantía');
 });
 
 $("#btnRegistrarGarantiaSinSolicitud").click(function (e) {
@@ -432,7 +432,7 @@ $("#btnRegistrarGarantiaSinSolicitud").click(function (e) {
 /* Acciones para garantias sin solicitud */
 $("#btnDetallesGarantia_SinSolicitud_Confirmar").click(function (e) {
 
-    RedirigirAccion('GarantiaSinSolicitud_Detalles.aspx', 'detalles de la garantía');
+    MostrarContenidoEnModalFullScreen('GarantiaSinSolicitud_Detalles.aspx', 'detalles de la garantía');
 });
 
 $("#btnActualizarGarantia_SinSolicitud_Confirmar").click(function (e) {
@@ -443,7 +443,7 @@ $("#btnActualizarGarantia_SinSolicitud_Confirmar").click(function (e) {
 /* Imprimir documentación */
 $("#btnImprimirDocumentacion_Confirmar").click(function (e) {
 
-    RedirigirAccion('SolicitudesCredito_ImprimirDocumentacion.aspx', 'imprimir documentación de la solicitud');
+    MostrarContenidoEnModalFullScreen('SolicitudesCredito_ImprimirDocumentacion.aspx', 'imprimir documentación de la solicitud');
 });
 
 /* Solicitar instalacion de GPS y revisión física */
@@ -794,6 +794,30 @@ function RedirigirAccion(nombreFormulario, accion) {
         },
         success: function (data) {
             data.d != "-1" ? window.location = nombreFormulario + "?" + data.d : MensajeError("No se pudo redireccionar a" + accion);
+        }
+    });
+}
+
+
+function MostrarContenidoEnModalFullScreen(nombreFormulario, accion) {
+
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_ListadoGarantias.aspx/EncriptarParametros",
+        data: JSON.stringify({ idSolicitud: idSolicitud, idGarantia: idGarantia, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError("No se pudo redireccionar a " + accion);
+        },
+        success: function (data) {
+
+            $("#iframe-fullscreen").prop('src', '#');
+            $(".modal.fade.show").modal("hide");
+            $("#iframe-fullscreen").prop('src', nombreFormulario + "?" + data.d);
+            $('body').css('overflow', 'hidden');
+            $(".modal.modal-fullscreen .modal-body").css('overflow', 'hidden');
+            $("#modalPantallaCompleta").modal();
         }
     });
 }

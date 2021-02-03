@@ -20,18 +20,12 @@ public partial class GestionCobranzaClienteDocumentos : System.Web.UI.Page
             try
             {
                 var lcURL = Request.Url.ToString();
-                int liParamStart = lcURL.IndexOf("?");
-
-                string lcParametros;
-
-                if (liParamStart > 0)
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                else
-                    lcParametros = string.Empty;
+                var liParamStart = lcURL.IndexOf("?");
+                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
                 if (lcParametros != string.Empty)
                 {
-                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
+                    var lcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
                     var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
@@ -73,7 +67,7 @@ public partial class GestionCobranzaClienteDocumentos : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            url = (sqlResultado["fiTipoDocumento"].ToString() != "8" && sqlResultado["fiTipoDocumento"].ToString() != "9") ? sqlResultado["fcURL"].ToString() : sqlResultado["fcURL"].ToString() + ".jpg";
+                            url = sqlResultado["fcURL"].ToString() + ((sqlResultado["fiTipoDocumento"].ToString() != "8" && sqlResultado["fiTipoDocumento"].ToString() != "9") ? "" : ".jpg");
 
                             tRowDocumento = new HtmlTableRow();
                             tRowDocumento.Cells.Add(new HtmlTableCell() { InnerHtml = "<a href='" + url + "' target='imgbox'>" + sqlResultado["fcDescripcionTipoDocumento"].ToString() + "</a>" });
