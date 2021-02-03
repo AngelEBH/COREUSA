@@ -108,9 +108,9 @@ $(document).ready(function () {
                 }
             },
             {
-                "data": "DocumentosSubidos", "className": "text-center cursor-zoom-in",
+                "data": "DocumentosSubidos", "className": "text-center",
                 "render": function (data, type, row) {
-                    return '<span class="btn btn-sm btn-secondary" onclick="MostrarDocumentosGarantia(' + row["IdGarantia"] + ')">' + row["DocumentosSubidos"] + ' <i class="fas fa-search"></i></span>'
+                    return '<span class="btn btn-sm btn-secondary cursor-zoom-in" onclick="MostrarDocumentosGarantia(' + row["IdGarantia"] + ')">' + row["DocumentosSubidos"] + ' <i class="fas fa-search"></i></span>'
                 }
             },
             {
@@ -120,15 +120,15 @@ $(document).ready(function () {
                 }
             },
             {
-                "data": "EstadoRevisionFisica", "className": "text-center cursor-zoom-in",
+                "data": "EstadoRevisionFisica", "className": "text-center",
                 "render": function (data, type, row) {
-                    return '<i class="mdi mdi-check-circle mdi-24px p-0 text-' + row["EstadoRevisionFisicaClassName"] + '" onclick="MostrarRevisionGarantia(' + row["IdGarantia"] + ')"><label style="display:none;">' + row["EstadoRevisionFisica"] + '</label></i>';
+                    return '<i class="mdi mdi-check-circle mdi-24px p-0 text-' + row["EstadoRevisionFisicaClassName"] + ' cursor-zoom-in" onclick="MostrarRevisionGarantia(' + row["IdGarantia"] + ')"><label style="display:none;">' + row["EstadoRevisionFisica"] + '</label></i>';
                 }
             },
             {
-                "data": "EstadoSolicitudGPS", "className": "text-center cursor-zoom-in",
+                "data": "EstadoSolicitudGPS", "className": "text-center",
                 "render": function (data, type, row) {
-                    return '<span class="badge badge-' + row["EstadoSolicitudGPSClassName"] + ' p-1" ' + (row["IdEstadoInstalacion"] == 3 ? 'onclick="MostrarInstalacionGPS(' + row["IdAutoGPSInstalacion"] + ')"' : '') + '>' + row["EstadoSolicitudGPS"] + '</span>';
+                    return '<span class="badge badge-' + row["EstadoSolicitudGPSClassName"] + ' p-1 cursor-zoom-in" ' + (row["IdEstadoInstalacion"] == 3 ? 'onclick="MostrarInstalacionGPS(' + row["IdAutoGPSInstalacion"] + ')"' : '') + '>' + row["EstadoSolicitudGPS"] + '</span>';
                 }
             }
         ],
