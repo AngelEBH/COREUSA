@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Solicitudes CANEX</title>
-    <!-- BOOTSTRAP -->
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Content/css/style.css" rel="stylesheet" />
@@ -33,12 +32,11 @@
         <div class="card">
             <div class="card-header">
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-auto">
                         <h6 class="">Solicitudes de canalex externos</h6>
                     </div>
                     <div class="col-4">
-                        <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
-                            aria-label="Buscar" />
+                        <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar" aria-label="Buscar" />
                     </div>
                 </div>
             </div>
@@ -114,7 +112,6 @@
     <!-- jQuery -->
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <!-- DATATABLES -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>

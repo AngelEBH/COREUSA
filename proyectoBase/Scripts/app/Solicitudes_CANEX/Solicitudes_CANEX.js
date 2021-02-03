@@ -71,7 +71,7 @@ $(document).ready(function () {
                     "data": "FechaIngresoSolicitud",
                     "render": function (value) {
                         if (value === null) return "";
-                        return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a');
+                        return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
                     }
                 },
                 { "data": "Identidad" },

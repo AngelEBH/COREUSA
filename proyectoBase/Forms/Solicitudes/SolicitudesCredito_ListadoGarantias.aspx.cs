@@ -656,12 +656,12 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         {
             var liParamStart = URL.IndexOf("?");
             var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
-            var pcEncriptado = string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
