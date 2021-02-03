@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Mantenimiento.aspx.cs" Inherits="SolicitudesCredito_Mantenimiento" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Mantenimiento.aspx.cs" Inherits="SolicitudesCredito_Mantenimiento" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -11,6 +11,11 @@
     <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <link href="/CSS/Estilos.css" rel="stylesheet" />
     <style>
@@ -46,45 +51,81 @@
                         Buscar
                     </button>
                 </div>
-                <div class="row mb-0">
-                    <div class="col-12">
-                        <div class="form-group row">
-                            <div class="col-sm-3 col-12">
-                                <label class="col-form-label">Cliente</label>
-                                <asp:TextBox ID="txtNombreCliente" ReadOnly="true" CssClass="form-control form-control-sm" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-sm-3 col-6">
-                                <label class="col-form-label">Identidad</label>
-                                <asp:TextBox ID="txtIdentidadCliente" ReadOnly="true" CssClass="form-control form-control-sm" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-sm-3 col-6">
-                                <label class="col-form-label">RTN numérico</label>
-                                <asp:TextBox ID="txtRtn" ReadOnly="true" CssClass="form-control form-control-sm" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-sm-3 col-12">
-                                <label class="col-form-label">Teléfono</label>
-                                <asp:TextBox ID="txtTelefono" ReadOnly="true" CssClass="form-control form-control-sm" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-sm-3 col-12">
-                                <label class="col-form-label">Producto</label>
-                                <asp:TextBox ID="txtProducto" ReadOnly="true" CssClass="form-control form-control-sm" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-sm-3 col-12">
-                                <label class="col-form-label">Tipo de solicitud</label>
-                                <asp:TextBox ID="txtTipoDeSolicitud" ReadOnly="true" CssClass="form-control form-control-sm" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-sm-2 col-12">
-                                <label class="col-form-label">Agencia</label>
-                                <asp:TextBox ID="txtAgencia" ReadOnly="true" CssClass="form-control form-control-sm" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-sm-2 col-6">
-                                <label class="col-form-label">Agente asignado</label>
-                                <asp:TextBox ID="txtAgenteAsignado" ReadOnly="true" CssClass="form-control form-control-sm" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-sm-2 col-6">
-                                <label class="col-form-label">Gestor asignado</label>
-                                <asp:TextBox ID="txtGestorAsignado" ReadOnly="true" CssClass="form-control form-control-sm" runat="server"></asp:TextBox>
-                            </div>
+                <div class="row mt-3 mb-0">
+                    <div class="col-6">
+                        <div class="table-responsive">
+                            <table class="table table-sm" style="margin-bottom: 0px;">
+                                <tbody>
+                                    <tr>
+                                        <td><span class="font-weight-bold">Información del cliente</span></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Cliente</span></td>
+                                        <td><span class="label label-table label-success" id="lblNombreCliente"></span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Identidad</span></td>
+                                        <td id="lblIdentidadCliente"></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">RTN numérico</span></td>
+                                        <td id="lblRtn"></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Teléfono</span></td>
+                                        <td id="lblTelefono"></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="table-responsive">
+                            <table class="table table-sm" style="margin-bottom: 0px;">
+                                <tbody>
+                                    <tr>
+                                        <td><span class="font-weight-bold">Información de la solicitud</span></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Producto</span></td>
+                                        <td id="lblProducto"></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Tipo de solicitud</span></td>
+                                        <td id="lblTipoDeSolicitud"></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">CC / Vendedor</span></td>
+                                        <td id="lblAgenciaYVendedorAsignado"></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Gestor asignado</span></td>
+                                        <td id="lblGestorAsignado"></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -106,9 +147,6 @@
                                     <button type="button" id="btnReiniciarResolucion" runat="server" class="FormatoBotonesIconoCuadrado40 disabled" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
                                         Cambiar Resolución
                                     </button>
-                                    <%--<button type="button" id="btnCambiarTasaInteres" runat="server" class="FormatoBotonesIconoCuadrado40 disabled" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/percentage_40px.png');">
-                                        Cambiar Tasa Interes
-                                    </button>--%>
                                     <button type="button" id="btnCambiarFondos" runat="server" class="FormatoBotonesIconoCuadrado40" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/money_bag_40px.png');">
                                         Cambiar Fondos
                                     </button>
@@ -150,20 +188,15 @@
                             <h6 class="font-weight-bold pl-3">Historial de mantenimientos</h6>
 
                             <div class="col-12 justify-content-center table-responsive">
-                                <table class="table tabla-compacta table-striped mb-0" id="tblHistorialMantenimiento">
+                                <table class="table table-sm table-bordered table-hover cursor-pointer" id="tblHistorialMantenimiento" style="width: 100%">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Fecha</th>
                                             <th>CC</th>
                                             <th>Usuario</th>
-                                            <th>Observaciones</th>
+                                            <th class="no-sort">Observaciones</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-center" colspan="4">No hay registros disponibles...</td>
-                                        </tr>
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -177,6 +210,7 @@
             </div>
         </div>
 
+        <!-- Fondos del préstamo -->
         <div id="modalCambiarFondos" class="modal fade" role="dialog" aria-labelledby="modalCambiarFondosLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -220,25 +254,33 @@
             </div>
         </div>
 
-        <div id="modalReiniciarProceso" class="modal fade" role="dialog" aria-labelledby="modalReiniciarProcesoLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+        <!-- Resolucion de la solicitud -->
+        <div id="modalCambiarResolucion" class="modal fade" role="dialog" aria-labelledby="modalCambiarResolucionLabel" aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalReiniciarProcesoLabel">Reiniciar Resolución</h6>
+                        <h6 class="modal-title mt-0" id="modalCambiarResolucionLabel">Cambiar resolución de la solicitud</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        <label class="col-form-label">¿Está seguro de reiniciar la resolución de la solicitud?</label>
+                        <div class="form-group row mb-0">
+                            <div class="col-auto">
+                                <label class="col-form-label font-weight-bold">Resolución</label>
+                            </div>
+                            <div class="col-auto">
+                                <asp:DropDownList ID="ddlCatalogoResoluciones" runat="server" CssClass="form-control form-control-sm" required="required"></asp:DropDownList>
+                            </div>
+                        </div>
 
                         <div class="form-group row">
                             <div class="col-12">
                                 <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesReiniciarResolucionSolicitud" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                                <textarea id="txtObservacionesCambiarResolucionSolicitud" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnReiniciarSolicitud" data-dismiss="modal" class="btn btn-danger">
+                        <button id="btnCambiarResolucionConfirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary">
@@ -249,6 +291,7 @@
             </div>
         </div>
 
+        <!-- Resultados de campo -->
         <div id="modalResolucionCampo" class="modal fade" role="dialog" aria-labelledby="modalResolucionCampoLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -288,6 +331,46 @@
             </div>
         </div>
 
+        <div id="modalReiniciarCampo" class="modal fade" role="dialog" aria-labelledby="modalReiniciarCampoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalReiniciarCampoLabel">Reiniciar investigación de campo</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoDomicilio" />
+                            <label class="form-check-label" for="cbReiniciarCampoDomicilio">
+                                Investigación del domicilio
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoTrabajo" />
+                            <label class="form-check-label" for="cbReiniciarCampoTrabajo">
+                                Investigación del trabajo
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Observaciones</label>
+                                <textarea id="txtObservacionesReiniciarCampo" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnReiniciarInvestigacionDeCampo" type="button" class="btn btn-danger">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asignaciones -->
         <div id="modalAsignarGestorSolicitud" class="modal fade" role="dialog" aria-labelledby="modalAsignarGestorSolicitudLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -350,6 +433,7 @@
             </div>
         </div>
 
+        <!-- Condiciones -->
         <div id="modalAnularCondicion" class="modal fade" role="dialog" aria-labelledby="modalAnularCondicionLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -358,8 +442,8 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <table id="tblCondiciones" class="table tabla-compacta table-striped table-bordered">
+                        <div class="table-responsive">
+                            <table id="tblCondiciones" class="table table-sm table-bordered table-hover cursor-pointer" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th>Tipo Condición</th>
@@ -402,7 +486,8 @@
                         <button id="btnAnularCondicionConfirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary" data-toggle="modal" data-target="#modalAnularCondicion">
+                            <i class="far fa-arrow-alt-circle-left"></i>
                             Cancelar
                         </button>
                     </div>
@@ -410,6 +495,7 @@
             </div>
         </div>
 
+        <!-- Documentos -->
         <div id="modalDocumentacionSolicitud" class="modal fade" role="dialog" aria-labelledby="modalDocumentacionSolicitudLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -418,13 +504,18 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <table id="tblDocumenacionSolicitud" class="table table-sm table-bordered table-hover cursor-pointer">
-                                <thead class="thead-light">
+                        <div class="table-responsive">
+                            <table id="tblDocumenacionSolicitud" class="table table-sm table-bordered table-hover cursor-pointer" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="text-center text-muted">Información del documento</th>
+                                        <th colspan="2" class="text-center text-muted">Acciones</th>
+                                    </tr>
                                     <tr>
                                         <th>Tipo de documento</th>
                                         <th>Nombre</th>
-                                        <th colspan="2" class="text-center">Acciones</th>
+                                        <th class="text-center no-sort">Vista previa</th>
+                                        <th class="text-center no-sort">Eliminar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -440,7 +531,6 @@
                 </div>
             </div>
         </div>
-
 
         <div id="modalEliminarDocumentoSolicitud" class="modal fade" role="dialog" aria-labelledby="modalEliminarDocumentoSolicitudLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -461,7 +551,8 @@
                         <button id="btnEliminarDocumentoConfirmar" type="button" class="btn btn-danger">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary" data-toggle="modal" data-target="#modalDocumentacionSolicitud">
+                            <i class="far fa-arrow-alt-circle-left"></i>
                             Cancelar
                         </button>
                     </div>
@@ -469,118 +560,38 @@
             </div>
         </div>
 
-        <div id="modalReferenciasPersonales" class="modal fade" role="dialog" aria-labelledby="modalReferenciasPersonalesLabel" aria-hidden="true">
+        <div id="modalVistaPreviaDocumento" class="modal fade" role="dialog" aria-labelledby="modalVistaPreviaDocumentoLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalReferenciasPersonalesLabel">Referencias personales</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <button type="button" id="btnAgregarReferencia" class="btn btn-info mb-1">Nuevo</button>
-                            <div class="table-responsive">
-                                <table id="tblReferneciasPersonales" class="table tabla-compacta table-striped table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Nombre completo</th>
-                                            <th>Lugar de trabajo</th>
-                                            <th>Telefono</th>
-                                            <th>Tiempo C.</th>
-                                            <th>Parentesco</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
-                            Cerrar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="modalCambiarResolucion" class="modal fade" role="dialog" aria-labelledby="modalCambiarResolucionLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalCambiarResolucionLabel">Cambiar resolución de la solicitud</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
                         <div class="form-group row mb-0">
-                            <div class="col-auto">
-                                <label class="col-form-label font-weight-bold">Resolución</label>
-                            </div>
-                            <div class="col-auto">
-                                <asp:DropDownList ID="ddlCatalogoResoluciones" runat="server" CssClass="form-control form-control-sm" required="required"></asp:DropDownList>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
                             <div class="col-12">
-                                <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesCambiarResolucionSolicitud" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                                <h6 class="m-0" id="lblTipoDocumentoVistaPrevia"></h6>
+                            </div>
+                            <div class="col-12 text-muted">
+                                <span class="text-muted" id="modalVistaPreviaDocumentoLabel">Vista previa del documento</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="btnCambiarResolucionConfirmar" type="button" class="btn btn-danger">
-                            Confirmar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="modalReiniciarCampo" class="modal fade" role="dialog" aria-labelledby="modalReiniciarCampoLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalReiniciarCampoLabel">Reiniciar investigación de campo</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoDomicilio" />
-                            <label class="form-check-label" for="cbReiniciarCampoDomicilio">
-                                Investigación del domicilio
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="cbReiniciarCampoTrabajo" />
-                            <label class="form-check-label" for="cbReiniciarCampoTrabajo">
-                                Investigación del trabajo
-                            </label>
-                        </div>
                         <div class="form-group row">
                             <div class="col-12">
-                                <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesReiniciarCampo" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                                <div id="divImgVistaPrevia"></div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnReiniciarInvestigacionDeCampo" type="button" class="btn btn-danger">
-                            Confirmar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
-                            Cancelar
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary" data-toggle="modal" data-target="#modalDocumentacionSolicitud">
+                            <i class="far fa-arrow-alt-circle-left"></i>
+                            Volver a los documentos
                         </button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Reiniciar procesos -->
         <div id="modalReiniciarReprogramacion" class="modal fade" role="dialog" aria-labelledby="modalReiniciarReprogramacionLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -686,7 +697,48 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modalAgregarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarReferenciaPersonalLabel" aria-hidden="true">
+        <!-- Referencias personales -->
+        <div id="modalReferenciasPersonales" class="modal fade" role="dialog" aria-labelledby="modalReferenciasPersonalesLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalReferenciasPersonalesLabel">Referencias personales</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <button type="button" id="btnAgregarReferencia" class="btn btn-info mb-1 float-right">
+                                <i class="fas fa-plus"></i>
+                                Agregar nueva
+                            </button>
+                            <div class="table-responsive">
+                                <table id="tblReferenciasPersonales" class="table table-sm table-bordered table-hover cursor-pointer" style="width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre completo</th>
+                                            <th class="no-sort">Lugar de trabajo</th>
+                                            <th>Telefono</th>
+                                            <th>Tiempo C.</th>
+                                            <th>Parentesco</th>
+                                            <th class="no-sort">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalAgregarReferenciaPersonal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAgregarReferenciaPersonalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header pb-1 pt-1">
@@ -736,7 +788,8 @@
                         <button id="btnAgregarReferenciaConfirmar" type="button" class="btn btn-primary mr-1">
                             Agregar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary" data-toggle="modal" data-target="#modalReferenciasPersonales">
+                            <i class="far fa-arrow-alt-circle-left"></i>
                             Cancelar
                         </button>
                     </div>
@@ -744,34 +797,7 @@
             </div>
         </div>
 
-        <div id="modalEliminarReferenciaPersonal" class="modal fade" role="dialog" aria-labelledby="modalEliminarReferenciaPersonalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalEliminarReferenciaPersonalLabel">Eliminar referencia personal</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <div class="col-12">
-                                <label class="col-form-label">Observaciones</label>
-                                <textarea id="txtObservacionesEliminarReferenciaPersonal" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="btnEliminarReferenciaPersonalConfirmar" type="button" class="btn btn-danger">
-                            Confirmar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="modalEditarReferenciaPersonal" tabindex="-1" role="dialog" aria-labelledby="modalEditarReferenciaPersonalLabel" aria-hidden="true">
+        <div id="modalEditarReferenciaPersonal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEditarReferenciaPersonalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header pb-1 pt-1">
@@ -821,13 +847,43 @@
                         <button id="btnEditarReferenciaConfirmar" type="button" class="btn btn-primary mr-1">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary" data-toggle="modal" data-target="#modalReferenciasPersonales">
+                            <i class="far fa-arrow-alt-circle-left"></i>
                             Cancelar
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div id="modalEliminarReferenciaPersonal" class="modal fade" role="dialog" aria-labelledby="modalEliminarReferenciaPersonalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalEliminarReferenciaPersonalLabel">Eliminar referencia personal</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Observaciones</label>
+                                <textarea id="txtObservacionesEliminarReferenciaPersonal" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="150" data-parsley-minlength="15" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnEliminarReferenciaPersonalConfirmar" type="button" class="btn btn-danger">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary" data-toggle="modal" data-target="#modalReferenciasPersonales">
+                            <i class="far fa-arrow-alt-circle-left"></i>
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </form>
     <!-- jQuery -->
     <script src="/Scripts/js/jquery.min.js"></script>
@@ -837,7 +893,16 @@
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Mantenimiento.js?2021020212302585"></script>
+    <!-- datatable js -->
+    <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Responsive -->
+    <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
+    <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Mantenimiento.js?20210203010352"></script>
+
     <script>
         $(document).ready(function () {
             $(".mascara-enteros").inputmask("decimal", {

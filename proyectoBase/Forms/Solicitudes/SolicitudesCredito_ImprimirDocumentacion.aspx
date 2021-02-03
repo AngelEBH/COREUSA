@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_ImprimirDocumentacion.aspx.cs" Inherits="SolicitudesCredito_ImprimirDocumentacion" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_ImprimirDocumentacion.aspx.cs" Inherits="SolicitudesCredito_ImprimirDocumentacion" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -106,9 +106,6 @@
                                 </button>
                                 <button type="button" id="btnEnviarCorreoSeguro" onclick="EnviarCorreo('Seguro', 'Seguro de garantía', 'divCorreoSeguroPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
                                     Correo Seguro
-                                </button>
-                                <button type="button" id="btnExpediente" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
-                                    Expediente
                                 </button>
                             </div>
                         </div>
@@ -489,8 +486,7 @@
                                 <b>1)</b> Contraiga deudas con otras instituciones financieras, no financieras, puestos de bolsa, proveedores, filiales y otros. <b>EL CLIENTE</b> aprueba libre y voluntariamente por ser válidas, todas las condiciones fijadas en este inciso, por entender que de tal manera
                                 <b class="lblNombreComercial"></b>
                                 se asegura de la solvencia de <b>EL CLIENTE</b> y del pago del crédito otorgado.
-                                <b>
-                                    - SEXTO: DE LAS MODIFICACIONES DEL CONTRATO.-
+                                <b>- SEXTO: DE LAS MODIFICACIONES DEL CONTRATO.-
                                     <span class="lblNombreComercial"></span>
                                 </b>
                                 comunicará a
@@ -538,8 +534,7 @@
                                 ejerza las acciones judiciales correspondientes, quedando obligado el cliente a pago de gastos y honorarios que ocasione el procedimiento judicial. Así como para determinar el saldo adeudado El estado de cuenta certificado por el contador de
                                 <b class="lblNombreComercial"></b>
                                 o de quien haya adquirido los derechos, hará fe en juicio para establecer el saldo a cargo de <b>EL CLIENTE</b> y Constituirá junto con el presente contrato título ejecutivo, sin necesidad de reconocimiento de firma ni de otro requisito previo alguno, según lo establecido en la ley del sistema financiero. En caso de ejecución de la presente obligación las partes nos sometemos a la jurisdicción y competencia de los Juzgados de San Pedro Sula, Cortés.
-                                <b>
-                                    .- DÉCIMO PRIMERA: MEDIOS PARA COMUNICACIONES.- EL CLIENTE y
+                                <b>.- DÉCIMO PRIMERA: MEDIOS PARA COMUNICACIONES.- EL CLIENTE y
                                     <span class="lblNombreComercial"></span>
                                 </b>
                                 establecen y a la vez autorizan, que para las distintas notificaciones que se deban hacer conforme a lo estipulado por este contrato o por lo dispuesto por la ley, se harán efectivas a través de uno solo de los siguientes medios:
@@ -548,7 +543,7 @@
                                 <asp:Label runat="server" ID="lblCorreo_Contrato"></asp:Label>
                                 <b>C)</b> Notificación mediante cualquier red sociales que pudiese pertenecer al Cliente,
                                 <b>D)</b> o a las direcciones indicadas en cualquiera de los documentos suscritos con
-                                <b>“ <span class="lblNombreComercial"></span> ”</b>.
+                                <b>“ <span class="lblNombreComercial"></span>”</b>.
                                 Cualquier cambio de dirección o número telefónico deberá notificarse fehacientemente, con una anticipación razonable a
                                 <b class="lblNombreComercial"></b>
                                 y hasta entonces se considera efectiva.
@@ -556,7 +551,7 @@
                                 <b class="lblNombreComercial"></b>
                                 o sus representantes puedan ingresar a su domicilio a retirar el vehículo, y por lo tanto lo exime de toda responsabilidad que pueda incurrir según el artículo 99 de la Constitución de la Republica.
                                 Así como faculta a 
-                                <b>“ <span class="lblNombreComercial"></span> ”</b>,
+                                <b>“ <span class="lblNombreComercial"></span>”</b>,
                                 sus distintas dependencias, así como también a su personal, que mediante visitas a su domicilio se le puedan presentar y ofrecer las diferentes propuestas de negocio, servicios, catálogos de nuevos productos; a su vez, faculta otros canales, sean estos telefónicos o electrónicos, a que se comuniquen y a que le informen en los días de semana, así como también en los días llamados vacaciones, o festivos, en los diferentes horarios abiertos, incluso fin de semana, exonerándole de cualquier perjuicio a la empresa o de ser estas visitas catalogadas como “hostigamiento”.
                                 <b>- El CLIENTE:</b> autoriza de manera expresa y voluntaria que en caso de que
                                 <b class="lblNombreComercial"></b>
@@ -1470,7 +1465,7 @@
                                 <li class="page-break">Solo cubre colisiones debidamente acreditas con el parte de la policía de tránsito y cuando sea
                                 denuncia interpuesta sin parte de transito solo se reconoce como máximo el 50% del valor del siniestro previa inspección de ajustador.
                                 </li>
-                                
+
                                 <li class="mt-5">En caso de robo del vehículo en garantía sera necesario acreditar dicho siniestro ante entidad
                                     competente en territorio Hondureño.
                                 </li>
@@ -1482,7 +1477,7 @@
                                     <span class="lblEmailEmpresa"></span>
                                 </li>
                                 <li>Mantener al día el pago del préstamo y la cuota del servicio del seguro y respectivo GPS.</li>
-                            </ul>                            
+                            </ul>
                             <p>
                                 <b>CUARTA: SE EXCLUYE DE SINIESTROS</b>
                             </p>
@@ -1802,7 +1797,7 @@
                                 la documentación original y completa del automóvil con las siguientes características:
                             </p>
                         </div>
-                        
+
                         <div class="col-6">
                             <table class="table table-sm table-bordered">
                                 <tr>
@@ -1867,7 +1862,7 @@
                                 </tr>
                             </table>
                         </div>
-                        
+
                         <div class="col-12">
                             <p>
                                 En virtud de lo anterior se le emite esta <b>NOTA DE ENTREGA</b> y al mismo tiempo ratificamos nuestro
@@ -1903,324 +1898,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Expendiente -->
-        <div id="divContenedorExpediente" class="contenedorPDF">
-            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divExpedientePDF" style="display: none;">
-                <div class="card-body pt-0 pr-5 pl-5">
-                    <div class="row justify-content-between">
-                        <div class="col-auto">
-                            <label class="font-weight-bold d-block lblRazonSocial"></label>
-                            <label class="font-weight-bold d-block lblNombreComercial"></label>
-                            <label class="font-weight-bold d-block">Solicitud de crédito N°:&nbsp;<b runat="server" id="lblNoSolicitudCredito_Expediente"></b></label>
-                            <small class="font-weight-bold">Fecha:&nbsp;<b runat="server" id="lblFechaActual_Expediente"></b></small>
-                        </div>
-                        <div class="col-auto align-content-start pr-0">
-                            <div id="qr_Expediente"></div>
-                        </div>
-                    </div>
-                    <div class="row border border-gray mb-2 mt-2">
-                        <div class="col-7">
-                            <div class="form-group row mb-1">
-                                <div class="col-4">
-                                    <b>Nombre:</b>
-                                </div>
-                                <div class="col-8">
-                                    <label class="mb-0" id="lblNombreCliente_Expediente" runat="server"></label>
-                                </div>
-
-                                <div class="col-4">
-                                    <b>Identidad:</b>
-                                </div>
-                                <div class="col-8">
-                                    <label class="mb-0" id="lblIdentidadCliente_Expediente" runat="server"></label>
-                                </div>
-
-                                <div class="col-4">
-                                    <b>Departamento:</b>
-                                </div>
-                                <div class="col-8">
-                                    <label class="mb-0" id="lblDepartamento_Expediente" runat="server"></label>
-                                </div>
-
-                                <div class="col-4">
-                                    <b>Dirección:</b>
-                                </div>
-                                <div class="col-8">
-                                    <label class="mb-0" id="lblDireccionCliente_Expediente" runat="server"></label>
-                                </div>
-
-                                <div class="col-4">
-                                    <b>Tel. Celular:</b>
-                                </div>
-                                <div class="col-8">
-                                    <label class="mb-0" id="lblTelefonoCliente_Expediente" runat="server"></label>
-                                </div>
-                            </div>
-                            <u class="font-weight-bold">Datos laborales</u>
-                            <div class="form-group row mb-0">
-                                <div class="col-4">
-                                    <b>Tipo de trabajo:</b>
-                                </div>
-                                <div class="col-8">
-                                    <label class="mb-0" id="lblTipoDeTrabajo_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-4">
-                                    <b>Cargo:</b>
-                                </div>
-                                <div class="col-8">
-                                    <label class="mb-0" id="lblPuestoAsignado_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-4">
-                                    <b>Teléfono:</b>
-                                </div>
-                                <div class="col-8">
-                                    <label class="mb-0" id="lblTelefonoTrabajo_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-4">
-                                    <b>Dirección:</b>
-                                </div>
-                                <div class="col-8">
-                                    <label class="mb-0" id="lblDirecciónTrabajo_Expediente" runat="server"></label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-5 border-left border-gray">
-                            <div class="form-group row border-bottom border-gray mb-1">
-                                <u class="p-2 font-weight-bold">Datos del préstamo</u>
-                            </div>
-                            <div class="form-group row mb-0">
-                                <div class="col-6">
-                                    <b>N° Solicitud:</b>
-                                </div>
-                                <div class="col-6">
-                                    <label class="mb-0" id="lblNoSolicitud_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-6">
-                                    <b>Fecha de otorgamiento:</b>
-                                </div>
-                                <div class="col-6">
-                                    <label class="mb-0" id="lblFechaOtorgamiento_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-6">
-                                    <b>Plazo:</b>
-                                </div>
-                                <div class="col-6">
-                                    <label class="mb-0" id="lblCantidadCuotas_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-6">
-                                    <b>Monto otorgado:</b>
-                                </div>
-                                <div class="col-6">
-                                    <label class="mb-0" id="lblMontoOtorgado_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-6">
-                                    <b>Valor de la cuota:</b>
-                                </div>
-                                <div class="col-6">
-                                    <label class="mb-0" id="lblValorCuota_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-6">
-                                    <b>Fecha primer pago:</b>
-                                </div>
-                                <div class="col-6">
-                                    <label class="mb-0" id="lblFechaPrimerPago_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-6">
-                                    <b>Frecuencia:</b>
-                                </div>
-                                <div class="col-6">
-                                    <label class="mb-0" id="lblFrecuenciaPlazo_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-6">
-                                    <b>Vencimiento</b>
-                                </div>
-                                <div class="col-6">
-                                    <label class="mb-0" id="lblFechaVencimiento_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-6">
-                                    <b>Oficial:</b>
-                                </div>
-                                <div class="col-6">
-                                    <label class="mb-0" id="lblOficialNegocios_Expediente" runat="server"></label>
-                                </div>
-                                <div class="col-6">
-                                    <b>Gestor:</b>
-                                </div>
-                                <div class="col-6">
-                                    <label class="mb-0" id="lblGestor_Expediente" runat="server"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 p-0">
-                            <asp:Table ID="tblDocumentos_Expediente" CssClass="table table-sm table-condensed table-bordered" runat="server">
-                                <asp:TableHeaderRow TableSection="TableHeader">
-                                    <asp:TableHeaderCell>Tipo de documento</asp:TableHeaderCell>
-                                    <asp:TableHeaderCell CssClass="text-center">SI</asp:TableHeaderCell>
-                                    <asp:TableHeaderCell CssClass="text-center">NO</asp:TableHeaderCell>
-                                    <asp:TableHeaderCell CssClass="text-center">N/A</asp:TableHeaderCell>
-                                </asp:TableHeaderRow>
-                            </asp:Table>
-                        </div>
-                        <div class="col-6">
-                            <u class="font-weight-bold">TIPO DE RENEGOCIACIÓN</u>
-                            <asp:Table ID="tblTipoDeSolicitud_Expediente" CssClass="font-weight-bold table-borderless mt-2" runat="server"></asp:Table>
-                        </div>
-                        <div class="col-12 p-0">
-                            <div class="form-group row">
-                                <label class="col-2 pr-0">Especifique otros:</label>
-                                <asp:Label runat="server" ID="lblEspecifiqueOtros_Expediente" CssClass="col-10 border-top-0 border-left-0 border-right-0 border-bottom border-dark"></asp:Label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row pt-5 justify-content-center">
-                        <div class="col-5 text-center">
-                            <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
-                            <label class="mt-0 d-block">Firma oficial</label>
-                        </div>
-                        <div class="col-5 text-center">
-                            <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
-                            <label class="mt-0 d-block">Firma de Jefe/Supervisor</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="divContenedorPortadaExpediente" class="contenedorPDF">
-            <div class="card m-0 divImprimir" runat="server" visible="true" id="divPortadaExpedientePDF" style="display: none;">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-4 align-self-end">
-                            <div class="form-group row pl-3">
-                                <div class="col-6 border border-dark">
-                                    <h6 class="m-0">FECHA</h6>
-                                </div>
-                                <div class="col-6 border border-dark text-right">
-                                    <h6 class="m-0">01/02/2021</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4 text-center align-self-">
-                            <img src="#" class="img-fluid img-logo-empresa" />
-                        </div>
-                        <div class="col-4 align-self-end">
-                            <div class="form-group row pr-3">
-                                <div class="col-6 border border-dark">
-                                    <h6 class="m-0">MES</h6>
-                                </div>
-                                <div class="col-6 border border-dark">
-                                    <h6 class="m-0">ENERO</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <table class="table table-sm table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <td style="width: 10%" class="text-center">CLIENTE</td>
-                                        <td colspan="3" style="width: 90%" class="text-center">
-                                            <h4 class="font-weight-bold">JOSE FRANCISCO MORAZAN QUEZADA</h4>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>IDENTIDAD</td>
-                                        <td class="text-center">0502-2000-02944</td>
-                                        <td>SOLICITUD</td>
-                                        <td class="text-center">1011</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table class="table table-sm table-bordered mt-3">
-                                <tbody>
-                                    <tr>
-                                        <td style="width: 10%">OFICIAL</td>
-                                        <td class="text-center">ALEJANDRO FLORES</td>
-                                        <td>CENTRO DE COSTO</td>
-                                        <td class="text-center">VEHICULOS 0603</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table class="table table-sm table-bordered mt-3">
-                                <tbody>
-                                    <tr>
-                                        <td style="width: 10%">MARCA</td>
-                                        <td class="text-center">HYUNDAI</td>
-                                        <td>COLOR</td>
-                                        <td class="text-center">ROJO</td>
-                                        <td>AÑO</td>
-                                        <td class="text-center">2015</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 10%">MODELO</td>
-                                        <td class="text-center">ROJO</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>PLACA</td>
-                                        <td class="text-center">HAH 0522</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table class="table table-sm table-bordered mt-3" style="width: 70%">
-                                <tbody>
-                                    <tr>
-                                        <td>VENDEDOR</td>
-                                        <td class="text-center">JUAN PEREZ - 0502-2000-02944</td>
-                                    </tr>
-                                    <tr>
-                                        <td>DUEÑO ANTERIOR</td>
-                                        <td class="text-center">LUIS ALFREDO ZAMORA REYES - 0502-2000-02944</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 mb-0">
-                            <%--<div style="max-width: 794px !important; min-width: 794px !important; overflow-x: hidden;">--%>
-                            <div id="divGaleriaPortadaExpediente" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden;" runat="server"></div>
-                            <%--</div>--%>
-                        </div>
-                        <div class="col-12 mt-0">
-                            <div id="divPortadaExpediente_Revision" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden;" runat="server"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modalGuardarExpedienteSolicitud -->
-        <div id="modalGuardarExpedienteSolicitud" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalGuardarExpedienteSolicitudLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalGuardarExpedienteSolicitudLabel">Expediente de la solicitud de crédito</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-
-                        <label class="mb-3">Documentos del expediente:</label>
-
-                        <ul id="ulDocumentosDelExpediente" style="max-height: 50vh; overflow-x: auto;"></ul>
-
-                        <div class="form-group mt-3">
-                            <label>Especifique otras</label>
-                            <textarea id="txtEspecifiqueOtras" class="form-control form-control-sm" data-parsley-maxlength="500" runat="server"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="btnGuardarExpedienteSolicitud" class="btn btn-info mr-1">
-                            Guardar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -2231,10 +1908,7 @@
     <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
-    <script src="/Scripts/plugins/qrcode/qrcode.js"></script>
     <script>
-
-        debugger;
 
         $("#divGaleriaGarantia").unitegallery({
             gallery_width: 900,
@@ -2245,19 +1919,6 @@
             gallery_theme: "tilesgrid",
             tile_width: 300,
             tile_height: 194,
-            grid_num_rows: 15
-        });
-
-        $("#divGaleriaPortadaExpediente").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 300,
-            tile_height: 180,
-            grid_num_rows: 15
-        });
-        $("#divPortadaExpediente_Revision").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 618,
-            tile_height: 300,
             grid_num_rows: 15
         });
 
@@ -2288,7 +1949,6 @@
         $('.lblProfesionRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.Prefesion);
         $('.lblCiudadDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.CiudadDomicilio);
         $('.lblDepartamentoDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.DepartamentoDomicilio);
-
 
         function ExportToPDF(nombreDelArchivo, idDivContenedor, idDivPDF) {
 
@@ -2332,9 +1992,7 @@
                     MensajeError('No se pudo enviar el correo, contacte al administrador.');
                 },
                 success: function (data) {
-
                     data.d == true ? MensajeExito('El correo se envió correctamente') : MensajeError('No se pudo enviar el correo, contacte al administrador.');
-
                 }
             });
         }
@@ -2351,173 +2009,6 @@
                 title: 'Éxito',
                 message: mensaje
             });
-        }
-    </script>
-
-    <script>
-        $(document).ready(function () {
-
-            InicializarCodigosQR();
-        });
-
-        function InicializarCodigosQR() {
-
-            GenerarCodigoQR('qr_Expediente');
-        };
-
-        function GenerarCodigoQR(idElemento) {
-
-            let qrcode = new QRCode(document.getElementById('' + idElemento + ''), {
-                width: 85,
-                height: 85
-            });
-
-            qrcode.makeCode('<%=UrlCodigoQR%>');
-        }
-    </script>
-
-    <script>
-        // Expedientes
-        var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=listaDocumentosDelExpedienteJSON%>');
-        var permitirImprimirExpediente = ValidarEstadoDeDocumentosExpediente();
-
-        $("#btnExpediente").click(function () {
-
-            if (ValidarEstadoDeDocumentosExpediente() && permitirImprimirExpediente == true) {
-                ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
-            }
-            else {
-
-                var ulDocumentosExpedientes = $("#ulDocumentosDelExpediente").empty();
-                var template = '';
-                var identificadorElemento = '';
-                var stringData = '';
-
-                for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
-
-                    identificadorElemento = 'radio_' + LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento;
-                    stringData = ' data-iddocumento="' + LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento + '" ';
-
-                    template +=
-                        '<li>' +
-                        '<div class="form-group row border-bottom border-gray mb-2 mr-3">' +
-                        '<div class="col-sm-4 font-weight-bold pr-0">' +
-                        LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento +
-                        '</div>' +
-                        '<div class="col-sm-8 pr-0">' +
-                        '<div class="form-check form-check-inline">' +
-                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_si_' + identificadorElemento + '" ' + stringData + ' value="1" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 1 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)"  />' +
-                        '<label class="form-check-label" for="radio_si_' + identificadorElemento + '">SI</label>' +
-                        '</div>' +
-                        '<div class="form-check form-check-inline">' +
-                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_no_' + identificadorElemento + '" ' + stringData + ' value="2" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 2 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
-                        '<label class="form-check-label" for="radio_no_' + identificadorElemento + '">NO</label>' +
-                        '</div>' +
-                        '<div class="form-check form-check-inline">' +
-                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_na_' + identificadorElemento + '" ' + stringData + ' value="3" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 3 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
-                        '<label class="form-check-label" for="radio_na_' + identificadorElemento + '">N/A</label>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>' +
-                        '</li>';
-                }
-
-                ulDocumentosExpedientes.append(template);
-
-                $("#modalGuardarExpedienteSolicitud").modal();
-            }
-        });
-
-        $("#btnGuardarExpedienteSolicitud").click(function () {
-
-            var modelStateIsValid = true;
-
-            if (!ValidarEstadoDeDocumentosExpediente()) {
-                MensajeError('La lista de verificación está incompleta.');
-                modelStateIsValid = false;
-            }
-
-            if (modelStateIsValid) {
-
-                var especifiqueOtrosDocumentos = $("#txtEspecifiqueOtras").val();
-
-                $.ajax({
-                    type: "POST",
-                    url: 'SolicitudesCredito_ImprimirDocumentacion.aspx/GuardarExpediente',
-                    data: JSON.stringify({ documentosExpediente: LISTA_DOCUMENTOS_EXPEDIENTES, especifiqueOtros: especifiqueOtrosDocumentos, dataCrypt: window.location.href }),
-                    contentType: 'application/json; charset=utf-8',
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        MensajeError('No se pudo guardar el expediente de la solicitud, contacte al administrador');
-                    },
-                    beforeSend: function () {
-                        MostrarLoader();
-                    },
-                    success: function (data) {
-
-                        if (data.d.ResultadoExitoso == true) {
-
-                            var tblDocumentos_Expediente = $("#tblDocumentos_Expediente tbody").empty();
-                            let template = '';
-
-                            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
-
-                                template += '<tr>' +
-                                    '<td>' + LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento + '</td>' +
-                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '1' ? 'X' : '') + '</td>' +
-                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '2' ? 'X' : '') + '</td>' +
-                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '3' ? 'X' : '') + '</td>' +
-                                    '</tr>';
-                            }
-
-                            tblDocumentos_Expediente.append(template);
-
-                            $("#lblEspecifiqueOtros_Expediente").text(especifiqueOtrosDocumentos);
-
-                            permitirImprimirExpediente = true;
-                            $("#modalGuardarExpedienteSolicitud").modal('hide');
-                            ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
-                        }
-                        else {
-                            MensajeError(data.d.MensajeResultado);
-                            console.log(data.d.MensajeDebug);
-                        }
-                    },
-                    complete: function () {
-                        OcultarLoader();
-                    }
-                });
-            }
-        });
-
-        function ActualizarEstadoDocumentoExpediente(elemento) {
-
-            let idDocumento = $(elemento).data('iddocumento');
-            let idEstado = $(elemento).val();
-
-            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
-
-                if (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento == idDocumento) {
-                    LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento = idEstado;
-                    break;
-                }
-            }
-        }
-
-        function ValidarEstadoDeDocumentosExpediente() {
-
-            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
-                if (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 0)
-                    return false;
-            }
-            return true;
-        }
-
-        function MostrarLoader() {
-            $("#Loader").css('display', '');
-        }
-
-        function OcultarLoader() {
-            $("#Loader").css('display', 'none');
         }
     </script>
 </body>

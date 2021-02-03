@@ -448,13 +448,11 @@ $("#btnCambiarFondosConfirmar").click(function (e) {
                 },
                 success: function (data) {
 
-                    if (data.d == true)
-                    {
+                    if (data.d == true) {
                         MensajeExito('El origen de los fondos se cambió correctamente.');
                         BuscarSolicitud();
                     }
-                    else
-                    {
+                    else {
                         MensajeError("No se pudo cambiar el origen de los fondos, contacte al administrador.");
                     }
 
@@ -465,8 +463,7 @@ $("#btnCambiarFondosConfirmar").click(function (e) {
         else
             MensajeError('La solicitud ya tiene esta resolución...');
     }
-    else
-    {
+    else {
         $("#ddlFondos").parsley().validate();
         $("#txtObservacionesCambiarFondos").parsley().validate();
     }
@@ -724,10 +721,8 @@ function BuscarSolicitud() {
             contentType: "application/json; charset=utf-8",
             error: function (xhr, ajaxOptions, thrownError) {
 
-                $("#btnBuscarSolicitud").prop('disabled', false);
                 $("#divInformacionSolicitud").css('display', 'none');
                 MensajeError("No se pudo realizar la búsqueda, contacte al administrador.");
-                OcultarLoader();
             },
             success: function (data) {
 
@@ -737,128 +732,164 @@ function BuscarSolicitud() {
 
                     idCliente = resultado.IdCliente;
 
+                    if (idCliente == 0) {
+                        MensajeError('No se encontraron resultados');
+                        return false;
+                    }
+
                     $('#lblIdSolicitud').text('No. ' + idSolicitud);
                     $('#lblIdSolicitud').css('display', '');
-                    $("#txtNombreCliente").val(resultado.NombreCliente);
-                    $("#txtIdentidadCliente").val(resultado.IdentidadCliente);
-                    $("#txtRtn").val(resultado.RtnCliente);
-                    $("#txtTelefono").val(resultado.Telefono);
-                    $("#txtProducto").val(resultado.Producto);
-                    $("#txtTipoDeSolicitud").val(resultado.TipoDeSolicitud);
-                    $("#txtAgencia").val(resultado.Agencia);
-                    $("#txtAgenteAsignado").val(resultado.UsuarioAsignado);
-                    $("#txtGestorAsignado").val(resultado.GestorAsignado);
-
+                    $("#lblNombreCliente").text(resultado.NombreCliente);
+                    $("#lblIdentidadCliente").text(resultado.IdentidadCliente);
+                    $("#lblRtn").text(resultado.RtnCliente);
+                    $("#lblTelefono").text(resultado.Telefono);
+                    $("#lblProducto").text(resultado.Producto);
+                    $("#lblTipoDeSolicitud").text(resultado.TipoDeSolicitud);
+                    $("#lblAgenciaYVendedorAsignado").text(resultado.Agencia + ' | ' + resultado.UsuarioAsignado);
+                    $("#lblGestorAsignado").text(resultado.GestorAsignado);
                     $("#lblFondoActual").text(resultado.Fondo);
                     $("#ddlFondos").val(resultado.IdFondo);
 
-                    /* Condiciones de la solicitud */
-                    var tblCondiciones = $("#tblCondiciones tbody");
-                    tblCondiciones.empty();
-                    tblCondiciones.append('<tr><td class="text-center" colspan="5">No hay registros disponibles...</td></tr>');
-
-                    if (resultado.Condiciones != null) {
-                        if (resultado.Condiciones.length > 0) {
-
-                            var condiciones = resultado.Condiciones;
-                            let templateCondiciones = '';
-                            let estadoCondicion = '';
-                            let btnAnularCondicion = '';
-
-                            tblCondiciones.empty();
-
-                            for (var i = 0; i < condiciones.length; i++) {
-
-                                estadoCondicion = condiciones[i].EstadoCondicion != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>"
-
-                                btnAnularCondicion = condiciones[i].EstadoCondicion != true ? '' : '<button id="btnAnularCondicion" data-id="' + condiciones[i].IdSolicitudCondicion + '" class="btn btn-sm btn-danger mb-0" type="button" title="Anular condición"><i class="far fa-trash-alt"></i></button>';
-
-                                templateCondiciones += '<tr><td>' + condiciones[i].Condicion + '</td><td>' + condiciones[i].DescripcionCondicion + '</td><td>' + condiciones[i].ComentarioAdicional + '</td><td>' + estadoCondicion + '</td><td class="text-center">' + btnAnularCondicion + '</td></tr>';
-                            }
-
-                            tblCondiciones.append(templateCondiciones);
-                        }
+                    var datatableLenguage = {
+                        "sProcessing": "Cargando información...",
+                        "sLengthMenu": "Mostrar _MENU_ registros",
+                        "sZeroRecords": "No se encontraron resultados",
+                        "sEmptyTable": "Ningún dato disponible en esta tabla",
+                        "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Buscar:",
+                        "sUrl": "",
+                        "sInfoThousands": ",",
+                        "sLoadingRecords": "Cargando información...",
+                        "oPaginate": {
+                            "sFirst": "Primero",
+                            "sLast": "Último",
+                            "sNext": "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        },
+                        "decimal": ".",
+                        "thousands": ","
                     }
 
-                    /* Documentación de la solicitud */
-                    var tblDocumentos = $("#tblDocumenacionSolicitud tbody");
-                    tblDocumentos.empty();
-                    tblDocumentos.append('<tr><td class="text-center" colspan="3">No hay registros disponibles...</td></tr>');
-                    let btnEliminarDocumento = '';
+                    /* Inicializar datatables de condiciones */
+                    $('#tblCondiciones').DataTable({
+                        "destroy": true,
+                        "pageLength": 10,
+                        "aaSorting": [],
+                        "responsive": true,
+                        "language": datatableLenguage,
+                        data: resultado.Condiciones,
+                        "columns": [
+                            { "data": "Condicion" },
+                            { "data": "DescripcionCondicion" },
+                            { "data": "ComentarioAdicional" },
+                            {
+                                "data": "EstadoCondicion",
+                                "render": function (value) {
+                                    return value != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>"
+                                }
+                            },
+                            {
+                                "data": "EstadoCondicion", "className": "text-center",
+                                "render": function (data, type, row) {
+                                    return row["EstadoCondicion"] != true ? '' : '<button id="btnAnularCondicion" data-id="' + row["IdSolicitudCondicion"] + '" class="btn btn-sm btn-danger mb-0" type="button" title="Anular condición"><i class="far fa-trash-alt"></i></button>';
+                                }
+                            },
+                        ]
+                    });
 
-                    if (resultado.Documentos != null) {
-                        if (resultado.Documentos.length > 0) {
+                    /* Inicializar datatables de documentos */
+                    $('#tblDocumenacionSolicitud').DataTable({
+                        "destroy": true,
+                        "pageLength": 10,
+                        "aaSorting": [],
+                        "responsive": true,
+                        "language": datatableLenguage,
+                        data: resultado.Documentos,
+                        "columns": [
+                            { "data": "DescripcionTipoDocumento" },
+                            { "data": "NombreArchivo" },
+                            {
+                                "data": "URLArchivo", "className": "text-center",
+                                "render": function (data, type, row) {
+                                    return '<button class="btn btn-sm btn-secondary" data-url="' + row["URLArchivo"] + (row["IdTipoDocumento"] == 8 || row["IdTipoDocumento"] == 9 ? '.jpg' : '') + '" data-descripcion="' + row["DescripcionTipoDocumento"] + '" onclick="MostrarVistaPrevia(this)" type="button">Abrir <i class="fas fa-search pl-1"></i></button>'
+                                }
+                            },
+                            {
+                                "data": "IdSolicitudDocumento", "className": "text-center",
+                                "render": function (value) {
+                                    return '<button id="btnEliminarDocumento" data-id="' + value + '" class="btn btn-sm btn-danger mb-0" type="button" title="Eliminar documento"><i class="far fa-trash-alt"></i></button>'
+                                }
+                            },
+                        ],
+                        columnDefs: [
+                            { targets: 'no-sort', orderable: false },
+                        ]
+                    });
 
-                            var documentos = resultado.Documentos;
-                            let templateDocumentos = '';
-
-                            tblDocumentos.empty();
-
-                            for (var i = 0; i < documentos.length; i++) {
-
-                                btnEliminarDocumento = '<button id="btnEliminarDocumento" data-id="' + documentos[i].IdSolicitudDocumento + '" class="btn btn-sm btn-danger mb-0" type="button" title="Eliminar documento"><i class="far fa-trash-alt"></i></button>';
-
-                                templateDocumentos += '<tr><td>' + documentos[i].DescripcionTipoDocumento + '</td><td>' + documentos[i].NombreArchivo + '</td><td class="text-center"><a href="' + documentos[i].URLArchivo + '" target="_blank">Abrir</a></td><td class="text-center">' + btnEliminarDocumento + '</td></tr>';
-                            }
-
-                            tblDocumentos.append(templateDocumentos);
-                        }
-                    }
-
-                    /* Referencias personales de la solicitud */
-                    var tblReferenciasPersonales = $("#tblReferneciasPersonales tbody");
-                    tblReferenciasPersonales.empty();
-                    tblReferenciasPersonales.append('<tr><td class="text-center" colspan="6">No hay registros disponibles...</td></tr>');
-
-                    if (resultado.ReferenciasPersonales != null) {
-
-                        if (resultado.ReferenciasPersonales.length > 0) {
-
-                            var referenciasPersonales = resultado.ReferenciasPersonales;
-                            let templateReferenciasPersonales = '';
-                            let btnEliminarReferencia = '';
-                            let btnEditarReferencia = '';
-
-                            tblReferenciasPersonales.empty();
-
-                            for (var i = 0; i < referenciasPersonales.length; i++) {
-
-                                btnEliminarReferencia = '<button id="btnEliminarReferencia" data-id="' + referenciasPersonales[i].IdReferencia + '" class="btn btn-sm btn-danger mb-0" type="button" title="Eliminar referencia personal"><i class="far fa-trash-alt"></i></button>';
-                                btnEditarReferencia = '<button id="btnEditarReferencia" data-id="' + referenciasPersonales[i].IdReferencia + '" data-nombre="' + referenciasPersonales[i].NombreCompleto + '" data-trabajo="' + referenciasPersonales[i].LugarTrabajo + '" data-telefono="' + referenciasPersonales[i].TelefonoReferencia + '" data-idtiempodeconocer="' + referenciasPersonales[i].IdTiempoDeConocer + '" data-idparentesco="' + referenciasPersonales[i].IdParentescoReferencia + '" class="btn btn-sm btn-info mb-0" type="button" title="Editar referencia personal"><i class="far fa-edit"></i></button>';
-
-                                templateReferenciasPersonales += '<tr><td class="pt-0 pb-0"><small>' + referenciasPersonales[i].NombreCompleto + '</small></td><td class="pt-0 pb-0"><small>' + referenciasPersonales[i].LugarTrabajo + '</small></td><td class="pt-0 pb-0 text-center"><small>' + referenciasPersonales[i].TelefonoReferencia + '</small></td><td class="pt-0 pb-0 text-center"><small>' + referenciasPersonales[i].TiempoDeConocer + '</small></td><td class="pt-0 pb-0"><small>' + referenciasPersonales[i].DescripcionParentesco + '</small></td><td class="text-center pt-0 pb-0">' + btnEliminarReferencia + btnEditarReferencia + '</td></tr>';
-                            }
-
-                            tblReferenciasPersonales.append(templateReferenciasPersonales);
-                        }
-                    }
+                    /* Inicializar datatables de Referencias personales de la solicitud */
+                    $('#tblReferenciasPersonales').DataTable({
+                        "destroy": true,
+                        "pageLength": 10,
+                        "aaSorting": [],
+                        "responsive": true,
+                        "dom": "<'row'<'col-sm-12'>>" +
+                            "<'row'<'col-sm-12'tr>>" +
+                            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+                        "language": datatableLenguage,
+                        data: resultado.ReferenciasPersonales,
+                        "columns": [
+                            { "data": "NombreCompleto" },
+                            { "data": "LugarTrabajo", "className": "text-center" },
+                            { "data": "TelefonoReferencia" },
+                            { "data": "TiempoDeConocer" },
+                            { "data": "DescripcionParentesco" },
+                            {
+                                "data": "IdReferencia", "className": "text-center",
+                                "render": function (data, type, row) {
+                                    return '<button id="btnEliminarReferencia" data-id="' + row["IdReferencia"] + '" class="btn btn-sm btn-danger mb-0" type="button" title="Eliminar referencia personal"><i class="far fa-trash-alt"></i></button> ' +
+                                        '<button id="btnEditarReferencia" data-id="' + row["IdReferencia"] + '" data-nombre="' + row["NombreCompleto"] + '" data-trabajo="' + row["LugarTrabajo"] + '" data-telefono="' + row["TelefonoReferencia"] + '" data-idtiempodeconocer="' + row["IdTiempoDeConocer"] + '" data-idparentesco="' + row["IdParentescoReferencia"] + '" class="btn btn-sm btn-info mb-0" type="button" title="Editar referencia personal"><i class="far fa-edit"></i></button>';
+                                }
+                            },
+                        ],
+                        columnDefs: [
+                            { targets: 'no-sort', orderable: false },
+                        ]
+                    });
 
                     /* Resolución de la solicitud */
                     $("#ddlCatalogoResoluciones").val(resultado.IdEstadoSolicitud);
                     idEstadoSolicitud = resultado.IdEstadoSolicitud;
 
-                    /* Historial de mantenimiento */
-                    var tblHistorialMantenimiento = $("#tblHistorialMantenimiento tbody");
-                    tblHistorialMantenimiento.empty();
-                    tblHistorialMantenimiento.append('<tr><td class="text-center" colspan="4">No hay registros disponibles...</td></tr>');
-
-                    if (resultado.HistorialMantenimientos != null) {
-                        if (resultado.HistorialMantenimientos.length > 0) {
-
-                            tblHistorialMantenimiento.empty();
-
-                            var historialMantenimiento = resultado.HistorialMantenimientos;
-
-                            var template = '';
-
-                            $.each(historialMantenimiento, function (i, iter) {
-
-                                template += '<tr><td>' + moment(iter.FechaMantenimiento).locale('es').format('YYYY/MM/DD hh:mm:ss a') + '</td><td>' + iter.AgenciaUsuario + '</td><td>' + iter.NombreUsuario + '</td><td>' + iter.Observaciones + '</td></tr>';
-                            });
-
-                            tblHistorialMantenimiento.append(template);
-                        }
-                    }
+                    /* Dtatable Historial de mantenimiento */
+                    $('#tblHistorialMantenimiento').DataTable({
+                        "destroy": true,
+                        "pageLength": 10,
+                        "aaSorting": [],
+                        "responsive": true,
+                        "language": datatableLenguage,
+                        data: resultado.HistorialMantenimientos,
+                        "columns": [
+                            {
+                                "data": "FechaMantenimiento",
+                                "render": function (value) {
+                                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a')
+                                }
+                            },
+                            { "data": "AgenciaUsuario" },
+                            { "data": "NombreUsuario" },
+                            { "data": "Observaciones" }
+                        ],
+                        columnDefs: [
+                            { targets: 'no-sort', orderable: false },
+                        ]
+                    });
 
                     $("#divInformacionSolicitud").css('display', '');
 
@@ -867,15 +898,30 @@ function BuscarSolicitud() {
                     $("#divInformacionSolicitud").css('display', 'none');
                     MensajeError('No se pudo cargar la información, contacte al administrador.');
                 }
-                $('#btnBuscarSolicitud').prop('disabled', false);
+            },// success
+            complete: function () {
                 OcultarLoader();
-
-            }// success
+                $('#btnBuscarSolicitud').prop('disabled', false);
+            }
         }); // ajax
     } // if txtNoSolicitud != ''
     else {
         $("#txtNoSolicitud").focus();
     }
+}
+
+function MostrarVistaPrevia(btnVistaPrevia) {
+
+    let urlImagen = $(btnVistaPrevia).data('url');
+    let descripcion = $(btnVistaPrevia).data('descripcion');
+    let imgTemplate = '<img alt="' + descripcion + '" src="' + urlImagen + '" data-image="' + urlImagen + '" data-description="' + descripcion + '"/>';
+
+
+    $("#lblTipoDocumentoVistaPrevia").text(descripcion);
+    $("#divImgVistaPrevia").empty().append(imgTemplate).unitegallery();
+
+    $("#modalDocumentacionSolicitud").modal('hide');
+    $("#modalVistaPreviaDocumento").modal();
 }
 
 function MensajeError(mensaje) {

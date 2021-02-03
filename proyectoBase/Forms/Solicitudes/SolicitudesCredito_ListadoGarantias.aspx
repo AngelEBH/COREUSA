@@ -184,7 +184,7 @@
     </div>
 
     <div id="modalActualizarGarantia" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalActualizarGarantiaLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title mt-0" id="modalActualizarGarantiaLabel">Actualizar garantía | Solicitud <span class="lblNoSolicitudCredito"></span></h6>

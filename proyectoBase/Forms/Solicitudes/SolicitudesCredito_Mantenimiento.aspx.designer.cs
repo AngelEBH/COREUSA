@@ -40,87 +40,6 @@ public partial class SolicitudesCredito_Mantenimiento
     protected global::System.Web.UI.HtmlControls.HtmlButton btnBuscarSolicitud;
 
     /// <summary>
-    /// Control txtNombreCliente.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtNombreCliente;
-
-    /// <summary>
-    /// Control txtIdentidadCliente.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtIdentidadCliente;
-
-    /// <summary>
-    /// Control txtRtn.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtRtn;
-
-    /// <summary>
-    /// Control txtTelefono.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtTelefono;
-
-    /// <summary>
-    /// Control txtProducto.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtProducto;
-
-    /// <summary>
-    /// Control txtTipoDeSolicitud.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtTipoDeSolicitud;
-
-    /// <summary>
-    /// Control txtAgencia.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtAgencia;
-
-    /// <summary>
-    /// Control txtAgenteAsignado.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtAgenteAsignado;
-
-    /// <summary>
-    /// Control txtGestorAsignado.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtGestorAsignado;
-
-    /// <summary>
     /// Control btnReiniciarResolucion.
     /// </summary>
     /// <remarks>
@@ -265,13 +184,22 @@ public partial class SolicitudesCredito_Mantenimiento
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesCambiarFondos;
 
     /// <summary>
-    /// Control txtObservacionesReiniciarResolucionSolicitud.
+    /// Control ddlCatalogoResoluciones.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesReiniciarResolucionSolicitud;
+    protected global::System.Web.UI.WebControls.DropDownList ddlCatalogoResoluciones;
+
+    /// <summary>
+    /// Control txtObservacionesCambiarResolucionSolicitud.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesCambiarResolucionSolicitud;
 
     /// <summary>
     /// Control ddlResolucionCampo.
@@ -290,6 +218,15 @@ public partial class SolicitudesCredito_Mantenimiento
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacioneResolucionCampo;
+
+    /// <summary>
+    /// Control txtObservacionesReiniciarCampo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesReiniciarCampo;
 
     /// <summary>
     /// Control ddlGestores.
@@ -344,33 +281,6 @@ public partial class SolicitudesCredito_Mantenimiento
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesEliminarDocumento;
-
-    /// <summary>
-    /// Control ddlCatalogoResoluciones.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlCatalogoResoluciones;
-
-    /// <summary>
-    /// Control txtObservacionesCambiarResolucionSolicitud.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesCambiarResolucionSolicitud;
-
-    /// <summary>
-    /// Control txtObservacionesReiniciarCampo.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesReiniciarCampo;
 
     /// <summary>
     /// Control txtObservacionesReiniciarReprogramacion.
@@ -454,15 +364,6 @@ public partial class SolicitudesCredito_Mantenimiento
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesNuevaReferencia;
 
     /// <summary>
-    /// Control txtObservacionesEliminarReferenciaPersonal.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesEliminarReferenciaPersonal;
-
-    /// <summary>
     /// Control txtNombreReferenciaPersonal_Editar.
     /// </summary>
     /// <remarks>
@@ -515,4 +416,13 @@ public partial class SolicitudesCredito_Mantenimiento
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesEditarReferenciaPersonal;
+
+    /// <summary>
+    /// Control txtObservacionesEliminarReferenciaPersonal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObservacionesEliminarReferenciaPersonal;
 }

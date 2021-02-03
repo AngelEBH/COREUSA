@@ -373,12 +373,14 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
 
                         /****** Información del cliente ******/
                         sqlResultado.NextResult();
-                        sqlResultado.Read();
 
-                        informacionDeClienteSolicitud.NombreCliente = sqlResultado["fcPrimerNombreCliente"].ToString() + " " + sqlResultado["fcSegundoNombreCliente"].ToString() + " " + sqlResultado["fcPrimerApellidoCliente"].ToString() + " " + sqlResultado["fcSegundoApellidoCliente"].ToString();
-                        informacionDeClienteSolicitud.IdentidadCliente = sqlResultado["fcIdentidadCliente"].ToString();
-                        informacionDeClienteSolicitud.RtnCliente = sqlResultado["fcRTN"].ToString();
-                        informacionDeClienteSolicitud.Telefono = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
+                        while (sqlResultado.Read())
+                        {
+                            informacionDeClienteSolicitud.NombreCliente = sqlResultado["fcPrimerNombreCliente"].ToString() + " " + sqlResultado["fcSegundoNombreCliente"].ToString() + " " + sqlResultado["fcPrimerApellidoCliente"].ToString() + " " + sqlResultado["fcSegundoApellidoCliente"].ToString();
+                            informacionDeClienteSolicitud.IdentidadCliente = sqlResultado["fcIdentidadCliente"].ToString();
+                            informacionDeClienteSolicitud.RtnCliente = sqlResultado["fcRTN"].ToString();
+                            informacionDeClienteSolicitud.Telefono = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
+                        }
 
                         /****** Información laboral ******/
                         sqlResultado.NextResult();
