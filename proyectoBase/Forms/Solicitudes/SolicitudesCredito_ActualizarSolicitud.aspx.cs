@@ -18,18 +18,20 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 {
     #region Propiedades
 
-    private string pcEncriptado = "";
-    private string pcIDUsuario = "";
-    private string pcIDSesion = "";
-    public string IdSolicitud = "";
-    public string IdCliente = "";
-    private string pcIDApp = "";
     public string pcID = "";
-    private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-    public SolicitudesCredito_ActualizarSolicitud_Precalificado_ViewModel Precalificado;
-    public List<CoreFinanciero_TipoDocumento_ViewModel> DocumentosRequeridos = new List<CoreFinanciero_TipoDocumento_ViewModel>();
-    public string jsonPrecalicado;
+    public string pcIDApp = "";
+    public string IdCliente = "";
+    public string pcIDSesion = "";
+    public string IdSolicitud = "";
+    public string pcIDUsuario = "";
+    public string pcEncriptado = "";
     public int IdProducto { get; set; }
+
+    public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public List<CoreFinanciero_TipoDocumento_ViewModel> DocumentosRequeridos = new List<CoreFinanciero_TipoDocumento_ViewModel>();
+
+    public SolicitudesCredito_ActualizarSolicitud_Precalificado_ViewModel Precalificado;
+    public string jsonPrecalicado;
 
     #endregion
 
@@ -41,28 +43,23 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
         if (!IsPostBack && type == null)
         {
-            var lcURL = Request.Url.ToString();
-            var liParamStart = lcURL.IndexOf("?");
-            string lcParametros;
-
             Precalificado = new SolicitudesCredito_ActualizarSolicitud_Precalificado_ViewModel();
 
-            if (liParamStart > 0)
-                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var lcURL = Request.Url.ToString();
+            var liParamStart = lcURL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
 
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                IdSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                IdSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 Session.Timeout = 10080;
@@ -89,10 +86,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
             Session["tipoDoc"] = tipoDocumento;
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-{ "limit", 1 },
-{ "title", "auto" },
-{ "uploadDir", uploadDir }
-});
+                { "limit", 1 },
+                { "title", "auto" },
+                { "uploadDir", uploadDir }
+            });
 
             switch (type)
             {
@@ -132,6 +129,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -269,9 +267,9 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         {
                             ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -289,11 +287,12 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_SolicitudClientePorIdSolicitud", sqlConexion))
                 {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", IdSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", IdSolicitud);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -361,7 +360,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     ddlTipoDeSeguro.Items.Add("C - Basico");
 
                                     lblTipoDePlazo.InnerText = "mensual";
-
                                     break;
 
                                 case 101:
@@ -670,9 +668,9 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             /****** Historial de mantenimientos de la solicitud ******/
                             sqlResultado.NextResult();
                         }
-                    }
-                } // using command
-            }// using connection
+                    } // using sqlResultado
+                } // using sqlComando
+            }// using sqlConexion
         }
         catch (Exception ex)
         {
@@ -695,6 +693,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -755,6 +754,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piPais", 1);
                     sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
                     sqlComando.Parameters.AddWithValue("@piMunicipio", 0);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -795,6 +795,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
                     sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
                     sqlComando.Parameters.AddWithValue("@piPoblado", 0);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -837,6 +838,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
                     sqlComando.Parameters.AddWithValue("@piPoblado", idCiudadPoblado);
                     sqlComando.Parameters.AddWithValue("@piBarrio", 0);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -902,12 +904,13 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var mensajeError = string.Empty;
 
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+
+            var mensajeError = string.Empty;
             var resultadoActualizacion = string.Empty;
             var json_serializer = new JavaScriptSerializer();
 
@@ -980,6 +983,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                     sqlComando.Parameters.AddWithValue("@piIDSolicitudCondicion", idSolicitudCondicion);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -1034,6 +1038,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -1056,7 +1061,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     public static string ActualizarInformacionDomicilio(Cliente_InformacionDomicilio_ViewModel clienteInformacionDomicilio, string idSolicitud, string pcIDSesion, string pcIDUsuario, string pcIDApp)
     {
         var resultado = string.Empty;
-
         try
         {
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
@@ -1406,16 +1410,14 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     [WebMethod]
     public static List<Cliente_ReferenciaPersonal_ViewModel> ListadoReferenciasPersonalesPorIdSolicitud(string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var listadoReferenciasPersonales = new List<Cliente_ReferenciaPersonal_ViewModel>();
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1428,6 +1430,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -1464,14 +1467,13 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     [WebMethod]
     public static bool RegistrarReferenciaPersonal(Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1490,6 +1492,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -1515,14 +1518,13 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     [WebMethod]
     public static bool EliminarReferenciaPersonal(int idReferenciaPersonal, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1535,6 +1537,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -1560,14 +1563,13 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     [WebMethod]
     public static bool ActualizarReferenciaPersonal(Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
         var resultado = false;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -1635,6 +1637,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@liPlazo", plazo);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -1696,6 +1699,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piTipodeSeguro", tipoSeguro);
                     sqlComando.Parameters.AddWithValue("@piTipodeGPS", tipoGps);
                     sqlComando.Parameters.AddWithValue("@piFinanciandoGastosdeCierre", gastosDeCierreFinanciados);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -1743,40 +1747,35 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     public static string ObtenerUrlEncriptado(int idCliente, string dataCrypt)
     {
         var lUrlDesencriptado = DesencriptarURL(dataCrypt);
-        var idUsuario = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("usr");
-        var idSolicitud = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("IDSOL");
         var pcIDApp = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("IDApp");
+        var idUsuario = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("usr");
         var pcIDSesion = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("SID") ?? "0";
+        var idSolicitud = HttpUtility.ParseQueryString(lUrlDesencriptado.Query).Get("IDSOL");
 
         return DSC.Encriptar("usr=" + idUsuario + "&IDSOL=" + idSolicitud + "&cltID=" + idCliente + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
     }
 
     public static Uri DesencriptarURL(string URL)
     {
-        Uri lUrlDesencriptado = null;
+        Uri lURLDesencriptado = null;
         try
         {
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
             var liParamStart = URL.IndexOf("?");
-
-            if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-                lUrlDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
+                lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return lUrlDesencriptado;
+        return lURLDesencriptado;
     }
 
     private static DateTime ObtenerFechaPrimerPago(string idProducto)
