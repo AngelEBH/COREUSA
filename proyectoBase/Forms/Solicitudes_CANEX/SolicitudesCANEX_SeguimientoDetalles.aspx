@@ -10,6 +10,9 @@
     <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -49,20 +52,23 @@
                     <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
                         <div class="form-inline">
                             <div class="button-items pb-2">
-                                <button id="btnListaCondiciones" class="btn btn-sm btn-success validador" runat="server" visible="false" data-toggle="modal" data-target="#modalListaCondiciones" type="button">
+                                <button id="btnListaCondiciones" type="button" class="btn btn-warning validador" runat="server" visible="false" data-toggle="modal" data-target="#modalListaCondiciones">
+                                    <i class="fas fa-pen-square"></i>
                                     Lista de condiciones
                                 </button>
-                                <button id="btnDetallesResolucion" runat="server" visible="false" data-toggle="modal" data-target="#modalEstado" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
+                                <button id="btnDetallesResolucion" visible="false" data-toggle="modal" data-target="#modalEstado" type="button" class="btn btn-secondary float-right" runat="server">
+                                    <i class="fas fa-info-circle"></i>
                                     Detalles del estado
                                 </button>
-                                <button id="btnValidoDocumentacionModal" data-toggle="modal" data-target="#modalDocumentos" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
-                                    <small>Ver docs</small>
+                                <button id="btnValidoDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-secondary">
+                                    <i class="fas fa-file-alt"></i>
+                                    Documentos
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row bg-light">
+                <div class="row justify-content-between bg-light">
                     <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
                         <i class="mdi mdi-account mdi-24px mt-1"></i>
                         <asp:Label ID="lblNombreCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label>
@@ -398,45 +404,17 @@
                             <div class="panel-body">
                                 <div class="row mb-0" id="divReferenciasPersonales" runat="server">
                                     <div class="col-12">
-                                        <h6>Referencias personales</h6>
-                                        <div class="form-group row mr-1 ml-1">
-                                            <div class="table-responsive">
-                                                <table class="table tabla-compacta table-striped" id="tblReferencias" runat="server">
-                                                    <thead class="bg-light">
-                                                        <tr>
-                                                            <th>Nombre referencia</th>
-                                                            <th>Lugar de trabajo</th>
-                                                            <th>Tiempo de conocer</th>
-                                                            <th>Telefono</th>
-                                                            <th>Parentesco</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                        <div class="table-responsive mt-3 mb-3">
+                                            <asp:Table runat="server" ID="tblReferenciasPersonales" CssClass="table table-sm table-bordered table-hover mb-0 cursor-pointer w-100">
+                                                <asp:TableHeaderRow CssClass="thead-light" TableSection="TableHeader">
+                                                    <asp:TableHeaderCell>Nombre completo</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell>Lugar de trabajo</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell>Tiempo de conocer</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell>Teléfono</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell>Parentesco</asp:TableHeaderCell>
+                                                </asp:TableHeaderRow>
+                                            </asp:Table>
                                         </div>
-                                        <%--<div class="form-group row mr-1 ml-1" id="divAval">
-                                            <h6>Aval</h6>
-                                            <div class="table-responsive">
-                                                <table class="table tabla-compacta table-striped" id="tblAvales" runat="server">
-                                                    <thead class="bg-light">
-                                                        <tr>
-                                                            <th>Nombre completo</th>
-                                                            <th>Identidad</th>
-                                                            <th>Telefono</th>
-                                                            <th>Lugar de trabajo</th>
-                                                            <th>Puesto asignado</th>
-                                                            <th>Ingresos</th>
-                                                            <th>Estado</th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>--%>
                                     </div>
                                 </div>
                             </div>
@@ -518,38 +496,48 @@
 
         <!-- modal documentacion -->
         <div id="modalDocumentos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDocumentosLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalDocumentosLabel">Documentación</h5>
+                        <h6 class="modal-title mt-0" id="modalDocumentosLabel">Documentación</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación identidad</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionCedulaModal">
-                                </div>
+                    <div class="modal-body pt-0">
+                        <div class="row border-bottom justify-content-between bg-light pt-2">
+                            <div class="col-12">
+                                <label class="header-title font-weight-bold">Documentación identidad</label>
                             </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación domicilio</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionDomicilioModal">
-                                </div>
+                            <div class="col-12">
+                                <div runat="server" class="popup-gallery" id="divDocumentacionCedulaModal"></div>
                             </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación laboral</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionLaboralModal">
-                                </div>
+                        </div>
+                        <div class="row border-bottom justify-content-between pt-2">
+                            <div class="col-12">
+                                <label class="header-title font-weight-bold">Documentación domicilio</label>
                             </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Solicitud fisica</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionSoliFisicaModal">
-                                </div>
+                            <div class="col-12">
+                                <div runat="server" class="popup-gallery" id="divDocumentacionDomicilioModal"></div>
+                            </div>
+                        </div>
+                        <div class="row border-bottom justify-content-between bg-light pt-2">
+                            <div class="col-12">
+                                <label class="header-title font-weight-bold">Documentación laboral</label>
+                            </div>
+                            <div class="col-12">
+                                <div runat="server" class="popup-gallery" id="divDocumentacionLaboralModal"></div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between pt-2">
+                            <div class="col-12">
+                                <label class="header-title font-weight-bold">Solicitud física</label>
+                            </div>
+                            <div class="col-12">
+                                <div runat="server" class="popup-gallery" id="divDocumentacionSoliFisicaModal"></div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
                         </button>
                     </div>
@@ -566,7 +554,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="table-responsive">
-                            <table id="tblListaSolicitudCondiciones" runat="server" class="table tabla-compacta table-striped">
+                            <table id="tblListaSolicitudCondiciones" runat="server" class="table table-sm table-bordered table-hover mb-0 cursor-pointer w-100">
                                 <thead>
                                     <tr>
                                         <th>Tipo Condición</th>
@@ -598,23 +586,21 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <div class="text-center">
+                            <div class="mt-1 text-center">
+                                <label class="col-form-label">Estado actual: </label>
                                 <asp:Label ID="lblEstadoSolicitudModal" runat="server"></asp:Label>
-                            </div>
-                            <div class="mt-1">
-                                <label class="col-form-label">
-                                    Analista:
-                                </label>
+                                <span class="pr-2 pl-1">|</span>
+                                <label class="col-form-label">Analista de crédito: </label>
                                 <asp:Label ID="lblNombreAnalista" runat="server" CssClass="col-form-label font-weight-bold" />
                             </div>
                             <div class="mt-1">
-                                <label class="col-form-label">Detalles</label>
-                                <textarea id="lblDetalleEstado" runat="server" readonly="readonly" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
+                                <label class="col-form-label">Más detalles</label>
+                                <textarea id="lblDetalleEstado" runat="server" readonly="readonly" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
                         </button>
                     </div>
@@ -631,6 +617,12 @@
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
+    <!-- datatable js -->
+    <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Responsive -->
+    <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -638,64 +630,67 @@
             IDAgencia = <%=this.IdAgencia%>;
             IDSocio = <%=this.IdSocio%>;
             IDEstado = <%=this.IdEstadoSolicitud%>;
+
+
+
+
+            var lenguageDatatable = {
+                "sProcessing": "Cargando información...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando información...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                },
+                "decimal": ".",
+                "thousands": ","
+            }
+
+            $('#tblReferenciasPersonales').DataTable({
+                "pageLength": 10,
+                "aaSorting": [],
+                "responsive": true,
+                "language": lenguageDatatable
+            });
+
         });
     </script>
     <script>
-        $("#divDocumentacionCedula").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 150,
-            tile_height: 97,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
+        InicializarGaleria('divDocumentacionCedula', 150, 97);
+        InicializarGaleria('divDocumentacionCedulaModal', 180, 120);
+        InicializarGaleria('divDocumentacionDomicilio', 180, 120);
+        InicializarGaleria('divDocumentacionDomicilioModal', 180, 120);
+        InicializarGaleria('divDocumentacionLaboral', 180, 120);
+        InicializarGaleria('divDocumentacionLaboralModal', 180, 120);
+        InicializarGaleria('divDocumentacionSoliFisicaModal', 180, 120);
 
-        $("#divDocumentacionCedulaModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
+        function InicializarGaleria(idGaleria, tile_width, tile_height) {
 
-        $("#divDocumentacionDomicilio").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
-
-        $("#divDocumentacionDomicilioModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
-
-        $("#divDocumentacionLaboral").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
-
-        $("#divDocumentacionLaboralModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
-
-        $("#divDocumentacionSoliFisicaModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
+            $('#' + idGaleria + '').unitegallery({
+                gallery_theme: "tilesgrid",
+                tile_width: tile_width,
+                tile_height: tile_height,
+                lightbox_type: "compact",
+                grid_num_rows: 15,
+                tile_enable_textpanel: true,
+                tile_textpanel_title_text_align: "center"
+            });
+        }
     </script>
 </body>
 </html>

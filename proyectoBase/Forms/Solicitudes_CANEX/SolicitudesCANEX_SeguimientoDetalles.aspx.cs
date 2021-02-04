@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Web;
 using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
 
 public partial class SolicitudesCANEX_SeguimientoDetalles : System.Web.UI.Page
 {
@@ -242,16 +243,19 @@ public partial class SolicitudesCANEX_SeguimientoDetalles : System.Web.UI.Page
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 /* Llenar table de referencias */
-                                HtmlTableRow tRowReferencias = null;
+                                TableRow tRowReferencias = null;
                                 while (sqlResultado.Read())
                                 {
-                                    tRowReferencias = new HtmlTableRow();
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcNombre"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTrabajo"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTiempoConocerlo"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTelefono"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcParentesco"].ToString() });
-                                    tblReferencias.Rows.Add(tRowReferencias);
+                                    tRowReferencias = new TableRow();
+                                    tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcNombre"].ToString() });
+                                    tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTrabajo"].ToString() });
+                                    tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTiempoConocerlo"].ToString() });
+                                    tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTelefono"].ToString() });
+                                    tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcParentesco"].ToString() });
+
+                                    tRowReferencias.TableSection = TableRowSection.TableBody;
+
+                                    tblReferenciasPersonales.Rows.Add(tRowReferencias);
                                 }
                             }
                         }

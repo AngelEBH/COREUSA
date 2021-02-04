@@ -598,13 +598,13 @@ public partial class SolicitudesCANEX_SeguimientoDetalles
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divReferenciasPersonales;
 
     /// <summary>
-    /// Control tblReferencias.
+    /// Control tblReferenciasPersonales.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTable tblReferencias;
+    protected global::System.Web.UI.WebControls.Table tblReferenciasPersonales;
 
     /// <summary>
     /// Control divCapacidadDePagoPrecalificado.
