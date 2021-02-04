@@ -724,6 +724,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             Precalificado.IdProducto = int.Parse(sqlResultado["fiIDProducto"].ToString());
                             Precalificado.Producto = sqlResultado["fcProducto"].ToString();
                             Precalificado.ScorePromedio = sqlResultado["fiScorePromedio"].ToString();
+                            Precalificado.ScorePromedio = "634";
                         }
                     }
                 } // using sp consulta ejecutivos

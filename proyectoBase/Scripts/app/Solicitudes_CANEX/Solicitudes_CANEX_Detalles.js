@@ -11,12 +11,13 @@
             MensajeError('Error al cargar buro externo');
         },
         success: function (data) {
-            var parametros = data.d;
-            window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + parametros, "_blank",
+
+            window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + data.d, "_blank",
                 "toolbar=yes, scrollbars=yes,resizable=yes,top=0,left=window.screen.availWidth/2,window.screen.availWidth/2,window.screen.availHeight");
         }
     });
 });
+
 
 var contadorCondiciones = 0;
 var listaCondicionamientos = [];
@@ -40,7 +41,10 @@ $("#btnAgregarCondicion").click(function () {
         });
         contadorCondiciones = contadorCondiciones + 1;
 
-    } else { $($("#ddlCondiciones")).parsley().validate(); $($("#txtComentarioAdicional")).parsley().validate(); }
+    } else
+    {
+        $($("#ddlCondiciones")).parsley().validate(); $($("#txtComentarioAdicional")).parsley().validate();
+    }
 });
 
 $(document).on('click', 'button#btnQuitarCondicion', function () {

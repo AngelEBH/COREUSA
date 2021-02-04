@@ -8,27 +8,23 @@ using System.Web.Services;
 
 public partial class SolicitudesCANEX_BandejaSeguimiento : System.Web.UI.Page
 {
+    public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+
     protected void Page_Load(object sender, EventArgs e)
     {
-        var DSC = new DSCore.DataCrypt();
         var lcURL = Request.Url.ToString();
         var liParamStart = lcURL.IndexOf("?");
-
-        string lcParametros;
-        if (liParamStart > 0)
-            lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-        else
-            lcParametros = string.Empty;
+        var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
         if (lcParametros != string.Empty)
         {
-            var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-            lcEncriptado = lcEncriptado.Replace("%2f", "/");
+            var lcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
             var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+
             var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             /* Hacer aqui las validaciones que se lleguen a necesitar */
         }
     }
@@ -36,20 +32,17 @@ public partial class SolicitudesCANEX_BandejaSeguimiento : System.Web.UI.Page
     [WebMethod]
     public static List<SolicitudesCANEX_BandejaSeguimientoViewModel> CargarSolicitudes(string dataCrypt)
     {
-        var listadoSolicitudes = new List<SolicitudesCANEX_BandejaSeguimientoViewModel>();
+        var solicitudesCanex = new List<SolicitudesCANEX_BandejaSeguimientoViewModel>();
         try
         {
             /* Filtros pendientes */
             var idSocioComercial = 0;
             var idEstadoSolicitud = 0;
 
-            /* Desencriptar parametros */
-            var DSC = new DSCore.DataCrypt();
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -63,57 +56,54 @@ public partial class SolicitudesCANEX_BandejaSeguimiento : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSocioComercial", idSocioComercial);
                     sqlComando.Parameters.AddWithValue("@piIDEstadoSolicitud", idEstadoSolicitud);
+                    sqlComando.CommandTimeout = 120;
 
-                    using (var reader = sqlComando.ExecuteReader())
+                    using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (sqlResultado.Read())
                         {
-                            listadoSolicitudes.Add(new SolicitudesCANEX_BandejaSeguimientoViewModel()
+                            solicitudesCanex.Add(new SolicitudesCANEX_BandejaSeguimientoViewModel()
                             {
-                                NombreSocio = (string)reader["fcNombreSocio"],
-                                NombreAgencia = (string)reader["fcNombreAgencia"],
-                                IDSolicitudCanex = (int)reader["fiIDSolicitudCANEX"],
-                                NombreUsuario = (string)reader["fcNombreUsuario"],
-                                Identidad = (string)reader["fcIdentidad"],
-                                NombreCliente = (string)reader["fcNombreCliente"],
-                                NombreProducto = (string)reader["fcNombreProducto"],
-                                ValorGlobal = (decimal)reader["fnValorGlobal"],
-                                ValorPrima = (decimal)reader["fnValorPrima"],
-                                ValorPrestamo = (decimal)reader["fnValorPrestamo"],
-                                FechaIngresoSolicitud = (DateTime)reader["fdIngresoSolicitud"],
-                                EstadoSolicitud = (string)reader["fcEstadoSolicitud"],
-                                IDEstadoSolicitud = (decimal)reader["fiEstadoSolicitud"],
+                                NombreSocio = sqlResultado["fcNombreSocio"].ToString(),
+                                NombreAgencia = sqlResultado["fcNombreAgencia"].ToString(),
+                                IDSolicitudCanex = (int)sqlResultado["fiIDSolicitudCANEX"],
+                                NombreUsuario = sqlResultado["fcNombreUsuario"].ToString(),
+                                Identidad = sqlResultado["fcIdentidad"].ToString(),
+                                NombreCliente = sqlResultado["fcNombreCliente"].ToString(),
+                                NombreProducto = sqlResultado["fcNombreProducto"].ToString(),
+                                ValorGlobal = (decimal)sqlResultado["fnValorGlobal"],
+                                ValorPrima = (decimal)sqlResultado["fnValorPrima"],
+                                ValorPrestamo = (decimal)sqlResultado["fnValorPrestamo"],
+                                FechaIngresoSolicitud = (DateTime)sqlResultado["fdIngresoSolicitud"],
+                                EstadoSolicitud = sqlResultado["fcEstadoSolicitud"].ToString(),
+                                IDEstadoSolicitud = (decimal)sqlResultado["fiEstadoSolicitud"],
                                 Moneda = "L"
                             });
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return listadoSolicitudes;
+        return solicitudesCanex;
     }
 
     [WebMethod]
     public static string AbrirSolicitudSeguimientoDetalles(int idSolicitud, string identidad, string dataCrypt)
     {
-        var DSC = new DSCore.DataCrypt();
-        string resultado;
+        var resultado = string.Empty;
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            string lcParametros = "usr=" + pcIDUsuario +
-            "&IDApp=" + pcIDApp +
-            "&IDSOL=" + idSolicitud +
-            "&SID=" + pcIDSesion +
-            "&pcID=" + identidad;
+            var lcParametros = "usr=" + pcIDUsuario + "&IDApp=" + pcIDApp + "&IDSOL=" + idSolicitud + "&SID=" + pcIDSesion + "&pcID=" + identidad;
+
             resultado = DSC.Encriptar(lcParametros);
         }
         catch
@@ -128,20 +118,14 @@ public partial class SolicitudesCANEX_BandejaSeguimiento : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var DSC = new DSCore.DataCrypt();
-            var liParamStart = 0;
-            var lcParametros = "";
-            var pcEncriptado = string.Empty;
-            liParamStart = URL.IndexOf("?");
-            if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }

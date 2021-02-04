@@ -15,10 +15,10 @@ using System.Web.UI.HtmlControls;
 
 public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 {
-    public string pcEncriptado = "";
-    public string pcIDUsuario = "";
-    public string pcIDSesion = "";
     public string pcIDApp = "";
+    public string pcIDSesion = "";
+    public string pcIDUsuario = "";
+    public string pcEncriptado = "";
 
     public short IdPais = 0;
     public short IdSocio = 0;
@@ -33,30 +33,17 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         {
             try
             {
-                var idSolicitud = "0";
-                var lcURL = string.Empty;
-                var liParamStart = 0;
-                var lcParametros = string.Empty;
-                var lcParametroDesencriptado = string.Empty;
-                Uri lURLDesencriptado = null;
+                var idSolicitud = string.Empty;
 
-                lcURL = Request.Url.ToString();
-                liParamStart = lcURL.IndexOf("?");
-
-                if (liParamStart > 0)
-                {
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                }
-                else
-                {
-                    lcParametros = string.Empty;
-                }
+                var lcURL = Request.Url.ToString();
+                var liParamStart = lcURL.IndexOf("?");
+                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
                 if (lcParametros != string.Empty)
                 {
-                    pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                    lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-                    lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                    var lcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
+                    var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
@@ -75,10 +62,11 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Detalle", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                            sqlComando.CommandTimeout = 120;
 
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
@@ -265,6 +253,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.CommandTimeout = 120;
 
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
@@ -290,6 +279,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcIdentidad", identidadCliente);
+                            sqlComando.CommandTimeout = 120;
 
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
@@ -312,10 +302,12 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Condiciones", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                            sqlComando.CommandTimeout = 120;
+
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 if (sqlResultado.HasRows)
@@ -344,9 +336,10 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         using (var sqlComando = new SqlCommand("sp_CANEX_Catalogo_Condiciones", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.CommandTimeout = 120;
 
                             using (var AdapterDDLCondiciones = new SqlDataAdapter(sqlComando))
                             {
@@ -366,10 +359,11 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         using (var sqlComando = new SqlCommand("sp_CANEX_Solicitud_Documentos", sqlConexion))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                            sqlComando.CommandTimeout = 120;
 
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
@@ -462,6 +456,8 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSocio", IdSocio);
                     sqlComando.Parameters.AddWithValue("@piIDAgencia", IdAgencia);
                     sqlComando.Parameters.AddWithValue("@IDEstadoNuevo", estadoEnRevision);
+                    sqlComando.CommandTimeout = 120;
+
                     sqlComando.ExecuteReader();
                 }
             }
@@ -486,10 +482,10 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                 try
                 {
                     var lURLDesencriptado = DesencriptarURL(dataCrypt);
-                    var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                    var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                    var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                    var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
                     foreach (SolicitudesCondicionamientosViewModel item in solicitudCondiciones)
                     {
@@ -505,6 +501,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             sqlComandoList.Parameters.AddWithValue("@piIDAgencia", idAgencia);
                             sqlComandoList.Parameters.AddWithValue("@IDCondicion", item.fiIDCondicion);
                             sqlComandoList.Parameters.AddWithValue("@Observaciones", item.fcComentarioAdicional);
+                            sqlComandoList.CommandTimeout = 120;
 
                             using (var readerList = sqlComandoList.ExecuteReader())
                             {
@@ -519,10 +516,10 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                         resultadoProceso = false;
                                         break;
                                     }
-                                }
-                            }
-                        }
-                    }
+                                } // while (readerList.Read())
+                            } // using readerList
+                        } // using sqlComandoList
+                    } // foreach solicitudCondiciones
 
                     if (resultadoProceso == true)
                         transaccion.Commit();
@@ -544,10 +541,11 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+
             long mensajeError = 0;
 
             const int estadoRechazado = 5;
@@ -570,6 +568,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@IDEstadoNuevo", resolucion);
                     sqlComando.Parameters.AddWithValue("@piIDSolicitudPrestadito", "0");
                     sqlComando.Parameters.AddWithValue("@pcComentario", comentario.Trim());
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -598,16 +597,17 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
             var resultadoSp = false;
-            var mensajeResultado = string.Empty;
             var mensajeError = string.Empty;
-            var idSolicitudPrestadito = 0;
+            var mensajeResultado = string.Empty;
             var contadorErrores = 0;
+            var idSolicitudPrestadito = 0;
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -624,6 +624,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSocio", idSocio);
                     sqlComando.Parameters.AddWithValue("@piIDAgencia", idAgencia);
                     sqlComando.Parameters.AddWithValue("@pcComentario", comentario.Trim());
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -651,6 +652,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                        sqlComando.CommandTimeout = 120;
 
                         using (var sqlResultado = sqlComando.ExecuteReader())
                         {
@@ -761,6 +763,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.CommandTimeout = 120;
 
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
@@ -799,11 +802,12 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     public static string ObtenerUrlEncriptado(string dataCrypt)
     {
         var lURLDesencriptado = DesencriptarURL(dataCrypt);
-        var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
         var pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
         var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp").ToString();
-
+        var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
         var parametrosEncriptados = DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp);
+
         return parametrosEncriptados;
     }
 
@@ -812,24 +816,14 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var liParamStart = 0;
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
-            liParamStart = URL.IndexOf("?");
-
-            if (liParamStart > 0)
-            {
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            }
-            else
-            {
-                lcParametros = string.Empty;
-            }
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }

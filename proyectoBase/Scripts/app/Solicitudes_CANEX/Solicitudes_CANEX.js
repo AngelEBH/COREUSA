@@ -52,7 +52,7 @@ $(document).ready(function () {
             },
             "columns": [
                 {
-                    "data": "IDSolicitudCanex",
+                    "data": "IDSolicitudCanex", "className": "text-center",
                     "render": function (value) {
 
                         return '<div class="dropdown mo-mb-2">' +
@@ -65,18 +65,28 @@ $(document).ready(function () {
                             '</div >';
                     }
                 },
-                { "data": "NombreSocio" },
-                { "data": "IDSolicitudCanex" },
+                { "data": "IDSolicitudCanex", "className": "text-center" },
+                { "data": "NombreProducto" },
+                {
+                    "data": "NombreSocio",
+                    "render": function (data, type, row) {
+                        return row["NombreSocio"] + ' ' + '<br/><span class="text-muted">' + row["NombreAgencia"] + ' | ' + row["NombreUsuario"] + '</span>'
+                    }
+                },
+
                 {
                     "data": "FechaIngresoSolicitud",
                     "render": function (value) {
                         if (value === null) return "";
-                        return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
+                        return moment(value).locale('es').format('YYYY/MM/DD hh:mm A');
                     }
                 },
-                { "data": "Identidad" },
-                { "data": "NombreCliente" },
-                { "data": "NombreProducto" },
+                {
+                    "data": "NombreCliente",
+                    "render": function (data, type, row) {
+                        return row["NombreCliente"] + ' ' + '<br/><span class="text-muted">' + row["Identidad"] + '</span>'
+                    }
+                },
                 {
                     "data": "ValorGlobal",
                     "className": 'text-right sum',
@@ -92,14 +102,11 @@ $(document).ready(function () {
                     }
                 },
                 {
-                    "data": "ValorPrestamo",
-                    "className": 'text-right sum',
+                    "data": "ValorPrestamo", "className": 'text-right sum',
                     "render": function (data, type, row) {
                         return row["Moneda"] + ' ' + addFormatoNumerico(parseFloat(row["ValorPrestamo"]).toFixed(2))
                     }
                 },
-                { "data": "NombreAgencia" },
-                { "data": "NombreUsuario" },
                 {
                     "data": "EstadoSolicitud",
                     "render": function (data, type, row) {
@@ -108,7 +115,8 @@ $(document).ready(function () {
                 }
             ],
             columnDefs: [
-                { targets: [0], orderable: false }
+                { targets: [0], orderable: false },
+                { "width": "1%", "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] }
             ]
         });
 
@@ -116,31 +124,31 @@ $(document).ready(function () {
     $('#mesIngreso').on('change', function () {
 
         if (this.value != '')
-            tablaSolicitudes.columns(2).search('/' + this.value + '/').draw();
+            tablaSolicitudes.columns(4).search('/' + this.value + '/').draw();
         else
-            tablaSolicitudes.columns(2).search('').draw();
+            tablaSolicitudes.columns(4).search('').draw();
     });
 
     /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
 
-        tablaSolicitudes.columns(2).search(this.value + '/').draw();
+        tablaSolicitudes.columns(4).search(this.value + '/').draw();
     });
 
     $("#min").datepicker({
         onSelect: function () {
             filtroActual = 'rangoFechas';
         },
-        changeMonth: !0,
-        changeYear: !0,
+        changeMonth: true,
+        changeYear: true,
     });
 
     $("#max").datepicker({
         onSelect: function () {
             filtroActual = 'rangoFechas';
         },
-        changeMonth: !0,
-        changeYear: !0,
+        changeMonth: true,
+        changeYear: true,
     });
 
     $("#min, #max").change(function () {
@@ -148,13 +156,15 @@ $(document).ready(function () {
         tablaSolicitudes.draw();
     });
 
-    /* Agregar Filtros */
+    /* Agregar filtros */
     $.fn.dataTable.ext.search.push(function (e, a, i) {
 
         if (filtroActual == 'rangoFechas') {
+
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
-                FechaIngreso = new Date(a[2]);
+                FechaIngreso = new Date(a[4]);
+
             return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaIngreso <= Hasta) || ("Invalid Date" == Hasta && FechaIngreso >= Desde) || (FechaIngreso <= Hasta && FechaIngreso >= Desde);
         }
         else { return true; }
@@ -213,6 +223,7 @@ function MensajeError(mensaje) {
 }
 
 function addFormatoNumerico(nStr) {
+
     nStr += '';
     x = nStr.split('.');
     x1 = x[0];
@@ -231,20 +242,25 @@ function GetEstadoClass(idEstado) {
         case 1:
             return "primary"
             break;
+
         case 2:
             return "info"
             break;
+
         case 3:
         case 7:
         case 6:
             return "warning";
             break;
+
         case 4:
             return "success";
             break;
+
         case 5:
             return "danger";
             break;
+
         default:
             return "secondary";
             break;

@@ -351,7 +351,6 @@
                                                 <label class="col-form-label">Extensión RRHH</label>
                                                 <asp:TextBox ID="txtExtensionRecursosHumanos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-
                                             <div class="col-6">
                                                 <label class="col-form-label">Departamento</label>
                                                 <asp:TextBox ID="txtDepartamentoEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
@@ -435,27 +434,6 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <%--<div class="form-group row" id="divAval">
-                                            <h4>Aval</h4>
-                                            <div class="table-responsive">
-                                                <table runat="server" class="table table-condensed" id="tblAvales">
-                                                    <thead class="thead-light">
-                                                        <tr>
-                                                            <th>Nombre completo</th>
-                                                            <th>Identidad</th>
-                                                            <th>Telefono</th>
-                                                            <th>Lugar de trabajo</th>
-                                                            <th>Puesto asignado</th>
-                                                            <th>Ingresos</th>
-                                                            <th>Estado</th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>--%>
                                     </div>
                                 </div>
                             </div>
@@ -537,10 +515,10 @@
 
         <!-- modal documentacion -->
         <div id="modalDocumentos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDocumentosLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title mt-0" id="modalDocumentosLabel">Documentación</h5>
+                        <h6 class="modal-title mt-0" id="modalDocumentosLabel">Documentación</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
@@ -776,62 +754,27 @@
     </script>
     <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=20201221090925"></script>
 
-    <script>
-        $("#divDocumentacionCedula").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 150,
-            tile_height: 97,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
+    <script>        
+        InicializarGaleria('divDocumentacionCedula', 150, 97);
+        InicializarGaleria('divDocumentacionCedulaModal', 180, 120);
+        InicializarGaleria('divDocumentacionDomicilio', 180, 120);
+        InicializarGaleria('divDocumentacionDomicilioModal', 180, 120);
+        InicializarGaleria('divDocumentacionLaboral', 180, 120);
+        InicializarGaleria('divDocumentacionLaboralModal', 180, 120);
+        InicializarGaleria('divDocumentacionSoliFisicaModal', 180, 120);
 
-        $("#divDocumentacionCedulaModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
+        function InicializarGaleria(idGaleria, tile_width, tile_height) {
 
-        $("#divDocumentacionDomicilio").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
-
-        $("#divDocumentacionDomicilioModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
-
-        $("#divDocumentacionLaboral").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
-
-        $("#divDocumentacionLaboralModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
-
-        $("#divDocumentacionSoliFisicaModal").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 180,
-            tile_height: 120,
-            lightbox_type: "compact",
-            grid_num_rows: 15
-        });
+            $('#' + idGaleria + '').unitegallery({
+                gallery_theme: "tilesgrid",
+                tile_width: tile_width,
+                tile_height: tile_height,
+                lightbox_type: "compact",
+                grid_num_rows: 15,
+                tile_enable_textpanel: true,
+                tile_textpanel_title_text_align: "center"
+            });
+        }
     </script>
 </body>
 </html>

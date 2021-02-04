@@ -18,13 +18,13 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
 
         if (lcParametros != string.Empty)
         {
-            var lcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");            
+            var lcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
             var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
 
             var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");            
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             /* Hacer aqui las validaciones que se lleguen a necesitar */
         }
     }
@@ -56,6 +56,7 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSocioComercial", idSocioComercial);
                     sqlComando.Parameters.AddWithValue("@piIDEstadoSolicitud", idEstadoSolicitud);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -84,7 +85,7 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
             } // using sqlConexion
         }
         catch (Exception ex)
-        {            
+        {
             ex.Message.ToString();
         }
         return solicitudesCanex;
@@ -99,7 +100,7 @@ public partial class Solicitudes_CANEX : System.Web.UI.Page
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             var lcParametros = "usr=" + pcIDUsuario + "&IDApp=" + pcIDApp + "&IDSOL=" + idSolicitud + "&SID=" + pcIDSesion + "&pcID=" + identidad;
             resultado = DSC.Encriptar(lcParametros);
