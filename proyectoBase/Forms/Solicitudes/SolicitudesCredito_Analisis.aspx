@@ -1647,7 +1647,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        ¿Está seguro de que desea <strong>RECHAZAR</strong> esta solicitud?<br />
+                        ¿Está seguro de que desea <b>RECHAZAR</b> esta solicitud?<br />
                         <br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>
@@ -1675,7 +1675,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        ¿Está seguro de que desea <strong>APROBAR</strong> esta solicitud?<br />
+                        ¿Está seguro de que desea <b>APROBAR</b> esta solicitud?<br />
                         <br />
                         <div class="form-group">
                             <label class="col-form-label">Observaciones</label>

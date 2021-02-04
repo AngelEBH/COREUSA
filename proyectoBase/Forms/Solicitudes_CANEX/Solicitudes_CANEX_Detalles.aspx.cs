@@ -12,6 +12,7 @@ using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
 
 public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 {
@@ -144,7 +145,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                                     {
                                         var fechaNacimientoConyugue = (DateTime)sqlResultado["fdFechaNacimientoConyugue"];
 
-                                        txtNombreDelConyugue.Text = nombreCompletoConyugue.Replace("  ", " ");
+                                        txtNombreDelConyugue.Text = nombreCompletoConyugue.Replace(" ", " ");
                                         txtIdentidadConyugue.Text = sqlResultado["fcIdentidadConyugue"].ToString();
                                         txtFechaNacimientoConyugue.Text = fechaNacimientoConyugue.ToString("MM/dd/yyyy");
                                         txtTelefonoConyugue.Text = sqlResultado["fcTelefonoConyugue"].ToString();
@@ -258,16 +259,19 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 /* Llenar table de referencias */
-                                HtmlTableRow tRowReferencias = null;
+                                TableRow tRowReferencias = null;
                                 while (sqlResultado.Read())
                                 {
-                                    tRowReferencias = new HtmlTableRow();
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcNombre"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTrabajo"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTiempoConocerlo"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcTelefono"].ToString() });
-                                    tRowReferencias.Cells.Add(new HtmlTableCell() { InnerText = sqlResultado["fcParentesco"].ToString() });
-                                    tblReferencias.Rows.Add(tRowReferencias);
+                                    tRowReferencias = new TableRow();
+                                    tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcNombre"].ToString() });
+                                    tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTrabajo"].ToString() });
+                                    tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTiempoConocerlo"].ToString() });
+                                    tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTelefono"].ToString() });
+                                    tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcParentesco"].ToString() });
+
+                                    tRowReferencias.TableSection = TableRowSection.TableBody;
+
+                                    tblReferenciasPersonales.Rows.Add(tRowReferencias);
                                 }
                             }
                         }
@@ -845,7 +849,7 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
 
             if (listaDocumentos != null)
             {
-                /* Crear el nuevo directorio para los documentos de la solicitud  */
+                /* Crear el nuevo directorio para los documentos de la solicitud */
                 var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
                 var directorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentos + "\\";
                 var carpetaExistente = Directory.Exists(directorioDocumentosSolicitud);

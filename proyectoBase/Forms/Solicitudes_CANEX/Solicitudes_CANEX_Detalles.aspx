@@ -7,9 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles de la solicitud CANEX</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -48,26 +51,27 @@
                     <div class="col-lg-auto col-md-auto col-sm-auto col-auto">
                         <div class="form-inline">
                             <div class="button-items pb-2">
-                                <button id="btnDetallesResolucion" runat="server" visible="false" data-toggle="modal" data-target="#modalEstado" type="button" class="btn btn-sm btn-success waves-effect waves-light float-right">
+                                <button id="btnDetallesResolucion" runat="server" visible="false" data-toggle="modal" data-target="#modalEstado" type="button" class="btn btn-secondary float-right">
+                                    <i class="fas fa-info-circle"></i>
                                     Detalles del estado
                                 </button>
-                                <button runat="server" id="btnHistorialExterno" type="button" class="btn btn-secondary waves-effect waves-light">
+                                <button runat="server" id="btnHistorialExterno" type="button" class="btn btn-secondary">
                                     <i class="fas fa-clipboard-check"></i>
                                     Buró Externo
                                 </button>
-                                <button runat="server" id="btnValidoDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-secondary waves-effect waves-light">
+                                <button runat="server" id="btnValidoDocumentacionModal" type="button" data-toggle="modal" data-target="#modalDocumentos" class="btn btn-secondary">
                                     <i class="fas fa-file-alt"></i>
                                     Documentos
                                 </button>
-                                <button runat="server" id="btnCondicionarSolicitud" type="button" data-toggle="modal" data-target="#modalCondicionarSolicitud" class="btn btn-warning waves-effect waves-light validador">
+                                <button runat="server" id="btnCondicionarSolicitud" type="button" data-toggle="modal" data-target="#modalCondicionarSolicitud" class="btn btn-warning validador">
                                     <i class="fas fa-pen-square"></i>
                                     Condicionar
                                 </button>
-                                <button runat="server" id="btnRechazar" type="button" data-toggle="modal" data-target="#modalResolucionRechazar" class="btn btn-danger waves-effect waves-light validador">
+                                <button runat="server" id="btnRechazar" type="button" data-toggle="modal" data-target="#modalResolucionRechazar" class="btn btn-danger validador">
                                     <i class="fas fa-thumbs-down"></i>
                                     Rechazar
                                 </button>
-                                <button runat="server" id="btnAceptarSolicitud" type="button" data-toggle="modal" disabled="disabled" data-target="#modalResolucionAprobar" title="" class="btn btn-success waves-effect waves-light validador">
+                                <button runat="server" id="btnAceptarSolicitud" type="button" data-toggle="modal" disabled="disabled" data-target="#modalResolucionAprobar" title="" class="btn btn-success validador">
                                     <i class="fas fa-thumbs-up"></i>
                                     Aceptar
                                 </button>
@@ -414,25 +418,16 @@
                             <div class="panel-body">
                                 <div class="row mb-0" id="divReferenciasPersonales" runat="server">
                                     <div class="col-12">
-
-                                        <h6>Referencias personales</h6>
-
-                                        <div class="form-group row mr-1 ml-1">
-                                            <div class="table-responsive">
-                                                <table class="table tabla-compacta table-striped" id="tblReferencias" runat="server">
-                                                    <thead class="bg-light">
-                                                        <tr>
-                                                            <th>Nombre referencia</th>
-                                                            <th>Lugar de trabajo</th>
-                                                            <th>Tiempo de conocer</th>
-                                                            <th>Telefono</th>
-                                                            <th>Parentesco</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                        <div class="table-responsive mt-3 mb-3">
+                                            <asp:Table runat="server" ID="tblReferenciasPersonales" CssClass="table table-sm table-bordered table-hover mb-0 cursor-pointer w-100">
+                                                <asp:TableHeaderRow CssClass="thead-light" TableSection="TableHeader">
+                                                    <asp:TableHeaderCell>Nombre completo</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell>Lugar de trabajo</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell>Tiempo de conocer</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell>Teléfono</asp:TableHeaderCell>
+                                                    <asp:TableHeaderCell>Parentesco</asp:TableHeaderCell>
+                                                </asp:TableHeaderRow>
+                                            </asp:Table>
                                         </div>
                                     </div>
                                 </div>
@@ -521,33 +516,42 @@
                         <h6 class="modal-title mt-0" id="modalDocumentosLabel">Documentación</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
-                    <div class="modal-body">
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación identidad</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionCedulaModal">
-                                </div>
+                    <div class="modal-body pt-0">
+                        <div class="row border-bottom justify-content-between bg-light pt-2">
+                            <div class="col-12">
+                                <label class="header-title font-weight-bold">Documentación identidad</label>
                             </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación domicilio</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionDomicilioModal">
-                                </div>
+                            <div class="col-12">
+                                <div runat="server" class="popup-gallery" id="divDocumentacionCedulaModal"></div>
                             </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Documentación laboral</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionLaboralModal">
-                                </div>
+                        </div>
+                        <div class="row border-bottom justify-content-between pt-2">
+                            <div class="col-12">
+                                <label class="header-title font-weight-bold">Documentación domicilio</label>
                             </div>
-                            <div class="col-md-12">
-                                <label class="mt-0 header-title text-center">Solicitud fisica</label>
-                                <div runat="server" class="popup-gallery" id="divDocumentacionSoliFisicaModal">
-                                </div>
+                            <div class="col-12">
+                                <div runat="server" class="popup-gallery" id="divDocumentacionDomicilioModal"></div>
+                            </div>
+                        </div>
+                        <div class="row border-bottom justify-content-between bg-light pt-2">
+                            <div class="col-12">
+                                <label class="header-title font-weight-bold">Documentación laboral</label>
+                            </div>
+                            <div class="col-12">
+                                <div runat="server" class="popup-gallery" id="divDocumentacionLaboralModal"></div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between pt-2">
+                            <div class="col-12">
+                                <label class="header-title font-weight-bold">Solicitud física</label>
+                            </div>
+                            <div class="col-12">
+                                <div runat="server" class="popup-gallery" id="divDocumentacionSoliFisicaModal"></div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
                         </button>
                     </div>
@@ -599,23 +603,22 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
-                                        <table id="tblCondiciones" class="table table-condensed table-striped">
-                                            <thead>
+                                        <table id="tblCondiciones" class="table table-sm table-bordered table-hover mb-0 cursor-pointer w-100">
+                                            <thead class="thead-light">
                                                 <tr>
                                                     <th>Condicion</th>
                                                     <th>Comentario adicional</th>
                                                     <th></th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                            </tbody>
+                                            <tbody></tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
                             <div class="tab-pane p-3" id="listaCondiciones" role="tabpanel">
-                                <table id="tblListaSolicitudCondiciones" runat="server" class="table table-condensed table-striped">
-                                    <thead>
+                                <table id="tblListaSolicitudCondiciones" runat="server" class="table table-sm table-bordered table-hover mb-0 cursor-pointer w-100">
+                                    <thead class="thead-light">
                                         <tr>
                                             <th>Tipo Condición</th>
                                             <th>Descripción</th>
@@ -623,18 +626,17 @@
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                    </tbody>
+                                    <tbody></tbody>
                                 </table>
                             </div>
                         </div>
                         <!-- termina tab -->
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btnCondicionarSolicitudConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                        <button type="button" id="btnCondicionarSolicitudConfirmar" class="btn btn-primary mr-1 validador">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -661,10 +663,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnRechazarConfirmar" class="btn btn-danger waves-effect waves-light mr-1">
+                        <button id="btnRechazarConfirmar" class="btn btn-danger mr-1">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -691,10 +693,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnAceptarSolicitudConfirmar" class="btn btn-primary waves-effect waves-light mr-1">
+                        <button id="btnAceptarSolicitudConfirmar" class="btn btn-primary mr-1">
                             Confirmar
                         </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
@@ -711,24 +713,21 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <div class="text-center">
+                            <div class="mt-1 text-center">
+                                <label class="col-form-label">Estado actual: </label>
                                 <asp:Label ID="lblEstadoSolicitudModal" runat="server"></asp:Label>
-                            </div>
-                            <div class="mt-1">
-                                <label class="col-form-label">
-                                    Analista:
-                                </label>
+                                <span class="pr-2 pl-1">|</span>
+                                <label class="col-form-label">Analista de crédito: </label>
                                 <asp:Label ID="lblNombreAnalista" runat="server" CssClass="col-form-label font-weight-bold" />
                             </div>
                             <div class="mt-1">
-                                <label class="col-form-label">Detalles</label>
-
-                                <textarea id="lblDetalleEstado" runat="server" readonly="readonly" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="2"></textarea>
+                                <label class="col-form-label">Más detalles</label>
+                                <textarea id="lblDetalleEstado" runat="server" readonly="readonly" required="required" class="form-control form-control-sm col-form-label" data-parsley-maxlength="255" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cerrar
                         </button>
                     </div>
@@ -740,10 +739,14 @@
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
-    <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
-    <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
+    <!-- datatable js -->
+    <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Responsive -->
+    <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script>
         const idPais = <%=this.IdPais%>;
@@ -752,9 +755,9 @@
         idEstado = <%=this.IdEstadoSolicitud%>;
         const idSolicitudImportada = <%=this.IdSolicitudPrestadito%>;
     </script>
-    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=20201221090925"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX_Detalles.js?v=20210204042452"></script>
 
-    <script>        
+    <script>
         InicializarGaleria('divDocumentacionCedula', 150, 97);
         InicializarGaleria('divDocumentacionCedulaModal', 180, 120);
         InicializarGaleria('divDocumentacionDomicilio', 180, 120);

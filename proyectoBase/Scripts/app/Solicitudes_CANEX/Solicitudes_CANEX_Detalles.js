@@ -1,4 +1,10 @@
-﻿$("#btnHistorialExterno").click(function () {
+﻿$(document).ready(function () {
+
+    InicializarDatatables();
+
+});
+
+$("#btnHistorialExterno").click(function () {
 
     MensajeInformacion('Cargando buro externo');
 
@@ -12,8 +18,7 @@
         },
         success: function (data) {
 
-            window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + data.d, "_blank",
-                "toolbar=yes, scrollbars=yes,resizable=yes,top=0,left=window.screen.availWidth/2,window.screen.availWidth/2,window.screen.availHeight");
+            window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + data.d, "_blank", "toolbar=yes, scrollbars=yes,resizable=yes,top=0,left=window.screen.availWidth/2,window.screen.availWidth/2,window.screen.availHeight");
         }
     });
 });
@@ -41,8 +46,7 @@ $("#btnAgregarCondicion").click(function () {
         });
         contadorCondiciones = contadorCondiciones + 1;
 
-    } else
-    {
+    } else {
         $($("#ddlCondiciones")).parsley().validate(); $($("#txtComentarioAdicional")).parsley().validate();
     }
 });
@@ -128,13 +132,17 @@ $("#btnRechazarConfirmar").click(function () {
                 MensajeError('Error al actualizar estado de la solicitud, contacte al administrador');
             },
             success: function (data) {
+
                 if (data.d != 0) {
+
                     $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('disabled', true);
                     $("#btnAceptarSolicitud, #btnRechazar, #btnCondicionarSolicitud").prop('title', 'La solicitud ya fue rechazada');
                     $("#modalResolucionRechazar").modal('hide');
                     MensajeExito('¡Solicitud rechazada correctamente!');
                 }
-                else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
+                else {
+                    MensajeError('Error al actualizar estado de la solicitud, contacte al administrador');
+                }
             }
         });
     }
@@ -191,5 +199,42 @@ function MensajeError(mensaje) {
     iziToast.error({
         title: 'Error',
         message: mensaje
+    });
+}
+
+function InicializarDatatables() {
+
+    var lenguageDatatable = {
+        "sProcessing": "Cargando información...",
+        "sLengthMenu": "Mostrar _MENU_ registros",
+        "sZeroRecords": "No se encontraron resultados",
+        "sEmptyTable": "Ningún dato disponible en esta tabla",
+        "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix": "",
+        "sSearch": "Buscar:",
+        "sUrl": "",
+        "sInfoThousands": ",",
+        "sLoadingRecords": "Cargando información...",
+        "oPaginate": {
+            "sFirst": "Primero",
+            "sLast": "Último",
+            "sNext": "Siguiente",
+            "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        },
+        "decimal": ".",
+        "thousands": ","
+    }
+
+    $('#tblReferenciasPersonales').DataTable({
+        "pageLength": 10,
+        "aaSorting": [],
+        "responsive": true,
+        "language": lenguageDatatable
     });
 }
