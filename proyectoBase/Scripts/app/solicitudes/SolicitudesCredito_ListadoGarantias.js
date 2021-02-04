@@ -128,7 +128,7 @@ $(document).ready(function () {
             {
                 "data": "EstadoSolicitudGPS", "className": "text-center",
                 "render": function (data, type, row) {
-                    return '<span class="badge badge-' + row["EstadoSolicitudGPSClassName"] + ' p-1 cursor-zoom-in" ' + (row["IdEstadoInstalacion"] == 3 ? 'onclick="MostrarInstalacionGPS(' + row["IdAutoGPSInstalacion"] + ')"' : '') + '>' + row["EstadoSolicitudGPS"] + '</span>';
+                    return '<span class="badge badge-' + row["EstadoSolicitudGPSClassName"] + ' p-1 ' + (row["IdEstadoInstalacion"] == 3 ? 'cursor-zoom-in' : '') + '" ' + (row["IdEstadoInstalacion"] == 3 ? 'onclick="MostrarInstalacionGPS(' + row["IdAutoGPSInstalacion"] + ')"' : '') + '>' + row["EstadoSolicitudGPS"] + '</span>';
                 }
             }
         ],

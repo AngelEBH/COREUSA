@@ -68,7 +68,10 @@
                 <div class="col-md-12">
                     <div class="form-group row">
                         <div class="col-lg-2 col-sm-3 pr-0 align-self-end">
-                            <button type="button" id="btnRegistrarGarantiaSinSolicitud" class="btn btn-block btn-warning pr-0 pl-0">Registrar sin solicitud</button>
+                            <button type="button" id="btnRegistrarGarantiaSinSolicitud" class="btn btn-block btn-warning pr-0 pl-0">
+                                <i class="fas fa-plus"></i>
+                                Registrar sin solicitud
+                            </button>
                         </div>
                         <div class="col-lg-3 col-sm-3 align-self-end">
                             <label class="col-form-label">Búsqueda por Mes</label>
