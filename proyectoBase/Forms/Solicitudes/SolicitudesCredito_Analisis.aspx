@@ -11,6 +11,9 @@
     <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
@@ -77,7 +80,7 @@
                         <asp:Label ID="lblIdentidadCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label>
                     </div>
                     <div class="col-lg-12">
-                        <table class="table table-condensed mb-0">
+                        <table class="table table-condensed mb-0 w-100">
                             <tbody>
                                 <tr>
                                     <th class="text-center pt-1 pb-1">No. Solicitud:
@@ -101,7 +104,7 @@
                     </div>
                     <div class="col-12">
                         <div class="table-responsive">
-                            <asp:Table runat="server" ID="tblEstadoSolicitud" CssClass="table table-sm m-0 text-center">
+                            <asp:Table runat="server" ID="tblEstadoSolicitud" CssClass="table table-sm m-0 text-center w-100">
                                 <asp:TableHeaderRow TableSection="TableHeader">
                                     <asp:TableHeaderCell CssClass="text-center">Ingreso</asp:TableHeaderCell>
                                     <asp:TableHeaderCell CssClass="text-center">Recepción</asp:TableHeaderCell>
@@ -929,9 +932,9 @@ Rechazar solicitud
 
                                             <!-- Calculo del prestamo -->
                                             <!--
-EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
-MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
--->
+                                                EN CASO DE QUE SE HAYAN MODIFICADO LOS INGRESOS DEL CLIENTE DEBIDO A INCONGRUENCIA CON EL PRECALIFICADO Y LOS COMPROBANTES DE PAGO
+                                                MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
+                                            -->
                                             <div class="form-group row">
                                                 <div class="col-sm-12 col-6">
                                                     <label class="col-form-label">Monto total a financiar</label>
@@ -1166,6 +1169,8 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                         <!--/ panel-collapse collapse -->
                     </div>
                     <!--/ panel investigacion de campo-->
+
+
                 </div>
                 <!--/ collapse-group -->
             </div>
@@ -1312,7 +1317,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                     <span class="d-none d-sm-block">Agregar nuevas condiciones</span>
                                 </a>
                             </li>
-                            <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones" style="display: none;">
+                            <li class="nav-item" runat="server" id="pestanaListaSolicitudCondiciones">
                                 <a class="nav-link" data-toggle="tab" href="#tbllistaCondiciones" role="tab">
                                     <span class="d-none d-sm-block">Condiciones de la solictud</span>
                                 </a>
@@ -1358,7 +1363,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 </div>
                             </div>
                             <div class="tab-pane pt-3" id="tbllistaCondiciones" role="tabpanel">
-                                <table id="tblListaSolicitudCondiciones" class="table table-sm table-bordered table-hover cursor-pointer">
+                                <table id="tblListaSolicitudCondiciones" class="table table-sm table-bordered table-hover cursor-pointer w-100">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Tipo Condición</th>
@@ -1526,14 +1531,14 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                     <span class="d-none d-sm-block">Más detalles</span>
                                 </a>
                             </li>
-                            <li class="nav-item" runat="server" id="tabListaCondicionesDeLaSolicitud" style="display: none;">
+                            <li class="nav-item" runat="server" id="tabListaCondicionesDeLaSolicitud">
                                 <a class="nav-link" data-toggle="tab" href="#tabListaCondiciones" role="tab">
                                     <span class="d-none d-sm-block">Condiciones de la solictud</span>
                                 </a>
                             </li>
                         </ul>
                         <!-- Tab panes -->
-                        <div class="tab-content">
+                        <div class="tab-content pb-3">
                             <div class="tab-pane active pr-0 pl-0 pt-3 pb-3" id="tabTiempos" role="tabpanel">
                                 <div class="form-group row justify-content-center" id="divSolicitudInactiva" style="display: none;">
                                     <h6 class="text-danger">Solicitud Inactiva</h6>
@@ -1613,7 +1618,7 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                 </div>
                             </div>
                             <div class="tab-pane pr-0 pl-0 pt-3" id="tabListaCondiciones" role="tabpanel">
-                                <table id="tblListaCondicionesDeLaSolicitud" class="table table-sm table-bordered table-hover mb-0 cursor-pointer">
+                                <table id="tblListaCondicionesDeLaSolicitud" class="table table-sm table-bordered table-hover cursor-pointer w-100">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Tipo Condición</th>
@@ -2093,6 +2098,12 @@ MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
+    <!-- datatable js -->
+    <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Responsive -->
+    <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/countdownjs/countdown.min.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>

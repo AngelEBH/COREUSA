@@ -443,7 +443,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="table-responsive">
-                            <table id="tblCondiciones" class="table table-sm table-bordered table-hover cursor-pointer" style="width: 100%">
+                            <table id="tblCondiciones" class="table table-sm table-bordered table-hover cursor-pointer w-100">
                                 <thead>
                                     <tr>
                                         <th>Tipo Condición</th>

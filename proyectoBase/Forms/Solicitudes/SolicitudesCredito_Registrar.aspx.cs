@@ -42,25 +42,17 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         /* Captura de parámetros encriptados */
         if (!IsPostBack && type == null)
         {
-            var lcURL = Request.Url.ToString();
-            var liParamStart = lcURL.IndexOf("?");
             Precalificado = new Precalificado_ViewModel();
             Constantes = new SolicitudesCredito_Registrar_Constantes();
             DocumentosRequeridos = new List<TipoDocumento_ViewModel>();
 
-            string lcParametros;
-            if (liParamStart > 0)
-            {
-                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-            }
-            else
-            {
-                lcParametros = string.Empty;
-            }
+            var lcURL = Request.Url.ToString();
+            var liParamStart = lcURL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                var pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
@@ -167,13 +159,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-{ "limit", 1 },
-{ "title", "auto" },
-{ "uploadDir", uploadDir },
-{ "extensions", new string[] { "jpg", "png", "jpeg"} },
-{ "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
-{ "fileMaxSize", 10 }, //peso máximo por archivo
-});
+                { "limit", 1 },
+                { "title", "auto" },
+                { "uploadDir", uploadDir },
+                { "extensions", new string[] { "jpg", "png", "jpeg"} },
+                { "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
+                { "fileMaxSize", 10 }, //peso máximo por archivo
+            });
 
             switch (type)
             {

@@ -22,6 +22,44 @@ var gPlazoFinal = 0;
 var resolucionHabilitada = false;
 var resolucion = false;
 
+var datatableLanguage = {
+    "sProcessing": "Cargando información...",
+    "sLengthMenu": "Mostrar _MENU_ registros",
+    "sZeroRecords": "No se encontraron resultados",
+    "sEmptyTable": "Ningún dato disponible en esta tabla",
+    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+    "sInfoPostFix": "",
+    "sSearch": "Buscar:",
+    "sUrl": "",
+    "sInfoThousands": ",",
+    "sLoadingRecords": "Cargando información...",
+    "oPaginate": {
+        "sFirst": "Primero",
+        "sLast": "Último",
+        "sNext": "Siguiente",
+        "sPrevious": "Anterior"
+    },
+    "oAria": {
+        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    },
+    "decimal": ".",
+    "thousands": ","
+}
+
+var select2language = {
+    errorLoading: function () { return "No se pudieron cargar los resultados" },
+    inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+    inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
+    loadingMore: function () { return "Cargando más resultados…" },
+    maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
+    noResults: function () { return "No se encontraron resultados" },
+    searching: function () { return "Buscando…" },
+    removeAllItems: function () { return "Eliminar todos los elementos" }
+}
+
 // #endregion
 
 // #region Document Ready
@@ -34,6 +72,17 @@ $(document).ready(function () {
 
 // #region Cargar detalles de la solicitud
 
+function AgregarFilaATablaDeEstatusDeLaSolicitud(descripcionProceso, procesoInicio, procesoFin, idTimerDelProceso, usuarioEncargado) {
+
+    $('#tblDetalleEstado tbody').append('<tr>' +
+        '<td class="text-center">' + descripcionProceso + '</td>' +
+        '<td class="text-center">' + procesoInicio + '</td>' +
+        '<td class="text-center">' + procesoFin + '</td>' +
+        '<td class="text-center"><span id="' + idTimerDelProceso + '"></span></td>' +
+        '<td class="text-center">' + usuarioEncargado + '</td>' +
+        '</tr>');
+}
+
 /* ====== Carga el estado actual del procesamiento de la solicitud =============================== */
 /* ====== Muestra el procesamiento de la solicitud en el modal "modalEstadoSolicitud" ============ */
 /* ====== Además actualiza variables globales y realiza otras validaciones ======================= */
@@ -45,7 +94,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify({ dataCrypt: window.location.href }),
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudo cargar la información, contacte al administrador');
+            MensajeError('No se pudo cargar la información de la solicitud de crédito, contacte al administrador');
         },
         beforeSend: function () {
             MostrarLoader();
@@ -69,13 +118,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                     enIngresoUsuario = '-';
                 }
 
-                tablaEstatusSolicitud.append('<tr>' +
-                    '<td class="text-center">Ingreso</td>' +
-                    '<td class="text-center">' + enIngresoInicio + '</td>' +
-                    '<td class="text-center">' + enIngresoFin + '</td>' +
-                    '<td class="text-center"><span id="lblTiempoTranscurrido_EnIngreso"></span></td>' +
-                    '<td class="text-center">' + enIngresoUsuario + '</td>' +
-                    '</tr>');
+                AgregarFilaATablaDeEstatusDeLaSolicitud('Ingreso', enIngresoInicio, enIngresoFin, 'lblTiempoTranscurrido_EnIngreso', enIngresoUsuario);
 
                 InicializarContador(informacionSolicitud.EnIngresoInicio, informacionSolicitud.EnIngresoFin, 'lblTiempoTranscurrido_EnIngreso');
 
@@ -83,13 +126,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                 var enColaInicio = ObtenerFechaFormateada(informacionSolicitud.EnColaInicio);
                 var enColaFin = ObtenerFechaFormateada(informacionSolicitud.EnColaFin);
 
-                tablaEstatusSolicitud.append('<tr>' +
-                    '<td class="text-center">Recepción</td>' +
-                    '<td class="text-center">' + enColaInicio + '</td>' +
-                    '<td class="text-center">' + enColaFin + '</td>' +
-                    '<td class="text-center"><span id="lblTiempoTranscurrido_EnCola"></span></td>' +
-                    '<td class="text-center">N/A</td>' +
-                    '</tr>');
+                AgregarFilaATablaDeEstatusDeLaSolicitud('Recepción', enColaInicio, enColaFin, 'lblTiempoTranscurrido_EnCola', 'N/A');
 
                 InicializarContador(informacionSolicitud.EnColaInicio, informacionSolicitud.EnColaFin, 'lblTiempoTranscurrido_EnCola');
 
@@ -102,13 +139,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                     enAnalisisUsuario = '-';
                 }
 
-                tablaEstatusSolicitud.append('<tr>' +
-                    '<td class="text-center">Análisis</td>' +
-                    '<td class="text-center">' + enAnalisisInicio + '</td>' +
-                    '<td class="text-center">' + enAnalisisFin + '</td>' +
-                    '<td class="text-center"><span id="lblTiempoTranscurrido_EnAnalisis"></span></td>' +
-                    '<td class="text-center">' + enAnalisisUsuario + '</td>' +
-                    '</tr>');
+                AgregarFilaATablaDeEstatusDeLaSolicitud('Análisis', enAnalisisInicio, enAnalisisFin, 'lblTiempoTranscurrido_EnAnalisis', enAnalisisUsuario);
 
                 InicializarContador(informacionSolicitud.EnAnalisisInicio, informacionSolicitud.EnAnalisisFin, 'lblTiempoTranscurrido_EnAnalisis');
 
@@ -121,13 +152,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                     enCampoUsuario = '-';
                 }
 
-                tablaEstatusSolicitud.append('<tr>' +
-                    '<td class="text-center">Campo</td>' +
-                    '<td class="text-center">' + enCampoInicio + '</td>' +
-                    '<td class="text-center">' + enCampoFin + '</td>' +
-                    '<td class="text-center"><span id="lblTiempoTranscurrido_EnCampo"></span></td>' +
-                    '<td class="text-center">' + enCampoUsuario + '</td>' +
-                    '</tr>');
+                AgregarFilaATablaDeEstatusDeLaSolicitud('Campo', enCampoInicio, enCampoFin, 'lblTiempoTranscurrido_EnCampo', enCampoUsuario);
 
                 InicializarContador(informacionSolicitud.EnRutaDeInvestigacionInicio, informacionSolicitud.EnRutaDeInvestigacionFin, 'lblTiempoTranscurrido_EnCampo');
 
@@ -140,13 +165,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                     condicionadoUsuario = '-';
                 }
 
-                tablaEstatusSolicitud.append('<tr>' +
-                    '<td class="text-center">Condicionado</td>' +
-                    '<td class="text-center">' + condicionadoInicio + '</td>' +
-                    '<td class="text-center">' + condicionadoFin + '</td>' +
-                    '<td class="text-center"><span id="lblTiempoTranscurrido_Condicionado"></span></td>' +
-                    '<td class="text-center">' + condicionadoUsuario + '</td>' +
-                    '</tr>');
+                AgregarFilaATablaDeEstatusDeLaSolicitud('Condicionado', condicionadoInicio, condicionadoFin, 'lblTiempoTranscurrido_Condicionado', condicionadoUsuario);
 
                 InicializarContador(informacionSolicitud.CondicionadoInicio, informacionSolicitud.CondicionadoFin, 'lblTiempoTranscurrido_Condicionado');
 
@@ -159,13 +178,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                     reprogramadoUsuario = '-';
                 }
 
-                tablaEstatusSolicitud.append('<tr>' +
-                    '<td class="text-center">Reprogramado</td>' +
-                    '<td class="text-center">' + reprogramadoInicio + '</td>' +
-                    '<td class="text-center">' + reprogramadoFin + '</td>' +
-                    '<td class="text-center"><span id="lblTiempoTranscurrido_Reprogramado"></span></td>' +
-                    '<td class="text-center">' + reprogramadoUsuario + '</td>' +
-                    '</tr>');
+                AgregarFilaATablaDeEstatusDeLaSolicitud('Reprogramado', reprogramadoInicio, reprogramadoFin, 'lblTiempoTranscurrido_Reprogramado', reprogramadoUsuario);
 
                 InicializarContador(informacionSolicitud.ReprogramadoInicio, informacionSolicitud.ReprogramadoFin, 'lblTiempoTranscurrido_Reprogramado');
 
@@ -178,13 +191,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                     validacionUsuario = '-';
                 }
 
-                tablaEstatusSolicitud.append('<tr>' +
-                    '<td class="text-center">Validación</td>' +
-                    '<td class="text-center">' + validacionInicio + '</td>' +
-                    '<td class="text-center">' + validacionFin + '</td>' +
-                    '<td class="text-center"><span id="lblTiempoTranscurrido_Validacion"></span></td>' +
-                    '<td class="text-center">' + (validacionUsuario == '' ? '-' : validacionUsuario) + '</td>' +
-                    '</tr>');
+                AgregarFilaATablaDeEstatusDeLaSolicitud('Validación', validacionInicio, validacionFin, 'lblTiempoTranscurrido_Validacion', (validacionUsuario == '' ? '-' : validacionUsuario));
 
                 InicializarContador(informacionSolicitud.PasoFinalInicio, informacionSolicitud.PasoFinalFin, 'lblTiempoTranscurrido_Validacion');
 
@@ -328,38 +335,26 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
                     $("#divSolicitudInactiva").css('display', 'none');
                 }
 
-                /* Condiciones de la solicitud */
-                var tblCondiciones = $("#tblListaCondicionesDeLaSolicitud tbody").empty().append('<tr><td class="text-center" colspan="4">No hay registros disponibles...</td></tr>');
-
-                if (informacionSolicitud.Condiciones != null) {
-
-                    if (informacionSolicitud.Condiciones.length > 0) {
-
-                        let condiciones = informacionSolicitud.Condiciones;
-                        let templateCondiciones = '';
-                        let estadoCondicion = '';
-                        tblCondiciones.empty();
-
-                        for (var i = 0; i < condiciones.length; i++) {
-
-                            estadoCondicion = condiciones[i].EstadoCondicion != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>";
-
-                            templateCondiciones += '<tr><td>' + condiciones[i].Condicion + '</td><td>' + condiciones[i].DescripcionCondicion + '</td><td>' + condiciones[i].ComentarioAdicional + '</td><td>' + estadoCondicion + '</td></tr>';
+                /* Inicializar datatables de condiciones de la solicitud de credito */
+                $('#tblListaCondicionesDeLaSolicitud').DataTable({
+                    "destroy": true,
+                    "pageLength": 10,
+                    "aaSorting": [],
+                    "responsive": true,
+                    "language": datatableLanguage,
+                    data: informacionSolicitud.Condiciones,
+                    "columns": [
+                        { "data": "Condicion" },
+                        { "data": "DescripcionCondicion" },
+                        { "data": "ComentarioAdicional" },
+                        {
+                            "data": "EstadoCondicion",
+                            "render": function (value) {
+                                return value != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>"
+                            }
                         }
-
-                        tblCondiciones.append(templateCondiciones);
-
-                        $("#tabListaCondicionesDeLaSolicitud").css('display', '');
-
-                    } // if informacionSolicitud.Condiciones.length > 0
-                    else {
-                        $("#tabListaCondicionesDeLaSolicitud").css('display', 'none');
-                    }
-
-                } // if informacionSolicitud.Condiciones != null
-                else {
-                    $("#tabListaCondicionesDeLaSolicitud").css('display', 'none');
-                }
+                    ]
+                });
 
                 /* iconos del procesamiento de la solicitud que está debajo de la información principal de la solicitud */
                 var iconoRojo = "<i class='mdi mdi-close-circle-outline mdi-18px text-danger'></i>";
@@ -455,7 +450,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
 
             } // if data.d != null
             else {
-                MensajeError('Error al cargar estado de la solicitud, contacte al administrador');
+                MensajeError('No se pudo cargar la información de la solicitud de crédito, contacte al administrador');
             }
         }, // success
         complete: function () {
@@ -499,48 +494,59 @@ $("#btnCondicionarSolicitud").click(function () {
         success: function (data) {
 
             let catalogoCondiciones = data.d.CatalogoCondiciones;
-            let solicitudCondiciones = data.d.CondicionesDeLaSolicitud;
             let ddlCondiciones = $("#ddlCondiciones");
 
             /* Catalogo de condiciones */
             ddlCondiciones.empty();
 
+            ddlCondicionesTemplate = '';
+            let grupoDdlCondicion = '';
+
             for (var i = 0; i < catalogoCondiciones.length; i++) {
-                ddlCondiciones.append('<option value="' + catalogoCondiciones[i].IdCondicion + '">' + catalogoCondiciones[i].Condicion + ' | ' + catalogoCondiciones[i].DescripcionCondicion + '</option>');
-            }
 
-            /* Condiciones de la solicitud */
-            let tblListaSolicitudCondiciones = $("#tblListaSolicitudCondiciones tbody").empty().append('<tr><td class="text-center" colspan="5">No hay registros disponibles...</td></tr>');
-
-            if (solicitudCondiciones != null) {
-
-                if (solicitudCondiciones.length > 0) {
-
-                    let templateCondiciones, estadoCondicion, btnAnularCondicion = '';
-
-                    tblListaSolicitudCondiciones.empty();
-
-                    for (var i = 0; i < solicitudCondiciones.length; i++) {
-
-                        estadoCondicion = solicitudCondiciones[i].EstadoCondicion != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>";
-                        btnAnularCondicion = solicitudCondiciones[i].EstadoCondicion != true ? "" : "<button type='button' id='btnAnularCondicion' data-id='" + solicitudCondiciones[i].IdSolicitudCondicion + "' class='btn btn-sm btn-block btn-danger mb-0'><i class='far fa-trash-alt'></i> Anular</button>";
-
-                        templateCondiciones += '<tr><td>' + solicitudCondiciones[i].Condicion + '</td><td>' + solicitudCondiciones[i].DescripcionCondicion + '</td><td>' + solicitudCondiciones[i].ComentarioAdicional + '</td><td>' + estadoCondicion + '</td><td>' + btnAnularCondicion + '</td></tr>';
-                    }
-
-                    tblListaSolicitudCondiciones.append(templateCondiciones);
-
-                    $("#pestanaListaSolicitudCondiciones").css('display', '');
-
-                } // if solicitudCondiciones.length > 0
-                else {
-                    $("#pestanaListaSolicitudCondiciones").css('display', 'none');
+                if (grupoDdlCondicion != catalogoCondiciones[i].Condicion) {
+                    ddlCondicionesTemplate += ' <optgroup label="' + catalogoCondiciones[i].Condicion + '">';
                 }
 
-            } // if solicitudCondiciones != null
-            else {
-                $("#pestanaListaSolicitudCondiciones").css('display', 'none');
+                ddlCondicionesTemplate += '<option value="' + catalogoCondiciones[i].IdCondicion + '">' + catalogoCondiciones[i].DescripcionCondicion + '</option>';
+
+                if (grupoDdlCondicion != catalogoCondiciones[i].Condicion) {
+                    ddlCondicionesTemplate += ' </optgroup>';
+                }
+
+                grupoDdlCondicion = catalogoCondiciones[i].Condicion;
             }
+
+            ddlCondiciones.append(ddlCondicionesTemplate);
+
+            ddlCondiciones.select2({ language: select2language });
+
+            /* Inicializar datatables de condiciones */
+            $('#tblListaSolicitudCondiciones').DataTable({
+                "destroy": true,
+                "pageLength": 10,
+                "aaSorting": [],
+                "responsive": true,
+                "language": datatableLanguage,
+                data: data.d.CondicionesDeLaSolicitud,
+                "columns": [
+                    { "data": "Condicion" },
+                    { "data": "DescripcionCondicion" },
+                    { "data": "ComentarioAdicional" },
+                    {
+                        "data": "EstadoCondicion",
+                        "render": function (value) {
+                            return value != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>"
+                        }
+                    },
+                    {
+                        "data": "EstadoCondicion", "className": "text-center",
+                        "render": function (data, type, row) {
+                            return row["EstadoCondicion"] != true ? '' : '<button id="btnAnularCondicion" data-id="' + row["IdSolicitudCondicion"] + '" class="btn btn-sm btn-block btn-danger mb-0" type="button" title="Anular condición"><i class="far fa-trash-alt"></i> Anular</button>';
+                        }
+                    },
+                ]
+            });
 
             $("#modalCondicionarSolicitud").modal();
 
@@ -571,7 +577,9 @@ $("#btnAgregarNuevaCondicion").click(function () {
             IdCondicion: IdCondicion,
             ComentarioAdicional: ComentarioAdicional
         });
+
         contadorNuevasCondiciones++;
+
         $("#btnCondicionarSolicitudConfirmar").prop('disabled', false);
 
         $("#txtComentarioAdicional").val('');
@@ -601,6 +609,7 @@ $(document).on('click', 'button#btnQuitarCondicion', function () {
                 IdCondicion: listaNuevasCondiciones[i].IdCondicion,
                 ComentarioAdicional: listaNuevasCondiciones[i].ComentarioAdicional
             };
+
             if (JSON.stringify(item) != JSON.stringify(condicionAQuitar)) {
                 nuevaListaDeCondiciones.push(item);
             }
@@ -634,6 +643,7 @@ $("#btnCondicionarSolicitudConfirmar").click(function () {
             success: function (data) {
 
                 if (data.d == true) {
+
                     $("#modalCondicionarSolicitud").modal('hide');
 
                     MensajeExito('Estado de la solicitud actualizado. Actualizando información de la solicitud...');
@@ -798,18 +808,19 @@ $("#btnAgregarReferenciaConfirmar").click(function () {
 });
 
 /* Actualizar referencia personal */
-$(document).on('click', 'button#btnActualizarReferencia', function () {
+function AbrirModalActualizarReferenciaPersonal(btnReferenciaPersonal) {
 
-    idReferenciaPersonalSeleccionada = $(this).data('id');
+    let referenciaPersonal = $(btnReferenciaPersonal);
 
-    $("#txtNombreReferenciaPersonal_Editar").val($(this).data('nombrereferencia'));
-    $("#txtTelefonoReferenciaPersonal_Editar").val($(this).data('telefono'));
-    $("#ddlTiempoDeConocerReferencia_Editar").val($(this).data('idtiempodeconocer'));
-    $("#ddlParentesco_Editar").val($(this).data('idparentesco'));
-    $("#txtLugarDeTrabajoReferencia_Editar").val($(this).data('lugardetrabajo'));
+    idReferenciaPersonalSeleccionada = referenciaPersonal.data('id');
 
+    $("#txtNombreReferenciaPersonal_Editar").val(referenciaPersonal.data('nombrereferencia'));
+    $("#txtTelefonoReferenciaPersonal_Editar").val(referenciaPersonal.data('telefono'));
+    $("#ddlTiempoDeConocerReferencia_Editar").val(referenciaPersonal.data('idtiempodeconocer'));
+    $("#ddlParentesco_Editar").val(referenciaPersonal.data('idparentesco'));
+    $("#txtLugarDeTrabajoReferencia_Editar").val(referenciaPersonal.data('lugardetrabajo'));
     $("#modalEditarReferenciaPersonal").modal();
-});
+};
 
 $("#btnEditarReferenciaConfirmar").click(function (e) {
 
@@ -838,7 +849,6 @@ $("#btnEditarReferenciaConfirmar").click(function (e) {
             success: function (data) {
 
                 if (data.d == true) {
-
                     MensajeExito('La referencia personal se editó correctamente.');
                     CargarReferenciasPersonales();
                 }
@@ -877,8 +887,8 @@ $("#btnEliminarReferenciaConfirmar").click(function () {
             MensajeError('Error al eliminar la referencia personal, contacte al administrador.');
         },
         success: function (data) {
-            if (data.d == true) {
 
+            if (data.d == true) {
                 MensajeExito('La referencia personal se eliminó correctamente');
                 CargarReferenciasPersonales();
             }
@@ -919,10 +929,11 @@ function CargarReferenciasPersonales() {
                     tblReferenciasPersonales.empty();
 
                     for (var i = 0; i < listaReferenciasPersonales.length; i++) {
+
                         stringDatas = 'data-id="' + listaReferenciasPersonales[i].IdReferencia + '" data-nombrereferencia="' + listaReferenciasPersonales[i].NombreCompleto + '" data-telefono="' + listaReferenciasPersonales[i].TelefonoReferencia + '" data-idtiempodeconocer="' + listaReferenciasPersonales[i].IdTiempoDeConocer + '" data-idparentesco="' + listaReferenciasPersonales[i].IdParentescoReferencia + '" data-lugardetrabajo="' + listaReferenciasPersonales[i].LugarTrabajo + '" data-observaciones="' + listaReferenciasPersonales[i].ComentarioDeptoCredito + '" data-analista="' + listaReferenciasPersonales[i].AnalistaComentario + '" data-sincomunicacion="' + listaReferenciasPersonales[i].SinComunicacion + '" data-fechaanalisis="' + (listaReferenciasPersonales[i].FechaAnalisis == PROCESO_PENDIENTE ? (listaReferenciasPersonales[i].AnalistaComentario != '' ? 'Fecha no disponible' : '') : moment(listaReferenciasPersonales[i].FechaAnalisis).format('YYYY/MM/DD hh:mm A')) + '"';
 
                         btnComentarioReferenciaPersonal = '<button type="button" id="btnComentarioReferencia" ' + stringDatas + ' class="btn btn-sm btn-info far fa-comments" title="Ver observaciones del departamento de crédito"></button>';
-                        btnActualizarReferencia = '<button id="btnActualizarReferencia" ' + stringDatas + ' class="btn btn-sm btn-info far fa-edit" type="button" title="Editar"></button>';
+                        btnActualizarReferencia = '<button id="btnActualizarReferencia" ' + stringDatas + ' onclick="AbrirModalActualizarReferenciaPersonal(this)" class="btn btn-sm btn-info far fa-edit" type="button" title="Editar"></button>';
                         btnEliminarReferencia = '<button id="btnEliminarReferencia" ' + stringDatas + ' onclick="AbrirModalEliminarReferenciaPersonal(' + listaReferenciasPersonales[i].IdReferencia + ')" class="btn btn-sm btn-danger far fa-trash-alt" type="button" title="Eliminar"></button>';
                         colorClass = listaReferenciasPersonales[i].ComentarioDeptoCredito != '' ? listaReferenciasPersonales[i].SinComunicacion != true ? 'tr-exito' : 'text-danger' : '';
                         estado = listaReferenciasPersonales[i].ComentarioDeptoCredito != '' ? listaReferenciasPersonales[i].SinComunicacion != true ? '<i class="far fa-check-circle" title="Validación realizada"></i>' : '<i class="fas fa-phone-slash" title="Sin comunicación"></i>' : '<i class="fas fa-phone" title="Validación pendiente"></i>';
@@ -1813,6 +1824,7 @@ function OcultarLoader() {
 // #region Otras funciones
 
 $(window).on('hide.bs.modal', function () { /* cuando se abra un modal, ocultar el scroll del BODY y deja solo el del modal (en caso de que este tenga scroll) */
+
     const body = document.body;
     const scrollY = body.style.top;
     body.style.position = '';
@@ -1822,6 +1834,7 @@ $(window).on('hide.bs.modal', function () { /* cuando se abra un modal, ocultar 
 });
 
 $(window).on('show.bs.modal', function () { /* Cuando se cierre el modal */
+
     const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
     const body = document.body;
     body.style.position = 'fixed';
