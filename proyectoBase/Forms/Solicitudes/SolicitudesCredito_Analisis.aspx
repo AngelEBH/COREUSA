@@ -137,7 +137,7 @@
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
                                     <button id="btnValidarInformacionPersonal" type="button" onclick="ValidacionDeAnalisis(this)" class="btn btn-sm btn-warning btn-block btnValidacionDeAnalisis" data-validacion="InformacionPersonal">
                                         <i class="far fa-check-square"></i>
-                                        Validar información personal
+                                        <span>Validar información personal</span>
                                     </button>
                                 </div>
                             </div>
@@ -329,7 +329,7 @@
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
                                     <button id="btnValidarInformacionLaboral" type="button" onclick="ValidacionDeAnalisis(this)" class="btn btn-sm btn-warning btn-block btnValidacionDeAnalisis" data-validacion="InformacionLaboral">
                                         <i class="far fa-check-square"></i>
-                                        Validar información laboral
+                                        <span>Validar información laboral</span>
                                     </button>
                                 </div>
                             </div>
@@ -435,14 +435,14 @@
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
                                     <button id="btnValidarReferenciasPersonales" type="button" onclick="ValidacionDeAnalisis(this)" class="btn btn-sm btn-warning btn-block btnValidacionDeAnalisis" data-validacion="ReferenciasPersonales">
                                         <i class="far fa-check-square"></i>
-                                        Validar referencias personales
+                                        <span>Validar referencias personales</span>                                        
                                     </button>
                                 </div>
                             </div>
                         </div>
                         <div id="collapseReferenciasPersonales" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
                             <div class="panel-body pt-2">
-                                <div class="row justify-content-between" id="divReferenciasPersonales" runat="server">
+                                <div class="row justify-content-between mb-3" id="divReferenciasPersonales" runat="server">
                                     <div class="col-auto">
                                         <h6>Lista de referencias personales</h6>
                                     </div>
@@ -451,7 +451,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="table-responsive">
-                                            <asp:Table runat="server" ID="tblReferenciasPersonales" CssClass="table table-sm table-bordered table-hover cursor-pointer">
+                                            <asp:Table runat="server" ID="tblReferenciasPersonales" CssClass="table table-sm table-bordered table-hover cursor-pointer w-100">
                                                 <asp:TableHeaderRow TableSection="TableHeader" CssClass="thead-light">
                                                     <asp:TableHeaderCell CssClass="text-center">Nombre de la referencia</asp:TableHeaderCell>
                                                     <asp:TableHeaderCell CssClass="text-center">Lugar de trabajo</asp:TableHeaderCell>
@@ -1041,7 +1041,7 @@ Rechazar solicitud
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
                                     <button id="btnEnviarACampo" type="button" class="btn btn-sm btn-warning btn-block">
                                         <i class="far fa-check-square"></i>
-                                        Enviar a campo
+                                        <span>Enviar a investigación de campo</span>
                                     </button>
                                 </div>
                             </div>

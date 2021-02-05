@@ -65,7 +65,23 @@ var select2language = {
 // #region Document Ready
 
 $(document).ready(function () {
+
     CargarDetallesDelProcesamientoDeLaSolicitud();
+
+    /* Inicializar datatables de Referencias personales de la solicitud */
+    $('#tblReferenciasPersonales').DataTable({
+        "destroy": true,
+        "pageLength": 10,
+        "aaSorting": [],
+        "responsive": true,
+        "dom": "<'row'<'col-sm-12'>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+        "language": datatableLanguage,
+        columnDefs: [
+            { targets: 'no-sort', orderable: false },
+        ]
+    });
 });
 
 // #endregion
@@ -630,20 +646,17 @@ $(document).on('click', 'button#btnQuitarCondicion', function () {
 $("#btnCondicionarSolicitudConfirmar").click(function () {
 
     if (contadorNuevasCondiciones >= 1 && listaNuevasCondiciones.length >= 1) {
-
         $.ajax({
             type: "POST",
             url: "SolicitudesCredito_Analisis.aspx/CondicionarSolicitud",
             data: JSON.stringify({ listaCondiciones: listaNuevasCondiciones, observacionesOtrasCondiciones: $("#razonCondicion").val(), dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
-
                 MensajeError('No se pudo cargar la información, contacte al administrador');
             },
             success: function (data) {
 
                 if (data.d == true) {
-
                     $("#modalCondicionarSolicitud").modal('hide');
 
                     MensajeExito('Estado de la solicitud actualizado. Actualizando información de la solicitud...');
@@ -676,7 +689,6 @@ $(document).on('click', 'button#btnAnularCondicion', function () {
         success: function (data) {
 
             if (data.d == true) {
-
                 buttonAnularCondicion.replaceWith('<label class="btn btn-sm btn-success mb-0"><i class="far fa-check-circle"></i> Anulada</label>');
 
                 MensajeExito('La condición se anuló correctamente. Actualizando información de la solicitud...');
@@ -696,6 +708,7 @@ $(document).on('click', 'button#btnAnularCondicion', function () {
 /* Actualizar comentario sobre una referencia personal radiofaro */
 var idReferenciaPersonalSeleccionada = '';
 var btnReferenciaPersonalSeleccionada = '';
+
 
 /* Actualizar comentario de la referencia */
 $(document).on('click', 'button#btnComentarioReferencia', function () {
@@ -730,13 +743,11 @@ $("#btnActualizarObservacionReferencia").click(function () {
             data: JSON.stringify({ idReferencia: idReferenciaPersonalSeleccionada, observaciones: observacionesReferenciaPersonal, sinComunicacion: $("#cbSinComunicacion").prop('checked'), dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
-
                 MensajeError('Error al actualizar observaciones de la referencia personal, contacte al administrador.');
             },
             success: function (data) {
 
                 if (data.d == true) {
-
                     MensajeExito('Las observaciones/comentarios se actualizaron correctamente. Actualizando listado...');
                     CargarReferenciasPersonales();
                 }
@@ -753,6 +764,7 @@ $("#btnActualizarObservacionReferencia").click(function () {
     else
         $($("#txtObservacionesReferencia")).parsley().validate();
 });
+
 
 /* Agregar referencia personal */
 $("#btnAgregarReferencia").click(function () {
@@ -789,7 +801,6 @@ $("#btnAgregarReferenciaConfirmar").click(function () {
             success: function (data) {
 
                 if (data.d == true) {
-
                     MensajeExito('La referencia personal se agregó correctamente.');
                     CargarReferenciasPersonales();
                 }
@@ -806,6 +817,7 @@ $("#btnAgregarReferenciaConfirmar").click(function () {
     else
         $($("#frmPrincipal")).parsley().validate({ group: 'referenciasPersonales', force: true });
 });
+
 
 /* Actualizar referencia personal */
 function AbrirModalActualizarReferenciaPersonal(btnReferenciaPersonal) {
@@ -903,6 +915,7 @@ $("#btnEliminarReferenciaConfirmar").click(function () {
     });
 });
 
+
 function CargarReferenciasPersonales() {
 
     $.ajax({
@@ -911,7 +924,6 @@ function CargarReferenciasPersonales() {
         data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
-
             MensajeError('Error al cargar las referencias personales de la solicitud, contacte al administrador.');
         },
         success: function (data) {
@@ -941,6 +953,21 @@ function CargarReferenciasPersonales() {
                         templateReferenciasPersonales += '<tr class=' + colorClass + '><td>' + listaReferenciasPersonales[i].NombreCompleto + '</td><td>' + listaReferenciasPersonales[i].LugarTrabajo + '</td><td>' + listaReferenciasPersonales[i].TiempoDeConocer + '</td><td>' + listaReferenciasPersonales[i].TelefonoReferencia + '</td><td>' + listaReferenciasPersonales[i].DescripcionParentesco + '</td><td class="text-center">' + estado + '</td><td class="text-center">' + btnComentarioReferenciaPersonal + ' ' + btnActualizarReferencia + ' ' + btnEliminarReferencia + '</td></tr>';
                     }
                     tblReferenciasPersonales.append(templateReferenciasPersonales);
+
+                    /* Inicializar datatables de Referencias personales de la solicitud */
+                    $('#tblReferenciasPersonales').DataTable({
+                        "destroy": true,
+                        "pageLength": 10,
+                        "aaSorting": [],
+                        "responsive": true,
+                        "dom": "<'row'<'col-sm-12'>>" +
+                            "<'row'<'col-sm-12'tr>>" +
+                            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+                        "language": datatableLanguage,
+                        columnDefs: [
+                            { targets: 'no-sort', orderable: false },
+                        ]
+                    });
                 }
             }
         }
@@ -951,24 +978,27 @@ function CargarReferenciasPersonales() {
 
 // #region validaciones de analisis
 
-var tipoDeValidacion = '';
+var descripcionTipoDeValidacion = '';
 var btnValidacion = '';
 
 /* Validaciones de analisis, información del cliente y la solicitud */
 function ValidacionDeAnalisis(element) {
 
     btnValidacion = $(element);
-    tipoDeValidacion = btnValidacion.data('validacion');
+    descripcionTipoDeValidacion = btnValidacion.data('validacion');
+
     $("#txtComentarioValidacionDeAnalisis").val('');
-    $("#modalValidacionDeAnalisis").modal();
+
     $($("#frmPrincipal")).parsley().reset({ group: 'validacionDeAnalisis' });
+
+    $("#modalValidacionDeAnalisis").modal();
 }
 
 /* Validaciones de la documentación de la solicitud */
 function ValidacionDeDocumentacion(element) {
 
     btnValidacion = $(element);
-    tipoDeValidacion = btnValidacion.data('validacion');
+    descripcionTipoDeValidacion = btnValidacion.data('validacion');
 
     let documentosPendientesDeValidar = 0;
 
@@ -988,9 +1018,11 @@ function ValidacionDeDocumentacion(element) {
     if (documentosPendientesDeValidar == 1) {
 
         $("#txtComentarioValidacionDeAnalisis").val('');
+
+        $($("#frmPrincipal")).parsley().reset({ group: 'validacionDeAnalisis' });
+
         $("#modalDocumentacion").modal('hide');
         $("#modalValidacionDeAnalisis").modal();
-        $($("#frmPrincipal")).parsley().reset({ group: 'validacionDeAnalisis' });
     }
     else
         RealizarValidacion();
@@ -1012,12 +1044,13 @@ function RealizarValidacion() {
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_Analisis.aspx/ValidacionesDeAnalisis',
-        data: JSON.stringify({ tipoDeValidacion: tipoDeValidacion, comentario: $("#txtComentarioValidacionDeAnalisis").val(), dataCrypt: window.location.href }),
+        data: JSON.stringify({ tipoDeValidacion: descripcionTipoDeValidacion, comentario: $("#txtComentarioValidacionDeAnalisis").val(), dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al realizar validación, contacte al administrador.');
         },
         success: function (data) {
+
             if (data.d == true) {
 
                 MensajeExito('La validación se realizó correctamente.');
@@ -1037,6 +1070,49 @@ function RealizarValidacion() {
 
 // #endregion
 
+// #region Enviar a solicitud a investigación campo
+
+$("#btnEnviarACampo").click(function () {
+
+    if (ESTADO_SOLICITUD.FechaEnvioARuta == PROCESO_PENDIENTE) {
+        $("#modalEnviarACampo").modal();
+    }
+});
+
+$("#btnEnviarACampoConfirmar").click(function () {
+
+    if ($($("#txtComentariosParaGestoria")).parsley().isValid()) {
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Analisis.aspx/EnviarACampo",
+            data: JSON.stringify({ observacionesDeCredito: $("#txtComentariosParaGestoria").val(), dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('No se pudo enviar a investigación de campo, contacte al administrador');
+            },
+            success: function (data) {
+
+                if (data.d != false) {
+
+                    $("#btnEnviarACampo, #btnEnviarACampoConfirmar").prop('disabled', true).removeClass('btn-warning').addClass('btn-success').prop('title', 'La solicitud ya fue enviada a investigación de campo');
+
+                    CargarDetallesDelProcesamientoDeLaSolicitud();
+
+                    $("#modalEnviarACampo").modal('hide');
+
+                    MensajeExito('La solicitud se envió a investigación de campo correctamente.');
+                }
+                else
+                    MensajeError('Error al enviar la solicitud a investigación de campo, contacte al administrador');
+            }
+        });
+    }
+    else
+        $($("#txtComentariosParaGestoria")).parsley().validate();
+});
+
+// #endregion
 
 //#region Funciones de analisis
 
@@ -1480,48 +1556,6 @@ function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
 // #endregion Calculos
 
 
-// #region Enviar a campo
-
-$("#btnEnviarACampo").click(function () {
-
-    if (ESTADO_SOLICITUD.FechaEnvioARuta == PROCESO_PENDIENTE)
-        $("#modalEnviarACampo").modal();
-});
-
-$("#btnEnviarACampoConfirmar").click(function () {
-
-    if ($($("#txtComentariosParaGestoria")).parsley().isValid()) {
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/EnviarACampo",
-            data: JSON.stringify({ observacionesDeCredito: $("#txtComentariosParaGestoria").val(), dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo enviar a investigación de campo, contacte al administrador');
-            },
-            success: function (data) {
-
-                if (data.d != false) {
-
-                    //$("#btnEnviarACampo, #btnEnviarACampoConfirmar").prop('disabled', true).removeClass('btn-warning').addClass('btn-success').prop('title', 'La solicitud ya fue enviada a investigación de campo');
-
-                    $("#modalEnviarACampo").modal('hide');
-                    MensajeExito('La solicitud se envió a investigación de campo correctamente.');
-                    CargarDetallesDelProcesamientoDeLaSolicitud();
-                }
-                else
-                    MensajeError('Error al enviar la solicitud a investigación de campo, contacte al administrador');
-            }
-        });
-    }
-    else
-        $($("#txtComentariosParaGestoria")).parsley().validate();
-});
-
-// #endregion
-
-
 // #region Aprobar solicitud
 
 $("#btnAprobar").click(function () {
@@ -1789,6 +1823,7 @@ function MensajeError(mensaje) {
 }
 
 function ConvertirAFormatoNumerico(nStr) {
+
     nStr += '';
     x = nStr.split('.');
     x1 = x[0];
