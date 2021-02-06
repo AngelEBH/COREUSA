@@ -495,6 +495,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     var imagenesGarantia = new StringBuilder();
                                     var imagenesGarantiaParaInspeccionDeSeguro = new StringBuilder();
 
+                                    var imagenesGarantiaParaPortadaExpediente = new StringBuilder();
+                                    var imagenesGarantiaParaPortadaExpedienteRevision = new StringBuilder();
+
                                     while (sqlResultado.Read())
                                     {
                                         imagenesGarantia.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
@@ -503,14 +506,18 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                             imagenesGarantiaParaInspeccionDeSeguro.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
 
                                         if ((int)sqlResultado["fiIDSeccionGarantia"] == 3 || (int)sqlResultado["fiIDSeccionGarantia"] == 4)
-                                            divGaleriaPortadaExpediente.InnerHtml += "<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>";
+                                            imagenesGarantiaParaPortadaExpediente.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
 
                                         if ((int)sqlResultado["fiIDSeccionGarantia"] == 9)
-                                            divPortadaExpediente_Revision.InnerHtml = "<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>";
+                                            imagenesGarantiaParaPortadaExpedienteRevision.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
                                     }
 
                                     divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
                                     divGaleriaInspeccionSeguroDeVehiculo.InnerHtml = imagenesGarantiaParaInspeccionDeSeguro.ToString();
+
+                                    divGaleriaPortadaExpediente.InnerHtml = imagenesGarantiaParaPortadaExpediente.ToString() != "" ? imagenesGarantiaParaPortadaExpediente.ToString() : "<img alt='No hay fotografías disponibles' src='/Imagenes/Imagen_no_disponible.png' data-image='/Imagenes/Imagen_no_disponible.png' data-description='No hay fotografías disponibles'/>";
+                                    divPortadaExpediente_Revision.InnerHtml = imagenesGarantiaParaPortadaExpedienteRevision.ToString() != "" ? imagenesGarantiaParaPortadaExpedienteRevision.ToString() : "<img alt='No hay fotografías disponibles' src='/Imagenes/Imagen_no_disponible.png' data-image='/Imagenes/Imagen_no_disponible.png' data-description='No hay fotografías disponibles'/>";
+
                                 }
                                 divInformacionGarantia.Visible = true;
 

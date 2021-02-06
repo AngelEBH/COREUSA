@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -1769,8 +1769,8 @@
         </div>
 
         <!-- Nota de entrega -->
-        <div id="divContenedorNotaDeEntrega" class="contenedorPDFx">
-            <div class="card m-0 divImprimir" runat="server" visible="true" id="divNotaDeEntregaPDF" style="/*display: none; */">
+        <div id="divContenedorNotaDeEntrega" class="contenedorPDF">
+            <div class="card m-0 divImprimir" runat="server" visible="true" id="divNotaDeEntregaPDF" style="display: none;">
                 <div class="card-body pt-0 pr-5 pl-5">
                     <div class="row">
                         <div class="col-12 m-0 p-0 text-center">
@@ -1904,8 +1904,8 @@
 
 
         <!-- Portada del expediente -->
-        <div id="divContenedorPortadaExpediente" class="contenedorPDFx">
-            <div class="card m-0 divCotizacionPDF" runat="server" visible="true" id="divPortadaExpedientePDF" style="/*display: none; */">
+        <div id="divContenedorPortadaExpediente">
+            <div class="card m-0" runat="server" visible="true" id="divPortadaExpedientePDF">
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-6 m-0 p-0">
@@ -2036,120 +2036,10 @@
     <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
     <script>
 
-        $("#divGaleriaGarantia").unitegallery({
-            gallery_width: 900,
-            gallery_height: 600
-        });
+        const FONDOS_PRESTAMO = <%=this.FondoPrestamoJSON %>;
+        const ID_SOLICITUD_CREDITO = '<%=pcIDSolicitud%>';
 
-        $("#divGaleriaInspeccionSeguroDeVehiculo").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 300,
-            tile_height: 194,
-            grid_num_rows: 15
-        });
-
-        $("#divGaleriaPortadaExpediente").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 310,
-            tile_height: 190,
-            grid_num_rows: 15
-        });
-
-        $("#divPortadaExpediente_Revision").unitegallery({
-            gallery_theme: "tilesgrid",
-            tile_width: 640,
-            tile_height: 310,
-            grid_num_rows: 15
-        });
-
-        $("#divContenedorInspeccionSeguro").css('margin-top', '999px');
-        $("#divInspeccionSeguroPDF,#divContenedorInspeccionSeguro").css('display', 'none');
-
-        $('.lblDepartamento_Firma').text('<%=DepartamentoFirma%>');
-        $('.lblCiudad_Firma').text('<%=CiudadFirma%>');
-        $('.lblNumeroDia_Firma').text('<%=DiasFirma%>');
-        $('.lblMes_Firma').text('<%=MesFirma%>');
-        $('.lblAnio_Firma').text('<%=AnioFirma%>');
-
-        const FONDOS_PRESTAMO = <%=this.FondoPrestamoJSON%>;
-
-        $(".img-logo-empresa").attr('src', FONDOS_PRESTAMO.UrlLogo);
-        $('.lblRazonSocial').text(FONDOS_PRESTAMO.RazonSocial);
-        $('.lblNombreComercial').text(FONDOS_PRESTAMO.NombreComercial);
-        $('.lblRTNEmpresa').text(FONDOS_PRESTAMO.EmpresaRTN);
-        $('.lblCiudadDomicilioEmpresa').text(FONDOS_PRESTAMO.EmpresaCiudadDomiciliada);
-        $('.lblDepartamentoDomicilioEmpresa').text(FONDOS_PRESTAMO.EmpresaDepartamentoDomiciliada);
-        $('.lblTelefonoEmpresa').text(FONDOS_PRESTAMO.Telefono);
-        $('.lblEmailEmpresa').text(FONDOS_PRESTAMO.Email);
-        $('.lblConstitucionFondo').text(FONDOS_PRESTAMO.Constitucion);
-        $('.lblNombreRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.NombreCompleto);
-        $('.lblIdentidadRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.Identidad);
-        $('.lblEstadoCivilRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.EstadoCivil);
-        $('.lblNacionalidadRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.Nacionalidad);
-        $('.lblProfesionRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.Prefesion);
-        $('.lblCiudadDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.CiudadDomicilio);
-        $('.lblDepartamentoDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.DepartamentoDomicilio);
-
-        function ExportToPDF(nombreDelArchivo, idDivContenedor, idDivPDF) {
-
-            $("#Loader").css('display', '');
-
-            var opt = {
-                margin: [0.3, 0.3, 0.3, 0.3], //top, left, buttom, right,
-                filename: 'Solicitud_' + '<%=pcIDSolicitud%>' + '_' + nombreDelArchivo + '.pdf',
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: {
-                    dpi: 192,
-                    scale: 4,
-                    letterRendering: true,
-                    useCORS: false
-                },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
-                pagebreak: { after: '.page-break', always: 'img' }
-            };
-
-            $("#" + idDivContenedor + ",#" + idDivPDF + "").css('display', '');
-            $("body,html").css("overflow", "hidden");
-
-            html2pdf().from(this.document.getElementById(idDivPDF)).set(opt).save().then(function () {
-                $("#" + idDivContenedor + ",#" + idDivPDF + "").css('display', 'none');
-                $("body,html").css("overflow", "");
-
-                $("#Loader").css('display', 'none');
-            });
-        }
-
-        function EnviarCorreo(asunto, tituloGeneral, idContenidoHtml) {
-
-            let contenidoHtml = $('#' + idContenidoHtml + '').html();
-
-            $.ajax({
-                type: "POST",
-                url: "SolicitudesCredito_ImprimirDocumentacion.aspx/EnviarDocumentoPorCorreo",
-                data: JSON.stringify({ asunto: asunto, tituloGeneral: tituloGeneral, contenidoHtml: contenidoHtml, dataCrypt: window.location.href }),
-                contentType: "application/json; charset=utf-8",
-                error: function (xhr, ajaxOptions, thrownError) {
-                    MensajeError('No se pudo enviar el correo, contacte al administrador.');
-                },
-                success: function (data) {
-                    data.d == true ? MensajeExito('El correo se envió correctamente') : MensajeError('No se pudo enviar el correo, contacte al administrador.');
-                }
-            });
-        }
-
-        function MensajeError(mensaje) {
-            iziToast.error({
-                title: 'Error',
-                message: mensaje
-            });
-        }
-
-        function MensajeExito(mensaje) {
-            iziToast.success({
-                title: 'Éxito',
-                message: mensaje
-            });
-        }
     </script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210206122252"></script>
 </body>
 </html>
