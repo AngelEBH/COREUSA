@@ -120,6 +120,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var fechaOtorgamiento = (DateTime)sqlResultado["fdTiempoTomaDecisionFinal"];
                             var fechaVencimiento = "";
                             var oficialDeNegocios = sqlResultado["fcOficialDeNegocios"].ToString();
+                            var oficialDeNegociosCentroDeCosto = sqlResultado["fcCentroDeCostoOFicialDeNegocios"].ToString();
                             var gestorDeCobros = sqlResultado["fcGestorDeCobros"].ToString();
                             var departamentoResidencia = sqlResultado["fcDepartamento"].ToString();
                             var ciudadPoblado = sqlResultado["fcPoblado"].ToString();
@@ -130,7 +131,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var producto = sqlResultado["fcProducto"].ToString();
                             var montoTotalContrato = decimal.Parse(sqlResultado["fnValorTotalContrato"].ToString());
                             var plazoFinalAprobado = sqlResultado["fiPlazo"].ToString();
-                            var valorTotalFinanciamiento = decimal.Parse(sqlResultado["fnValorTotalFinanciamiento"].ToString());                            
+                            var valorTotalFinanciamiento = decimal.Parse(sqlResultado["fnValorTotalFinanciamiento"].ToString());
                             var tipoDePlazo = sqlResultado["fcTipoDePlazo"].ToString();
                             var tipoDePlazoSufijoAl = sqlResultado["fcTipoPlazoSufijoAl"].ToString();
                             var tipoDePlazoSufijoMente = sqlResultado["fcTipoPlazoSufijoMente"].ToString();
@@ -461,6 +462,24 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblCilindraje_NotaEntrega.Text = cilindraje;
                                     lblPlaca_NotaEntrega.Text = matricula;
                                     lblNombreVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
+
+
+                                    /* Portada del expediente */
+                                    lblNoSolicitud_PortadaExpediente.Text = "Solicitud de crédito #" + pcIDSolicitud;
+                                    lblOficialNegocios_PortadaExpediente.Text = "Oficial de negocios: " + oficialDeNegocios;
+                                    lblCentroDeCosto_PortadaExpediente.Text = "Centro de costo: " + oficialDeNegociosCentroDeCosto;
+                                    lblFechaActual_PortadaExpediente.Text = DateTime.Now.ToString("MM/dd/yyyy");
+
+                                    lblNombreCliente_PortadaExpediente.Text = nombreCliente;
+                                    lblIdentidadCliente_PortadaExpediente.Text = identidad;
+                                    lblMarca_PortadaExpediente.Text = marca;
+                                    lblModelo_PortadaExpediente.Text = modelo;
+                                    lblColor_PortadaExpediente.Text = color;
+                                    lblAnio_PortadaExpediente.Text = anio;
+                                    lblPlaca_PortadaExpediente.Text = matricula;
+                                    lblVIN_PortadaExpediente.Text = VIN;
+                                    lblVendedorGarantia_PortadaExpediente.Text = nombreVendedorGarantia + " - " + identidadVendedorGarantia;
+                                    lblDuenoAnteriorGarantia_PortadaExpediente.Text = nombrePropietarioGarantia + " - " + identidadPropietarioGarantia;
                                 }
 
                                 /* Fotografías de la garantía */
@@ -481,7 +500,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                         imagenesGarantia.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
 
                                         if ((bool)sqlResultado["fbApareceEnInspeccionDeSeguro"] == true)
-                                            imagenesGarantiaParaInspeccionDeSeguro.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");                                        
+                                            imagenesGarantiaParaInspeccionDeSeguro.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
+
+                                        if ((int)sqlResultado["fiIDSeccionGarantia"] == 3 || (int)sqlResultado["fiIDSeccionGarantia"] == 4)
+                                            divGaleriaPortadaExpediente.InnerHtml += "<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>";
+
+                                        if ((int)sqlResultado["fiIDSeccionGarantia"] == 9)
+                                            divPortadaExpediente_Revision.InnerHtml = "<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>";
                                     }
 
                                     divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();

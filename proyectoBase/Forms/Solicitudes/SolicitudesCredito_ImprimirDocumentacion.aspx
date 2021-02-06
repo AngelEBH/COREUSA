@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -106,6 +106,9 @@
                                 </button>
                                 <button type="button" id="btnEnviarCorreoSeguro" onclick="EnviarCorreo('Seguro', 'Seguro de garantía', 'divCorreoSeguroPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
                                     Correo Seguro
+                                </button>
+                                <button type="button" id="btnPortadaExpediente" onclick="ExportToPDF('PORTADA_EXPEDIENTE','divContenedorPortadaExpediente','divPortadaExpedientePDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
+                                    Portada Expediente
                                 </button>
                             </div>
                         </div>
@@ -1766,8 +1769,8 @@
         </div>
 
         <!-- Nota de entrega -->
-        <div id="divContenedorNotaDeEntrega" class="contenedorPDF">
-            <div class="card m-0 divImprimir" runat="server" visible="true" id="divNotaDeEntregaPDF" style="display: none;">
+        <div id="divContenedorNotaDeEntrega" class="contenedorPDFx">
+            <div class="card m-0 divImprimir" runat="server" visible="true" id="divNotaDeEntregaPDF" style="/*display: none; */">
                 <div class="card-body pt-0 pr-5 pl-5">
                     <div class="row">
                         <div class="col-12 m-0 p-0 text-center">
@@ -1898,6 +1901,129 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- Portada del expediente -->
+        <div id="divContenedorPortadaExpediente" class="contenedorPDFx">
+            <div class="card m-0 divCotizacionPDF" runat="server" visible="true" id="divPortadaExpedientePDF" style="/*display: none; */">
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div class="col-6 m-0 p-0">
+                            <img src="#" class="img-fluid pt-4 img-logo-empresa" />
+                        </div>
+                        <div class="col-6 m-0 p-0 justify-content-end">
+                            <table class="table table-borderless m-0" style="width: 100%">
+                                <tr runat="server" id="tr1">
+                                    <td class="p-0 text-right">
+                                        <asp:Label ID="lblNoSolicitud_PortadaExpediente" CssClass="col-8 p-0 font-weight-bold" Text="Solicitud de crédito #1057" runat="server"></asp:Label></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-0 text-right">
+                                        <asp:Label ID="lblOficialNegocios_PortadaExpediente" CssClass="p-0 font-weight-bold" Text="Oficial de negocios: Alejandro Flores" runat="server"></asp:Label></td>
+                                </tr>
+                                <tr runat="server" id="trCentroDeCostoVendedor_PortadaExpediente">
+                                    <td class="p-0 text-right">
+                                        <asp:Label ID="lblCentroDeCosto_PortadaExpediente" CssClass="col-8 p-0 font-weight-bold" Text="Centro de costo: Prestadito Matriz" runat="server"></asp:Label></td>
+                                </tr>
+                            </table>
+                            <table class="table table-borderless m-0" style="width: 100%">
+                                <tr>
+                                    <td class="p-0 text-right">
+                                        <asp:Label ID="lblFechaActual_PortadaExpediente" CssClass="col-8 p-0 font-weight-bold" Text="02/06/2021" runat="server"></asp:Label></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-12 mb-0">
+                            <h5 class="text-center font-weight-bold mb-1">Expediente</h5>
+                        </div>
+                        <div class="col-12">
+                            <table class="table table-sm mb-0">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th colspan="6" class="p-1 font-weight-bold">Información del cliente / Garantía</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="p-1">Cliente</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblNombreCliente_PortadaExpediente"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                        <td class="p-1">Identidad</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblIdentidadCliente_PortadaExpediente"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">Marca</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblMarca_PortadaExpediente"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                        <td class="p-1">Modelo</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblModelo_PortadaExpediente"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">Color</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblColor_PortadaExpediente"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                        <td class="p-1">Año</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblAnio_PortadaExpediente"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">Placa</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblPlaca_PortadaExpediente"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                        <td class="p-1">VIN</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblVIN_PortadaExpediente"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">Vendedor</td>
+                                        <td colspan="5" class="p-1">
+                                            <asp:Label runat="server" ID="lblVendedorGarantia_PortadaExpediente"></asp:Label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1">Dueño anterior</td>
+                                        <td colspan="5" class="p-1">
+                                            <asp:Label runat="server" ID="lblDuenoAnteriorGarantia_PortadaExpediente"></asp:Label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mb-0 pl-0">
+                            <%--<div style="max-width: 794px !important; min-width: 794px !important; overflow-x: hidden;">--%>
+                            <div id="divGaleriaPortadaExpediente" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden;" runat="server"></div>
+                            <%--</div>--%>
+                        </div>
+                        <div class="col-12 mt-0 pl-0">
+                            <div id="divPortadaExpediente_Revision" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden;" runat="server"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -1919,6 +2045,20 @@
             gallery_theme: "tilesgrid",
             tile_width: 300,
             tile_height: 194,
+            grid_num_rows: 15
+        });
+
+        $("#divGaleriaPortadaExpediente").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 310,
+            tile_height: 190,
+            grid_num_rows: 15
+        });
+
+        $("#divPortadaExpediente_Revision").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 640,
+            tile_height: 310,
             grid_num_rows: 15
         });
 

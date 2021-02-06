@@ -2099,4 +2099,175 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblNombreVendedorGarantia_NotaEntrega;
+
+    /// <summary>
+    /// Control divPortadaExpedientePDF.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPortadaExpedientePDF;
+
+    /// <summary>
+    /// Control tr1.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTableRow tr1;
+
+    /// <summary>
+    /// Control lblNoSolicitud_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNoSolicitud_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblOficialNegocios_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblOficialNegocios_PortadaExpediente;
+
+    /// <summary>
+    /// Control trCentroDeCostoVendedor_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTableRow trCentroDeCostoVendedor_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblCentroDeCosto_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblCentroDeCosto_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblFechaActual_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblFechaActual_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblNombreCliente_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombreCliente_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblIdentidadCliente_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblIdentidadCliente_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblMarca_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMarca_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblModelo_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblModelo_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblColor_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblColor_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblAnio_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblAnio_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblPlaca_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblPlaca_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblVIN_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblVIN_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblVendedorGarantia_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblVendedorGarantia_PortadaExpediente;
+
+    /// <summary>
+    /// Control lblDuenoAnteriorGarantia_PortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblDuenoAnteriorGarantia_PortadaExpediente;
+
+    /// <summary>
+    /// Control divGaleriaPortadaExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divGaleriaPortadaExpediente;
+
+    /// <summary>
+    /// Control divPortadaExpediente_Revision.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPortadaExpediente_Revision;
 }
