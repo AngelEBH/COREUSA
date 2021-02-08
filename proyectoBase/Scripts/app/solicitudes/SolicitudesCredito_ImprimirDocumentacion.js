@@ -1,4 +1,5 @@
-﻿MostrarLoader();
+﻿
+MostrarLoader();
 
 $("#divGaleriaGarantia").unitegallery({
     gallery_width: 900,

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_ImprimirDocumentacion.aspx.cs" Inherits="SolicitudesCredito_ImprimirDocumentacion" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_ImprimirDocumentacion.aspx.cs" Inherits="SolicitudesCredito_ImprimirDocumentacion" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -2013,9 +2013,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12 mb-0 pl-0">
-                            <%--<div style="max-width: 794px !important; min-width: 794px !important; overflow-x: hidden;">--%>
                             <div id="divGaleriaPortadaExpediente" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden;" runat="server"></div>
-                            <%--</div>--%>
                         </div>
                         <div class="col-12 mt-0 pl-0">
                             <div id="divPortadaExpediente_Revision" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden;" runat="server"></div>
