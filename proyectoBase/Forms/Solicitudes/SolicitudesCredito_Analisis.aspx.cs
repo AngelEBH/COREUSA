@@ -12,7 +12,7 @@ using proyectoBase.Models.ViewModel;
 
 public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 {
-    #region Propiedades
+    #region Propiedades publicas
 
     public string pcID = ""; /* Identidad del cliente */
     public string pcIDApp = ""; /* Id de la aplicacion */
@@ -25,7 +25,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Page load
+    #region Page load * Listo *
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -63,7 +63,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Cargar información del cliente, de la solicitud, de la garantía, cargar listados
+    #region Cargar información del cliente, de la solicitud, de la garantía, cargar listados * Listo *
 
     public void CargarInformacionClienteSolicitud()
     {
@@ -1531,7 +1531,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Administrar condiciones de la solicitud
+    #region Administrar condiciones de la solicitud * Listo *
 
     [WebMethod]
     public static CatalogoCondiciones_SolicitudCondiciones_ViewModel ObtenerCatalogoCondicionesYSolicitudCondiciones(string dataCrypt)
@@ -1729,7 +1729,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Administracion de referencias personales
+    #region Administracion de referencias personales * Listo *
 
     [WebMethod]
     public static List<SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel> ListadoReferenciasPersonalesPorIdSolicitud(string dataCrypt)
@@ -1985,7 +1985,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region Funciones utilitarias
+    #region Funciones utilitarias * Listo *
 
     public static Uri DesencriptarURL(string URL)
     {
@@ -2035,7 +2035,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 
     #endregion
 
-    #region View Models
+    #region View Models * Listo *
 
     public class SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel
     {

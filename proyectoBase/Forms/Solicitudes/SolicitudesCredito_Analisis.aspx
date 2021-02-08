@@ -1046,24 +1046,28 @@ Rechazar solicitud
                         <div id="collapseInformacionAnalisis" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
                             <div class="panel-body">
                                 <div class="row mb-0" id="divInformacionPerfil" runat="server">
-                                    <div class="col-lg-6 col-md-6 col-12 border-right border-gray">
+                                    <div class="col-lg-6 col-md-6 col-12 border-right border-gray pr-5">
+
+                                        <div class="form-group row mt-3">
+                                            <label class="col-sm-3 col-form-label">Tipo de empresa</label>
+                                            <asp:DropDownList ID="ddlTipoDeEmpresa" onchange="ValidarInformacionDePerfil()" CssClass="col-sm-9 form-control form-control-sm" runat="server"></asp:DropDownList>
+                                        </div>
+
                                         <div class="form-group row">
-                                            <div class="col-12">
-                                                <label class="col-form-label">Tipo de empresa</label>
-                                                <asp:DropDownList ID="ddlTipoDeEmpresa" onchange="ValidarInformacionDePerfil()" CssClass="form-control form-control-sm" runat="server"></asp:DropDownList>
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="col-form-label">Tipo de perfil</label>
-                                                <asp:DropDownList ID="ddlTipoDePerfil" onchange="ValidarInformacionDePerfil()" CssClass="form-control form-control-sm" runat="server"></asp:DropDownList>
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="col-form-label">Tipo de empleo</label>
-                                                <asp:DropDownList ID="ddlTipoDeEmpleo" onchange="ValidarInformacionDePerfil()" CssClass="form-control form-control-sm" runat="server"></asp:DropDownList>
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="col-form-label">Buro actual</label>
-                                                <asp:DropDownList ID="ddlBuroActual" onchange="ValidarInformacionDePerfil()" CssClass="form-control form-control-sm" runat="server"></asp:DropDownList>
-                                            </div>
+                                            <label class="col-sm-3 col-form-label">Tipo de perfil</label>
+                                            <asp:DropDownList ID="ddlTipoDePerfil" onchange="ValidarInformacionDePerfil()" CssClass="col-sm-9 form-control form-control-sm" runat="server"></asp:DropDownList>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Tipo de empleo</label>
+                                            <asp:DropDownList ID="ddlTipoDeEmpleo" onchange="ValidarInformacionDePerfil()" CssClass="col-sm-9 form-control form-control-sm" runat="server"></asp:DropDownList>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Buro actual</label>
+                                            <asp:DropDownList ID="ddlBuroActual" onchange="ValidarInformacionDePerfil()" CssClass="col-sm-9 form-control form-control-sm" runat="server"></asp:DropDownList>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Fondos de desembolso</label>
+                                            <asp:DropDownList ID="ddlFondos" Enabled="false" CssClass="col-sm-9 form-control form-control-sm" runat="server"></asp:DropDownList>
                                         </div>
                                     </div>
                                 </div>

@@ -215,22 +215,13 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var liParamStart = 0;
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
-
-            liParamStart = URL.IndexOf("?");
-
-            if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
 
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
@@ -242,6 +233,8 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
         return lURLDesencriptado;
     }
 }
+
+#region View Models
 
 public class PreSolicitud_ViewModel
 {
@@ -324,7 +317,6 @@ public class PreSolicitud_Detalles_ViewModel
     }
 }
 
-
 public class PreSolicitudDocumentosSolicitud_ViewModel
 {
     public int IdPreSolicitudDocumento { get; set; }
@@ -337,3 +329,5 @@ public class PreSolicitudDocumentosSolicitud_ViewModel
     public string URLArchivo { get; set; }
     public byte ArchivoActivo { get; set; }
 }
+
+#endregion

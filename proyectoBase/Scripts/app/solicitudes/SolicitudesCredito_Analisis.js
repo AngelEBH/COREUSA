@@ -62,31 +62,18 @@ var select2language = {
 
 // #endregion
 
-// #region Document Ready
+// #region Document Ready * Listo *
 
 $(document).ready(function () {
 
     CargarDetallesDelProcesamientoDeLaSolicitud();
 
-    /* Inicializar datatables de Referencias personales de la solicitud */
-    $('#tblReferenciasPersonales').DataTable({
-        "destroy": true,
-        "pageLength": 10,
-        "aaSorting": [],
-        "responsive": true,
-        "dom": "<'row'<'col-sm-12'>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-        "language": datatableLanguage,
-        columnDefs: [
-            { targets: 'no-sort', orderable: false },
-        ]
-    });
+    InicializarDataTableReferenciasPersonales();
 });
 
 // #endregion
 
-// #region Cargar detalles de la solicitud
+// #region Cargar detalles de la solicitud * Listo * 
 
 function AgregarFilaATablaDeEstatusDeLaSolicitud(descripcionProceso, procesoInicio, procesoFin, idTimerDelProceso, usuarioEncargado) {
 
@@ -477,7 +464,7 @@ function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
 
 // #endregion Cargar detalles de la solicitud
 
-// #region Administrar condiciones de la solicitud
+// #region Administrar condiciones de la solicitud * Listo *
 
 /* ====== Almacena la cantidad de nuevas condiciones que se estan agregando ================ */
 /* ====== Se utiliza para validar que se agregue por lo menos una condición ================ */
@@ -703,7 +690,7 @@ $(document).on('click', 'button#btnAnularCondicion', function () {
 
 // #endregion Administrar condiciones de la solicitud
 
-// #region Administrar referencias personales
+// #region Administrar referencias personales * Listo *
 
 /* Actualizar comentario sobre una referencia personal radiofaro */
 var idReferenciaPersonalSeleccionada = '';
@@ -900,6 +887,9 @@ $("#btnEliminarReferenciaConfirmar").click(function () {
         },
         success: function (data) {
 
+
+            debugger;
+
             if (data.d == true) {
                 MensajeExito('La referencia personal se eliminó correctamente');
                 CargarReferenciasPersonales();
@@ -928,6 +918,8 @@ function CargarReferenciasPersonales() {
         },
         success: function (data) {
 
+            debugger;
+
             var listaReferenciasPersonales = data.d;
             var tblReferenciasPersonales = $("#tblReferenciasPersonales tbody").empty().append('<tr><td class="text-center" colspan="7">No hay registros disponibles...</td></tr>');
 
@@ -954,23 +946,28 @@ function CargarReferenciasPersonales() {
                     }
                     tblReferenciasPersonales.append(templateReferenciasPersonales);
 
-                    /* Inicializar datatables de Referencias personales de la solicitud */
-                    $('#tblReferenciasPersonales').DataTable({
-                        "destroy": true,
-                        "pageLength": 10,
-                        "aaSorting": [],
-                        "responsive": true,
-                        "dom": "<'row'<'col-sm-12'>>" +
-                            "<'row'<'col-sm-12'tr>>" +
-                            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-                        "language": datatableLanguage,
-                        columnDefs: [
-                            { targets: 'no-sort', orderable: false },
-                        ]
-                    });
+                    InicializarDataTableReferenciasPersonales();
                 }
             }
         }
+    });
+}
+
+function InicializarDataTableReferenciasPersonales() {
+
+    /* Inicializar datatables de Referencias personales de la solicitud */
+    $('#tblReferenciasPersonales').DataTable({
+        "destroy": true,
+        "pageLength": 10,
+        "aaSorting": [],
+        "responsive": true,
+        "dom": "<'row'<'col-sm-12'>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+        "language": datatableLanguage,
+        columnDefs: [
+            { targets: 'no-sort', orderable: false },
+        ]
     });
 }
 
@@ -1070,7 +1067,7 @@ function RealizarValidacion() {
 
 // #endregion
 
-// #region Enviar a solicitud a investigación campo
+// #region Enviar a solicitud a investigación campo * Listo *
 
 $("#btnEnviarACampo").click(function () {
 
@@ -1114,7 +1111,7 @@ $("#btnEnviarACampoConfirmar").click(function () {
 
 // #endregion
 
-//#region Funciones de analisis
+//#region Funciones de analisis * Pendiente *
 
 function CargarBuroExterno() {
 
@@ -1366,7 +1363,7 @@ $("#btnConfirmarPrestamoAprobado").click(function () {
 //#endregion Funciones de analisis
 
 
-// #region Calculos
+// #region Calculos * Pendiente *
 
 function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
 
@@ -1555,7 +1552,7 @@ function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
 // #endregion Calculos
 
 
-// #region Aprobar solicitud
+// #region Aprobar solicitud * Pendiente *
 
 $("#btnAprobar").click(function () {
     resolucion = true;
@@ -1628,7 +1625,7 @@ $("#btnConfirmarAprobar").click(function () {
 // #endregion Aprobar solicitud
 
 
-// #region Rechazar solicitud
+// #region Rechazar solicitud * Pendiente *
 
 $("#btnRechazar").click(function () {
     resolucion = false;
@@ -1743,7 +1740,7 @@ $("#btnRechazarIncapPagoConfirmar").click(function () {
 // #endregion Rechazar solicitud
 
 
-//#region Funciones utilitarias
+//#region Funciones utilitarias * Listo *
 
 countdown.setLabels(
     'ms | seg | min | hr | d | sem | mes |año | dec | sig | mil ',
@@ -1854,8 +1851,7 @@ function OcultarLoader() {
 
 //#endregion Funciones utilitarias
 
-
-// #region Otras funciones
+// #region Otras funciones * Listo *
 
 $(window).on('hide.bs.modal', function () { /* cuando se abra un modal, ocultar el scroll del BODY y deja solo el del modal (en caso de que este tenga scroll) */
 
