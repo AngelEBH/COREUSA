@@ -96,9 +96,9 @@ $(document).ready(function () {
                 }
             },
             {
-                "data": "PrimerNombre",
+                "data": "NombreCompleto",
                 "render": function (data, type, row) {
-                    return row["PrimerNombre"] + ' ' + row["SegundoNombre"] + ' ' + row["PrimerApellido"] + ' ' + row["SegundoApellido"] + ' <br/><span class="text-muted">' + row["Identidad"] + "</span>" + (row["IdCanal"] == 3 ? ' <span class="btn btn-sm btn-info pt-0 pb-0 m-0">canex</span>' : '')
+                    return row["NombreCompleto"] + ' <br/><span class="text-muted">' + row["Identidad"] + "</span>" + (row["IdCanal"] == 3 ? ' <span class="btn btn-sm btn-info pt-0 pb-0 m-0">canex</span>' : '')
                 }
             },
             {
@@ -368,7 +368,7 @@ $(document).ready(function () {
 
         idSolicitudInstalacionGPS = row.IdAutoGPSInstalacion;
         VIN = row.VIN;
-        nombreCliente = row["PrimerNombre"] + ' ' + row["SegundoNombre"] + ' ' + row["PrimerApellido"] + ' ' + row["SegundoApellido"];
+        nombreCliente = row["NombreCompleto"];
         identidad = row["Identidad"]
 
         $(".txtVIN").val(row.VIN);
@@ -381,6 +381,10 @@ $(document).ready(function () {
         $(".lblModelo").text(row.Modelo);
         $(".lblAnio").text(row.Anio);
         $(".lblColor").text(row.Color);
+        $("#lblValorMercadoGarantia").text(row.Moneda + ' ' + ConvertirADecimal(row.ValorMercadoGarantia));
+        $("#lblValorPrima").text(row.Moneda + ' ' + ConvertirADecimal(row.ValorPrima));
+        $("#lblValorAPrestar").text(row.Moneda + ' ' + ConvertirADecimal(row.ValorAPrestarGarantia));
+        $("#lblValorAFinanciar").text(row.Moneda + ' ' + ConvertirADecimal(row.ValorAFinanciar));
         $(".lblNoSolicitudCredito").text(idSolicitud);
         $(".lblNombreCliente").text(nombreCliente);
         $("#lblEstadoRevisionFisica").removeClass('badge-success').removeClass('badge-warning').removeClass('badge-danger').addClass('badge-' + row.EstadoRevisionFisicaClassName).text(row.EstadoRevisionFisica);
@@ -859,3 +863,16 @@ $('.table-responsive').on('hide.bs.dropdown', function () {
 jQuery("#date-range").datepicker({
     toggleActive: true
 });
+
+function ConvertirADecimal(nStr) {
+
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}

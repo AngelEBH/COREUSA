@@ -254,8 +254,7 @@
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de informacion domicilio -->
-                                                <div class="align-self-center" id="divDocumentacionDomicilio" runat="server" style="display: none;">
-                                                </div>
+                                                <div class="align-self-center" id="divDocumentacionDomicilio" runat="server" style="display: none;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -410,8 +409,7 @@
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de informacion laboral -->
-                                                <div class="align-self-center" id="divDocumentacionLaboral" runat="server" style="display: none;">
-                                                </div>
+                                                <div class="align-self-center" id="divDocumentacionLaboral" runat="server" style="display: none;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -435,7 +433,7 @@
                                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-auto">
                                     <button id="btnValidarReferenciasPersonales" type="button" onclick="ValidacionDeAnalisis(this)" class="btn btn-sm btn-warning btn-block btnValidacionDeAnalisis" data-validacion="ReferenciasPersonales">
                                         <i class="far fa-check-square"></i>
-                                        <span>Validar referencias personales</span>                                        
+                                        <span>Validar referencias personales</span>
                                     </button>
                                 </div>
                             </div>
@@ -567,8 +565,7 @@
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de la garantía-->
-                                                <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;">
-                                                </div>
+                                                <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -1118,8 +1115,7 @@ Rechazar solicitud
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de informacion domicilio -->
-                                                <div class="align-self-center" id="divDocumentacionCampoDomicilio" runat="server" style="display: none;">
-                                                </div>
+                                                <div class="align-self-center" id="divDocumentacionCampoDomicilio" runat="server" style="display: none;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -1157,8 +1153,7 @@ Rechazar solicitud
                                         <div class="form-group row">
                                             <div class="col-12">
                                                 <!-- Div donde se muestran las imágenes de informacion domicilio -->
-                                                <div class="align-self-center" id="divDocumentacionCampoTrabajo" runat="server" style="display: none;">
-                                                </div>
+                                                <div class="align-self-center" id="divDocumentacionCampoTrabajo" runat="server" style="display: none;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -1373,8 +1368,7 @@ Rechazar solicitud
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                    </tbody>
+                                    <tbody></tbody>
                                 </table>
                             </div>
                         </div>
@@ -1627,8 +1621,7 @@ Rechazar solicitud
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                    </tbody>
+                                    <tbody></tbody>
                                 </table>
                             </div>
                         </div>
@@ -2130,6 +2123,7 @@ Rechazar solicitud
         InicializarGaleria('divDocumentacionCampoDomicilioModal');
         InicializarGaleria('divDocumentacionCampoTrabajo');
         InicializarGaleria('divDocumentacionCampoTrabajoModal');
+
         $("#divGaleriaGarantia").unitegallery({
             tile_width: 180,
             tile_height: 120

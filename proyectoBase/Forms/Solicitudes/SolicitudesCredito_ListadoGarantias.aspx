@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Garantías de solicitudes aprobadas</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
@@ -19,14 +19,16 @@
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
-    <link href="/Content/css/bootstrap4-modal-fullscreen.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap4-modal-fullscreen.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
         .opcion {
             cursor: pointer;
         }
 
-        .cursor-zoom-in {cursor: zoom-in;}
+        .cursor-zoom-in {
+            cursor: zoom-in;
+        }
 
         .dataTable tbody tr {
             cursor: pointer;
@@ -605,7 +607,7 @@
                                 <h6 class="m-0" id="modalDocumentosDeLaGarantiaLabel">Fotografías de la garantía | Solicitud de crédito N° <b class="lblNoSolicitudCredito"></b></h6>
                             </div>
                             <div class="col-12 text-muted">
-                                Marca:
+                                Marca: 
                                 <span class="lblMarca"></span>
                                 / Modelo:
                                 <span class="lblModelo"></span>
@@ -619,16 +621,42 @@
                         </div>
                     </div>
                     <div class="modal-body">
-                        <div class="row mb-0">
+                        <div class="form-group row">
                             <div class="col-12">
-                                <div class="form-group row">
-                                    <div class="col-12">
-                                        <!-- Div donde se muestran las fotografías de la garantía -->
-                                        <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;"></div>
-                                    </div>
+                                <!-- Div donde se muestran las fotografías de la garantía -->
+                                <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;"></div>
+                            </div>
+                        </div>
+                        <div class="row mt-3 mb-0">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table class="table table-sm" style="margin-bottom: 0px;">
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="font-weight-bold text-muted">Valor del mercado</span></td>
+                                                <td><span class="label label-table label-success" id="lblValorMercadoGarantia"></span></td>
+                                                <td></td>
+                                                <td><span class="font-weight-bold text-muted">Valor de la prima</span></td>
+                                                <td id="lblValorPrima"></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="font-weight-bold text-muted">Valor a Prestar</span></td>
+                                                <td id="lblValorAPrestar"></td>
+                                                <td></td>
+                                                <td><span class="font-weight-bold text-muted">Valor a Financiar</span></td>
+                                                <td id="lblValorAFinanciar"></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -670,6 +698,6 @@
         const NOMBRE_USUARIO = '<%=pcNombreUsuario %>';
         const CORREO_USUARIO = '<%=pcBuzoCorreoUsuario%>';
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20210203031652"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20210208121852"></script>
 </body>
 </html>

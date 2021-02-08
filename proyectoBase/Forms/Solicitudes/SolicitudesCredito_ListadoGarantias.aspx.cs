@@ -13,12 +13,18 @@ using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 {
+    #region Propiedades públicas
+
     public string pcIDApp = "";
     public string pcIDSesion = "";
     public string pcIDUsuario = "";
     public string pcNombreUsuario = "";
     public string pcBuzoCorreoUsuario = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+
+    #endregion
+
+    #region Page_Load, Cargar información del usuario, cargar listas para formularios
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -55,8 +61,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                 using (var sqlComando = new SqlCommand("CoreSeguridad.dbo.sp_InformacionUsuario", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.CommandTimeout = 120;
 
@@ -97,8 +103,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                 using (var sqlComando = new SqlCommand("sp_CREDGarantias_UbicacionesInstalacionGPS", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.CommandTimeout = 120;
 
@@ -120,6 +126,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         }
     }
 
+    #endregion
+
     [WebMethod]
     public static List<SolicitudesCredito_ListadoGarantias_ViewModel> CargarListado(string dataCrypt)
     {
@@ -127,9 +135,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -163,10 +171,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 SolicitudActiva = (byte)sqlResultado["fiSolicitudActiva"],
                                 IdCliente = (int)sqlResultado["fiIDCliente"],
                                 Identidad = sqlResultado["fcIdentidadCliente"].ToString(),
-                                PrimerNombre = sqlResultado["fcPrimerNombreCliente"].ToString(),
-                                SegundoNombre = sqlResultado["fcSegundoNombreCliente"].ToString(),
-                                PrimerApellido = sqlResultado["fcPrimerApellidoCliente"].ToString(),
-                                SegundoApellido = sqlResultado["fcSegundoApellidoCliente"].ToString(),
+                                NombreCompleto = sqlResultado["fcNombreCliente"].ToString(),
                                 IdGarantia = (int)sqlResultado["fiIDGarantia"],
                                 VIN = sqlResultado["fcVIN"].ToString(),
                                 Marca = sqlResultado["fcMarca"].ToString(),
@@ -174,6 +179,11 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 Anio = sqlResultado["fiAnio"].ToString(),
                                 Color = sqlResultado["fcColor"].ToString(),
                                 DocumentosSubidos = sqlResultado["fcDocumentos"].ToString(),
+                                ValorMercadoGarantia = (decimal)sqlResultado["fnValorDelMercadoGarantia"],
+                                ValorPrima = (decimal)sqlResultado["fnValorPrima"],
+                                ValorAPrestarGarantia = (decimal)sqlResultado["fnValorAPrestarGarantia"],
+                                ValorAFinanciar = (decimal)sqlResultado["fnValorFinanciado"],
+                                Moneda = sqlResultado["fcSimboloMoneda"].ToString(),
                                 /* Estado revisión fisica de la garantia */
                                 EstadoRevisionFisica = sqlResultado["fcEstadoRevisionFisica"].ToString(),
                                 EstadoRevisionFisicaClassName = sqlResultado["fcEstadoRevisionFisicaClassName"].ToString(),
@@ -207,9 +217,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -260,9 +270,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -326,9 +336,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -382,9 +392,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -449,9 +459,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -499,7 +509,6 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         return revisionesGarantia;
     }
 
-
     [WebMethod]
     public static InstalacionGPS_ViewModel CargarInstalacionGPS(int idAutoInstalacionGPS, string dataCrypt)
     {
@@ -507,9 +516,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -583,9 +592,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -627,6 +636,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         return documentosDeLaGarantia;
     }
 
+    #region Métodos utilitarios
+
     [WebMethod]
     public static string EncriptarParametros(int idSolicitud, int idGarantia, string dataCrypt)
     {
@@ -634,9 +645,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
             string lcParametros = "usr=" + pcIDUsuario + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion + "&IDSOL=" + idSolicitud + "&IDGarantia=" + idGarantia;
 
@@ -737,7 +748,11 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             ExceptionLogging.SendExcepToDB(ex);
         }
     }
+
+    #endregion
 }
+
+#region View Models
 
 public class SolicitudesCredito_ListadoGarantias_ViewModel
 {
@@ -755,10 +770,7 @@ public class SolicitudesCredito_ListadoGarantias_ViewModel
     public int SolicitudActiva { get; set; }
     public int IdCliente { get; set; }
     public string Identidad { get; set; }
-    public string PrimerNombre { get; set; }
-    public string SegundoNombre { get; set; }
-    public string PrimerApellido { get; set; }
-    public string SegundoApellido { get; set; }
+    public string NombreCompleto { get; set; }
     public int IdGarantia { get; set; }
     public string VIN { get; set; }
     public string Marca { get; set; }
@@ -766,6 +778,11 @@ public class SolicitudesCredito_ListadoGarantias_ViewModel
     public string Anio { get; set; }
     public string Color { get; set; }
     public string DocumentosSubidos { get; set; }
+    public decimal ValorMercadoGarantia { get; set; }
+    public decimal ValorPrima { get; set; }
+    public decimal ValorAPrestarGarantia { get; set; }
+    public decimal ValorAFinanciar { get; set; }
+    public string Moneda { get; set; }
 
     /* Estado de la revisión física de la garantía */
     public string EstadoRevisionFisica { get; set; }
@@ -888,3 +905,5 @@ public class InformacionDocumento
     public DateTime FechaCreador { get; set; }
     public string HashTag { get; set; }
 }
+
+#endregion
