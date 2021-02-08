@@ -1127,8 +1127,7 @@ function CargarBuroExterno() {
             MensajeError('Error al cargar buro externo');
         },
         success: function (data) {
-            window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + data.d, "_blank",
-                "toolbar=yes, scrollbars=yes, resizable=yes, top=0, left=window.screen.availWidth/2, window.screen.availWidth/2,window.screen.availHeight");
+            window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + data.d, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=0, left=window.screen.availWidth/2, window.screen.availWidth/2,window.screen.availHeight");
         }
     });
 }
