@@ -130,11 +130,28 @@ $(document).ready(function () {
                 "render": function (data, type, row) {
                     return '<span class="badge badge-' + row["EstadoSolicitudGPSClassName"] + ' p-1 ' + (row["IdEstadoInstalacion"] == 3 ? 'cursor-zoom-in' : '') + '" ' + (row["IdEstadoInstalacion"] == 3 ? 'onclick="MostrarInstalacionGPS(' + row["IdAutoGPSInstalacion"] + ')"' : '') + '>' + row["EstadoSolicitudGPS"] + '</span>';
                 }
+            },
+            {
+                "data": "FechaCreacion", "className": "report-precios-de-mercado", "visible": false, "title": 'Fecha de ingreso',
+                "render": function (value) {
+                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
+                }
+            },
+            { "data": "Marca", "className": "report-precios-de-mercado", "visible": false, "title": 'Marca' },
+            { "data": "Modelo", "className": "report-precios-de-mercado", "visible": false, "title": 'Modelo' },
+            { "data": "Anio", "className": "report-precios-de-mercado text-center", "visible": false, "title": 'Año' },
+            { "data": "Moneda", "className": "report-precios-de-mercado text-center", "visible": false, "title": 'Moneda' },
+            {
+                "data": "ValorMercadoGarantia", "className": "report-precios-de-mercado text-right", "visible": false, "title": 'Precio de mercado',
+                "render": function (value) {
+                    return ConvertirADecimal(value);
+                }
             }
         ],
         buttons: [
             {
                 extend: 'excelHtml5',
+                text: '<i class="far fa-file-excel"></i> Exportar',
                 title: 'Garantias_' + moment(),
                 autoFilter: true,
                 messageTop: 'Garantías de solicitudes de crédito' + moment().format('YYYY/MM/DD'),
@@ -144,16 +161,29 @@ $(document).ready(function () {
             },
             {
                 extend: 'colvis',
-                text: 'Ocultar columnas'
+                text: '<i class="mdi mdi-table-column-remove"></i> Columnas',
+                columns: [1, 2, 3, 4, 5, 6, 7, 8] // columnas que pueden ocultarse y mostrarse, por indice para mejorar el tiempo de carga, por className es mas intuitivo toggle-visible-active
             },
             {
                 extend: 'print',
-                text: 'Imprimir',
+                text: '<i class="fas fa-print"></i> Imprimir',
                 autoFilter: true,
                 exportOptions: {
-                    columns: 'report-data'
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8]
                 }
-            }
+            },
+            {
+                extend: 'excelHtml5',
+                text: '<i class="far fa-file-excel"></i> Precios de mercado',
+                title: 'Precios_de_mercado_' + moment(),
+                autoFilter: true,
+                messageTop: 'Precios de mercado',
+                createEmptyCells: true,
+                sheetName: 'Precios de mercado',
+                exportOptions: {
+                    columns: '.report-precios-de-mercado'
+                }
+            },
         ],
         columnDefs: [
             { targets: 'no-sort', orderable: false },
@@ -329,7 +359,7 @@ $(document).ready(function () {
         if (filtroActual == 'rangoFechas' && tabActivo == 'tab_Listado_Solicitudes_Garantias') {
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
-                FechaIngreso = new Date(data[1]);
+                FechaIngreso = new Date(data[9]);
             return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaIngreso <= Hasta) || ("Invalid Date" == Hasta && FechaIngreso >= Desde) || (FechaIngreso <= Hasta && FechaIngreso >= Desde);
         }
         else if (filtroActual == 'rangoFechas') {
@@ -463,9 +493,9 @@ $(document).on('click', 'button#btnSolicitarGPS', function () {
 
 $("#btnSolicitarGPS_Confirmar").click(function (e) {
 
-    if ($('#frmPrincipal').parsley().isValid({ group: 'InstalacionGPS_Guardar' })) {
+    $("#btnSolicitarGPS_Confirmar").css('disabled', true);
 
-        $("#btnSolicitarGPS_Confirmar").css('disabled', true);
+    if ($('#frmPrincipal').parsley().isValid({ group: 'InstalacionGPS_Guardar' })) {
 
         var solicitudGPS = {
             IdSolicitud: idSolicitud,
@@ -491,7 +521,6 @@ $("#btnSolicitarGPS_Confirmar").click(function (e) {
             contentType: "application/json; charset=utf-8",
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('No se pudo guardar la solicitud de revisión física y GPS, contacte al administrador.');
-                $("#btnSolicitarGPS_Confirmar").css('disabled', false);
             },
             success: function (data) {
 
@@ -503,12 +532,16 @@ $("#btnSolicitarGPS_Confirmar").click(function (e) {
 
                 $(btnSolicitarGPS).replaceWith('<button type="button" class="dropdown-item" id="btnDetalleSolicitudGPS"><i class="fas fa-map-marker-alt"></i> Detalles solicitud revisión física y GPS</button>');
 
+            },
+            complete: function () {
                 $("#btnSolicitarGPS_Confirmar").css('disabled', false);
             }
         });
     }
-    else
+    else {
         $('#frmPrincipal').parsley().validate({ group: 'InstalacionGPS_Guardar', force: true });
+        $("#btnSolicitarGPS_Confirmar").css('disabled', false);
+    }
 });
 
 /* Actualizar solicitud de GPS y revisión física */
@@ -561,6 +594,8 @@ $("#btnActualizarSolicitudGPS").click(function (e) {
 
 $("#btnActualizarSolicitudGPS_Confirmar").click(function (e) {
 
+    $("#btnActualizarSolicitudGPS_Confirmar").prop('disabled', true);
+
     if ($('#frmPrincipal').parsley().isValid({ group: 'InstalacionGPS_Actualizar' })) {
 
         var solicitudGPS = {
@@ -596,11 +631,16 @@ $("#btnActualizarSolicitudGPS_Confirmar").click(function (e) {
                 data.d == true ? MensajeExito('La solicitud de revisión física y GPS se actualizó correctamente') : MensajeError('No se pudo actualizar la solicitud de revisión física y GPS, contacte al administrador.');
 
                 $("#txtFechaInstalacion_Actualizar,#ddlUbicacionInstalacion_Actualizar,#txtComentario_Actualizar").val('');
+            },
+            complete: function () {
+                $("#btnActualizarSolicitudGPS_Confirmar").prop('disabled', false);
             }
         });
     }
-    else
+    else {
         $('#frmPrincipal').parsley().validate({ group: 'InstalacionGPS_Actualizar', force: true });
+        $("#btnActualizarSolicitudGPS_Confirmar").prop('disabled', false);
+    }
 });
 
 

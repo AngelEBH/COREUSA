@@ -692,56 +692,59 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     {
         try
         {
-            var pmmMensaje = new MailMessage();
-            var smtpCliente = new SmtpClient();
+            using (var smtpCliente = new SmtpClient())
+            {
+                smtpCliente.Host = "mail.miprestadito.com";
+                smtpCliente.Port = 587;
+                smtpCliente.Credentials = new System.Net.NetworkCredential("systembot@miprestadito.com", "iPwf@p3q");
+                smtpCliente.EnableSsl = true;
 
-            smtpCliente.Host = "mail.miprestadito.com";
-            smtpCliente.Port = 587;
-            smtpCliente.Credentials = new System.Net.NetworkCredential("systembot@miprestadito.com", "iPwf@p3q");
-            smtpCliente.EnableSsl = true;
+                using (var pmmMensaje = new MailMessage())
+                {
+                    pmmMensaje.Subject = pcAsunto;
+                    pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
+                    pmmMensaje.To.Add("willian.diaz@miprestadito.com");
+                    //pmmMensaje.To.Add("sistemas@miprestadito.com");
+                    //pmmMensaje.CC.Add(buzonCorreoUsuario);
+                    pmmMensaje.IsBodyHtml = true;
 
-            pmmMensaje.Subject = pcAsunto;
-            pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
-            pmmMensaje.To.Add("sistemas@miprestadito.com");
-            pmmMensaje.CC.Add(buzonCorreoUsuario);
-            pmmMensaje.IsBodyHtml = true;
+                    string htmlString = @"<!DOCTYPE html> " +
+                    "<html>" +
+                    "<body>" +
+                    " <div style=\"width: 500px;\">" +
+                    " <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
+                    " <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
+                    " <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td>&nbsp;</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td style=\"background-color:whitesmoke; text-align:center;\">" + pcSubtitulo + "</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td>&nbsp;</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td>&nbsp;</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
+                    " <td>System Bot Prestadito</td>" +
+                    " </tr>" +
+                    " </table>" +
+                    " </div>" +
+                    "</body> " +
+                    "</html> ";
 
-            string htmlString = @"<!DOCTYPE html> " +
-            "<html>" +
-            "<body>" +
-            " <div style=\"width: 500px;\">" +
-            " <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
-            " <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
-            " <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td>&nbsp;</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td style=\"background-color:whitesmoke; text-align:center;\">" + pcSubtitulo + "</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td>&nbsp;</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td>&nbsp;</td>" +
-            " </tr>" +
-            " <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
-            " <td>System Bot Prestadito</td>" +
-            " </tr>" +
-            " </table>" +
-            " </div>" +
-            "</body> " +
-            "</html> ";
+                    pmmMensaje.Body = htmlString;
 
-            pmmMensaje.Body = htmlString;
-
-            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
-            smtpCliente.Send(pmmMensaje);
-            smtpCliente.Dispose();
+                    ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+                    smtpCliente.Send(pmmMensaje);
+                }
+            }
         }
         catch (Exception ex)
         {
