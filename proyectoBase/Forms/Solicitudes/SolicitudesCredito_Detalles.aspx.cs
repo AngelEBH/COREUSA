@@ -407,6 +407,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                     case "2":
                                     case "18":
                                     case "19":
+                                    case "24":
+                                    case "25":
                                         documentacionIdentidad.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
                                         break;
                                     case "3":
