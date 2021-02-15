@@ -9,6 +9,7 @@
     <title></title>
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
@@ -30,6 +31,7 @@
                 <div class="row">
                     <div class="col-8">
                         <h6 class="">Recuperación del Dia</h6>
+                        <asp:Label runat="server" ID="lblMensajeError" CssClass="text-danger font-12"></asp:Label>
                     </div>
                     <div class="col-4">
                         <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar" aria-label="Buscar" />
@@ -71,15 +73,21 @@
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
+    <!-- datatable js -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Buttons -->
     <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
     <script src="/Scripts/plugins/datatables/buttons.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
     <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.print.min.js"></script>
+    <script src="/Scripts/plugins/datatables/buttons.colVis.min.js"></script>
+    <!-- Responsive -->
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoRecuperacionDelDiaPorSupervisor.js?v=1.1"></script>
+    <script src="/Scripts/app/SRC/Seguimientos/SeguimientoRecuperacionDelDiaPorSupervisor.js?v=20210215100002"></script>
 </body>
 </html>

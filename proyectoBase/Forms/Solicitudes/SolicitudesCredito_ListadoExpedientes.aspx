@@ -46,7 +46,6 @@
     </style>
 </head>
 <body runat="server" class="EstiloBody-Listado">
-
     <div class="card">
         <div class="card-header">
             <div class="row">
@@ -116,7 +115,9 @@
                                 <th class="report-data">Producto / CC / Vendedor</th>
                                 <th class="report-data">Cliente / Identidad</th>
                                 <th class="report-data">Marca / Modelo / Año / VIN</th>
-                                <th class="report-data no-sort">Docs. <br /> Expediente</th>
+                                <th class="report-data no-sort">Docs.
+                                    <br />
+                                    Expediente</th>
                                 <th class="report-data">Estado<br />
                                     Expediente</th>
                             </tr>

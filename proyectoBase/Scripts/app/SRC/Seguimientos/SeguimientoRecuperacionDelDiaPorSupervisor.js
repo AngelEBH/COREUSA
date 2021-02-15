@@ -32,7 +32,7 @@ $(document).ready(function () {
         "pageLength": 10,
         "aaSorting": [],
         "processing": true,
-        "dom": "<'row'<'col-sm-6'><'col-sm-6'T>>" +
+        "dom": "<'row'<'col-sm-6'><'col-sm-6 text-right'>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
         "ajax": {
@@ -43,6 +43,12 @@ $(document).ready(function () {
                 return JSON.stringify({ dataCrypt: window.location.href, IDAgente: $("#ddlAgentesActivos :selected").val() });
             },
             "dataSrc": function (json) {
+
+                if (json.d == null) {
+                    MensajeError('Ocurrió un error al cargar la información, contacta al administrador.');
+                    return false;
+                }
+
                 var return_data = json.d;
                 return return_data;
             }
@@ -52,7 +58,7 @@ $(document).ready(function () {
             {
                 "data": "IDCliente",
                 "render": function (data, type, row) {
-                    return "<a class='text-info' href=" + row["UrlCliente"] + ">" + row["IDCliente"] + "</a>"
+                    return "<a class='text-info' href=" + row["UrlCliente"] + " target='_blank'>" + row["IDCliente"] + "</a>"
                 }
             },
             { "data": "NombreCompletoCliente" },
@@ -72,6 +78,31 @@ $(document).ready(function () {
                     return row["Moneda"] + ' ' + addFormatoNumerico(parseFloat(row["AbonosHoy"]).toFixed(2))
                 }
             }
+        ],
+        buttons: [
+            {
+                extend: 'colvis',
+                text: '<i class="mdi mdi-table-column-remove"></i> Columnas',
+                columns: [1, 2, 3, 4, 5, 6]
+            },
+            {
+                extend: 'excelHtml5',
+                text: '<i class="far fa-file-excel"></i> Excel',
+                title: 'Recuperacion_Del_Dia',
+                autoFilter: true,
+                messageTop: 'Recuperacion del día',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6]
+                }
+            },
+            {
+                extend: 'print',
+                text: '<i class="fas fa-print"></i> Imprimir',
+                autoFilter: true,
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6]
+                }
+            },
         ],
         columnDefs: [
             { targets: 'no-sort', orderable: false }
@@ -121,4 +152,11 @@ function addFormatoNumerico(nStr) {
         x1 = x1.replace(rgx, '$1' + ',' + '$2');
     }
     return x1 + x2;
+}
+
+function MensajeError(mensaje) {
+    iziToast.error({
+        title: 'Error',
+        message: mensaje
+    });
 }

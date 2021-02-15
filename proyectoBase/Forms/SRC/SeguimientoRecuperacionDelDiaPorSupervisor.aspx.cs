@@ -13,43 +13,52 @@ public partial class SeguimientoRecuperacionDelDiaPorSupervisor : System.Web.UI.
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        var lcURL = Request.Url.ToString();
-        var liParamStart = lcURL.IndexOf("?");
-
-        string lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
-
-        if (lcParametros != string.Empty)
+        try
         {
-            var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-            var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-            var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+            var lcURL = Request.Url.ToString();
+            var liParamStart = lcURL.IndexOf("?");
+            string lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-
-            /* Agentes activos */
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            if (lcParametros != string.Empty)
             {
-                sqlConexion.Open();
+                var lcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+                var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                var Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
+                var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-                using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(Comando, sqlConexion))
+                /* Agentes activos */
+                using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
                 {
-                    DataTable dtAgentes = new DataTable();
-                    sqlDataAdapter.Fill(dtAgentes);
-                    ddlAgentesActivos.DataSource = dtAgentes;
-                    ddlAgentesActivos.DataBind();
-                    ddlAgentesActivos.DataTextField = "fcNombreCorto";
-                    ddlAgentesActivos.DataValueField = "fiIDUsuario";
-                    ddlAgentesActivos.DataBind();
-                    dtAgentes.Dispose();
-                    sqlDataAdapter.Dispose();
-                    ddlAgentesActivos.Items.Insert(0, new ListItem("Seleccionar Agente", "0"));
-                    ddlAgentesActivos.SelectedIndex = 0;
-                }
-            }
+                    sqlConexion.Open();
+
+                    using (var sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_AgentesActivos", sqlConexion))
+                    {
+                        sqlComando.CommandType = CommandType.StoredProcedure;
+                        sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                        sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                        sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                        sqlComando.CommandTimeout = 120;
+
+                        using (var sqlResultado = sqlComando.ExecuteReader())
+                        {
+                            ddlAgentesActivos.Items.Clear();
+                            ddlAgentesActivos.Items.Add(new ListItem("Seleccionar agente", "0"));
+
+                            while (sqlResultado.Read())
+                            {
+                                ddlAgentesActivos.Items.Add(new ListItem(sqlResultado["fcNombreCorto"].ToString(), sqlResultado["fiIDUsuario"].ToString()));
+                            }
+                        } // using sqlResultado
+                    } // using sqlComando
+                } // using sqlConexion
+            } // if lcParametros != string.Empty
+        }
+        catch (Exception ex)
+        {
+            lblMensajeError.Text = "Ocurrió un error, contacta al administrador. (" + ex.Message.ToString() + ")";
         }
     }
 
@@ -57,6 +66,7 @@ public partial class SeguimientoRecuperacionDelDiaPorSupervisor : System.Web.UI.
     public static List<SeguimientoRecuperacionDelDiaPorSupervisorViewModel> CargarRegistros(string dataCrypt, int IDAgente)
     {
         var ListadoRegistros = new List<SeguimientoRecuperacionDelDiaPorSupervisorViewModel>();
+
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
@@ -89,6 +99,7 @@ public partial class SeguimientoRecuperacionDelDiaPorSupervisor : System.Web.UI.
                                 NombreAgente = sqlResultado["fcNombreAgente"].ToString(),
                                 IDCliente = sqlResultado["fcIDCliente"].ToString(),
                                 NombreCompletoCliente = sqlResultado["fcNombreSAF"].ToString(),
+                                UrlCliente = "../Gestion/EstadodeCuenta.aspx?" + DSC.Encriptar("IDCliente=" + sqlResultado["fcIDCliente"] + "&usr=" + pcIDUsuario),
                                 Descripcion = sqlResultado["fcDescripcion"].ToString(),
                                 DiasAtraso = (short)sqlResultado["fiDiasAtraso"],
                                 SaldoInicialPonerAlDia = (decimal)sqlResultado["fnInicialSaldoPonerAlDia"],
@@ -103,6 +114,7 @@ public partial class SeguimientoRecuperacionDelDiaPorSupervisor : System.Web.UI.
         catch (Exception ex)
         {
             ex.Message.ToString();
+            ListadoRegistros = null;
         }
         return ListadoRegistros;
     }
@@ -112,18 +124,12 @@ public partial class SeguimientoRecuperacionDelDiaPorSupervisor : System.Web.UI.
         Uri lURLDesencriptado = null;
         try
         {
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
             var liParamStart = Url.IndexOf("?");
-
-            if (liParamStart > 0)
-                lcParametros = Url.Substring(liParamStart, Url.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var lcParametros = liParamStart > 0 ? Url.Substring(liParamStart, Url.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = Url.Substring((liParamStart + 1), Url.Length - (liParamStart + 1));
+                var pcEncriptado = Url.Substring(liParamStart + 1, Url.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
@@ -141,6 +147,7 @@ public class SeguimientoRecuperacionDelDiaPorSupervisorViewModel
     public int IDUsuarioSupervisor { get; set; }
     public string NombreSupervisor { get; set; }
     public int IDAgente { get; set; }
+    public string UrlCliente { get; set; }
     public string NombreAgente { get; set; }
     public string IDCliente { get; set; }
     public string NombreCompletoCliente { get; set; }
