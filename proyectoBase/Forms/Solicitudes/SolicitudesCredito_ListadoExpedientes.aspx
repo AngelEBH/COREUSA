@@ -156,6 +156,6 @@
     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoExpedientes.js?v=20210212100652"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoExpedientes.js?v=20210215105325"></script>
 </body>
 </html>

@@ -35,8 +35,8 @@ public partial class SeguimientoSupervisorPromesasdePago : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");            
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {

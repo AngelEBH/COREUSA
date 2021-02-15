@@ -27,24 +27,31 @@ public partial class SolicitudesCredito_ListadoExpedientes : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        try
         {
-            var lcURL = Request.Url.ToString();
-            var liParamStart = lcURL.IndexOf("?");
-            var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
-
-            if (lcParametros != string.Empty)
+            if (!IsPostBack)
             {
-                var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
-                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-                var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                var lcURL = Request.Url.ToString();
+                var liParamStart = lcURL.IndexOf("?");
+                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
-                pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                if (lcParametros != string.Empty)
+                {
+                    var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
+                    var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                CargarInformacionUsuario();
+                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+                    CargarInformacionUsuario();
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            lblMensajeError.InnerText = "Ocurrió un error, contacte al administrador. (" + ex.Message.ToString() + ")";
         }
     }
 
@@ -158,6 +165,7 @@ public partial class SolicitudesCredito_ListadoExpedientes : System.Web.UI.Page
         catch (Exception ex)
         {
             ex.Message.ToString();
+            listado = null;
         }
         return listado;
     }
