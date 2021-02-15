@@ -5,35 +5,25 @@ using System.Web;
 
 public partial class ConvenioReadecuacion : System.Web.UI.Page
 {
-    private string pcIDApp = "";
-    private string pcIDUsuario = "";
-    private string pcIDConvenio = "";
     public string lcNombreArchivoPDF = "";
+    public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        var DSC = new DSCore.DataCrypt();
-        var lcIDCliente = string.Empty;
-        var lcParametros = string.Empty;
-
         var lcURL = Request.Url.ToString();
-        int liParamStart = lcURL.IndexOf("?");
-
-        if (liParamStart > 0)
-            lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-        else
-            lcParametros = string.Empty;
+        var liParamStart = lcURL.IndexOf("?");
+        var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
         if (lcParametros != string.Empty)
         {
-            var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+            var lcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
             var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
             var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-            pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            lcIDCliente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDCliente");
-            pcIDConvenio = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("Convenio");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var lcIDCliente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDCliente");
+            var pcIDConvenio = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("Convenio");
 
             try
             {
@@ -48,6 +38,7 @@ public partial class ConvenioReadecuacion : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcCodigoReadecuacion", pcIDConvenio);
+                        sqlComando.CommandTimeout = 120;
 
                         using (var sqlResultado = sqlComando.ExecuteReader())
                         {
@@ -96,5 +87,4 @@ public partial class ConvenioReadecuacion : System.Web.UI.Page
             }
         } // if lcParametros != string.empty
     } // page load
-
 }

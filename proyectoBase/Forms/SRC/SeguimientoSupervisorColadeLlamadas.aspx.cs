@@ -15,7 +15,6 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
     {
         var lcURL = Request.Url.ToString();
         var liParamStart = lcURL.IndexOf("?");
-
         string lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
         if (lcParametros != string.Empty)
@@ -33,23 +32,26 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                string Comando = "EXEC dbo.sp_SRC_CallCenter_AgentesActivos " + pcIDSesion + "," + pcIDApp + "," + pcIDUsuario;
-
-                using (var sqlDataAdapter = new SqlDataAdapter(Comando, sqlConexion))
+                using (var sqlComando = new SqlCommand("dbo.sp_SRC_CallCenter_AgentesActivos", sqlConexion))
                 {
-                    DataTable dtAgentes = new DataTable();
-                    sqlDataAdapter.Fill(dtAgentes);
-                    ddlAgentesActivos.DataSource = dtAgentes;
-                    ddlAgentesActivos.DataBind();
-                    ddlAgentesActivos.DataTextField = "fcNombreCorto";
-                    ddlAgentesActivos.DataValueField = "fiIDUsuario";
-                    ddlAgentesActivos.DataBind();
-                    dtAgentes.Dispose();
-                    sqlDataAdapter.Dispose();
-                    ddlAgentesActivos.Items.Insert(0, new ListItem("Todos los agentes", "0"));
-                    ddlAgentesActivos.SelectedIndex = 0;
-                }
-            }
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        ddlAgentesActivos.Items.Clear();
+                        ddlAgentesActivos.Items.Add(new ListItem("Seleccionar agente", "0"));
+
+                        while (sqlResultado.Read())
+                        {
+                            ddlAgentesActivos.Items.Add(new ListItem(sqlResultado["fcNombreCorto"].ToString(), sqlResultado["fiIDUsuario"].ToString()));
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
     }
 
@@ -162,18 +164,12 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
             var liParamStart = Url.IndexOf("?");
-
-            if (liParamStart > 0)
-                lcParametros = Url.Substring(liParamStart, Url.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var lcParametros = liParamStart > 0 ? Url.Substring(liParamStart, Url.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = Url.Substring((liParamStart + 1), Url.Length - (liParamStart + 1));
+                var pcEncriptado = Url.Substring(liParamStart + 1, Url.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }

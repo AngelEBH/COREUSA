@@ -14,20 +14,18 @@ public partial class SeguimientoRecuperacionDelDiaPorAgente : System.Web.UI.Page
     {
         var lcURL = Request.Url.ToString();
         var liParamStart = lcURL.IndexOf("?");
-
         string lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
         if (lcParametros != string.Empty)
         {
-            var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+            var lcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
             var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
             var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
         }
-        /* FIN de captura de parametros y desencriptado de cadena, realizar validaciones que se lleguen a necesitar */
     }
 
     [WebMethod]
@@ -52,6 +50,8 @@ public partial class SeguimientoRecuperacionDelDiaPorAgente : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuarioSupervisor", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDAgente", 0);
+                    sqlComando.CommandTimeout = 120;
+
                     using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
                     {
                         while (sqlResultado.Read())
@@ -87,18 +87,12 @@ public partial class SeguimientoRecuperacionDelDiaPorAgente : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
             var liParamStart = Url.IndexOf("?");
-
-            if (liParamStart > 0)
-                lcParametros = Url.Substring(liParamStart, Url.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var lcParametros = liParamStart > 0 ? Url.Substring(liParamStart, Url.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = Url.Substring((liParamStart + 1), Url.Length - (liParamStart + 1));
+                var pcEncriptado = Url.Substring(liParamStart + 1, Url.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }

@@ -45,33 +45,28 @@
 <body>
     <div class="container-fluid" id="GenerarConvenio">
         <div class="row">
-            <div class="col-md-12">
-                <div class="form-group row">
-                    <div class="col-sm-12">
-                        <img alt="" src="/Imagenes/logoPrestadito.png" />
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-12 justify-content-center">
-                        <h5 class="text-center">ADENDUM
-                            <asp:Label runat="server" ID="lblNoAdendum" Text="" /><br />
-                            POR READECUACION
-                        </h5>
-                    </div>
-                </div>
+            <div class="col-sm-12 mb-3">
+                <img alt="" src="/Imagenes/logoPrestadito.png" />
+            </div>
+            <div class="col-sm-12 justify-content-center mb-3">
+                <h5 class="text-center">ADENDUM
+                    <asp:Label runat="server" ID="lblNoAdendum" Text="" /><br />
+                    POR READECUACION
+                </h5>
             </div>
             <div class="col-md-12">
                 <div class="form-group row">
                     <div class="col-sm-12">
                         <p>
                             El señor(a)
-                            <asp:Label CssClass="font-weight-bold" runat="server" ID="lblNombreCliente" Text="" />&nbsp;con
-                            número de identidad
-                            <asp:Label runat="server" CssClass="font-weight-bold" ID="lblIdentidadCliente" Text="" />&nbsp;y
-                            el acreedor <span class="font-weight-bold">PRESTADITO S.A. de C.V.</span>
+                            <asp:Label CssClass="font-weight-bold" runat="server" ID="lblNombreCliente" Text="" />
+                            con número de identidad
+                            <asp:Label runat="server" CssClass="font-weight-bold" ID="lblIdentidadCliente" Text="" />
+                            y el acreedor
+                            <span class="font-weight-bold">PRESTADITO S.A. de C.V.</span>
                             acuerdan hacer la readecuación de su préstamo No.
-                            <asp:Label CssClass="font-weight-bold" runat="server" ID="lblNoPrestamo" Text="" />&nbsp;a
-                            un nuevo préstamo el cual tendrá las siguientes condiciones:
+                            <asp:Label CssClass="font-weight-bold" runat="server" ID="lblNoPrestamo" Text="" />
+                            a un nuevo préstamo el cual tendrá las siguientes condiciones:
                         </p>
                     </div>
 
