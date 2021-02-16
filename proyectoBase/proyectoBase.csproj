@@ -877,6 +877,7 @@
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ImprimirDocumentacion.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ListadoExpedientes.aspx" />
+    <Content Include="Forms\Solicitudes\PreciosDeMercado_Listado.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx" />
@@ -1235,6 +1236,7 @@
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ActualizarSolicitud.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Analisis.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ListadoExpedientes.js" />
+    <Content Include="Scripts\app\solicitudes\PreciosDeMercado_Listado.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Mantenimiento.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_NoAsignadas.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ListadoGarantias.js" />
@@ -1871,6 +1873,13 @@
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListadoExpedientes.aspx.designer.cs">
       <DependentUpon>SolicitudesCredito_ListadoExpedientes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\PreciosDeMercado_Listado.aspx.cs">
+      <DependentUpon>PreciosDeMercado_Listado.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\PreciosDeMercado_Listado.aspx.designer.cs">
+      <DependentUpon>PreciosDeMercado_Listado.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx.cs">
       <DependentUpon>SolicitudesCredito_ListadoGarantias.aspx</DependentUpon>
