@@ -115,10 +115,11 @@
                         <table id="datatable-listado-devaluacion" class="table-bordered nowrap display compact table-sm table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
-                                    <th>Acciones</th>
-                                    <th>Marca</th>
-                                    <th>Modelo</th>
-                                    <th>Version</th>
+                                    <th><span class="mr-3">Marca</span></th>
+                                    <th><span class="mr-3">Modelo</span></th>
+                                    <th><span class="mr-3">Version</span></th>
+                                    <th><span class="mr-3">Años disponibles</span></th>                                    
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>

@@ -127,10 +127,10 @@ $(document).ready(function () {
         columnDefs: [
             { targets: 'no-sort', orderable: false },
             { "width": "1%", "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] }
-        ]
+        ],
     });
 
-    /* Inicializar datable del listado de garantias sin solicitud */
+    /* Inicializar datable del listado modelos */
     dtListado_Historial_Devaluacion = $('#datatable-listado-devaluacion').DataTable({
         "pageLength": 15,
         "aaSorting": [],
@@ -147,6 +147,8 @@ $(document).ready(function () {
             },
             "dataSrc": function (json) {
                 var return_data = json.d;
+
+                console.log(return_data);
                 return return_data;
             }
         },
@@ -155,18 +157,55 @@ $(document).ready(function () {
             { "data": "Modelo" },
             { "data": "Version" },
             {
-                "data": "IdModelo", "className": "text-center details-control",
-                "render": function (value) {
+                "data": "Anios", "className": "text-center details-control", // DropDownList de años disponibles
+                "render": function (data, type, row) {
 
-                    return '<button type="button" class="btn btn-sm btn-secondary ml-1 mr-1"><i class="fas fa-chevron-down"></i> Años disponibles</button>';
+                    let aniosDisponibles = row["Anios"];
+
+                    let ddlTemplate = '<select class="form-control form-control-sm" id="ddlAnio_' + row["IdMarca"] + row["IdModelo"] + row["Version"] + '">';
+
+                    ddlTemplate += '<option value="0">Seleccionar</option>'
+
+                    for (var i = 0; i < aniosDisponibles.length; i++) {
+
+                        ddlTemplate += '<option value="' + aniosDisponibles[i].IdModeloAnio + '">' + aniosDisponibles[i].Anio + '</option>';
+                    }
+
+                    ddlTemplate += '</select>';
+
+                    return ddlTemplate;
+                }
+            },
+            {
+                "data": "IdModelo", "className": "text-center details-control", // Boton de ver historial de precios
+                "render": function (data, type, row) {
+
+                    return '<button type="button" id="btnVerHistorialDePrecios_' + row["IdMarca"] + row["IdModelo"] + row["Version"] + '" class="btn btn-sm btn-secondary ml-1 mr-1"><i class="fas fa-history"></i> Historial de precios</button>';
                 }
             },
         ],
         columnDefs: [
-            { targets: [0], orderable: false },
-            { "width": "1%", "targets": [3] }
-        ]
+            { targets: [3,4], orderable: false },
+            { "width": "10%", "targets": [3, 4] }
+        ],
+        initComplete: function () {
+            this.api().columns([0,1,2]).every(function () {
+                var column = this;
+                var select = $('<select class=""><option value="">Todos</option></select>')
+                    .appendTo($(column.header()))
+                    .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column.search(val ? '^' + val + '$' : '', true, false).draw();
+                    });
+                column.data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
+        },
     });
+
 
     /* Buscador de los datatables */
     $('#txtDatatableFilter').keyup(function () {
@@ -213,6 +252,113 @@ function MensajeExito(mensaje) {
     });
 }
 
+/* Mostrar historial de precios de un registro */
+$('#datatable-listado-devaluacion tbody').on('click', 'tr td:last-child', function () {
+
+    let tr = $(this).closest("tr");
+    let row = dtListado_Historial_Devaluacion.row(tr); // obtener fila clickada por el usuario
+    let dataRow = row.data(); // obtener data de la fila
+
+    if (dataRow == undefined) {
+        return false;
+    }
+
+    $(".lblMarca").text(dataRow.Marca);
+    $(".lblModelo").text(dataRow.Modelo);
+    $(".lblVersion").text(dataRow.Version);
+
+    let ddlAnioSeleccionado = $('#ddlAnio_' + dataRow.IdMarca + dataRow.IdModelo + dataRow.Version + ' :selected');
+
+    let idModeloAnioSeleccionado = parseInt(ddlAnioSeleccionado.val());
+
+    if (idModeloAnioSeleccionado > 0 && idModeloAnioSeleccionado != undefined && idModeloAnioSeleccionado != null && idModeloAnioSeleccionado != '') {
+
+        $(".lblAnio").text(ddlAnioSeleccionado.text());
+
+        var anioModelo = dataRow.Anios.find(x => {
+            return x.IdModeloAnio === idModeloAnioSeleccionado
+        });
+
+        MostrarHistorialDePreciosEnModal(anioModelo.HistorialDevaluaciones);
+    }
+    else {
+        MensajeAdvertencia(idModeloAnioSeleccionado == 0 ? 'Primero debes seleccionar un año' : 'Año inválido');
+
+        $('#ddlAnio_' + dataRow.IdMarca + dataRow.IdModelo + dataRow.Version).focus();
+    }
+});
+
+function MostrarHistorialDePreciosEnModal(historialPrecios) {
+
+    $('#tblHistorialDePrecios').DataTable({
+        destroy: true,
+        data: historialPrecios,
+        language: languageDatatable,
+        columns: [
+            {
+                "data": "FechaInicio", "className": "text-center",
+                render: function (value) {
+                    return value != '/Date(-2208967200000)/' ? moment(value).locale('es').format('YYYY/MM/DD') : '';
+                }
+            },
+            {
+                "data": "FechaFin", "className": "text-center",
+                "render": function (data, type, row) {
+                    return row["FechaFin"] != '/Date(-2208967200000)/' ? moment(row["FechaFin"]).locale('es').format('YYYY/MM/DD') : row["FechaInicio"] != '/Date(-2208967200000)/' ? '<span class="badge badge-info p-1">Precio actual</span>' : '';
+                }
+            },
+            {
+                "data": "PrecioDeMercado", "className": "text-right",
+                render: function (value) {
+                    return 'L. ' + ConvertirADecimal(value);
+                }
+            },
+            {
+                "data": "UltimaDevaluacion", "className": "text-right",
+                "render": function (data, type, row) {
+                    return 'L. ' + ConvertirADecimal(row["UltimaDevaluacion"]);
+                }
+            },
+            {
+                "data": "UltimaDevaluacion", "className": "text-center",
+                "render": function (data, type, row) {
+                    return ((row["UltimaDevaluacion"] * 100) / row["PrecioDeMercado"]).toFixed(2) + '%';
+                }
+            },
+        ],
+    });
+
+    $("#modalHistorialDePrecios").modal();
+
+}
+
+function MensajeError(mensaje) {
+    iziToast.error({
+        title: 'Error',
+        message: mensaje
+    });
+}
+
+function MensajeAdvertencia(mensaje) {
+    iziToast.warning({
+        title: 'Atención',
+        message: mensaje
+    });
+}
+
+function ConvertirADecimal(nStr) {
+
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+
 /* Definir el tab que está mirando el usuario */
 $("#tab_listado_precios_de_mercado_link").on("click", function () {
     tabActivo = 'tab_listado_precios_de_mercado';
@@ -236,136 +382,3 @@ $('.table-responsive').on('hide.bs.dropdown', function () {
 jQuery("#date-range").datepicker({
     toggleActive: true
 });
-
-function ConvertirADecimal(nStr) {
-
-    nStr += '';
-    x = nStr.split('.');
-    x1 = x[0];
-    x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
-}
-
-
-// Para mostrar detalles en el datatables de devaluaciones // esto debe ir debajo de la inicializacion del datatable
-
-$('#datatable-listado-devaluacion tbody').on('click', 'tr td:last-child', function () {
-
-    let tr = $(this).closest("tr");
-    let row = dtListado_Historial_Devaluacion.row(tr); // obtener fila clickada por el usuario
-    let dataRow = row.data(); // obtener data de la fila
-
-    
-
-    if (row.child.isShown()) {
-
-        // This row is already open - close it
-        row.child.hide();
-        tr.removeClass('row-selected');
-    }
-    else if (dataRow != undefined) {
-
-        if (dtListado_Historial_Devaluacion.row('.shown').length) {
-            $('.details-control', dtListado_Historial_Devaluacion.row('.shown').node()).click();
-        }
-
-        $(".lblMarca").text(dataRow.Marca);
-        $(".lblModelo").text(dataRow.Modelo);
-        $(".lblVersion").text(dataRow.Version);
-
-        tr.addClass('row-selected');
-
-        let idTableDetailsAniosDisponibles = 'tblAniosDisponibles_' + dataRow.IdMarca + dataRow.IdModelo + dataRow.Version;
-
-        let table = DrawDataTable_AniosDisponibles(idTableDetailsAniosDisponibles) // dibujar tabla de historial
-
-        row.child(table).show();
-        row.child().addClass("row-selected");
-
-        tblAnios = $('#' + idTableDetailsAniosDisponibles).DataTable({
-            dom: "rt<'row'<'col-sm-4'><'col-sm-8'>>",
-            data: dataRow.Anios,
-            language: languageDatatable,
-            columns: [
-                { "data": "Anio", "className": 'text-center' },
-                {
-                    "data": "IdModeloAnio", "className": "text-center",
-                    "render": function (data, type, row) {
-                        return '<button type="button" id="btnVerHistorialDePrecios_' + row["IdModeloAnio"] + '" class="btn btn-sm btn-secondary ml-1 mr-1"><i class="fas fa-history"></i> Historial de precios</button>';
-                    }
-                },
-            ],
-        }).on('click', 'tr td:last-child', function () {
-
-            let rowAnio = tblAnios.row($(this).closest("tr")); // obtener fila clickada por el usuario
-            let rowAnioData = rowAnio.data();
-            let historialMantenimiento = rowAnioData.HistorialDevaluaciones;
-
-            $(".lblAnio").text(rowAnioData.Anio);
-
-            $('#tblHistorialDePrecios').DataTable({
-                destroy: true,
-                data: historialMantenimiento,
-                language: languageDatatable,
-                columns: [
-                    {
-                        "data": "FechaInicio", "className": "text-center",
-                        render: function (value) {
-                            return value != '/Date(-2208967200000)/' ? moment(value).locale('es').format('YYYY/MM/DD') : '';
-                        }
-                    },
-                    {
-                        "data": "FechaFin", "className": "text-center",
-                        "render": function (data, type, row) {
-                            return row["FechaFin"] != '/Date(-2208967200000)/' ? moment(row["FechaFin"]).locale('es').format('YYYY/MM/DD') : row["FechaInicio"] != '/Date(-2208967200000)/' ? '<span class="badge badge-info p-1">Precio actual</span>' : '';
-                        }
-                    },
-                    {
-                        "data": "PrecioDeMercado", "className": "text-right",
-                        render: function (value) {
-                            return 'L. ' + ConvertirADecimal(value);
-                        }
-                    },
-                    {
-                        "data": "UltimaDevaluacion", "className": "text-right",
-                        "render": function (data, type, row) {
-                            return 'L. ' + ConvertirADecimal(row["UltimaDevaluacion"]);
-                        }
-                    },
-                    {
-                        "data": "UltimaDevaluacion", "className": "text-center",
-                        "render": function (data, type, row) {
-                            return ((row["UltimaDevaluacion"] * 100) / row["PrecioDeMercado"]).toFixed(2) + '%';
-                        }
-                    },
-                ],
-            });
-
-            $("#modalHistorialDePrecios").modal();
-        });
-    }
-});
-
-function DrawDataTable_AniosDisponibles(idDataTable) {
-
-    return `<div class="">
-                <div>
-                    <div class="table-responsive">
-                        <table class="table-bordered display compact nowrap table-sm table-hover dataTable bg-white" class="tblAniosDisponibles" id="${idDataTable}" style="width: 20%">
-                            <thead>
-                                <tr class="text-center">
-                                    <th>Año</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-`;
-}
