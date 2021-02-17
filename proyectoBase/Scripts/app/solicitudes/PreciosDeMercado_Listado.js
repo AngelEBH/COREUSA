@@ -1,6 +1,32 @@
 ﻿/* Para realizar filtros en ambas listas*/
 var filtroActual = '';
 var tabActivo = 'tab_listado_precios_de_mercado';
+var languageDatatable = {
+    "sProcessing": "Cargando información...",
+    "sLengthMenu": "Mostrar _MENU_ registros",
+    "sZeroRecords": "No se encontraron resultados",
+    "sEmptyTable": "Ningún dato disponible en esta tabla",
+    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+    "sInfoPostFix": "",
+    "sSearch": "Buscar:",
+    "sUrl": "",
+    "sInfoThousands": ",",
+    "sLoadingRecords": "Cargando información...",
+    "oPaginate": {
+        "sFirst": "Primero",
+        "sLast": "Último",
+        "sNext": "Siguiente",
+        "sPrevious": "Anterior"
+    },
+    "oAria": {
+        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    },
+    "decimal": ".",
+    "thousands": ","
+}
 
 $(document).ready(function () {
 
@@ -10,32 +36,7 @@ $(document).ready(function () {
         "dom": "<'row'<'col-sm-12'B>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-        "language": {
-            "sProcessing": "Cargando información...",
-            "sLengthMenu": "Mostrar _MENU_ registros",
-            "sZeroRecords": "No se encontraron resultados",
-            "sEmptyTable": "Ningún dato disponible en esta tabla",
-            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix": "",
-            "sSearch": "Buscar:",
-            "sUrl": "",
-            "sInfoThousands": ",",
-            "sLoadingRecords": "Cargando información...",
-            "oPaginate": {
-                "sFirst": "Primero",
-                "sLast": "Último",
-                "sNext": "Siguiente",
-                "sPrevious": "Anterior"
-            },
-            "oAria": {
-                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-            },
-            "decimal": ".",
-            "thousands": ","
-        },
+        "language": languageDatatable,
         "ajax": {
             type: "POST",
             url: "PreciosDeMercado_Listado.aspx/CargarListaPreciosDeMercado",
@@ -136,32 +137,7 @@ $(document).ready(function () {
         "dom": "<'row'<'col-sm-12'>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-        "language": {
-            "sProcessing": "Cargando información...",
-            "sLengthMenu": "Mostrar _MENU_ registros",
-            "sZeroRecords": "No se encontraron resultados",
-            "sEmptyTable": "Ningún dato disponible en esta tabla",
-            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix": "",
-            "sSearch": "Buscar:",
-            "sUrl": "",
-            "sInfoThousands": ",",
-            "sLoadingRecords": "Cargando información...",
-            "oPaginate": {
-                "sFirst": "Primero",
-                "sLast": "Último",
-                "sNext": "Siguiente",
-                "sPrevious": "Anterior"
-            },
-            "oAria": {
-                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-            },
-            "decimal": ".",
-            "thousands": ","
-        },
+        "language": languageDatatable,
         "ajax": {
             type: "POST",
             url: "PreciosDeMercado_Listado.aspx/CargarHistorialDevaluacionPorModelo",
@@ -171,31 +147,24 @@ $(document).ready(function () {
             },
             "dataSrc": function (json) {
                 var return_data = json.d;
-
-                console.log(return_data);
                 return return_data;
             }
         },
         "columns": [
-            {
-                "data": "IdModelo", "className": "text-center",
-                "render": function (value) {
-
-                    return '<div class="dropdown mo-mb-2">' +
-                        '<button class="btn pt-1 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>' +
-                        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
-                        '<button type="button" class="dropdown-item" id="btnDetalles_SinSolicitud" data-toggle="modal" data-target="#modalDetallesGarantia_SinSolicitud"><i class="fas fa-tasks"></i> Detalles</button>' +
-                        '<button type="button" class="dropdown-item" id="btnActualizar_SinSolicitud" data-toggle="modal" data-target="#modalActualizarGarantia_SinSolicitud"><i class="far fa-edit"></i> Actualizar</button>' +
-                        '</div>' +
-                        '</div >';
-                }
-            },
             { "data": "Marca" },
             { "data": "Modelo" },
             { "data": "Version" },
+            {
+                "data": "IdModelo", "className": "text-center details-control",
+                "render": function (value) {
+
+                    return '<button type="button" class="btn btn-sm btn-secondary ml-1 mr-1"><i class="fas fa-chevron-down"></i> Años disponibles</button>';
+                }
+            },
         ],
         columnDefs: [
-            { targets: [0], orderable: false }
+            { targets: [0], orderable: false },
+            { "width": "1%", "targets": [3] }
         ]
     });
 
@@ -282,12 +251,15 @@ function ConvertirADecimal(nStr) {
 }
 
 
-// Para mostrar detalles en el datatables de devaluaciones
+// Para mostrar detalles en el datatables de devaluaciones // esto debe ir debajo de la inicializacion del datatable
 
-$('#datatable-listado-devaluacion tbody').on('click', 'tr td:not(:first-child)', function () {
+$('#datatable-listado-devaluacion tbody').on('click', 'tr td:last-child', function () {
 
     let tr = $(this).closest("tr");
-    let row = dtListado_Historial_Devaluacion.row(tr);
+    let row = dtListado_Historial_Devaluacion.row(tr); // obtener fila clickada por el usuario
+    let dataRow = row.data(); // obtener data de la fila
+
+    
 
     if (row.child.isShown()) {
 
@@ -295,65 +267,99 @@ $('#datatable-listado-devaluacion tbody').on('click', 'tr td:not(:first-child)',
         row.child.hide();
         tr.removeClass('row-selected');
     }
-    else {
+    else if (dataRow != undefined) {
 
-        let dataUser = row.data();
+        if (dtListado_Historial_Devaluacion.row('.shown').length) {
+            $('.details-control', dtListado_Historial_Devaluacion.row('.shown').node()).click();
+        }
+
+        $(".lblMarca").text(dataRow.Marca);
+        $(".lblModelo").text(dataRow.Modelo);
+        $(".lblVersion").text(dataRow.Version);
+
         tr.addClass('row-selected');
 
-        let table = DrawDataTable_Anios(TipoTabla + dataUser.fiIDUsuario)
+        let idTableDetailsAniosDisponibles = 'tblAniosDisponibles_' + dataRow.IdMarca + dataRow.IdModelo + dataRow.Version;
+
+        let table = DrawDataTable_AniosDisponibles(idTableDetailsAniosDisponibles) // dibujar tabla de historial
 
         row.child(table).show();
         row.child().addClass("row-selected");
-        $.ajax({
-            url: UrlPage + '/LoadDataAvancePorCartera',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ ID: dataUser.fiIDUsuario, CrypData: window.location.href, TipoTablaRecuperacion: TipoTabla }),
-            dataType: "json",
-            type: 'post',
 
-            success: function (data) {
+        tblAnios = $('#' + idTableDetailsAniosDisponibles).DataTable({
+            dom: "rt<'row'<'col-sm-4'><'col-sm-8'>>",
+            data: dataRow.Anios,
+            language: languageDatatable,
+            columns: [
+                { "data": "Anio", "className": 'text-center' },
+                {
+                    "data": "IdModeloAnio", "className": "text-center",
+                    "render": function (data, type, row) {
+                        return '<button type="button" id="btnVerHistorialDePrecios_' + row["IdModeloAnio"] + '" class="btn btn-sm btn-secondary ml-1 mr-1"><i class="fas fa-history"></i> Historial de precios</button>';
+                    }
+                },
+            ],
+        }).on('click', 'tr td:last-child', function () {
 
-                $('#TableCartera-' + TipoTabla + dataUser.fiIDUsuario).DataTable({
-                    dom: "rt<'row'<'col-sm-4'><'col-sm-8'>>",
-                    data: data.d,
-                    columns: RenderColumnsDataTable_Recuperacion(false)
-                });
+            let rowAnio = tblAnios.row($(this).closest("tr")); // obtener fila clickada por el usuario
+            let rowAnioData = rowAnio.data();
+            let historialMantenimiento = rowAnioData.HistorialDevaluaciones;
 
-            },
-            error: function (data) {
-                console.log(data);
-            },
+            $(".lblAnio").text(rowAnioData.Anio);
+
+            $('#tblHistorialDePrecios').DataTable({
+                destroy: true,
+                data: historialMantenimiento,
+                language: languageDatatable,
+                columns: [
+                    {
+                        "data": "FechaInicio", "className": "text-center",
+                        render: function (value) {
+                            return value != '/Date(-2208967200000)/' ? moment(value).locale('es').format('YYYY/MM/DD') : '';
+                        }
+                    },
+                    {
+                        "data": "FechaFin", "className": "text-center",
+                        "render": function (data, type, row) {
+                            return row["FechaFin"] != '/Date(-2208967200000)/' ? moment(row["FechaFin"]).locale('es').format('YYYY/MM/DD') : row["FechaInicio"] != '/Date(-2208967200000)/' ? '<span class="badge badge-info p-1">Precio actual</span>' : '';
+                        }
+                    },
+                    {
+                        "data": "PrecioDeMercado", "className": "text-right",
+                        render: function (value) {
+                            return 'L. ' + ConvertirADecimal(value);
+                        }
+                    },
+                    {
+                        "data": "UltimaDevaluacion", "className": "text-right",
+                        "render": function (data, type, row) {
+                            return 'L. ' + ConvertirADecimal(row["UltimaDevaluacion"]);
+                        }
+                    },
+                    {
+                        "data": "UltimaDevaluacion", "className": "text-center",
+                        "render": function (data, type, row) {
+                            return ((row["UltimaDevaluacion"] * 100) / row["PrecioDeMercado"]).toFixed(2) + '%';
+                        }
+                    },
+                ],
+            });
+
+            $("#modalHistorialDePrecios").modal();
         });
     }
 });
 
-function DrawDataTable_Anios(IdUsuario) {
-
+function DrawDataTable_AniosDisponibles(idDataTable) {
 
     return `<div class="">
                 <div>
                     <div class="table-responsive">
-                        <table class="table-bordered display compact nowrap table-condensed table-hover bg-white" id="TableCartera-${IdUsuario}" style="width: 100%">
+                        <table class="table-bordered display compact nowrap table-sm table-hover dataTable bg-white" class="tblAniosDisponibles" id="${idDataTable}" style="width: 20%">
                             <thead>
                                 <tr class="text-center">
-                                    <th rowspan="2"></th>
-                                    <th rowspan="2" >Nombre</th>
-                                    <th colspan="2" >RECUPERACION</th>
-                                    <th colspan="4" >CUOTA</th>
-                                    <th colspan="2" >REQUERIDO</th>
-                                    <th colspan="2" >PROYECCION</th>
-                                </tr>
-                                <tr>
-                                    <th>HOY</th>
-                                    <th>Acumulada</th>
-                                    <th>Diaria</th>
-                                    <th>Acumulada</th>
-                                    <th>Global</th>
-                                    <th>% Cobr</th>
-                                    <th>Global</th>
-                                    <th>% Efic</th>
-                                    <th>Total</th>
-                                    <th> %</th>
+                                    <th>Año</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -362,115 +368,4 @@ function DrawDataTable_Anios(IdUsuario) {
                 </div>
             </div>
 `;
-}
-
-function RenderColumnsDataTable_Recuperacion(Hasbottom, IsAdmin, UrlPage) {
-
-    let columnsData = [
-        {
-            "data": null,
-            visible: Hasbottom,
-            // className: "details-Agent",
-            "render": function (data) {
-                if (data.fiIDUsuario <= 0) return "";
-
-                //var urlDetalle = IsAdmin ? `${UrlPage}/AbrirDetallesupervisor` : `${UrlPage}/AbrirDetalleAgente`;
-                //var urlPageToSend = IsAdmin ? "DetailSupervisor.aspx?" : "DetailAgent.aspx?";
-
-                //var  btnDetalles = `<button type="button" onclick="ViewAgentDetails(${data.fiIDUsuario},'${urlDetalle}', '${urlPageToSend}')" class="btn btn-sm btn-success mr-1"><i class="fa fa-user"></i></button>`;
-                //btnDetalles += IsAdmin? '<button type="button" onclick="ViewSupervisorAgents(' + data.fiIDUsuario + ')" class="btn btn-sm btn-primary"><i class="fa fa-list"></i></button>':"";
-
-                var urlDetalleAgente = `${UrlPage}/AbrirDetalleAgente`;
-                var urlPageToSend = "DetailAgent.aspx?";
-
-                var btnDetalles = IsAdmin ? '<button type="button" onclick="ViewSupervisorAgents(' + data.fiIDUsuario + ')" class="btn btn-sm btn-primary"><i class="fa fa-list"></i></button>' : `<button type="button" onclick="ViewAgentDetails(${data.fiIDUsuario},'${urlDetalleAgente}', '${urlPageToSend}')" class="btn btn-sm btn-success mr-1"><i class="fa fa-user"></i></button>`;
-
-                return btnDetalles;
-            }
-        },
-        { "data": "fcNombreCorto" },
-        {
-            data: null,
-            className: 'text-right',
-            render: function (data) {
-                return ConvertirDecimal(data.fnRecuperado_Hoy);
-            }
-        },
-        {
-            data: null,
-            className: 'text-right',
-            render: function (data) {
-                return ConvertirDecimal(data.fnRecuperado_Acumulado);
-            }
-        },
-
-        {
-            data: null,
-            className: 'text-right',
-            render: function (data) {
-                return ConvertirDecimal(data.fnCuota_Hoy);
-            }
-        },
-        {
-            data: null,
-            className: 'text-right',
-            render: function (data) {
-                return ConvertirDecimal(data.fnCuota_Acumulado);
-            }
-        },
-        {
-            data: null,
-            className: 'text-right',
-            render: function (data) {
-                return ConvertirDecimal(data.fnCuota_Global);
-            }
-        },
-        {
-            data: null,
-            className: 'text-right',
-            render: function (data) {
-                var className = data.fnPorcentajeCobranza < 80 ? "text-danger" : "text-success";
-                return `<span class="${className} text-bold">${ConvertirDecimal(data.fnPorcentajeCobranza)} %</span>`;
-            }
-        },
-        {
-            data: null,
-            className: 'text-right',
-            render: function (data) {
-                return ConvertirDecimal(data.fnRequerido_Global);
-            }
-        },
-
-
-        {
-            data: null,
-            className: 'text-right',
-            render: function (data) {
-                var className = data.fnPorcentajeEficiencia < 80 ? "text-danger" : "text-success";
-                return `<span class="${className} text-bold">${ConvertirDecimal(data.fnPorcentajeEficiencia)} %</span>`;
-
-            }
-        },
-
-
-        {
-            data: null,
-            className: 'text-right',
-            render: function (data) {
-                return ConvertirDecimal(data.fnProyeccion);
-            }
-        },
-        {
-            data: null,
-            className: 'text-right',
-            render: function (data) {
-                var className = data.fnPorcentajeProyeccion < 80 ? "text-danger" : "text-success";
-                return `<span class="${className} text-bold">${ConvertirDecimal(data.fnPorcentajeProyeccion)} %</span>`;
-
-
-            }
-        },
-    ];
-
-    return columnsData;
 }

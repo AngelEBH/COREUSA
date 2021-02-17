@@ -18,7 +18,6 @@
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
-    <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <link href="/Content/css/bootstrap4-modal-fullscreen.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
@@ -79,10 +78,10 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#tab_listado_devaluacion" id="tab_listado_devaluacion_link" role="tab" aria-selected="false">
-                        <span class="d-block d-sm-none">Devaluación
+                        <span class="d-block d-sm-none">Historial
                             <br />
                             de precios</span>
-                        <span class="d-none d-sm-block">Devaluación de precios de mercado</span>
+                        <span class="d-none d-sm-block">Historial de precios de mercado</span>
                     </a>
                 </li>
             </ul>
@@ -90,7 +89,7 @@
             <div class="tab-content" id="tabContent">
                 <div class="tab-pane active" id="tab_listado_precios_de_mercado" role="tabpanel">
                     <div class="table-responsive mt-2">
-                        <table id="datatable-listado-precios-de-mercado" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                        <table id="datatable-listado-precios-de-mercado" class="table-bordered display compact nowrap table-sm table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
                                     <th class="no-sort">Acciones</th>
@@ -113,7 +112,7 @@
                 <!-- Listado garantías sin solicitudes -->
                 <div class="tab-pane" id="tab_listado_devaluacion" role="tabpanel">
                     <div class="table-responsive mt-2">
-                        <table id="datatable-listado-devaluacion" class="table-bordered nowrap display compact table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                        <table id="datatable-listado-devaluacion" class="table-bordered nowrap display compact table-sm table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
                                     <th>Acciones</th>
@@ -126,6 +125,53 @@
                             <tfoot></tfoot>
                         </table>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal de documentos de la garantía -->
+    <div id="modalHistorialDePrecios" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalHistorialDePreciosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header pb-2">
+                    <div class="form-group row mb-0">
+                        <div class="col-12">
+                            <h6 class="m-0" id="modalHistorialDePreciosLabel">Historial de precios</h6>
+                        </div>
+                        <div class="col-12 text-muted">
+                            <span class="lblMarca"></span>
+                            <span class="lblModelo"></span>
+                            <span class="lblVersion"></span>
+                            <span class="lblAnio"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-0">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table id="tblHistorialDePrecios" class="table-bordered display compact nowrap table-sm table-hover dataTable" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <td>Fecha de inicio</td>
+                                            <td>Fecha de fin</td>
+                                            <td>Precio de mercado</td>
+                                            <td>Última devaluación</td>
+                                            <td>Porcentaje de devaluación</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        Cerrar
+                    </button>
                 </div>
             </div>
         </div>

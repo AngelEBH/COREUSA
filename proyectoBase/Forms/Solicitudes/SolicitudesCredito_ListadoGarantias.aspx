@@ -18,7 +18,6 @@
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
-    <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <link href="/CSS/Content/css/bootstrap4-modal-fullscreen.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
@@ -146,7 +145,7 @@
                 <!-- Listado de solicitudes aprobadas que requieren garantías -->
                 <div class="tab-pane active" id="tab_Listado_Solicitudes_Garantias" role="tabpanel">
                     <div class="table-responsive mt-2">
-                        <table id="datatable-principal-garantias" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                        <table id="datatable-principal-garantias" class="table-bordered display compact nowrap table-sm table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
                                     <th class="no-sort">Acciones</th>
@@ -172,7 +171,7 @@
                 <!-- Listado garantías sin solicitudes -->
                 <div class="tab-pane" id="tab_Listado_Garantias_SinSolicitud" role="tabpanel">
                     <div class="table-responsive mt-2">
-                        <table id="datatable-garantiasSinSolicutd" class="table-bordered nowrap display compact table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                        <table id="datatable-garantiasSinSolicutd" class="table-bordered nowrap display compact table-sm table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
                                     <th>Acciones</th>
