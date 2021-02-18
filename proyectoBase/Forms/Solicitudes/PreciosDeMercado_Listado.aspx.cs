@@ -64,7 +64,7 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDPreciosDeMercado_ListarPreciosDeMercado", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDPreciosDeMercado_ListarPreciosDeMercadoActuales", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);

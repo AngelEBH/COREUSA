@@ -118,7 +118,7 @@
                                     <th><span class="mr-3">Marca</span></th>
                                     <th><span class="mr-3">Modelo</span></th>
                                     <th><span class="mr-3">Version</span></th>
-                                    <th><span class="mr-3">Años disponibles</span></th>                                    
+                                    <th><span class="mr-3">Años disponibles</span></th>
                                     <th></th>
                                 </tr>
                             </thead>

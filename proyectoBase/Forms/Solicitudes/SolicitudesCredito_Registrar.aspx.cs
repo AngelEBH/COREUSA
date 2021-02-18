@@ -2359,7 +2359,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public string TipoPlazo { get; set; }
         public decimal Cuota { get; set; }
     }
-    
+
     public class CalculoPrestamo_ViewModel
     {
         public int IdOrden { get; set; }
