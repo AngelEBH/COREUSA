@@ -6,6 +6,8 @@ var identidad = "";
 var idSolicitud = 0;
 var filtroActual = "";
 
+// columnas: Valor del vehiculo, valor de la prima y el valor a financiar y la tasa de interes, seguro y GPS, la marca modelo año del carro
+
 $(document).ready(function () {
 
     dtBandeja = $('#datatable-bandeja').DataTable({
@@ -352,7 +354,7 @@ $(document).ready(function () {
                 success: function (data) {
 
                     //if (data.d == true) {
-                    $("#modalAbrirSolicitud").modal({ backdrop: !1 });
+                    $("#modalAbrirSolicitud").modal({ backdrop: false });
                     idSolicitud = idSolicitud;
                     identidad = row.IdentidadCliente;
                     //}
@@ -362,7 +364,7 @@ $(document).ready(function () {
         else {
             idSolicitud = idSolicitud;
             identidad = row.IdentidadCliente;
-            $("#modalAbrirSolicitud").modal({ backdrop: !1 });
+            $("#modalAbrirSolicitud").modal({ backdrop: false });
         }
     });
 

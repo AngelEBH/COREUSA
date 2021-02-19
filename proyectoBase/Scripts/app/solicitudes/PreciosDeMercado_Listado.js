@@ -153,6 +153,20 @@ $(document).ready(function () {
             }
         },
         "columns": [
+            //{
+            //    "data": "Marca", "className": "text-center",
+            //    "render": function (data, type, row) {
+
+            //        return '<div class="dropdown mo-mb-2">' +
+            //            '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button >' +
+            //            '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+            //            '<button type="button" class="dropdown-item" id="btnGuardar"><i class="fas fa-plus"></i> Agregar</button>' +
+            //            '<button type="button" class="dropdown-item" id="btnDetalles"><i class="fas fa-tasks"></i> Detalles</button>' +
+            //            '<button type="button" class="dropdown-item" id="btnActualizar"><i class="far fa-edit"></i> Actualizar</button>' +
+            //            '</div>' +
+            //            '</div >';
+            //    }
+            //},
             { "data": "Marca" },
             { "data": "Modelo" },
             { "data": "Version" },

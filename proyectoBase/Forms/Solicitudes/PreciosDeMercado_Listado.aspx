@@ -111,10 +111,16 @@
                 </div>
                 <!-- Listado garantías sin solicitudes -->
                 <div class="tab-pane" id="tab_listado_devaluacion" role="tabpanel">
+
+                    <div class="form-group mt-3 text-right">
+                        <button class="btn btn-info float-right">Nuevo</button>
+                    </div>
+
                     <div class="table-responsive mt-2">
                         <table id="datatable-listado-devaluacion" class="table-bordered nowrap display compact table-sm table-hover dataTable" style="width: 100%" role="grid">
                             <thead>
                                 <tr>
+                                    <%--<th><span class="mr-3">Acciones</span></th>--%>
                                     <th><span class="mr-3">Marca</span></th>
                                     <th><span class="mr-3">Modelo</span></th>
                                     <th><span class="mr-3">Version</span></th>
