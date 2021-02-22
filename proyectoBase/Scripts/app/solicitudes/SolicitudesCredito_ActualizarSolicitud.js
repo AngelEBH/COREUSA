@@ -887,8 +887,7 @@ $('#txtValorGlobal,#txtValorPrima,#txtPlazoSeleccionado,#ddlTipoGastosDeCierre,#
 
     var valorGlobal = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
     var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
-    var plazo = parseInt($("#txtPlazoSeleccionado").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazoSeleccionado").val().replace(/,/g, ''));
-    var valorFinanciar = valorGlobal - valorPrima;
+    var plazo = parseInt($("#txtPlazoSeleccionado").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazoSeleccionado").val().replace(/,/g, ''));    
 
     if (valorGlobal > 0 && plazo > 0) {
         CalculoPrestamo(valorGlobal.toString(), valorPrima.toString(), plazo.toString());
@@ -936,8 +935,8 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
                 data: JSON.stringify(
                     {
                         idProducto: PRECALIFICADO.IdProducto,
-                        valorGlobal: valorGlobal,
-                        valorPrima: valorPrima,
+                        valorVehiculo: valorGlobal,
+                        valorPrimaOEmpenio: valorPrima,
                         plazo: plazo,
                         scorePromedio: PRECALIFICADO.ScorePromedio,
                         tipoSeguro: lcSeguro,

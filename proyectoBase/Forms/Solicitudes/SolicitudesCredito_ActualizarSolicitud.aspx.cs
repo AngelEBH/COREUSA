@@ -724,7 +724,6 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             Precalificado.IdProducto = int.Parse(sqlResultado["fiIDProducto"].ToString());
                             Precalificado.Producto = sqlResultado["fcProducto"].ToString();
                             Precalificado.ScorePromedio = sqlResultado["fiScorePromedio"].ToString();
-                            Precalificado.ScorePromedio = "634";
                         }
                     }
                 } // using sp consulta ejecutivos
@@ -1672,7 +1671,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel CalculoPrestamoVehiculo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string scorePromedio, int tipoSeguro, int tipoGps, int gastosDeCierreFinanciados, string dataCrypt)
+    public static SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel CalculoPrestamoVehiculo(int idProducto, decimal valorVehiculo, decimal valorPrimaOEmpenio, int plazo, string scorePromedio, int tipoSeguro, int tipoGps, int gastosDeCierreFinanciados, string dataCrypt)
     {
         var calculo = new SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel();
         try
@@ -1687,15 +1686,15 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                 using (var sqlComando = new SqlCommand("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
                 {
-                    var montoPrestamo = (idProducto == 203) ? valorPrima : valorGlobal - valorPrima;
-                    valorPrima = (idProducto == 203) ? valorGlobal - valorPrima : valorPrima;
+                    valorPrimaOEmpenio = (idProducto == 203) ? valorVehiculo - valorPrimaOEmpenio : valorPrimaOEmpenio;
+                    var montoPrestamo = (idProducto == 203) ? valorVehiculo - valorPrimaOEmpenio : valorVehiculo - valorPrimaOEmpenio;
 
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
                     sqlComando.Parameters.AddWithValue("@pnMontoaPrestamo", montoPrestamo);
-                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrimaOEmpenio);
                     sqlComando.Parameters.AddWithValue("@piScorePromedio", scorePromedio);
                     sqlComando.Parameters.AddWithValue("@piTipodeSeguro", tipoSeguro);
                     sqlComando.Parameters.AddWithValue("@piTipodeGPS", tipoGps);
