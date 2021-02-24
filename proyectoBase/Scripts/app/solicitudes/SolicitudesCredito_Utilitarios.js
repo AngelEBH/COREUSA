@@ -522,7 +522,7 @@ function MostrarHistorialDePreciosEnModal(historialPrecios) {
     /* Definir el tab que está mirando el usuario */
     $("#tab_listado_precios_de_mercado_link").on("click", function () {
         tabActivo = 'tab_listado_precios_de_mercado';
-    });
+    }); 
 
     /* Definir el tab que está mirando el usuario */
     $("#tab_listado_devaluacion_link").on("click", function () {

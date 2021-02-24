@@ -125,7 +125,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             }
 
                             var fechaOtorgamiento = (DateTime)sqlResultado["fdTiempoTomaDecisionFinal"];
-                            var fechaVencimiento = "";
                             var oficialDeNegocios = sqlResultado["fcOficialDeNegocios"].ToString();
                             var oficialDeNegociosCentroDeCosto = sqlResultado["fcCentroDeCostoOFicialDeNegocios"].ToString();
                             var gestorDeCobros = sqlResultado["fcGestorDeCobros"].ToString();
