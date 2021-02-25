@@ -88,12 +88,12 @@ public partial class CFRM : System.Web.UI.Page
 
                         var idEstadoExpediente = (int)sqlResultado["fiIDEstadoExpediente"];
 
-                        if (idEstadoExpediente == 1)
+                        if (idEstadoExpediente == 2)
                         {
                             divCambiarEstadoExpediente.Visible = pcIDUsuario == "211";
                         }
 
-                        if (idEstadoExpediente == 5 || idEstadoExpediente == 6)
+                        if (idEstadoExpediente == 6 || idEstadoExpediente == 7)
                         {
                             divCambiarEstadoExpediente.Visible = pcIDUsuario == "89";
                         }
