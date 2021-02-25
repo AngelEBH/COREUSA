@@ -37,7 +37,6 @@ $('.lblMes_Firma').text(MES_FIRMA);
 $('.lblAnio_Firma').text(ANIO_FIRMA);
 
 
-
 $(".img-logo-empresa").attr('src', FONDOS_PRESTAMO.UrlLogo);
 $('.lblRazonSocial').text(FONDOS_PRESTAMO.RazonSocial);
 $('.lblNombreComercial').text(FONDOS_PRESTAMO.NombreComercial);
@@ -245,6 +244,146 @@ function ValidarEstadoDeDocumentosExpediente() {
             return false;
     }
     return true;
+}
+
+
+/***********************************************************************************************/
+/*************** VALIDAR SI HAY DOCUMENTOS PENDIENTES PARA ASEGURAR VEHICULO *******************/
+/***********************************************************************************************/
+function ValidarDocumentosParaAsegurarPendientes() {
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_ImprimirDocumentacion.aspx/DocumentosParaAsegurarPendientes",
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Ocurrió un error al validar los documentos para asegurar, contacte al administrador.');
+        },
+        success: function (data) {
+
+            var LenguajeEspanol = {
+                feedback: 'Arrastra y suelta los archivos aqui',
+                feedback2: 'Arrastra y suelta los archivos aqui',
+                drop: 'Arrastra y suelta los archivos aqui',
+                button: 'Buscar archivos',
+                confirm: 'Confirmar',
+                cancel: 'Cancelar'
+            }
+
+            var formatoInputFile = '<div class="form-group mb-0">' +
+                '<input type="file" class="filestyle" data-buttonname="btn-secondary" id="filestyle-0" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);"/>' +
+                '<div class="bootstrap-filestyle input-group">' +
+                '<input type="text" class="form-control " placeholder="" disabled=""/>' +
+                '<span class="group-span-filestyle input-group-append" tabindex="0">' +
+                '<label for="filestyle-0" class="btn btn-secondary">' +
+                '<span class="icon-span-filestyle fas fa-folder-open"></span>' +
+                '<span class="buttonText">Subir archivo</span>' +
+                '</label>' +
+                '</span>' +
+                '</div>' +
+                '</div>';
+
+            var divDocumentacion = $("#DivDocumentacion");
+
+            $.each(data.d, function (i, iter) {
+
+                var idInput = 'Documento' + iter.IdFotografia;
+
+                divDocumentacion.append(
+                    '<form action="SolicitudesCredito_ImprimirDocumentacion.aspx?type=upload&idfotografia=' + iter.IdFotografia + ' method="post" enctype="multipart/form-data">' +
+                    '<label class="mb-1 mt-2">' + iter.DescripcionFotografia + '</label>' +
+                    '<input type="file" class="filestyle" data-buttonname="btn-secondary" id="' + idInput + '" name="files" data-tipo="' + iter.IdFotografia + '"/>' +
+                    '</form>');
+
+                $('#' + idInput + '').fileuploader({
+                    inputNameBrackets: false,
+                    changeInput: formatoInputFile,
+                    theme: 'dragdrop',
+                    limit: 1, // Limite de archivos a subir
+                    maxSize: 200, // Peso máximo de todos los archivos seleccionado en megas (MB)
+                    fileMaxSize: 20, // Peso máximo de un archivo
+                    extensions: ['jpg', 'png', 'jpeg'],// Extensiones/formatos permitidos
+                    upload: {
+                        url: 'SolicitudesCredito_ImprimirDocumentacion.aspx?type=upload&idfotografia=' + iter.IdFotografia,
+                        data: null,
+                        type: 'POST',
+                        enctype: 'multipart/form-data',
+                        start: true,
+                        synchron: true,
+                        beforeSend: null,
+                        onSuccess: function (result, item) {
+                            var data = {};
+                            try {
+                                data = JSON.parse(result);
+                            } catch (e) {
+                                data.hasWarnings = true;
+                            }
+
+                            /* Validar exito */
+                            if (data.isSuccess && data.files[0]) {
+                                item.name = data.files[0].name;
+                                item.html.find('.column-title > div:first-child').text(data.files[0].name).attr('title', data.files[0].name);
+                            }
+
+                            /* Validar si se produjo un error */
+                            if (data.hasWarnings) {
+                                for (var warning in data.warnings) {
+                                    alert(data.warnings);
+                                }
+                                item.html.removeClass('upload-successful').addClass('upload-failed');
+                                return this.onError ? this.onError(item) : null;
+                            }
+
+                            item.html.find('.fileuploader-action-remove').addClass('fileuploader-action-success');
+                            setTimeout(function () {
+                                item.html.find('.progress-bar2').fadeOut(400);
+                            }, 400);
+                        },
+                        onError: function (item) {
+                            var progressBar = item.html.find('.progress-bar2');
+
+                            if (progressBar.length) {
+                                progressBar.find('span').html(0 + "%");
+                                progressBar.find('.fileuploader-progressbar .bar').width(0 + "%");
+                                item.html.find('.progress-bar2').fadeOut(400);
+                            }
+
+                            item.upload.status != 'cancelled' && item.html.find('.fileuploader-action-retry').length == 0 ? item.html.find('.column-actions').prepend(
+                                '<button type="button" class="fileuploader-action fileuploader-action-retry" title="Retry"><i class="fileuploader-icon-retry"></i></button>'
+                            ) : null;
+                        },
+                        onProgress: function (data, item) {
+                            var progressBar = item.html.find('.progress-bar2');
+
+                            if (progressBar.length > 0) {
+                                progressBar.show();
+                                progressBar.find('span').html(data.percentage + "%");
+                                progressBar.find('.fileuploader-progressbar .bar').width(data.percentage + "%");
+                            }
+                        },
+                        onComplete: null,
+                    },
+                    onRemove: function (item) {
+                        $.post('SolicitudesCredito_ImprimirDocumentacion.aspx?type=remove', { file: item.name });
+                    },
+                    dialogs: {
+                        alert: function (text) {
+                            return iziToast.warning({
+                                title: 'Atencion',
+                                message: text
+                            });
+                        },
+                        confirm: function (text, callback) {
+                            confirm(text) ? callback() : null;
+                        }
+                    },
+                    captions: $.extend(true, {}, $.fn.fileuploader.languages['es'], LenguajeEspanol)
+
+                }); /* Termina fileUploader*/
+
+            }); /* Termina .Each*/
+        }
+    }); /* Termina Ajax */
 }
 
 function EnviarCorreo(asunto, tituloGeneral, idContenidoHtml) {
