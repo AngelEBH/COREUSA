@@ -998,6 +998,7 @@
     <Content Include="Content\icons\typicons\typicons.ttf" />
     <Content Include="Content\icons\typicons\typicons.woff" />
     <Content Include="Imagenes\change_user_40px.png" />
+    <Content Include="Imagenes\check_list_40px.png" />
     <Content Include="Imagenes\Cotizador\image3.png" />
     <Content Include="Imagenes\crowd_40px.png" />
     <Content Include="Imagenes\delete_document_40px.png" />

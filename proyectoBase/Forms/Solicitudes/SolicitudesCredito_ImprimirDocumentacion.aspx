@@ -110,13 +110,15 @@
                                 <button type="button" id="btnPortadaExpediente" onclick="ExportToPDF('PORTADA_EXPEDIENTE','divContenedorPortadaExpediente','divPortadaExpedientePDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
                                     Portada Expediente
                                 </button>
-                                <button type="button" id="btnExpediente" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
-                                    Expediente
-                               
+                                <button type="button" id="btnExpediente" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/check_list_40px.png');">
+                                    CHECK LIST
                                 </button>
-                                <button type="button" id="btnEnviarCorreoAseguradora" data-toggle="modal" data-target="#modalEnviarInformacionAseguradora" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/vehicle_insurance_40px.png');">
+                                <button type="button" id="btnMemorandumExpediente" onclick="ExportToPDF('MEMORANDUM','divContenedorMemorandum','divMemorandumPDF')" runat="server" visible="false" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    Memorandum
+                                </button>
+                                <%--<button type="button" id="btnEnviarCorreoAseguradora" data-toggle="modal" data-target="#modalEnviarInformacionAseguradora" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/vehicle_insurance_40px.png');">
                                     Correo aseguradora
-                                </button>
+                                </button>--%>
                             </div>
                         </div>
                     </div>
@@ -1910,6 +1912,86 @@
         </div>
 
 
+        <div id="modalEnviarInformacionAseguradora" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalEnviarInformacionAseguradoraLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalEnviarInformacionAseguradoraLabel">Enviar información de seguro</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div id="divRequisitosPendientes">
+                            <h6 class="font-weight-bold">Documentos pendientes pendientes</h6>
+
+                            <div class="form-group mb-0">
+                                <label class="mb-1 mt-2">Licencia cara frontal</label>
+                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
+                                <div class="bootstrap-filestyle input-group">
+                                    <input type="text" class="form-control " placeholder="" disabled="" />
+                                    <span class="group-span-filestyle input-group-append" tabindex="0">
+                                        <label for="filestyle-0" class="btn btn-secondary">
+                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
+                                            <span class="buttonText">Subir archivo</span>
+                                        </label>
+                                    </span>
+                                </div>
+
+                                <label class="mb-1 mt-2">Licencia cara posterior</label>
+                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
+                                <div class="bootstrap-filestyle input-group">
+                                    <input type="text" class="form-control " placeholder="" disabled="" />
+                                    <span class="group-span-filestyle input-group-append" tabindex="0">
+                                        <label for="filestyle-0" class="btn btn-secondary">
+                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
+                                            <span class="buttonText">Subir archivo</span>
+                                        </label>
+                                    </span>
+                                </div>
+
+                                <label class="mb-1 mt-2">Informe de inspección continental cara frontal</label>
+                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
+                                <div class="bootstrap-filestyle input-group">
+                                    <input type="text" class="form-control " placeholder="" disabled="" />
+                                    <span class="group-span-filestyle input-group-append" tabindex="0">
+                                        <label for="filestyle-0" class="btn btn-secondary">
+                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
+                                            <span class="buttonText">Subir archivo</span>
+                                        </label>
+                                    </span>
+                                </div>
+
+                                <label class="mb-1 mt-2">Informe de inspección continental cara posterior</label>
+                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
+                                <div class="bootstrap-filestyle input-group">
+                                    <input type="text" class="form-control " placeholder="" disabled="" />
+                                    <span class="group-span-filestyle input-group-append" tabindex="0">
+                                        <label for="filestyle-0" class="btn btn-secondary">
+                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
+                                            <span class="buttonText">Subir archivo</span>
+                                        </label>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnEnviarInformacionAseguradora_Confirmar" class="btn btn-primary">
+                            Guardar y enviar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Portada del expediente -->
         <div id="divContenedorPortadaExpediente">
             <div class="card m-0" runat="server" visible="true" id="divPortadaExpedientePDF">
@@ -2029,88 +2111,6 @@
                 </div>
             </div>
         </div>
-
-        <div id="modalEnviarInformacionAseguradora" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalEnviarInformacionAseguradoraLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header pb-2">
-                        <div class="form-group row mb-0">
-                            <div class="col-12">
-                                <h6 class="m-0" id="modalEnviarInformacionAseguradoraLabel">Enviar información de seguro</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-body">
-                        <div id="divRequisitosPendientes">
-                            <h6 class="font-weight-bold">Documentos pendientes pendientes</h6>
-
-                            <div class="form-group mb-0">
-                                <label class="mb-1 mt-2">Licencia cara frontal</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
-
-                                <label class="mb-1 mt-2">Licencia cara posterior</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
-
-                                <label class="mb-1 mt-2">Informe de inspección continental cara frontal</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
-
-                                <label class="mb-1 mt-2">Informe de inspección continental cara posterior</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-12"></div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="btnEnviarInformacionAseguradora_Confirmar" class="btn btn-primary">
-                            Guardar y enviar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cerrar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
 
         <!-- Expendiente -->
         <div id="divContenedorExpediente" class="contenedorPDF">
@@ -2302,7 +2302,6 @@
             </div>
         </div>
 
-
         <!-- modalGuardarExpedienteSolicitud -->
         <div id="modalGuardarExpedienteSolicitud" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalGuardarExpedienteSolicitudLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -2323,20 +2322,110 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btnGuardarExpedienteSolicitud" class="btn btn-info mr-1">
-                            Guardar
-                       
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
-                            Cancelar
-                       
-                        </button>
+                        <button type="button" id="btnGuardarExpedienteSolicitud" class="btn btn-info mr-1">Guardar</button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">Cancelar</button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Memorandum -->
+        <div id="divContenedorMemorandum" class="contenedorPDF">
+            <div class="card m-0 divImprimir" runat="server" visible="false" id="divMemorandumPDF" style="display: none;">
+                <div class="card-body pt-0">
+                    <div class="row justify-content-between">
+                        <div class="col-auto m-0 p-0">
+                            <img src="#" class="img-fluid img-logo-empresa" />
+                        </div>
+                        <div class="col-auto align-content-start pr-0">
+                            <div id="qr_Memorandum"></div>
+                        </div>
+                        <div class="col-12">
+                            <h5 class="text-center font-weight-bold border-bottom">MEMORANDUM</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
 
+                            <table class="table table-sm table-borderless font-16">
+                                <tbody>
+                                    <tr>
+                                        <td class="p-1 font-weight-bold">Para:</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblPara_Memorandum"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1 font-weight-bold">De:</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblDe_Memorandum"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1 font-weight-bold">Fecha:</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblFecha_Memorandum">24-02-2021</asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1 font-weight-bold">Asunto:</td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblAsunto_Memorandum"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p>
+                                Por este medio, hago entrega de documentos originales del cliente:                                
+                            </p>
+                            <table class="table table-sm table-bordered font-16">
+                                <thead>
+                                    <tr>
+                                        <td class="font-weight-bold">Cliente</td>
+                                        <td class="font-weight-bold">Número de placa</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblCliente_Memorandum">Daniel Andres Coto Velasquez</asp:Label>
+                                        </td>
+                                        <td class="p-1">
+                                            <asp:Label runat="server" ID="lblNumeroPlaca_Memorandum">HBF8496</asp:Label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>
+                                Por este medio hago constar que he recibido los documentos arriba mencionado, mismos que quedan bajo mi custodia y responsabilidad;
+                                además me comprometo a devolverlos de manera íntegra y completa.
+                                Es por eso que hago constar que si los extravío, daño  o los pierdo me comprometo a conseguir en el IP o en cualquier otra institución ya que entiendo que 
+                                estos documentos son garantías de préstamo y representan dinero.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Firma -->
+                    <div class="row pt-5 justify-content-center">
+                        <div class="col-5 text-center">
+                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
+                            <label class="mt-0 d-block">Nombre Completo</label>
+                        </div>
+                        <div class="col-5 text-center">
+                            <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
+                            <label class="mt-0 d-block">Firma</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -2363,6 +2452,6 @@
         var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=ListaDocumentosDelExpedienteJSON%>');
 
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210225110025"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=2021022512420552"></script>
 </body>
 </html>

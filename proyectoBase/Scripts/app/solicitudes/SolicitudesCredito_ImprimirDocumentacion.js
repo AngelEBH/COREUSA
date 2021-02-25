@@ -98,6 +98,7 @@ $(document).ready(function () {
 function InicializarCodigosQR() {
 
     GenerarCodigoQR('qr_Expediente');
+    GenerarCodigoQR('qr_Memorandum');
 };
 
 function GenerarCodigoQR(idElemento) {

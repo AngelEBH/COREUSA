@@ -488,7 +488,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblOficialNegocios_PortadaExpediente.Text = "Oficial de negocios: " + oficialDeNegocios;
                                     lblCentroDeCosto_PortadaExpediente.Text = "Centro de costo: " + oficialDeNegociosCentroDeCosto;
                                     lblFechaActual_PortadaExpediente.Text = DateTime.Now.ToString("MM/dd/yyyy");
-
                                     lblNombreCliente_PortadaExpediente.Text = nombreCliente;
                                     lblIdentidadCliente_PortadaExpediente.Text = identidad;
                                     lblMarca_PortadaExpediente.Text = marca;
@@ -522,6 +521,17 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblFechaVencimiento_Expediente.InnerText = "";
                                     lblOficialNegocios_Expediente.InnerText = oficialDeNegocios;
                                     lblGestor_Expediente.InnerText = gestorDeCobros;
+
+                                    /* Memorandum */
+                                    var usuarioLogueado = ObtenerInformacionUsuarioLogueado(pcIDApp, pcIDUsuario, pcIDSesion);
+
+                                    lblPara_Memorandum.Text = "Marco Lara";
+                                    lblDe_Memorandum.Text = usuarioLogueado.NombreCorto;
+                                    lblFecha_Memorandum.Text = DateTime.Now.ToString("dd-MM-yyyy");
+                                    lblAsunto_Memorandum.Text = "Entrega de documentos originales de vehículos";
+                                    lblCliente_Memorandum.Text = nombreCliente;
+                                    lblNumeroPlaca_Memorandum.Text = matricula;
+
                                 }
 
                                 /* Fotografías de la garantía */
@@ -617,6 +627,12 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                         {
                             lblEspecifiqueOtros_Expediente.Text = sqlResultado["fcComentarios"].ToString();
                             txtEspecifiqueOtras.InnerText = sqlResultado["fcComentarios"].ToString();
+
+                            if ((int)sqlResultado["fiIDEstadoExpediente"] == 1 && pcIDUsuario == "211") /* ID usuario Mariely Guzman*/
+                            {
+                                divMemorandumPDF.Visible = true;
+                                btnMemorandumExpediente.Visible = true;
+                            }
                         }
 
                         /* Segundo resultado: Documentos del expediente */
@@ -794,30 +810,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var buzonCorreoUsuario = string.Empty;
+            var usuarioLogueado = ObtenerInformacionUsuarioLogueado(pcIDApp, pcIDUsuario, pcIDSesion);
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("CoreSeguridad.dbo.sp_InformacionUsuario", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            buzonCorreoUsuario = sqlResultado["fcBuzondeCorreo"].ToString();
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-
-            resultado = EnviarCorreo(asunto, tituloGeneral, tituloGeneral, contenidoHtml, buzonCorreoUsuario);
+            resultado = EnviarCorreo(asunto, tituloGeneral, tituloGeneral, contenidoHtml, usuarioLogueado.BuzonDeCorreo);
         }
         catch (Exception ex)
         {
@@ -926,6 +921,43 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         PanelMensajeErrores.Visible = true;
         lblMensaje.Visible = true;
         lblMensaje.Text = mensaje;
+    }
+
+    public static InformacionUsuario_ViewModel ObtenerInformacionUsuarioLogueado(string pcIDApp, string pcIDUsuario, string pcIDSesion)
+    {
+        var usuarioLogueado = new InformacionUsuario_ViewModel();
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreSeguridad.dbo.sp_InformacionUsuario", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            usuarioLogueado.NombreCorto = sqlResultado["fcNombreCorto"].ToString();
+                            usuarioLogueado.CentroDeCosto = sqlResultado["fcCentroDeCosto"].ToString();
+                            usuarioLogueado.NombreAgencia = sqlResultado["fcNombreAgencia"].ToString();
+                            usuarioLogueado.BuzonDeCorreo = sqlResultado["fcBuzondeCorreo"].ToString();
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            usuarioLogueado = null;
+        }
+        return usuarioLogueado;
     }
 
     #endregion
@@ -1072,6 +1104,15 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         public string Prefesion { get; set; }
         public string CiudadDomicilio { get; set; }
         public string DepartamentoDomicilio { get; set; }
+    }
+
+    public class InformacionUsuario_ViewModel
+    {
+        public int IdUsuario { get; set; }
+        public string NombreCorto { get; set; }
+        public string CentroDeCosto { get; set; }
+        public string NombreAgencia { get; set; }
+        public string BuzonDeCorreo { get; set; }
     }
 
     #endregion
