@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -2292,11 +2292,11 @@
                         <div class="col-5 text-center">
                             <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
                             <label class="mt-0 d-block">Firma de entrega</label>
-                            <label class="mt-0 d-block" runat="server" id="lblNombreEntrega"></label>
+                            <label class="mt-0 d-block" runat="server" id="lblNombreFirmaEntrega"></label>
                         </div>
                         <div class="col-5 text-center">
                             <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
-                            <label class="mt-0 d-block">Firma de recibido</label>
+                            <label class="mt-0 d-block">Firma de recibe</label>
                             <label class="mt-0 d-block">Mariely Guzman</label>
                         </div>
                     </div>
