@@ -41,6 +41,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
     #endregion
 
+    #region Page Load
+
     protected void Page_Load(object sender, EventArgs e)
     {
         try
@@ -79,6 +81,10 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         }
 
     }
+
+    #endregion
+
+    #region Cargar información de la solicitud y expediente de la solicitud
 
     private void CargarInformacion()
     {
@@ -663,6 +669,10 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         }
     }
 
+    #endregion
+
+    #region Guardar expediente de la solicitud
+
     [WebMethod]
     public static Resultado_ViewModel GuardarExpediente(List<Expediente_Documento_ViewModel> documentosExpediente, string especifiqueOtros, string dataCrypt)
     {
@@ -769,6 +779,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         }
         return resultado;
     }
+
+    #endregion
 
     #region Funciones utilitarias
 

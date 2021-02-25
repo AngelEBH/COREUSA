@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_ImprimirDocumentacion.aspx.cs" Inherits="SolicitudesCredito_ImprimirDocumentacion" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_ImprimirDocumentacion.aspx.cs" Inherits="SolicitudesCredito_ImprimirDocumentacion" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -2353,168 +2353,16 @@
         const FONDOS_PRESTAMO = <%=this.FondoPrestamoJSON %>;
         const ID_SOLICITUD_CREDITO = '<%=pcIDSolicitud%>';
 
-    </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210206122252"></script>
+        const DEPARTAMENTO_FIRMA = '<%=DepartamentoFirma%>';
+        const CIUDAD_FIRMA = '<%=CiudadFirma%>';
+        const DIAS_FIRMA = '<%=DiasFirma%>';
+        const MES_FIRMA = '<%=MesFirma%>';
+        const ANIO_FIRMA = '<%=AnioFirma%>';
 
-    <script>
-        $(document).ready(function () {
-
-            InicializarCodigosQR();
-        });
-
-        function InicializarCodigosQR() {
-
-            GenerarCodigoQR('qr_Expediente');
-        };
-
-        function GenerarCodigoQR(idElemento) {
-
-            let qrcode = new QRCode(document.getElementById('' + idElemento + ''), {
-                width: 85,
-                height: 85
-            });
-
-            qrcode.makeCode('<%=UrlCodigoQR%>');
-        }
-    </script>
-
-    <script>
-
+        const URL_CODIGO_QR = '<%=UrlCodigoQR%>';
         var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=ListaDocumentosDelExpedienteJSON%>');
-        var permitirImprimirExpediente = ValidarEstadoDeDocumentosExpediente();
 
-        $("#btnExpediente").click(function () {
-
-            if (ValidarEstadoDeDocumentosExpediente() && permitirImprimirExpediente == true) {
-                ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
-            }
-            else {
-
-                var ulDocumentosExpedientes = $("#ulDocumentosDelExpediente").empty();
-                var template = '';
-                var identificadorElemento = '';
-                var stringData = '';
-
-                for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
-
-                    identificadorElemento = 'radio_' + LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento;
-                    stringData = ' data-iddocumento="' + LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento + '" ';
-
-                    template +=
-                        '<li>' +
-                        '<div class="form-group row border-bottom border-gray mb-2 mr-3">' +
-                        '<div class="col-sm-4 font-weight-bold pr-0">' +
-                        LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento +
-                        '</div>' +
-                        '<div class="col-sm-8 pr-0">' +
-                        '<div class="form-check form-check-inline">' +
-                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_si_' + identificadorElemento + '" ' + stringData + ' value="1" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 1 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)"  />' +
-                        '<label class="form-check-label" for="radio_si_' + identificadorElemento + '">SI</label>' +
-                        '</div>' +
-                        '<div class="form-check form-check-inline">' +
-                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_no_' + identificadorElemento + '" ' + stringData + ' value="2" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 2 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
-                        '<label class="form-check-label" for="radio_no_' + identificadorElemento + '">NO</label>' +
-                        '</div>' +
-                        '<div class="form-check form-check-inline">' +
-                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_na_' + identificadorElemento + '" ' + stringData + ' value="3" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 3 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
-                        '<label class="form-check-label" for="radio_na_' + identificadorElemento + '">N/A</label>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>' +
-                        '</li>';
-                }
-
-                ulDocumentosExpedientes.append(template);
-
-                $("#modalGuardarExpedienteSolicitud").modal();
-            }
-        });
-
-        $("#btnGuardarExpedienteSolicitud").click(function () {
-
-            var modelStateIsValid = true;
-
-            if (!ValidarEstadoDeDocumentosExpediente()) {
-                MensajeError('La lista de verificación está incompleta.');
-                modelStateIsValid = false;
-            }
-
-            if (modelStateIsValid) {
-
-                var especifiqueOtrosDocumentos = $("#txtEspecifiqueOtras").val();
-
-                $.ajax({
-                    type: "POST",
-                    url: 'SolicitudesCredito_ImprimirDocumentacion.aspx/GuardarExpediente',
-                    data: JSON.stringify({ documentosExpediente: LISTA_DOCUMENTOS_EXPEDIENTES, especifiqueOtros: especifiqueOtrosDocumentos, dataCrypt: window.location.href }),
-                    contentType: 'application/json; charset=utf-8',
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        MensajeError('No se pudo guardar el expediente de la solicitud, contacte al administrador');
-                    },
-                    beforeSend: function () {
-                        MostrarLoader();
-                    },
-                    success: function (data) {
-
-                        if (data.d.ResultadoExitoso == true) {
-
-                            var tblDocumentos_Expediente = $("#tblDocumentos_Expediente tbody").empty();
-                            let template = '';
-
-                            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
-
-                                template += '<tr>' +
-                                    '<td>' + LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento + '</td>' +
-                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '1' ? 'X' : '') + '</td>' +
-                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '2' ? 'X' : '') + '</td>' +
-                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '3' ? 'X' : '') + '</td>' +
-                                    '</tr>';
-                            }
-
-                            tblDocumentos_Expediente.append(template);
-
-                            $("#lblEspecifiqueOtros_Expediente").text(especifiqueOtrosDocumentos);
-
-                            permitirImprimirExpediente = true;
-                            $("#modalGuardarExpedienteSolicitud").modal('hide');
-                            ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
-                        }
-                        else {
-                            MensajeError(data.d.MensajeResultado);
-                            console.log(data.d.MensajeDebug);
-                        }
-                    },
-                    complete: function () {
-                        OcultarLoader();
-                    }
-                });
-            }
-        });
-
-        function ActualizarEstadoDocumentoExpediente(elemento) {
-
-            let idDocumento = $(elemento).data('iddocumento');
-            let idEstado = $(elemento).val();
-
-            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
-
-                if (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento == idDocumento) {
-                    LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento = idEstado;
-                    break;
-                }
-            }
-        }
-
-        function ValidarEstadoDeDocumentosExpediente() {
-
-            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
-                if (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 0)
-                    return false;
-            }
-            return true;
-        }
     </script>
-
-
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210225110025"></script>
 </body>
 </html>
