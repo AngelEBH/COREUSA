@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -11,6 +12,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Web;
 using System.Web.Services;
+using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Page
 {
@@ -34,6 +36,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
     public string FondoPrestamoJSON { get; set; }
 
+    public string UrlCodigoQR { get; set; }
+    public string ListaDocumentosDelExpedienteJSON { get; set; }
+
     #endregion
 
     protected void Page_Load(object sender, EventArgs e)
@@ -56,6 +61,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    UrlCodigoQR = "http://190.92.0.76/OPS/CFRM.aspx?" + DSC.Encriptar("S=" + pcIDSolicitud);
 
                     var hoy = DateTime.Today;
                     DiasFirma = hoy.Day.ToString();
@@ -63,6 +69,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     AnioFirma = hoy.Year.ToString();
 
                     CargarInformacion();
+                    CargarExpedienteDeLaSolicitud();
                 }
             }
         }
@@ -486,6 +493,29 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblVIN_PortadaExpediente.Text = VIN;
                                     lblVendedorGarantia_PortadaExpediente.Text = nombreVendedorGarantia + " - " + identidadVendedorGarantia;
                                     lblDuenoAnteriorGarantia_PortadaExpediente.Text = nombrePropietarioGarantia + " - " + identidadPropietarioGarantia;
+
+                                    /* Expediente */
+                                    lblNoSolicitudCredito_Expediente.InnerText = pcIDSolicitud;
+                                    lblFechaActual_Expediente.InnerText = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt");
+                                    lblNombreCliente_Expediente.InnerText = nombreCliente;
+                                    lblIdentidadCliente_Expediente.InnerText = identidad;
+                                    lblDepartamento_Expediente.InnerText = departamentoResidencia;
+                                    lblDireccionCliente_Expediente.InnerText = direccionCliente;
+                                    lblTelefonoCliente_Expediente.InnerText = telefonoPrimario;
+                                    lblTipoDeTrabajo_Expediente.InnerText = nombreTrabajo;
+                                    lblPuestoAsignado_Expediente.InnerText = puestoAsignado;
+                                    lblTelefonoTrabajo_Expediente.InnerText = telefonoTrabajo;
+                                    lblDirecciónTrabajo_Expediente.InnerText = direccionTrabajo;
+                                    lblNoSolicitud_Expediente.InnerText = pcIDSolicitud;
+                                    lblFechaOtorgamiento_Expediente.InnerText = fechaOtorgamiento.ToString("dd/MM/yyyy");
+                                    lblCantidadCuotas_Expediente.InnerText = plazoFinalAprobado + " Cuotas";
+                                    lblMontoOtorgado_Expediente.InnerText = DecimalToString(valorTotalFinanciamiento);
+                                    lblValorCuota_Expediente.InnerText = DecimalToString(valorCuotaTotal);
+                                    lblFechaPrimerPago_Expediente.InnerText = fechaPrimerPago.ToString("dd/MM/yyyy");
+                                    lblFrecuenciaPlazo_Expediente.InnerText = tipoDePlazoSufijoAl;
+                                    lblFechaVencimiento_Expediente.InnerText = "";
+                                    lblOficialNegocios_Expediente.InnerText = oficialDeNegocios;
+                                    lblGestor_Expediente.InnerText = gestorDeCobros;
                                 }
 
                                 /* Fotografías de la garantía */
@@ -555,6 +585,189 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             MostrarMensaje("Error al cargar información de la solicitud " + pcIDSolicitud + ": " + ex.Message.ToString() + mensajeExtra);
             divContenedorInspeccionSeguro.Visible = false;
         }
+    }
+
+    public void CargarExpedienteDeLaSolicitud()
+    {
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Expediente_ObtenerPorIdSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        /* Primer resultado: Información principal del expediente*/
+                        while (sqlResultado.Read())
+                        {
+                            lblEspecifiqueOtros_Expediente.Text = sqlResultado["fcComentarios"].ToString();
+                            txtEspecifiqueOtras.InnerText = sqlResultado["fcComentarios"].ToString();
+                        }
+
+                        /* Segundo resultado: Documentos del expediente */
+                        sqlResultado.NextResult();
+
+                        var listaDocumentosExpediente = new List<Expediente_Documento_ViewModel>();
+
+                        TableRow tRowDocumentoExpediente = null;
+
+                        while (sqlResultado.Read())
+                        {
+                            tRowDocumentoExpediente = new TableRow();
+                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fcDescripcionDocumento"].ToString() });
+                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "1" ? "X" : "", HorizontalAlign = HorizontalAlign.Center });
+                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "2" ? "X" : "", HorizontalAlign = HorizontalAlign.Center });
+                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "3" ? "X" : "", HorizontalAlign = HorizontalAlign.Center });
+                            tblDocumentos_Expediente.Rows.Add(tRowDocumentoExpediente);
+
+                            listaDocumentosExpediente.Add(new Expediente_Documento_ViewModel()
+                            {
+                                IdDocumento = (int)sqlResultado["fiIDDocumento"],
+                                DescripcionDocumento = sqlResultado["fcDescripcionDocumento"].ToString(),
+                                IdTipoDocumento = (int)sqlResultado["fiIDTipoDocumento"],
+                                IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
+                                EstadoDocumento = sqlResultado["fcEstadoDocumento"].ToString()
+                            });
+                        }
+
+                        ListaDocumentosDelExpedienteJSON = JsonConvert.SerializeObject(listaDocumentosExpediente);
+
+                        /* Listado de tipos de solicitudes */
+                        sqlResultado.NextResult();
+
+                        TableRow tRowTiposDeSolicitud = null;
+
+                        while (sqlResultado.Read())
+                        {
+                            tRowTiposDeSolicitud = new TableRow();
+                            tRowTiposDeSolicitud.Cells.Add(new TableCell() { Text = sqlResultado["fcTipoSolicitud"].ToString() });
+                            tRowTiposDeSolicitud.Cells.Add(new TableCell() { Text = "(" + sqlResultado["fcMarcado"].ToString() + ")" });
+                            tblTipoDeSolicitud_Expediente.Rows.Add(tRowTiposDeSolicitud);
+                        }
+                    }
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            MostrarMensaje("Error al cargar el expediente de la solicitud " + pcIDSolicitud + ": " + ex.Message.ToString());
+        }
+    }
+
+    [WebMethod]
+    public static Resultado_ViewModel GuardarExpediente(List<Expediente_Documento_ViewModel> documentosExpediente, string especifiqueOtros, string dataCrypt)
+    {
+        var resultado = new Resultado_ViewModel() { ResultadoExitoso = true };
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlTransaccion = sqlConexion.BeginTransaction("GuardarExpediente"))
+                {
+                    try
+                    {
+                        var idExpediente = string.Empty;
+
+                        using (var sqlComando = new SqlCommand("sp_Expedientes_Maestro_Guardar", sqlConexion, sqlTransaccion))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                            sqlComando.Parameters.AddWithValue("@pcComentarios", especifiqueOtros.Trim());
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.CommandTimeout = 120;
+
+                            using (var sqlResultado = sqlComando.ExecuteReader())
+                            {
+                                while (sqlResultado.Read())
+                                {
+                                    idExpediente = sqlResultado["MensajeError"].ToString();
+
+                                    if (idExpediente.StartsWith("-1"))
+                                    {
+                                        sqlTransaccion.Rollback();
+                                        resultado.ResultadoExitoso = false;
+                                        resultado.MensajeResultado = "Error al guardar información principal del expediente, contacte al administrador";
+                                        resultado.MensajeDebug = idExpediente;
+                                        return resultado;
+                                    }
+                                }
+                            } // using sqlResultado
+                        } // using sqlComando
+
+                        foreach (Expediente_Documento_ViewModel item in documentosExpediente)
+                        {
+                            using (var sqlComandoList = new SqlCommand("sp_Expedientes_Documentos_Guardar", sqlConexion, sqlTransaccion))
+                            {
+                                sqlComandoList.CommandType = CommandType.StoredProcedure;
+                                sqlComandoList.Parameters.AddWithValue("@piIDExpediente", idExpediente);
+                                sqlComandoList.Parameters.AddWithValue("@piIDDocumento", item.IdDocumento);
+                                sqlComandoList.Parameters.AddWithValue("@piIDEstadoDocumento", item.IdEstadoDocumento);
+                                sqlComandoList.Parameters.AddWithValue("@pcNombreArchivo", "");
+                                sqlComandoList.Parameters.AddWithValue("@pcExtension", "");
+                                sqlComandoList.Parameters.AddWithValue("@pcRutaArchivo", "");
+                                sqlComandoList.Parameters.AddWithValue("@pcURL", "");
+                                sqlComandoList.Parameters.AddWithValue("@pcComentarios", "");
+                                sqlComandoList.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                                sqlComandoList.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                                sqlComandoList.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                                sqlComandoList.CommandTimeout = 120;
+
+                                using (var sqlResultado = sqlComandoList.ExecuteReader())
+                                {
+                                    while (sqlResultado.Read())
+                                    {
+                                        if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                        {
+                                            sqlTransaccion.Rollback();
+                                            resultado.ResultadoExitoso = false;
+                                            resultado.MensajeResultado = "Error al guardar información del documento " + item.DescripcionDocumento + " del expediente, contacte al administrador.";
+                                            resultado.MensajeDebug = sqlResultado["MensajeError"].ToString();
+                                            return resultado;
+                                        }
+                                    }
+                                } // using sqlResultado
+                            } // using sqlComandoList
+                        } // foreach documentos del expediente
+
+                        if (resultado.ResultadoExitoso != false)
+                            sqlTransaccion.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        sqlTransaccion.Rollback();
+                        resultado.ResultadoExitoso = false;
+                        resultado.MensajeResultado = "Error al guardar el expediente de la solicitud, contacte al administrador";
+                        resultado.MensajeDebug = ex.Message.ToString();
+                    }
+                } // using sqlTransaccion
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            resultado.ResultadoExitoso = false;
+            resultado.MensajeResultado = "Error al guardar el expediente de la solicitud, contacte al administrador";
+            resultado.MensajeDebug = ex.Message.ToString();
+        }
+        return resultado;
     }
 
     #region Funciones utilitarias
@@ -804,6 +1017,15 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     #endregion
 
     #region View Models
+
+    public class Expediente_Documento_ViewModel
+    {
+        public int IdDocumento { get; set; }
+        public string DescripcionDocumento { get; set; }
+        public int IdTipoDocumento { get; set; }
+        public int IdEstadoDocumento { get; set; }
+        public string EstadoDocumento { get; set; }
+    }
 
     public class Resultado_ViewModel
     {

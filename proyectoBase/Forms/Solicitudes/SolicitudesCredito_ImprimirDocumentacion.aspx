@@ -110,6 +110,10 @@
                                 <button type="button" id="btnPortadaExpediente" onclick="ExportToPDF('PORTADA_EXPEDIENTE','divContenedorPortadaExpediente','divPortadaExpedientePDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
                                     Portada Expediente
                                 </button>
+                                <button type="button" id="btnExpediente" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    Expediente
+                               
+                                </button>
                                 <button type="button" id="btnEnviarCorreoAseguradora" data-toggle="modal" data-target="#modalEnviarInformacionAseguradora" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/vehicle_insurance_40px.png');">
                                     Correo aseguradora
                                 </button>
@@ -2037,10 +2041,8 @@
                         </div>
                     </div>
                     <div class="modal-body">
-
                         <div id="divRequisitosPendientes">
                             <h6 class="font-weight-bold">Documentos pendientes pendientes</h6>
-
 
                             <div class="form-group mb-0">
                                 <label class="mb-1 mt-2">Licencia cara frontal</label>
@@ -2091,11 +2093,7 @@
                                     </span>
                                 </div>
                             </div>
-
-
                         </div>
-
-
                         <div class="form-group row">
                             <div class="col-12"></div>
                         </div>
@@ -2111,6 +2109,234 @@
                 </div>
             </div>
         </div>
+
+
+
+        <!-- Expendiente -->
+        <div id="divContenedorExpediente" class="contenedorPDF">
+            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divExpedientePDF" style="display: none;">
+                <div class="card-body pt-0 pr-5 pl-5">
+                    <div class="row justify-content-between">
+                        <div class="col-auto">
+                            <label class="font-weight-bold d-block lblRazonSocial"></label>
+                            <label class="font-weight-bold d-block lblNombreComercial"></label>
+                            <label class="font-weight-bold d-block">
+                                Solicitud de crédito N°:
+                                <b runat="server" id="lblNoSolicitudCredito_Expediente"></b>
+                            </label>
+                            <small class="font-weight-bold">Fecha:
+                                <b runat="server" id="lblFechaActual_Expediente"></b>
+                            </small>
+                        </div>
+                        <div class="col-auto align-content-start pr-0">
+                            <div id="qr_Expediente"></div>
+                        </div>
+                    </div>
+                    <div class="row border border-gray mb-2 mt-2">
+                        <div class="col-7">
+                            <div class="form-group row mb-1">
+                                <div class="col-4">
+                                    <b>Nombre:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblNombreCliente_Expediente" runat="server"></label>
+                                </div>
+
+                                <div class="col-4">
+                                    <b>Identidad:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblIdentidadCliente_Expediente" runat="server"></label>
+                                </div>
+
+                                <div class="col-4">
+                                    <b>Departamento:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblDepartamento_Expediente" runat="server"></label>
+                                </div>
+
+                                <div class="col-4">
+                                    <b>Dirección:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblDireccionCliente_Expediente" runat="server"></label>
+                                </div>
+
+                                <div class="col-4">
+                                    <b>Tel. Celular:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblTelefonoCliente_Expediente" runat="server"></label>
+                                </div>
+                            </div>
+                            <u class="font-weight-bold">Datos laborales</u>
+                            <div class="form-group row mb-0">
+                                <div class="col-4">
+                                    <b>Tipo de trabajo:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblTipoDeTrabajo_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-4">
+                                    <b>Cargo:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblPuestoAsignado_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-4">
+                                    <b>Teléfono:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblTelefonoTrabajo_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-4">
+                                    <b>Dirección:</b>
+                                </div>
+                                <div class="col-8">
+                                    <label class="mb-0" id="lblDirecciónTrabajo_Expediente" runat="server"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 border-left border-gray">
+                            <div class="form-group row border-bottom border-gray mb-1">
+                                <u class="p-2 font-weight-bold">Datos del préstamo</u>
+                            </div>
+                            <div class="form-group row mb-0">
+                                <div class="col-6">
+                                    <b>N° Solicitud:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblNoSolicitud_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Fecha de otorgamiento:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblFechaOtorgamiento_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Plazo:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblCantidadCuotas_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Monto otorgado:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblMontoOtorgado_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Valor de la cuota:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblValorCuota_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Fecha primer pago:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblFechaPrimerPago_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Frecuencia:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblFrecuenciaPlazo_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Vencimiento</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblFechaVencimiento_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Oficial:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblOficialNegocios_Expediente" runat="server"></label>
+                                </div>
+                                <div class="col-6">
+                                    <b>Gestor:</b>
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-0" id="lblGestor_Expediente" runat="server"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 p-0">
+                            <asp:Table ID="tblDocumentos_Expediente" CssClass="table table-sm table-condensed table-bordered" runat="server">
+                                <asp:TableHeaderRow TableSection="TableHeader">
+                                    <asp:TableHeaderCell>Tipo de documento</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">SI</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">NO</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center">N/A</asp:TableHeaderCell>
+                                </asp:TableHeaderRow>
+                            </asp:Table>
+                        </div>
+                        <div class="col-6">
+                            <u class="font-weight-bold">TIPO DE RENEGOCIACIÓN</u>
+                            <asp:Table ID="tblTipoDeSolicitud_Expediente" CssClass="font-weight-bold table-borderless mt-2" runat="server"></asp:Table>
+                        </div>
+                        <div class="col-12 p-0">
+                            <div class="form-group row">
+                                <label class="col-2 pr-0">Especifique otros:</label>
+                                <asp:Label runat="server" ID="lblEspecifiqueOtros_Expediente" CssClass="col-10 border-top-0 border-left-0 border-right-0 border-bottom border-dark"></asp:Label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pt-5 justify-content-center">
+                        <div class="col-5 text-center">
+                            <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
+                            <label class="mt-0 d-block">Firma oficial</label>
+                        </div>
+                        <div class="col-5 text-center">
+                            <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
+                            <label class="mt-0 d-block">Firma de Jefe/Supervisor</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- modalGuardarExpedienteSolicitud -->
+        <div id="modalGuardarExpedienteSolicitud" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalGuardarExpedienteSolicitudLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalGuardarExpedienteSolicitudLabel">Expediente de la solicitud de crédito</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+
+                        <label class="mb-3">Documentos del expediente:</label>
+
+                        <ul id="ulDocumentosDelExpediente" style="max-height: 50vh; overflow-x: auto;"></ul>
+
+                        <div class="form-group mt-3">
+                            <label>Especifique otras</label>
+                            <textarea id="txtEspecifiqueOtras" class="form-control form-control-sm" data-parsley-maxlength="500" runat="server"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnGuardarExpedienteSolicitud" class="btn btn-info mr-1">
+                            Guardar
+                       
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                            Cancelar
+                       
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -2121,6 +2347,7 @@
     <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
+    <script src="/Scripts/plugins/qrcode/qrcode.js"></script>
     <script>
 
         const FONDOS_PRESTAMO = <%=this.FondoPrestamoJSON %>;
@@ -2128,5 +2355,166 @@
 
     </script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210206122252"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            InicializarCodigosQR();
+        });
+
+        function InicializarCodigosQR() {
+
+            GenerarCodigoQR('qr_Expediente');
+        };
+
+        function GenerarCodigoQR(idElemento) {
+
+            let qrcode = new QRCode(document.getElementById('' + idElemento + ''), {
+                width: 85,
+                height: 85
+            });
+
+            qrcode.makeCode('<%=UrlCodigoQR%>');
+        }
+    </script>
+
+    <script>
+
+        var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=ListaDocumentosDelExpedienteJSON%>');
+        var permitirImprimirExpediente = ValidarEstadoDeDocumentosExpediente();
+
+        $("#btnExpediente").click(function () {
+
+            if (ValidarEstadoDeDocumentosExpediente() && permitirImprimirExpediente == true) {
+                ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
+            }
+            else {
+
+                var ulDocumentosExpedientes = $("#ulDocumentosDelExpediente").empty();
+                var template = '';
+                var identificadorElemento = '';
+                var stringData = '';
+
+                for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
+
+                    identificadorElemento = 'radio_' + LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento;
+                    stringData = ' data-iddocumento="' + LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento + '" ';
+
+                    template +=
+                        '<li>' +
+                        '<div class="form-group row border-bottom border-gray mb-2 mr-3">' +
+                        '<div class="col-sm-4 font-weight-bold pr-0">' +
+                        LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento +
+                        '</div>' +
+                        '<div class="col-sm-8 pr-0">' +
+                        '<div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_si_' + identificadorElemento + '" ' + stringData + ' value="1" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 1 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)"  />' +
+                        '<label class="form-check-label" for="radio_si_' + identificadorElemento + '">SI</label>' +
+                        '</div>' +
+                        '<div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_no_' + identificadorElemento + '" ' + stringData + ' value="2" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 2 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
+                        '<label class="form-check-label" for="radio_no_' + identificadorElemento + '">NO</label>' +
+                        '</div>' +
+                        '<div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="radio" name="' + identificadorElemento + '" id="radio_na_' + identificadorElemento + '" ' + stringData + ' value="3" ' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 3 ? 'checked' : '') + ' onclick="ActualizarEstadoDocumentoExpediente(this)" />' +
+                        '<label class="form-check-label" for="radio_na_' + identificadorElemento + '">N/A</label>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</li>';
+                }
+
+                ulDocumentosExpedientes.append(template);
+
+                $("#modalGuardarExpedienteSolicitud").modal();
+            }
+        });
+
+        $("#btnGuardarExpedienteSolicitud").click(function () {
+
+            var modelStateIsValid = true;
+
+            if (!ValidarEstadoDeDocumentosExpediente()) {
+                MensajeError('La lista de verificación está incompleta.');
+                modelStateIsValid = false;
+            }
+
+            if (modelStateIsValid) {
+
+                var especifiqueOtrosDocumentos = $("#txtEspecifiqueOtras").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: 'SolicitudesCredito_ImprimirDocumentacion.aspx/GuardarExpediente',
+                    data: JSON.stringify({ documentosExpediente: LISTA_DOCUMENTOS_EXPEDIENTES, especifiqueOtros: especifiqueOtrosDocumentos, dataCrypt: window.location.href }),
+                    contentType: 'application/json; charset=utf-8',
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        MensajeError('No se pudo guardar el expediente de la solicitud, contacte al administrador');
+                    },
+                    beforeSend: function () {
+                        MostrarLoader();
+                    },
+                    success: function (data) {
+
+                        if (data.d.ResultadoExitoso == true) {
+
+                            var tblDocumentos_Expediente = $("#tblDocumentos_Expediente tbody").empty();
+                            let template = '';
+
+                            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
+
+                                template += '<tr>' +
+                                    '<td>' + LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento + '</td>' +
+                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '1' ? 'X' : '') + '</td>' +
+                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '2' ? 'X' : '') + '</td>' +
+                                    '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '3' ? 'X' : '') + '</td>' +
+                                    '</tr>';
+                            }
+
+                            tblDocumentos_Expediente.append(template);
+
+                            $("#lblEspecifiqueOtros_Expediente").text(especifiqueOtrosDocumentos);
+
+                            permitirImprimirExpediente = true;
+                            $("#modalGuardarExpedienteSolicitud").modal('hide');
+                            ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
+                        }
+                        else {
+                            MensajeError(data.d.MensajeResultado);
+                            console.log(data.d.MensajeDebug);
+                        }
+                    },
+                    complete: function () {
+                        OcultarLoader();
+                    }
+                });
+            }
+        });
+
+        function ActualizarEstadoDocumentoExpediente(elemento) {
+
+            let idDocumento = $(elemento).data('iddocumento');
+            let idEstado = $(elemento).val();
+
+            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
+
+                if (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdDocumento == idDocumento) {
+                    LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento = idEstado;
+                    break;
+                }
+            }
+        }
+
+        function ValidarEstadoDeDocumentosExpediente() {
+
+            for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
+                if (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == 0)
+                    return false;
+            }
+            return true;
+        }
+    </script>
+
+
 </body>
 </html>
