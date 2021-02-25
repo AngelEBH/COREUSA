@@ -26,8 +26,8 @@
                     </a>
                 </h3>
                 <div class="p-3">
-                    <h4 class="font-18 m-b-5 text-center">Bienvenido!</h4>
-                    <p class="text-center">Inicia sesión para continuar.</p>
+                    <h4 class="font-18 m-b-5 text-center">Iniciar sesión</h4>
+                    <p class="text-center">Registrar procesamiento de expedientes.</p>
 
                     <div class="alert alert-danger mb-0 text-center" role="alert" runat="server" id="divMensajeError" style="display: none;">
                         <asp:Label ID="lblMensajeError" runat="server"></asp:Label>

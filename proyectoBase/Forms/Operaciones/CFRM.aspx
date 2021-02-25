@@ -69,10 +69,11 @@
     <form id="frmPrincipal" runat="server">
         <div class="card shadow-none m-0">
             <div class="card-header">
-                <label class="mb-0">Expediente solicitud de crédito N°
+                <label class="mb-0">
+                    Expediente solicitud de crédito N°
                     <asp:Label ID="lblNoSolicitudCredito" CssClass="font-weight-bold" runat="server"></asp:Label>
                 </label>
-                <div runat="server" id="divEstadoExpediente"></div>
+                <div runat="server" class="display-block" id="divEstadoExpediente"></div>
             </div>
             <div class="card-body">
                 <div class="row mb-0">
@@ -81,7 +82,7 @@
                             <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" runat="server"></asp:Label>
                         </div>
                         <div class="form-group mt-2 text-center" runat="server" id="divCambiarEstadoExpediente" visible="false">
-                            <button runat="server" id="btnCambiarEstadoExpediente" class="btn btn-info" type="button">
+                            <button runat="server" id="btnCambiarEstadoExpediente" class="btn btn-info" type="button" visible="false">
                                 Cambiar estado a
                                 <span class="font-weight-bold" runat="server" id="lblSiguienteEstadoExpediente"></span>
                             </button>

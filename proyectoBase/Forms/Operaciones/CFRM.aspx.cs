@@ -22,12 +22,7 @@ public partial class CFRM : System.Web.UI.Page
 
             var lcURL = Request.Url.ToString();
             var liParamStart = lcURL.IndexOf("?");
-            var lcParametros = string.Empty;
-
-            if (liParamStart > 0)
-                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
@@ -35,20 +30,20 @@ public partial class CFRM : System.Web.UI.Page
                 var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("S");
-
-                lblNoSolicitudCredito.Text = pcIDSolicitud;
-
-                pcIDUsuario = HttpContext.Current.Session["usr"].ToString();
-                pcIDSesion = HttpContext.Current.Session["SID"].ToString();
                 pcIDApp = HttpContext.Current.Session["IDApp"].ToString();
+                pcIDSesion = HttpContext.Current.Session["SID"].ToString();
+                pcIDUsuario = HttpContext.Current.Session["usr"].ToString();
+                pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("S");
+                lblNoSolicitudCredito.Text = pcIDSolicitud;
 
                 if (pcIDSolicitud != "" && pcIDSolicitud != "0")
                 {
+
                     CargarExpedienteDeLaSolicitud();
                 }
                 else
                 {
+
                     MostrarMensaje("Parámetros inválidos.");
                 }
             }
@@ -90,9 +85,22 @@ public partial class CFRM : System.Web.UI.Page
                         txtPlazo.Text = sqlResultado["fiPlazoFinalAprobado"].ToString();
                         txtOficialDeNegocios.Text = sqlResultado["fcUsuarioAsignado"].ToString();
                         txtGestorDeCobros.Text = sqlResultado["fcGestorAsignado"].ToString();
+
+                        var idEstadoExpediente = (int)sqlResultado["fiIDEstadoExpediente"];
+
+                        if (idEstadoExpediente == 1)
+                        {
+                            divCambiarEstadoExpediente.Visible = pcIDUsuario == "211";
+                        }
+
+                        if (idEstadoExpediente == 5 || idEstadoExpediente == 6)
+                        {
+                            divCambiarEstadoExpediente.Visible = pcIDUsuario == "89";
+                        }
+
                         txtEspecifiqueOtras.InnerText = sqlResultado["fcComentarios"].ToString();
-                        divEstadoExpediente.InnerText = sqlResultado["fcEstadoExpediente"].ToString();
-                        divEstadoExpediente.Attributes.Add("class", "badge badge-"+ sqlResultado["fcEstadoExpedienteClassName"].ToString() +" ml-2 font-12 float-right");
+                        divEstadoExpediente.InnerText = "Estado actual: " + sqlResultado["fcEstadoExpediente"].ToString();
+                        divEstadoExpediente.Attributes.Add("class", "badge badge-" + sqlResultado["fcEstadoExpedienteClassName"].ToString() + " font-12");
 
                         /* Segundo resultado: Documentos del expediente */
                         sqlResultado.NextResult();
@@ -139,14 +147,14 @@ public partial class CFRM : System.Web.UI.Page
 
                         if (idSiguienteEstadoExpediente > 0)
                         {
-                            divCambiarEstadoExpediente.Visible = true;
+                            btnCambiarEstadoExpediente.Visible = true;
                             btnCambiarEstadoExpediente.Attributes.Add("data-idsiguienteestado", idSiguienteEstadoExpediente.ToString());
                             btnCambiarEstadoExpediente.Attributes.Add("class", "btn btn-" + sqlResultado["fcClassNameSiguiente"].ToString());
                             lblSiguienteEstadoExpediente.InnerText = sqlResultado["fcEstadoExpedienteSiguiente"].ToString();
                         }
                         else
                         {
-                            divCambiarEstadoExpediente.Visible = false;
+                            btnCambiarEstadoExpediente.Visible = false;
                             btnCambiarEstadoExpediente.Disabled = true;
                         }
                     }
@@ -185,10 +193,10 @@ public partial class CFRM : System.Web.UI.Page
             }
 
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("S");
-            var pcIDUsuario = HttpContext.Current.Session["usr"].ToString();
-            var pcIDSesion = HttpContext.Current.Session["SID"].ToString();
             var pcIDApp = HttpContext.Current.Session["IDApp"].ToString();
+            var pcIDSesion = HttpContext.Current.Session["SID"].ToString();
+            var pcIDUsuario = HttpContext.Current.Session["usr"].ToString();
+            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("S");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -196,12 +204,13 @@ public partial class CFRM : System.Web.UI.Page
 
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Expediente_CambiarEstadoExpediente", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;                    
+                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
                     sqlComando.Parameters.AddWithValue("@piIDEstadoExpediente", idEstado);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -245,12 +254,7 @@ public partial class CFRM : System.Web.UI.Page
     {
         var lcURL = Request.Url.ToString();
         var liParamStart = lcURL.IndexOf("?");
-        var lcParametros = string.Empty;
-
-        if (liParamStart > 0)
-            lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-        else
-            lcParametros = string.Empty;
+        var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
         Response.Write("<script>window.open('CFRM_IniciarSesion.aspx" + lcParametros + "','_self')</script>");
         Response.End();
@@ -261,20 +265,14 @@ public partial class CFRM : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var liParamStart = 0;
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
-            liParamStart = URL.IndexOf("?");
-
-            if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }

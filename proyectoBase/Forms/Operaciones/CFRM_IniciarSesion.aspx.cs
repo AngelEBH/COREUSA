@@ -33,7 +33,7 @@ public partial class CFRM_IniciarSesion : System.Web.UI.Page
             var generarMD5 = new Funciones.FuncionesComunes();
             var idUsuario = "";
             var idSesion = "";
-            var idApp = "107";
+            var idApp = "108";
 
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
             var pcIDSolicitud = lURLDesencriptado != null ? HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("S") : "";
@@ -60,6 +60,9 @@ public partial class CFRM_IniciarSesion : System.Web.UI.Page
                             idSesion = sqlResultado["fiIDSesion"].ToString();
                         }
                     }
+
+                    if (resultado.Mensaje == "Usuario no tiene acceso a esta aplicacion")
+                        resultado.AccesoAutorizado = 1;
 
                     if (resultado.AccesoAutorizado == 1)
                     {
@@ -96,21 +99,14 @@ public partial class CFRM_IniciarSesion : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var liParamStart = 0;
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
-            liParamStart = URL.IndexOf("?");
-
-            if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
