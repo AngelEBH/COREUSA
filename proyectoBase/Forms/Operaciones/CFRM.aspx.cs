@@ -86,16 +86,29 @@ public partial class CFRM : System.Web.UI.Page
                         txtOficialDeNegocios.Text = sqlResultado["fcUsuarioAsignado"].ToString();
                         txtGestorDeCobros.Text = sqlResultado["fcGestorAsignado"].ToString();
 
+                        var idUsuarioCreadorExpediente = sqlResultado["fiIDUsuarioCreador"].ToString();
                         var idEstadoExpediente = (int)sqlResultado["fiIDEstadoExpediente"];
 
-                        if (idEstadoExpediente == 2)
-                        {
-                            divCambiarEstadoExpediente.Visible = pcIDUsuario == "211";
-                        }
 
-                        if (idEstadoExpediente == 6 || idEstadoExpediente == 7)
+                        switch (idEstadoExpediente)
                         {
-                            divCambiarEstadoExpediente.Visible = pcIDUsuario == "89";
+                            case 1: // Estado "Creado" solo el usuario creador podrá pasarlo a "En tránsito"
+                                divCambiarEstadoExpediente.Visible = idUsuarioCreadorExpediente == pcIDUsuario;
+                                break;
+
+                            case 2: // Estado "En Transito" solo el usuario 211 podrá cambiar el estado a estado 3 "Recibido Mariely Guzman" *
+                            case 3: /* Si está en estado "Recibido Mariely Guzman" cualquier usuario puede cambiar el estado a "Entregado Abogado" */
+                            case 4: /* Si está en estado "Entregado Abogado" cualquier usuario puede cambiar el estado a "Recibido Abogado" */
+                                divCambiarEstadoExpediente.Visible = pcIDUsuario == "211";
+                                break;
+                            case 5: /* Si está en estado "Recibido Abogado" solo el usuario 89 puede cambiar el estado a "Entregado Archivo"*/
+                            case 6: /* Si está en estado "Entregado Archivo" solo el usuario 89 puede cambiar el estado a "Archivado"*/
+                                divCambiarEstadoExpediente.Visible = pcIDUsuario == "89";
+                                break;
+                            default:
+
+                                divCambiarEstadoExpediente.Visible = false;
+                                break;
                         }
 
                         txtEspecifiqueOtras.InnerText = sqlResultado["fcComentarios"].ToString();

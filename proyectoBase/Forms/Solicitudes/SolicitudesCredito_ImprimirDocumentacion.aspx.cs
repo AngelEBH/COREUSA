@@ -630,7 +630,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             lblEspecifiqueOtros_Expediente.Text = sqlResultado["fcComentarios"].ToString();
                             txtEspecifiqueOtras.InnerText = sqlResultado["fcComentarios"].ToString();
 
-                            if ((int)sqlResultado["fiIDEstadoExpediente"] != 0 && pcIDUsuario == "211") /* ID usuario Mariely Guzman*/
+                            if ((int)sqlResultado["fiIDEstadoExpediente"] != 1 && (int)sqlResultado["fiIDEstadoExpediente"] != 2 && pcIDUsuario == "211") /* ID usuario Mariely Guzman*/
                             {
                                 divMemorandumPDF.Visible = true;
                                 btnMemorandumExpediente.Visible = true;
