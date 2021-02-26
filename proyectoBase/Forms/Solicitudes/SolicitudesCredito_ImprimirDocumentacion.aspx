@@ -2473,10 +2473,10 @@
                                 Dicho documento me es solicitado por
                                 <b class="lblNombreComercial"></b>,
                                 y ________________________________
-                                para realizar un trámite de financiamiento para la compra de mi motocicleta:
-                                marca:
+                                para realizar un trámite de financiamiento para la compra de mi motocicleta: <br />
+                                Marca:
                                 <asp:Label runat="server" ID="lblMarca_ActaDeCompromiso"></asp:Label>,
-                                modelo:
+                                Modelo:
                                 <asp:Label runat="server" ID="lblModelo_ActaDeCompromiso"></asp:Label>,
                                 Año:
                                 <asp:Label runat="server" ID="lblAnio_ActaDeCompromiso"></asp:Label>,
