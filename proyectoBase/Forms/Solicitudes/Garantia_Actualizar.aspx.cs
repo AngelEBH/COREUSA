@@ -38,7 +38,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
 
                 if (lcParametros != string.Empty)
                 {
-                    var pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                    var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
                     var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
@@ -50,7 +50,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                     lblNoSolicitud.InnerText = pcIDSolicitud != "0" ? ("Solicitud de crédito No. " + pcIDSolicitud) : "Sin solicitud de crédito";
 
                     HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
-                    HttpContext.Current.Session["ListaDocumentosGarantia_Actualizar"] = null;
+                    HttpContext.Current.Session["ListaDocumentosParaAsegurar"] = null;
                     Session.Timeout = 10080;
                 }
                 LlenarListas();
@@ -85,7 +85,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                         var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
 
                         /* Guardar listado de documentos en una session propia de esta pantalla */
-                        Session["ListaDocumentosGarantia_Actualizar"] = list;
+                        Session["ListaDocumentosParaAsegurar"] = list;
 
                         break;
 
@@ -350,10 +350,10 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                     var garantiaDocumentos = new List<SolicitudesDocumentosViewModel>();
 
                     /* Registrar documentacion de la solicitud */
-                    if (HttpContext.Current.Session["ListaDocumentosGarantia_Actualizar"] != null)
+                    if (HttpContext.Current.Session["ListaDocumentosParaAsegurar"] != null)
                     {
                         /* lista de documentos adjuntados por el usuario */
-                        var listaDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaDocumentosGarantia_Actualizar"];
+                        var listaDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaDocumentosParaAsegurar"];
 
                         if (listaDocumentos != null)
                         {
@@ -378,7 +378,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                                 } // if File.Exists
                             } // foreach lista documentos
                         } // if lista documentos != null
-                    } // if Session["ListaDocumentosGarantia_Actualizar"] != null
+                    } // if Session["ListaDocumentosParaAsegurar"] != null
 
                     /* Guardar los documentos de la garantia en la base de datos*/
                     int contadorErrores = 0;

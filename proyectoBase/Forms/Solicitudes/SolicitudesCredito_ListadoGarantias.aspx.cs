@@ -128,6 +128,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 
     #endregion
 
+    #region Cargar listados
+
     [WebMethod]
     public static List<SolicitudesCredito_ListadoGarantias_ViewModel> CargarListado(string dataCrypt)
     {
@@ -262,6 +264,10 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         }
         return garantiasSinSolicitud;
     }
+
+    #endregion
+
+    #region Administrar solicitudes GPS
 
     [WebMethod]
     public static bool GuardarSolicitudGPS(SolicitudGPS_ViewModel solicitudGPS, string dataCrypt)
@@ -452,62 +458,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         return resultado;
     }
 
-    [WebMethod]
-    public static List<Garantia_Revision_ViewModel> CargarRevisionesGarantia(int idGarantia, string dataCrypt)
-    {
-        var revisionesGarantia = new List<Garantia_Revision_ViewModel>();
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+    #endregion
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("sp_CREDGarantias_Revisiones_ListarPorIdGarantia", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDGarantia", idGarantia);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            revisionesGarantia.Add(new Garantia_Revision_ViewModel()
-                            {
-                                IdRevision = (int)sqlResultado["fiIDRevision"],
-                                NombreRevision = sqlResultado["fcNombreRevision"].ToString(),
-                                DescripcionRevision = sqlResultado["fcDescripcionRevision"].ToString(),
-                                IdGarantiaRevision = (int)sqlResultado["fiIDGarantiaRevision"],
-                                IdGarantia = (int)sqlResultado["fiIDGarantia"],
-                                IdSolicitudGPS = (int)sqlResultado["fiIDAutoGPSInstalacion"],
-                                IdEstadoRevision = (int)sqlResultado["fiEstadoRevision"],
-                                EstadoRevision = sqlResultado["fcEstadoRevision"].ToString(),
-                                EstadoRevisionClassName = sqlResultado["fcEstadoRevisionClassName"].ToString(),
-                                Observaciones = sqlResultado["fcObservaciones"].ToString(),
-                                IdUsuarioValidador = (int)sqlResultado["fiIDUsuarioValidador"],
-                                UsuarioValidador = sqlResultado["fcUsuarioValidador"].ToString(),
-                                FechaValidacion = (DateTime)sqlResultado["fdFechaValidacion"],
-                            });
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            revisionesGarantia = null;
-        }
-        return revisionesGarantia;
-    }
+    #region Instalacion GPS
 
     [WebMethod]
     public static InstalacionGPS_ViewModel CargarInstalacionGPS(int idAutoInstalacionGPS, string dataCrypt)
@@ -584,6 +537,69 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         }
         return instalacionGPS;
     }
+
+    #endregion
+
+    #region Revisiones de la garantía
+
+    [WebMethod]
+    public static List<Garantia_Revision_ViewModel> CargarRevisionesGarantia(int idGarantia, string dataCrypt)
+    {
+        var revisionesGarantia = new List<Garantia_Revision_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDGarantias_Revisiones_ListarPorIdGarantia", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDGarantia", idGarantia);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            revisionesGarantia.Add(new Garantia_Revision_ViewModel()
+                            {
+                                IdRevision = (int)sqlResultado["fiIDRevision"],
+                                NombreRevision = sqlResultado["fcNombreRevision"].ToString(),
+                                DescripcionRevision = sqlResultado["fcDescripcionRevision"].ToString(),
+                                IdGarantiaRevision = (int)sqlResultado["fiIDGarantiaRevision"],
+                                IdGarantia = (int)sqlResultado["fiIDGarantia"],
+                                IdSolicitudGPS = (int)sqlResultado["fiIDAutoGPSInstalacion"],
+                                IdEstadoRevision = (int)sqlResultado["fiEstadoRevision"],
+                                EstadoRevision = sqlResultado["fcEstadoRevision"].ToString(),
+                                EstadoRevisionClassName = sqlResultado["fcEstadoRevisionClassName"].ToString(),
+                                Observaciones = sqlResultado["fcObservaciones"].ToString(),
+                                IdUsuarioValidador = (int)sqlResultado["fiIDUsuarioValidador"],
+                                UsuarioValidador = sqlResultado["fcUsuarioValidador"].ToString(),
+                                FechaValidacion = (DateTime)sqlResultado["fdFechaValidacion"],
+                            });
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            revisionesGarantia = null;
+        }
+        return revisionesGarantia;
+    }
+
+    #endregion
 
     [WebMethod]
     public static List<Garantia_Documento> CargarDocumentosGarantia(int idGarantia, string dataCrypt)

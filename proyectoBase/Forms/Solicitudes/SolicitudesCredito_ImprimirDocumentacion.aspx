@@ -16,6 +16,7 @@
 </head>
 <body>
     <form id="frmGuardarPreSolicitud" runat="server">
+
         <div class="card m-0">
             <div class="card-header pb-1 pt-1">
                 <div class="float-right p-1" id="Loader" style="display: none;">
@@ -107,9 +108,12 @@
                                 <button type="button" id="btnEnviarCorreoLiquidacion" onclick="EnviarCorreo('Liquidación', 'Liquidación', 'divCorreoLiquidacionPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
                                     Correo Liquidación
                                 </button>
+
+
                                 <button type="button" id="btnEnviarCorreoSeguro" onclick="EnviarCorreo('Seguro', 'Seguro de garantía', 'divCorreoSeguroPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
-                                    Correo Seguro
+                                    Enviar información aseguradora
                                 </button>
+
                                 <button type="button" id="btnPortadaExpediente" onclick="ExportToPDF('PORTADA_EXPEDIENTE','divContenedorPortadaExpediente','divPortadaExpedientePDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
                                     Portada Expediente
                                 </button>
@@ -1926,88 +1930,6 @@
         </div>
 
 
-        <!-- Modar enviar información para asegurar por correo electrónico -->
-        <div id="modalEnviarInformacionAseguradora" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalEnviarInformacionAseguradoraLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header pb-2">
-                        <div class="form-group row mb-0">
-                            <div class="col-12">
-                                <h6 class="m-0" id="modalEnviarInformacionAseguradoraLabel">Enviar información de seguro</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-body">
-                        <div id="divRequisitosPendientes">
-                            <h6 class="font-weight-bold">Documentos pendientes pendientes</h6>
-
-                            <div class="form-group mb-0">
-                                <label class="mb-1 mt-2">Licencia cara frontal</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
-
-                                <label class="mb-1 mt-2">Licencia cara posterior</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
-
-                                <label class="mb-1 mt-2">Informe de inspección continental cara frontal</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
-
-                                <label class="mb-1 mt-2">Informe de inspección continental cara posterior</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-12"></div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="btnEnviarInformacionAseguradora_Confirmar" class="btn btn-primary">
-                            Guardar y enviar
-                        </button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cerrar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
         <!-- ================================== HTML Portada del expediente ===================== -->
         <div id="divContenedorPortadaExpediente">
             <div class="card m-0" runat="server" visible="true" id="divPortadaExpedientePDF">
@@ -2322,34 +2244,6 @@
         </div>
 
 
-        <!-- modalGuardarExpedienteSolicitud -->
-        <div id="modalGuardarExpedienteSolicitud" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalGuardarExpedienteSolicitudLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalGuardarExpedienteSolicitudLabel">Expediente de la solicitud de crédito</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-
-                        <label class="mb-3">Documentos del expediente:</label>
-
-                        <ul id="ulDocumentosDelExpediente" style="max-height: 50vh; overflow-x: auto;"></ul>
-
-                        <div class="form-group mt-3">
-                            <label>Especifique otras</label>
-                            <textarea id="txtEspecifiqueOtras" class="form-control form-control-sm" data-parsley-maxlength="500" runat="server"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="btnGuardarExpedienteSolicitud" class="btn btn-info mr-1">Guardar</button>
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
         <!-- ================================== HTML Memorandum ================================= -->
         <div id="divContenedorMemorandum" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="false" id="divMemorandumPDF" style="display: none;">
@@ -2517,6 +2411,116 @@
                             <label class="d-block lblNombreComercial"></label>
                             <label class="d-block">C.C: ____________________________________________________</label>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- modalGuardarExpedienteSolicitud -->
+        <div id="modalGuardarExpedienteSolicitud" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalGuardarExpedienteSolicitudLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalGuardarExpedienteSolicitudLabel">Expediente de la solicitud de crédito</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+
+                        <label class="mb-3">Documentos del expediente:</label>
+
+                        <ul id="ulDocumentosDelExpediente" style="max-height: 50vh; overflow-x: auto;"></ul>
+
+                        <div class="form-group mt-3">
+                            <label>Especifique otras</label>
+                            <textarea id="txtEspecifiqueOtras" class="form-control form-control-sm" data-parsley-maxlength="500" runat="server"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnGuardarExpedienteSolicitud" class="btn btn-info mr-1">Guardar</button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modar enviar información para asegurar por correo electrónico -->
+        <div id="modalEnviarInformacionAseguradora" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalEnviarInformacionAseguradoraLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalEnviarInformacionAseguradoraLabel">Enviar información de seguro</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div id="divRequisitosPendientes">
+                            <h6 class="font-weight-bold">Documentos pendientes pendientes</h6>
+
+                            <div class="form-group mb-0">
+                                <label class="mb-1 mt-2">Licencia cara frontal</label>
+                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
+                                <div class="bootstrap-filestyle input-group">
+                                    <input type="text" class="form-control " placeholder="" disabled="" />
+                                    <span class="group-span-filestyle input-group-append" tabindex="0">
+                                        <label for="filestyle-0" class="btn btn-secondary">
+                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
+                                            <span class="buttonText">Subir archivo</span>
+                                        </label>
+                                    </span>
+                                </div>
+
+                                <label class="mb-1 mt-2">Licencia cara posterior</label>
+                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
+                                <div class="bootstrap-filestyle input-group">
+                                    <input type="text" class="form-control " placeholder="" disabled="" />
+                                    <span class="group-span-filestyle input-group-append" tabindex="0">
+                                        <label for="filestyle-0" class="btn btn-secondary">
+                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
+                                            <span class="buttonText">Subir archivo</span>
+                                        </label>
+                                    </span>
+                                </div>
+
+                                <label class="mb-1 mt-2">Informe de inspección continental cara frontal</label>
+                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
+                                <div class="bootstrap-filestyle input-group">
+                                    <input type="text" class="form-control " placeholder="" disabled="" />
+                                    <span class="group-span-filestyle input-group-append" tabindex="0">
+                                        <label for="filestyle-0" class="btn btn-secondary">
+                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
+                                            <span class="buttonText">Subir archivo</span>
+                                        </label>
+                                    </span>
+                                </div>
+
+                                <label class="mb-1 mt-2">Informe de inspección continental cara posterior</label>
+                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
+                                <div class="bootstrap-filestyle input-group">
+                                    <input type="text" class="form-control " placeholder="" disabled="" />
+                                    <span class="group-span-filestyle input-group-append" tabindex="0">
+                                        <label for="filestyle-0" class="btn btn-secondary">
+                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
+                                            <span class="buttonText">Subir archivo</span>
+                                        </label>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnEnviarInformacionAseguradora_Confirmar" class="btn btn-primary">
+                            Guardar y enviar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
                     </div>
                 </div>
             </div>

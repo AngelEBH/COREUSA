@@ -1,15 +1,20 @@
-﻿using Newtonsoft.Json;
+﻿using adminfiles;
+using Newtonsoft.Json;
+using proyectoBase.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.WebControls;
@@ -47,7 +52,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     {
         try
         {
-            if (!IsPostBack)
+            var type = Request.QueryString["type"];
+
+            if (!IsPostBack && type == null)
             {
                 var lcURL = Request.Url.ToString();
                 var liParamStart = lcURL.IndexOf("?");
@@ -72,27 +79,77 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                     CargarInformacion();
                     CargarExpedienteDeLaSolicitud();
+
+                    HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
+                    HttpContext.Current.Session["ListaDocumentosParaAsegurar"] = null;
+                    Session.Timeout = 10080;
                 }
+            }
+
+            /* Guardar documentos de la solicitud */
+            if (type != null || Request.HttpMethod == "POST")
+            {
+                Session["IdDocumentoAsegurar"] = Convert.ToInt32(Request.QueryString["IdDocumentoAsegurar"]);
+                var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
+
+                var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
+                    { "limit", 1 },
+                    { "title", "auto" },
+                    { "uploadDir", uploadDir },
+                    { "extensions", new string[] { "jpg", "png", "jpeg"} },
+                    { "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
+                    { "fileMaxSize", 20 }, /* Peso máximo por archivo */
+                });
+
+                switch (type)
+                {
+                    case "upload": /* Guardar achivo en carpeta temporal y guardar la informacion del mismo en una variable de sesion */
+
+                        var data = fileUploader.Upload();
+
+                        if (data["files"].Count == 1)
+                            data["files"][0].Remove("file");
+                        Response.Write(JsonConvert.SerializeObject(data));
+
+                        /* Al subirse los archivos se guardan en este objeto de sesion general del helper fileuploader */
+                        var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
+
+                        /* Guardar listado de documentos en una session propia de esta pantalla */
+                        Session["ListaDocumentosParaAsegurar"] = list;
+
+                        break;
+
+                    case "remove":
+                        string file = Request.Form["file"];
+
+                        if (file != null)
+                        {
+                            file = FileUploader.FullDirectory(uploadDir) + file;
+                            if (File.Exists(file))
+                                File.Delete(file);
+                        }
+                        break;
+                }
+                Response.End();
             }
         }
         catch (Exception ex)
         {
             MostrarMensaje("Ocurrió un error al cargar la información: " + ex.Message.ToString());
         }
-
     }
 
     #endregion
 
     #region Cargar información de la solicitud y expediente de la solicitud
 
-    private void CargarInformacion()
+    private async void CargarInformacion()
     {
         try
         {
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                sqlConexion.Open();
+                await sqlConexion.OpenAsync();
 
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionDocumentacion", sqlConexion))
                 {
@@ -103,12 +160,12 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
                     sqlComando.CommandTimeout = 120;
 
-                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    using (var sqlResultado = await sqlComando.ExecuteReaderAsync())
                     {
                         if (!sqlResultado.HasRows)
                             Response.Write("<script>window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitud + "&IDApp=" + pcIDApp) + "','_self')</script>");
 
-                        while (sqlResultado.Read())
+                        while (await sqlResultado.ReadAsync())
                         {
                             var fechaPrimerPago = (DateTime)sqlResultado["fdFechaPrimerCuota"];
                             MesPrimerPago = fechaPrimerPago.ToString("MMMM", new CultureInfo("es-ES"));
@@ -213,12 +270,12 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             if ((byte)sqlResultado["fiRequiereGarantia"] == 1)
                             {
                                 /* Informacion del garantía */
-                                sqlResultado.NextResult();
+                                await sqlResultado.NextResultAsync();
 
                                 if (!sqlResultado.HasRows)
                                     Response.Write("<script>window.open('Garantia_Registrar.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitud + "&IDApp=" + pcIDApp + "&IDSOL=" + pcIDSolicitud) + "','_self')</script>");
 
-                                while (sqlResultado.Read())
+                                while (await sqlResultado.ReadAsync())
                                 {
                                     var VIN = sqlResultado["fcVin"].ToString();
                                     var tipoDeGarantia = sqlResultado["fcTipoGarantia"].ToString();
@@ -482,7 +539,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblPlaca_NotaEntrega.Text = matricula;
                                     lblNombreVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
 
-
                                     /* Portada del expediente */
                                     lblNoSolicitud_PortadaExpediente.Text = "Solicitud de crédito #" + pcIDSolicitud;
                                     lblOficialNegocios_PortadaExpediente.Text = "Oficial de negocios: " + oficialDeNegocios;
@@ -523,7 +579,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblGestor_Expediente.InnerText = gestorDeCobros;
 
                                     /* Memorandum */
-                                    var usuarioLogueado = ObtenerInformacionUsuarioLogueado(pcIDApp, pcIDUsuario, pcIDSesion);
+                                    var usuarioLogueado = await ObtenerInformacionUsuarioLogueado(pcIDApp, pcIDUsuario, pcIDSesion);
 
                                     lblNombreFirmaEntrega_Expediente.InnerText = usuarioLogueado.NombreCorto;
                                     lblPara_Memorandum.Text = "Marco Lara";
@@ -546,7 +602,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                 }
 
                                 /* Fotografías de la garantía */
-                                sqlResultado.NextResult();
+                                await sqlResultado.NextResultAsync();
 
                                 if (!sqlResultado.HasRows)
                                 {
@@ -565,7 +621,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                 var imagenesGarantiaParaPortadaExpediente = new StringBuilder();
                                 var imagenesGarantiaParaPortadaExpedienteRevision = new StringBuilder();
 
-                                while (sqlResultado.Read())
+                                while (await sqlResultado.ReadAsync())
                                 {
                                     imagenesGarantia.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
 
@@ -614,13 +670,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         }
     }
 
-    public void CargarExpedienteDeLaSolicitud()
+    private async void CargarExpedienteDeLaSolicitud()
     {
         try
         {
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                sqlConexion.Open();
+                await sqlConexion.OpenAsync();
 
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Expediente_ObtenerPorIdSolicitud", sqlConexion))
                 {
@@ -631,10 +687,10 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
                     sqlComando.CommandTimeout = 120;
 
-                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    using (var sqlResultado = await sqlComando.ExecuteReaderAsync())
                     {
                         /* Primer resultado: Información principal del expediente*/
-                        while (sqlResultado.Read())
+                        while (await sqlResultado.ReadAsync())
                         {
                             lblEspecifiqueOtros_Expediente.Text = sqlResultado["fcComentarios"].ToString();
                             txtEspecifiqueOtras.InnerText = sqlResultado["fcComentarios"].ToString();
@@ -645,19 +701,19 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                 btnMemorandumExpediente.Visible = true;
                             }
 
-                            var usuarioCreador = ObtenerInformacionUsuarioLogueado(pcIDApp, sqlResultado["fiIDUsuarioCreador"].ToString(), pcIDSesion);
+                            var usuarioCreador = await ObtenerInformacionUsuarioLogueado(pcIDApp, sqlResultado["fiIDUsuarioCreador"].ToString(), pcIDSesion);
 
                             lblNombreFirmaEntrega_Expediente.InnerText = usuarioCreador.NombreCorto;
                         }
 
                         /* Segundo resultado: Documentos del expediente */
-                        sqlResultado.NextResult();
+                        await sqlResultado.NextResultAsync();
 
                         var listaDocumentosExpediente = new List<Expediente_Documento_ViewModel>();
 
                         TableRow tRowDocumentoExpediente = null;
 
-                        while (sqlResultado.Read())
+                        while (await sqlResultado.ReadAsync())
                         {
                             tRowDocumentoExpediente = new TableRow();
                             tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fcDescripcionDocumento"].ToString() });
@@ -679,11 +735,11 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                         ListaDocumentosDelExpedienteJSON = JsonConvert.SerializeObject(listaDocumentosExpediente);
 
                         /* Listado de tipos de solicitudes */
-                        sqlResultado.NextResult();
+                        await sqlResultado.NextResultAsync();
 
                         TableRow tRowTiposDeSolicitud = null;
 
-                        while (sqlResultado.Read())
+                        while (await sqlResultado.ReadAsync())
                         {
                             tRowTiposDeSolicitud = new TableRow();
                             tRowTiposDeSolicitud.Cells.Add(new TableCell() { Text = sqlResultado["fcTipoSolicitud"].ToString() });
@@ -705,20 +761,20 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     #region Guardar expediente de la solicitud
 
     [WebMethod]
-    public static Resultado_ViewModel GuardarExpediente(List<Expediente_Documento_ViewModel> documentosExpediente, string especifiqueOtros, string dataCrypt)
+    public static async Task<Resultado_ViewModel> GuardarExpediente(List<Expediente_Documento_ViewModel> documentosExpediente, string especifiqueOtros, string dataCrypt)
     {
         var resultado = new Resultado_ViewModel() { ResultadoExitoso = true };
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                sqlConexion.Open();
+                await sqlConexion.OpenAsync();
 
                 using (var sqlTransaccion = sqlConexion.BeginTransaction("GuardarExpediente"))
                 {
@@ -736,9 +792,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.CommandTimeout = 120;
 
-                            using (var sqlResultado = sqlComando.ExecuteReader())
+                            using (var sqlResultado = await sqlComando.ExecuteReaderAsync())
                             {
-                                while (sqlResultado.Read())
+                                while (await sqlResultado.ReadAsync())
                                 {
                                     idExpediente = sqlResultado["MensajeError"].ToString();
 
@@ -772,9 +828,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                 sqlComandoList.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                                 sqlComandoList.CommandTimeout = 120;
 
-                                using (var sqlResultado = sqlComandoList.ExecuteReader())
+                                using (var sqlResultado = await sqlComandoList.ExecuteReaderAsync())
                                 {
-                                    while (sqlResultado.Read())
+                                    while (await sqlResultado.ReadAsync())
                                     {
                                         if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                         {
@@ -813,10 +869,221 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
     #endregion
 
+    #region Proceso para asegurar vehiculo
+
+    [WebMethod]
+    public static async Task<List<TipoDocumento_ViewModel>> ObtenerDocumentosParaAsegurar(string dataCrypt)
+    {
+        try
+        {
+            var urlDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr") ?? "0";
+            var pcIDSolicitud = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDSol");
+
+            return await ObtenerDocumentosParaAsegurarPorIdSolicitudAsync(pcIDApp, pcIDSesion, pcIDUsuario, pcIDSolicitud);
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            return null;
+        }
+    }
+
+    [WebMethod]
+    public static async Task<Resultado_ViewModel> EnviarInformacionParaAsegurar(string contenidoHtml, string VIN, string dataCrypt)
+    {
+        var resultadoProceso = new Resultado_ViewModel() { ResultadoExitoso = false };
+        try
+        {
+            var urlDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr") ?? "0";
+            var pcIDSolicitud = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDSol");
+            var usuarioLogueado = await ObtenerInformacionUsuarioLogueado(pcIDApp, pcIDUsuario, pcIDSesion);
+
+            var documentosParaAsegurarGuardarEnBbdd = new List<SolicitudesDocumentosViewModel>();
+
+            /* Validar si se adjuntaron Documentos. Si se adjuntaron, guardarlos y moverlos al directorio de la solicitud crediticia */
+            if (HttpContext.Current.Session["ListaDocumentosParaAsegurar"] != null)
+            {
+                var documentosParaAsegurarAdjuntados = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaDocumentosParaAsegurar"];
+
+                if (documentosParaAsegurarAdjuntados != null)
+                {
+                    var nombreCarpetaDestino = "Solicitud" + pcIDSolicitud;
+                    var nuevoNombreDocumento = string.Empty;
+
+                    documentosParaAsegurarAdjuntados.ForEach(item =>
+                    {
+                        /* si el archivo existe, que se agregue a la lista */
+                        if (File.Exists(item.fcRutaArchivo + "\\" + item.NombreAntiguo))
+                        {
+                            nuevoNombreDocumento = GenerarNombreDocumentoGarantia(pcIDSolicitud, VIN);
+
+                            documentosParaAsegurarGuardarEnBbdd.Add(new SolicitudesDocumentosViewModel()
+                            {
+                                fcNombreArchivo = nuevoNombreDocumento,
+                                NombreAntiguo = item.NombreAntiguo,
+                                fcTipoArchivo = item.fcTipoArchivo,
+                                fcRutaArchivo = item.fcRutaArchivo.Replace("Temp", "") + nombreCarpetaDestino,
+                                URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDestino + "/" + nuevoNombreDocumento + ".png",
+                                fiTipoDocumento = item.fiTipoDocumento
+                            });
+                        }
+                    }); // foreach documentos adjunstados
+                } // if documentosParaAsegurarAdjuntados != null
+            } // if HttpContext.Current.Session["ListaDocumentosParaAsegurar"] != null
+
+
+            /* Si se adjuntaron documentos para asegurar, guardarlos en la base de datos */
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                await sqlConexion.OpenAsync();
+
+                using (SqlTransaction sqlTransaction = sqlConexion.BeginTransaction())
+                {
+
+                    foreach (var item in documentosParaAsegurarGuardarEnBbdd)
+                    {
+
+                        using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Documentos_Guardar", sqlConexion, sqlTransaction))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                            sqlComando.Parameters.AddWithValue("@pcNombreArchivo", item.fcNombreArchivo);
+                            sqlComando.Parameters.AddWithValue("@pcTipoArchivo", (item.fiTipoDocumento == 8 || item.fiTipoDocumento == 9) ? "jpg" : ".png");
+                            sqlComando.Parameters.AddWithValue("@pcRutaArchivo", item.fcRutaArchivo);
+                            sqlComando.Parameters.AddWithValue("@pcURL", item.URLArchivo);
+                            sqlComando.Parameters.AddWithValue("@piTipoDocumento", item.fiTipoDocumento);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.CommandTimeout = 120;
+
+                            using (SqlDataReader sqlResultado = await sqlComando.ExecuteReaderAsync())
+                            {
+                                while (sqlResultado.Read())
+                                {
+                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                    {
+                                        resultadoProceso.ResultadoExitoso = false;
+                                        resultadoProceso.MensajeResultado = "Ocurrió un error al registrar el documento" + item.fcNombreArchivo + "., contacte al administrador.";
+                                        resultadoProceso.MensajeDebug = sqlResultado["MensajeError"].ToString();
+                                        sqlTransaction.Rollback();
+
+                                        return resultadoProceso;
+                                    }
+                                }
+                            } // using sqlResultado
+                        } // using sqlComando
+                    } // ForEach documentos que se van a guardar en BBDD
+
+
+                    /* Mover al directorio de la solicitud los documentos para asegurar adjuntados por el usuario que se guardaron en la base de datos */
+                    if (!FileUploader.GuardarSolicitudDocumentos(int.Parse(pcIDSolicitud), documentosParaAsegurarGuardarEnBbdd))
+                    {
+                        resultadoProceso.ResultadoExitoso = false;
+                        resultadoProceso.MensajeResultado = "Ocurrió un error al guadar los documentos para asegurar, contacte al administrador.";
+                        resultadoProceso.MensajeDebug = "Error al mover los documentos al nuevo directorio";
+                        sqlTransaction.Rollback();
+
+                        return resultadoProceso;
+                    }
+
+                    sqlTransaction.Commit();
+                } // using sqlTransaction
+            } // using sqlConexion
+
+            /* Validar si hay documentos para asegurar pendientes. En caso de que hayan, retornar mensaje de error al usuario */
+            var documentosParaAsegurar = await ObtenerDocumentosParaAsegurarPorIdSolicitudAsync(pcIDApp, pcIDSesion, pcIDUsuario, pcIDSolicitud);
+
+            if (documentosParaAsegurar.Any(x => x.IdEstadoDocumento == 0))
+            {
+                var documentosPendientes = new StringBuilder();
+
+                foreach (var item in documentosParaAsegurar.Where(x => x.IdEstadoDocumento == 0))
+                {
+                    documentosPendientes.Append(item.Descripcion + ", ");
+                }
+                resultadoProceso.ResultadoExitoso = false;
+                resultadoProceso.MensajeResultado = "Los siguientes documentos están pendientes: " + documentosPendientes.ToString() + ". Adjuntalos todos para poder continuar.";
+                resultadoProceso.MensajeDebug = "Hay documentos pendientes";
+                return resultadoProceso;
+            }
+
+            /** Enviar por correo electrónico la información para asegurar un vehículo **/
+            if (await EnviarCorreo("Seguro", "Seguro de garantía", "", contenidoHtml, usuarioLogueado.BuzonDeCorreo))
+            {
+                resultadoProceso.ResultadoExitoso = false;
+                resultadoProceso.MensajeResultado = "El proceso se realizó con exito pero ocurrió un error al enviar el correo electrónico, contacte al administrador.";
+                resultadoProceso.MensajeDebug = "Error al EnviarCorreo";
+            }
+            else
+            {
+                resultadoProceso.ResultadoExitoso = true;
+                resultadoProceso.MensajeResultado = "¡La información para asegurar se envió exitosamente!";
+                resultadoProceso.MensajeDebug = "Todo cheque";
+            }
+        }
+        catch (Exception ex)
+        {
+            resultadoProceso.ResultadoExitoso = false;
+            resultadoProceso.MensajeResultado = "Ocurrió un error al enviar la información, contacte al administrador.";
+            resultadoProceso.MensajeDebug = ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
+
+    public static async Task<List<TipoDocumento_ViewModel>> ObtenerDocumentosParaAsegurarPorIdSolicitudAsync(string pcIDApp, string pcIDSesion, string pcIDUsuario, string pcIDSolicitud)
+    {
+        var documentosParaAsegurar = new List<TipoDocumento_ViewModel>();
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString.ToString())))
+            {
+                await sqlConexion.OpenAsync();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Documentos_ObtenerDocumentosParaAsegurar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = await sqlComando.ExecuteReaderAsync())
+                    {
+                        while (await sqlResultado.ReadAsync())
+                        {
+                            documentosParaAsegurar.Add(new TipoDocumento_ViewModel()
+                            {
+                                IdDocumento = (int)sqlResultado["fiIDTipoDocumento"],
+                                Descripcion = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
+                                IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"]
+                            });
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            documentosParaAsegurar = null;
+        }
+        return documentosParaAsegurar;
+    }
+
+    #endregion
+
     #region Funciones utilitarias
 
     [WebMethod]
-    public static bool EnviarDocumentoPorCorreo(string asunto, string tituloGeneral, string contenidoHtml, string dataCrypt)
+    public static async Task<bool> EnviarDocumentoPorCorreo(string asunto, string tituloGeneral, string contenidoHtml, string dataCrypt)
     {
         var resultado = false;
         try
@@ -825,9 +1092,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var usuarioLogueado = ObtenerInformacionUsuarioLogueado(pcIDApp, pcIDUsuario, pcIDSesion);
+            var usuarioLogueado = await ObtenerInformacionUsuarioLogueado(pcIDApp, pcIDUsuario, pcIDSesion);
 
-            resultado = EnviarCorreo(asunto, tituloGeneral, tituloGeneral, contenidoHtml, usuarioLogueado.BuzonDeCorreo);
+            resultado = await EnviarCorreo(asunto, tituloGeneral, tituloGeneral, contenidoHtml, usuarioLogueado.BuzonDeCorreo);
         }
         catch (Exception ex)
         {
@@ -836,7 +1103,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         return resultado;
     }
 
-    public static bool EnviarCorreo(string pcAsunto, string pcTituloGeneral, string pcSubtitulo, string pcContenidodelMensaje, string buzonCorreoUsuario)
+    public static async Task<bool> EnviarCorreo(string pcAsunto, string pcTituloGeneral, string pcSubtitulo, string pcContenidodelMensaje, string buzonCorreoUsuario)
     {
         var resultado = false;
         try
@@ -890,7 +1157,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             pmmMensaje.Body = htmlString;
 
             ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
-            smtpCliente.Send(pmmMensaje);
+
+            await smtpCliente.SendMailAsync(pmmMensaje);
+
             smtpCliente.Dispose();
             resultado = true;
         }
@@ -938,14 +1207,14 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         lblMensaje.Text = mensaje;
     }
 
-    public static InformacionUsuario_ViewModel ObtenerInformacionUsuarioLogueado(string pcIDApp, string pcIDUsuario, string pcIDSesion)
+    public static async Task<InformacionUsuario_ViewModel> ObtenerInformacionUsuarioLogueado(string pcIDApp, string pcIDUsuario, string pcIDSesion)
     {
         var usuarioLogueado = new InformacionUsuario_ViewModel();
         try
         {
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
-                sqlConexion.Open();
+                await sqlConexion.OpenAsync();
 
                 using (var sqlComando = new SqlCommand("CoreSeguridad.dbo.sp_InformacionUsuario", sqlConexion))
                 {
@@ -954,7 +1223,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
 
-                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    using (var sqlResultado = await sqlComando.ExecuteReaderAsync())
                     {
                         while (sqlResultado.Read())
                         {
@@ -975,7 +1244,10 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         return usuarioLogueado;
     }
 
-    #endregion
+    private static string GenerarNombreDocumentoGarantia(string idSolicitud, string vin)
+    {
+        return ("G_" + idSolicitud + "_" + vin + "_" + Guid.NewGuid()).Replace("*", "").Replace("/", "").Replace("\\", "").Replace(":", "").Replace("?", "").Replace("<", "").Replace(">", "").Replace("|", "");
+    }
 
     #region Convertir cantidad a palabras
 
@@ -1075,7 +1347,17 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     }
     #endregion
 
+    #endregion
+
     #region View Models
+
+    public class Resultado_ViewModel
+    {
+        public int IdInsertado { get; set; }
+        public bool ResultadoExitoso { get; set; }
+        public string MensajeResultado { get; set; }
+        public string MensajeDebug { get; set; }
+    }
 
     public class Expediente_Documento_ViewModel
     {
@@ -1084,14 +1366,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         public int IdTipoDocumento { get; set; }
         public int IdEstadoDocumento { get; set; }
         public string EstadoDocumento { get; set; }
-    }
-
-    public class Resultado_ViewModel
-    {
-        public int IdInsertado { get; set; }
-        public bool ResultadoExitoso { get; set; }
-        public string MensajeResultado { get; set; }
-        public string MensajeDebug { get; set; }
     }
 
     public class Fondo_RepresentanteLegal_ViewModel
@@ -1128,6 +1402,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         public string CentroDeCosto { get; set; }
         public string NombreAgencia { get; set; }
         public string BuzonDeCorreo { get; set; }
+    }
+
+    public class TipoDocumento_ViewModel
+    {
+        public int IdDocumento { get; set; }
+        public string Descripcion { get; set; }
+        public int IdEstadoDocumento { get; set; }
     }
 
     #endregion
