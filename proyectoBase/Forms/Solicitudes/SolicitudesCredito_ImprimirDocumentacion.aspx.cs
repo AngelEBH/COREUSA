@@ -525,14 +525,23 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     /* Memorandum */
                                     var usuarioLogueado = ObtenerInformacionUsuarioLogueado(pcIDApp, pcIDUsuario, pcIDSesion);
 
-                                    lblNombreFirmaEntrega.InnerText = usuarioLogueado.NombreCorto;
-
+                                    lblNombreFirmaEntrega_Expediente.InnerText = usuarioLogueado.NombreCorto;
                                     lblPara_Memorandum.Text = "Marco Lara";
                                     lblDe_Memorandum.Text = usuarioLogueado.NombreCorto;
                                     lblFecha_Memorandum.Text = DateTime.Now.ToString("dd-MM-yyyy");
                                     lblAsunto_Memorandum.Text = "Entrega de documentos originales de vehículos";
                                     lblCliente_Memorandum.Text = nombreCliente;
                                     lblNumeroPlaca_Memorandum.Text = matricula;
+
+                                    /* Acta de compromiso */
+                                    lblNombreCliente_ActaDeCompromiso.Text = nombreCliente;
+                                    lblIdentidadCliente_ActaDeCompromiso.Text = identidad;
+                                    lblMarca_ActaDeCompromiso.Text = marca;
+                                    lblModelo_ActaDeCompromiso.Text = modelo;
+                                    lblAnio_ActaDeCompromiso.Text = anio;
+                                    lblCilindraje_ActaDeCompromiso.Text = cilindraje;
+                                    lblColor_ActaDeCompromiso.Text = color;
+                                    lblMotor_ActaDeCompromiso.Text = serieMotor;
 
                                 }
 
@@ -638,7 +647,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                             var usuarioCreador = ObtenerInformacionUsuarioLogueado(pcIDApp, sqlResultado["fiIDUsuarioCreador"].ToString(), pcIDSesion);
 
-                            lblNombreFirmaEntrega.InnerText = usuarioCreador.NombreCorto;
+                            lblNombreFirmaEntrega_Expediente.InnerText = usuarioCreador.NombreCorto;
                         }
 
                         /* Segundo resultado: Documentos del expediente */
@@ -848,35 +857,35 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             pmmMensaje.IsBodyHtml = true;
 
             string htmlString = @"<!DOCTYPE html> " +
-                        "<html>" +
-                        "<body>" +
-                        "    <div style=\"width: 500px;\">" +
-                        "        <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
-                        "            <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
-                        "                <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td>&nbsp;</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td style=\"background-color:whitesmoke; text-align:center;\">Datos del cliente y la garantía</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td>&nbsp;</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                        "                <td>&nbsp;</td>" +
-                        "            </tr>" +
-                        "            <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
-                        "                <td>System Bot Prestadito</td>" +
-                        "            </tr>" +
-                        "        </table>" +
-                        "    </div>" +
-                        "</body> " +
-                        "</html> ";
+            "<html>" +
+            "<body>" +
+            " <div style=\"width: 500px;\">" +
+            " <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
+            " <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
+            " <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td style=\"background-color:whitesmoke; text-align:center;\">Datos del cliente y la garantía</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
+            " </tr>" +
+            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            " <td>&nbsp;</td>" +
+            " </tr>" +
+            " <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
+            " <td>System Bot Prestadito</td>" +
+            " </tr>" +
+            " </table>" +
+            " </div>" +
+            "</body> " +
+            "</html> ";
 
             pmmMensaje.Body = htmlString;
 

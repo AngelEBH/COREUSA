@@ -2506,13 +2506,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblEspecifiqueOtros_Expediente;
 
     /// <summary>
-    /// Control lblNombreFirmaEntrega.
+    /// Control lblNombreFirmaEntrega_Expediente.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNombreFirmaEntrega;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNombreFirmaEntrega_Expediente;
 
     /// <summary>
     /// Control txtEspecifiqueOtras.
@@ -2585,4 +2585,85 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblNumeroPlaca_Memorandum;
+
+    /// <summary>
+    /// Control divActaDeCompromisoPDF.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divActaDeCompromisoPDF;
+
+    /// <summary>
+    /// Control lblNombreCliente_ActaDeCompromiso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblNombreCliente_ActaDeCompromiso;
+
+    /// <summary>
+    /// Control lblIdentidadCliente_ActaDeCompromiso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblIdentidadCliente_ActaDeCompromiso;
+
+    /// <summary>
+    /// Control lblMarca_ActaDeCompromiso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMarca_ActaDeCompromiso;
+
+    /// <summary>
+    /// Control lblModelo_ActaDeCompromiso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblModelo_ActaDeCompromiso;
+
+    /// <summary>
+    /// Control lblAnio_ActaDeCompromiso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblAnio_ActaDeCompromiso;
+
+    /// <summary>
+    /// Control lblCilindraje_ActaDeCompromiso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblCilindraje_ActaDeCompromiso;
+
+    /// <summary>
+    /// Control lblColor_ActaDeCompromiso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblColor_ActaDeCompromiso;
+
+    /// <summary>
+    /// Control lblMotor_ActaDeCompromiso.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblMotor_ActaDeCompromiso;
 }

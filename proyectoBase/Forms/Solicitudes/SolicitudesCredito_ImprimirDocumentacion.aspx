@@ -78,6 +78,9 @@
                                 <button type="button" id="btnCompromisoLegal" onclick="ExportToPDF('COMPROMISO_LEGAL','divContenedorCompromisoLegal','divCompromisoLegalPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
                                     Compromiso legal
                                 </button>
+                                <button type="button" id="btnActaDeCompromiso" onclick="ExportToPDF('ACTA_DE_COMPROMISO','divContenedorActaDeCompromiso','divActaDeCompromisoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    Acta de compromiso
+                                </button>
                                 <button type="button" id="btnConvenioComprayVenta" onclick="ExportToPDF('CONVENIO_DE_COMPRA_Y_VENTA_DE_VEHICULOS_PARA_FINANCIAMIENTO','divContenedorConvenioCyV','divConevionCyVPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
                                     C. y V. de vehic. finan.
                                 </button>
@@ -612,7 +615,8 @@
             </div>
         </div>
 
-        <!-- Pagaré -->
+
+        <!-- ================================== HTML Pagaré ===================================== -->
         <div id="divContenedorPagare" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divPagarePDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -695,7 +699,8 @@
             </div>
         </div>
 
-        <!-- Compromiso Legal -->
+
+        <!-- ================================== HTML Compromiso Legal ===================================== -->
         <div id="divContenedorCompromisoLegal" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divCompromisoLegalPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -775,7 +780,8 @@
             </div>
         </div>
 
-        <!-- Convenio de regulación de compra y venta de vehiculos para financiamiento a tercero -->
+
+        <!-- ======== HTML Convenio de regulación de compra y venta de vehiculos para financiamiento a tercero =========== -->
         <div id="divContenedorConvenioCyV" class="contenedorPDF">
             <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divConevionCyVPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -908,7 +914,8 @@
             </div>
         </div>
 
-        <!-- Inspeccion del vehiculo -->
+
+        <!-- =========================== HTML Inspeccion del vehiculo============================ -->
         <div id="divContenedorInspeccionSeguro" runat="server">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDF">
                 <div class="card-body pt-0">
@@ -974,7 +981,8 @@
             </div>
         </div>
 
-        <!-- Recibo -->
+
+        <!-- =========================== HTML Recibo ============================================ -->
         <div id="divContenedorRecibo" runat="server" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divReciboPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -1093,7 +1101,8 @@
             </div>
         </div>
 
-        <!-- Traspaso de vehiculo del cliente -->
+
+        <!-- =========================== HTML Traspaso de vehiculo del cliente ================== -->
         <div id="divContenedorTraspaso" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divTraspasoPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -1246,7 +1255,8 @@
             </div>
         </div>
 
-        <!-- Traspaso de vehiculo del propietario -->
+
+        <!-- =========================== HTML Traspaso de vehiculo del propietario ============== -->
         <div id="divContenedorTraspasoVendedor" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divTraspasoVendedorPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -1399,7 +1409,8 @@
             </div>
         </div>
 
-        <!-- Básico + CPI -->
+
+        <!-- =========================== HTML Básico + CPI ====================================== -->
         <div id="divContenedorBasicoCPI" class="contenedorPDF">
             <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divBasicoCPIPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -1563,7 +1574,8 @@
             </div>
         </div>
 
-        <!-- Correo liquidación -->
+
+        <!-- =========================== HTML Correo liquidación ================================ -->
         <div id="divContenedorCorreoLiquidacion" style="display: none;">
             <div id="divCorreoLiquidacionPDF">
                 <table border="1" style="width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
@@ -1686,7 +1698,8 @@
             </div>
         </div>
 
-        <!-- Correo seguro -->
+
+        <!-- ================================== HTML Correo de seguro =========================== -->
         <div id="divContenedorCorreoSeguro" style="display: none;">
             <div id="divCorreoSeguroPDF">
                 <table border="1" style="width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
@@ -1777,7 +1790,8 @@
             </div>
         </div>
 
-        <!-- Nota de entrega -->
+
+        <!-- ================================== HTML Nota de entrega ============================ -->
         <div id="divContenedorNotaDeEntrega" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divNotaDeEntregaPDF" style="display: none;">
                 <div class="card-body pt-0 pr-5 pl-5">
@@ -1912,6 +1926,7 @@
         </div>
 
 
+        <!-- Modar enviar información para asegurar por correo electrónico -->
         <div id="modalEnviarInformacionAseguradora" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalEnviarInformacionAseguradoraLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -1992,7 +2007,8 @@
             </div>
         </div>
 
-        <!-- Portada del expediente -->
+
+        <!-- ================================== HTML Portada del expediente ===================== -->
         <div id="divContenedorPortadaExpediente">
             <div class="card m-0" runat="server" visible="true" id="divPortadaExpedientePDF">
                 <div class="card-body pt-0">
@@ -2112,7 +2128,8 @@
             </div>
         </div>
 
-        <!-- Expendiente -->
+
+        <!-- ================================== HTML Expendiente ================================ -->
         <div id="divContenedorExpediente" class="contenedorPDF">
             <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divExpedientePDF" style="display: none;">
                 <div class="card-body pt-0 pr-5 pl-5">
@@ -2292,7 +2309,7 @@
                         <div class="col-5 text-center">
                             <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
                             <label class="mt-0 d-block">Firma de entrega</label>
-                            <label class="mt-0 d-block" runat="server" id="lblNombreFirmaEntrega"></label>
+                            <label class="mt-0 d-block" runat="server" id="lblNombreFirmaEntrega_Expediente"></label>
                         </div>
                         <div class="col-5 text-center">
                             <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
@@ -2303,6 +2320,7 @@
                 </div>
             </div>
         </div>
+
 
         <!-- modalGuardarExpedienteSolicitud -->
         <div id="modalGuardarExpedienteSolicitud" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalGuardarExpedienteSolicitudLabel" aria-hidden="true">
@@ -2331,7 +2349,8 @@
             </div>
         </div>
 
-        <!-- Memorandum -->
+
+        <!-- ================================== HTML Memorandum ================================= -->
         <div id="divContenedorMemorandum" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="false" id="divMemorandumPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -2428,6 +2447,81 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- ================================== HTML Acta de compromiso ========================= -->
+        <div id="divContenedorActaDeCompromiso" class="contenedorPDF">
+            <div class="card m-0 divImprimir" runat="server" visible="true" id="divActaDeCompromisoPDF" style="display: none;">
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div class="col-12 m-0 p-0">
+                            <img src="#" class="img-fluid img-logo-empresa" />
+                        </div>
+                        <div class="col-12">
+                            <h5 class="text-center font-weight-bold">ACTA DE COMPROMISO</h5>
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <p>
+                                Por medio de la presente yo
+                                <asp:Label runat="server" ID="lblNombreCliente_ActaDeCompromiso"></asp:Label>,
+                                con numero de identidad
+                                <asp:Label runat="server" ID="lblIdentidadCliente_ActaDeCompromiso"></asp:Label>,
+                                me comprometo a realizar y entregar el documento de LICENCIA DE CONDUCIR en los próximos 40 días, proceso que no he podido realizar debido a que la Dirección Nacional de Vialidad y Transporte (Departamento de Tránsito) se encontraba cerrada por la emergencia del COVID-19. 
+                                Dicho documento me es solicitado por
+                                <b class="lblNombreComercial"></b>,
+                                y ________________________________
+                                para realizar un trámite de financiamiento para la compra de mi motocicleta:
+                                marca:
+                                <asp:Label runat="server" ID="lblMarca_ActaDeCompromiso"></asp:Label>,
+                                modelo:
+                                <asp:Label runat="server" ID="lblModelo_ActaDeCompromiso"></asp:Label>,
+                                Año:
+                                <asp:Label runat="server" ID="lblAnio_ActaDeCompromiso"></asp:Label>,
+                                Cilindraje:
+                                <asp:Label runat="server" ID="lblCilindraje_ActaDeCompromiso"></asp:Label>,
+                                Color:
+                                <asp:Label runat="server" ID="lblColor_ActaDeCompromiso"></asp:Label>,
+                                Motor:
+                                <asp:Label runat="server" ID="lblMotor_ActaDeCompromiso"></asp:Label>,
+                            </p>
+                            <p>
+                                <b>IMPORTANTE:</b>
+                                es de mi conocimiento que de no entregar dicho documento en los próximos 40 días doy autorización a PRESTADITO a recuperar la motocicleta adquirida mediante el financiamiento de ellos, y también me doy por enterado de que no se me hará entrega de placas y boleta de revisión.                               
+                            </p>
+                            <p>
+                                Doy fe y constancia de que firmo este documento libre y espontáneamente
+                                en la ciudad de
+                                <span class="lblCiudad_Firma"></span>,
+                                departamento de
+                                <span class="lblDepartamento_Firma"></span>,
+                                a los
+                                <span class="lblNumeroDia_Firma"></span>
+                                días del mes de 
+                                <span class="lblMes_Firma"></span>
+                                del año <span class="lblAnio_Firma"></span>.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Firma -->
+                    <div class="row mb-5">
+                        <div class="col-12">
+                            <label class="d-block mb-3">Firma: __________________________________________________</label>
+                            <label class="d-block">No. ID: _________________________________________________</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="d-block lblNombreComercial"></label>
+                            <label class="d-block">C.C: ____________________________________________________</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -2454,6 +2548,6 @@
         var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=ListaDocumentosDelExpedienteJSON%>');
 
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=2021022512420552"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210226063685"></script>
 </body>
 </html>
