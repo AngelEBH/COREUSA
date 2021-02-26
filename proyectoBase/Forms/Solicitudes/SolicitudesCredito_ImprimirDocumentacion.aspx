@@ -700,7 +700,7 @@
         </div>
 
 
-        <!-- ================================== HTML Compromiso Legal ===================================== -->
+        <!-- ================================== HTML Compromiso Legal =========================== -->
         <div id="divContenedorCompromisoLegal" class="contenedorPDF">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divCompromisoLegalPDF" style="display: none;">
                 <div class="card-body pt-0">
@@ -915,7 +915,7 @@
         </div>
 
 
-        <!-- =========================== HTML Inspeccion del vehiculo============================ -->
+        <!-- =========================== HTML Inspeccion del vehiculo =========================== -->
         <div id="divContenedorInspeccionSeguro" runat="server">
             <div class="card m-0 divImprimir" runat="server" visible="true" id="divInspeccionSeguroPDF">
                 <div class="card-body pt-0">
@@ -2534,7 +2534,6 @@
     <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
     <script src="/Scripts/plugins/qrcode/qrcode.js"></script>
     <script>
-
         const FONDOS_PRESTAMO = <%=this.FondoPrestamoJSON %>;
         const ID_SOLICITUD_CREDITO = '<%=pcIDSolicitud%>';
 
@@ -2546,7 +2545,6 @@
 
         const URL_CODIGO_QR = '<%=UrlCodigoQR%>';
         var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=ListaDocumentosDelExpedienteJSON%>');
-
     </script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210226063685"></script>
 </body>
