@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_ImprimirDocumentacion.aspx.cs" Inherits="SolicitudesCredito_ImprimirDocumentacion" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_ImprimirDocumentacion.aspx.cs" Inherits="SolicitudesCredito_ImprimirDocumentacion" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -7,12 +7,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <link href="/CSS/SolicitudesCredito_ImprimirDocumentacion.css?v=20210106150602" rel="stylesheet" />
+
+    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
 </head>
 <body>
     <form id="frmGuardarPreSolicitud" runat="server">
@@ -110,7 +114,7 @@
                                 </button>
 
 
-                                <button type="button" id="btnEnviarCorreoSeguro" onclick="EnviarCorreo('Seguro', 'Seguro de garantía', 'divCorreoSeguroPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
+                                <button type="button" id="btnEnviarCorreoSeguro" data-toggle="modal" data-target="#modalEnviarInformacionAseguradora" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
                                     Enviar información aseguradora
                                 </button>
 
@@ -296,7 +300,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="#" class="img-fluid img-logo-empresa" />
+                            <img src="//:0" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h6 class="text-center font-weight-bold">CONTRATO DE CRÉDITO PARA COMPRA DE VEHÍCULO</h6>
@@ -626,7 +630,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="#" class="img-fluid img-logo-empresa" />
+                            <img src="//:0" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">PAGARÉ POR
@@ -710,7 +714,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="#" class="img-fluid img-logo-empresa" />
+                            <img src="//:0" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">COMPROMISO LEGAL</h5>
@@ -791,7 +795,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="#" class="img-fluid mt-0 pt-0 img-logo-empresa" />
+                            <img src="//:0" class="img-fluid mt-0 pt-0 img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h6 class="text-center font-weight-bold">Convenio de regulación de compra y venta de vehículos para financiamiento a Tercero</h6>
@@ -925,7 +929,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="#" class="img-fluid img-logo-empresa" />
+                            <img src="//:0" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">INSPECCIÓN SEGURO DE VEHÍCULO</h5>
@@ -992,7 +996,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 mb-5">
-                            <img src="#" class="img-fluid img-logo-empresa" />
+                            <img src="//:0" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-6 align-self-center">
                             <h4 class="text-center font-weight-bold lblRazonSocial"></h4>
@@ -1112,7 +1116,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="#" class="img-fluid img-logo-empresa" />
+                            <img src="//:0" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">TRASPASO DE VEHÍCULO</h5>
@@ -1266,7 +1270,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="#" class="img-fluid img-logo-empresa" />
+                            <img src="//:0" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">TRASPASO DE VEHÍCULO</h5>
@@ -1801,7 +1805,7 @@
                 <div class="card-body pt-0 pr-5 pl-5">
                     <div class="row">
                         <div class="col-12 m-0 p-0 text-center">
-                            <img src="#" class="img-fluid pt-4 img-logo-empresa" />
+                            <img src="//:0" class="img-fluid pt-4 img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h4 class="text-center pt-2 pb-4 font-weight-bold">NOTA DE ENTREGA
@@ -1936,7 +1940,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-6 m-0 p-0">
-                            <img src="#" class="img-fluid pt-4 img-logo-empresa" />
+                            <img src="//:0" class="img-fluid pt-4 img-logo-empresa" />
                         </div>
                         <div class="col-6 m-0 p-0 justify-content-end">
                             <table class="table table-borderless m-0" style="width: 100%">
@@ -2250,7 +2254,7 @@
                 <div class="card-body pt-0">
                     <div class="row justify-content-between">
                         <div class="col-auto m-0 p-0">
-                            <img src="#" class="img-fluid img-logo-empresa" />
+                            <img src="//:0" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-auto align-content-start pr-0">
                             <div id="qr_Memorandum"></div>
@@ -2349,7 +2353,7 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-12 m-0 p-0">
-                            <img src="#" class="img-fluid img-logo-empresa" />
+                            <img src="//:0" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
                             <h5 class="text-center font-weight-bold">ACTA DE COMPROMISO</h5>
@@ -2367,7 +2371,8 @@
                                 Dicho documento me es solicitado por
                                 <b class="lblNombreComercial"></b>,
                                 y ________________________________
-                                para realizar un trámite de financiamiento para la compra de mi motocicleta: <br />
+                                para realizar un trámite de financiamiento para la compra de mi motocicleta:
+                                <br />
                                 Marca:
                                 <asp:Label runat="server" ID="lblMarca_ActaDeCompromiso"></asp:Label>,
                                 Modelo:
@@ -2457,62 +2462,18 @@
                         </div>
                     </div>
                     <div class="modal-body">
-                        <div id="divRequisitosPendientes">
-                            <h6 class="font-weight-bold">Documentos pendientes pendientes</h6>
 
-                            <div class="form-group mb-0">
-                                <label class="mb-1 mt-2">Licencia cara frontal</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
-
-                                <label class="mb-1 mt-2">Licencia cara posterior</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
-
-                                <label class="mb-1 mt-2">Informe de inspección continental cara frontal</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
-
-                                <label class="mb-1 mt-2">Informe de inspección continental cara posterior</label>
-                                <input type="file" class="filestyle" data-buttonname="btn-secondary" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" />
-                                <div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="" disabled="" />
-                                    <span class="group-span-filestyle input-group-append" tabindex="0">
-                                        <label for="filestyle-0" class="btn btn-secondary">
-                                            <span class="icon-span-filestyle fas fa-folder-open"></span>
-                                            <span class="buttonText">Subir archivo</span>
-                                        </label>
-                                    </span>
-                                </div>
+                        <div class="spinner-border text-center" role="status" id="LoaderDocumentosParaAsegurar">
+                                <span class="sr-only">Cargando</span>
                             </div>
+
+                        <div id="divDocumentosParaAsegurarPendientes" style="display:none;">
+                            
+                            <h6 class="font-weight-bold">Documentos pendientes</h6>
+
+                            <div class="mb-3" id="DivDocumentacionParaAsegurar"></div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-12"></div>
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="btnEnviarInformacionAseguradora_Confirmar" class="btn btn-primary">
@@ -2537,6 +2498,7 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
     <script src="/Scripts/plugins/qrcode/qrcode.js"></script>
+    <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script>
         const FONDOS_PRESTAMO = <%=this.FondoPrestamoJSON %>;
         const ID_SOLICITUD_CREDITO = '<%=pcIDSolicitud%>';

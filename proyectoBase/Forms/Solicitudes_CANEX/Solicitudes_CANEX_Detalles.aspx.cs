@@ -839,52 +839,52 @@ public partial class Solicitudes_CANEX_Detalles : System.Web.UI.Page
     }
 
     /* Descargar y guardar los documentos de la solicitud en su respectiva carpeta de documentos */
-    public static bool ImportarDocumentosCANEX(int idSolicitud, List<SolicitudesDocumentosViewModel> listaDocumentos)
+    public static bool ImportarDocumentosCANEX(int idSolicitudCredito, List<SolicitudesDocumentosViewModel> documentos)
     {
-        bool result;
+        var resultado = false;
         try
         {
-            var client = new WebClient();
-            var md5ArchivoDescargado = MD5.Create();
-
-            if (listaDocumentos != null)
+            if (documentos != null)
             {
-                /* Crear el nuevo directorio para los documentos de la solicitud */
-                var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
+                /* Crear el nuevo directorio para los documentos de la solicitud de crédito */
+                var nombreCarpetaDocumentos = "Solicitud" + idSolicitudCredito;
                 var directorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentos + "\\";
-                var carpetaExistente = Directory.Exists(directorioDocumentosSolicitud);
 
-                if (!carpetaExistente)
+                if (!Directory.Exists(directorioDocumentosSolicitud))
                     Directory.CreateDirectory(directorioDocumentosSolicitud);
 
-                foreach (SolicitudesDocumentosViewModel Documento in listaDocumentos)
+                /* Descargar todos los documentos canex y guardarlos en el nuevo directorio de la solicitud de credito */
+
+                var viejoDirectorio = string.Empty;
+                var nuevoNombreDocumento = string.Empty;
+                var nuevoDirectorio = string.Empty;
+
+                foreach (SolicitudesDocumentosViewModel Documento in documentos)
                 {
-                    var viejoDirectorio = Documento.URLAntiguoArchivo;
-                    var nuevoNombreDocumento = Documento.fcNombreArchivo;
-                    var nuevoDirectorio = directorioDocumentosSolicitud + nuevoNombreDocumento + ".png";
+                    viejoDirectorio = Documento.URLAntiguoArchivo;
+                    nuevoNombreDocumento = Documento.fcNombreArchivo;
+                    nuevoDirectorio = directorioDocumentosSolicitud + nuevoNombreDocumento + ".png";
 
                     if (File.Exists(nuevoDirectorio))
                         File.Delete(nuevoDirectorio);
 
                     if (!File.Exists(nuevoDirectorio))
                     {
-                        var lcURL = Documento.URLAntiguoArchivo;
-
-                        client.DownloadFile(new Uri(lcURL), nuevoDirectorio);
-                        client.Dispose();
-                        client = null;
-                        client = new WebClient();
+                        using (var client = new WebClient())
+                        {
+                            client.DownloadFile(new Uri(Documento.URLAntiguoArchivo), nuevoDirectorio);
+                        }
                     }
-                }
-            }
-            result = true;
+                } // foreach documentos
+            } // if documentos != null
+            resultado = true;
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
-            result = false;
+            resultado = false;
         }
-        return result;
+        return resultado;
     }
 
     public static int GetMonthDifference(DateTime startDate, DateTime endDate)

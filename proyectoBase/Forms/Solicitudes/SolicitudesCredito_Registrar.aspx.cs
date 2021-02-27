@@ -221,7 +221,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             Response.Write(lcScript);
                             Response.Write("</script>");
                         }
-
+                        
                         while (sqlResultado.Read())
                         {
                             Precalificado.IdClienteSAF = sqlResultado["fcIDCliente"].ToString();

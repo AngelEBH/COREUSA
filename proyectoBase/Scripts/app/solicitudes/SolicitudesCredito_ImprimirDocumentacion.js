@@ -1,6 +1,14 @@
-﻿
+﻿/***********************************************************************************************/
+/************************************ Ejecutar funciones iniciales *****************************/
+/***********************************************************************************************/
 MostrarLoader();
+CargarDocumentosParaAsegurarPendientes();
 
+
+
+/***********************************************************************************************/
+/************************************ Inicializar galerias  ************************************/
+/***********************************************************************************************/
 $("#divGaleriaGarantia").unitegallery({
     gallery_width: 900,
     gallery_height: 600
@@ -30,13 +38,16 @@ $("#divPortadaExpediente_Revision").unitegallery({
 $("#divContenedorInspeccionSeguro,#divContenedorPortadaExpediente").css('margin-top', '999px');
 $("#divInspeccionSeguroPDF,#divContenedorInspeccionSeguro,#divPortadaExpedientePDF,#divContenedorPortadaExpediente").css('display', 'none');
 
+
+
+/***********************************************************************************************/
+/************************************ SETEAR CAMPOS GENERICOS **********************************/
+/***********************************************************************************************/
 $('.lblDepartamento_Firma').text(DEPARTAMENTO_FIRMA);
 $('.lblCiudad_Firma').text(CIUDAD_FIRMA);
 $('.lblNumeroDia_Firma').text(DIAS_FIRMA);
 $('.lblMes_Firma').text(MES_FIRMA);
 $('.lblAnio_Firma').text(ANIO_FIRMA);
-
-
 
 $(".img-logo-empresa").attr('src', FONDOS_PRESTAMO.UrlLogo);
 $('.lblRazonSocial').text(FONDOS_PRESTAMO.RazonSocial);
@@ -55,9 +66,13 @@ $('.lblProfesionRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.Pre
 $('.lblCiudadDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.CiudadDomicilio);
 $('.lblDepartamentoDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.DepartamentoDomicilio);
 
-
 OcultarLoader();
 
+
+
+/***********************************************************************************************/
+/************************************ Exportar a PDF *******************************************/
+/***********************************************************************************************/
 function ExportToPDF(nombreDelArchivo, idDivContenedor, idDivPDF) {
 
     $("#Loader").css('display', '');
@@ -87,6 +102,8 @@ function ExportToPDF(nombreDelArchivo, idDivContenedor, idDivPDF) {
     });
 }
 
+
+
 /***********************************************************************************************/
 /************************************ GENERACIÓN DE CÓDIGO QR **********************************/
 /***********************************************************************************************/
@@ -110,6 +127,8 @@ function GenerarCodigoQR(idElemento) {
 
     qrcode.makeCode(URL_CODIGO_QR);
 }
+
+
 
 /***********************************************************************************************/
 /************************************ MANEJO DE EXPEDIENTES ************************************/
@@ -247,24 +266,11 @@ function ValidarEstadoDeDocumentosExpediente() {
     return true;
 }
 
-function EnviarCorreo(asunto, tituloGeneral, idContenidoHtml) {
 
-    let contenidoHtml = $('#' + idContenidoHtml + '').html();
 
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_ImprimirDocumentacion.aspx/EnviarDocumentoPorCorreo",
-        data: JSON.stringify({ asunto: asunto, tituloGeneral: tituloGeneral, contenidoHtml: contenidoHtml, dataCrypt: window.location.href }),
-        contentType: "application/json; charset=utf-8",
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudo enviar el correo, contacte al administrador.');
-        },
-        success: function (data) {
-            data.d == true ? MensajeExito('El correo se envió correctamente') : MensajeError('No se pudo enviar el correo, contacte al administrador.');
-        }
-    });
-}
-
+/***********************************************************************************************/
+/************************************ ENVIAR INFORMACION PARA ASEGURAR *************************/
+/***********************************************************************************************/
 function CargarDocumentosParaAsegurarPendientes() {
 
     $.ajax({
@@ -299,19 +305,20 @@ function CargarDocumentosParaAsegurarPendientes() {
                 '</div>' +
                 '</div>';
 
-            var divDocumentacion = $("#DivDocumentacion");
+            var divDocumentacion = $("#DivDocumentacionParaAsegurar");
 
             $.each(data.d, function (i, iter) {
 
-                if (data.d.IdEstadoDocumento == 0) {
+                if (iter.IdEstadoDocumento == 0) {
 
+                    $("#divDocumentosParaAsegurarPendientes").css('display', '');
 
-                    var idInput = 'Documento' + iter.IdFotografia;
+                    var idInput = 'Documento' + iter.IdDocumento;
 
                     divDocumentacion.append(
-                        '<form action="SolicitudesCredito_ImprimirDocumentacion.aspx?type=upload&IdDocumentoAsegurar=' + iter.IdFotografia + ' method="post" enctype="multipart/form-data">' +
-                        '<label class="mb-1 mt-2">' + iter.DescripcionFotografia + '</label>' +
-                        '<input type="file" class="filestyle" data-buttonname="btn-secondary" id="' + idInput + '" name="files" data-tipo="' + iter.IdFotografia + '"/>' +
+                        '<form action="SolicitudesCredito_ImprimirDocumentacion.aspx?type=upload&IdDocumentoAsegurar=' + iter.IdDocumento + ' method="post" enctype="multipart/form-data">' +
+                        '<label class="mb-1 mt-2">' + iter.Descripcion + '</label>' +
+                        '<input type="file" class="filestyle" data-buttonname="btn-secondary" id="' + idInput + '" name="files" data-tipo="' + iter.IdDocumento + '"/>' +
                         '</form>');
 
                     $('#' + idInput + '').fileuploader({
@@ -323,7 +330,7 @@ function CargarDocumentosParaAsegurarPendientes() {
                         fileMaxSize: 20, // Peso máximo de un archivo
                         extensions: ['jpg', 'png', 'jpeg'],// Extensiones/formatos permitidos
                         upload: {
-                            url: 'SolicitudesCredito_ImprimirDocumentacion.aspx?type=upload&IdDocumentoAsegurar=' + iter.IdFotografia,
+                            url: 'SolicitudesCredito_ImprimirDocumentacion.aspx?type=upload&IdDocumentoAsegurar=' + iter.IdDocumento,
                             data: null,
                             type: 'POST',
                             enctype: 'multipart/form-data',
@@ -403,10 +410,61 @@ function CargarDocumentosParaAsegurarPendientes() {
                 }
 
             }); /* Termina .Each*/
+
+            $("#LoaderDocumentosParaAsegurar").css('display', 'none');
         }
     }); /* Termina Ajax */
 }
 
+$("#btnEnviarInformacionAseguradora_Confirmar").click(function () {
+
+    $("#btnEnviarInformacionAseguradora_Confirmar").prop('disabled',true);
+
+    let contenidoHtml = $('#divCorreoSeguroPDF').html();
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_ImprimirDocumentacion.aspx/EnviarInformacionParaAsegurar",
+        data: JSON.stringify({ contenidoHtml: contenidoHtml, VIN: $("#txtVIN").val(), dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo enviar la información para asegurar, contacte al administrador.');
+        },
+        success: function (data) {
+
+            data.d.ResultadoExitoso == true ? MensajeExito(data.d.MensajeResultado) : MensajeError(data.d.MensajeResultado);
+
+            console.log(data.d.MensajeDebug);
+
+            $("#modalEnviarInformacionAseguradora").modal('hide');
+        },
+        complete: function () {
+            $("#btnEnviarInformacionAseguradora_Confirmar").prop('disabled', false);
+        }
+    });
+
+});
+
+/***********************************************************************************************/
+/************************************ FUNCIONES UTILITARIAS ************************************/
+/***********************************************************************************************/
+function EnviarCorreo(asunto, tituloGeneral, idContenidoHtml) {
+
+    let contenidoHtml = $('#' + idContenidoHtml + '').html();
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_ImprimirDocumentacion.aspx/EnviarDocumentoPorCorreo",
+        data: JSON.stringify({ asunto: asunto, tituloGeneral: tituloGeneral, contenidoHtml: contenidoHtml, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo enviar el correo, contacte al administrador.');
+        },
+        success: function (data) {
+            data.d == true ? MensajeExito('El correo se envió correctamente') : MensajeError('No se pudo enviar el correo, contacte al administrador.');
+        }
+    });
+}
 
 function MensajeError(mensaje) {
     iziToast.error({
@@ -425,6 +483,7 @@ function MensajeExito(mensaje) {
 function MostrarLoader() {
     $("#Loader").css('display', '');
 }
+
 function OcultarLoader() {
     $("#Loader").css('display', 'none');
 }
