@@ -1123,7 +1123,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
             pmmMensaje.To.Add("willian.diaz@miprestadito.com");
             //pmmMensaje.To.Add(buzonCorreoUsuario);
-            pmmMensaje.CC.Add(buzonCorreoUsuario);
+            //pmmMensaje.CC.Add(buzonCorreoUsuario);
             pmmMensaje.IsBodyHtml = true;
 
             string htmlString = @"<!DOCTYPE html> " +

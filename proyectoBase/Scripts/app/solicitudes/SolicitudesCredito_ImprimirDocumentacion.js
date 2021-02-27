@@ -418,6 +418,8 @@ function CargarDocumentosParaAsegurarPendientes() {
 
 $("#btnEnviarInformacionAseguradora_Confirmar").click(function () {
 
+    debugger;
+
     $("#btnEnviarInformacionAseguradora_Confirmar").prop('disabled',true);
 
     let contenidoHtml = $('#divCorreoSeguroPDF').html();

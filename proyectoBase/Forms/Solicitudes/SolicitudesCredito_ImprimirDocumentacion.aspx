@@ -2371,7 +2371,7 @@
                                 Dicho documento me es solicitado por
                                 <b class="lblNombreComercial"></b>,
                                 y ________________________________
-                                para realizar un trámite de financiamiento para la compra de mi motocicleta:
+                                para realizar un trámite de financiamiento para la compra de mi vehiculo:
                                 <br />
                                 Marca:
                                 <asp:Label runat="server" ID="lblMarca_ActaDeCompromiso"></asp:Label>,
@@ -2388,7 +2388,7 @@
                             </p>
                             <p>
                                 <b>IMPORTANTE:</b>
-                                es de mi conocimiento que de no entregar dicho documento en los próximos 40 días doy autorización a PRESTADITO a recuperar la motocicleta adquirida mediante el financiamiento de ellos, y también me doy por enterado de que no se me hará entrega de placas y boleta de revisión.                               
+                                es de mi conocimiento que de no entregar dicho documento en los próximos 40 días doy autorización a PRESTADITO a recuperar la vehiculo adquirida mediante el financiamiento de ellos, y también me doy por enterado de que no se me hará entrega de placas y boleta de revisión.                               
                             </p>
                             <p>
                                 Doy fe y constancia de que firmo este documento libre y espontáneamente
@@ -2464,11 +2464,11 @@
                     <div class="modal-body">
 
                         <div class="spinner-border text-center" role="status" id="LoaderDocumentosParaAsegurar">
-                                <span class="sr-only">Cargando</span>
-                            </div>
+                            <span class="sr-only">Cargando</span>
+                        </div>
 
-                        <div id="divDocumentosParaAsegurarPendientes" style="display:none;">
-                            
+                        <div id="divDocumentosParaAsegurarPendientes" style="display: none;">
+
                             <h6 class="font-weight-bold">Documentos pendientes</h6>
 
                             <div class="mb-3" id="DivDocumentacionParaAsegurar"></div>
