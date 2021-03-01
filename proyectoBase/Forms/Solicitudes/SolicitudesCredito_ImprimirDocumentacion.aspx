@@ -113,9 +113,10 @@
                                 </button>
 
 
-                                <button type="button" id="btnEnviarCorreoSeguro" data-toggle="modal" data-target="#modalEnviarInformacionAseguradora" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
+                                <button type="button" id="btnEnviarCorreoSeguro" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
                                     Enviar información aseguradora
                                 </button>
+
 
                                 <button type="button" id="btnPortadaExpediente" onclick="ExportToPDF('PORTADA_EXPEDIENTE','divContenedorPortadaExpediente','divPortadaExpedientePDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
                                     Portada Expediente

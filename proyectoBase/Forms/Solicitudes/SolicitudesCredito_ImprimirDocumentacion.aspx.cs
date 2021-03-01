@@ -871,7 +871,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     #region Proceso para asegurar vehiculo
 
     [WebMethod]
-    public static List<TipoDocumento_ViewModel> ObtenerDocumentosParaAsegurar(string dataCrypt)
+    public static List<TipoDocumento_ViewModel> ObtenerDocumentosParaAsegurar(bool reiniciarListaDocumentosAdjuntados, string dataCrypt)
     {
         try
         {
@@ -880,6 +880,12 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             var pcIDSesion = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("SID");
             var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr") ?? "0";
             var pcIDSolicitud = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDSol");
+
+            if (reiniciarListaDocumentosAdjuntados)
+            {
+                HttpContext.Current.Session["ListaDocumentosParaAsegurar"] = null;
+                HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
+            }
 
             return ObtenerDocumentosParaAsegurarPorIdSolicitud(pcIDApp, pcIDSesion, pcIDUsuario, pcIDSolicitud);
         }
@@ -1016,13 +1022,45 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                 return resultadoProceso;
             }
 
+
+            /* Cambiar estado asegurado de la garantía a "Asegurado" */
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDGarantias_CambiarEstadoAsegurado", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultadoProceso.ResultadoExitoso = false;
+                                resultadoProceso.MensajeResultado = "Ocurrió un error al cambiar el estado de la garantía a asegurado. vuelva a intentarlo o contacte al administrador.";
+                                resultadoProceso.MensajeDebug = sqlResultado["MensajeError"].ToString();
+
+                                return resultadoProceso;
+                            }
+                        }
+                    }
+                }
+            }
+
             var listaDirectoriosAttachments = documentosParaAsegurar.Where(x => x.IdEstadoDocumento != 0).Select(x => x.Ruta).ToList();
 
             /** Enviar por correo electrónico la información para asegurar un vehículo **/
             if (!EnviarCorreo("Seguro", "Seguro de garantía", "", contenidoHtml, usuarioLogueado.BuzonDeCorreo, listaDirectoriosAttachments))
             {
                 resultadoProceso.ResultadoExitoso = false;
-                resultadoProceso.MensajeResultado = "El proceso se realizó con exito pero ocurrió un error al enviar el correo electrónico, contacte al administrador.";
+                resultadoProceso.MensajeResultado = "El proceso se realizó con exito pero ocurrió un error al enviar el correo electrónico, vuelva a intentarlo o contacte al administrador.";
                 resultadoProceso.MensajeDebug = "Error al EnviarCorreo";
             }
             else

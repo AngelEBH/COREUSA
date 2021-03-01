@@ -2,8 +2,6 @@
 /************************************ Ejecutar funciones iniciales *****************************/
 /***********************************************************************************************/
 MostrarLoader();
-CargarDocumentosParaAsegurarPendientes();
-
 
 
 /***********************************************************************************************/
@@ -270,15 +268,26 @@ function ValidarEstadoDeDocumentosExpediente() {
 /***********************************************************************************************/
 /************************************ ENVIAR INFORMACION PARA ASEGURAR *************************/
 /***********************************************************************************************/
-function CargarDocumentosParaAsegurarPendientes() {
+$("#btnEnviarCorreoSeguro").click(function () {
+
+    CargarDocumentosParaAsegurarPendientes(true);
+});
+
+
+function CargarDocumentosParaAsegurarPendientes(mostrarModalEnviarDocumentosParaAsegurar) {
+
+    $("#DivDocumentacionParaAsegurar").empty();
 
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_ImprimirDocumentacion.aspx/ObtenerDocumentosParaAsegurar",
-        data: JSON.stringify({ dataCrypt: window.location.href }),
+        data: JSON.stringify({ reiniciarListaDocumentosAdjuntados: true, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Ocurrió un error al validar los documentos para asegurar la garantía, contacte al administrador');
+        },
+        beforeSend: function () {
+            $("#LoaderDocumentosParaAsegurar").css('display', '');
         },
         success: function (data) {
 
@@ -411,6 +420,11 @@ function CargarDocumentosParaAsegurarPendientes() {
 
             }); /* Termina .Each*/
 
+            if (mostrarModalEnviarDocumentosParaAsegurar == true) {
+                $("#modalEnviarInformacionAseguradora").modal({ backdrop: 'static'});
+            }
+        },
+        complete: function () {
             $("#LoaderDocumentosParaAsegurar").css('display', 'none');
         }
     }); /* Termina Ajax */
