@@ -1900,11 +1900,8 @@
                         <div class="col-12">
                             <p>
                                 En virtud de lo anterior se le emite esta <b>NOTA DE ENTREGA</b> y al mismo tiempo ratificamos nuestro
-                                compromiso de hacer el pago correspondiente en efectivo o en Cheque al señor:
-                                <asp:Label runat="server" ID="lblNombreVendedorGarantia_NotaEntrega"></asp:Label>
-                                en cinco (5) días hábiles mismos que serán para inscribir dicho vehículo en el Instituto de la Propiedad Mercantil a favor de 
-                                <span class="lblNombreComercial"></span>,
-                                salvo que la documentación entregada no se encuentre completa y/o no pueda ser inscrito en el IP.
+                                compromiso de hacer el pago correspondiente en efectivo o en Cheque.
+                                Se le pide a la concesionaria entregar una COPIA de factura al cliente y retener una llave original para ser entregada a Prestadito.
                             </p>
                             <p>
                                 Y para los fines que estime conveniente, se le extiende la presente en la ciudad de

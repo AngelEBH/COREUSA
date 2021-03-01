@@ -541,7 +541,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblColor_NotaEntrega.Text = color;
                                     lblCilindraje_NotaEntrega.Text = cilindraje;
                                     lblPlaca_NotaEntrega.Text = matricula;
-                                    lblNombreVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
 
                                     /* Portada del expediente */
                                     lblNoSolicitud_PortadaExpediente.Text = "Solicitud de crédito #" + pcIDSolicitud;
@@ -928,7 +927,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                     documentosParaAsegurarAdjuntados.ForEach(item =>
                     {
-    /* si el archivo existe, que se agregue a la lista */
+                        /* si el archivo existe, que se agregue a la lista */
                         if (File.Exists(item.fcRutaArchivo + "\\" + item.NombreAntiguo))
                         {
                             nuevoNombreDocumento = GenerarNombreDocumentoGarantia(pcIDSolicitud, VIN);
