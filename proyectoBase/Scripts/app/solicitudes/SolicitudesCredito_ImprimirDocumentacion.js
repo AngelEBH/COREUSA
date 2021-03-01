@@ -69,7 +69,6 @@ $('.lblDepartamentoDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.Representa
 OcultarLoader();
 
 
-
 /***********************************************************************************************/
 /************************************ Exportar a PDF *******************************************/
 /***********************************************************************************************/
@@ -312,6 +311,7 @@ function CargarDocumentosParaAsegurarPendientes() {
                 if (iter.IdEstadoDocumento == 0) {
 
                     $("#divDocumentosParaAsegurarPendientes").css('display', '');
+                    $("#divParaAsegurarNoHayDocumentosPendientes").css('display', 'none');
 
                     var idInput = 'Documento' + iter.IdDocumento;
 
@@ -420,7 +420,7 @@ $("#btnEnviarInformacionAseguradora_Confirmar").click(function () {
 
     debugger;
 
-    $("#btnEnviarInformacionAseguradora_Confirmar").prop('disabled',true);
+    $("#btnEnviarInformacionAseguradora_Confirmar").prop('disabled', true);
 
     let contenidoHtml = $('#divCorreoSeguroPDF').html();
 

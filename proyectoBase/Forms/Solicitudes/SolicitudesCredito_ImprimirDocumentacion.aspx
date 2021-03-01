@@ -13,7 +13,6 @@
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <link href="/CSS/SolicitudesCredito_ImprimirDocumentacion.css?v=20210106150602" rel="stylesheet" />
-
     <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
     <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
     <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
@@ -2472,6 +2471,10 @@
                             <h6 class="font-weight-bold">Documentos pendientes</h6>
 
                             <div class="mb-3" id="DivDocumentacionParaAsegurar"></div>
+                        </div>
+
+                        <div id="divParaAsegurarNoHayDocumentosPendientes">
+                            <h6 class="font-weight-bold">¡No hay documentos pendientes!</h6>
                         </div>
 
                     </div>

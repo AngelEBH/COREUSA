@@ -88,7 +88,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             /* Guardar documentos de la solicitud */
             if (type != null || Request.HttpMethod == "POST")
             {
-                Session["IdDocumentoAsegurar"] = Convert.ToInt32(Request.QueryString["IdDocumentoAsegurar"]);
+                Session["tipoDoc"] = Convert.ToInt32(Request.QueryString["IdDocumentoAsegurar"]);
                 var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
                 var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
@@ -949,7 +949,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                         foreach (var item in documentosParaAsegurarGuardarEnBbdd)
                         {
-
                             using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Documentos_Guardar", sqlConexion, sqlTransaction))
                             {
                                 sqlComando.CommandType = CommandType.StoredProcedure;
@@ -1017,8 +1016,10 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                 return resultadoProceso;
             }
 
+            var listaDirectoriosAttachments = documentosParaAsegurar.Where(x => x.IdEstadoDocumento != 0).Select(x => x.Ruta).ToList();
+
             /** Enviar por correo electrónico la información para asegurar un vehículo **/
-            if (EnviarCorreo("Seguro", "Seguro de garantía", "", contenidoHtml, usuarioLogueado.BuzonDeCorreo))
+            if (!EnviarCorreo("Seguro", "Seguro de garantía", "", contenidoHtml, usuarioLogueado.BuzonDeCorreo, listaDirectoriosAttachments))
             {
                 resultadoProceso.ResultadoExitoso = false;
                 resultadoProceso.MensajeResultado = "El proceso se realizó con exito pero ocurrió un error al enviar el correo electrónico, contacte al administrador.";
@@ -1066,7 +1067,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             {
                                 IdDocumento = (short)sqlResultado["fiIDTipoDocumento"],
                                 Descripcion = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
-                                IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"]
+                                IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
+                                Url = sqlResultado["fcURL"].ToString(),
+                                Ruta = sqlResultado["fcRutaArchivo"].ToString()
                             });
                         }
                     } // using sqlResultado
@@ -1106,7 +1109,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         return resultado;
     }
 
-    public static bool EnviarCorreo(string pcAsunto, string pcTituloGeneral, string pcSubtitulo, string pcContenidodelMensaje, string buzonCorreoUsuario)
+    public static bool EnviarCorreo(string pcAsunto, string pcTituloGeneral, string pcSubtitulo, string pcContenidodelMensaje, string buzonCorreoUsuario, List<string> directoriosAttachments = null)
     {
         var resultado = false;
         try
@@ -1124,6 +1127,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             pmmMensaje.To.Add("willian.diaz@miprestadito.com");
             //pmmMensaje.To.Add(buzonCorreoUsuario);
             //pmmMensaje.CC.Add(buzonCorreoUsuario);
+            pmmMensaje.CC.Add("Amilcar.sauceda@miprestadito.com");
             pmmMensaje.IsBodyHtml = true;
 
             string htmlString = @"<!DOCTYPE html> " +
@@ -1160,6 +1164,16 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             pmmMensaje.Body = htmlString;
 
             ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+
+            /* Validar si se agregó algún attachments */
+            if (directoriosAttachments != null)
+            {
+                foreach (var item in directoriosAttachments)
+                {
+                    if(File.Exists(item))
+                        pmmMensaje.Attachments.Add(new Attachment(item));
+                }
+            }
 
             smtpCliente.Send(pmmMensaje);
 
@@ -1412,6 +1426,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         public int IdDocumento { get; set; }
         public string Descripcion { get; set; }
         public int IdEstadoDocumento { get; set; }
+        public string Url { get; set; }
+        public string Ruta { get; set; }
     }
 
     #endregion
