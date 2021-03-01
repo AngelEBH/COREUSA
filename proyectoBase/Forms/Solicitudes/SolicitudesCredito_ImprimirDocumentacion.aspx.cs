@@ -296,6 +296,11 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     var serieDos = sqlResultado["fcSerieDos"].ToString();
                                     var comentario = sqlResultado["fcComentario"].ToString().Trim();
 
+                                    if (sqlResultado["fiEstadoAsegurado"].ToString() != "0")
+                                    {
+                                        btnEnviarCorreoSeguro.Visible = false;
+                                    }
+
                                     /* Propietario de la garantia */
                                     var nombrePropietarioGarantia = sqlResultado["fcNombrePropietarioGarantia"].ToString();
                                     var identidadPropietarioGarantia = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
@@ -923,7 +928,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                     documentosParaAsegurarAdjuntados.ForEach(item =>
                     {
-                        /* si el archivo existe, que se agregue a la lista */
+    /* si el archivo existe, que se agregue a la lista */
                         if (File.Exists(item.fcRutaArchivo + "\\" + item.NombreAntiguo))
                         {
                             nuevoNombreDocumento = GenerarNombreDocumentoGarantia(pcIDSolicitud, VIN);
@@ -1208,7 +1213,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             {
                 foreach (var item in directoriosAttachments)
                 {
-                    if(File.Exists(item))
+                    if (File.Exists(item))
                         pmmMensaje.Attachments.Add(new Attachment(item));
                 }
             }
