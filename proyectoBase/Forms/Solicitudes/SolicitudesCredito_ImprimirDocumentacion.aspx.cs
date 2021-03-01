@@ -135,6 +135,10 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         catch (Exception ex)
         {
             MostrarMensaje("Ocurrió un error al cargar la información: " + ex.Message.ToString());
+
+            divContenedorPortadaExpediente.Visible = false;
+            divContenedorInspeccionSeguro.Visible = false;
+
         }
     }
 
@@ -1166,40 +1170,43 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
             pmmMensaje.Subject = pcAsunto;
             pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
+            
             pmmMensaje.To.Add("willian.diaz@miprestadito.com");
+            pmmMensaje.CC.Add("amilcar.sauceda@miprestadito.com");
+            
             //pmmMensaje.To.Add(buzonCorreoUsuario);
             //pmmMensaje.CC.Add(buzonCorreoUsuario);
-            pmmMensaje.CC.Add("Amilcar.sauceda@miprestadito.com");
+
             pmmMensaje.IsBodyHtml = true;
 
             string htmlString = @"<!DOCTYPE html> " +
             "<html>" +
             "<body>" +
-            " <div style=\"width: 500px;\">" +
-            " <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
-            " <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
-            " <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td>&nbsp;</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td style=\"background-color:whitesmoke; text-align:center;\">Datos del cliente y la garantía</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td>&nbsp;</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td>&nbsp;</td>" +
-            " </tr>" +
-            " <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
-            " <td>System Bot Prestadito</td>" +
-            " </tr>" +
-            " </table>" +
-            " </div>" +
+            "   <div style=\"width: 500px;\">" +
+            "       <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
+            "           <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
+            "               <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
+            "           </tr>" +
+            "           <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            "               <td>&nbsp;</td>" +
+            "           </tr>" +
+            "           <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            "               <td style=\"background-color:whitesmoke; text-align:center;\">Datos del cliente y la garantía</td>" +
+            "           </tr>" +
+            "           <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            "               <td>&nbsp;</td>" +
+            "           </tr>" +
+            "           <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            "               <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
+            "           </tr>" +
+            "           <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+            "               <td>&nbsp;</td>" +
+            "           </tr>" +
+            "           <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
+            "               <td>System Bot Prestadito</td>" +
+            "           </tr>" +
+            "       </table>" +
+            "   </div>" +
             "</body> " +
             "</html> ";
 

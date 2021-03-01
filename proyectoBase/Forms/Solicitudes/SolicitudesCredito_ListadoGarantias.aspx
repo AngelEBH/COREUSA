@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Garantías de solicitudes aprobadas</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />    
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
@@ -18,7 +18,7 @@
     <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/bootstrap4-modal-fullscreen.min.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap4-modal-fullscreen.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
         .opcion {
@@ -154,13 +154,14 @@
                                     <th class="report-data">Producto / CC / Vendedor</th>
                                     <th class="report-data">Cliente / Identidad</th>
                                     <th class="report-data">Marca / Modelo / Año / VIN</th>
-                                    <th class="no-sort">Doc.</th>
+                                    <th class="no-sort">Doc.</th>                                    
                                     <th class="no-sort">Registro<br />
-                                        Garantia</th>
+                                        Garantia</th>                                    
                                     <th class="no-sort">Revisión<br />
                                         Física</th>
                                     <th class="no-sort estado-instalacion-gps">Instalación<br />
                                         GPS</th>
+                                    <th class="no-sort">Asegurado</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -196,7 +197,7 @@
             <div class="modal-content">
                 <div class="modal-body p-0">
 
-                    <iframe class="w-100 h-100" id="iframe-fullscreen" src="Garantia_Detalles.aspx?hFuYL/3BFCvrmaPQ+Jn7raBWiZZzDdR1rCp9U4CzMiHir1Y3dsMSqh4guMZqUYhpV7PvRlbKYRqtyPc/mQeXow=="></iframe>
+                    <iframe class="w-100 h-100" id="iframe-fullscreen" src="//"></iframe>
 
                 </div>
                 <div class="modal-footer pt-2 pb-2">

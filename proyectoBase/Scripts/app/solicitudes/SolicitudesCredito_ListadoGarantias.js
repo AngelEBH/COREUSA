@@ -132,6 +132,12 @@ $(document).ready(function () {
                 }
             },
             {
+                "data": "IdEstadoAsegurado", "className": "text-center",
+                "render": function (data, type, row) {
+                    return '<i class="mdi mdi-check-circle mdi-24px p-0 text-' + (row["IdEstadoAsegurado"] == 0 ? 'warning' : 'success') + '" title="' + (row["IdEstadoAsegurado"] == 0 ? '' : row["UsuarioAseguro"] + ' - ' + moment(row["FechaAsegurado"]).locale('es').format('LLL')) + '" ><label style="display:none;">' + (row["IdEstadoAsegurado"] == 0 ? 'Pendiente asegurar' : 'asegurado') + '</label></i>';
+                }
+            },
+            {
                 "data": "FechaCreacion", "className": "report-precios-de-mercado", "visible": false, "title": 'Fecha de ingreso',
                 "render": function (value) {
                     return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
@@ -156,20 +162,20 @@ $(document).ready(function () {
                 autoFilter: true,
                 messageTop: 'Garantías de solicitudes de crédito' + moment().format('YYYY/MM/DD'),
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8]
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
                 }
             },
             {
                 extend: 'colvis',
                 text: '<i class="mdi mdi-table-column-remove"></i> Columnas',
-                columns: [1, 2, 3, 4, 5, 6, 7, 8] // columnas que pueden ocultarse y mostrarse, por indice para mejorar el tiempo de carga, por className es mas intuitivo toggle-visible-active
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9] // columnas que pueden ocultarse y mostrarse, por indice para mejorar el tiempo de carga, por className es mas intuitivo toggle-visible-active
             },
             {
                 extend: 'print',
                 text: '<i class="fas fa-print"></i> Imprimir',
                 autoFilter: true,
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8]
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
                 }
             },
             {
@@ -187,7 +193,7 @@ $(document).ready(function () {
         ],
         columnDefs: [
             { targets: 'no-sort', orderable: false },
-            { "width": "1%", "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8] }
+            { "width": "1%", "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] }
         ]
     });
 
@@ -359,7 +365,7 @@ $(document).ready(function () {
         if (filtroActual == 'rangoFechas' && tabActivo == 'tab_Listado_Solicitudes_Garantias') {
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
-                FechaIngreso = new Date(data[9]);
+                FechaIngreso = new Date(data[10]);
             return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaIngreso <= Hasta) || ("Invalid Date" == Hasta && FechaIngreso >= Desde) || (FechaIngreso <= Hasta && FechaIngreso >= Desde);
         }
         else if (filtroActual == 'rangoFechas') {

@@ -186,6 +186,11 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 ValorAPrestarGarantia = (decimal)sqlResultado["fnValorAPrestarGarantia"],
                                 ValorAFinanciar = (decimal)sqlResultado["fnValorFinanciado"],
                                 Moneda = sqlResultado["fcSimboloMoneda"].ToString(),
+                                /* Estado asegurado de la garantia */
+                                IdEstadoAsegurado = (int)sqlResultado["fiEstadoAsegurado"],
+                                IdUsuarioAseguro = (int)sqlResultado["fiIDUsuarioAseguro"],
+                                UsuarioAseguro = sqlResultado["fcUsuarioAseguro"].ToString(),
+                                FechaAsegurado = (DateTime)sqlResultado["fdFechaAsegurado"],
                                 /* Estado revisión fisica de la garantia */
                                 EstadoRevisionFisica = sqlResultado["fcEstadoRevisionFisica"].ToString(),
                                 EstadoRevisionFisicaClassName = sqlResultado["fcEstadoRevisionFisicaClassName"].ToString(),
@@ -802,6 +807,12 @@ public class SolicitudesCredito_ListadoGarantias_ViewModel
     public decimal ValorAPrestarGarantia { get; set; }
     public decimal ValorAFinanciar { get; set; }
     public string Moneda { get; set; }
+
+    /* Estado asegurado de la garantía */
+    public int IdEstadoAsegurado { get; set; }
+    public int IdUsuarioAseguro { get; set; }
+    public string UsuarioAseguro { get; set; }
+    public DateTime FechaAsegurado { get; set; }
 
     /* Estado de la revisión física de la garantía */
     public string EstadoRevisionFisica { get; set; }
