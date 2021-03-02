@@ -9,7 +9,7 @@
     <title>Garantías de solicitudes aprobadas</title>
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />    
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
@@ -154,9 +154,9 @@
                                     <th class="report-data">Producto / CC / Vendedor</th>
                                     <th class="report-data">Cliente / Identidad</th>
                                     <th class="report-data">Marca / Modelo / Año / VIN</th>
-                                    <th class="no-sort">Doc.</th>                                    
+                                    <th class="no-sort">Doc.</th>
                                     <th class="no-sort">Registro<br />
-                                        Garantia</th>                                    
+                                        Garantia</th>
                                     <th class="no-sort">Revisión<br />
                                         Física</th>
                                     <th class="no-sort estado-instalacion-gps">Instalación<br />

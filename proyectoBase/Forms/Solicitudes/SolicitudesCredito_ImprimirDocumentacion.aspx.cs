@@ -82,6 +82,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                     HttpContext.Current.Session["ListaDocumentosParaAsegurar"] = null;
                     Session.Timeout = 10080;
+
+                    divContenedorPortadaExpediente.Visible = true;
+                    divContenedorInspeccionSeguro.Visible = true;
                 }
             }
 
@@ -135,10 +138,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         catch (Exception ex)
         {
             MostrarMensaje("Ocurrió un error al cargar la información: " + ex.Message.ToString());
-
-            divContenedorPortadaExpediente.Visible = false;
-            divContenedorInspeccionSeguro.Visible = false;
-
         }
     }
 
@@ -302,7 +301,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                                     if (sqlResultado["fiEstadoAsegurado"].ToString() != "0")
                                     {
-                                        btnEnviarCorreoSeguro.Visible = false;
+                                        btnEnviarCorreoSeguro.Visible = true;
                                     }
 
                                     /* Propietario de la garantia */
@@ -528,7 +527,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblVIN_CorreoSeguro.Text = VIN;
                                     lblNombreCliente_CorreoSeguro.Text = nombreCliente;
                                     lblIdentidadCliente_CorreoSeguro.Text = identidad;
-                                    lblNumeroPrestamo_CorreoSeguro.Text = "";
 
                                     /* Nota de entrega */
                                     lblVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
@@ -1172,7 +1170,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
             
             pmmMensaje.To.Add("willian.diaz@miprestadito.com");
-            pmmMensaje.CC.Add("amilcar.sauceda@miprestadito.com");
+            //pmmMensaje.CC.Add("amilcar.sauceda@miprestadito.com");
             
             //pmmMensaje.To.Add(buzonCorreoUsuario);
             //pmmMensaje.CC.Add(buzonCorreoUsuario);
