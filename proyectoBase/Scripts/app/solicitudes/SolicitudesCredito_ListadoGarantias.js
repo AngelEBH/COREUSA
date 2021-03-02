@@ -79,6 +79,7 @@ $(document).ready(function () {
                         ((row["IdGarantia"] != 0 && row["VIN"] != '') ? '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion" data-toggle="modal" data-target="#modalImprimirDocumentacion"><i class="far fa-file-alt"></i> Imprimir Doc.</button>' : '') +
                         ((row["IdGarantia"] != 0 && row["VIN"] != '' && row["IdAutoGPSInstalacion"] == 0) ? '<button type="button" class="dropdown-item" id="btnSolicitarGPS"><i class="fas fa-map-marker-alt"></i> Solicitar revisión física/GPS</button>' : '') +
                         ((row["IdAutoGPSInstalacion"] != 0) ? '<button type="button" class="dropdown-item" id="btnDetalleSolicitudGPS"><i class="fas fa-map-marker-alt"></i> Solicitud revisión física/GPS</button>' : '') +
+                        '<button type="button" class="dropdown-item" id="btnVerExpediente" onclick="MostrarExpedienteSolicitudGarantia(' + row["IdSolicitud"] + ',' + row["IdGarantia"] + ')"><i class="far fa-file-alt"></i> Ver expediente</button>' +
                         '</div>' +
                         '</div >';
                 }
@@ -423,6 +424,7 @@ $(document).ready(function () {
         $("#lblValorAFinanciar").text(row.Moneda + ' ' + ConvertirADecimal(row.ValorAFinanciar));
         $(".lblNoSolicitudCredito").text(idSolicitud);
         $(".lblNombreCliente").text(nombreCliente);
+        $(".lblIdentidadCliente").text(identidad);
         $("#lblEstadoRevisionFisica").removeClass('badge-success').removeClass('badge-warning').removeClass('badge-danger').addClass('badge-' + row.EstadoRevisionFisicaClassName).text(row.EstadoRevisionFisica);
 
         if (idSolicitudInstalacionGPS != 0) {
@@ -649,8 +651,6 @@ $("#btnActualizarSolicitudGPS_Confirmar").click(function (e) {
     }
 });
 
-
-
 function MostrarRevisionGarantia(idGarantia) {
 
     $.ajax({
@@ -778,7 +778,6 @@ function MostrarInstalacionGPS(idAutoInstalacionGPS) {
                     tile_textpanel_title_text_align: "center"
                 });
 
-
                 $("#modalDetallesInstalacionGPS").modal();
             }
             else
@@ -804,7 +803,6 @@ function MostrarDocumentosGarantia(idGarantia) {
                 var documentos = data.d;
                 var divGaleriaGarantia = $("#divGaleriaGarantia").empty();
                 var templateDocumentos = '';
-
 
                 if (documentos != null) {
 
@@ -832,6 +830,76 @@ function MostrarDocumentosGarantia(idGarantia) {
     });
 }
 
+function MostrarExpedienteSolicitudGarantia(idSolicitud, idGarantia) {
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_ListadoGarantias.aspx/CargarDocumentosExpedienteSolicitudGarantia",
+        data: JSON.stringify({ idSolicitud: idSolicitud, idGarantia: idGarantia, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudieron cargar los documentos de la garantía, contacte al administrador.');
+        },
+        success: function (data) {
+
+            if (data.d != null) {
+
+                /* Documentos de la solicitud */
+                var documentosSolicitud = data.d.SolicitudDocumentos;
+                var divExpedienteSolicitud = $("#divExpedienteSolicitud").empty();
+                var templateDocumentosSolicitud = '';
+
+                if (documentosSolicitud != null) {
+
+                    if (documentosSolicitud.length > 0) {
+
+                        for (var i = 0; i < documentosSolicitud.length; i++) {
+
+                            templateDocumentosSolicitud += '<img alt="' + documentosSolicitud[i].DescripcionTipoDocumento + '" src="' + documentosSolicitud[i].URLArchivo + '" data-image="' + documentosSolicitud[i].URLArchivo + '" data-description="' + documentosSolicitud[i].DescripcionTipoDocumento + '"/>';
+                        }
+                    }
+                }
+
+
+                templateDocumentosSolicitud = templateDocumentosSolicitud == '' ? imgNoHayFotografiasDisponibles : templateDocumentosSolicitud;
+
+                divExpedienteSolicitud.append(templateDocumentosSolicitud);
+
+                $("#divExpedienteSolicitud").unitegallery();
+
+
+                /* Documentos de la garantía */
+                var documentosGarantia = data.d.GarantiaDocumentos;
+                var divExpedienteGarantia = $("#divExpedienteGarantia").empty();
+                var templateDocumentosGarantia = '';
+                var imgNoHayFotografiasDisponibles = '<img alt="No hay fotografías disponibles" src="/Imagenes/Imagen_no_disponible.png" data-image="/Imagenes/Imagen_no_disponible.png" data-description="No hay fotografías disponibles"/>';
+
+                if (documentosGarantia != null) {
+
+                    if (documentosGarantia.length > 0) {
+
+                        for (var i = 0; i < documentosGarantia.length; i++) {
+
+                            templateDocumentosGarantia += '<img alt="' + documentosGarantia[i].DescripcionTipoDocumento + '" src="' + documentosGarantia[i].URLArchivo + '" data-image="' + documentosGarantia[i].URLArchivo + '" data-description="' + documentosGarantia[i].DescripcionTipoDocumento + '"/>';
+                        }
+                    }
+                }
+
+
+                templateDocumentosGarantia = templateDocumentosGarantia == '' ? imgNoHayFotografiasDisponibles : templateDocumentosGarantia;
+
+                divExpedienteGarantia.append(templateDocumentosGarantia);
+
+                $("#divExpedienteGarantia").unitegallery();
+
+                $("#modalDocumentosGarantiaSolicitud").modal();
+            }
+            else
+                MensajeError('No se pudo cargar el expediente, contacte al administrador.');
+        }
+    });
+}
+
 function RedirigirAccion(nombreFormulario, accion) {
 
     $.ajax({
@@ -848,9 +916,7 @@ function RedirigirAccion(nombreFormulario, accion) {
     });
 }
 
-
 function MostrarContenidoEnModalFullScreen(nombreFormulario, accion) {
-
 
     $.ajax({
         type: "POST",

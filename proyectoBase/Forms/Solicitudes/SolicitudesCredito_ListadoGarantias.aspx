@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
-    <title>Garantías de solicitudes aprobadas</title>
+    <title>Garantías</title>
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Content/css/style.css" rel="stylesheet" />
@@ -197,7 +197,7 @@
             <div class="modal-content">
                 <div class="modal-body p-0">
 
-                    <iframe class="w-100 h-100" id="iframe-fullscreen" src="//"></iframe>
+                    <iframe class="w-100 h-100" id="iframe-fullscreen" src="//" allowfullscreen></iframe>
 
                 </div>
                 <div class="modal-footer pt-2 pb-2">
@@ -657,6 +657,132 @@
                             </div>
                         </div>
 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="modalDocumentosGarantiaSolicitud" class="modal fade modal-fullscreen" tabindex="-1" role="dialog" aria-labelledby="modalDocumentosGarantiaSolicitudLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalDocumentosGarantiaSolicitudLabel">Expediente Solicitud - Garantía | Solicitud de crédito N° <b class="lblNoSolicitudCredito"></b></h6>
+                            </div>
+                            <div class="col-12 text-muted">
+                                Marca: 
+                                <span class="lblMarca"></span>
+                                / Modelo:
+                                <span class="lblModelo"></span>
+                                / Año:
+                                <span class="lblAnio"></span>
+                                / Color:
+                                <span class="lblColor"></span>
+                                / VIN:
+                                <span class="lblVIN"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body w-100 h-100">
+
+                        <div class="row mt-3 mb-0">
+                            <div class="col-6">
+                                <div class="table-responsive">
+                                    <table class="table table-sm" style="margin-bottom: 0px;">
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="font-weight-bold">Información del cliente</span></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="font-weight-bold text-muted">Cliente</span></td>
+                                                <td><span class="label label-table label-success lblNombreCliente"></span></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="font-weight-bold text-muted">Identidad</span></td>
+                                                <td class="lblIdentidadCliente"></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="font-weight-bold text-muted">RTN numérico</span></td>
+                                                <td id="lblRtn"></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="font-weight-bold text-muted">Teléfono</span></td>
+                                                <td id="lblTelefono"></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="table-responsive">
+                                    <table class="table table-sm" style="margin-bottom: 0px;">
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="font-weight-bold">Información de la solicitud</span></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="font-weight-bold text-muted">Producto</span></td>
+                                                <td id="lblProducto"></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="font-weight-bold text-muted">Tipo de solicitud</span></td>
+                                                <td id="lblTipoDeSolicitud"></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="font-weight-bold text-muted">CC / Vendedor</span></td>
+                                                <td id="lblAgenciaYVendedorAsignado"></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="font-weight-bold text-muted">Gestor asignado</span></td>
+                                                <td id="lblGestorAsignado"></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <!-- Div donde se muestran las fotografías de la garantía -->
+                                <h6>Expediente de la solicitud</h6>
+                                <div class="align-self-center" id="divExpedienteSolicitud" runat="server" style="display: none;"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <!-- Div donde se muestran las fotografías de la garantía -->
+                                <h6>Expediente de la garantía</h6>
+                                <div class="align-self-center" id="divExpedienteGarantia" runat="server" style="display: none;"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">

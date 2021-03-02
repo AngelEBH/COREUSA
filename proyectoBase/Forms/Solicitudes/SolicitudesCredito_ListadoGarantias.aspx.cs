@@ -26,6 +26,13 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 
     #region Page_Load, Cargar información del usuario, cargar listas para formularios
 
+    private static string _ConnectionString { get; set; }
+
+    public SolicitudesCredito_ListadoGarantias()
+    {
+        _ConnectionString = _ConnectionString ?? DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString);
+    }
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -54,7 +61,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     {
         try
         {
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            using (var sqlConexion = new SqlConnection(_ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -96,7 +103,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 
         try
         {
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            using (var sqlConexion = new SqlConnection(_ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -178,7 +185,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                                 VIN = sqlResultado["fcVIN"].ToString(),
                                 Marca = sqlResultado["fcMarca"].ToString(),
                                 Modelo = sqlResultado["fcModelo"].ToString(),
-                                Anio = sqlResultado["fiAnio"].ToString(),
+                                Anio = (int)sqlResultado["fiAnio"],
                                 Color = sqlResultado["fcColor"].ToString(),
                                 DocumentosSubidos = sqlResultado["fcDocumentos"].ToString(),
                                 ValorMercadoGarantia = (decimal)sqlResultado["fnValorDelMercadoGarantia"],
@@ -609,6 +616,23 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     [WebMethod]
     public static List<Garantia_Documento> CargarDocumentosGarantia(int idGarantia, string dataCrypt)
     {
+        return ObtenerDocumentosGarantiaPorIdGarantia(idGarantia, dataCrypt);
+    }
+
+    [WebMethod]
+    public static DocumentosExpedienteSolicitudGarantia_ViewModel CargarDocumentosExpedienteSolicitudGarantia(int idSolicitud, int idGarantia, string dataCrypt)
+    {
+        var expedienteSolicitudGarantia = new DocumentosExpedienteSolicitudGarantia_ViewModel();
+        expedienteSolicitudGarantia.GarantiaDocumentos = ObtenerDocumentosGarantiaPorIdGarantia(idGarantia, dataCrypt);
+        expedienteSolicitudGarantia.SolicitudDocumentos = ObtenerDocumentosDeLaSolicitudPorIdSolicitud(idSolicitud, dataCrypt);
+
+        return expedienteSolicitudGarantia;
+    }
+
+    #region Obtener documentos de la garantía y de la solicitud
+
+    public static List<Garantia_Documento> ObtenerDocumentosGarantiaPorIdGarantia(int idGarantia, string dataCrypt)
+    {
         var documentosDeLaGarantia = new List<Garantia_Documento>();
         try
         {
@@ -656,6 +680,59 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         }
         return documentosDeLaGarantia;
     }
+
+    public static List<DocumentoSolicitud_ViewModel> ObtenerDocumentosDeLaSolicitudPorIdSolicitud(int idSolicitud, string dataCrypt)
+    {
+        var documentosDeLaSolicitud = new List<DocumentoSolicitud_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Documentos_ObtenerPorIdSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            documentosDeLaSolicitud.Add(new DocumentoSolicitud_ViewModel()
+                            {
+                                IdSolicitudDocumento = (int)sqlResultado["fiIDSolicitudDocs"],
+                                NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
+                                Extension = sqlResultado["fcTipoArchivo"].ToString(),
+                                RutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),
+                                URLArchivo = sqlResultado["fcURL"].ToString(),
+                                IdTipoDocumento = (int)sqlResultado["fiTipoDocumento"],
+                                DescripcionTipoDocumento = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
+                                ArchivoActivo = (byte)sqlResultado["fiArchivoActivo"]
+                            });
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            documentosDeLaSolicitud = null;
+        }
+        return documentosDeLaSolicitud;
+    }
+
+    #endregion
 
     #region Métodos utilitarios
 
@@ -778,7 +855,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 
 #region View Models
 
-public class SolicitudesCredito_ListadoGarantias_ViewModel
+/************* Listados *********************************/
+public class SolicitudesCredito_ListadoGarantias_ViewModel : Garantia
 {
     public int IdSolicitud { get; set; }
     public int IdCanal { get; set; }
@@ -796,11 +874,6 @@ public class SolicitudesCredito_ListadoGarantias_ViewModel
     public string Identidad { get; set; }
     public string NombreCompleto { get; set; }
     public int IdGarantia { get; set; }
-    public string VIN { get; set; }
-    public string Marca { get; set; }
-    public string Modelo { get; set; }
-    public string Anio { get; set; }
-    public string Color { get; set; }
     public string DocumentosSubidos { get; set; }
     public decimal ValorMercadoGarantia { get; set; }
     public decimal ValorPrima { get; set; }
@@ -831,46 +904,18 @@ public class SolicitudesCredito_ListadoGarantias_ViewModel
     public string EstadoSolicitudGPSClassName { get; set; }
 }
 
-public class SolicitudGPS_ViewModel
-{
-    public int IdAutoGPSInstalacion { get; set; }
-    public int IdSolicitud { get; set; }
-    public int IdGarantia { get; set; }
-    public string VIN { get; set; }
-    public DateTime FechaInstalacion { get; set; }
-    public int IDAgenciaInstalacion { get; set; }
-    public string AgenciaInstalacion { get; set; }
-    public string Comentario_Instalacion { get; set; }
-    public int IdEstadoInstalacion { get; set; }
-    public string EstadoInstalacionGPS { get; set; }
-    public string EstadoInstalacionClassName { get; set; }
-    public bool EstadoActivoSolicitudGPS { get; set; }
-
-    /* Estas propiedas se utilizan como parte de la información que se envía por correo al guardar o actualizar solucitudes de GPS */
-    public string NombreCliente { get; set; }
-    public string IdentidadCliente { get; set; }
-    public string Marca { get; set; }
-    public string Modelo { get; set; }
-    public string Anio { get; set; }
-    public string NombreUsuario { get; set; }
-    public string CorreoUsuario { get; set; }
-}
-
-public class GarantiaSinSolicitud_ViewModel
+public class GarantiaSinSolicitud_ViewModel : Garantia
 {
     public int IdGarantia { get; set; }
     public string Agencia { get; set; }
     public string Vendedor { get; set; }
     public string TipoDeGarantia { get; set; }
     public string TipoDeVehiculo { get; set; }
-    public string VIN { get; set; }
-    public string Marca { get; set; }
-    public string Modelo { get; set; }
-    public int Anio { get; set; }
     public string Comentarios { get; set; }
     public DateTime FechaCreacion { get; set; }
 }
 
+/************* Revisiones de la garantía ****************/
 public class Garantia_Revision_ViewModel
 {
     public int IdRevision { get; set; }
@@ -891,10 +936,27 @@ public class Garantia_Revision_ViewModel
     public DateTime FechaValidacion { get; set; }
 }
 
-public class Garantia_Documento : InformacionDocumento
+/************* Solicitudes de GPS / Revisión ************/
+public class SolicitudGPS_ViewModel : Garantia
 {
-    public int IdGarantiaDocumento { get; set; }
+    public int IdAutoGPSInstalacion { get; set; }
+    public int IdSolicitud { get; set; }
     public int IdGarantia { get; set; }
+
+    public DateTime FechaInstalacion { get; set; }
+    public int IDAgenciaInstalacion { get; set; }
+    public string AgenciaInstalacion { get; set; }
+    public string Comentario_Instalacion { get; set; }
+    public int IdEstadoInstalacion { get; set; }
+    public string EstadoInstalacionGPS { get; set; }
+    public string EstadoInstalacionClassName { get; set; }
+    public bool EstadoActivoSolicitudGPS { get; set; }
+
+    /* Estas propiedas se utilizan como parte de la información que se envía por correo al guardar o actualizar solucitudes de GPS */
+    public string NombreCliente { get; set; }
+    public string IdentidadCliente { get; set; }
+    public string NombreUsuario { get; set; }
+    public string CorreoUsuario { get; set; }
 }
 
 public class InstalacionGPS_ViewModel
@@ -914,13 +976,48 @@ public class InstalacionGPS_ViewModel
     }
 }
 
-public class FotosInstalacionGPS : InformacionDocumento
+public class FotosInstalacionGPS : Documento
 {
     public int IdAutoGPSInstalacion { get; set; }
     public int IdCREDSolicitud { get; set; }
 }
 
-public class InformacionDocumento
+/************* Documentos de la solicitud y garantia ****/
+public class DocumentosExpedienteSolicitudGarantia_ViewModel
+{
+    public List<DocumentoSolicitud_ViewModel> SolicitudDocumentos { get; set; }
+    public List<Garantia_Documento> GarantiaDocumentos { get; set; }
+
+    public DocumentosExpedienteSolicitudGarantia_ViewModel()
+    {
+        SolicitudDocumentos = new List<DocumentoSolicitud_ViewModel>();
+        GarantiaDocumentos = new List<Garantia_Documento>();
+    }
+}
+
+public class DocumentoSolicitud_ViewModel : Documento
+{
+    public int IdSolicitud { get; set; }
+    public int IdSolicitudDocumento { get; set; }
+}
+
+public class Garantia_Documento : Documento
+{
+    public int IdGarantiaDocumento { get; set; }
+    public int IdGarantia { get; set; }
+}
+
+/************* Entidades base ***************************/
+public abstract class Garantia
+{
+    public string VIN { get; set; }
+    public string Marca { get; set; }
+    public string Modelo { get; set; }
+    public int Anio { get; set; }
+    public string Color { get; set; }
+}
+
+public abstract class Documento
 {
     public string NombreArchivo { get; set; }
     public int IdTipoDocumento { get; set; }

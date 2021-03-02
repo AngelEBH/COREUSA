@@ -101,6 +101,12 @@
                                     <span class="d-none d-sm-block">Expediente</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tab_Historial" role="tab" aria-selected="false">
+                                    <span class="d-block d-sm-none"><i class="fas fa-history"></i></span>
+                                    <span class="d-none d-sm-block">Historial</span>
+                                </a>
+                            </li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content" id="tabContent">
@@ -166,6 +172,16 @@
                                                 <textarea id="txtEspecifiqueOtras" class="form-control form-control-sm" readonly="readonly" rows="3" runat="server"></textarea>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane" id="tab_Historial" role="tabpanel">
+                                <div class="row mb-0">
+                                    <div class="col-12">
+                                        <h6>Historial de movimientos</h6>
+
+                                        <ul class="mt-3" runat="server" id="ulHistorialExpediente"></ul>
                                     </div>
                                 </div>
                             </div>

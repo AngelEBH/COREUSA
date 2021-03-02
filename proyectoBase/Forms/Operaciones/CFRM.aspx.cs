@@ -88,7 +88,12 @@ public partial class CFRM : System.Web.UI.Page
 
                         var idUsuarioCreadorExpediente = sqlResultado["fiIDUsuarioCreador"].ToString();
                         var idEstadoExpediente = (int)sqlResultado["fiIDEstadoExpediente"];
+                        var usuarioCreador = sqlResultado["fcUsuarioCreador"].ToString();
+                        var fechaCreacion = (DateTime)sqlResultado["fdFechaCreacion"];
 
+                        var idUsuarioUltimaModificacion = (int)sqlResultado["fiIDUsuarioUltimaModificacion"];
+                        var usuarioUltimaModificacion = sqlResultado["fcUsuarioUltimaModificacion"].ToString();
+                        var fechaUltimaModificacion = (DateTime)sqlResultado["fdFechaUltimaModificacion"];
 
                         switch (idEstadoExpediente)
                         {
@@ -100,6 +105,7 @@ public partial class CFRM : System.Web.UI.Page
                             case 3: /* Si está en estado "Recibido Mariely Guzman" cualquier usuario puede cambiar el estado a "Entregado Abogado" */
                             case 4: /* Si está en estado "Entregado Abogado" cualquier usuario puede cambiar el estado a "Recibido Abogado" */
                                 divCambiarEstadoExpediente.Visible = pcIDUsuario == "211";
+                                divCambiarEstadoExpediente.Visible = pcIDUsuario == "77";
                                 break;
                             case 5: /* Si está en estado "Recibido Abogado" solo el usuario 89 puede cambiar el estado a "Entregado Archivo"*/
                             case 6: /* Si está en estado "Entregado Archivo" solo el usuario 89 puede cambiar el estado a "Archivado"*/
@@ -149,10 +155,10 @@ public partial class CFRM : System.Web.UI.Page
 
                         ulDocumentosExpediente.InnerHtml = templateDocumentosExpediente.ToString();
 
-                        /* Listado de tipos de solicitudes */
+                        /* Tercer resultado: Listado de tipos de solicitudes */
                         sqlResultado.NextResult();
 
-                        /* Siguiente estado del expediente */
+                        /* Cuarto resultado: Siguiente estado del expediente */
                         sqlResultado.NextResult();
                         sqlResultado.Read();
 
@@ -170,6 +176,37 @@ public partial class CFRM : System.Web.UI.Page
                             btnCambiarEstadoExpediente.Visible = false;
                             btnCambiarEstadoExpediente.Disabled = true;
                         }
+
+                        /* Quinto resultado: Listar historial de movimientos de un expediente */
+                        sqlResultado.NextResult();
+
+                        var templateHistorial = new StringBuilder();
+
+                        templateHistorial.Append("<li>" +
+                            "<span class='text-muted'>" + usuarioCreador + " - " + fechaCreacion.ToString("MM/dd/yyyy hh:mm tt") + "</span>" +
+                            "<br />" +
+                            "<span>Expediente creado</span>" +
+                        "</li>");
+
+                        if (idUsuarioUltimaModificacion != 0)
+                        {
+                            templateHistorial.Append("<li class='mt-2'>" +
+                            "<span class='text-muted'>" + usuarioUltimaModificacion + " - " + fechaUltimaModificacion.ToString("MM/dd/yyyy hh:mm tt") + "</span>" +
+                            "<br />" +
+                            "<span>Última modificación</span>" +
+                        "</li>");
+                        }
+
+                        while (sqlResultado.Read())
+                        {
+                            templateHistorial.Append("<li class='mt-2'>" +
+                                "<span class='text-muted'>" + sqlResultado["fcNombreCorto"].ToString() + " - " + DateTime.Parse(sqlResultado["fdFecha"].ToString()).ToString("MM/dd/yyyy hh:mm tt") + "</span>" +
+                                "<br />" +
+                                "<span>" + sqlResultado["fcComentarios"].ToString() + "</span>" +
+                                "</li>");
+                        }
+
+                        ulHistorialExpediente.InnerHtml = templateHistorial.ToString();
                     }
                 } // using sqlComando
             } // using sqlConexion
