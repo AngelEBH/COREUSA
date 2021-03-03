@@ -421,7 +421,7 @@ function CargarDocumentosParaAsegurarPendientes(mostrarModalEnviarDocumentosPara
             }); /* Termina .Each*/
 
             if (mostrarModalEnviarDocumentosParaAsegurar == true) {
-                $("#modalEnviarInformacionAseguradora").modal({ backdrop: 'static'});
+                $("#modalEnviarInformacionAseguradora").modal({ backdrop: 'static' });
             }
         },
         complete: function () {
@@ -431,8 +431,6 @@ function CargarDocumentosParaAsegurarPendientes(mostrarModalEnviarDocumentosPara
 }
 
 $("#btnEnviarInformacionAseguradora_Confirmar").click(function () {
-
-    debugger;
 
     $("#btnEnviarInformacionAseguradora_Confirmar").prop('disabled', true);
 
