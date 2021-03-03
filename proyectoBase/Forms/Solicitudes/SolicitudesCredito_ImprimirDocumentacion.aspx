@@ -1716,59 +1716,59 @@
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>AÑO</th>
-                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight:normal">
+                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblAño_CorreoSeguro"></asp:Label>
                         </td>
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>PLACA</th>
-                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight:normal">
+                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblPlaca_CorreoSeguro"></asp:Label>
                         </td>
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>MARCA</th>
-                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight:normal">
+                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblMarca_CorreoSeguro"></asp:Label>
                         </td>
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>MODELO</th>
-                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight:normal">
+                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblModelo_CorreoSeguro"></asp:Label>
                         </td>
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>TIPO</th>
-                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight:normal">
+                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblTipoVehiculo_CorreoSeguro"></asp:Label>
                         </td>
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>COLOR</th>
-                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight:normal">
+                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblColor_CorreoSeguro"></asp:Label>
                         </td>
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>MOTOR</th>
-                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight:normal">
+                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblSerieMotor_CorreoSeguro"></asp:Label>
                         </td>
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>CHASIS</th>
-                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight:normal">
+                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblSerieChasis_CorreoSeguro"></asp:Label>
                         </td>
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>VIN</th>
-                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight:normal">
+                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblVIN_CorreoSeguro"></asp:Label>
                         </td>
                     </tr>
-                    </table>
+                </table>
                 <br />
                 <table border="1" style="width: 100%; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
                     <tr>
@@ -1776,13 +1776,13 @@
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>NOMBRE</th>
-                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight:normal">
+                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblNombreCliente_CorreoSeguro"></asp:Label>
                         </td>
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>IDENTIDAD</th>
-                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight:normal">
+                        <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblIdentidadCliente_CorreoSeguro"></asp:Label>
                         </td>
                     </tr>

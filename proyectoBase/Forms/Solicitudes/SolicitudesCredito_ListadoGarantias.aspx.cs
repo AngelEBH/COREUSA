@@ -26,11 +26,11 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 
     #region Page_Load, Cargar información del usuario, cargar listas para formularios
 
-    private static string _ConnectionString { get; set; }
+    private static string ConnectionString { get; set; }
 
     public SolicitudesCredito_ListadoGarantias()
     {
-        _ConnectionString = _ConnectionString ?? DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString);
+        ConnectionString = ConnectionString ?? DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString);
     }
 
     protected void Page_Load(object sender, EventArgs e)
@@ -61,7 +61,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     {
         try
         {
-            using (var sqlConexion = new SqlConnection(_ConnectionString))
+            using (var sqlConexion = new SqlConnection(ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -103,7 +103,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 
         try
         {
-            using (var sqlConexion = new SqlConnection(_ConnectionString))
+            using (var sqlConexion = new SqlConnection(ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -148,7 +148,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -235,7 +235,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -292,7 +292,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -358,7 +358,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -414,7 +414,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -485,7 +485,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -565,7 +565,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -614,26 +614,37 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     #endregion
 
     [WebMethod]
-    public static List<Garantia_Documento> CargarDocumentosGarantia(int idGarantia, string dataCrypt)
+    public static List<Documento_ViewModel> CargarDocumentosGarantia(int idGarantia, string dataCrypt)
     {
         return ObtenerDocumentosGarantiaPorIdGarantia(idGarantia, dataCrypt);
     }
 
     [WebMethod]
-    public static DocumentosExpedienteSolicitudGarantia_ViewModel CargarDocumentosExpedienteSolicitudGarantia(int idSolicitud, int idGarantia, string dataCrypt)
+    public static List<Documento_ViewModel> CargarDocumentosExpedienteSolicitudGarantia(int idSolicitud, int idGarantia, string dataCrypt)
     {
-        var expedienteSolicitudGarantia = new DocumentosExpedienteSolicitudGarantia_ViewModel();
-        expedienteSolicitudGarantia.GarantiaDocumentos = ObtenerDocumentosGarantiaPorIdGarantia(idGarantia, dataCrypt);
-        expedienteSolicitudGarantia.SolicitudDocumentos = ObtenerDocumentosDeLaSolicitudPorIdSolicitud(idSolicitud, dataCrypt);
+        var documentosSolicitud = ObtenerDocumentosDeLaSolicitudPorIdSolicitud(idSolicitud, dataCrypt);
+        var documentosGarantia = ObtenerDocumentosGarantiaPorIdGarantia(idGarantia, dataCrypt);
 
-        return expedienteSolicitudGarantia;
+        var expedienteGaratiaSolicitud = new List<Documento_ViewModel>();
+
+        documentosSolicitud.ForEach(item =>
+        {
+            expedienteGaratiaSolicitud.Add(item);
+        });
+
+        documentosGarantia.ForEach(item =>
+        {
+            expedienteGaratiaSolicitud.Add(item);
+        });
+
+        return expedienteGaratiaSolicitud;
     }
 
     #region Obtener documentos de la garantía y de la solicitud
 
-    public static List<Garantia_Documento> ObtenerDocumentosGarantiaPorIdGarantia(int idGarantia, string dataCrypt)
+    public static List<Documento_ViewModel> ObtenerDocumentosGarantiaPorIdGarantia(int idGarantia, string dataCrypt)
     {
-        var documentosDeLaGarantia = new List<Garantia_Documento>();
+        var documentosDeLaGarantia = new List<Documento_ViewModel>();
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
@@ -641,7 +652,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -658,7 +669,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            documentosDeLaGarantia.Add(new Garantia_Documento()
+                            documentosDeLaGarantia.Add(new Documento_ViewModel()
                             {
                                 NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
                                 Extension = sqlResultado["fcExtension"].ToString(),
@@ -681,9 +692,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         return documentosDeLaGarantia;
     }
 
-    public static List<DocumentoSolicitud_ViewModel> ObtenerDocumentosDeLaSolicitudPorIdSolicitud(int idSolicitud, string dataCrypt)
+    public static List<Documento_ViewModel> ObtenerDocumentosDeLaSolicitudPorIdSolicitud(int idSolicitud, string dataCrypt)
     {
-        var documentosDeLaSolicitud = new List<DocumentoSolicitud_ViewModel>();
+        var documentosDeLaSolicitud = new List<Documento_ViewModel>();
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
@@ -691,7 +702,7 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            using (var sqlConexion = new SqlConnection(ConnectionString))
             {
                 sqlConexion.Open();
 
@@ -708,9 +719,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            documentosDeLaSolicitud.Add(new DocumentoSolicitud_ViewModel()
+                            documentosDeLaSolicitud.Add(new Documento_ViewModel()
                             {
-                                IdSolicitudDocumento = (int)sqlResultado["fiIDSolicitudDocs"],
                                 NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
                                 Extension = sqlResultado["fcTipoArchivo"].ToString(),
                                 RutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),
@@ -976,7 +986,7 @@ public class InstalacionGPS_ViewModel
     }
 }
 
-public class FotosInstalacionGPS : Documento
+public class FotosInstalacionGPS : Documento_ViewModel
 {
     public int IdAutoGPSInstalacion { get; set; }
     public int IdCREDSolicitud { get; set; }
@@ -985,26 +995,14 @@ public class FotosInstalacionGPS : Documento
 /************* Documentos de la solicitud y garantia ****/
 public class DocumentosExpedienteSolicitudGarantia_ViewModel
 {
-    public List<DocumentoSolicitud_ViewModel> SolicitudDocumentos { get; set; }
-    public List<Garantia_Documento> GarantiaDocumentos { get; set; }
+    public List<Documento_ViewModel> SolicitudDocumentos { get; set; }
+    public List<Documento_ViewModel> GarantiaDocumentos { get; set; }
 
     public DocumentosExpedienteSolicitudGarantia_ViewModel()
     {
-        SolicitudDocumentos = new List<DocumentoSolicitud_ViewModel>();
-        GarantiaDocumentos = new List<Garantia_Documento>();
+        SolicitudDocumentos = new List<Documento_ViewModel>();
+        GarantiaDocumentos = new List<Documento_ViewModel>();
     }
-}
-
-public class DocumentoSolicitud_ViewModel : Documento
-{
-    public int IdSolicitud { get; set; }
-    public int IdSolicitudDocumento { get; set; }
-}
-
-public class Garantia_Documento : Documento
-{
-    public int IdGarantiaDocumento { get; set; }
-    public int IdGarantia { get; set; }
 }
 
 /************* Entidades base ***************************/
@@ -1017,7 +1015,7 @@ public abstract class Garantia
     public string Color { get; set; }
 }
 
-public abstract class Documento
+public class Documento_ViewModel
 {
     public string NombreArchivo { get; set; }
     public int IdTipoDocumento { get; set; }

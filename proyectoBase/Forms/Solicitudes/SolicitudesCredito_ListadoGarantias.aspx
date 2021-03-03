@@ -47,6 +47,18 @@
         .nav-tabs > li > .active {
             background-color: whitesmoke !important;
         }
+
+        table.datatable-cells-responsive tbody td.td-responsive {
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+            table.datatable-cells-responsive tbody td.td-responsive:hover {
+                overflow: visible;
+                white-space: inherit;
+            }
     </style>
 </head>
 <body runat="server" class="EstiloBody-Listado">
@@ -666,7 +678,7 @@
             </div>
         </div>
 
-        <div id="modalDocumentosGarantiaSolicitud" class="modal fade modal-fullscreen" tabindex="-1" role="dialog" aria-labelledby="modalDocumentosGarantiaSolicitudLabel" aria-hidden="true">
+        <div id="modalDocumentosGarantiaSolicitud" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalDocumentosGarantiaSolicitudLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header pb-2">
@@ -689,7 +701,7 @@
                         </div>
                     </div>
                     <div class="modal-body w-100 h-100 pt-0">
-                        <div class="row mt-3 mb-0">
+                        <div class="row mt-3">
                             <div class="col-6">
                                 <div class="table-responsive">
                                     <table class="table table-sm" style="margin-bottom: 0px;">
@@ -723,9 +735,7 @@
                                     <table class="table table-sm" style="margin-bottom: 0px;">
                                         <tbody>
                                             <tr>
-                                                <td><span class="font-weight-bold">Información de la solicitud</span></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td colspan="3"><span class="font-weight-bold">Información de la solicitud</span></td>
                                             </tr>
                                             <tr>
                                                 <td><span class="font-weight-bold text-muted">Producto</span></td>
@@ -746,13 +756,27 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <h6 class="font-weight-bold">Expediente de la solicitud</h6>
-                                <div class="align-self-center" id="divExpedienteSolicitud" runat="server" style="display: none;"></div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-sm-4 border-right border-top pt-3">
+                                <div class="table-responsive border-right border p-2" style="max-height: 50vh; overflow: auto;">
+                                    <table id="tblExpedienteSolicitudGarantia" class="table table-sm table-hover cursor-pointer" style="width: 100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Documento</th>
+                                                <%--<th>Nombre</th>--%>
+                                                <th class="text-center no-sort"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="col-sm-6">
-                                <h6 class="font-weight-bold">Expediente de la garantía</h6>
-                                <div class="align-self-center" id="divExpedienteGarantia" runat="server" style="display: none;"></div>
+                            <div class="col-sm-8 border-top pt-3">
+                                <h6 class="font-weight-bold mt-0">Previsualización</h6>
+
+                                <div class="align-self-center" id="divPrevisualizacionDocumento" runat="server" style="display: none;"></div>
                             </div>
                         </div>
                     </div>
@@ -796,6 +820,6 @@
         const NOMBRE_USUARIO = '<%=pcNombreUsuario %>';
         const CORREO_USUARIO = '<%=pcBuzoCorreoUsuario%>';
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=2021020903433562589"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ListadoGarantias.js?v=20210303021585"></script>
 </body>
 </html>

@@ -283,10 +283,10 @@ $(document).ready(function () {
                 }
             },
             //{
-            //    "data": "Comentarios",
-            //    "render": function (value) {
-            //        return value + value + value
-            //    }
+            // "data": "Comentarios",
+            // "render": function (value) {
+            // return value + value + value
+            // }
             //},
         ],
         columnDefs: [
@@ -846,52 +846,54 @@ function MostrarExpedienteSolicitudGarantia(idSolicitud, idGarantia) {
 
             if (data.d != null) {
 
-                /* Documentos de la solicitud */
-                var documentosSolicitud = data.d.SolicitudDocumentos;
-                var divExpedienteSolicitud = $("#divExpedienteSolicitud").empty();
-                var templateDocumentosSolicitud = '';
+                /* Inicializar datatables de documentos */
+                $('#tblExpedienteSolicitudGarantia').DataTable({
+                    "destroy": true,
+                    "pageLength": 100,
+                    "aaSorting": [],
+                    "language": {
+                        "sProcessing": "Cargando información...",
+                        "sLengthMenu": "Mostrar _MENU_ registros",
+                        "sZeroRecords": "No se encontraron resultados",
+                        "sEmptyTable": "Ningún dato disponible en esta tabla",
+                        "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Buscar:",
+                        "sUrl": "",
+                        "sInfoThousands": ",",
+                        "sLoadingRecords": "Cargando información...",
+                        "oPaginate": {
+                            "sFirst": "Primero",
+                            "sLast": "Último",
+                            "sNext": "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        },
+                        "decimal": ".",
+                        "thousands": ","
+                    },
+                    dom: 'f',
+                    data: data.d,
+                    "columns": [
+                        { "data": "DescripcionTipoDocumento", "className": "font-12" },
+                        //{ "data": "NombreArchivo", "className": "font-12 td-responsive" },
+                        {
+                            "data": "URLArchivo", "className": "text-center",
+                            "render": function (data, type, row) {
+                                return '<button class="btn btn-sm btn-secondary" data-url="' + row["URLArchivo"] + (row["IdTipoDocumento"] == 8 || row["IdTipoDocumento"] == 9 ? '.jpg' : '') + '" data-descripcion="' + row["DescripcionTipoDocumento"] + '" onclick="MostrarVistaPrevia(this)" type="button"><i class="fas fa-search"></i></button>'
+                            }
+                        },
+                    ],
+                    columnDefs: [
+                        { targets: 'no-sort', orderable: false },
+                    ]
+                });
 
-                if (documentosSolicitud != null) {
-
-                    if (documentosSolicitud.length > 0) {
-
-                        for (var i = 0; i < documentosSolicitud.length; i++) {
-
-                            templateDocumentosSolicitud += '<img alt="' + documentosSolicitud[i].DescripcionTipoDocumento + '" src="' + documentosSolicitud[i].URLArchivo + '" data-image="' + documentosSolicitud[i].URLArchivo + '" data-description="' + documentosSolicitud[i].DescripcionTipoDocumento + '"/>';
-                        }
-                    }
-                }
-
-
-                templateDocumentosSolicitud = templateDocumentosSolicitud == '' ? imgNoHayFotografiasDisponibles : templateDocumentosSolicitud;
-
-                divExpedienteSolicitud.append(templateDocumentosSolicitud);
-
-                $("#divExpedienteSolicitud").unitegallery();
-
-
-                /* Documentos de la garantía */
-                var documentosGarantia = data.d.GarantiaDocumentos;
-                var divExpedienteGarantia = $("#divExpedienteGarantia").empty();
-                var templateDocumentosGarantia = '';
-                var imgNoHayFotografiasDisponibles = '<img alt="No hay fotografías disponibles" src="/Imagenes/Imagen_no_disponible.png" data-image="/Imagenes/Imagen_no_disponible.png" data-description="No hay fotografías disponibles"/>';
-
-                if (documentosGarantia != null) {
-
-                    if (documentosGarantia.length > 0) {
-
-                        for (var i = 0; i < documentosGarantia.length; i++) {
-
-                            templateDocumentosGarantia += '<img alt="' + documentosGarantia[i].DescripcionTipoDocumento + '" src="' + documentosGarantia[i].URLArchivo + '" data-image="' + documentosGarantia[i].URLArchivo + '" data-description="' + documentosGarantia[i].DescripcionTipoDocumento + '"/>';
-                        }
-                    }
-                }
-
-                templateDocumentosGarantia = templateDocumentosGarantia == '' ? imgNoHayFotografiasDisponibles : templateDocumentosGarantia;
-
-                divExpedienteGarantia.append(templateDocumentosGarantia);
-
-                $("#divExpedienteGarantia").unitegallery();
 
                 $("#modalDocumentosGarantiaSolicitud").modal();
             }
@@ -899,6 +901,15 @@ function MostrarExpedienteSolicitudGarantia(idSolicitud, idGarantia) {
                 MensajeError('No se pudo cargar el expediente, contacte al administrador.');
         }
     });
+}
+
+function MostrarVistaPrevia(btnVistaPrevia) {
+
+    let urlImagen = $(btnVistaPrevia).data('url');
+    let descripcion = $(btnVistaPrevia).data('descripcion');
+    let imgTemplate = '<img alt="' + descripcion + '" src="' + urlImagen + '" data-image="' + urlImagen + '" data-description="' + descripcion + '"/>';
+
+    $("#divPrevisualizacionDocumento").empty().append(imgTemplate).unitegallery();
 }
 
 function RedirigirAccion(nombreFormulario, accion) {
