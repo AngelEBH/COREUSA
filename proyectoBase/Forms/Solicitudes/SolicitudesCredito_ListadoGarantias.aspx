@@ -656,7 +656,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -666,7 +665,6 @@
                 </div>
             </div>
         </div>
-
 
         <div id="modalDocumentosGarantiaSolicitud" class="modal fade modal-fullscreen" tabindex="-1" role="dialog" aria-labelledby="modalDocumentosGarantiaSolicitudLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -691,7 +689,6 @@
                         </div>
                     </div>
                     <div class="modal-body w-100 h-100 pt-0">
-
                         <div class="row mt-3 mb-0">
                             <div class="col-6">
                                 <div class="table-responsive">
@@ -749,7 +746,6 @@
                                     </table>
                                 </div>
                             </div>
-
                             <div class="col-sm-6">
                                 <h6 class="font-weight-bold">Expediente de la solicitud</h6>
                                 <div class="align-self-center" id="divExpedienteSolicitud" runat="server" style="display: none;"></div>
@@ -759,41 +755,6 @@
                                 <div class="align-self-center" id="divExpedienteGarantia" runat="server" style="display: none;"></div>
                             </div>
                         </div>
-
-                        <%--<!-- Nav tabs -->
-                        <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist" runat="server" id="Ul1">
-                            <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#tab_Expediente_Solicitud" role="tab" aria-selected="false">
-                                    <span class="d-block d-sm-none">Expediente
-                                        <br />
-                                        solicitud</span>
-                                    <span class="d-none d-sm-block">Expediente solicitud</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#tab_Expediente_Garantia" role="tab" aria-selected="false">
-                                    <span class="d-block d-sm-none">Expediente
-                                            <br />
-                                        garantía</span>
-                                    <span class="d-none d-sm-block">Expediente garantía</span>
-                                </a>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content" id="tabContent_Expedientes">
-                            <div class="tab-pane active text-center" id="tab_Expediente_Solicitud" role="tabpanel">
-                                <!-- Div donde se muestran las fotografías de la garantía -->
-                                <h6 class="font-weight-bold">Expediente de la solicitud</h6>
-                                <div class="align-self-center" id="divExpedienteSolicitud" runat="server" style="display: none;"></div>
-
-                            </div>
-                            <div class="tab-pane text-center" id="tab_Expediente_Garantia" role="tabpanel">
-
-                                <!-- Div donde se muestran las fotografías de la garantía -->
-                                <h6 class="font-weight-bold">Expediente de la garantía</h6>
-                                <div class="align-self-center" id="divExpedienteGarantia" runat="server" style="display: none;"></div>
-                            </div>
-                        </div>--%>
                     </div>
                     <div class="modal-footer">
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
