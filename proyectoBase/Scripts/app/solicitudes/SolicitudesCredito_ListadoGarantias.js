@@ -885,7 +885,7 @@ function MostrarExpedienteSolicitudGarantia(idSolicitud, idGarantia) {
                         {
                             "data": "URLArchivo", "className": "text-center",
                             "render": function (data, type, row) {
-                                return '<button class="btn btn-sm btn-secondary" data-url="' + row["URLArchivo"] + (row["IdTipoDocumento"] == 8 || row["IdTipoDocumento"] == 9 ? '.jpg' : '') + '" data-descripcion="' + row["DescripcionTipoDocumento"] + '" onclick="MostrarVistaPrevia(this)" type="button"><i class="fas fa-search"></i></button>'
+                                return '<button class="btn btn-sm btn-secondary" data-url="' + row["URLArchivo"] + '" data-descripcion="' + row["DescripcionTipoDocumento"] + '" onclick="MostrarVistaPrevia(this)" type="button"><i class="fas fa-search"></i></button>'
                             }
                         },
                     ],
