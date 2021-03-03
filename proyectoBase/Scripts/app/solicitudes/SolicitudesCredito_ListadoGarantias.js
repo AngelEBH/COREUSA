@@ -423,6 +423,8 @@ $(document).ready(function () {
         $("#lblValorAPrestar").text(row.Moneda + ' ' + ConvertirADecimal(row.ValorAPrestarGarantia));
         $("#lblValorAFinanciar").text(row.Moneda + ' ' + ConvertirADecimal(row.ValorAFinanciar));
         $(".lblNoSolicitudCredito").text(idSolicitud);
+        $(".lblProducto").text(row.Producto);
+        $(".lblAgenciaYVendedorAsignado").text(row.Agencia + ' / ' + row.UsuarioAsignado);
         $(".lblNombreCliente").text(nombreCliente);
         $(".lblIdentidadCliente").text(identidad);
         $("#lblEstadoRevisionFisica").removeClass('badge-success').removeClass('badge-warning').removeClass('badge-danger').addClass('badge-' + row.EstadoRevisionFisicaClassName).text(row.EstadoRevisionFisica);
@@ -884,7 +886,6 @@ function MostrarExpedienteSolicitudGarantia(idSolicitud, idGarantia) {
                         }
                     }
                 }
-
 
                 templateDocumentosGarantia = templateDocumentosGarantia == '' ? imgNoHayFotografiasDisponibles : templateDocumentosGarantia;
 
