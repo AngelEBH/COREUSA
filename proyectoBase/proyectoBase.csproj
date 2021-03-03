@@ -874,6 +874,7 @@
     <Content Include="Forms\Movil\CotizadorCarros.aspx" />
     <Content Include="Forms\Operaciones\CFRM.aspx" />
     <Content Include="Forms\Operaciones\CFRM_IniciarSesion.aspx" />
+    <Content Include="Forms\Servicios\PortalWebValidarDeposito.aspx" />
     <Content Include="Forms\SolicitudesGPS\SolicitudesGPS_DetallesInstalacionGPS.aspx" />
     <Content Include="Forms\SolicitudesGPS\SolicitudesGPS_RegistroInstalacionGPS.aspx" />
     <Content Include="Forms\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.aspx" />
@@ -1733,6 +1734,13 @@
     </Compile>
     <Compile Include="Forms\Operaciones\CFRM_IniciarSesion.aspx.designer.cs">
       <DependentUpon>CFRM_IniciarSesion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Servicios\PortalWebValidarDeposito.aspx.cs">
+      <DependentUpon>PortalWebValidarDeposito.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Servicios\PortalWebValidarDeposito.aspx.designer.cs">
+      <DependentUpon>PortalWebValidarDeposito.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\SolicitudesGPS\SolicitudesGPS_DetallesInstalacionGPS.aspx.cs">
       <DependentUpon>SolicitudesGPS_DetallesInstalacionGPS.aspx</DependentUpon>
