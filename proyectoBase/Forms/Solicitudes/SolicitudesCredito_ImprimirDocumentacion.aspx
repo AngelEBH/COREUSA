@@ -7,15 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <link href="/CSS/SolicitudesCredito_ImprimirDocumentacion.css?v=20210106150602" rel="stylesheet" />
-    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
 </head>
 <body>
     <form id="frmGuardarPreSolicitud" runat="server">
@@ -2407,7 +2407,7 @@
         </div>
 
 
-        <!-- modalGuardarExpedienteSolicitud -->
+        <!-- ============== Modal de guardar expediente de la solicitud ========================= -->
         <div id="modalGuardarExpedienteSolicitud" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalGuardarExpedienteSolicitudLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -2416,7 +2416,6 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-
                         <label class="mb-3">Documentos del expediente:</label>
 
                         <ul id="ulDocumentosDelExpediente" style="max-height: 50vh; overflow-x: auto;"></ul>
@@ -2435,7 +2434,7 @@
         </div>
 
 
-        <!-- Modar enviar información para asegurar por correo electrónico -->
+        <!-- ============== Modal de enviar información para asegurar por correo electrónico ==== -->
         <div id="modalEnviarInformacionAseguradora" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalEnviarInformacionAseguradoraLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -2451,18 +2450,15 @@
                         <div class="spinner-border text-center" role="status" id="LoaderDocumentosParaAsegurar">
                             <span class="sr-only">Cargando</span>
                         </div>
-
                         <div id="divDocumentosParaAsegurarPendientes" style="display: none;">
 
                             <h6 class="font-weight-bold">Documentos pendientes</h6>
 
                             <div class="mb-3" id="DivDocumentacionParaAsegurar"></div>
                         </div>
-
                         <div id="divParaAsegurarNoHayDocumentosPendientes">
                             <h6 class="font-weight-bold">¡No hay documentos pendientes!</h6>
                         </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="btnEnviarInformacionAseguradora_Confirmar" class="btn btn-primary">
@@ -2475,7 +2471,6 @@
                 </div>
             </div>
         </div>
-
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>

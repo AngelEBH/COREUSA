@@ -622,10 +622,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
     [WebMethod]
     public static List<Documento_ViewModel> CargarDocumentosExpedienteSolicitudGarantia(int idSolicitud, int idGarantia, string dataCrypt)
     {
+        var expedienteGaratiaSolicitud = new List<Documento_ViewModel>();
         var documentosSolicitud = ObtenerDocumentosDeLaSolicitudPorIdSolicitud(idSolicitud, dataCrypt);
         var documentosGarantia = ObtenerDocumentosGarantiaPorIdGarantia(idGarantia, dataCrypt);
-
-        var expedienteGaratiaSolicitud = new List<Documento_ViewModel>();
 
         documentosSolicitud.ForEach(item =>
         {
@@ -811,9 +810,9 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
                 {
                     pmmMensaje.Subject = pcAsunto;
                     pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
-                    pmmMensaje.To.Add("willian.diaz@miprestadito.com");
-                    //pmmMensaje.To.Add("sistemas@miprestadito.com");
-                    //pmmMensaje.CC.Add(buzonCorreoUsuario);
+                    //pmmMensaje.To.Add("willian.diaz@miprestadito.com");
+                    pmmMensaje.To.Add("sistemas@miprestadito.com");
+                    pmmMensaje.CC.Add(buzonCorreoUsuario);
                     pmmMensaje.IsBodyHtml = true;
 
                     string htmlString = @"<!DOCTYPE html> " +

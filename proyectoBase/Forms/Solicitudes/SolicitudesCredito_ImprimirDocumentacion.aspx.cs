@@ -95,13 +95,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                 var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
                 var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-{ "limit", 1 },
-{ "title", "auto" },
-{ "uploadDir", uploadDir },
-{ "extensions", new string[] { "jpg", "png", "jpeg"} },
-{ "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
-{ "fileMaxSize", 20 }, /* Peso máximo por archivo */
-});
+                    { "limit", 1 },
+                    { "title", "auto" },
+                    { "uploadDir", uploadDir },
+                    { "extensions", new string[] { "jpg", "png", "jpeg"} },
+                    { "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
+                    { "fileMaxSize", 20 }, /* Peso máximo por archivo */
+                });
 
                 switch (type)
                 {
@@ -193,7 +193,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                             if (sqlResultado["fdTiempoTomaDecisionFinal"] == DBNull.Value)
                             {
-                                MostrarMensaje("No puede imprimir los documentos de esta solicitud antes de que ésta sea aprobada");
+                                MostrarMensaje("No puede imprimir los documentos de esta solicitud antes de que esta sea aprobada");
                             }
 
                             var fechaOtorgamiento = (DateTime)sqlResultado["fdTiempoTomaDecisionFinal"];
@@ -958,7 +958,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                     using (SqlTransaction sqlTransaction = sqlConexion.BeginTransaction())
                     {
-
                         foreach (var item in documentosParaAsegurarGuardarEnBbdd)
                         {
                             using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Documentos_Guardar", sqlConexion, sqlTransaction))
@@ -1169,7 +1168,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             pmmMensaje.Subject = pcAsunto;
             pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
             pmmMensaje.To.Add("willian.diaz@miprestadito.com");
-            pmmMensaje.To.Add("edwar.madrid@miprestadito.com");
+            //pmmMensaje.To.Add("edwar.madrid@miprestadito.com");
             //pmmMensaje.CC.Add("amilcar.sauceda@miprestadito.com");
             //pmmMensaje.To.Add(buzonCorreoUsuario);
             //pmmMensaje.CC.Add(buzonCorreoUsuario);
