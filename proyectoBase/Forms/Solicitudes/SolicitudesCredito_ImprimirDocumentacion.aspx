@@ -7,15 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Imprimir documentacion</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <link href="/CSS/SolicitudesCredito_ImprimirDocumentacion.css?v=20210106150602" rel="stylesheet" />
-    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
 </head>
 <body>
     <form id="frmGuardarPreSolicitud" runat="server">
@@ -2496,6 +2496,6 @@
         const URL_CODIGO_QR = '<%=UrlCodigoQR%>';
         var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=ListaDocumentosDelExpedienteJSON%>');
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210303042425"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210304050118"></script>
 </body>
 </html>

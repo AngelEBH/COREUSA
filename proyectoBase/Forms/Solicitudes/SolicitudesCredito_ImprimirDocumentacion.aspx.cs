@@ -95,13 +95,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                 var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
                 var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-                    { "limit", 1 },
-                    { "title", "auto" },
-                    { "uploadDir", uploadDir },
-                    { "extensions", new string[] { "jpg", "png", "jpeg"} },
-                    { "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
-                    { "fileMaxSize", 20 }, /* Peso máximo por archivo */
-                });
+{ "limit", 1 },
+{ "title", "auto" },
+{ "uploadDir", uploadDir },
+{ "extensions", new string[] { "jpg", "png", "jpeg"} },
+{ "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
+{ "fileMaxSize", 20 }, /* Peso máximo por archivo */
+});
 
                 switch (type)
                 {
@@ -912,6 +912,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
             var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("SID");
             var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr") ?? "0";
+            var pcIDGarantia = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDGarantia");
             var pcIDSolicitud = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDSol");
             var usuarioLogueado = ObtenerInformacionUsuarioLogueado(pcIDApp, pcIDUsuario, pcIDSesion);
 
@@ -929,7 +930,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                     documentosParaAsegurarAdjuntados.ForEach(item =>
                     {
-                        /* si el archivo existe, que se agregue a la lista */
+    /* si el archivo existe, que se agregue a la lista */
                         if (File.Exists(item.fcRutaArchivo + "\\" + item.NombreAntiguo))
                         {
                             nuevoNombreDocumento = GenerarNombreDocumentoGarantia(pcIDSolicitud, VIN);
@@ -958,17 +959,47 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                     using (SqlTransaction sqlTransaction = sqlConexion.BeginTransaction())
                     {
+                        var guardarDocumentoSP = string.Empty;
+                        var llavePrimaria = 0;
+                        var nombreParametroIdLlavePrimaria = string.Empty;
+                        var nombreParametroExtensionArchivo = string.Empty;
+                        var nombreParametroIdTipoDocumento = string.Empty;
+
                         foreach (var item in documentosParaAsegurarGuardarEnBbdd)
                         {
-                            using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Documentos_Guardar", sqlConexion, sqlTransaction))
+                            /* Validar si es un documento de la garantía o de la solicitud */
+                            /* Si el documento a guardar tiene ID 9 quiere decir que es el documento "Boleta de revisión" de la garantía por lo que se guardará en la tabla de documentos de la garantía */
+                            /* En caso contrario, quiere decir que es un documento de la solicitud y se guardará en la tabla de documentos de la solicitud */
+                            if (item.fiTipoDocumento == 9)
+                            {
+                                guardarDocumentoSP = "sp_CREDGarantias_Documentos_Actualizar";
+                                llavePrimaria = int.Parse(pcIDGarantia);
+                                nombreParametroIdLlavePrimaria = "@piIDGarantia";
+                                nombreParametroExtensionArchivo = "@pcExtension";
+                                nombreParametroIdTipoDocumento = "@piIDSeccionGarantia";
+                            }
+                            else
+                            {
+                                guardarDocumentoSP = "sp_CREDSolicitudes_Documentos_Guardar";
+                                llavePrimaria = int.Parse(pcIDSolicitud);
+                                nombreParametroIdLlavePrimaria = "@piIDSolicitud";
+                                nombreParametroExtensionArchivo = "@pcTipoArchivo";
+                                nombreParametroIdTipoDocumento = "@piTipoDocumento";
+                            }
+
+                            using (var sqlComando = new SqlCommand(guardarDocumentoSP, sqlConexion, sqlTransaction))
                             {
                                 sqlComando.CommandType = CommandType.StoredProcedure;
-                                sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                                sqlComando.Parameters.AddWithValue(nombreParametroIdLlavePrimaria, llavePrimaria);
                                 sqlComando.Parameters.AddWithValue("@pcNombreArchivo", item.fcNombreArchivo);
-                                sqlComando.Parameters.AddWithValue("@pcTipoArchivo", (item.fiTipoDocumento == 8 || item.fiTipoDocumento == 9) ? "jpg" : ".png");
+                                sqlComando.Parameters.AddWithValue(nombreParametroExtensionArchivo, ".png");
                                 sqlComando.Parameters.AddWithValue("@pcRutaArchivo", item.fcRutaArchivo);
                                 sqlComando.Parameters.AddWithValue("@pcURL", item.URLArchivo);
-                                sqlComando.Parameters.AddWithValue("@piTipoDocumento", item.fiTipoDocumento);
+                                sqlComando.Parameters.AddWithValue(nombreParametroIdTipoDocumento, item.fiTipoDocumento);
+
+                                if (item.fiTipoDocumento == 9)
+                                    sqlComando.Parameters.AddWithValue("@pcComentario", "");
+
                                 sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                                 sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                                 sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -1026,7 +1057,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                 resultadoProceso.MensajeDebug = "Hay documentos pendientes";
                 return resultadoProceso;
             }
-
 
             /* Cambiar estado asegurado de la garantía a "Asegurado" */
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
