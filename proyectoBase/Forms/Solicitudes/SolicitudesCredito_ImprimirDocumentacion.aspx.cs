@@ -1197,11 +1197,11 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
             pmmMensaje.Subject = pcAsunto;
             pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
-            pmmMensaje.To.Add("willian.diaz@miprestadito.com");
             //pmmMensaje.To.Add("edwar.madrid@miprestadito.com");
             //pmmMensaje.CC.Add("amilcar.sauceda@miprestadito.com");
             //pmmMensaje.To.Add(buzonCorreoUsuario);
-            //pmmMensaje.CC.Add(buzonCorreoUsuario);
+            pmmMensaje.To.Add("willian.diaz@miprestadito.com");
+            pmmMensaje.CC.Add(buzonCorreoUsuario);
 
             pmmMensaje.IsBodyHtml = true;
 
