@@ -6,6 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
+    <meta name="description" content="Bandeja de solicitudes de crédito" />
     <title>Bandeja de solicitudes</title>
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
@@ -144,12 +145,11 @@
                 <table id="datatable-bandeja" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Agencia</th>
-                            <th>Prod.</th>
-                            <th>Identidad</th>
-                            <th>Nombre cliente</th>
-                            <th>Fecha de ingreso</th>
+                            <th>Acciones</th>
+                            <th>Solicitud N° <br /> Fecha de ingreso</th>
+                            <th>Producto / CC / Vendedor</th>
+                            <th>Cliente / Identidad</th>
+                            <th>Marca / Modelo / Año / VIN</th>
                             <th>Ingreso</th>
                             <th>Recepción</th>
                             <th>Analisis</th>

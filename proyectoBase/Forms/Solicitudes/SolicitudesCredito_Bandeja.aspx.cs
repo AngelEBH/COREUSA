@@ -8,10 +8,6 @@ using System.Web.Services;
 
 public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
 {
-    public string pcIDApp = "";
-    public string pcIDSesion = "";
-    public string pcIDUsuario = "";
-    public string pcEncriptado = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
@@ -24,13 +20,12 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
-
+                var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + DSC.Desencriptar(pcEncriptado));
 
-                pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "1";
-                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "1";
+                var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
                 if (pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "146")
                 {
@@ -83,6 +78,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                                 /* Informacion cliente */
                                 IdCliente = (int)sqlResultado["fiIDCliente"],
                                 IdentidadCliente = (string)sqlResultado["fcIdentidadCliente"],
+                                NombreCliente = sqlResultado["fcNombreCliente"].ToString(),
                                 PrimerNombreCliente = (string)sqlResultado["fcPrimerNombreCliente"],
                                 SegundoNombreCliente = (string)sqlResultado["fcSegundoNombreCliente"],
                                 PrimerApellidoCliente = (string)sqlResultado["fcPrimerApellidoCliente"],
@@ -128,7 +124,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
     [WebMethod]
     public static string AbrirAnalisis(int idSolicitud, string identidad, string dataCrypt)
     {
-        var resultado = string.Empty;
+        string resultado;
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
@@ -152,7 +148,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
     [WebMethod]
     public static string EncriptarParametros(int idSolicitud, string identidad, string dataCrypt)
     {
-        var resultado = string.Empty;
+        string resultado;
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
@@ -246,6 +242,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         public string IdentidadCliente { get; set; }
         public bool ClienteActivo { get; set; }
         public string RazonInactivo { get; set; }
+        public string NombreCliente { get; set; }
         public string PrimerNombreCliente { get; set; }
         public string SegundoNombreCliente { get; set; }
         public string PrimerApellidoCliente { get; set; }

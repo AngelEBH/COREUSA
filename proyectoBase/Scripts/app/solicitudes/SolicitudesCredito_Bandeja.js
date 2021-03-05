@@ -1,6 +1,6 @@
-﻿const iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">,</label></i>';
-const iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">.</label></i>';
-const iconoRojo = '<i class="mdi mdi mdi-close-circle mdi-24px text-danger p-0"></i>';
+﻿const iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">iconoExito</label></i>';
+const iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">iconoPendiente</label></i>';
+const iconoRojo = '<i class="mdi mdi mdi-close-circle mdi-24px text-danger p-0">iconoRojo</i>';
 const procesoPendiente = "/Date(-2208967200000)/";
 var identidad = "";
 var idSolicitud = 0;
@@ -62,26 +62,43 @@ $(document).ready(function () {
             }
         },
         "columns": [
-            { "data": "IdSoliciud", "className": "text-center" },
-            { "data": "Agencia" },
             {
-                "data": "Producto",
-                "render": function (value) {
-                    return value.split(' ')[1]
-                }
-            },
-            { "data": "IdentidadCliente" },
-            {
-                "data": "PrimerNombreCliente",
+                "data": "IdGarantia", "className": "text-center",
                 "render": function (data, type, row) {
-                    return row["PrimerNombreCliente"] + ' ' + row["SegundoNombreCliente"] + ' ' + row["PrimerApellidoCliente"] + ' ' + row["SegundoApellidoCliente"]
+
+                    return '<div class="dropdown mo-mb-2">' +
+                        '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button >' +
+                        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnDetalles" data-toggle="modal" data-target="#modalAbrirDetalles"><i class="fas fa-tasks"></i> Detalles</button>') +
+                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnAnalisis" data-toggle="modal" data-target="#modalAbrirAnalisis"><i class="fas fa-tasks"></i> Análisis</button>') +
+                        ((row["IdGarantia"] != 0 && row["VIN"] != '') ? '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion" data-toggle="modal" data-target="#modalImprimirDocumentacion"><i class="far fa-file-alt"></i> Imprimir Doc.</button>' : '') +
+                        '<button type="button" class="dropdown-item" id="btnVerExpediente" onclick="MostrarExpedienteSolicitudGarantia(' + row["IdSolicitud"] + ',' + row["IdGarantia"] + ')"><i class="far fa-file-alt"></i> Ver expediente</button>' +
+                        '</div>' +
+                        '</div >';
                 }
             },
             {
-                "data": "FechaCreacionSolicitud",
-                "render": function (value) {
-                    if (value === null) return "";
-                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm A');
+                "data": "IdSolicitud",
+                "render": function (data, type, row) {
+                    return row["IdSolicitud"] + ' <br><span class="text-muted">' + moment(row["FechaCreacionSolicitud"]).locale('es').format('YYYY/MM/DD hh:mm a') + '</span>';
+                }
+            },
+            {
+                "data": "Agencia",
+                "render": function (data, type, row) {
+                    return row["Producto"] + ' <br/><span class="text-muted">' + row["Agencia"] + ' | ' + row["UsuarioAsignado"] + '</span>'
+                }
+            },
+            {
+                "data": "NombreCliente",
+                "render": function (data, type, row) {
+                    return row["NombreCliente"] + ' <br/><span class="text-muted">' + row["Identidad"] + "</span>" + (row["IdCanal"] == 3 ? ' <span class="btn btn-sm btn-info pt-0 pb-0 m-0">canex</span>' : '')
+                }
+            },
+            {
+                "data": "VIN",
+                "render": function (data, type, row) {
+                    return row["Marca"] + ' ' + row["Modelo"] + ' ' + row["Anio"] + ' <br/><span class="text-muted">' + 'VIN: ' + (row["VIN"] != '' ? row["VIN"] : '') + '<span>'
                 }
             },
             {
@@ -198,7 +215,6 @@ $(document).ready(function () {
             {
                 "data": "FechaResolucion", "visible": false, "title": 'Fecha resolución',
                 "render": function (value) {
-
                     return value != procesoPendiente ? moment(value).locale('es').format('YYYY/MM/DD hh:mm A') : '';
                 }
             },
@@ -242,22 +258,22 @@ $(document).ready(function () {
                 dtBandeja.columns([6, 7, 8, 9, 10, 11, 12, 13]).search("").draw();
                 break;
             case "7":
-                dtBandeja.columns(7).search(".").columns(13).search("Pendiente").draw();
+                dtBandeja.columns(7).search("iconoPendiente").columns(13).search("Pendiente").draw();
                 break;
             case "8":
-                dtBandeja.columns(8).search(".").columns(9).search("_").columns(10).search("_").columns(13).search("Pendiente").draw();
+                dtBandeja.columns(8).search("iconoPendiente").columns(9).search("_").columns(10).search("_").columns(13).search("Pendiente").draw();
                 break;
             case "9":
-                dtBandeja.columns(9).search(".").columns(13).search("Pendiente").draw();
+                dtBandeja.columns(9).search("iconoPendiente").columns(13).search("Pendiente").draw();
                 break;
             case "10":
-                dtBandeja.columns(10).search(".").columns(13).search("Pendiente").draw();
+                dtBandeja.columns(10).search("iconoPendiente").columns(13).search("Pendiente").draw();
                 break;
             case "11":
-                dtBandeja.columns(11).search(".").columns(13).search("Pendiente").draw();
+                dtBandeja.columns(11).search("iconoPendiente").columns(13).search("Pendiente").draw();
                 break;
             case "12":
-                dtBandeja.columns(12).search(".").columns(13).search("Pendiente").draw();
+                dtBandeja.columns(12).search("iconoPendiente").columns(13).search("Pendiente").draw();
                 break;
             case "13":
                 dtBandeja.columns(13).search("Pendiente").draw();
