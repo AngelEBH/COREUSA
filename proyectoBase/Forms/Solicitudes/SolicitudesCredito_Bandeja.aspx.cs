@@ -24,7 +24,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                 var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + DSC.Desencriptar(pcEncriptado));
 
                 var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "1";
+                var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                 var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
                 if (pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "146")
@@ -64,25 +64,27 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                         {
                             solicitudes.Add(new SolicitudesCredito_Bandeja_ViewModel()
                             {
-                                IdSoliciud = (int)sqlResultado["fiIDSolicitud"],
+                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
+                                FechaCreacionSolicitud = (DateTime)sqlResultado["fdFechaCreacionSolicitud"],
                                 IdProducto = (int)sqlResultado["fiIDTipoProducto"],
                                 Producto = (string)sqlResultado["fcProducto"],
+                                RequiereGarantia = (byte)sqlResultado["fiRequiereGarantia"],
+                                /* Centro de costo */
                                 Agencia = (string)sqlResultado["fcNombreAgencia"],
                                 /* Informacion del vendedor */
-                                IdUsuarioAsignado = (int)sqlResultado["fiIDUsuarioVendedor"],
-                                UsuarioAsignado = (string)sqlResultado["fcNombreCortoVendedor"],
-                                FechaCreacionSolicitud = (DateTime)sqlResultado["fdFechaCreacionSolicitud"],
-                                /* Informacion del analista */
-                                IdAnalistaSolicitud = (int)sqlResultado["fiIDAnalista"],
-                                AnalistaSolicitud = (string)sqlResultado["fcNombreCortoAnalista"],
+                                IdUsuarioAsignado = (int)sqlResultado["fiIDUsuarioAsignado"],
+                                UsuarioAsignado = (string)sqlResultado["fcUsuarioAsignado"],
                                 /* Informacion cliente */
                                 IdCliente = (int)sqlResultado["fiIDCliente"],
                                 IdentidadCliente = (string)sqlResultado["fcIdentidadCliente"],
                                 NombreCliente = sqlResultado["fcNombreCliente"].ToString(),
-                                PrimerNombreCliente = (string)sqlResultado["fcPrimerNombreCliente"],
-                                SegundoNombreCliente = (string)sqlResultado["fcSegundoNombreCliente"],
-                                PrimerApellidoCliente = (string)sqlResultado["fcPrimerApellidoCliente"],
-                                SegundoApellidoCliente = (string)sqlResultado["fcSegundoApellidoCliente"],
+                                VIN = sqlResultado["fcVIN"].ToString(),
+                                Marca = sqlResultado["fcMarca"].ToString(),
+                                Modelo = sqlResultado["fcModelo"].ToString(),
+                                Anio = (int)sqlResultado["fiAnio"],
+                                /* Informacion del analista */
+                                IdAnalistaSolicitud = (int)sqlResultado["fiIDAnalista"],
+                                AnalistaSolicitud = (string)sqlResultado["fcNombreCortoAnalista"],
                                 /* Bitacora */
                                 EnIngresoInicio = ConvertFromDBVal<DateTime>(sqlResultado["fdEnIngresoInicio"]),
                                 EnIngresoFin = ConvertFromDBVal<DateTime>(sqlResultado["fdEnIngresoFin"]),
@@ -91,7 +93,6 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                                 EnAnalisisInicio = ConvertFromDBVal<DateTime>(sqlResultado["fdEnAnalisisInicio"]),
                                 EnAnalisisFin = ConvertFromDBVal<DateTime>(sqlResultado["fdEnAnalisisFin"]),
                                 CondicionadoInicio = ConvertFromDBVal<DateTime>(sqlResultado["fdCondicionadoInicio"]),
-                                CondicionadoComentario = (string)sqlResultado["fcCondicionadoComentario"],
                                 CondificionadoFin = ConvertFromDBVal<DateTime>(sqlResultado["fdCondificionadoFin"]),
                                 /* Proceso de campo */
                                 EnvioARutaAnalista = ConvertFromDBVal<DateTime>(sqlResultado["fdEnvioARutaAnalista"]),
@@ -222,31 +223,35 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
 
     public class SolicitudesCredito_Bandeja_ViewModel
     {
-        public int IdSoliciud { get; set; }
+        public int IdSolicitud { get; set; }
+        public DateTime FechaCreacionSolicitud { get; set; }
         public int IdProducto { get; set; }
         public string Producto { get; set; }
-        public DateTime FechaCreacionSolicitud { get; set; }
+        public int RequiereGarantia { get; set; }
+        public int IdAgencia { get; set; }
+        public string Agencia { get; set; }
+        public int IdUsuarioAsignado { get; set; }
+        public string UsuarioAsignado { get; set; }
+        public int IdCliente { get; set; }
+        public string IdentidadCliente { get; set; }
+        public string NombreCliente { get; set; }
+        public bool ClienteActivo { get; set; }
+        public string RazonInactivo { get; set; }
+        public int IdGarantia { get; set; }
+        public string VIN { get; set; }
+        public string Marca { get; set; }
+        public string Modelo { get; set; }
+        public int Anio { get; set; }
+
         public int SolicitudActiva { get; set; }
         public int IdUsuarioCreador { get; set; }
         public string UsuarioCreador { get; set; }
-        public int IdUsuarioAsignado { get; set; }
-        public string UsuarioAsignado { get; set; }
-        public int IdAgencia { get; set; }
-        public string Agencia { get; set; }
         public int IdAnalistaSolicitud { get; set; }
         public string AnalistaSolicitud { get; set; }
         public int IdGestorAsignado { get; set; }
         public string GestorAsignado { get; set; }
         public int IdEstadoSolicitud { get; set; }
-        public int IdCliente { get; set; }
-        public string IdentidadCliente { get; set; }
-        public bool ClienteActivo { get; set; }
-        public string RazonInactivo { get; set; }
-        public string NombreCliente { get; set; }
-        public string PrimerNombreCliente { get; set; }
-        public string SegundoNombreCliente { get; set; }
-        public string PrimerApellidoCliente { get; set; }
-        public string SegundoApellidoCliente { get; set; }
+
         public DateTime EnIngresoInicio { get; set; }
         public DateTime EnIngresoFin { get; set; }
         public DateTime EnTramiteInicio { get; set; }
@@ -265,7 +270,6 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         public string ComentarioResolucion { get; set; }
         public DateTime EnAnalisisFin { get; set; }
         public DateTime CondicionadoInicio { get; set; }
-        public string CondicionadoComentario { get; set; }
         public DateTime CondificionadoFin { get; set; }
         public int IdEstadoDeCampo { get; set; }
         public DateTime EnvioARutaAnalista { get; set; }

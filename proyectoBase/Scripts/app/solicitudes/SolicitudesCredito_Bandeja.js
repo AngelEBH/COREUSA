@@ -1,6 +1,6 @@
 ﻿const iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">iconoExito</label></i>';
 const iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">iconoPendiente</label></i>';
-const iconoRojo = '<i class="mdi mdi mdi-close-circle mdi-24px text-danger p-0">iconoRojo</i>';
+const iconoRojo = '<i class="mdi mdi mdi-close-circle mdi-24px text-danger p-0"></i>';
 const procesoPendiente = "/Date(-2208967200000)/";
 var identidad = "";
 var idSolicitud = 0;
@@ -63,15 +63,15 @@ $(document).ready(function () {
         },
         "columns": [
             {
-                "data": "IdGarantia", "className": "text-center",
+                "data": "IdSolicitud", "className": "text-center",
                 "render": function (data, type, row) {
 
                     return '<div class="dropdown mo-mb-2">' +
                         '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button >' +
                         '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
-                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnDetalles" data-toggle="modal" data-target="#modalAbrirDetalles"><i class="fas fa-tasks"></i> Detalles</button>') +
-                        (row["IdGarantia"] == 0 ? '' : '<button type="button" class="dropdown-item" id="btnAnalisis" data-toggle="modal" data-target="#modalAbrirAnalisis"><i class="fas fa-tasks"></i> Análisis</button>') +
-                        ((row["IdGarantia"] != 0 && row["VIN"] != '') ? '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion" data-toggle="modal" data-target="#modalImprimirDocumentacion"><i class="far fa-file-alt"></i> Imprimir Doc.</button>' : '') +
+                        '<button type="button" class="dropdown-item" id="btnAnalisis" data-toggle="modal" data-target="#modalAbrirAnalisis"><i class="fas fa-tasks"></i> Abrir análisis</button>' +
+                        '<button type="button" class="dropdown-item" id="btnDetalles" data-toggle="modal" data-target="#modalAbrirDetalles"><i class="fas fa-tasks"></i> Ver detalles</button>' +                        
+                        '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion" data-toggle="modal" data-target="#modalImprimirDocumentacion"><i class="far fa-file-alt"></i> Imprimir Documentos</button>' +
                         '<button type="button" class="dropdown-item" id="btnVerExpediente" onclick="MostrarExpedienteSolicitudGarantia(' + row["IdSolicitud"] + ',' + row["IdGarantia"] + ')"><i class="far fa-file-alt"></i> Ver expediente</button>' +
                         '</div>' +
                         '</div >';
@@ -84,21 +84,21 @@ $(document).ready(function () {
                 }
             },
             {
-                "data": "Agencia",
+                "data": "Agencia", "className": "td-responsive",
                 "render": function (data, type, row) {
                     return row["Producto"] + ' <br/><span class="text-muted">' + row["Agencia"] + ' | ' + row["UsuarioAsignado"] + '</span>'
                 }
             },
             {
-                "data": "NombreCliente",
+                "data": "NombreCliente", "className": "td-responsive",
                 "render": function (data, type, row) {
-                    return row["NombreCliente"] + ' <br/><span class="text-muted">' + row["Identidad"] + "</span>" + (row["IdCanal"] == 3 ? ' <span class="btn btn-sm btn-info pt-0 pb-0 m-0">canex</span>' : '')
+                    return row["NombreCliente"] + ' <br/><span class="text-muted">' + row["IdentidadCliente"] + "</span>" + (row["IdCanal"] == 3 ? ' <span class="btn btn-sm btn-info pt-0 pb-0 m-0">canex</span>' : '')
                 }
             },
             {
-                "data": "VIN",
+                "data": "VIN", "className": "td-responsive",
                 "render": function (data, type, row) {
-                    return row["Marca"] + ' ' + row["Modelo"] + ' ' + row["Anio"] + ' <br/><span class="text-muted">' + 'VIN: ' + (row["VIN"] != '' ? row["VIN"] : '') + '<span>'
+                    return row["RequiereGarantia"] == 0 ? '<span class="text-muted">No aplica</span>' : row["Marca"] + ' ' + row["Modelo"] + ' ' + row["Anio"] + ' <br/><span class="text-muted">' + 'VIN: ' + row["VIN"] + '<span>'
                 }
             },
             {
@@ -239,7 +239,7 @@ $(document).ready(function () {
             }
         ],
         columnDefs: [
-            { targets: [6, 7, 8, 9, 10, 11, 12], orderable: false },
+            { targets: [0, 5, 6, 7, 8, 9, 10, 11, 12], orderable: false },
             { "width": "1%", "targets": 0 }
         ]
     });
@@ -355,7 +355,7 @@ $(document).ready(function () {
         idSolicitud = row.IdSoliciud;
 
         $("#lblCliente").text(row.PrimerNombreCliente + ' ' + row.SegundoNombreCliente + ' ' + row.PrimerApellidoCliente + ' ' + row.SegundoApellidoCliente + ' ');
-        $("#lblIdentidadCliente").text(row.IdentidadCliente);
+        $("#lblIdentidadClienteCliente").text(row.IdentidadClienteCliente);
 
         if (idAnalistaSolicitud != 0 || 1 == 1) {
 
@@ -372,19 +372,19 @@ $(document).ready(function () {
                     //if (data.d == true) {
                     $("#modalAbrirSolicitud").modal({ backdrop: false });
                     idSolicitud = idSolicitud;
-                    identidad = row.IdentidadCliente;
+                    identidad = row.IdentidadClienteCliente;
                     //}
                 }
             });
         }
         else {
             idSolicitud = idSolicitud;
-            identidad = row.IdentidadCliente;
+            identidad = row.IdentidadClienteCliente;
             $("#modalAbrirSolicitud").modal({ backdrop: false });
         }
     });
 
-    FiltrarSolicitudesMesActual();
+    //FiltrarSolicitudesMesActual();
 });
 
 
@@ -393,7 +393,7 @@ $("#btnAbrirAnalisis").click(function (e) {
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Bandeja.aspx/AbrirAnalisis",
-        data: JSON.stringify({ idSolicitud: idSolicitud, Identidad: identidad, dataCrypt: window.location.href }),
+        data: JSON.stringify({ idSolicitud: idSolicitud, IdentidadCliente: identidad, dataCrypt: window.location.href }),
         contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError("No se pudo cargar la solicitud, contacte al administrador");

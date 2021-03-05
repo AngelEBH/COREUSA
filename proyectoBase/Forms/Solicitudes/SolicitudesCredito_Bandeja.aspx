@@ -42,6 +42,18 @@
             overflow-y: auto;
             max-height: 300px !important;
         }
+
+        table.datatable-cells-responsive tbody td.td-responsive {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+            table.datatable-cells-responsive tbody td.td-responsive:hover {
+                overflow: visible;
+                white-space: inherit;
+            }
     </style>
 </head>
 <body runat="server" class="EstiloBody-Listado">
@@ -142,21 +154,21 @@
             </div>
 
             <div class="table-responsive">
-                <table id="datatable-bandeja" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                <table id="datatable-bandeja" class="table table-bordered table-sm table-hover dataTable datatable-cells-responsive" style="width: 100%" role="grid">
                     <thead>
                         <tr>
-                            <th>Acciones</th>
-                            <th>Solicitud N° <br /> Fecha de ingreso</th>
+                            <th><span class="pt-2 pb-2">Acciones</span></th>
+                            <th>Solicitud de crédito</th>
                             <th>Producto / CC / Vendedor</th>
                             <th>Cliente / Identidad</th>
                             <th>Marca / Modelo / Año / VIN</th>
                             <th>Ingreso</th>
-                            <th>Recepción</th>
-                            <th>Analisis</th>
+                            <th>Recepc.</th>
+                            <th>Analis.</th>
                             <th>Campo</th>
-                            <th>Condicio.</th>
+                            <th>Condic.</th>
                             <th>Reprog.</th>
-                            <th>Valid.</th>
+                            <th>Valida.</th>
                             <th>Resolución</th>
                         </tr>
                     </thead>

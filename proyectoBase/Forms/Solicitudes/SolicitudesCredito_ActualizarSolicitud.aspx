@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_ActualizarSolicitud.aspx.cs" Inherits="SolicitudesCredito_ActualizarSolicitud" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_ActualizarSolicitud.aspx.cs" Inherits="SolicitudesCredito_ActualizarSolicitud" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
