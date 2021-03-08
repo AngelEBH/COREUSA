@@ -2042,22 +2042,22 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         /* ================================================== */
         else if (idProducto == "202" || idProducto == "203" || idProducto == "204")
         {
-            if (hoy.Day >= 6 && hoy.Day <= 20)
+            if (hoy.Day >= 21 || hoy.Day <= 5)
             {
-                anioPrimerPago = hoy.AddMonths(1).Year;
-                mesPrimerPago = hoy.AddMonths(1).Month;
-                diaPrimerPago = 15;
-            }
-            else if (hoy.Day >= 21 || hoy.Day <= 5)
-            {
-                if (hoy.Day > 5)
+                if (hoy.Day >= 21)
                 {
                     mesPrimerPago = hoy.AddMonths(1).Month;
                     anioPrimerPago = hoy.AddMonths(1).Year;
                 }
-
                 var ultimoDiaDelMes = new DateTime(anioPrimerPago, mesPrimerPago, DateTime.DaysInMonth(anioPrimerPago, mesPrimerPago)).Day; // ultimo dia del mes
                 diaPrimerPago = ultimoDiaDelMes > 30 ? 30 : ultimoDiaDelMes;
+
+            }
+            else if (hoy.Day >= 6 || hoy.Day <= 20)
+            {
+                mesPrimerPago = hoy.AddMonths(1).Month;
+                anioPrimerPago = hoy.AddMonths(1).Year;
+                diaPrimerPago = 15;
             }
         }
 
