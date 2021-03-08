@@ -1266,8 +1266,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                 using (var sqlComando = new SqlCommand("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
                 {
-                    var montoPrestamo = (idProducto == 203) ? valorPrima : valorGlobal - valorPrima;
                     valorPrima = (idProducto == 203) ? valorGlobal - valorPrima : valorPrima;
+                    var montoPrestamo = (idProducto == 203) ? valorGlobal - valorPrima : valorGlobal - valorPrima;
 
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
