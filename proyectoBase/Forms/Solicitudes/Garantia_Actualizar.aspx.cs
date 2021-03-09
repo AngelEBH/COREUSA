@@ -13,99 +13,94 @@ using proyectoBase.Models.ViewModel;
 
 public partial class Garantia_Actualizar : System.Web.UI.Page
 {
-    public string pcIDApp = "";
-    public string pcIDSesion = "";
-    public string pcIDUsuario = "";
-    public string pcIDGarantia = "";
-    public string pcIDSolicitud = "";
-    public bool EsDigitadoManualmente;
+    private string pcIDApp = "";
+    private string pcIDSesion = "";
+    private string pcIDUsuario = "";
+    private string pcIDGarantia = "";
+    private string pcIDSolicitud = "";
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+
     public List<SeccionGarantia_ViewModel> Documentos_Secciones_Garantia;
+    public bool EsDigitadoManualmente;
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        try
+        var type = Request.QueryString["type"];
+
+        /* Captura de parámetros encriptados */
+        if (!IsPostBack && type == null)
         {
-            var type = Request.QueryString["type"];
+            var lcURL = Request.Url.ToString();
+            var liParamStart = lcURL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
-            if (!IsPostBack && type == null)
+            Documentos_Secciones_Garantia = new List<SeccionGarantia_ViewModel>();
+
+            if (lcParametros != string.Empty)
             {
-                var lcURL = Request.Url.ToString();
-                var liParamStart = lcURL.IndexOf("?");
-                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
+                var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                Documentos_Secciones_Garantia = new List<SeccionGarantia_ViewModel>();
+                pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
+                pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                lblNoSolicitud.InnerText = pcIDSolicitud != "0" ? ("Solicitud de crédito No. " + pcIDSolicitud) : "Sin solicitud de crédito";
 
-                if (lcParametros != string.Empty)
-                {
-                    var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
-                    var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-
-                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                    pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
-                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                    lblNoSolicitud.InnerText = pcIDSolicitud != "0" ? ("Solicitud de crédito No. " + pcIDSolicitud) : "Sin solicitud de crédito";
-
-                    HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
-                    HttpContext.Current.Session["ListaDocumentosParaAsegurar"] = null;
-                    Session.Timeout = 10080;
-                }
-                LlenarListas();
+                HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
+                HttpContext.Current.Session["ListaDocumentosGarantia_Actualizar"] = null;
+                Session.Timeout = 10080;
             }
-
-            /* Guardar documentos de la solicitud */
-            if (type != null || Request.HttpMethod == "POST")
-            {
-                Session["tipoDoc"] = Convert.ToInt32(Request.QueryString["doc"]);
-                var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
-
-                var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-                    { "limit", 1 },
-                    { "title", "auto" },
-                    { "uploadDir", uploadDir },
-                    { "extensions", new string[] { "jpg", "png", "jpeg"} },
-                    { "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
-                    { "fileMaxSize", 20 }, /* Peso máximo por archivo */
-                });
-
-                switch (type)
-                {
-                    case "upload": /* Guardar achivo en carpeta temporal y guardar la informacion del mismo en una variable de sesion */
-
-                        var data = fileUploader.Upload();
-
-                        if (data["files"].Count == 1)
-                            data["files"][0].Remove("file");
-                        Response.Write(JsonConvert.SerializeObject(data));
-
-                        /* Al subirse los archivos se guardan en este objeto de sesion general del helper fileuploader */
-                        var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
-
-                        /* Guardar listado de documentos en una session propia de esta pantalla */
-                        Session["ListaDocumentosParaAsegurar"] = list;
-
-                        break;
-
-                    case "remove":
-                        string file = Request.Form["file"];
-
-                        if (file != null)
-                        {
-                            file = FileUploader.FullDirectory(uploadDir) + file;
-                            if (File.Exists(file))
-                                File.Delete(file);
-                        }
-                        break;
-                }
-                Response.End();
-            }
+            LlenarListas();
         }
-        catch (Exception ex)
+
+        /* Guardar documentos de la solicitud */
+        if (type != null || Request.HttpMethod == "POST")
         {
-            ex.Message.ToString();
+            Session["tipoDoc"] = Convert.ToInt32(Request.QueryString["doc"]);
+            var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
+
+            var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
+                { "limit", 1 },
+                { "title", "auto" },
+                { "uploadDir", uploadDir },
+                { "extensions", new string[] { "jpg", "png", "jpeg"} },
+                { "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
+                { "fileMaxSize", 20 }, //peso máximo por archivo
+            });
+
+            switch (type)
+            {
+                case "upload":
+                    /* Proceso de carga */
+                    var data = fileUploader.Upload();
+
+                    /* Resultado */
+                    if (data["files"].Count == 1)
+                        data["files"][0].Remove("file");
+                    Response.Write(JsonConvert.SerializeObject(data));
+
+                    /* Al subirse los archivos se guardan en este objeto de sesion general del helper fileuploader */
+                    var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
+
+                    /* Guardar listado de documentos en una session propia de esta pantalla */
+                    Session["ListaDocumentosGarantia_Actualizar"] = list;
+                    break;
+
+                case "remove":
+                    string file = Request.Form["file"];
+
+                    if (file != null)
+                    {
+                        file = FileUploader.FullDirectory(uploadDir) + file;
+                        if (File.Exists(file))
+                            File.Delete(file);
+                    }
+                    break;
+            }
+            Response.End();
         }
     }
 
@@ -120,11 +115,11 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                 using (var sqlComando = new SqlCommand("sp_CREDGarantias_Actualizar_LlenarListas", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
                     sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
@@ -151,16 +146,13 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                         }
 
                         if (pcIDSolicitud == "0")
-                        {
                             ddlTipoDeGarantia.Enabled = true;
-                        }
 
                         /* Tercer resultado: Informacion de la garantía */
                         sqlResultado.NextResult();
 
                         var idEstadoCivilPropietario = "0";
                         var idNacionalidadPropietario = "0";
-
                         var idEstadoCivilVendedor = "0";
                         var idNacionalidadVendedor = "0";
 
@@ -262,181 +254,187 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
     {
         var resultado = new Resultado_ViewModel() { ResultadoExitoso = false };
 
-        using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["conexionEncriptada"].ToString())))
+        try
         {
-            sqlConexion.Open();
-
-            using (var tran = sqlConexion.BeginTransaction())
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["conexionEncriptada"].ToString())))
             {
-                try
+                sqlConexion.Open();
+
+                using (var tran = sqlConexion.BeginTransaction())
                 {
-                    var urlDesencriptado = DesencriptarURL(dataCrypt);
-                    var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp") ?? "0";
-                    var pcIDSesion = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("SID") ?? "0";
-                    var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr") ?? "0";
-                    var pcIDGarantia = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDGarantia") ?? "0";
-                    var pcIDSolicitud = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDSol") ?? "0";
-
-                    using (var sqlComando = new SqlCommand("sp_CREDGarantias_Actualizar", sqlConexion, tran))
+                    try
                     {
-                        sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
-                        sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
-                        sqlComando.Parameters.AddWithValue("@pcPrestamo", garantia.NumeroPrestamo);
-                        sqlComando.Parameters.AddWithValue("@pcVin", garantia.VIN);
-                        sqlComando.Parameters.AddWithValue("@pcTipoGarantia", garantia.TipoDeGarantia);
-                        sqlComando.Parameters.AddWithValue("@pcTipoVehiculo", garantia.TipoDeVehiculo);
-                        sqlComando.Parameters.AddWithValue("@pcMarca", garantia.Marca);
-                        sqlComando.Parameters.AddWithValue("@pcModelo", garantia.Modelo);
-                        sqlComando.Parameters.AddWithValue("@piAnio", garantia.Anio);
-                        sqlComando.Parameters.AddWithValue("@pcColor", garantia.Color);
-                        sqlComando.Parameters.AddWithValue("@pcCilindraje", garantia.Cilindraje);
-                        sqlComando.Parameters.AddWithValue("@pnRecorrido", garantia.Recorrido);
-                        sqlComando.Parameters.AddWithValue("@pcUnidadDeDistancia", garantia.UnidadDeDistancia);
-                        sqlComando.Parameters.AddWithValue("@pcTransmision", garantia.Transmision);
-                        sqlComando.Parameters.AddWithValue("@pcTipoCombustible", garantia.TipoDeCombustible);
-                        sqlComando.Parameters.AddWithValue("@pcMatricula", garantia.Matricula);
-                        sqlComando.Parameters.AddWithValue("@pcSerieUno", garantia.SerieUno);
-                        sqlComando.Parameters.AddWithValue("@pcSerieDos", garantia.SerieDos);
-                        sqlComando.Parameters.AddWithValue("@pcChasis", garantia.SerieChasis);
-                        sqlComando.Parameters.AddWithValue("@pcMotor", garantia.SerieMotor);
-                        sqlComando.Parameters.AddWithValue("@pcGPS", garantia.GPS);
-                        sqlComando.Parameters.AddWithValue("@pnValorGarantia", garantia.ValorMercado);
-                        sqlComando.Parameters.AddWithValue("@pnValorPrima", garantia.ValorPrima);
-                        sqlComando.Parameters.AddWithValue("@pnValorFinanciado", garantia.ValorFinanciado);
-                        sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", garantia.GastosDeCierre);
-                        sqlComando.Parameters.AddWithValue("@pcNombrePropietarioGarantia", garantia.NombrePropietario);
-                        sqlComando.Parameters.AddWithValue("@pcIdentidadPropietarioGarantia", garantia.IdentidadPropietario);
-                        sqlComando.Parameters.AddWithValue("@piIDNacionalidadPropietarioGarantia", garantia.IdNacionalidadPropietario);
-                        sqlComando.Parameters.AddWithValue("@piIDEstadoCivilPropietarioGarantia", garantia.IdEstadoCivilPropietario);
-                        sqlComando.Parameters.AddWithValue("@pcNombreVendedorGarantia", garantia.NombreVendedor);
-                        sqlComando.Parameters.AddWithValue("@pcIdentidadVendedorGarantia", garantia.IdentidadVendedor);
-                        sqlComando.Parameters.AddWithValue("@piIDNacionalidadVendedorGarantia", garantia.IdNacionalidadVendedor);
-                        sqlComando.Parameters.AddWithValue("@piIDEstadoCivilVendedorGarantia", garantia.IdEstadoCivilVendedor);
-                        sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
-                        sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.EsDigitadoManualmente);
-                        sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                        sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                        sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                        sqlComando.CommandTimeout = 120;
+                        var urlDesencriptado = DesencriptarURL(dataCrypt);
+                        var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp") ?? "0";
+                        var pcIDSesion = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("SID") ?? "0";
+                        var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr") ?? "0";
+                        var pcIDGarantia = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDGarantia") ?? "0";
+                        var pcIDSolicitud = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDSol") ?? "0";
 
-                        using (var sqlResultado = sqlComando.ExecuteReader())
-                        {
-                            while (sqlResultado.Read())
-                            {
-                                var resultadoSp = sqlResultado["MensajeError"].ToString();
-
-                                if (resultadoSp.StartsWith("-1"))
-                                {
-                                    resultado.ResultadoExitoso = false;
-                                    resultado.MensajeResultado = "No se pudo actualizar la información de la garantía, contacte al administrador.";
-                                    resultado.DebugString = resultadoSp;
-
-                                    if (resultadoSp.Contains("Violation of UNIQUE KEY") && pcIDSolicitud != "0")
-                                    {
-                                        resultado.MensajeResultado = "El VIN que intenta guardar ya está asociado a esta solicitud.";
-                                    }
-                                    else
-                                    {
-                                        resultado.MensajeResultado = "El VIN que intenta guardar ya está registrado sin solicitud.";
-                                    }
-                                    return resultado;
-                                }
-                            } // while sqlResultado.Read()
-                        } // sqlResultado
-                    } // using sqlComando
-
-                    /* Lista de documentos que se va ingresar en la base de datos y se va mover al nuevo directorio */
-                    var garantiaDocumentos = new List<SolicitudesDocumentosViewModel>();
-
-                    /* Registrar documentacion de la solicitud */
-                    if (HttpContext.Current.Session["ListaDocumentosParaAsegurar"] != null)
-                    {
-                        /* lista de documentos adjuntados por el usuario */
-                        var listaDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaDocumentosParaAsegurar"];
-
-                        if (listaDocumentos != null)
-                        {
-                            string nombreCarpetaDocumentos = "Solicitud" + pcIDSolicitud;
-                            string nuevoNombreDocumento = "";
-
-                            foreach (SolicitudesDocumentosViewModel file in listaDocumentos)
-                            {
-                                if (File.Exists(file.fcRutaArchivo + @"\" + file.NombreAntiguo)) /* si el archivo existe, que se agregue a la lista */
-                                {
-                                    nuevoNombreDocumento = GenerarNombreDocumento(pcIDSolicitud, garantia.VIN);
-
-                                    garantiaDocumentos.Add(new SolicitudesDocumentosViewModel()
-                                    {
-                                        fcNombreArchivo = nuevoNombreDocumento,
-                                        NombreAntiguo = file.NombreAntiguo,
-                                        fcTipoArchivo = file.fcTipoArchivo,
-                                        fcRutaArchivo = file.fcRutaArchivo.Replace("Temp", "") + nombreCarpetaDocumentos,
-                                        URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDocumentos + "/" + nuevoNombreDocumento + ".png",
-                                        fiTipoDocumento = file.fiTipoDocumento
-                                    });
-                                } // if File.Exists
-                            } // foreach lista documentos
-                        } // if lista documentos != null
-                    } // if Session["ListaDocumentosParaAsegurar"] != null
-
-                    /* Guardar los documentos de la garantia en la base de datos*/
-                    int contadorErrores = 0;
-                    foreach (SolicitudesDocumentosViewModel documento in garantiaDocumentos)
-                    {
-                        using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDGarantias_Documentos_Actualizar", sqlConexion, tran))
+                        using (var sqlComando = new SqlCommand("sp_CREDGarantias_Actualizar", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
                             sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
-                            sqlComando.Parameters.AddWithValue("@pcNombreArchivo", documento.fcNombreArchivo);
-                            sqlComando.Parameters.AddWithValue("@pcExtension", ".png");
-                            sqlComando.Parameters.AddWithValue("@pcRutaArchivo", documento.fcRutaArchivo);
-                            sqlComando.Parameters.AddWithValue("@pcURL", documento.URLArchivo);
-                            sqlComando.Parameters.AddWithValue("@piIDSeccionGarantia", documento.fiTipoDocumento);
-                            sqlComando.Parameters.AddWithValue("@pcComentario", "");
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
+                            sqlComando.Parameters.AddWithValue("@pcPrestamo", garantia.NumeroPrestamo);
+                            sqlComando.Parameters.AddWithValue("@pcVin", garantia.VIN);
+                            sqlComando.Parameters.AddWithValue("@pcTipoGarantia", garantia.TipoDeGarantia);
+                            sqlComando.Parameters.AddWithValue("@pcTipoVehiculo", garantia.TipoDeVehiculo);
+                            sqlComando.Parameters.AddWithValue("@pcMarca", garantia.Marca);
+                            sqlComando.Parameters.AddWithValue("@pcModelo", garantia.Modelo);
+                            sqlComando.Parameters.AddWithValue("@piAnio", garantia.Anio);
+                            sqlComando.Parameters.AddWithValue("@pcColor", garantia.Color);
+                            sqlComando.Parameters.AddWithValue("@pcCilindraje", garantia.Cilindraje);
+                            sqlComando.Parameters.AddWithValue("@pnRecorrido", garantia.Recorrido);
+                            sqlComando.Parameters.AddWithValue("@pcUnidadDeDistancia", garantia.UnidadDeDistancia);
+                            sqlComando.Parameters.AddWithValue("@pcTransmision", garantia.Transmision);
+                            sqlComando.Parameters.AddWithValue("@pcTipoCombustible", garantia.TipoDeCombustible);
+                            sqlComando.Parameters.AddWithValue("@pcMatricula", garantia.Matricula);
+                            sqlComando.Parameters.AddWithValue("@pcSerieUno", garantia.SerieUno);
+                            sqlComando.Parameters.AddWithValue("@pcSerieDos", garantia.SerieDos);
+                            sqlComando.Parameters.AddWithValue("@pcChasis", garantia.SerieChasis);
+                            sqlComando.Parameters.AddWithValue("@pcMotor", garantia.SerieMotor);
+                            sqlComando.Parameters.AddWithValue("@pcGPS", garantia.GPS);
+                            sqlComando.Parameters.AddWithValue("@pnValorGarantia", garantia.ValorMercado);
+                            sqlComando.Parameters.AddWithValue("@pnValorPrima", garantia.ValorPrima);
+                            sqlComando.Parameters.AddWithValue("@pnValorFinanciado", garantia.ValorFinanciado);
+                            sqlComando.Parameters.AddWithValue("@pnGastosDeCierre", garantia.GastosDeCierre);
+                            sqlComando.Parameters.AddWithValue("@pcNombrePropietarioGarantia", garantia.NombrePropietario);
+                            sqlComando.Parameters.AddWithValue("@pcIdentidadPropietarioGarantia", garantia.IdentidadPropietario);
+                            sqlComando.Parameters.AddWithValue("@piIDNacionalidadPropietarioGarantia", garantia.IdNacionalidadPropietario);
+                            sqlComando.Parameters.AddWithValue("@piIDEstadoCivilPropietarioGarantia", garantia.IdEstadoCivilPropietario);
+                            sqlComando.Parameters.AddWithValue("@pcNombreVendedorGarantia", garantia.NombreVendedor);
+                            sqlComando.Parameters.AddWithValue("@pcIdentidadVendedorGarantia", garantia.IdentidadVendedor);
+                            sqlComando.Parameters.AddWithValue("@piIDNacionalidadVendedorGarantia", garantia.IdNacionalidadVendedor);
+                            sqlComando.Parameters.AddWithValue("@piIDEstadoCivilVendedorGarantia", garantia.IdEstadoCivilVendedor);
+                            sqlComando.Parameters.AddWithValue("@pcComentario", garantia.Comentario);
+                            sqlComando.Parameters.AddWithValue("@pbDigitadoManualmente", garantia.EsDigitadoManualmente);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.CommandTimeout = 120;
 
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 while (sqlResultado.Read())
                                 {
-                                    if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                                        contadorErrores++;
+                                    var resultadoSp = sqlResultado["MensajeError"].ToString();
+
+                                    if (resultadoSp.StartsWith("-1"))
+                                    {
+                                        resultado.ResultadoExitoso = false;
+                                        resultado.MensajeResultado = "No se pudo actualizar la información de la garantía, contacte al administrador.";
+                                        resultado.DebugString = resultadoSp;
+
+                                        if (resultadoSp.Contains("Violation of UNIQUE KEY") && pcIDSolicitud != "0")
+                                            resultado.MensajeResultado = "El VIN que intenta guardar ya está asociado a esta solicitud.";
+                                        else
+                                            resultado.MensajeResultado = "El VIN que intenta guardar ya está registrado sin solicitud.";
+
+                                        return resultado;
+                                    }
+                                } // sqlResultado.Read()
+                            } // sqlComando.ExecuteReader()
+                        } // using sqlComando
+
+                        /* Lista de documentos que se va ingresar en la base de datos y se va mover al nuevo directorio */
+                        var garantiaDocumentos = new List<SolicitudesDocumentosViewModel>();
+
+                        /* Registrar documentacion de la solicitud */
+                        if (HttpContext.Current.Session["ListaDocumentosGarantia_Actualizar"] != null)
+                        {
+                            /* lista de documentos adjuntados por el usuario */
+                            var listaDocumentos = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaDocumentosGarantia_Actualizar"];
+
+                            if (listaDocumentos != null)
+                            {
+                                string NombreCarpetaDocumentos = "Solicitud" + pcIDSolicitud;
+                                string NuevoNombreDocumento = "";
+
+                                foreach (SolicitudesDocumentosViewModel file in listaDocumentos)
+                                {
+                                    if (File.Exists(file.fcRutaArchivo + @"\" + file.NombreAntiguo)) /* si el archivo existe, que se agregue a la lista */
+                                    {
+                                        NuevoNombreDocumento = GenerarNombreDocumento(pcIDSolicitud, garantia.VIN);
+
+                                        garantiaDocumentos.Add(new SolicitudesDocumentosViewModel()
+                                        {
+                                            fcNombreArchivo = NuevoNombreDocumento,
+                                            NombreAntiguo = file.NombreAntiguo,
+                                            fcTipoArchivo = file.fcTipoArchivo,
+                                            fcRutaArchivo = file.fcRutaArchivo.Replace("Temp", "") + NombreCarpetaDocumentos,
+                                            URLArchivo = "/Documentos/Solicitudes/" + NombreCarpetaDocumentos + "/" + NuevoNombreDocumento + ".png",
+                                            fiTipoDocumento = file.fiTipoDocumento
+                                        });
+                                    } // if File.Exists
+                                } // foreach lista documentos
+                            } // if lista documentos != null
+                        } // if Session["ListaDocumentosGarantia_Actualizar"] != null
+
+                        /* Guardar los documentos de la garantia en la base de datos*/
+                        int contadorErrores = 0;
+                        foreach (SolicitudesDocumentosViewModel documento in garantiaDocumentos)
+                        {
+                            using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDGarantias_Documentos_Actualizar", sqlConexion, tran))
+                            {
+                                sqlComando.CommandType = CommandType.StoredProcedure;
+                                sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
+                                sqlComando.Parameters.AddWithValue("@pcNombreArchivo", documento.fcNombreArchivo);
+                                sqlComando.Parameters.AddWithValue("@pcExtension", ".png");
+                                sqlComando.Parameters.AddWithValue("@pcRutaArchivo", documento.fcRutaArchivo);
+                                sqlComando.Parameters.AddWithValue("@pcURL", documento.URLArchivo);
+                                sqlComando.Parameters.AddWithValue("@piIDSeccionGarantia", documento.fiTipoDocumento);
+                                sqlComando.Parameters.AddWithValue("@pcComentario", "");
+                                sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                                sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                                sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                                using (var sqlResultado = sqlComando.ExecuteReader())
+                                {
+                                    while (sqlResultado.Read())
+                                    {
+                                        if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                            contadorErrores++;
+                                    }
                                 }
                             }
+                            if (contadorErrores > 0)
+                            {
+                                resultado.ResultadoExitoso = false;
+                                resultado.MensajeResultado = "No se pudo actualizar la informacion de la garantía, contacte al administrador.";
+                                resultado.DebugString = "Garantias_Documentos_Insert";
+                                return resultado;
+                            }
                         }
-                        if (contadorErrores > 0)
+
+                        if (!GuardarDocumentosGarantia(garantiaDocumentos, pcIDSolicitud))
                         {
                             resultado.ResultadoExitoso = false;
-                            resultado.MensajeResultado = "No se pudo actualizar la informacion de la garantía, contacte al administrador.";
-                            resultado.DebugString = "Garantias_Documentos_Insert";
+                            resultado.MensajeResultado = "No se pudo actualizar la documentación de la garantía, contacte al administrador..";
+                            resultado.DebugString = "GuardarDocumentosGarantia()";
                             return resultado;
                         }
-                    }
 
-                    if (!GuardarDocumentosGarantia(garantiaDocumentos, pcIDSolicitud))
+                        tran.Commit();
+
+                        resultado.ResultadoExitoso = true;
+                        resultado.MensajeResultado = "La información de la garantía se actualizó correctamente";
+                    }
+                    catch (Exception ex)
                     {
+                        tran.Rollback();
                         resultado.ResultadoExitoso = false;
-                        resultado.MensajeResultado = "No se pudo actualizar la documentación de la garantía, contacte al administrador..";
-                        resultado.DebugString = "GuardarDocumentosGarantia()";
-                        return resultado;
+                        resultado.MensajeResultado = "No se pudo actualizar la información de la garantía, contacte al administrador.";
+                        resultado.DebugString = ex.Message.ToString();
                     }
-
-                    tran.Commit();
-
-                    resultado.ResultadoExitoso = true;
-                    resultado.MensajeResultado = "La información de la garantía se actualizó correctamente";
-                }
-                catch (Exception ex)
-                {
-                    tran.Rollback();
-                    resultado.ResultadoExitoso = false;
-                    resultado.MensajeResultado = "No se pudo actualizar la información de la garantía, contacte al administrador.";
-                    resultado.DebugString = ex.Message.ToString();
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            resultado.ResultadoExitoso = false;
+            resultado.MensajeResultado = "No se pudo actualizar la información de la garantía, contacte al administrador.";
+            resultado.DebugString = ex.Message.ToString();
         }
         return resultado;
     }
@@ -454,22 +452,22 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
             if (ListaDocumentos != null)
             {
                 /* Crear el nuevo directorio para los documentos de la garantia */
-                var directorioTemporal = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
-                var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
-                var directorioDocumentos = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentos + "\\";
-                bool carpetaExistente = Directory.Exists(directorioDocumentos);
+                string DirectorioTemporal = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
+                string NombreCarpetaDocumentos = "Solicitud" + idSolicitud;
+                string DirectorioDocumentos = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + NombreCarpetaDocumentos + "\\";
+                bool CarpetaExistente = Directory.Exists(DirectorioDocumentos);
 
-                if (!carpetaExistente)
-                    Directory.CreateDirectory(directorioDocumentos);
+                if (!CarpetaExistente)
+                    Directory.CreateDirectory(DirectorioDocumentos);
 
                 ListaDocumentos.ForEach(documento =>
                 {
-                    string viejoDirectorio = directorioTemporal + documento.NombreAntiguo;
-                    string nuevoNombreDocumento = documento.fcNombreArchivo;
-                    string nuevoDirectorio = directorioDocumentos + nuevoNombreDocumento + ".png";
+                    string ViejoDirectorio = DirectorioTemporal + documento.NombreAntiguo;
+                    string NuevoNombreDocumento = documento.fcNombreArchivo;
+                    string NuevoDirectorio = DirectorioDocumentos + NuevoNombreDocumento + ".png";
 
-                    if (File.Exists(viejoDirectorio))
-                        File.Move(viejoDirectorio, nuevoDirectorio);
+                    if (File.Exists(ViejoDirectorio))
+                        File.Move(ViejoDirectorio, NuevoDirectorio);
                 });
             }
             result = true;
@@ -482,19 +480,17 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
         return result;
     }
 
-    public static Uri DesencriptarURL(string Url)
+    public static Uri DesencriptarURL(string URL)
     {
         Uri lURLDesencriptado = null;
         try
         {
-            var pcEncriptado = string.Empty;
-            var liParamStart = Url.IndexOf("?");
-            var lcParametros = liParamStart > 0 ? Url.Substring(liParamStart, Url.Length - liParamStart) : string.Empty;
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = Url.Substring(liParamStart + 1, Url.Length - (liParamStart + 1));
-
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
@@ -542,12 +538,10 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
         public decimal ValorPrima { get; set; }
         public decimal ValorFinanciado { get; set; }
         public decimal GastosDeCierre { get; set; }
-
         public string IdentidadPropietario { get; set; }
         public string NombrePropietario { get; set; }
         public int IdNacionalidadPropietario { get; set; }
         public int IdEstadoCivilPropietario { get; set; }
-
         public string IdentidadVendedor { get; set; }
         public string NombreVendedor { get; set; }
         public int IdNacionalidadVendedor { get; set; }

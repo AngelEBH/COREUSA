@@ -6,21 +6,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
+    <meta name="description" content="Actualizar garantía" />
     <title>Actualizar información de la garantía</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <style>
-        html {
-            background-color: rgb(255,255,255) !important;
-        }
-
         .card {
             border: none;
             -webkit-box-shadow: none !important;
@@ -55,31 +52,20 @@
                     <div>
                         <!-- Información principal -->
                         <div id="step-1" class="form-section">
-
-                            <!-- loader -->
-                            <div class="float-right" id="spinnerCargando" runat="server" visible="false">
-                                <div class="spinner-border" role="status">
-                                    <span class="sr-only"></span>
+                            <div class="row m-0 border-bottom border-gray pb-1">
+                                <div class="col-sm-auto p-0">
+                                    <label class="col-form-label">VIN</label>
                                 </div>
-                            </div>
-                            <div class="row m-0 border-bottom border-gray">
-                                <div class="col-12">
-                                    <div class="form-group row mb-1">
-                                        <div class="col-sm-auto p-0">
-                                            <label class="col-form-label">VIN</label>
-                                        </div>
-                                        <div class="col-sm-4 pr-0">
-                                            <asp:TextBox ID="txtBuscarVIN" CssClass="form-control form-control-sm mascara-vin" placeholder="EJ. JH4TB2H26CC000000" type="text" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-sm-auto pl-1">
-                                            <button type="button" id="btnBuscarVIN" class="btn btn-secondary text-center pt-1">Buscar</button>
-                                        </div>
-                                        <div class="m-0 p-0">
-                                            <label class="col-form-label">Digitar manualmente&nbsp;</label>
-                                            <input type="checkbox" id="cbDigitarManualmente" switch="info" class="align-bottom mb-1" />
-                                            <label for="cbDigitarManualmente" data-on-label="ON" data-off-label="OFF" class="align-bottom mb-1"></label>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-4 pr-0">
+                                    <asp:TextBox ID="txtBuscarVIN" CssClass="form-control form-control-sm mascara-vin" placeholder="EJ. JH4TB2H26CC000000" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-auto pl-1">
+                                    <button type="button" id="btnBuscarVIN" class="btn btn-secondary text-center pt-1">Buscar</button>
+                                </div>
+                                <div class="m-0 p-0">
+                                    <label class="col-form-label">Digitar manualmente&nbsp;</label>
+                                    <input type="checkbox" id="cbDigitarManualmente" switch="info" class="align-bottom mb-1" />
+                                    <label for="cbDigitarManualmente" data-on-label="ON" data-off-label="OFF" class="align-bottom mb-1"></label>
                                 </div>
                             </div>
                             <div class="row justify-content-between mb-0">
@@ -217,42 +203,39 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="row">
                                 <div class="col-12">
                                     <h6 class="mb-0 border-top border-gray pt-2"></h6>
-                                    <div class="form-group row">
-                                        <div class="col-sm-4 col-md-4 col-lg-2">
-                                            <label class="col-form-label">Serie 1</label>
-                                            <asp:TextBox ID="txtSerieUno" CssClass="form-control form-control-sm" ReadOnly="true" type="text" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-sm-4 col-md-4 col-lg-2">
-                                            <label class="col-form-label">Serie Motor</label>
-                                            <asp:TextBox ID="txtSerieMotor" placeholder="EJ. 0XX-0000000" CssClass="form-control form-control-sm" required="required" type="text" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-sm-4 col-md-4 col-lg-2">
-                                            <label class="col-form-label">Serie Chasis</label>
-                                            <asp:TextBox ID="txtSerieChasis" placeholder="EJ. 0XXXX00X0XX000000" CssClass="form-control form-control-sm" required="required" type="text" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-sm-4 col-md-4 col-lg-2">
-                                            <label class="col-form-label">Otra serie (opcional)</label>
-                                            <asp:TextBox ID="txtSerieDos" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-sm-4 col-md-4 col-lg-2">
-                                            <label class="col-form-label">GPS</label>
-                                            <asp:TextBox ID="txtGPS" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-sm-4 col-md-4 col-lg-2">
-                                            <label class="col-form-label">No. Préstamo (opcional)</label>
-                                            <asp:TextBox ID="txtNumeroPrestamo" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
-                                        </div>
-                                        <!-- Préstamos disponibles -->
-                                        <div class="col-12">
-                                            <label class="col-form-label">Comentario</label>
-                                            <textarea id="txtComentario" runat="server" class="form-control form-control-sm" data-parsley-maxlength="300" rows="2"></textarea>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <label class="col-form-label">Serie 1</label>
+                                    <asp:TextBox ID="txtSerieUno" CssClass="form-control form-control-sm" ReadOnly="true" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <label class="col-form-label">Serie Motor</label>
+                                    <asp:TextBox ID="txtSerieMotor" placeholder="EJ. 0XX-0000000" CssClass="form-control form-control-sm" required="required" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <label class="col-form-label">Serie Chasis</label>
+                                    <asp:TextBox ID="txtSerieChasis" placeholder="EJ. 0XXXX00X0XX000000" CssClass="form-control form-control-sm" required="required" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <label class="col-form-label">Otra serie (opcional)</label>
+                                    <asp:TextBox ID="txtSerieDos" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <label class="col-form-label">GPS</label>
+                                    <asp:TextBox ID="txtGPS" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <label class="col-form-label">No. Préstamo (opcional)</label>
+                                    <asp:TextBox ID="txtNumeroPrestamo" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <!-- Préstamos disponibles -->
+                                <div class="col-12">
+                                    <label class="col-form-label">Comentario</label>
+                                    <textarea id="txtComentario" runat="server" class="form-control form-control-sm" data-parsley-maxlength="300" rows="2"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -265,8 +248,7 @@
                                 </div>
                             </div>
                             <!-- Div donde se generan dinamicamente los inputs para la documentación -->
-                            <div class="row pr-1 pl-1 text-center" id="DivDocumentacion">
-                            </div>
+                            <div class="row pr-1 pl-1 text-center" id="DivDocumentacion"></div>
                         </div>
                     </div>
                 </div>
