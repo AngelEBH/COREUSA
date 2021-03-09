@@ -6,21 +6,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
+    <meta name="description" content="Registrar garantía" />
     <title>Guardar nueva garantía</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <style>
-        html {
-            background-color: rgb(255,255,255) !important;
-        }
-
         .card {
             border: none;
             -webkit-box-shadow: none !important;
@@ -37,7 +33,6 @@
                         <h6>Guardar garantía: <span runat="server" id="lblNoSolicitud"></span><small><span runat="server" id="lblMensaje" class="text-danger" visible="false"></span></small></h6>
                     </div>
                     <div class="col-1 align-self-center">
-                        <!-- loader -->
                         <div id="Loader" class="float-right" runat="server" style="display: none;">
                             <div class="spinner-border" role="status">
                                 <span class="sr-only"></span>
@@ -53,40 +48,26 @@
                         <li><a href="#step-2" class="pt-3 pb-2 font-12">Documentación</a></li>
                     </ul>
                     <div>
-                        <!-- Información principal -->
                         <div id="step-1" class="form-section">
-
-                            <!-- loader -->
-                            <div class="float-right" id="spinnerCargando" runat="server" visible="false">
-                                <div class="spinner-border" role="status">
-                                    <span class="sr-only"></span>
+                            <div class="row m-0 border-bottom border-gray pb-1">
+                                <div class="col-sm-auto p-0">
+                                    <label class="col-form-label">VIN</label>
                                 </div>
-                            </div>
-                            <div class="row m-0 border-bottom border-gray">
-                                <div class="col-12">
-                                    <div class="form-group row mb-1">
-                                        <div class="col-sm-auto p-0">
-                                            <label class="col-form-label">VIN</label>
-                                        </div>
-                                        <div class="col-sm-4 pr-0">
-                                            <asp:TextBox ID="txtBuscarVIN" CssClass="form-control form-control-sm mascara-vin" placeholder="EJ. JH4TB2H26CC000000" type="text" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-sm-auto pl-1">
-                                            <button type="button" id="btnBuscarVIN" class="btn btn-secondary text-center pt-1">Buscar</button>
-                                        </div>
-                                        <div class="m-0 p-0">
-                                            <label class="col-form-label">Digitar manualmente&nbsp;</label>
-                                            <input type="checkbox" id="cbDigitarManualmente" switch="info" class="align-bottom mb-1" />
-                                            <label for="cbDigitarManualmente" data-on-label="ON" data-off-label="OFF" class="align-bottom mb-1"></label>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-4 pr-0">
+                                    <asp:TextBox ID="txtBuscarVIN" CssClass="form-control form-control-sm mascara-vin" placeholder="EJ. JH4TB2H26CC000000" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-auto pl-1">
+                                    <button type="button" id="btnBuscarVIN" class="btn btn-secondary text-center pt-1">Buscar</button>
+                                </div>
+                                <div class="m-0 p-0">
+                                    <label class="col-form-label">Digitar manualmente&nbsp;</label>
+                                    <input type="checkbox" id="cbDigitarManualmente" switch="info" class="align-bottom mb-1" />
+                                    <label for="cbDigitarManualmente" data-on-label="ON" data-off-label="OFF" class="align-bottom mb-1"></label>
                                 </div>
                             </div>
                             <div class="row justify-content-between mb-0">
-                                <!-- Información del cliente -->
                                 <div class="col-lg-6">
                                     <h6 class="mb-1">Características físicas</h6>
-
                                     <div class="form-group row">
                                         <div class="col-12">
                                             <label class="col-form-label">VIN</label>
@@ -122,7 +103,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Información del préstamo máximo -->
                                 <div class="col-lg-6 border-left border-gray">
                                     <h6 class="mb-1">Características mecánicas</h6>
                                     <div class="form-group row mb-4">
@@ -148,7 +128,6 @@
                                             <asp:TextBox ID="txtTipoDeCombustible" placeholder="EJ. Gasolina" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
-
                                     <h6 class="mb-1">Valores de la garantía</h6>
                                     <div class="form-group row mb-0">
                                         <div class="col-sm-3">
@@ -169,7 +148,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-lg-6">
                                     <h6 class="mb-1 border-top border-gray pt-2">Propietario de la garantía</h6>
                                     <div class="form-group row">
@@ -193,7 +171,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-lg-6 border-left border-gray">
                                     <h6 class="mb-1 border-top border-gray pt-2">Vendedor de la garantía</h6>
                                     <div class="form-group row">
@@ -217,7 +194,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="row">
                                 <div class="col-12">
@@ -247,7 +223,6 @@
                                             <label class="col-form-label">No. Préstamo (opcional)</label>
                                             <asp:TextBox ID="txtNumeroPrestamo" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
                                         </div>
-                                        <!-- Préstamos disponibles -->
                                         <div class="col-12">
                                             <label class="col-form-label">Comentario</label>
                                             <textarea id="txtComentario" runat="server" class="form-control form-control-sm" data-parsley-maxlength="300" rows="2"></textarea>
@@ -256,7 +231,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Documentación de la garantía -->
                         <div id="step-2" class="form-section">
                             <div class="form-group row m-0 border-bottom border-gray">
@@ -265,8 +239,7 @@
                                 </div>
                             </div>
                             <!-- Div donde se generan dinamicamente los inputs para la documentación -->
-                            <div class="row pr-1 pl-1 text-center" id="DivDocumentacion">
-                            </div>
+                            <div class="row pr-1 pl-1 text-center" id="DivDocumentacion"></div>
                         </div>
                     </div>
                 </div>
@@ -319,7 +292,6 @@
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
-    <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/Garantia_Registrar.js?v=20201216080352"></script>
+    <script src="/Scripts/app/solicitudes/Garantia_Registrar.js?v=20210309100625"></script>
 </body>
 </html>
