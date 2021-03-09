@@ -199,7 +199,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
                 string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-                sqlConexion = new SqlConnection(sqlConnectionString);                
+                sqlConexion = new SqlConnection(sqlConnectionString);
                 SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredSolicitud_ActualizarCondicion", sqlConexion);
                 sqlComando.CommandType = CommandType.StoredProcedure;
                 sqlComando.Parameters.AddWithValue("@fiIDSolicitudCondicion", ID);
@@ -209,7 +209,7 @@ namespace proyectoBase.Forms.Aval
                 sqlConexion.Open();
                 reader = sqlComando.ExecuteReader();
                 string MensajeError = String.Empty;
-                
+
                 while (reader.Read())
                     MensajeError = (string)reader["MensajeError"];
 
@@ -422,7 +422,7 @@ namespace proyectoBase.Forms.Aval
                         sqlConexion.Close();
                 }
                 if (reader != null)
-                reader.Close();
+                    reader.Close();
             }
             return MensajeError;
         }
@@ -679,7 +679,7 @@ namespace proyectoBase.Forms.Aval
                 sqlComando.Parameters.AddWithValue("@piDepartamento", CODDepto);
                 sqlComando.Parameters.AddWithValue("@piMunicipio", 0);
                 sqlConexion.Open();
-                reader = sqlComando.ExecuteReader();                
+                reader = sqlComando.ExecuteReader();
                 while (reader.Read())
                 {
                     municipios.Add(new MunicipiosViewModel()
