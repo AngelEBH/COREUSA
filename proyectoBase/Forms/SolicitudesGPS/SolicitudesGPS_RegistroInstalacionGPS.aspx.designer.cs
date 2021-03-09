@@ -22,6 +22,42 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS
     protected global::System.Web.UI.HtmlControls.HtmlForm frmPrincipal;
 
     /// <summary>
+    /// Control lblMarca.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMarca;
+
+    /// <summary>
+    /// Control lblModelo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblModelo;
+
+    /// <summary>
+    /// Control lblAnio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblAnio;
+
+    /// <summary>
+    /// Control lblColor.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblColor;
+
+    /// <summary>
     /// Control PanelMensajeErrores.
     /// </summary>
     /// <remarks>

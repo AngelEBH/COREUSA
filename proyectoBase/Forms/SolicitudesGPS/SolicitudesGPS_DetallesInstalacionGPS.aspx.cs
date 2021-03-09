@@ -129,29 +129,6 @@ public partial class SolicitudesGPS_DetallesInstalacionGPS : System.Web.UI.Page
         }
     }
 
-    public static Uri DesencriptarURL(string URL)
-    {
-        Uri lURLDesencriptado = null;
-        try
-        {
-            var liParamStart = URL.IndexOf("?");
-            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
-            var pcEncriptado = string.Empty;
-
-            if (lcParametros != string.Empty)
-            {
-                pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
-                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-                lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return lURLDesencriptado;
-    }
-
     protected void MostrarMensaje(string mensaje)
     {
         PanelMensajeErrores.Visible = true;

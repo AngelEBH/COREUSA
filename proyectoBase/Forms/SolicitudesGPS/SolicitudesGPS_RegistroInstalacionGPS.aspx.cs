@@ -66,13 +66,13 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
                 var directorio = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
                 var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-                    { "limit", 1 },
-                    { "title", "auto" },
-                    { "uploadDir", directorio },
-                    { "extensions", new string[] { "jpg", "png", "jpeg"} },
-                    { "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
-                    { "fileMaxSize", 20 }, /* Peso máximo por archivo */
-                });
+{ "limit", 1 },
+{ "title", "auto" },
+{ "uploadDir", directorio },
+{ "extensions", new string[] { "jpg", "png", "jpeg"} },
+{ "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
+{ "fileMaxSize", 20 }, /* Peso máximo por archivo */
+});
 
                 switch (type)
                 {
@@ -89,7 +89,6 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
 
                         /* Guardar listado de documentos en una session propia de esta pantalla */
                         Session["ListaFotografiasInstalacion"] = list;
-
                         break;
 
                     case "remove":
@@ -150,6 +149,11 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
                             txtMatricula.Text = sqlResultado["fcMatricula"].ToString();
                             txtUbicacion.InnerText = sqlResultado["fcDescripcionUbicacion"].ToString();
                             txtComentariosDeLaInstalacion.InnerText = sqlResultado["fcObservacionesInstalacion"].ToString();
+
+                            lblMarca.InnerText = sqlResultado["fcMarca"].ToString();
+                            lblModelo.InnerText = sqlResultado["fcModelo"].ToString();
+                            lblAnio.InnerText = sqlResultado["fiAnio"].ToString();
+                            lblColor.InnerText = sqlResultado["fcColor"].ToString();
                         }
                     } // using sqlResultado
                 } // using sqlComando
@@ -165,7 +169,6 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
     public static List<FotografiaInstalacion_ViewModel> CargarListaFotografiasRequeridas(string dataCrypt)
     {
         var listaFotografiasRequeridas = new List<FotografiaInstalacion_ViewModel>();
-
         try
         {
             var urlDesencriptado = DesencriptarURL(dataCrypt);
@@ -433,7 +436,6 @@ public partial class SolicitudesGPS_RegistroInstalacionGPS : System.Web.UI.Page
         string url;
         string json;
         var resultadoWS = new RespuestaWebService();
-
         try
         {
             using (var client = new WebClient())

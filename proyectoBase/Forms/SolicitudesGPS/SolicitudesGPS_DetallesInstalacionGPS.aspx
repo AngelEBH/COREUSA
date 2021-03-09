@@ -44,12 +44,12 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group mb-0">
-                            <label class="d-block mb-0 font-weight-bold">
+                            <h6 class="d-block mb-0 font-weight-bold">
                                 <span id="lblMarca" runat="server"></span>
                                 <span id="lblModelo" runat="server"></span>
                                 <span id="lblAnio" runat="server"></span>
                                 <span id="lblColor" runat="server"></span>
-                            </label>
+                            </h6>
                             <label class="text-muted mb-0">
                                 VIN:
                                     <span id="lblVIN" runat="server"></span>
