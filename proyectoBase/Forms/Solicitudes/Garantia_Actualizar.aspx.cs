@@ -15,11 +15,11 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
 {
     private string pcIDApp = "";
     private string pcIDSesion = "";
-    private string pcIDUsuario = "";
     private string pcIDGarantia = "";
     private string pcIDSolicitud = "";
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
+    public string pcIDUsuario = "";
     public List<SeccionGarantia_ViewModel> Documentos_Secciones_Garantia;
     public bool EsDigitadoManualmente;
 

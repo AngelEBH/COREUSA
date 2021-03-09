@@ -313,7 +313,7 @@
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="/Scripts/app/solicitudes/Garantia_Actualizar.js?v=20201216081425"></script>
+    <script src="/Scripts/app/solicitudes/Garantia_Actualizar.js?v=202103090943"></script>
 </body>
 </html>
 
