@@ -6,7 +6,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
-    <title>Garantías de solicitudes aprobadas</title>
+    <meta name="description" content="Listado de solicitudes de GPS y revisión" />
+    <title>Solicitudes de GPS y revisión</title>
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Content/css/style.css" rel="stylesheet" />
@@ -103,7 +104,6 @@
                         <tfoot></tfoot>
                     </table>
                 </div>
-                <!-- Listado garantías sin solicitudes -->
                 <div class="tab-pane" id="tab_Listado_SolicitudesGPS_Completadas" role="tabpanel">
                     <table id="datatable_SolicitudesGPS_Completadas" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
                         <thead>
@@ -134,26 +134,20 @@
                     <h6 class="modal-title mt-0" id="modalCompletarSolicitudGPSLabel">Revisar garantía</h6>
                 </div>
                 <div class="modal-body">
+
+                    <h5 class="font-weight-bold text-center">
+                        <span class="lblMarca"></span>
+                        <span class="lblModelo"></span>
+                        <span class="lblAnio"></span>
+                    </h5>
                     <div class="form-group row">
-                        <div class="col-12 mb-2">
+                        <div class="col-9 mb-2 pr-1">
                             <label>Cliente</label>
                             <input class="txtNombreCliente form-control form-control-sm" readonly="readonly" />
                         </div>
-                        <div class="col-6 mb-2 pr-0">
-                            <label>Marca</label>
-                            <input class="txtMarca form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2">
-                            <label>Modelo</label>
-                            <input class="txtModelo form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2 pr-0">
-                            <label>Año</label>
-                            <input class="txtAnio form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2">
+                        <div class="col-3 mb-2 pl-1">
                             <label>Revisiones</label>
-                            <input class="txtRevisionesGarantia form-control form-control-sm" readonly="readonly" value="0/3" />
+                            <input class="txtRevisionesGarantia form-control form-control-sm font-weight-bold text-center" readonly="readonly" value="" />
                         </div>
                         <div class="col-12 mb-0">
                             <label>Comentarios de la solicitud de GPS</label>
@@ -162,7 +156,7 @@
                     </div>
                 </div>
                 <div class="modal-footer pt-2 pb-2">
-                    <button type="button" id="btnCompletarSolicitud_Confirmar" class="btn btn-info waves-effect waves-light">
+                    <button type="button" id="btnCompletarSolicitud_Confirmar" class="btn btn-info waves-effect waves-light" aria-label="redirigir a revisar garantia">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -180,26 +174,21 @@
                     <h6 class="modal-title mt-0" id="modalInstalarGPSLabel"><b>Registro de instalación de GPS</b></h6>
                 </div>
                 <div class="modal-body">
+
+                    <h5 class="font-weight-bold text-center">
+                        <span class="lblMarca"></span>
+                        <span class="lblModelo"></span>
+                        <span class="lblAnio"></span>
+                    </h5>
+
                     <div class="form-group row">
-                        <div class="col-12 mb-2">
+                        <div class="col-9 mb-2 pr-1">
                             <label>Cliente</label>
                             <input class="txtNombreCliente form-control form-control-sm" readonly="readonly" />
                         </div>
-                        <div class="col-6 mb-2 pr-0">
-                            <label>Marca</label>
-                            <input class="txtMarca form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2">
-                            <label>Modelo</label>
-                            <input class="txtModelo form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2 pr-0">
-                            <label>Año</label>
-                            <input class="txtAnio form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2">
+                        <div class="col-3 mb-2 pl-1">
                             <label>Revisiones</label>
-                            <input class="txtRevisionesGarantia form-control form-control-sm" readonly="readonly" value="0/3" />
+                            <input class="txtRevisionesGarantia form-control form-control-sm text-center font-weight-bold" readonly="readonly" value="0/3" />
                         </div>
                         <div class="col-12 mb-0">
                             <label>Comentarios de la solicitud de GPS</label>
@@ -208,7 +197,7 @@
                     </div>
                 </div>
                 <div class="modal-footer pt-2 pb-2">
-                    <button type="button" id="btnInstalarGPS_Confirmar" class="btn btn-info waves-effect waves-light">
+                    <button type="button" id="btnInstalarGPS_Confirmar" class="btn btn-info waves-effect waves-light" aria-label="redirigir a registrar instalación">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -226,26 +215,21 @@
                     <h6 class="modal-title mt-0" id="modalDetallesInstalacionGPSLabel"><b>Detalles de la instalación de GPS</b></h6>
                 </div>
                 <div class="modal-body">
+
+                    <h5 class="font-weight-bold text-center">
+                        <span class="lblMarca"></span>
+                        <span class="lblModelo"></span>
+                        <span class="lblAnio"></span>
+                    </h5>
+
                     <div class="form-group row">
-                        <div class="col-12 mb-2">
+                        <div class="col-9 mb-2 pr-1">
                             <label>Cliente</label>
                             <input class="txtNombreCliente form-control form-control-sm" readonly="readonly" />
                         </div>
-                        <div class="col-6 mb-2 pr-0">
-                            <label>Marca</label>
-                            <input class="txtMarca form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2">
-                            <label>Modelo</label>
-                            <input class="txtModelo form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2 pr-0">
-                            <label>Año</label>
-                            <input class="txtAnio form-control form-control-sm" readonly="readonly" />
-                        </div>
-                        <div class="col-6 mb-2">
+                        <div class="col-3 mb-2 pl-1">
                             <label>Revisiones</label>
-                            <input class="txtRevisionesGarantia form-control form-control-sm" readonly="readonly" value="0/3" />
+                            <input class="txtRevisionesGarantia form-control form-control-sm text-center font-weight-bold" readonly="readonly" value="0/3" />
                         </div>
                         <div class="col-12 mb-0">
                             <label>Comentarios de la solicitud de GPS</label>
@@ -254,7 +238,7 @@
                     </div>
                 </div>
                 <div class="modal-footer pt-2 pb-2">
-                    <button type="button" id="btnDetallesInstalacionGPS_Confirmar" class="btn btn-info waves-effect waves-light">
+                    <button type="button" id="btnDetallesInstalacionGPS_Confirmar" class="btn btn-info waves-effect waves-light" aria-label="redirigir a ver detalles">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -271,21 +255,12 @@
     <!-- datatable js -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
-    <!-- Buttons -->
-    <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.bootstrap4.min.js"></script>
-    <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
-    <script src="/Scripts/plugins/datatables/pdfmake.min.js"></script>
-    <script src="/Scripts/plugins/datatables/vfs_fonts.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.print.min.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.colVis.min.js"></script>
     <!-- Responsive -->
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
     <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
-    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_Listado.js?v=20210129014052"></script>
+    <script src="/Scripts/app/SolicitudesGPS/SolicitudesGPS_Listado.js?v=20210309124052"></script>
 </body>
 </html>

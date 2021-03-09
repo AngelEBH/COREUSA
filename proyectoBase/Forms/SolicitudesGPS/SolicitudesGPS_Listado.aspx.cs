@@ -8,58 +8,22 @@ using System.Web.Services;
 
 public partial class SolicitudesGPS_Listado : System.Web.UI.Page
 {
-    #region Propiedades
-
-    private string pcIDApp = "";
-    private string pcIDSesion = "";
-    private string pcIDUsuario = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-
-    #endregion
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        try
-        {
-            if (!IsPostBack)
-            {
-                var lcURL = Request.Url.ToString();
-                var liParamStart = lcURL.IndexOf("?");
-                var lcParametros = string.Empty;
-
-                if (liParamStart > 0)
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-
-                if (lcParametros != string.Empty)
-                {
-                    string pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                    string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-
-                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            MostrarMensajeError("Ocurrió un error: " + ex.Message.ToString());
-        }
     }
 
     [WebMethod]
     public static SolicitudesGPS_Listado_ViewModel CargarSolicitudesGPS(string dataCrypt)
     {
         var solicitudesGPS = new SolicitudesGPS_Listado_ViewModel();
-
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-            pcIDUsuario = "24";
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -69,6 +33,7 @@ public partial class SolicitudesGPS_Listado : System.Web.UI.Page
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -158,10 +123,9 @@ public partial class SolicitudesGPS_Listado : System.Web.UI.Page
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var lcParametros = "usr=" + pcIDUsuario + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion + "&IDSOL=" + idSolicitudCredito + "&IDGarantia=" + idGarantia + "&IDSolicitudGPS=" + idSolicitudGPS;
 
             resultado = DSC.Encriptar(lcParametros);
@@ -178,25 +142,13 @@ public partial class SolicitudesGPS_Listado : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var liParamStart = 0;
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
-            liParamStart = URL.IndexOf("?");
-
-            if (liParamStart > 0)
-            {
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            }
-            else
-            {
-                lcParametros = string.Empty;
-            }
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
-
-                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
+                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
@@ -205,11 +157,6 @@ public partial class SolicitudesGPS_Listado : System.Web.UI.Page
             ex.Message.ToString();
         }
         return lURLDesencriptado;
-    }
-
-    private void MostrarMensajeError(string mensaje)
-    {
-        lblMensajeError.Text = mensaje;
     }
 
     #endregion
@@ -238,22 +185,18 @@ public partial class SolicitudesGPS_Listado : System.Web.UI.Page
         public int IdEstadoInstalacion { get; set; }
         public string EstadoSolicitudGPS { get; set; }
         public string EstadoSolicitudGPSClassName { get; set; }
-
         public int IdUsuarioCreador { get; set; }
         public string UsuarioCreador { get; set; }
         public int IdUsuarioAsignado { get; set; }
         public string UsuarioAsignado { get; set; }
         public DateTime FechaCreacion { get; set; }
-
         public int IdCliente { get; set; }
         public string NombreCliente { get; set; }
-
         public int IdGarantia { get; set; }
         public string VIN { get; set; }
         public string Marca { get; set; }
         public string Modelo { get; set; }
         public string Anio { get; set; }
-
         public int CantidadRevisiones { get; set; }
         public int CantidadRevisionesCompletadas { get; set; }
         public string RevisionesGarantia { get; set; }
