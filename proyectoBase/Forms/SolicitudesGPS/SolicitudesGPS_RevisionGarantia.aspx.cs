@@ -22,7 +22,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
     public string pcIDUsuario = "";
     public string pcIDGarantia = "";
     public string pcIDSolicitudGPS = "";
-    public string pcIDSolicitudCredito = "";    
+    public string pcIDSolicitudCredito = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     public List<Garantia_Revision_ViewModel> RevisionesDeLaGarantia = new List<Garantia_Revision_ViewModel>();
@@ -52,7 +52,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
                     pcIDSolicitudGPS = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSolicitudGPS") ?? "0";
-                    pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");                    
+                    pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
                     /* Cagrar información de la garantía y el listado de revisiones de la garantía */
                     CargarInformacion();
@@ -79,19 +79,19 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitud_CREDGarantia_ObtenerPorIdSolicitud", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitudCredito);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
                     sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         if (!sqlResultado.HasRows)
                         {
-                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp) + "','_self')";
                             Response.Write("<script>");
-                            Response.Write(lcScript);
+                            Response.Write("window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp) + "','_self')");
                             Response.Write("</script>");
                         }
 
@@ -101,16 +101,14 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                             txtIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
                             txtRtn.Text = sqlResultado["fcRTN"].ToString();
                             txtTelefonoCliente.Text = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
-
                             int requiereGarantia = (byte)sqlResultado["fiRequiereGarantia"];
 
                             sqlResultado.NextResult();
 
                             if (!sqlResultado.HasRows)
                             {
-                                string lcScript = "window.open('Garantia_Registrar.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp + "&IDSOL=" + pcIDSolicitudCredito) + "','_self')";
                                 Response.Write("<script>");
-                                Response.Write(lcScript);
+                                Response.Write("window.open('Garantia_Registrar.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp + "&IDSOL=" + pcIDSolicitudCredito) + "','_self')");
                                 Response.Write("</script>");
                             }
                             else
@@ -139,6 +137,10 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                                     txtSerieUno.Text = sqlResultado["fcSerieUno"].ToString();
                                     txtSerieDos.Text = sqlResultado["fcSerieDos"].ToString();
                                     txtComentario.InnerText = sqlResultado["fcComentario"].ToString().Trim();
+                                    lblMarca.InnerText = sqlResultado["fcMarca"].ToString();
+                                    lblModelo.InnerText = sqlResultado["fcModelo"].ToString();
+                                    lblAnio.InnerText = sqlResultado["fiAnio"].ToString();
+                                    lblColor.InnerText = sqlResultado["fcColor"].ToString();
                                 }
 
                                 /* Fotografías de la garantía */
@@ -248,7 +250,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
             var pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia");
             var pcIDSolicitudGPS = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSolicitudGPS") ?? "0";
-            var pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");            
+            var pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -271,6 +273,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                                 sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                                 sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                                 sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                                sqlComando.CommandTimeout = 120;
 
                                 using (var sqlResultado = sqlComando.ExecuteReader())
                                 {
@@ -279,7 +282,6 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                                     if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                     {
                                         sqlTransaccion.Rollback();
-
                                         resultado.ResultadoExitoso = false;
                                         resultado.MensajeResultado = "Error al guardar resultado de la revisión: " + item.Revision + ", contacte al aministrador.";
                                         resultado.MensajeDebug = "_Revisiones_Guardar" + sqlResultado["MensajeError"].ToString();
@@ -298,6 +300,7 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.CommandTimeout = 120;
 
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
@@ -306,7 +309,6 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
                                 if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
                                 {
                                     sqlTransaccion.Rollback();
-
                                     resultado.ResultadoExitoso = false;
                                     resultado.MensajeResultado = "Error al actualizar millaje de la garantía, contacte al aministrador.";
                                     resultado.MensajeDebug = "_Revisiones_ActualizarMillaje" + sqlResultado["MensajeError"].ToString();
@@ -350,19 +352,12 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var liParamStart = 0;
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
-            liParamStart = URL.IndexOf("?");
-
-            if (liParamStart > 0)
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
@@ -472,7 +467,6 @@ public partial class SolicitudesGPS_RevisionGarantia : System.Web.UI.Page
             // "<tr><th colspan='2' style='text-align: left; font-weight: bold;'><b>Actualización de millaje</b></th></tr>" +
             // "<tr><th style='text-align: left;'>Nuevo millaje</th><td>" + recorrido.ToString("N") + "</td></tr>" +
             // "<tr><th style='text-align: left;'>Unidad de medida</th><td>" + unidadDeDistancia + "</td></tr>");
-
 
             /* Revisiones realizadas */
             //foreach (var item in revisionesGarantia)
