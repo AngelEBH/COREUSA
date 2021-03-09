@@ -10,6 +10,7 @@
     <title>Detalles de la garantía</title>
     <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <style>
@@ -43,38 +44,39 @@
                                 <label class="col-form-label">Tipo de vehículo</label>
                                 <asp:TextBox ID="txtTipoDeVehiculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-4 col-6">
                                 <label class="col-form-label">Marca</label>
                                 <asp:TextBox ID="txtMarca" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-4 col-6">
                                 <label class="col-form-label">Modelo</label>
                                 <asp:TextBox ID="txtModelo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-4 col-6">
                                 <label class="col-form-label">Año</label>
                                 <asp:TextBox ID="txtAnio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-4 col-6">
                                 <label class="col-form-label">Color</label>
                                 <asp:TextBox ID="txtColor" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-4 col-6">
                                 <label class="col-form-label">Matrícula</label>
                                 <asp:TextBox ID="txtMatricula" CssClass="form-control form-control-sm" ReadOnly="true" type="text" required="required" runat="server"></asp:TextBox>
                             </div>
-                            <div class="col-sm-3 col-6">
-                                <label class="col-form-label">Serie Motor</label>
-                                <asp:TextBox ID="txtSerieMotor" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-sm-3 col-6">
-                                <label class="col-form-label">Serie Chasis</label>
-                                <asp:TextBox ID="txtSerieChasis" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-4 col-6">
                                 <label class="col-form-label">GPS</label>
                                 <asp:TextBox ID="txtGPS" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
+                            <div class="col-sm-6 col-6">
+                                <label class="col-form-label">Serie Motor</label>
+                                <asp:TextBox ID="txtSerieMotor" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-sm-6 col-6">
+                                <label class="col-form-label">Serie Chasis</label>
+                                <asp:TextBox ID="txtSerieChasis" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                            </div>
+
                         </div>
                         <h6 class="m-0 pt-2">Características mecánicas</h6>
                         <div class="form-group row">
