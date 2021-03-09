@@ -11,17 +11,6 @@ public partial class CFRM_IniciarSesion : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        try
-        {
-            if (!IsPostBack)
-            {
-                // ....
-            }
-        }
-        catch (Exception ex)
-        {
-            MostrarMensajeError("Ocurrió un error: " + ex.Message.ToString());
-        }
     }
 
     [WebMethod]
@@ -106,7 +95,6 @@ public partial class CFRM_IniciarSesion : System.Web.UI.Page
             {
                 var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
@@ -115,12 +103,6 @@ public partial class CFRM_IniciarSesion : System.Web.UI.Page
             ex.Message.ToString();
         }
         return lURLDesencriptado;
-    }
-
-    private void MostrarMensajeError(string mensaje)
-    {
-        divMensajeError.Visible = true;
-        lblMensajeError.Text = mensaje;
     }
 
     public class ResultadoIniciarSesion_ViewModel

@@ -15,7 +15,7 @@ public partial class SeguimientoBitacoras : System.Web.UI.Page
     {
         var lcURL = Request.Url.ToString();
         var liParamStart = lcURL.IndexOf("?");
-        string lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
+        var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
         if (lcParametros != string.Empty)
         {
@@ -97,9 +97,9 @@ public partial class SeguimientoBitacoras : System.Web.UI.Page
                                 TelefonoCliente = (string)sqlResultado["fcTelefono"],
                                 PrimerComentario = (string)sqlResultado["fcComentario1"],
                                 SegundoComentario = (string)sqlResultado["fcComentario2"],
-                                InicioLlamada = ConvertFromDBVal<DateTime>((object)sqlResultado["fdInicioLlamada"]),
-                                FinLlamada = ConvertFromDBVal<DateTime>((object)sqlResultado["fdFinLlamada"]),
-                                SegundosDuracionLlamada = ConvertFromDBVal<int>((object)sqlResultado["fiSegundos"])
+                                InicioLlamada = ConvertFromDBVal<DateTime>(sqlResultado["fdInicioLlamada"]),
+                                FinLlamada = ConvertFromDBVal<DateTime>(sqlResultado["fdFinLlamada"]),
+                                SegundosDuracionLlamada = ConvertFromDBVal<int>(sqlResultado["fiSegundos"])
                             });
                         }
                     } // using sqlResultado

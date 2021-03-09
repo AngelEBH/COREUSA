@@ -37,15 +37,9 @@ public partial class CFRM : System.Web.UI.Page
                 lblNoSolicitudCredito.Text = pcIDSolicitud;
 
                 if (pcIDSolicitud != "" && pcIDSolicitud != "0")
-                {
-
                     CargarExpedienteDeLaSolicitud();
-                }
                 else
-                {
-
                     MostrarMensaje("Parámetros inválidos.");
-                }
             }
         }
         catch (Exception ex)
@@ -65,10 +59,10 @@ public partial class CFRM : System.Web.UI.Page
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Expediente_ObtenerPorIdSolicitud", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
@@ -324,7 +318,6 @@ public partial class CFRM : System.Web.UI.Page
             {
                 var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }

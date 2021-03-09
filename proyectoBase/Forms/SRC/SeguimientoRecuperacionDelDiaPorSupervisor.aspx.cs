@@ -17,7 +17,7 @@ public partial class SeguimientoRecuperacionDelDiaPorSupervisor : System.Web.UI.
         {
             var lcURL = Request.Url.ToString();
             var liParamStart = lcURL.IndexOf("?");
-            string lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
+            var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
@@ -58,7 +58,7 @@ public partial class SeguimientoRecuperacionDelDiaPorSupervisor : System.Web.UI.
         }
         catch (Exception ex)
         {
-            lblMensajeError.Text = "Ocurrió un error, contacta al administrador. (" + ex.Message.ToString() + ")";
+            lblMensajeError.Text = "Ocurrió un error, contacte al administrador. (" + ex.Message.ToString() + ")";
         }
     }
 
@@ -66,7 +66,6 @@ public partial class SeguimientoRecuperacionDelDiaPorSupervisor : System.Web.UI.
     public static List<SeguimientoRecuperacionDelDiaPorSupervisorViewModel> CargarRegistros(string dataCrypt, int IDAgente)
     {
         var ListadoRegistros = new List<SeguimientoRecuperacionDelDiaPorSupervisorViewModel>();
-
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);

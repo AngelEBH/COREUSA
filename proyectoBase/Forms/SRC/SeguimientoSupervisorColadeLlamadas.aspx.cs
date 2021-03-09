@@ -15,7 +15,7 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
     {
         var lcURL = Request.Url.ToString();
         var liParamStart = lcURL.IndexOf("?");
-        string lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
+        var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
         if (lcParametros != string.Empty)
         {
@@ -117,7 +117,6 @@ public partial class SeguimientoSupervisorColadeLlamadas : System.Web.UI.Page
     public static List<ResumenAgentesViewModel> CargarResumen(string dataCrypt)
     {
         var ListadoResumen = new List<ResumenAgentesViewModel>();
-
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);

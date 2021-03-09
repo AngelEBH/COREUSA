@@ -42,7 +42,6 @@
                         </div>
                     </div>
                     <div class="col-12">
-
                         <div class="form-group mb-0">
                             <label class="d-block mb-0 font-weight-bold">
                                 <span id="lblMarca" runat="server"></span>
@@ -95,8 +94,7 @@
                         <div class="form-group row">
                             <div class="col-12">
                                 <!-- Div donde se muestran las imágenes de la garantía-->
-                                <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="/*display: none; */">
-                                </div>
+                                <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;"></div>
                             </div>
                         </div>
                     </div>
