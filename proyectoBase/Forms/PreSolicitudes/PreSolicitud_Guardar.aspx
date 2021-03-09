@@ -11,6 +11,7 @@
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
     <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Estilos_CSS.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
     <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
@@ -18,10 +19,6 @@
     <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <style>
-        html {
-            background-color: rgb(255,255,255) !important;
-        }
-
         .card {
             border: none;
             -webkit-box-shadow: none !important;
@@ -42,7 +39,6 @@
                 <h6>Guardar nueva Pre Solicitud <small><span runat="server" id="lblMensajeError" class="text-danger" visible="false"></span></small></h6>
             </div>
             <div class="card-body">
-
                 <div id="smartwizard" class="h-100">
                     <ul>
                         <li><a href="#step-1" class="pt-3 pb-2 font-12">Informacion del cliente</a></li>
@@ -51,13 +47,6 @@
                     <div>
                         <!-- Información principal -->
                         <div id="step-1" class="form-section">
-
-                            <!-- loader -->
-                            <div class="float-right" id="spinnerCargando" runat="server" visible="false">
-                                <div class="spinner-border" role="status">
-                                    <span class="sr-only"></span>
-                                </div>
-                            </div>
                             <div class="form-group form-row">
                                 <div class="col-12">
                                     <label class="col-form-label">Cliente</label>
@@ -141,8 +130,7 @@
                                 </div>
                             </div>
                             <!-- Div donde se generan dinamicamente los inputs para la documentación -->
-                            <div class="row pr-1 pl-1 text-center" id="DivDocumentacion">
-                            </div>
+                            <div class="row pr-1 pl-1 text-center" id="DivDocumentacion"></div>
                         </div>
                     </div>
                 </div>

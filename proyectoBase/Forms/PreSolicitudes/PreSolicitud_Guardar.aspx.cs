@@ -13,47 +13,32 @@ using System.Web.UI.WebControls;
 
 public partial class PreSolicitud_Guardar : System.Web.UI.Page
 {
-    public string pcID;
-    public string pcIDApp;
-    public string pcIDSesion;
-    public string pcIDUsuario;
-    public string pcIDProducto;
-    public string pcIDTipoDeSolicitud;
+    public string pcID = "";
+    public string pcIDApp = "";
+    public string pcIDSesion = "";
+    public string pcIDUsuario = "";
+    public string pcIDProducto = "";
+    public string pcIDTipoDeSolicitud = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
     public List<PreSolicitud_Guardar_DocumentosRequeridos_ViewModel> ListaDocumentosRequeridos;
 
     protected void Page_Load(object sender, EventArgs e)
     {
         var type = Request.QueryString["type"];
-
         try
         {
             if (!IsPostBack && type == null)
             {
-                /* Captura de parametros y desencriptado de cadena */
                 var lcURL = Request.Url.ToString();
-                int liParamStart = lcURL.IndexOf("?");
+                var liParamStart = lcURL.IndexOf("?");
+                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
-                pcID = "";
                 ListaDocumentosRequeridos = new List<PreSolicitud_Guardar_DocumentosRequeridos_ViewModel>();
-
-                string lcParametros;
-
-                if (liParamStart > 0)
-                {
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                }
-                else
-                {
-                    lcParametros = string.Empty;
-                }
 
                 if (lcParametros != string.Empty)
                 {
-                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                    lcEncriptado = lcEncriptado.Replace("%2f", "/");
-
-                    var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+                    var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
+                    var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
                     pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID") ?? "";
@@ -69,7 +54,6 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     if (!string.IsNullOrWhiteSpace(pcID))
                     {
                         CargarPrecalificado(pcID);
-
                         HttpContext.Current.Session["idTipoDeSolicitud"] = pcIDTipoDeSolicitud;
                     }
 
@@ -108,7 +92,6 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
 
                         /* Guardar listado de documentos en una session propia de esta pantalla */
                         Session["ListaDocumentosAdjuntadosPreSolicitud"] = list;
-
                         break;
 
                     case "remove":
@@ -162,6 +145,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
 
                         ddlDepartamento.Items.Clear();
                         ddlDepartamento.Items.Add(new ListItem("Seleccionar", ""));
+
                         while (sqlResultado.Read())
                         {
                             ddlDepartamento.Items.Add(new ListItem(sqlResultado["fcDepartamento"].ToString(), sqlResultado["fiCodDepartamento"].ToString()));
@@ -188,7 +172,6 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                                 CantidadMaxima = int.Parse(sqlResultado["fiCantidadDocumentos"].ToString())
                             });
                         }
-
                         Session["ListaDocumentosRequeridosPreSolicitud"] = ListaDocumentosRequeridos;
                     }
                 }
@@ -199,6 +182,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -212,8 +196,8 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                                 ddlGestores.Items.Add(new ListItem(sqlResultado["fcNombreCorto"].ToString(), sqlResultado["fiIDUsuario"].ToString()));
                             }
                         }
-                    }
-                }
+                    } // using sqlResultado
+                } // using sqlComando
 
                 ddlTipoInvestigacionDeCampo.Items.Add(new ListItem("Seleccionar", ""));
                 ddlTipoInvestigacionDeCampo.Items.Add(new ListItem("Domicilio", "1"));
@@ -246,9 +230,8 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     {
                         if (!sqlResultado.HasRows)
                         {
-                            string lcScript = "window.open('precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')";
                             Response.Write("<script>");
-                            Response.Write(lcScript);
+                            Response.Write("window.open('precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')");
                             Response.Write("</script>");
                         }
 
@@ -265,9 +248,9 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                         {
                             MostrarMensaje("No se puede ingresar una pre solicitud de un cliente sin nombre, contacte al administrador. ");
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -290,6 +273,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piPais", 1);
                     sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
                     sqlComando.Parameters.AddWithValue("@piMunicipio", 0);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -302,9 +286,9 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                                 NombreMunicipio = sqlResultado["fcMunicipio"].ToString(),
                             });
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -330,6 +314,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
                     sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
                     sqlComando.Parameters.AddWithValue("@piPoblado", 0);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -343,9 +328,9 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                                 NombreCiudadPoblado = sqlResultado["fcPoblado"].ToString(),
                             });
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -372,6 +357,7 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
                     sqlComando.Parameters.AddWithValue("@piPoblado", idCiudadPoblado);
                     sqlComando.Parameters.AddWithValue("@piBarrio", 0);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -471,7 +457,6 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
 
                         using (var sqlResultado = sqlComando.ExecuteReader())
                         {
-
                             while (sqlResultado.Read())
                             {
                                 if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
@@ -487,8 +472,8 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                                     return resultado;
                                 }
                             }
-                        }
-                    }
+                        } // using sqlResultado
+                    } // using sqlComando
 
                     /* Registrar documentacion de la pre solicitud */
 
@@ -541,14 +526,14 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.CommandTimeout = 120;
+
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 while (sqlResultado.Read())
                                 {
                                     if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                                    {
                                         contadorErrores++;
-                                    }
                                 }
                             }
                         }
@@ -574,7 +559,6 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
                     resultado.ResultadoExitoso = true;
                     resultado.MensajeResultado = "La pre solicitud se registró exitosamente";
                     resultado.DebugString = "";
-
                 }
                 catch (Exception ex)
                 {
@@ -590,13 +574,9 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
 
     private static string GenerarNombreDocumento(string idPreSolicitud, string piIDCatalogoDocumento)
     {
-        string lcBloqueFechaHora = DateTime.Now.ToString("yyyy-mm-dd hh:mm:ss");
+        string lcBloqueFechaHora = DateTime.Now.ToString("yyyy-mm-dd hh:mm:ss").Replace("-", "").Replace(":", "").Replace(" ", "T");
 
-        lcBloqueFechaHora = lcBloqueFechaHora.Replace("-", "");
-        lcBloqueFechaHora = lcBloqueFechaHora.Replace(":", "");
-        lcBloqueFechaHora = lcBloqueFechaHora.Replace(" ", "T");
-
-        return ("CTEPS" + idPreSolicitud.Trim() + "D" + piIDCatalogoDocumento.ToString().Trim() + "-" + lcBloqueFechaHora);
+        return "CTEPS" + idPreSolicitud.Trim() + "D" + piIDCatalogoDocumento.ToString().Trim() + "-" + lcBloqueFechaHora;
     }
 
     public static bool GuardarDocumentos(List<SolicitudesDocumentosViewModel> listaDocumentos, string idPreSolicitud)
@@ -635,23 +615,17 @@ public partial class PreSolicitud_Guardar : System.Web.UI.Page
         return result;
     }
 
-    public static Uri DesencriptarURL(string Url)
+    public static Uri DesencriptarURL(string URL)
     {
         Uri lURLDesencriptado = null;
         try
         {
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
-            var liParamStart = Url.IndexOf("?");
-
-            if (liParamStart > 0)
-                lcParametros = Url.Substring(liParamStart, Url.Length - liParamStart);
-            else
-                lcParametros = string.Empty;
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = Url.Substring((liParamStart + 1), Url.Length - (liParamStart + 1));
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
