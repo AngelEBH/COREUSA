@@ -25,6 +25,10 @@
             padding-top: 0 !important;
             padding-bottom: 0 !important;
         }
+
+            #datatable-solicitudesCanex tbody td.td-numeric {
+                text-align: right !important;
+            }
     </style>
 </head>
 <body class="EstiloBody-Listado">
@@ -78,15 +82,14 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table id="datatable-solicitudesCanex" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+                <table id="datatable-solicitudesCanex" class="table-bordered display compact nowrap table-sm table-hover dataTable" style="width: 100%" role="grid">
                     <thead>
                         <tr>
                             <th>Acciones</th>
-                            <th>N°</th>
-                            <th>Producto</th>
+                            <th>Solicitud credito</th>
                             <th>Socio / Agencia / Usuario</th>
-                            <th>Fecha de ingreso</th>
                             <th>Cliente / Identidad</th>
+                            <th>Producto</th>
                             <th>Garantía</th>
                             <th>Prima</th>
                             <th>Préstamo</th>
@@ -111,6 +114,6 @@
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX.js?v=20210204112752"></script>
+    <script src="/Scripts/app/Solicitudes_CANEX/Solicitudes_CANEX.js?v=20210309034158"></script>
 </body>
 </html>

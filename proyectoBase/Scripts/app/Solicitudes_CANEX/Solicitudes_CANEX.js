@@ -65,20 +65,16 @@ $(document).ready(function () {
                             '</div >';
                     }
                 },
-                { "data": "IDSolicitudCanex", "className": "text-center" },
-                { "data": "NombreProducto" },
+                {
+                    "data": "IDSolicitudCanex",
+                    "render": function (data, type, row) {
+                        return row["IDSolicitudCanex"] + '<br/><span class="text-muted">' + moment(row["FechaIngresoSolicitud"]).locale('es').format('YYYY/MM/DD hh:mm A') + '</span>'
+                    }
+                },
                 {
                     "data": "NombreSocio",
                     "render": function (data, type, row) {
                         return row["NombreSocio"] + ' ' + '<br/><span class="text-muted">' + row["NombreAgencia"] + ' | ' + row["NombreUsuario"] + '</span>'
-                    }
-                },
-
-                {
-                    "data": "FechaIngresoSolicitud",
-                    "render": function (value) {
-                        if (value === null) return "";
-                        return moment(value).locale('es').format('YYYY/MM/DD hh:mm A');
                     }
                 },
                 {
@@ -87,22 +83,23 @@ $(document).ready(function () {
                         return row["NombreCliente"] + ' ' + '<br/><span class="text-muted">' + row["Identidad"] + '</span>'
                     }
                 },
+                { "data": "NombreProducto" },
                 {
                     "data": "ValorGlobal",
-                    "className": 'text-right sum',
+                    "className": 'td-numeric',
                     "render": function (data, type, row) {
                         return row["Moneda"] + ' ' + addFormatoNumerico(parseFloat(row["ValorGlobal"]).toFixed(2))
                     }
                 },
                 {
                     "data": "ValorPrima",
-                    "className": 'text-right sum',
+                    "className": 'td-numeric',
                     "render": function (data, type, row) {
                         return row["Moneda"] + ' ' + addFormatoNumerico(parseFloat(row["ValorPrima"]).toFixed(2))
                     }
                 },
                 {
-                    "data": "ValorPrestamo", "className": 'text-right sum',
+                    "data": "ValorPrestamo", "className": 'td-numeric',
                     "render": function (data, type, row) {
                         return row["Moneda"] + ' ' + addFormatoNumerico(parseFloat(row["ValorPrestamo"]).toFixed(2))
                     }
@@ -112,7 +109,14 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
                         return '<label class="btn btn-sm btn-block mb-0 btn-' + GetEstadoClass(row["IDEstadoSolicitud"]) + '">' + row["EstadoSolicitud"] + '</label>'
                     }
-                }
+                },
+                {
+                    "data": "FechaIngresoSolicitud", "visible": false,
+                    "render": function (value) {
+                        if (value === null) return "";
+                        return moment(value).locale('es').format('YYYY/MM/DD hh:mm A');
+                    }
+                },
             ],
             columnDefs: [
                 { targets: [0], orderable: false },
@@ -124,15 +128,15 @@ $(document).ready(function () {
     $('#mesIngreso').on('change', function () {
 
         if (this.value != '')
-            tablaSolicitudes.columns(4).search('/' + this.value + '/').draw();
+            tablaSolicitudes.columns(9).search('/' + this.value + '/').draw();
         else
-            tablaSolicitudes.columns(4).search('').draw();
+            tablaSolicitudes.columns(9).search('').draw();
     });
 
     /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
 
-        tablaSolicitudes.columns(4).search(this.value + '/').draw();
+        tablaSolicitudes.columns(9).search(this.value + '/').draw();
     });
 
     $("#min").datepicker({
@@ -163,7 +167,7 @@ $(document).ready(function () {
 
             var Desde = $("#min").datepicker("getDate"),
                 Hasta = $("#max").datepicker("getDate"),
-                FechaIngreso = new Date(a[4]);
+                FechaIngreso = new Date(a[9]);
 
             return ("Invalid Date" == Desde && "Invalid Date" == Hasta) || ("Invalid Date" == Desde && FechaIngreso <= Hasta) || ("Invalid Date" == Hasta && FechaIngreso >= Desde) || (FechaIngreso <= Hasta && FechaIngreso >= Desde);
         }
