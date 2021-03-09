@@ -7,16 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles de la garantía</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <style>
-        html {
-            background-color: rgb(255,255,255) !important;
-        }
-
         .card {
             border: none;
             -webkit-box-shadow: none !important;
@@ -24,7 +20,7 @@
         }
     </style>
 </head>
-<body class="EstiloBody">
+<body>
     <form id="frmPrincipal" runat="server">
         <div class="card m-0">
             <div class="card-header pb-1 pt-1">
@@ -36,77 +32,68 @@
                 <h5>Detalles de la garantía de solicitud de crédito No. <span id="lblIdSolicitud" class="font-weight-bold" runat="server"></span></h5>
             </div>
             <div class="card-body pt-0">
-                <div class="row mb-0">
-                    <div class="col-12">
-                        <div class="form-group row">
-                            <div class="col-6">
-                                <label class="col-form-label">Cliente</label>
-                                <asp:TextBox ID="txtNombreCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-6">
-                                <label class="col-form-label">Identidad</label>
-                                <asp:TextBox ID="txtIdentidadCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-6">
-                                <label class="col-form-label">RTN numérico</label>
-                                <asp:TextBox ID="txtRtn" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
-                            </div>
-                            <div class="col-6">
-                                <label class="col-form-label">Teléfono</label>
-                                <asp:TextBox ID="txtTelefonoCliente" type="tel" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
-                            </div>
-                        </div>
-                    </div>                    
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Cliente</label>
+                        <asp:TextBox ID="txtNombreCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Identidad</label>
+                        <asp:TextBox ID="txtIdentidadCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-form-label">RTN numérico</label>
+                        <asp:TextBox ID="txtRtn" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Teléfono</label>
+                        <asp:TextBox ID="txtTelefonoCliente" type="tel" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
+                    </div>
                 </div>
 
                 <div class="row mb-0" id="divInformacionGarantia" runat="server">
                     <div class="col-12">
                         <h6 class="border-bottom pb-2">Información de la garantía</h6>
                     </div>
-
-                    <div class="col-12">
-                        <div class="row">
+                    <div class="col-sm-6">
+                        <h6 class="m-0 pt-2">Propietario de la garantía</h6>
+                        <div class="form-group row">
                             <div class="col-sm-6">
-                                <h6 class="m-0 pt-2">Propietario de la garantía</h6>
-                                <div class="form-group row">
-                                    <div class="col-sm-6">
-                                        <label class="col-form-label">Nombre</label>
-                                        <asp:TextBox ID="txtNombrePropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label class="col-form-label">Identidad</label>
-                                        <asp:TextBox ID="txtIdentidadPropietarioGarantia" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="col-form-label">Nacionalidad</label>
-                                        <asp:TextBox ID="txtNacionalidadPropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="col-form-label">Estado civil</label>
-                                        <asp:TextBox ID="txtEstadoCivilPropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
-                                    </div>
-                                </div>
+                                <label class="col-form-label">Nombre</label>
+                                <asp:TextBox ID="txtNombrePropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
                             <div class="col-sm-6">
-                                <h6 class="m-0 pt-2">Vendedor de la garantía</h6>
-                                <div class="form-group row">
-                                    <div class="col-6">
-                                        <label class="col-form-label">Nombre</label>
-                                        <asp:TextBox ID="txtNombreVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="col-form-label">Identidad</label>
-                                        <asp:TextBox ID="txtIdentidadVendedorGarantia" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="col-form-label">Nacionalidad</label>
-                                        <asp:TextBox ID="txtNacionalidadVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="col-form-label">Estado civil</label>
-                                        <asp:TextBox ID="txtEstadoCivilVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
-                                    </div>
-                                </div>
+                                <label class="col-form-label">Identidad</label>
+                                <asp:TextBox ID="txtIdentidadPropietarioGarantia" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-6">
+                                <label class="col-form-label">Nacionalidad</label>
+                                <asp:TextBox ID="txtNacionalidadPropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-6">
+                                <label class="col-form-label">Estado civil</label>
+                                <asp:TextBox ID="txtEstadoCivilPropietarioGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <h6 class="m-0 pt-2">Vendedor de la garantía</h6>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Nombre</label>
+                                <asp:TextBox ID="txtNombreVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Identidad</label>
+                                <asp:TextBox ID="txtIdentidadVendedorGarantia" CssClass="form-control form-control-sm" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-6">
+                                <label class="col-form-label">Nacionalidad</label>
+                                <asp:TextBox ID="txtNacionalidadVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-6">
+                                <label class="col-form-label">Estado civil</label>
+                                <asp:TextBox ID="txtEstadoCivilVendedorGarantia" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
                             </div>
                         </div>
                     </div>

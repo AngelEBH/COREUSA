@@ -1,6 +1,6 @@
 ﻿/* color de la pantalla */
 html {
-    background-color: #d9d9d9;
+    background-color: rgb(255,255,255) !important;
 }
 
 /* eliminar el padding derecho */

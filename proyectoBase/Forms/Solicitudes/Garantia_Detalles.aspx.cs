@@ -19,25 +19,14 @@ public partial class Garantia_Detalles : System.Web.UI.Page
         {
             try
             {
-                /* Captura de parametros y desencriptado de cadena */
                 var lcURL = Request.Url.ToString();
-                int liParamStart = lcURL.IndexOf("?");
-
-                string lcParametros;
-                if (liParamStart > 0)
-                {
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                }
-                else
-                {
-                    lcParametros = string.Empty;
-                }
+                var liParamStart = lcURL.IndexOf("?");
+                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
                 if (lcParametros != string.Empty)
                 {
-                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                    lcEncriptado = lcEncriptado.Replace("%2f", "/");
-                    var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+                    var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
+                    var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
@@ -66,19 +55,18 @@ public partial class Garantia_Detalles : System.Web.UI.Page
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitud_CREDGarantia_ObtenerPorIdSolicitud", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         if (!sqlResultado.HasRows)
                         {
-                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitud + "&IDApp=" + pcIDApp) + "','_self')";
                             Response.Write("<script>");
-                            Response.Write(lcScript);
+                            Response.Write("window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSolicitud + "&IDApp=" + pcIDApp) + "','_self')");
                             Response.Write("</script>");
                         }
 
@@ -182,7 +170,6 @@ public partial class Garantia_Detalles : System.Web.UI.Page
                                     }
                                     divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
                                 }
-
                             } // else !sqlResultado.HasRows
                         } // while sqlResultado.Read()
                     } // using sqlComando.ExecuteReader()
