@@ -8,57 +8,23 @@ using System.Web.Services;
 
 public partial class PreSolicitud_Listado : System.Web.UI.Page
 {
-    private static string pcIDUsuario = "";
-    private static string pcIDApp = "";
-    private static string pcIDSesion = "";
     private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
-            try
-            {
-                /* Captura de parametros y desencriptado de cadena */
-                var lcURL = Request.Url.ToString();
-                int liParamStart = lcURL.IndexOf("?");
-
-                string lcParametros;
-                if (liParamStart > 0)
-                {
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                }
-                else
-                {
-                    lcParametros = string.Empty;
-                }
-
-                if (lcParametros != string.Empty)
-                {
-                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                    lcEncriptado = lcEncriptado.Replace("%2f", "/");
-
-                    var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-
-                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.Message.ToString();
-            }
-        }
     }
 
     [WebMethod]
-    public static List<PreSolicitud_ViewModel> CargarPreSolicitudes()
+    public static List<PreSolicitud_ViewModel> CargarPreSolicitudes(string dataCrypt)
     {
         var listadoDePreSolicitudes = new List<PreSolicitud_ViewModel>();
         try
         {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
@@ -69,6 +35,7 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -108,16 +75,21 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static PreSolicitud_Detalles_ViewModel DetallesPreSolicitud(int idPreSolicitud)
+    public static PreSolicitud_Detalles_ViewModel DetallesPreSolicitud(int idPreSolicitud, string dataCrypt)
     {
         var preSolicitud = new PreSolicitud_Detalles_ViewModel();
         try
         {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_Detalles", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDPreSolicitudes_Maestro_Detalles", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDPreSolicitud", idPreSolicitud);
@@ -125,7 +97,7 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
                     {
                         while (sqlResultado.Read())
                         {
@@ -154,18 +126,18 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                                 BarrioColonia = sqlResultado["fcBarrio"].ToString(),
                                 DireccionDetallada = sqlResultado["fcDireccionDetallada"].ToString(),
                                 ReferenciasDireccionDetallada = sqlResultado["fcReferenciasDireccionDetallada"].ToString(),
-                                // usuario crea
+                                // Usuario creador
                                 IdUsuarioCrea = int.Parse(sqlResultado["fiIDUsuarioCreador"].ToString()),
                                 UsuarioCrea = sqlResultado["fcUsuarioCreador"].ToString(),
                                 FechaCreacion = DateTime.Parse(sqlResultado["fdFechaCreado"].ToString()),
-                                // usuario modifica
+                                // Usuario ultima modificacion
                                 IdUsuarioUltimaModificacion = int.Parse(sqlResultado["fiIDUsuarioUltimaModificacion"].ToString()),
                                 UsuarioUltimaMoficiacion = sqlResultado["fcUsuarioUltimaModificacion"].ToString(),
                                 FechaUltimaModificacion = DateTime.Parse(sqlResultado["fdFechaUltimaModificacion"].ToString()),
-                                // gestor
+                                // Gestor de cobros
                                 IdGestorValidador = int.Parse(sqlResultado["fiIDGestorValidador"].ToString()),
                                 GestorValidador = sqlResultado["fcGestorValidador"].ToString(),
-                                // validacion de gestoria
+                                // Validacion de gestoria
                                 Latitud = sqlResultado["fcLatitud"].ToString(),
                                 Longitud = sqlResultado["fcLongitud"].ToString(),
                                 IdInvestigacionDeCampo = byte.Parse(sqlResultado["fiIDInvestigacionDeCampo"].ToString()),
@@ -186,7 +158,7 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
 
                         while (sqlResultado.Read())
                         {
-                            preSolicitud.Documentos.Add(new PreSolicitudDocumentosSolicitud_ViewModel()
+                            preSolicitud.Documentos.Add(new PreSolicitudDocumento_ViewModel()
                             {
                                 IdPreSolicitudDocumento = (int)sqlResultado["fiIDPreSolicitudDocumento"],
                                 IdPreSolicitud = (int)sqlResultado["fiIDPreSolicitud"],
@@ -198,10 +170,10 @@ public partial class PreSolicitud_Listado : System.Web.UI.Page
                                 DescripcionTipoDocumento = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
                                 ArchivoActivo = (byte)sqlResultado["fiArchivoActivo"]
                             });
-                        }
-                    }
-                }
-            }
+                        } // while sqlResultado.Read()
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -284,7 +256,7 @@ public class PreSolicitud_Detalles_ViewModel
     public string BarrioColonia { get; set; }
     public string DireccionDetallada { get; set; }
     public string ReferenciasDireccionDetallada { get; set; }
-    // usuario crea
+    // usuario creador
     public int IdUsuarioCrea { get; set; }
     public string UsuarioCrea { get; set; }
     public DateTime? FechaCreacion { get; set; }
@@ -309,15 +281,15 @@ public class PreSolicitud_Detalles_ViewModel
     public int IdEstadoPreSolicitud { get; set; }
     public string EstadoPreSolicitud { get; set; }
     public int EstadoFavorable { get; set; }
-    public List<PreSolicitudDocumentosSolicitud_ViewModel> Documentos { get; set; }
+    public List<PreSolicitudDocumento_ViewModel> Documentos { get; set; }
 
     public PreSolicitud_Detalles_ViewModel()
     {
-        Documentos = new List<PreSolicitudDocumentosSolicitud_ViewModel>();
+        Documentos = new List<PreSolicitudDocumento_ViewModel>();
     }
 }
 
-public class PreSolicitudDocumentosSolicitud_ViewModel
+public class PreSolicitudDocumento_ViewModel
 {
     public int IdPreSolicitudDocumento { get; set; }
     public int IdPreSolicitud { get; set; }
@@ -329,5 +301,4 @@ public class PreSolicitudDocumentosSolicitud_ViewModel
     public string URLArchivo { get; set; }
     public byte ArchivoActivo { get; set; }
 }
-
 #endregion

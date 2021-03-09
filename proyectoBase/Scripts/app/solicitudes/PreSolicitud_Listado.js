@@ -43,6 +43,9 @@ $(document).ready(function () {
             type: "POST",
             url: "PreSolicitud_Listado.aspx/CargarPreSolicitudes",
             contentType: 'application/json; charset=utf-8',
+            data: function (dtParms) {
+                return JSON.stringify({ dataCrypt: window.location.href });
+            },
             "dataSrc": function (json) {
                 var return_data = json.d;
                 return return_data;
@@ -55,7 +58,7 @@ $(document).ready(function () {
                 "data": "FechaCreacion",
                 "render": function (value) {
                     if (value === '/Date(-2208967200000)/') return "";
-                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a');
+                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm a');
                 }
             },
             { "data": "Agencia" },
@@ -86,22 +89,16 @@ $(document).ready(function () {
     /* busqueda por mes de ingreso */
     $('#mesIngreso').on('change', function () {
         if (this.value != '') {
-            dtPreSolicitudes.columns(2)
-                .search('/' + this.value + '/')
-                .draw();
+            dtPreSolicitudes.columns(2).search('/' + this.value + '/').draw();
         }
         else {
-            dtPreSolicitudes.columns(2)
-                .search('')
-                .draw();
+            dtPreSolicitudes.columns(2).search('').draw();
         }
     });
 
     /* busqueda por año de ingreso */
     $('#añoIngreso').on('change', function () {
-        dtPreSolicitudes.columns(2)
-            .search(this.value + '/')
-            .draw();
+        dtPreSolicitudes.columns(2).search(this.value + '/').draw();
     });
 
     $("#min").datepicker({
@@ -162,8 +159,8 @@ $(document).on('click', 'button#btnDetalles', function () {
     $.ajax({
         type: "POST",
         url: "PreSolicitud_Listado.aspx/DetallesPreSolicitud",
-        data: JSON.stringify({ idPreSolicitud: idPreSolicitud }),
         contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({ idPreSolicitud: idPreSolicitud, dataCrypt: window.location.href }),
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('No se pudo cargar la información de la pre solicitud, contacte al administrador');
         },
@@ -184,18 +181,15 @@ $(document).on('click', 'button#btnDetalles', function () {
                 $("#txtBarrioColonia").val(preSolicitud.BarrioColonia);
                 $("#txtDireccionDetallada").val(preSolicitud.DireccionDetallada);
                 $("#txtReferenciasDireccionDetallada").val(preSolicitud.ReferenciasDireccionDetallada);
-
                 $("#txtNombreTrabajo").val(preSolicitud.NombreTrabajo);
                 $("#txtTelefonoAdicional").val(preSolicitud.TelefonoAdicional);
                 $("#txtExtensionRecursosHumanos").val(preSolicitud.ExtensionRecursosHumanos);
                 $("#txtExtensionCliente").val(preSolicitud.ExtensionCliente);
 
-                if (preSolicitud.IdTipoDeUbicacion == 1)
-                {
+                if (preSolicitud.IdTipoDeUbicacion == 1) {
                     $("#lblTipoDeUbicacion").text('Investigación de domicilio');
                 }
-                else if (preSolicitud.IdTipoDeUbicacion == 2)
-                {
+                else if (preSolicitud.IdTipoDeUbicacion == 2) {
                     $("#lblTipoDeUbicacion").text('Investigación de trabajo');
                 }
 
@@ -250,17 +244,16 @@ $(document).on('click', 'button#btnDetalles', function () {
                     tile_textpanel_title_text_align: "center"
                 });
 
-                // gestoria
+                // Gestoria
                 $("#txtGestorAsignado").val(preSolicitud.IdGestorValidador == 0 ? 'No Asignado' : preSolicitud.GestorValidador);
                 $("#txtGestion").val(preSolicitud.GestionDeCampo);
                 $("#txtFechaDescargadoPorGestor").val(preSolicitud.FechaDescargadoPorGestor == '/Date(-2208967200000)/' ? 'Aún no recibido' : moment(preSolicitud.FechaDescargadoPorGestor).locale('es').format('YYYY/MM/DD hh:mm:ss a'));
                 $("#txtFechaValidacion").val(preSolicitud.FechaValidacion == '/Date(-2208967200000)/' ? 'Áún no validado' : moment(preSolicitud.FechaValidacion).locale('es').format('YYYY/MM/DD hh:mm:ss a'));
                 $("#txtObservacionesGestoria").val(preSolicitud.ObservacionesDeCampo);
 
-                // auditoria
+                // Auditoria
                 $("#txtUsuarioCreacion").val(preSolicitud.UsuarioCrea);
                 $("#txtFechaCreacion").val(moment(preSolicitud.FechaCreacion).locale('es').format('YYYY/MM/DD hh:mm:ss a'));
-
                 $("#txtUsuarioUltimaModificacion").val(preSolicitud.UsuarioUltimaMoficiacion == '' ? 'Sin Modificaciones' : preSolicitud.UsuarioUltimaMoficiacion);
                 $("#txtFechaUltimaModificacion").val(preSolicitud.FechaUltimaModificacion == '/Date(-2208967200000)/' ? 'Sin Modificaciones' : moment(preSolicitud.FechaUltimaModificacion).locale('es').format('YYYY/MM/DD hh:mm:ss a'));
 

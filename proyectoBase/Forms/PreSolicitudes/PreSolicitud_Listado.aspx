@@ -1,16 +1,16 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="PreSolicitud_Listado.aspx.cs" Inherits="PreSolicitud_Listado" %>
 
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
+    <meta name="description" content="Lista de presolicitudes" />
     <title>Pre Solicitudes</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
@@ -34,18 +34,16 @@
 <body class="EstiloBody-Listado">
     <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-8">
+            <div class="row justify-content-between">
+                <div class="col-auto">
                     <h6>Pre Solicitudes</h6>
                 </div>
                 <div class="col-4">
-                    <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar"
-                        aria-label="Buscar" />
+                    <input id="txtDatatableFilter" class="float-right form-control w-75" type="text" placeholder="Buscar" aria-label="Buscar" />
                 </div>
             </div>
         </div>
         <div class="card-body">
-
             <div class="form-inline justify-content-center">
                 <div class="form-group mb-2">
                     <label class="form-control-plaintext">Búsqueda por Mes</label>
@@ -67,14 +65,12 @@
                         <option value="12">Diciembre</option>
                     </select>
                 </div>
-
                 <div class="form-group mb-2">
                     <label class="form-control-plaintext">Búsqueda por Año</label>
                 </div>
                 <div class="form-group mx-sm-3 mb-2">
                     <input id="añoIngreso" class="form-control form-control-sm" type="text" />
                 </div>
-
                 <div class="form-group mb-2">
                     <label class="form-control-plaintext">Búsqueda por Fecha</label>
                 </div>
@@ -86,7 +82,7 @@
                 </div>
             </div>
 
-            <table id="datatable-presolicitudes" class="table-bordered display compact nowrap table-condensed table-hover dataTable" style="width: 100%" role="grid">
+            <table id="datatable-presolicitudes" class="table-bordered display compact nowrap table-sm table-hover dataTable" style="width: 100%" role="grid">
                 <thead>
                     <tr>
                         <th>Identidad</th>
@@ -98,8 +94,7 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
@@ -114,7 +109,6 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
-                    <!-- INFORMACION DEL CLIENTE -->
                     <div class="form-group form-row">
                         <div class="col-12">
                             <label class="col-form-label">Cliente</label>
@@ -178,11 +172,9 @@
                     <div class="form-group form-row">
                         <div class="col-sm-12">
                             <label class="col-form-label font-weight-bold">Documentos adjuntados</label>
-                            <div id="divDocumentosPreSolicitud" style="display: none;">
-                            </div>
+                            <div id="divDocumentosPreSolicitud" style="display: none;"></div>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <h6 class="border-bottom pb-1">Información de gestoría &nbsp; <span id="lblEstadoPreSolicitud" class="btn"></span></h6>
                     </div>
@@ -211,11 +203,9 @@
                     <div class="form-group form-row">
                         <div class="col-sm-12">
                             <label class="col-form-label font-weight-bold">Fotografías de la investigación de campo</label>
-                            <div id="divDocumentosInvestigacionDeCampo" style="display: none;">
-                            </div>
+                            <div id="divDocumentosInvestigacionDeCampo" style="display: none;"></div>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <h6 class="border-bottom pb-1">Auditoría</h6>
                     </div>
@@ -228,7 +218,6 @@
                             <label class="col-form-label">Fecha de creación</label>
                             <input type="text" id="txtFechaCreacion" disabled="disabled" class="form-control form-control-sm col-form-label" />
                         </div>
-
                         <div class="col-6">
                             <label class="col-form-label">Usuario última modificación</label>
                             <input type="text" id="txtUsuarioUltimaModificacion" disabled="disabled" class="form-control form-control-sm col-form-label" />
@@ -249,23 +238,12 @@
     </div>
     <!-- /.modal -->
 
-
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <!-- ARCHIVOS NECESARIOS PARA LA PANTALLA -->
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <!-- datatable js -->
     <script src="/Scripts/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/Scripts/plugins/datatables/dataTables.bootstrap4.min.js"></script>
-    <!-- Buttons -->
-    <script src="/Scripts/plugins/datatables/dataTables.buttons.min.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.bootstrap4.min.js"></script>
-    <script src="/Scripts/plugins/datatables/jszip.min.js"></script>
-    <script src="/Scripts/plugins/datatables/pdfmake.min.js"></script>
-    <script src="/Scripts/plugins/datatables/vfs_fonts.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.html5.min.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.print.min.js"></script>
-    <script src="/Scripts/plugins/datatables/buttons.colVis.min.js"></script>
     <!-- Responsive -->
     <script src="/Scripts/plugins/datatables/dataTables.responsive.min.js"></script>
     <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
@@ -275,6 +253,6 @@
     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
-    <script src="/Scripts/app/Solicitudes/PreSolicitud_Listado.js?V=20210106162452"></script>
+    <script src="/Scripts/app/Solicitudes/PreSolicitud_Listado.js?V=20210309105952"></script>
 </body>
 </html>
