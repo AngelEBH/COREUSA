@@ -7,9 +7,9 @@ using System.Web;
 
 public partial class GarantiaSinSolicitud_Detalles : System.Web.UI.Page
 {
-    public string pcIDUsuario = "";
     public string pcIDApp = "";
     public string pcIDSesion = "";
+    public string pcIDUsuario = "";
     public string pcIDGarantia = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
@@ -19,29 +19,19 @@ public partial class GarantiaSinSolicitud_Detalles : System.Web.UI.Page
         {
             try
             {
-                /* Captura de parametros y desencriptado de cadena */
                 var lcURL = Request.Url.ToString();
-                int liParamStart = lcURL.IndexOf("?");
+                var liParamStart = lcURL.IndexOf("?");
+                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
-                string lcParametros;
-                if (liParamStart > 0)
+                if (lcParametros != string.Empty)
                 {
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                }
-                else
-                {
-                    lcParametros = String.Empty;
-                }
-
-                if (lcParametros != String.Empty)
-                {
-                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                    lcEncriptado = lcEncriptado.Replace("%2f", "/");
-                    var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+                    var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
+                    var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
                     pcIDGarantia = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDGarantia") ?? "0";
                     CargarInformacion();
                 }
@@ -74,9 +64,8 @@ public partial class GarantiaSinSolicitud_Detalles : System.Web.UI.Page
                     {
                         if (!sqlResultado.HasRows)
                         {
-                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp) + "','_self')";
                             Response.Write("<script>");
-                            Response.Write(lcScript);
+                            Response.Write("window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp) + "','_self')");
                             Response.Write("</script>");
                         }
                         else
@@ -142,9 +131,9 @@ public partial class GarantiaSinSolicitud_Detalles : System.Web.UI.Page
                                 divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
                             }
                         }
-                    }
-                }
-            }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {

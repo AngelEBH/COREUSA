@@ -6,17 +6,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
+    <meta name="description" content="Detalles de la garantía" />
     <title>Detalles de la garantía</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <style>
-        html {
-            background-color: rgb(255,255,255) !important;
-        }
-
         .card {
             border: none;
             -webkit-box-shadow: none !important;
@@ -24,15 +20,10 @@
         }
     </style>
 </head>
-<body class="EstiloBody">
+<body>
     <form id="frmPrincipal" runat="server">
         <div class="card m-0">
             <div class="card-header pb-1 pt-1">
-                <div class="float-right p-1" id="Loader" style="display: none;">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only"></span>
-                    </div>
-                </div>
                 <h5>Detalles de garantía sin solicitud</h5>
             </div>
             <div class="card-body pt-0">
@@ -118,17 +109,15 @@
                         </div>
                     </div>
                     <div class="col-lg-6 border-left border-gray">
-                        <h6 class="">Fotografías de la garantía</h6>
+                        <h6>Fotografías de la garantía</h6>
                         <div class="form-group row">
                             <div class="col-12">
                                 <!-- Div donde se muestran las imágenes de la garantía-->
-                                <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;">
-                                </div>
+                                <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group row mr-0 ml-0 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="false">
                     <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server"></asp:Label>
                 </div>
@@ -137,11 +126,9 @@
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
-    <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
     <script>
         $("#divGaleriaGarantia").unitegallery({
             gallery_width: 900,
