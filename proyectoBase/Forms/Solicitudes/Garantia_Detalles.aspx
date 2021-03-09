@@ -9,7 +9,6 @@
     <title>Detalles de la garantía</title>
     <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/CSS/Content/css/style.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <style>
@@ -50,7 +49,6 @@
                         <asp:TextBox ID="txtTelefonoCliente" type="tel" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
                     </div>
                 </div>
-
                 <div class="row mb-0" id="divInformacionGarantia" runat="server">
                     <div class="col-12">
                         <h6 class="border-bottom pb-2">Información de la garantía</h6>
@@ -97,7 +95,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-lg-6">
                         <h6 class="m-0">Características físicas</h6>
                         <div class="form-group row">
@@ -189,7 +186,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group row mr-0 ml-0 alert alert-danger" runat="server" id="PanelMensajeErrores" visible="false">
                     <asp:Label CssClass="col-sm-12 col-form-label text-danger p-0" ID="lblMensaje" Text="" runat="server"></asp:Label>
                 </div>
@@ -198,11 +194,9 @@
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></script>
-    <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
     <script>
         $("#divGaleriaGarantia").unitegallery({
             gallery_width: 900,
