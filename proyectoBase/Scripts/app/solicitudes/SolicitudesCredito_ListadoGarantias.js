@@ -894,6 +894,7 @@ function MostrarExpedienteSolicitudGarantia(idSolicitud, idGarantia) {
                     ]
                 });
 
+                $("#divPrevisualizacionDocumento").empty();
 
                 $("#modalDocumentosGarantiaSolicitud").modal();
             }

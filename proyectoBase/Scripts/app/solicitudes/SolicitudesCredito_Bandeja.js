@@ -81,7 +81,7 @@ $(document).ready(function () {
                 }
             },
             {
-                "data": "IdSolicitud",
+                "data": "IdSolicitud", "className": "td-responsive",
                 "render": function (data, type, row) {
                     return row["IdSolicitud"] + ' <br><span class="text-muted">' + moment(row["FechaCreacionSolicitud"]).locale('es').format('YYYY/MM/DD hh:mm a') + '</span>';
                 }
@@ -404,6 +404,7 @@ $(document).ready(function () {
         idSolicitud = row.IdSolicitud;
         identidadCliente = row.IdentidadCliente;
 
+        $(".lblNoSolicitudCredito").text(row.IdSolicitud)
         $(".lblNombreCliente").text(row.NombreCliente);
         $(".lblIdentidadCliente").text(row.IdentidadCliente);
 
@@ -482,6 +483,7 @@ function MostrarExpedienteSolicitudGarantia(idSolicitud, idGarantia) {
                     ]
                 });
 
+                $("#divPrevisualizacionDocumento").empty();
 
                 $("#modalDocumentosGarantiaSolicitud").modal();
             }

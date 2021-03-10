@@ -58,7 +58,7 @@
             }
     </style>
 </head>
-<body runat="server" >
+<body class="EstiloBody-Listado">
     <div class="card">
         <div class="card-header">
             <div class="row justify-content-between">
@@ -117,10 +117,10 @@
             </div>
 
             <div class="row mb-1 justify-content-center">
-                <div class="col-lg-auto col-md-auto col-sm-auto col-6 pr-0 align-self-end">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6 align-self-end">
                     <div id="divContenedor_datatableButtons"></div>
                 </div>
-                <div class="col-lg-auto col-md-auto col-sm-3 col-6 align-self-end">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6 align-self-end">
                     <label class="col-form-label">Búsqueda por Mes</label>
                     <select id="ddlMesIngreso" class="form-control form-control-sm">
                         <option value="">Seleccionar</option>
@@ -138,14 +138,14 @@
                         <option value="12">Diciembre</option>
                     </select>
                 </div>
-                <div class="col-lg-auto col-md-auto col-sm-auto col-6">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6">
                     <label class="col-form-label">Búsqueda por Fecha</label>
                     <div class="input-daterange input-group" id="date-range">
                         <input type="text" class="form-control form-control-sm" name="fecha-minima" id="fecha-minima" />
                         <input type="text" class="form-control form-control-sm" name="fecha-maxima" id="fecha-maxima" />
                     </div>
                 </div>
-                <div class="col-lg-auto col-md-auto col-sm-auto col-6 align-self-end">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6 align-self-end">
                     <label class="col-form-label">Búsqueda por Año</label>
                     <input id="ddlAnioIngreso" class="form-control form-control-sm" type="text" />
                 </div>
