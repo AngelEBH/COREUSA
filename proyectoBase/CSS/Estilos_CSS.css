@@ -142,3 +142,7 @@ body {
 .modal.modal-fullscreen .modal-body {
     overflow-y: auto;
 }
+
+.cursor-zoom-in {
+    cursor: zoom-in;
+}

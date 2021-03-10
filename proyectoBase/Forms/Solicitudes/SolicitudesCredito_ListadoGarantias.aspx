@@ -26,10 +26,6 @@
             cursor: pointer;
         }
 
-        .cursor-zoom-in {
-            cursor: zoom-in;
-        }
-
         .dataTable tbody tr {
             cursor: pointer;
         }

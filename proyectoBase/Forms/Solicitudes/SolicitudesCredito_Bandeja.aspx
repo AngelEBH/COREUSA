@@ -177,6 +177,75 @@
         </div>
     </div>
 
+    <!-- modal de documentos de la garantía -->
+    <div id="modalDocumentosDeLaGarantia" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalDocumentosDeLaGarantiaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header pb-2">
+                    <div class="form-group row mb-0">
+                        <div class="col-12">
+                            <h6 class="m-0" id="modalDocumentosDeLaGarantiaLabel">Fotografías de la garantía | Solicitud de crédito N° <b class="lblNoSolicitudCredito"></b></h6>
+                        </div>
+                        <div class="col-12 text-muted">
+                            Marca:
+                            <span class="lblMarca"></span>
+                            / Modelo:
+                            <span class="lblModelo"></span>
+                            / Año:
+                            <span class="lblAnio"></span>
+                            / Color:
+                            <span class="lblColor"></span>
+                            / VIN:
+                            <span class="lblVIN"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <!-- Div donde se muestran las fotografías de la garantía -->
+                            <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="row mt-3 mb-0">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table table-sm" style="margin-bottom: 0px;">
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="font-weight-bold text-muted">Valor del mercado</span></td>
+                                            <td><span class="label label-table label-success" id="lblValorMercadoGarantia"></span></td>
+                                            <td></td>
+                                            <td><span class="font-weight-bold text-muted">Valor de la prima</span></td>
+                                            <td id="lblValorPrima"></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="font-weight-bold text-muted">Valor a Prestar</span></td>
+                                            <td id="lblValorAPrestar"></td>
+                                            <td></td>
+                                            <td><span class="font-weight-bold text-muted">Valor a Financiar</span></td>
+                                            <td id="lblValorAFinanciar"></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="modalDocumentosGarantiaSolicitud" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalDocumentosGarantiaSolicitudLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -310,6 +379,6 @@
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=20210310022552"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Bandeja.js?v=20210310035985"></script>
 </body>
 </html>

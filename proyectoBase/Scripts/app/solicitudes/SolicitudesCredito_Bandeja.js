@@ -101,7 +101,7 @@ $(document).ready(function () {
             {
                 "data": "VIN", "className": "td-responsive",
                 "render": function (data, type, row) {
-                    return row["RequiereGarantia"] == 0 ? '<span class="text-muted">No aplica</span>' : row["Marca"] + ' ' + row["Modelo"] + ' ' + row["Anio"] + ' <br/><span class="text-muted">' + 'VIN: ' + row["VIN"] + '<span>'
+                    return row["RequiereGarantia"] == 0 ? '<span class="text-muted">No aplica</span>' : '<label class="cursor-zoom-in m-0" onclick="MostrarDocumentosGarantia(' + row["IdGarantia"] + ')">' + row["Marca"] + ' ' + row["Modelo"] + ' ' + row["Anio"] + ' <br/><span class="text-muted">' + 'VIN: ' + row["VIN"] + '</span></label>'
                 }
             },
             {
@@ -123,7 +123,7 @@ $(document).ready(function () {
                     let Resultado = '';
                     Resultado = row["EnAnalisisInicio"] != procesoPendiente ? row["EnAnalisisFin"] != procesoPendiente ? iconoExito : iconoPendiente : '';
 
-                    if (row["EnAnalisisFin"] == procesoPendiente && (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7) && row["EnAnalisisInicio"] != procesoPendiente) {
+                    if (row["EnAnalisisInicio"] != procesoPendiente && row["EnAnalisisFin"] == procesoPendiente && (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7)) {
                         Resultado = row["IdEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
                     }
                     return Resultado;
@@ -136,7 +136,7 @@ $(document).ready(function () {
                     let Resultado = '';
                     if (row["EnvioARutaAnalista"] != procesoPendiente) {
 
-                        Resultado = (row["EnCampoInicio"] != procesoPendiente || row["IdEstadoDeCampo"] == 2) ? iconoExito : iconoPendiente;
+                        Resultado = (row["EnCampoInicio"] != procesoPendiente) ? (row["IdEstadoDeCampo"] == 2 ? iconoExito : iconoPendiente) : '';
 
                         if (row["EnCampoInicio"] == procesoPendiente && (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7)) {
                             Resultado = row["IdEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
@@ -232,6 +232,12 @@ $(document).ready(function () {
                 }
             },
             {
+                "data": "ValorAPrestarGarantia", "visible": false, "title": 'Valor a prestar',
+                "render": function (value) {
+                    return ConvertirADecimal(value);
+                }
+            },
+            {
                 "data": "ValorAFinanciar", "visible": false, "title": 'Valor a financiar',
                 "render": function (value) {
                     return ConvertirADecimal(value);
@@ -272,7 +278,7 @@ $(document).ready(function () {
                 autoFilter: true,
                 messageTop: 'Solicitudes de crédito ' + moment().format('YYYY/MM/DD'),
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+                    columns: [1, 2, 3, 4, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
                 }
             },
             {
@@ -416,10 +422,60 @@ $(document).ready(function () {
         $(".lblAnio").text(row.Anio);
         $(".lblVIN").text(row.VIN);
 
+        $("#lblValorMercadoGarantia").text(row.Moneda + ' ' + ConvertirADecimal(row.ValorGarantia));
+        $("#lblValorPrima").text(row.Moneda + ' ' + ConvertirADecimal(row.ValorPrima));
+        $("#lblValorAPrestar").text(row.Moneda + ' ' + ConvertirADecimal(row.ValorAPrestarGarantia));
+        $("#lblValorAFinanciar").text(row.Moneda + ' ' + ConvertirADecimal(row.ValorAFinanciar));
+
     });
 
     FiltrarSolicitudesMesActual();
 });
+
+/* Mostrar documentos de la garantía */
+function MostrarDocumentosGarantia(idGarantia) {
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Bandeja.aspx/CargarDocumentosGarantia",
+        data: JSON.stringify({ idGarantia: idGarantia, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudieron cargar los documentos de la garantía, contacte al administrador.');
+        },
+        success: function (data) {
+
+            if (data.d != null) {
+
+                var documentos = data.d;
+                var divGaleriaGarantia = $("#divGaleriaGarantia").empty();
+                var templateDocumentos = '';
+
+                if (documentos != null) {
+
+                    if (documentos.length > 0) {
+
+                        for (var i = 0; i < documentos.length; i++) {
+
+                            templateDocumentos += '<img alt="' + documentos[i].DescripcionTipoDocumento + '" src="' + documentos[i].URLArchivo + '" data-image="' + documentos[i].URLArchivo + '" data-description="' + documentos[i].DescripcionTipoDocumento + '"/>';
+                        }
+                    }
+                }
+
+                var imgNoHayFotografiasDisponibles = '<img alt="No hay fotografías disponibles" src="/Imagenes/Imagen_no_disponible.png" data-image="/Imagenes/Imagen_no_disponible.png" data-description="No hay fotografías disponibles"/>';
+                templateDocumentos = templateDocumentos == '' ? imgNoHayFotografiasDisponibles : templateDocumentos;
+
+                divGaleriaGarantia.append(templateDocumentos);
+
+                $("#divGaleriaGarantia").unitegallery();
+
+                $("#modalDocumentosDeLaGarantia").modal();
+            }
+            else
+                MensajeError('No se pudieron cargar los documentos de la garantía, contacte al administrador.');
+        }
+    });
+}
 
 /* Expediente de la solicitud y garantia */
 function MostrarExpedienteSolicitudGarantia(idSolicitud, idGarantia) {

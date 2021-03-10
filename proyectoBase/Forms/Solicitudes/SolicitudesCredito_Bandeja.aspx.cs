@@ -89,10 +89,11 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                                 PasoFinalFin = (DateTime)sqlResultado["fdPasoFinalFin"],
                                 IdEstadoSolicitud = (byte)sqlResultado["fiEstadoSolicitud"],
                                 FechaResolucion = (DateTime)sqlResultado["fdTiempoTomaDecisionFinal"],
-
                                 ValorGarantia = (decimal)sqlResultado["fnValorGarantia"],
                                 ValorPrima = (decimal)sqlResultado["fnValorPrima"],
+                                ValorAPrestarGarantia = (decimal)sqlResultado["fnValorAPrestar"],
                                 ValorAFinanciar = (decimal)sqlResultado["fnValorTotalFinanciamiento"],
+                                Moneda = sqlResultado["fcSimboloMoneda"].ToString(),
                                 Plazo = (int)sqlResultado["fiPlazo"],
                                 TasaInteresAnual = (decimal)sqlResultado["fnTasaAnualAplicada"],
                                 TasaInteresMensual = (decimal)sqlResultado["fnTasaMensualAplicada"],
@@ -113,6 +114,12 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
     }
 
     #region Obtener documentos de la garantía y de la solicitud
+
+    [WebMethod]
+    public static List<Documento_ViewModel> CargarDocumentosGarantia(int idGarantia, string dataCrypt)
+    {
+        return ObtenerDocumentosGarantiaPorIdGarantia(idGarantia, dataCrypt);
+    }
 
     [WebMethod]
     public static List<Documento_ViewModel> CargarExpedienteSolicitudGarantia(int idSolicitud, int idGarantia, string dataCrypt)
@@ -357,7 +364,9 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         /* Información del préstamo */
         public decimal ValorGarantia { get; set; }
         public decimal ValorPrima { get; set; }
+        public decimal ValorAPrestarGarantia { get; set; }
         public decimal ValorAFinanciar { get; set; }
+        public string Moneda { get; set; }
         public int Plazo { get; set; }
         public decimal TasaInteresAnual { get; set; }
         public decimal TasaInteresMensual { get; set; }
