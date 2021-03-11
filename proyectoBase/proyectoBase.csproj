@@ -953,6 +953,7 @@
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ListadoExpedientes.aspx" />
     <Content Include="Forms\Solicitudes\PreciosDeMercado_Listado.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx" />
+    <Content Include="Forms\Solicitudes\SolicitudesCredito_Expedientes.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Analisis.aspx" />
@@ -1084,6 +1085,7 @@
     <Content Include="Imagenes\exchange_40px.png" />
     <Content Include="Imagenes\export_pdf_48px.png" />
     <Content Include="Imagenes\export_pdf_80px.png" />
+    <Content Include="Imagenes\folder_40px.png" />
     <Content Include="Imagenes\gears_40px.png" />
     <Content Include="Imagenes\gifCargandoHorizontal30x60.gif" />
     <Content Include="Imagenes\iconoAcuerdo24.png" />
@@ -1969,6 +1971,13 @@
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx.designer.cs">
       <DependentUpon>SolicitudesCredito_ListadoGarantias.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Expedientes.aspx.cs">
+      <DependentUpon>SolicitudesCredito_Expedientes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Expedientes.aspx.designer.cs">
+      <DependentUpon>SolicitudesCredito_Expedientes.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx.cs">
       <DependentUpon>SolicitudesCredito_Registrar_Supervisor.aspx</DependentUpon>

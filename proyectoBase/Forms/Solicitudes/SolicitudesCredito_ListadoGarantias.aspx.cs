@@ -613,6 +613,8 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 
     #endregion
 
+    #region Obtener documentos de la garantía y de la solicitud
+
     [WebMethod]
     public static List<Documento_ViewModel> CargarDocumentosGarantia(int idGarantia, string dataCrypt)
     {
@@ -638,8 +640,6 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
 
         return expedienteGaratiaSolicitud;
     }
-
-    #region Obtener documentos de la garantía y de la solicitud
 
     public static List<Documento_ViewModel> ObtenerDocumentosGarantiaPorIdGarantia(int idGarantia, string dataCrypt)
     {

@@ -20,60 +20,36 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        try
         {
-            var lcURL = string.Empty;
-            var liParamStart = 0;
-            var lcParametros = string.Empty;
-            var lcEncriptado = string.Empty;
-            var lcParametroDesencriptado = string.Empty;
-            Uri lURLDesencriptado = null;
-
-            try
+            if (!IsPostBack)
             {
-                lcURL = Request.Url.ToString();
-                liParamStart = lcURL.IndexOf("?");
-
-                if (liParamStart > 0)
-                {
-                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                }
-                else
-                {
-                    lcParametros = string.Empty;
-                }
+                var lcURL = Request.Url.ToString();
+                var liParamStart = lcURL.IndexOf("?");
+                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
 
                 if (lcParametros != string.Empty)
                 {
-                    lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                    lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-                    lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                    var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
+                    var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
                     CargarInformacionClienteSolicitud();
                     CargarInformacionGarantia();
                 }
-                else
-                {
-                    string lcScript = "window.open('SolicitudesCredito_Bandeja.aspx?" + lcEncriptado + "','_self')";
-                    Response.Write("<script>");
-                    Response.Write(lcScript);
-                    Response.Write("</script>");
-                }
-            }
-            catch
-            {
-                string lcScript = "window.open('SolicitudesCredito_Bandeja.aspx?" + lcEncriptado + "','_self')";
-                Response.Write("<script>");
-                Response.Write(lcScript);
-                Response.Write("</script>");
             }
         }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+
     }
 
     public void CargarInformacionClienteSolicitud()
@@ -638,9 +614,8 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                     {
                         if (!sqlResultado.HasRows)
                         {
-                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp) + "','_self')";
                             Response.Write("<script>");
-                            Response.Write(lcScript);
+                            Response.Write("window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp) + "','_self')");
                             Response.Write("</script>");
                         }
 
@@ -980,23 +955,12 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var liParamStart = 0;
-            var lcParametros = string.Empty;
-            var pcEncriptado = string.Empty;
-            liParamStart = URL.IndexOf("?");
-
-            if (liParamStart > 0)
-            {
-                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
-            }
-            else
-            {
-                lcParametros = string.Empty;
-            }
+            var liParamStart = URL.IndexOf("?");
+            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
 
             if (lcParametros != string.Empty)
             {
-                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
+                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
