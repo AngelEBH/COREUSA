@@ -1302,6 +1302,7 @@
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_RegistroInstalacionGPS.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_Listado.js" />
+    <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Expedientes.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_ImprimirDocumentacion.js" />
     <Content Include="Scripts\app\solicitudes\Garantia_Actualizar.js" />
     <Content Include="Scripts\app\solicitudes\PreSolicitud_Guardar.js" />
