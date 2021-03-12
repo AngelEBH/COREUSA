@@ -586,8 +586,6 @@ $("#btnCrearExpediente_Confirmar").click(function () {
         },
         success: function (data) {
 
-            debugger;
-
             if (data.d != "-1") {
                 idExpediente = data.d;
                 RedirigirAccion('SolicitudesCredito_Expedientes.aspx', 'expediente del préstamo');
