@@ -6,6 +6,7 @@ const procesoPendiente = "/Date(-2208967200000)/";
 var idCliente = 0;
 var idGarantia = 0;
 var idSolicitud = 0;
+var idExpediente = 0;
 var identidadCliente = "";
 var filtroActual = "";
 
@@ -75,7 +76,10 @@ $(document).ready(function () {
                         '<button type="button" class="dropdown-item" id="btnAbrirDetalles" onclick="RedirigirAccion(' + "'SolicitudesCredito_Detalles.aspx'" + ',' + "'detalles de la solicitud'" + ')" aria-label="Detalles"><i class="far fa-file-alt"></i> Ver detalles</button>' +
                         (row["IdEstadoSolicitud"] == 7 ? '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion" onclick="RedirigirAccion(' + "'SolicitudesCredito_ImprimirDocumentacion.aspx'" + ',' + "'imprimir documentación'" + ')"><i class="far fa-file-pdf"></i> Imprimir Documentos</button>' : '') +
                         '<button type="button" class="dropdown-item" id="btnExpedienteSolicitud" onclick="MostrarExpedienteSolicitudGarantia(' + row["IdSolicitud"] + ',' + row["IdGarantia"] + ')" aria-label="Expediente de la solicitud"><i class="far fa-folder"></i> Expediente de la solicitud</button>' +
-                        //(row["IdEstadoSolicitud"] == 7 ? '<button type="button" class="dropdown-item" id="btnExpedientePrestamo" onclick="MostrarExpedienteSolicitudGarantia(' + row["IdSolicitud"] + ',' + row["IdGarantia"] + ')" aria-label="Expediente del préstamo"><i class="far fa-folder"></i> Expediente del préstamo</button>' : '') +
+                        (row["IdEstadoSolicitud"] == 7 ?
+                            '<button type="button" class="dropdown-item" onclick="AbrirExpedienteFinal(' + row["IdExpediente"] + ')" aria-label="Abrir expediente final"><i class="far fa-folder"></i> ' + (row["IdExpediente"] != 0 ? 'Abrir expediente del préstamo' : 'Crear expediente del préstamo') + '</button>'
+                            : ''
+                        ) +
                         '</div>' +
                         '</div >';
                 }
@@ -408,6 +412,7 @@ $(document).ready(function () {
         idCliente = row.IdCliente;
         idGarantia = row.IdGarantia;
         idSolicitud = row.IdSolicitud;
+        idExpediente = row.IdExpediente;
         identidadCliente = row.IdentidadCliente;
 
         $(".lblNoSolicitudCredito").text(row.IdSolicitud)
@@ -558,6 +563,44 @@ function MostrarVistaPrevia(btnVistaPrevia) {
     $("#divPrevisualizacionDocumento").empty().append(imgTemplate).unitegallery();
 }
 
+/* Expediente final */
+function AbrirExpedienteFinal(idExpediente) {
+
+    if (idExpediente != 0)
+        RedirigirAccion('SolicitudesCredito_Expedientes.aspx', 'expediente del préstamo');
+    else
+        $("#modalCrearExpedientePrestamo").modal();
+}
+
+$("#btnCrearExpediente_Confirmar").click(function () {
+
+    $("#btnCrearExpediente_Confirmar").prop('disabled', true);
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Bandeja.aspx/CrearExpedientePrestamo",
+        data: JSON.stringify({ idSolicitud: idSolicitud, comentarios: $("#txtComentariosExpediente").val(), dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Ocurrió un error al crear el expediente del préstamo, contacte al administrador');
+        },
+        success: function (data) {
+
+            debugger;
+
+            if (data.d != "-1") {
+                idExpediente = data.d;
+                RedirigirAccion('SolicitudesCredito_Expedientes.aspx', 'expediente del préstamo');
+            }
+            else
+                MensajeError('Ocurrió un error al crear el expediente del préstamo, contacte al administrador');
+        },
+        complete: function () {
+            $("#btnCrearExpediente_Confirmar").prop('disabled', false);
+        }
+    });
+
+});
 
 /* Funciones utilitarias */
 function RedirigirAccion(nombreFormulario, accion) {
@@ -565,7 +608,7 @@ function RedirigirAccion(nombreFormulario, accion) {
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Bandeja.aspx/EncriptarParametros",
-        data: JSON.stringify({ idSolicitud: idSolicitud, idCliente: idCliente, idGarantia: idGarantia, identidad: identidadCliente, dataCrypt: window.location.href }),
+        data: JSON.stringify({ idSolicitud: idSolicitud, idCliente: idCliente, idGarantia: idGarantia, identidad: identidadCliente, idExpediente: idExpediente, dataCrypt: window.location.href }),
         contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError("No se pudo redireccionar a " + accion);
@@ -601,3 +644,13 @@ function ConvertirADecimal(nStr) {
     }
     return x1 + x2;
 }
+
+/* Cuando de click en el boton de acciones de los datatables */
+$('.table-responsive').on('show.bs.dropdown', function () {
+    $('.table-responsive').css("overflow", "inherit");
+});
+
+/* Cuando de click en el boton de acciones de los datatables */
+$('.table-responsive').on('hide.bs.dropdown', function () {
+    $('.table-responsive').css("overflow", "auto");
+});

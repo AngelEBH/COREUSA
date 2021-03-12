@@ -9,14 +9,11 @@ using System.Web.Services;
 
 public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
 {
-    public string pcID = "";
     public string pcIDApp = "";
     public string pcIDSesion = "";
     public string pcIDUsuario = "";
-    public string pcIDSolicitudCredito = "";
+    public string pcIDExpediente = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-
-    public int pcIDExpediente { get; set; }
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -34,13 +31,10 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
                     var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                    pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                    pcIDSolicitudCredito = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-                    pcIDExpediente = 1;
+                    pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente") ?? "1";
 
                     CargarInformacionClienteSolicitud();
                     CargarGruposDeArchivos();
@@ -51,7 +45,6 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
         {
             ex.Message.ToString();
         }
-
     }
 
     public void CargarInformacionClienteSolicitud()

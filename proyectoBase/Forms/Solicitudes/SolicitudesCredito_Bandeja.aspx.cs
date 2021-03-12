@@ -99,6 +99,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                                 TasaInteresMensual = (decimal)sqlResultado["fnTasaMensualAplicada"],
                                 CuotaSeguro = (decimal)sqlResultado["fnCuotaMensualSeguro"],
                                 CuotaGPS = (decimal)sqlResultado["fnCuotaMensualGPS"],
+                                IdExpediente = (int)sqlResultado["fiIDExpediente"],
                                 PermitirAbrirAnalisis = pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "146",
                             });
                         }
@@ -243,10 +244,57 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
 
     #endregion
 
+    #region Crear expediente del prestamo
+
+    [WebMethod]
+    public static string CrearExpedientePrestamo(int idSolicitud, string comentarios, string dataCrypt)
+    {
+        var idExpedienteCreado = "-1";
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_Expedientes_Maestro_Guardar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pcComentarios", comentarios.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                idExpedienteCreado = sqlResultado["MensajeError"].ToString();
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return idExpedienteCreado;
+    }
+
+    #endregion
+
     #region Metodos utilitarios
 
     [WebMethod]
-    public static string EncriptarParametros(int idSolicitud, int idCliente, int idGarantia, string identidad, string dataCrypt)
+    public static string EncriptarParametros(int idSolicitud, int idCliente, int idGarantia, string identidad, string idExpediente, string dataCrypt)
     {
         string resultado;
         try
@@ -255,7 +303,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "1";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var lcParametros = "usr=" + pcIDUsuario + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion + "&pcID=" + identidad + "&IDSOL=" + idSolicitud + "&IDGarantia=" + idGarantia + "&IdCredCliente=" + idCliente;
+            var lcParametros = "usr=" + pcIDUsuario + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion + "&pcID=" + identidad + "&IDSOL=" + idSolicitud + "&IDGarantia=" + idGarantia + "&IdCredCliente=" + idCliente + "&idExpediente=" + idExpediente;
             resultado = DSC.Encriptar(lcParametros);
         }
         catch
@@ -372,7 +420,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         public decimal TasaInteresMensual { get; set; }
         public decimal CuotaSeguro { get; set; }
         public decimal CuotaGPS { get; set; }
-
+        public int IdExpediente { get; set; }
         public bool PermitirAbrirAnalisis { get; set; }
     }
 

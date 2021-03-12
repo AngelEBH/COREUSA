@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <meta name="description" content="Bandeja de solicitudes de crédito" />
     <title>Bandeja de solicitudes</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css?v=202010031105" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/Content/css/style.css?v=202010031105" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
@@ -353,6 +353,32 @@
             </div>
         </div>
     </div>
+
+
+    <div id="modalCrearExpedientePrestamo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCrearExpedientePrestamoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title mt-0" id="modalCrearExpedientePrestamoLabel">Crear expediente del préstamo | Solicitud de crédito <span class="lblNoSolicitudCredito"></span></h6>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-form-label">Comentarios/Obseraciones (Opcional)</label>
+                        <textarea id="txtComentariosExpediente" runat="server" class="form-control form-control-sm" data-parsley-group="expediente_crear" data-parsley-maxlength="500" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer pt-2 pb-2">
+                    <button type="button" id="btnCrearExpediente_Confirmar" class="btn btn-primary waves-effect waves-light">
+                        Confirmar
+                    </button>
+                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
