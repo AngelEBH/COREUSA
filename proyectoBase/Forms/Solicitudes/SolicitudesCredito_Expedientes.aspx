@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Expedientes.aspx.cs" Inherits="SolicitudesCredito_Expedientes" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Expedientes.aspx.cs" Inherits="SolicitudesCredito_Expedientes" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -38,7 +38,7 @@
                         <span class="sr-only"></span>
                     </div>
                 </div>
-                <h6 class="card-title font-weight-bold">Expediente del Préstamo | Solicitud de crédito 1080</h6>
+                <h6 class="card-title font-weight-bold">Expediente del Préstamo | Solicitud de crédito <span runat="server" id="lblNoSolicitudCredito"></span></h6>
             </div>
             <div class="card-body">
                 <div class="row mt-3 mb-0">
@@ -53,22 +53,22 @@
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Cliente</span></td>
-                                        <td><span class="label label-table label-success" id="lblNombreCliente">Willian Onandy Diaz Serrano</span></td>
+                                        <td><asp:Label class="label label-table label-success" id="lblNombreCliente" runat="server"></asp:Label></td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Identidad</span></td>
-                                        <td id="lblIdentidadCliente">050220002944</td>
+                                        <td><asp:Label id="lblIdentidadCliente" runat="server"></asp:Label></td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">RTN numérico</span></td>
-                                        <td id="lblRtn">05022000029448</td>
+                                        <td><asp:Label id="txtRTNCliente" runat="server"></asp:Label></td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Teléfono</span></td>
-                                        <td id="lblTelefono">96116376</td>
+                                        <td><asp:Label id="txtTelefonoCliente" runat="server"></asp:Label></td>
                                         <td></td>
                                     </tr>
                                     <tr>
@@ -91,22 +91,22 @@
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Producto</span></td>
-                                        <td id="lblProducto">Prestadito Automovil Empeño</td>
+                                        <td><asp:Label id="lblProducto" runat="server"></asp:Label></td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Tipo de solicitud</span></td>
-                                        <td id="lblTipoDeSolicitud">Nueva</td>
+                                        <td><asp:Label id="lblTipoDeSolicitud" runat="server"></asp:Label></td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">CC / Vendedor</span></td>
-                                        <td id="lblAgenciaYVendedorAsignado">Prestadito Matriz / XXXXX YYYY</td>
+                                        <td><asp:Label id="lblAgenciaYVendedorAsignado" runat="server"></asp:Label></td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Gestor asignado</span></td>
-                                        <td id="lblGestorAsignado">XXXXX YYYY</td>
+                                        <td><asp:Label id="lblGestorAsignado" runat="server"></asp:Label></td>
                                         <td></td>
                                     </tr>
                                     <tr>
@@ -120,26 +120,12 @@
                     </div>
                 </div>
 
+                <h6 class="font-weight-bold">Grupos de archivos</h6>
                 <div class="row justify-content-center bg-light border ">
-                    <div class="col-auto mt-2 mb-2">
-                        <button type="button" data-toggle="modal" data-target="#modalGrupoDeDocumentos" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/folder_40px.png');">
+                    <div class="col-auto mt-2 mb-2" runat="server" id="divGruposDeArchivos">
+                        <%--<button type="button" data-toggle="modal" data-target="#modalGrupoDeDocumentos" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/folder_40px.png');">
                             Archivo 1
-                        </button>
-                        <button type="button" data-toggle="modal" data-target="#modalGrupoDeDocumentos" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/folder_40px.png');">
-                            Archivo 2
-                        </button>
-                        <button type="button" data-toggle="modal" data-target="#modalGrupoDeDocumentos" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/folder_40px.png');">
-                            Archivo 3
-                        </button>
-                        <button type="button" data-toggle="modal" data-target="#modalGrupoDeDocumentos" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/folder_40px.png');">
-                            Archivo 4
-                        </button>
-                        <button type="button" data-toggle="modal" data-target="#modalGrupoDeDocumentos" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/folder_40px.png');">
-                            Archivo 5
-                        </button>
-                        <button type="button" data-toggle="modal" data-target="#modalGrupoDeDocumentos" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/folder_40px.png');">
-                            Archivo 6
-                        </button>
+                        </button>--%>
                     </div>
                 </div>
 
@@ -183,7 +169,7 @@
                         </table>
                     </div>
                     <div class="col-lg-4 col-md-6 pt-3 border">
-                        
+
                         <div class="row justify-content-between">
                             <div class="col-auto">
                                 <label class="font-14">Tipo de documento: <b>Solicitud de póliza</b></label>

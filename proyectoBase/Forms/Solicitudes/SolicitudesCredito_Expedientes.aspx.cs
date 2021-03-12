@@ -1,15 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 using System.Web;
 
 public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
 {
+    public string pcID = "";
     public string pcIDApp = "";
     public string pcIDSesion = "";
     public string pcIDUsuario = "";
+    public string pcIDSolicitud = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
@@ -28,12 +30,14 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
                     var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
-                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+                    pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
+                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr") ?? "0";
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
-                    ValidarPuesto();
-                    CargarListados();
+                    CargarInformacionClienteSolicitud();
+                    CargarGruposDeArchivos();
                 }
             }
         }
@@ -41,21 +45,23 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
         {
             ex.Message.ToString();
         }
+
     }
 
-    public void ValidarPuesto()
+    public void CargarInformacionClienteSolicitud()
     {
         try
         {
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("CoreSeguridad.dbo.sp_InformacionUsuario", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_SolicitudClientePorIdSolicitud", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.CommandTimeout = 120;
 
@@ -63,9 +69,30 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            var idPuesto = sqlResultado["fiIDPuesto"].ToString();
+                            lblNoSolicitudCredito.InnerText = sqlResultado["fiIDSolicitud"].ToString();
+                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
+                            lblTipoDeSolicitud.Text = sqlResultado["fcTipoSolicitud"].ToString();
+                            lblAgenciaYVendedorAsignado.Text = sqlResultado["fcNombreAgencia"].ToString() + " / " + sqlResultado["fcNombreUsuarioAsignado"].ToString();
+                            lblGestorAsignado.Text = sqlResultado["fcNombreGestor"].ToString();
                         }
-                    } // using sqlResultado
+
+                        /****** Documentos de la solicitud ******/
+                        sqlResultado.NextResult();
+
+                        /****** Condicionamientos de la solicitud *SE HACE EN EL FRONTEND* ******/
+                        sqlResultado.NextResult();
+
+                        /****** Información del cliente ******/
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            lblNombreCliente.Text = sqlResultado["fcPrimerNombreCliente"].ToString() + " " + sqlResultado["fcSegundoNombreCliente"].ToString() + " " + sqlResultado["fcPrimerApellidoCliente"].ToString() + " " + sqlResultado["fcSegundoApellidoCliente"].ToString();
+                            lblIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
+                            txtRTNCliente.Text = sqlResultado["fcRTN"].ToString();
+                            txtTelefonoCliente.Text = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
+                        }
+                    } // using sqlComando
                 } // using sqlComando
             } // using sqlConexion
         }
@@ -75,10 +102,37 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
         }
     }
 
-    public void CargarListados()
+    public void CargarGruposDeArchivos()
     {
         try
         {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_Expedientes_GruposDeArchivos_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        var grupoArchivosTemplate = new StringBuilder();
+
+                        while (sqlResultado.Read())
+                        {
+                            grupoArchivosTemplate.Append("<button type='button' runat='server' class='FormatoBotonesIconoCuadrado40' style='position: relative; margin-top: 5px; margin-left: 5px; background-image: url(/Imagenes/folder_40px.png);>" +
+                                sqlResultado["fcNombre"].ToString() +
+                            "</button>");
+                        }
+
+                        divGruposDeArchivos.InnerHtml = grupoArchivosTemplate.ToString();
+                    } // using sqlComando
+                } // using sqlComando
+            } // using sqlConexion
         }
         catch (Exception ex)
         {
@@ -108,94 +162,3 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
         return lURLDesencriptado;
     }
 }
-
-#region View Models
-
-public class SolicitudesCredito_Expedientes_ViewModel
-{
-    public int IdSolicitud { get; set; }
-    public int IdCliente { get; set; }
-    public string NombreCliente { get; set; }
-    public string IdentidadCliente { get; set; }
-    public string RtnCliente { get; set; }
-    public string Telefono { get; set; }
-    public string Producto { get; set; }
-    public string TipoDeSolicitud { get; set; }
-    public int IdUsuarioAsignado { get; set; }
-    public string UsuarioAsignado { get; set; }
-    public string Agencia { get; set; }
-    public int IdGestorAsignado { get; set; }
-    public string GestorAsignado { get; set; }
-    public int IdEstadoSolicitud { get; set; }
-    public string EstadoSolicitud { get; set; }
-    public int IdFondo { get; set; }
-    public string Fondo { get; set; }
-    public List<SolicitudesCredito_Expedientes_Documentos_Solicitud_ViewModel> Documentos { get; set; }
-    public List<SolicitudesCredito_Expedientes_Solicitud_Condicion_ViewModel> Condiciones { get; set; }
-    public List<SolicitudesCredito_Expedientes_Cliente_ReferenciaPersonal_ViewModel> ReferenciasPersonales { get; set; }
-    public List<SolicitudesCredito_Expedientes_HistorialMantenimiento_ViewModel> HistorialMantenimientos { get; set; }
-
-    public SolicitudesCredito_Expedientes_ViewModel()
-    {
-        Documentos = new List<SolicitudesCredito_Expedientes_Documentos_Solicitud_ViewModel>();
-        Condiciones = new List<SolicitudesCredito_Expedientes_Solicitud_Condicion_ViewModel>();
-        ReferenciasPersonales = new List<SolicitudesCredito_Expedientes_Cliente_ReferenciaPersonal_ViewModel>();
-        HistorialMantenimientos = new List<SolicitudesCredito_Expedientes_HistorialMantenimiento_ViewModel>();
-    }
-}
-
-public class SolicitudesCredito_Expedientes_Documentos_Solicitud_ViewModel
-{
-    public int IdSolicitudDocumento { get; set; }
-    public int IdSolicitud { get; set; }
-    public string NombreArchivo { get; set; }
-    public int IdTipoDocumento { get; set; }
-    public string DescripcionTipoDocumento { get; set; }
-    public string Extension { get; set; }
-    public string RutaArchivo { get; set; }
-    public string URLArchivo { get; set; }
-    public byte ArchivoActivo { get; set; }
-}
-
-public class SolicitudesCredito_Expedientes_HistorialMantenimiento_ViewModel
-{
-    public int IdHistorialMantenimiento { get; set; }
-    public int IdSolicitud { get; set; }
-    public int IdUsuario { get; set; }
-    public string NombreUsuario { get; set; }
-    public string AgenciaUsuario { get; set; }
-    public DateTime FechaMantenimiento { get; set; }
-    public string Observaciones { get; set; }
-    public int EstadoMantenimiento { get; set; }
-}
-
-public class SolicitudesCredito_Expedientes_Solicitud_Condicion_ViewModel
-{
-    public int IdSolicitudCondicion { get; set; }
-    public int IdCondicion { get; set; }
-    public string Condicion { get; set; }
-    public string DescripcionCondicion { get; set; }
-    public int IdSolicitud { get; set; }
-    public string ComentarioAdicional { get; set; }
-    public bool EstadoCondicion { get; set; }
-}
-
-public class SolicitudesCredito_Expedientes_Cliente_ReferenciaPersonal_ViewModel
-{
-    public int IdReferencia { get; set; }
-    public int IdCliente { get; set; }
-    public int IdSolicitud { get; set; }
-    public string NombreCompleto { get; set; }
-    public string LugarTrabajo { get; set; }
-    public int IdTiempoDeConocer { get; set; }
-    public string TiempoDeConocer { get; set; }
-    public string TelefonoReferencia { get; set; }
-    public int IdParentescoReferencia { get; set; }
-    public string DescripcionParentesco { get; set; }
-    public bool ReferenciaActivo { get; set; }
-    public string RazonInactivo { get; set; }
-    public string ComentarioDeptoCredito { get; set; }
-    public int AnalistaComentario { get; set; }
-}
-
-#endregion

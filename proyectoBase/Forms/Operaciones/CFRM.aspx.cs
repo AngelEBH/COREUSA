@@ -138,7 +138,7 @@ public partial class CFRM : System.Web.UI.Page
                             "<div class='widget-content-wrapper'>" +
                             "<div class='widget-content-left flex2'>" +
                             "<div class='widget-heading'>" +
-                            sqlResultado["fcDescripcionDocumento"].ToString() +
+                            sqlResultado["fcDocumento"].ToString() +
                             "</div>" +
                             "</div>" +
                             "<div class='widget-content-right'>" +

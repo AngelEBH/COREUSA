@@ -721,7 +721,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                         while (sqlResultado.Read())
                         {
                             tRowDocumentoExpediente = new TableRow();
-                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fcDescripcionDocumento"].ToString() });
+                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fcDocumento"].ToString() });
                             tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "1" ? "X" : "", HorizontalAlign = HorizontalAlign.Center });
                             tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "2" ? "X" : "", HorizontalAlign = HorizontalAlign.Center });
                             tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "3" ? "X" : "", HorizontalAlign = HorizontalAlign.Center });
@@ -730,7 +730,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             listaDocumentosExpediente.Add(new Expediente_Documento_ViewModel()
                             {
                                 IdDocumento = (int)sqlResultado["fiIDDocumento"],
-                                DescripcionDocumento = sqlResultado["fcDescripcionDocumento"].ToString(),
+                                DescripcionDocumento = sqlResultado["fcDocumento"].ToString(),
                                 IdTipoDocumento = (int)sqlResultado["fiIDTipoDocumento"],
                                 IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
                                 EstadoDocumento = sqlResultado["fcEstadoDocumento"].ToString()
