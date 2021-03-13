@@ -38,7 +38,18 @@
                         <span class="sr-only"></span>
                     </div>
                 </div>
-                <h6 class="card-title font-weight-bold">Expediente del Préstamo | Solicitud de crédito <span runat="server" id="lblNoSolicitudCredito"></span></h6>
+                <div class="row justify-content-around">
+                    <div class="col-sm-10">
+                        <h6 class="card-title font-weight-bold">Expediente del Préstamo | Solicitud de crédito 
+                            <span runat="server" id="lblNoSolicitudCredito"></span>
+                            <span class="badge badge-danger" id="lblExpedienteInactivo" runat="server" visible="false">EXPEDIENTE INACTIVO</span>
+                        </h6>
+                    </div>
+                    <div class="col-sm-2 text-right">
+                        <asp:Label runat="server" ID="lblEstadoExpediente"></asp:Label>
+                    </div>
+                </div>
+
             </div>
             <div class="card-body">
                 <div class="row mt-3 mb-0">
@@ -142,20 +153,23 @@
                     <div class="col-auto mt-2 mb-2" runat="server" id="divGruposDeArchivos"></div>
                 </div>
 
-                <h6 class="font-weight-bold">Lista de documentos del expediente</h6>
+                <h6 class="font-weight-bold">Documentos del expediente</h6>
 
                 <div class="row">
                     <div class="col-lg-4 col-md-6 pt-3 border">
-                        <label class="font-weight-bold font-14">Tipo de documento</label>
-                        <table class="table table-sm table-borderless table-hover cursor-pointer" id="tblTiposDeDocumentos" style="width: 100%">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>Documento</th>
-                                    <th class="text-center">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                        <label class="font-weight-bold font-14">Lista de documentos del expediente</label>
+                        <div class="table-responsive" style="max-height: 50vh; overflow: auto;">
+
+                            <table class="table table-sm table-borderless table-hover cursor-pointer" id="tblTiposDeDocumentos" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th>Documento</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-6 pt-3 border">
 
@@ -196,7 +210,7 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title mt-0" id="modalGrupoDeDocumentosLabel"><span id="lblNombreGrupoDeArchivos"></span></h6>
+                        <h6 class="modal-title mt-0 font-weight-bold" id="modalGrupoDeDocumentosLabel"><span id="lblNombreGrupoDeArchivos"></span></h6>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">

@@ -31,6 +31,24 @@ public partial class SolicitudesCredito_Expedientes
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNoSolicitudCredito;
 
     /// <summary>
+    /// Control lblExpedienteInactivo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblExpedienteInactivo;
+
+    /// <summary>
+    /// Control lblEstadoExpediente.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblEstadoExpediente;
+
+    /// <summary>
     /// Control lblNombreCliente.
     /// </summary>
     /// <remarks>

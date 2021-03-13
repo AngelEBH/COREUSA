@@ -36,7 +36,7 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
 
-                    CargarInformacionClienteSolicitud();
+                    CargarInformacionDelExpediente();
                     CargarGruposDeArchivos();
                 }
             }
@@ -47,7 +47,7 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
         }
     }
 
-    public void CargarInformacionClienteSolicitud()
+    public void CargarInformacionDelExpediente()
     {
         try
         {
@@ -55,7 +55,7 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_Expedientes_ObtenerPorIdExpediente", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_Expedientes_Maestro_ObtenerPorIdExpediente", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDExpediente", pcIDExpediente);
@@ -73,11 +73,15 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
                             lblTipoDeSolicitud.Text = sqlResultado["fcTipoSolicitud"].ToString();
                             lblAgenciaYVendedorAsignado.Text = sqlResultado["fcNombreAgencia"].ToString() + " / " + sqlResultado["fcNombreUsuarioAsignado"].ToString();
                             lblGestorAsignado.Text = sqlResultado["fcNombreGestor"].ToString();
-
                             lblNombreCliente.Text = sqlResultado["fcNombreCliente"].ToString();
                             lblIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
                             txtRTNCliente.Text = sqlResultado["fcRTN"].ToString();
                             txtTelefonoCliente.Text = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
+                            lblEstadoExpediente.Text = sqlResultado["fcEstadoExpediente"].ToString();
+                            lblEstadoExpediente.Attributes.Add("class", "btn btn-" + sqlResultado["fcEstadoExpedienteClassName"]);
+
+                            if ((byte)sqlResultado["fiActivo"] == 0)
+                                lblExpedienteInactivo.Visible = true;
                         }
                     } // using sqlComando
                 } // using sqlComando
@@ -188,6 +192,57 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
         return documentos;
     }
 
+    [WebMethod]
+    public static List<DocumentoDelExpediente_ViewModel> CargarDocumentosDelExpediente(int idExpediente, string dataCrypt)
+    {
+        var documentosDelExpediente = new List<DocumentoDelExpediente_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_Expedientes_ObtenerDocumentosDelExpedientePorIdExpediente", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDExpediente", idExpediente);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            documentosDelExpediente.Add(new DocumentoDelExpediente_ViewModel()
+                            {
+                                IdDocumento = (int)sqlResultado["fiIDDocumento"],
+                                DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
+                                DescripcionDetalladaDelDocumento = sqlResultado["fcDescripcionDetallada"].ToString(),
+                                Obligatorio = (bool)sqlResultado["fbObligatorio"],
+                                CantidadMinima = (int)sqlResultado["fiCantidadMinima"],
+                                CantidadMaxima = (int)sqlResultado["fiCantidadMaxima"],
+                                CantidadGuardados = (int)sqlResultado["fiDocumentosGuardados"],
+                            });
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            documentosDelExpediente = null;
+        }
+        return documentosDelExpediente;
+    }
+
     #endregion
 
     #region Metodos Utilitarios
@@ -217,6 +272,17 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
     #endregion
 
     #region View Models
+
+    public class DocumentoDelExpediente_ViewModel
+    {
+        public int IdDocumento { get; set; }
+        public string DescripcionNombreDocumento { get; set; }
+        public string DescripcionDetalladaDelDocumento { get; set; }
+        public bool Obligatorio { get; set; }
+        public int CantidadMinima { get; set; }
+        public int CantidadMaxima { get; set; }
+        public int CantidadGuardados { get; set; }
+    }
 
     public class GrupoDeArchivos_Documento_ViewModel : Documento
     {
