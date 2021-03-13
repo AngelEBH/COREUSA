@@ -54,25 +54,29 @@
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Cliente</span></td>
                                         <td>
-                                            <asp:Label class="label label-table label-success" ID="lblNombreCliente" runat="server"></asp:Label></td>
+                                            <asp:Label class="label label-table label-success" ID="lblNombreCliente" runat="server"></asp:Label>
+                                        </td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Identidad</span></td>
                                         <td>
-                                            <asp:Label ID="lblIdentidadCliente" runat="server"></asp:Label></td>
+                                            <asp:Label ID="lblIdentidadCliente" runat="server"></asp:Label>
+                                        </td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">RTN numérico</span></td>
                                         <td>
-                                            <asp:Label ID="txtRTNCliente" runat="server"></asp:Label></td>
+                                            <asp:Label ID="txtRTNCliente" runat="server"></asp:Label>
+                                        </td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Teléfono</span></td>
                                         <td>
-                                            <asp:Label ID="txtTelefonoCliente" runat="server"></asp:Label></td>
+                                            <asp:Label ID="txtTelefonoCliente" runat="server"></asp:Label>
+                                        </td>
                                         <td></td>
                                     </tr>
                                     <tr>
@@ -96,25 +100,29 @@
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Producto</span></td>
                                         <td>
-                                            <asp:Label ID="lblProducto" runat="server"></asp:Label></td>
+                                            <asp:Label ID="lblProducto" runat="server"></asp:Label>
+                                        </td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Tipo de solicitud</span></td>
                                         <td>
-                                            <asp:Label ID="lblTipoDeSolicitud" runat="server"></asp:Label></td>
+                                            <asp:Label ID="lblTipoDeSolicitud" runat="server"></asp:Label>
+                                        </td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">CC / Vendedor</span></td>
                                         <td>
-                                            <asp:Label ID="lblAgenciaYVendedorAsignado" runat="server"></asp:Label></td>
+                                            <asp:Label ID="lblAgenciaYVendedorAsignado" runat="server"></asp:Label>
+                                        </td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Gestor asignado</span></td>
                                         <td>
-                                            <asp:Label ID="lblGestorAsignado" runat="server"></asp:Label></td>
+                                            <asp:Label ID="lblGestorAsignado" runat="server"></asp:Label>
+                                        </td>
                                         <td></td>
                                     </tr>
                                     <tr>
@@ -134,7 +142,7 @@
                     <div class="col-auto mt-2 mb-2" runat="server" id="divGruposDeArchivos"></div>
                 </div>
 
-                <h6 class="font-weight-bold">Documentos del expediente</h6>
+                <h6 class="font-weight-bold">Lista de documentos del expediente</h6>
 
                 <div class="row">
                     <div class="col-lg-4 col-md-6 pt-3 border">
@@ -146,105 +154,36 @@
                                     <th class="text-center">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Comprobante de ingresos <small class="badge badge-secondary">2</small></td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-secondary">
-                                            <i class="fas fa-arrow-right"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Comprobante de domicilio <small class="badge badge-secondary">3</small></td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-secondary">
-                                            <i class="fas fa-arrow-right"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Solicitud de póliza de seguro <small class="badge badge-secondary">3</small></td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-secondary">
-                                            <i class="fas fa-arrow-right"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                     <div class="col-lg-4 col-md-6 pt-3 border">
 
                         <div class="row justify-content-between">
                             <div class="col-auto">
-                                <label class="font-14">Tipo de documento: <b>Solicitud de póliza</b></label>
+                                <label class="font-14 font-weight-bold text-muted" id="lblTituloListadoTipoDocumento">Sin seleccionar</label>
                             </div>
                             <div class="col-auto">
-                                <button type="button" class="btn btn-sm btn-info">
+                                <button type="button" id="btnAgrearNuevoTipoDocumento" class="btn btn-sm btn-info" disabled="disabled">
                                     <i class="fas fa-plus"></i>
                                     Agregar Nuevo
                                 </button>
                             </div>
                         </div>
-
-
-                        <table class="table table-sm table-borderless table-hover cursor-pointer" id="tblDocumentos" style="width: 100%">
+                        <table class="table table-sm table-borderless table-hover cursor-pointer" id="tblListadoTipoDocumento" style="width: 100%">
                             <thead class="thead-light">
                                 <tr>
                                     <th>Nombre del archivo</th>
                                     <th class="text-center">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>S1080CTE_202103111058</td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-secondary">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>S1080CTE_202103111058</td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-secondary">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>S1080CTE_202103111058</td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-secondary">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>S1080CTE_202103111058</td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-secondary">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>S1080CTE_202103111058</td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-secondary">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                     <div class="col-lg-4 col-md-12 pt-3 border">
                         <label class="font-weight-bold font-14">Previsualización del documento</label>
                     </div>
                 </div>
-
                 <!-- Mensaje de advertencias y errores -->
                 <div class="form-group row mb-0" runat="server" id="PanelMensajeErrores">
                     <asp:Label CssClass="col-sm-2 col-form-label text-danger" ID="lblMensaje" runat="server"></asp:Label>
@@ -262,14 +201,12 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-
                             <div class="col-12">
                                 <div class="alert alert-info bg-info text-white pt-1 pb-1" role="alert">
                                     <i class="fas fa-exclamation-circle text-white"></i>
                                     <span id="lblDescripcionDetalladaGrupoDeArchivos"></span>
                                 </div>
                             </div>
-
                             <div class="col-sm-4 border-right border-top pt-3">
                                 <div class="table-responsive border-right border p-2" style="max-height: 50vh; overflow: auto;">
                                     <table id="tblDocumentosDelGrupoDeArchivos" class="table table-sm table-hover cursor-pointer" style="width: 100%">
@@ -291,11 +228,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btnGuardarBloqueArchivo" class="btn btn-secondary">
+                        <button type="button" id="btnGuardarGrupoArchivo" class="btn btn-secondary">
                             <i class="far fa-file-pdf"></i>
                             Guardar PDF
                         </button>
-                        <button type="button" id="btnEnviarBloqueArchivoPorPDF" class="btn btn-secondary">
+                        <button type="button" id="btnEnviarGrupoArchivoPorPDF" class="btn btn-secondary">
                             <i class="mdi mdi-email-outline"></i>
                             Enviar por E-Mail
                         </button>
@@ -306,115 +243,6 @@
                 </div>
             </div>
         </div>
-
-        <div id="modalDocumentosGarantiaSolicitud" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalDocumentosGarantiaSolicitudLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header pb-2">
-                        <div class="form-group row mb-0">
-                            <div class="col-12">
-                                <h6 class="m-0" id="modalDocumentosGarantiaSolicitudLabel">Expediente Solicitud - Garantía | Solicitud de crédito N° <b class="lblNoSolicitudCredito"></b></h6>
-                            </div>
-                            <div class="col-12 text-muted">
-                                Marca:
-                            <span class="lblMarca"></span>
-                                / Modelo:
-                            <span class="lblModelo"></span>
-                                / Año:
-                            <span class="lblAnio"></span>
-                                / VIN:
-                            <span class="lblVIN"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-body w-100 h-100 pt-0">
-                        <div class="row mt-3">
-                            <div class="col-6">
-                                <div class="table-responsive">
-                                    <table class="table table-sm" style="margin-bottom: 0px;">
-                                        <tbody>
-                                            <tr>
-                                                <td><span class="font-weight-bold">Información del cliente</span></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span class="font-weight-bold text-muted">Cliente</span></td>
-                                                <td><span class="label label-table label-success lblNombreCliente"></span></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span class="font-weight-bold text-muted">Identidad</span></td>
-                                                <td class="lblIdentidadCliente"></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="table-responsive">
-                                    <table class="table table-sm" style="margin-bottom: 0px;">
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="3"><span class="font-weight-bold">Información de la solicitud</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span class="font-weight-bold text-muted">Producto</span></td>
-                                                <td class="lblProducto"></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td><span class="font-weight-bold text-muted">CC / Vendedor</span></td>
-                                                <td class="lblAgenciaYVendedorAsignado"></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-sm-4 border-right border-top pt-3">
-                                <div class="table-responsive border-right border p-2" style="max-height: 50vh; overflow: auto;">
-                                    <table id="tblExpedienteSolicitudGarantia2" class="table table-sm table-hover cursor-pointer" style="width: 100%">
-                                        <thead>
-                                            <tr>
-                                                <th>Documento</th>
-                                                <th class="text-center no-sort"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="col-sm-8 border-top pt-3">
-                                <h6 class="font-weight-bold mt-0">Previsualización</h6>
-
-                                <div class="align-self-center" id="div1" runat="server" style="display: none;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
-                            Cerrar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </form>
     <!-- jQuery -->
     <script src="/Scripts/js/jquery.min.js"></script>
@@ -434,22 +262,7 @@
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Expedientes.js?20210203010352"></script>
     <script>
-
         const ID_EXPEDIENTE = <%=this.pcIDExpediente%>;
-
-        $(document).ready(function () {
-            $(".mascara-enteros").inputmask("decimal", {
-                alias: "numeric",
-                groupSeparator: "",
-                digits: 0,
-                integerDigits: 13,
-                digitsOptional: false,
-                placeholder: "0",
-                radixPoint: ".",
-                autoGroup: true,
-                min: 0.0,
-            });
-        });
     </script>
 </body>
 </html>

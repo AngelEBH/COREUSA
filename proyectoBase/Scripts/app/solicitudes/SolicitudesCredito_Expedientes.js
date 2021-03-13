@@ -13,7 +13,7 @@ function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArch
 
             if (data.d != null) {
 
-                $("#btnEnviarBloqueArchivoPorPDF,#btnGuardarBloqueArchivo").prop('disabled', false).prop('title', '');
+                $("#btnEnviarGrupoArchivoPorPDF,#btnGuardarGrupoArchivo").prop('disabled', false).prop('title', '');
 
                 /* Inicializar datatables de documentos */
                 $('#tblDocumentosDelGrupoDeArchivos').DataTable({
@@ -55,7 +55,7 @@ function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArch
                             "render": function (data, type, row) {
 
                                 if (row["IdExpedienteDocumento"] == 0) {
-                                    $("#btnEnviarBloqueArchivoPorPDF,#btnGuardarBloqueArchivo").prop('disabled', true).prop('title','Grupo de archivos incompleto.');
+                                    $("#btnEnviarGrupoArchivoPorPDF,#btnGuardarGrupoArchivo").prop('disabled', true).prop('title','Grupo de archivos incompleto.');
                                 }
 
                                 return row["IdExpedienteDocumento"] != 0 ? '<button class="btn btn-sm btn-secondary" data-url="' + row["URL"] + '" data-descripcion="' + row["DescripcionNombreDocumento"] + '" onclick="MostrarVistaPrevia(this)" type="button" aria-label="Vista previa del documento"><i class="fas fa-search"></i></button>' : '<span class="badge badge-danger">Pendiente</span>'

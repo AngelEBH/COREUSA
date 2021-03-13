@@ -34,7 +34,7 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                    pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente") ?? "1";
+                    pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
 
                     CargarInformacionClienteSolicitud();
                     CargarGruposDeArchivos();
@@ -190,6 +190,8 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
 
     #endregion
 
+    #region Metodos Utilitarios
+
     public static Uri DesencriptarURL(string URL)
     {
         Uri lURLDesencriptado = null;
@@ -211,6 +213,8 @@ public partial class SolicitudesCredito_Expedientes : System.Web.UI.Page
         }
         return lURLDesencriptado;
     }
+
+    #endregion
 
     #region View Models
 
