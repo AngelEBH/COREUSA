@@ -900,6 +900,27 @@
     <Content Include="Documentos\Solicitudes\Solicitud1137\G_1137_JTEBH9FJ305007609_cc5faf89-4f5f-4e40-86cd-4ed6c804a406.png" />
     <Content Include="Documentos\Solicitudes\Solicitud1137\G_1137_JTEBH9FJ305007609_d39bb7ed-af82-41e5-ab0c-6eabf164c49d.png" />
     <Content Include="Documentos\Solicitudes\Solicitud1137\G_1137_JTEBH9FJ305007609_d4e8b62c-f52d-4cdd-9852-c2d6ae6244b6.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\CTES1177D1-20211212T041219-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\CTES1177D18-20211212T041219-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\CTES1177D24-20211212T041219-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\CTES1177D3-20211212T041219-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\CTES1177D4-20211212T041219-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\CTES1177D5-20211212T041219-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\CTES1177D6-20211212T041219-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\CTES1177D7-20211212T041219-0.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\GPS1177D1-20214012T044041.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\GPS1177D2-20214012T044041.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\GPS1177D3-20214012T044041.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\GPS1177D4-20214012T044041.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\G_1177_MPATFS54HCT100734_1aba3bcb-4d29-4d85-b1f5-8883871e0471.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\G_1177_MPATFS54HCT100734_212ead8f-b0e4-4fdf-a565-6a4c60067bcb.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\G_1177_MPATFS54HCT100734_497b00b2-e6ac-431c-b24c-d363c23f2b30.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\G_1177_MPATFS54HCT100734_4e5eff16-5309-4e2d-96c6-1d773710fa77.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\G_1177_MPATFS54HCT100734_5cb09f8b-8269-498b-8a98-e5d6934c751f.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\G_1177_MPATFS54HCT100734_ad01ee46-763c-400b-85c1-c29d01eb04b9.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\G_1177_MPATFS54HCT100734_d1349c28-913c-4aa0-be94-63ce71d68fad.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\G_1177_MPATFS54HCT100734_d7f2fa2c-c8a6-423c-839e-c0517b90789e.png" />
+    <Content Include="Documentos\Solicitudes\Solicitud1177\G_1177_MPATFS54HCT100734_ee5dd9bd-ae1b-4657-9c1f-63a2b08ac01f.png" />
     <Content Include="Documentos\Solicitudes\Solicitud962\CTES962C8-20210109T163626-001.jpg" />
     <Content Include="Documentos\Solicitudes\Solicitud962\CTES962D1-20214309T024327-0.png" />
     <Content Include="Documentos\Solicitudes\Solicitud962\CTES962D18-20214309T024327-0.png" />
@@ -924,6 +945,7 @@
     <Content Include="Forms\Aval\Aval_Registrar.aspx" />
     <Content Include="Forms\Clientes\GestionCobranzaClienteDocumentos.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
+    <Content Include="Forms\Expedientes\Expedientes_Consultar.aspx" />
     <Content Include="Forms\Movil\CotizadorCarros.aspx" />
     <Content Include="Forms\Operaciones\CFRM.aspx" />
     <Content Include="Forms\Operaciones\CFRM_IniciarSesion.aspx" />
@@ -1299,6 +1321,7 @@
     <Content Include="Scripts\app\CoreMovil\BandejaMisSolicitudes.js" />
     <Content Include="Scripts\app\CoreMovil\Clientes_BandejaPrecalificados.js" />
     <Content Include="Scripts\app\CoreMovil\CotizadorMovil.js" />
+    <Content Include="Scripts\app\Expedientes\Expedientes_Consultar.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_RegistroInstalacionGPS.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_Listado.js" />
@@ -1769,6 +1792,13 @@
     </Compile>
     <Compile Include="Forms\Clientes\Precalificado_Resolucion.aspx.designer.cs">
       <DependentUpon>Precalificado_Resolucion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Expedientes\Expedientes_Consultar.aspx.cs">
+      <DependentUpon>Expedientes_Consultar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Expedientes\Expedientes_Consultar.aspx.designer.cs">
+      <DependentUpon>Expedientes_Consultar.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Movil\CotizadorCarros.aspx.cs">
       <DependentUpon>CotizadorCarros.aspx</DependentUpon>

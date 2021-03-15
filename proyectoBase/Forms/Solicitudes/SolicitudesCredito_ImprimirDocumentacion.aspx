@@ -89,7 +89,8 @@
                                 <button type="button" id="btnConvenioComprayVenta" onclick="ExportToPDF('CONVENIO_DE_COMPRA_Y_VENTA_DE_VEHICULOS_PARA_FINANCIAMIENTO','divContenedorConvenioCyV','divConevionCyVPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
                                     C. y V. de vehic. finan.
                                 </button>
-                                <a href="/Documentos/Recursos/INSPECCION%20DE%20VEHICULO.pdf" download="Inspección vehículo" id="btnInspeccionVehiculo" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');">Inspección de vehículo
+                                <a href="/Documentos/Recursos/INSPECCION%20DE%20VEHICULO.pdf" download="Inspección vehículo" id="btnInspeccionVehiculo" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');">
+                                    Inspección de vehículo
                                 </a>
                                 <button type="button" id="btnInspeccionSeguroDeVehiculo" onclick="ExportToPDF('INSPECCION_SEGURO_VEHICULO','divContenedorInspeccionSeguro','divInspeccionSeguroPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');">
                                     Inspección seguro
