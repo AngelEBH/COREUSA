@@ -17,6 +17,9 @@
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
+    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <link href="/CSS/Estilos.css" rel="stylesheet" />
     <style>
@@ -158,6 +161,9 @@
                 <div class="row">
                     <div class="col-lg-3 col-md-6 pt-3 border">
                         <label class="font-weight-bold font-14">Lista de documentos del expediente</label>
+                        <button type="button" id="btnGenerarCheckList" class="btn btn-sm p-0 float-right" title="Descargar Check List">
+                            <i class="fas fa-download font-14"></i>
+                        </button>
                         <div class="table-responsive" style="max-height: 50vh; overflow: auto;">
 
                             <table class="table table-sm table-borderless table-hover cursor-pointer" id="tblTiposDeDocumentos" style="width: 100%">
@@ -181,13 +187,13 @@
                                 </label>
                             </div>
                             <div class="col-auto pl-0 text-right">
-                                <button type="button" class="btn btn-sm btn-danger btnCambiarEstadoDocumento" data-estado="2" disabled="disabled">
+                                <button type="button" id="btnCambiarEstadoANoAdjuntado" class="btn btn-sm btn-danger btnCambiarEstadoDocumento" data-idestado="2" disabled="disabled">
                                     NO
                                 </button>
-                                <button type="button" class="btn btn-sm btn-danger btnCambiarEstadoDocumento" data-estado="3" disabled="disabled">
+                                <button type="button" id="btnCambiarEstadoANoAplica" class="btn btn-sm btn-danger btnCambiarEstadoDocumento" data-idestado="3" disabled="disabled">
                                     N/A
                                 </button>
-                                <button type="button" id="btnAgrearNuevoTipoDocumento" class="btn btn-sm btn-info" disabled="disabled">
+                                <button type="button" id="btnAgrearNuevoTipoDocumento" class="btn btn-sm btn-info">
                                     <i class="fas fa-plus"></i>
                                     Agregar Nuevo
                                 </button>
@@ -268,6 +274,38 @@
                 </div>
             </div>
         </div>
+
+        <!-- ============== Modal Guardar Documentos De Un Determinado Tipo De Documento ==== -->
+        <div id="modalGuardarDocumentos" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modalGuardarDocumentosLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalGuardarDocumentosLabel">Guardar Documentos</h6>
+                            </div>
+                            <div class="col-12">
+                                <label class="text-muted">Tipo de documento: <span class="font-weight-bold">Comprobante de ingresos</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+
+                        <h6 class="font-weight-bold">Documentos pendientes</h6>
+
+                        <div class="mb-3" id="DivDocumentacionParaAsegurar"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnGuardarDocumentos_Confirmar" class="btn btn-primary">
+                            Guardar documentos
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
     <!-- jQuery -->
     <script src="/Scripts/js/jquery.min.js"></script>
@@ -285,9 +323,7 @@
     <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
+    <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
     <script src="/Scripts/app/Expedientes/Expedientes_Consultar.js?20210315081528"></script>
-    <script>
-        const ID_EXPEDIENTE = <%=this.pcIDExpediente%>;
-    </script>
 </body>
 </html>

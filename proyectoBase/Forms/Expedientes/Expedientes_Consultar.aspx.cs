@@ -1,8 +1,12 @@
-﻿using System;
+﻿using adminfiles;
+using Newtonsoft.Json;
+using proyectoBase.Models.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Services;
@@ -21,7 +25,9 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
     {
         try
         {
-            if (!IsPostBack)
+            var type = Request.QueryString["type"];
+
+            if (!IsPostBack && type == null)
             {
                 var lcURL = Request.Url.ToString();
                 var liParamStart = lcURL.IndexOf("?");
@@ -40,7 +46,57 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
                     CargarInformacionDelExpediente();
                     CargarGruposDeArchivos();
+
+                    HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
+                    HttpContext.Current.Session["ListaDeDocumentosAGuardarPorTipoDocumento"] = null;
+                    Session.Timeout = 10080;
                 }
+            }
+
+            /* Guardar documentos de la solicitud */
+            if (type != null || Request.HttpMethod == "POST")
+            {
+                Session["tipoDoc"] = Convert.ToInt32(Request.QueryString["IdTipoDocumento"]);
+                var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
+
+                var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
+                    { "limit", 1 },
+                    { "title", "auto" },
+                    { "uploadDir", uploadDir },
+                    { "extensions", new string[] { "jpg", "png", "jpeg"} },
+                    { "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
+                    { "fileMaxSize", 20 }, /* Peso máximo por archivo */
+                });
+
+                switch (type)
+                {
+                    case "upload": /* Guardar achivo en carpeta temporal y guardar la informacion del mismo en una variable de sesion */
+
+                        var data = fileUploader.Upload();
+
+                        if (data["files"].Count == 1)
+                            data["files"][0].Remove("file");
+                        Response.Write(JsonConvert.SerializeObject(data));
+
+                        /* Al subirse los archivos se guardan en este objeto de sesion general del helper fileuploader */
+                        var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
+
+                        /* Guardar listado de documentos en una session propia de esta pantalla */
+                        Session["ListaDocumentosParaAsegurar"] = list;
+                        break;
+
+                    case "remove":
+                        string file = Request.Form["file"];
+
+                        if (file != null)
+                        {
+                            file = FileUploader.FullDirectory(uploadDir) + file;
+                            if (File.Exists(file))
+                                File.Delete(file);
+                        }
+                        break;
+                }
+                Response.End();
             }
         }
         catch (Exception ex)
@@ -118,7 +174,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                         while (sqlResultado.Read())
                         {
                             grupoArchivosTemplate.Append("<button type='button' onclick='CargarDocumentosPorGrupoDeArchivos(" + sqlResultado["fiIDGrupoDeArchivo"] + ", " + '"' + sqlResultado["fcNombre"] + '"' + ", " + '"' + sqlResultado["fcDescripcion"] + '"' + ")' class='FormatoBotonesIconoCuadrado40' style='height: 115px; width: 100px; position: relative; margin-top: 5px; margin-left: 5px; background-image: url(/Imagenes/folder_40px.png);'>" +
-                                sqlResultado["fcNombre"].ToString() +
+                            sqlResultado["fcNombre"].ToString() +
                             "</button>");
                         }
 
@@ -135,7 +191,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
     #endregion
 
-    #region Cargar documentos por grupo de archivos, cargar documentos por id expediente, cargar documentos por id tipo de documento
+    #region CargarDocumentosDelExpediente, CargarDocumentosDelExpedientePorIdDocumento, CargarDocumentosPorGrupoDeArchivos, ElimiarDocumentoExpediente, CambiarEstadoDocumentosPorIdDocumento
 
     [WebMethod]
     public static List<DocumentoDelExpediente_ViewModel> CargarDocumentosDelExpediente(string dataCrypt)
@@ -175,6 +231,8 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                                 CantidadMinima = (int)sqlResultado["fiCantidadMinima"],
                                 CantidadMaxima = (int)sqlResultado["fiCantidadMaxima"],
                                 CantidadGuardados = (int)sqlResultado["fiDocumentosGuardados"],
+                                NoAdjuntado = (bool)sqlResultado["fbNoAdjuntado"],
+                                NoAplica = (bool)sqlResultado["fbNoAplica"]
                             });
                         }
                     } // using sqlResultado
@@ -230,52 +288,12 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                                 DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
                                 DescripcionDetalladaDelDocumento = sqlResultado["fcDescripcionDetallada"].ToString(),
                                 IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
-                                //NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
-                                NombreArchivo = "CTES1177D1-20211212T041219-0",
+                                NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
+                                //NombreArchivo = "CTES1177D1-20211212T041219-0",
                                 Extension = sqlResultado["fcExtension"].ToString(),
                                 Ruta = sqlResultado["fcRutaArchivo"].ToString(),
-                                //URL = sqlResultado["fcURL"].ToString(),
-                                URL = "/Documentos/Solicitudes/Solicitud1177/CTES1177D1-20211212T041219-0.png",
-                                Comentarios = sqlResultado["fcComentario"].ToString(),
-                                IdUsuarioCreador = (int)sqlResultado["fiIDUsuarioCreador"],
-                                UsuarioCreador = sqlResultado["fcUsuarioCreador"].ToString(),
-                                FechaCreacion = (DateTime)sqlResultado["fdFechaCreado"]
-                            });
-
-                            listaDocumentos.Add(new Expediente_Documento_ViewModel()
-                            {
-                                IdExpedienteDocumento = (int)sqlResultado["fiIDExpedienteDocumento"],
-                                IdExpediente = (int)sqlResultado["fiIDExpediente"],
-                                IdDocumento = (int)sqlResultado["fiIDDocumento"],
-                                DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
-                                DescripcionDetalladaDelDocumento = sqlResultado["fcDescripcionDetallada"].ToString(),
-                                IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
-                                //NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
-                                NombreArchivo = "CTES1177D1-20211212T041219-0",
-                                Extension = sqlResultado["fcExtension"].ToString(),
-                                Ruta = sqlResultado["fcRutaArchivo"].ToString(),
-                                //URL = sqlResultado["fcURL"].ToString(),
-                                URL = "http://172.20.3.140/Documentos/Solicitudes/Solicitud1177/CTES1177D1-20211212T041219-0.png",
-                                Comentarios = sqlResultado["fcComentario"].ToString(),
-                                IdUsuarioCreador = (int)sqlResultado["fiIDUsuarioCreador"],
-                                UsuarioCreador = sqlResultado["fcUsuarioCreador"].ToString(),
-                                FechaCreacion = (DateTime)sqlResultado["fdFechaCreado"]
-                            });
-
-                            listaDocumentos.Add(new Expediente_Documento_ViewModel()
-                            {
-                                IdExpedienteDocumento = (int)sqlResultado["fiIDExpedienteDocumento"],
-                                IdExpediente = (int)sqlResultado["fiIDExpediente"],
-                                IdDocumento = (int)sqlResultado["fiIDDocumento"],
-                                DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
-                                DescripcionDetalladaDelDocumento = sqlResultado["fcDescripcionDetallada"].ToString(),
-                                IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
-                                //NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
-                                NombreArchivo = "CTES1177D1-20211212T041219-0",
-                                Extension = sqlResultado["fcExtension"].ToString(),
-                                Ruta = sqlResultado["fcRutaArchivo"].ToString(),
-                                //URL = sqlResultado["fcURL"].ToString(),
-                                URL = "http://172.20.3.140/Documentos/Solicitudes/Solicitud1177/CTES1177D1-20211212T041219-0.png",
+                                URL = sqlResultado["fcURL"].ToString(),
+                                //URL = "/Documentos/Solicitudes/Solicitud1177/CTES1177D1-20211212T041219-0.png",
                                 Comentarios = sqlResultado["fcComentario"].ToString(),
                                 IdUsuarioCreador = (int)sqlResultado["fiIDUsuarioCreador"],
                                 UsuarioCreador = sqlResultado["fcUsuarioCreador"].ToString(),
@@ -354,6 +372,98 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         return documentos;
     }
 
+    [WebMethod]
+    public static bool ElimiarDocumentoExpediente(int idDocumentoExpediente, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_Expedientes_Documentos_EliminarDocumento", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDExpedienteDocumento", idDocumentoExpediente);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static ResultadoProceso_ViewModel CambiarEstadoDocumentosPorIdDocumento(int idTipoDeDocumento, int idEstadoDocumento, string dataCrypt)
+    {
+        var resultado = new ResultadoProceso_ViewModel();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_Expedientes_Documentos_CambiarEstadoDocumentosPorTipoDeDocumento", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDExpediente", pcIDExpediente);
+                    sqlComando.Parameters.AddWithValue("@piIDDocumento", idTipoDeDocumento);
+                    sqlComando.Parameters.AddWithValue("@piIDEstadoDocumento", idEstadoDocumento);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            resultado.ResultadoExitoso = sqlResultado["MensajeError"].ToString().StartsWith("-1") ? false : true;
+                            resultado.MensajeResultado = sqlResultado["MensajeResultado"].ToString();
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado.ResultadoExitoso = false;
+            resultado.MensajeResultado = "Ocurrió un error al cambiar el estado del documento, contacte al administrador.";
+        }
+        return resultado;
+    }
+
     #endregion
 
     #region Metodos Utilitarios
@@ -384,15 +494,21 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
     #region View Models
 
+    public class ResultadoProceso_ViewModel
+    {
+        public bool ResultadoExitoso { get; set; }
+        public string MensajeResultado { get; set; }
+    }
+
     public class GrupoDeArchivos_Documento_ViewModel : Expediente_Documento_ViewModel
     {
         public int IdGrupoDeArchivosDocumento { get; set; } // Llave primaria relacion GruposDeArchivos - Documentos
-        public int IdGrupoDeArchivos { get; set; } // Llave foranea Grupo de archivos        
+        public int IdGrupoDeArchivos { get; set; } // Llave foranea Grupo de archivos
     }
 
     public class Expediente_Documento_ViewModel : Documento
     {
-        public int IdExpedienteDocumento { get; set; }  // Llave primaria relación Expedientes - Catalogo Documentos
+        public int IdExpedienteDocumento { get; set; } // Llave primaria relación Expedientes - Catalogo Documentos
         public int IdExpediente { get; set; } // Llave foranea Expedientes Maestro
         public int IdDocumento { get; set; } // Llave foranea Catalogo de documentos
     }
@@ -421,6 +537,9 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         public int CantidadMinima { get; set; }
         public int CantidadMaxima { get; set; }
         public int CantidadGuardados { get; set; }
+
+        public bool NoAdjuntado { get; set; }
+        public bool NoAplica { get; set; }
     }
     #endregion
 }

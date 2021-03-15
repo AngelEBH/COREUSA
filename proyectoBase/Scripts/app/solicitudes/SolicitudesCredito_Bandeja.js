@@ -567,7 +567,7 @@ function MostrarVistaPrevia(btnVistaPrevia) {
 function AbrirExpedienteFinal(idExpediente) {
 
     if (idExpediente != 0)
-        RedirigirAccion('SolicitudesCredito_Expedientes.aspx', 'expediente del préstamo');
+        RedirigirAccion('../Expedientes/Expedientes_Consultar.aspx', 'expediente del préstamo');
     else
         $("#modalCrearExpedientePrestamo").modal();
 }
