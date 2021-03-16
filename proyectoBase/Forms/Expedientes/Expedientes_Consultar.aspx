@@ -21,6 +21,7 @@
     <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
     <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
+    <link href="/CSS/SolicitudesCredito_ImprimirDocumentacion.css?v=20210106150602" rel="stylesheet" />
     <style>
         h6 {
             font-size: 1rem;
@@ -171,7 +172,11 @@
                                         <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2" class="text-center">Cargando información...</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -203,7 +208,11 @@
                                     <th class="text-center">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" class="text-center">Cargando información...</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                     <div class="col-lg-5 col-md-12 pt-3 border">
@@ -320,20 +329,20 @@
         </div>
 
         <!-- ================================== HTML Expendiente ================================ -->
-        <div id="divContenedorExpediente" class="contenedorPDFx">
-            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divExpedientePDF" style="display: ;">
+        <div id="divContenedorExpediente" class="contenedorPDF">
+            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divExpedientePDF" style="display: none;">
                 <div class="card-body pt-0 pr-5 pl-5">
                     <div class="row justify-content-between">
                         <div class="col-auto">
-                            <asp:Label runat="server" ID="lblRazonSocial" class="font-weight-bold d-block"></asp:Label>
-                            <asp:Label runat="server" ID="lblNombreComercial" class="font-weight-bold d-block"></asp:Label>
+                            <asp:Label runat="server" ID="lblRazonSocial" class="font-weight-bold d-block mb-2"></asp:Label>
+                            <asp:Label runat="server" ID="lblNombreComercial" class="font-weight-bold d-block mb-2"></asp:Label>
                             <label class="font-weight-bold d-block">
                                 Solicitud de crédito N°:
                                 <b runat="server" id="lblNoSolicitudCredito_Expediente"></b>
                             </label>
-                            <small class="font-weight-bold">Fecha:
-                                <b runat="server" id="lblFechaActual_Expediente"></b>
-                            </small>
+                            <label class="font-weight-bold">Fecha:
+                                <span runat="server" id="lblFechaActual_Expediente"></span>
+                            </label>
                         </div>
                         <div class="col-auto align-content-start pr-0">
                             <div id="qr_Expediente"></div>
@@ -475,18 +484,23 @@
                     </div>
                     <div class="row">
                         <div class="col-6 p-0">
-                            <asp:Table ID="tblDocumentos_Expediente" CssClass="table table-sm table-condensed table-bordered" runat="server">
-                                <asp:TableHeaderRow TableSection="TableHeader">
-                                    <asp:TableHeaderCell>Tipo de documento</asp:TableHeaderCell>
-                                    <asp:TableHeaderCell CssClass="text-center">SI</asp:TableHeaderCell>
-                                    <asp:TableHeaderCell CssClass="text-center">NO</asp:TableHeaderCell>
-                                    <asp:TableHeaderCell CssClass="text-center">N/A</asp:TableHeaderCell>
-                                </asp:TableHeaderRow>
-                            </asp:Table>
+                            <table id="tblDocumentos_Expediente" class="table table-condensed table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="mt-0 mb-0 pt-0 pb-0">Tipo de documento</th>
+                                        <th class="text-center mt-0 mb-0 pt-0 pb-0">SI</th>
+                                        <th class="text-center mt-0 mb-0 pt-0 pb-0">NO</th>
+                                        <th class="text-center mt-0 mb-0 pt-0 pb-0">N/A</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
                         <div class="col-6">
                             <u class="font-weight-bold">TIPO DE RENEGOCIACIÓN</u>
-                            <asp:Table ID="tblTipoDeSolicitud_Expediente" CssClass="font-weight-bold table-borderless mt-2" runat="server"></asp:Table>
+                            <table id="tblTipoDeSolicitud_Expediente" class="font-weight-bold table-borderless mt-2">
+                                <tbody></tbody>
+                            </table>
                         </div>
                         <div class="col-12 p-0">
                             <div class="form-group row">
@@ -495,7 +509,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row pt-5 justify-content-center">
+                    <div class="row justify-content-center">
                         <div class="col-5 text-center">
                             <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
                             <label class="mt-0 d-block">Firma de entrega</label>
@@ -527,7 +541,13 @@
     <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
+    <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
+    <script src="/Scripts/plugins/qrcode/qrcode.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>
+    <script>
+        const URL_CODIGO_QR = '<%=UrlCodigoQR%>';
+        const ID_EXPEDIENTE = '<%=pcIDExpediente%>';
+    </script>
     <script src="/Scripts/app/Expedientes/Expedientes_Consultar.js?20210315081528"></script>
 </body>
 </html>

@@ -35,7 +35,6 @@ var cantidadMinimaDocumentos = 0;
 var cantidadMaximaDocumentos = 0;
 var cantidadDocumentosGuardados = 0;
 
-
 $(function () {
 
     /*
@@ -47,6 +46,7 @@ $(function () {
 
     CargarDocumentosDelExpediente();
     CargarDocumentosGuardadosPorTipoDeDocumento(idTipoDeDocumento, nombreTipoDeDocumento, descripcionTipoDeDocumento, undefined, undefined, cantidadMinimaDocumentos, cantidadMaximaDocumentos, cantidadDocumentosGuardados, documentoObligatorio);
+    InicializarCodigosQR();
 });
 
 /* Cargar el listado de documentos que corresponden al expediente (esto depende del tipo de producto). Con el indicador de la cantidad de documentos que se han guardado */
@@ -511,6 +511,147 @@ $("#btnGuardarDocumentos_Confirmar").click(function () {
     });
 
 });
+
+
+/***********************************************************************************************/
+/************************************ GENERAR CHECK LIST PDF ***********************************/
+/***********************************************************************************************/
+$("#btnGenerarCheckList").click(function () {
+
+    $("#btnGenerarCheckList").prop('disabled', true);
+
+    $.ajax({
+        type: "POST",
+        url: 'Expedientes_Consultar.aspx/ObtenerInformacionCheckListPorIdExpediente',
+        data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo cargar el Check List, contacte al administrador');
+        },
+        beforeSend: function () {
+            MostrarLoader();
+        },
+        success: function (data) {
+
+            debugger;
+
+            if (data.d == null) {
+
+                MensajeError('Ocurrió un error al cargar el Check List del expediente, contacte al administrador');
+                return false;
+            }
+
+            let expedienteDocumentosCheckList = data.d.Documentos;
+            let expedienteTipoSolicitudCheckList = data.d.TiposDeSolicitud;
+
+            if (!ValidarEstadoDeDocumentosExpediente(expedienteDocumentosCheckList)) {
+
+                let documentosPendientesTemplate = '';
+
+                for (var i = 0; i < expedienteDocumentosCheckList.length; i++) {
+                    if (expedienteDocumentosCheckList[i].IdEstadoDocumento == 0 /* y que sean obligatorios!! */)
+                        documentosPendientesTemplate += '   * ' + expedienteDocumentosCheckList[i].DescripcionNombreDocumento + '<br/>';
+                }
+                MensajeError("Los siguientes documentos obligatorios están pedientes: <br/>" + documentosPendientesTemplate + "<br/> Asegúrate de subir todos los documentos marcados como obligatorios y/o marcar como NO o N/A a los que correspondan para poder continuar.");
+                return false;
+            }
+
+            var tblDocumentos_Expediente = $("#tblDocumentos_Expediente tbody").empty();
+            let templateCheckListDocumento = '';
+
+            for (var i = 0; i < expedienteDocumentosCheckList.length; i++) {
+
+                templateCheckListDocumento += '<tr>' +
+                    '<td class="mt-0 mb-0 pt-0 pb-0">' + expedienteDocumentosCheckList[i].DescripcionNombreDocumento + '</td>' +
+                    '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (expedienteDocumentosCheckList[i].IdEstadoDocumento == '1' ? 'X' : '') + '</td>' +
+                    '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (expedienteDocumentosCheckList[i].IdEstadoDocumento == '2' ? 'X' : '') + '</td>' +
+                    '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (expedienteDocumentosCheckList[i].IdEstadoDocumento == '3' ? 'X' : '') + '</td>' +
+                    '</tr>';
+            }
+
+            tblDocumentos_Expediente.append(templateCheckListDocumento);
+
+            var tblTipoDeSolicitud_Expediente = $("#tblTipoDeSolicitud_Expediente tbody").empty();
+            let templateCheckListTiposDeSolicitud = '';
+
+            for (var i = 0; i < expedienteTipoSolicitudCheckList.length; i++) {
+
+                templateCheckListTiposDeSolicitud += '<tr>' +
+                    '<td>' + expedienteTipoSolicitudCheckList[i].TipoDeSolicitud + '</td>' +
+                    '<td class="text-center">(' + expedienteTipoSolicitudCheckList[i].Marcado + ')</td>' +
+                    '</tr>';
+            }
+
+            tblTipoDeSolicitud_Expediente.append(templateCheckListTiposDeSolicitud);
+
+            ExportToPDF('Expediente', 'divContenedorExpediente', 'divExpedientePDF');
+        },
+        complete: function () {
+            OcultarLoader();
+            $("#btnGenerarCheckList").prop('disabled', false);
+        }
+    });
+});
+
+function ValidarEstadoDeDocumentosExpediente(listaDocumentosExpediente) {
+
+    for (var i = 0; i < listaDocumentosExpediente.length; i++) {
+        if (listaDocumentosExpediente[i].IdEstadoDocumento == 0)
+            return false;
+    }
+    return true;
+}
+
+/***********************************************************************************************/
+/************************************ GENERACIÓN DE CÓDIGO QR **********************************/
+/***********************************************************************************************/
+function InicializarCodigosQR() {
+
+    GenerarCodigoQR('qr_Expediente');
+    //GenerarCodigoQR('qr_Memorandum');
+};
+
+function GenerarCodigoQR(idElemento) {
+
+    let qrcode = new QRCode(document.getElementById('' + idElemento + ''), {
+        width: 85,
+        height: 85
+    });
+
+    qrcode.makeCode(URL_CODIGO_QR);
+}
+
+/***********************************************************************************************/
+/************************************ Exportar a PDF *******************************************/
+/***********************************************************************************************/
+function ExportToPDF(nombreDelArchivo, idDivContenedor, idDivPDF) {
+
+    $("#Loader").css('display', '');
+
+    var opt = {
+        margin: [0.3, 0.3, 0.3, 0.3], //top, left, buttom, right,
+        filename: 'EXPEDIENTE_' + ID_EXPEDIENTE + '_' + nombreDelArchivo + '.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: {
+            dpi: 192,
+            scale: 4,
+            letterRendering: true,
+            useCORS: false
+        },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+        pagebreak: { after: '.page-break', always: 'img' }
+    };
+
+    $("#" + idDivContenedor + ",#" + idDivPDF + "").css('display', '');
+    $("body,html").css("overflow", "hidden");
+
+    html2pdf().from(this.document.getElementById(idDivPDF)).set(opt).save().then(function () {
+        $("#" + idDivContenedor + ",#" + idDivPDF + "").css('display', 'none');
+        $("body,html").css("overflow", "");
+
+        $("#Loader").css('display', 'none');
+    });
+}
 
 /***********************************************************************************************/
 /************************************ FUNCIONES UTILITARIAS ************************************/

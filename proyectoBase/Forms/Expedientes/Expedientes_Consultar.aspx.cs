@@ -18,6 +18,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
     public string pcIDUsuario = "";
     public string pcIDExpediente = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public string UrlCodigoQR { get; set; }
 
     #region Page_Load, CargarInformacionDelExpediente, CargarGruposDeArchivos
 
@@ -43,6 +44,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
                     pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
+                    UrlCodigoQR = "http://190.92.0.76/OPS/CFRM.aspx?" + DSC.Encriptar("E=" + pcIDExpediente);
 
                     CargarInformacionDelExpediente();
                     CargarGruposDeArchivos();
@@ -156,8 +158,8 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                             lblDirecciónTrabajo_Expediente.InnerText = sqlResultado["fcDireccionDetalladaEmpresa"].ToString();
                             lblOficialNegocios_Expediente.InnerText = sqlResultado["fcNombreUsuarioAsignado"].ToString();
                             lblGestor_Expediente.InnerText = sqlResultado["fcNombreGestor"].ToString();
-                            lblRazonSocial.Text = sqlResultado["fcRazonSocial"].ToString();
-                            lblNombreComercial.Text = sqlResultado["fcNombreComercial"].ToString();
+                            lblRazonSocial.Text = sqlResultado["fcRazonSocial"].ToString().ToUpper();
+                            lblNombreComercial.Text = sqlResultado["fcNombreComercial"].ToString().ToUpper();
                             var usuarioLogueado = ObtenerInformacionUsuarioPorIdUsuario(pcIDApp, pcIDUsuario, pcIDSesion);
                             lblNombreFirmaEntrega_Expediente.InnerText = usuarioLogueado.NombreCorto;
                             lblEspecifiqueOtros_Expediente.Text = sqlResultado["fcComentarios"].ToString();
@@ -498,7 +500,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
     #region Obtener información del checklist
 
     [WebMethod]
-    public static CheckList_ViewModel ObtenerInformacionCheckListPorIdExpediente(int idExpediente, string dataCrypt)
+    public static CheckList_ViewModel ObtenerInformacionCheckListPorIdExpediente(string dataCrypt)
     {
         var checkList = new CheckList_ViewModel();
         try
@@ -513,11 +515,10 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_Expedientes_Documentos_ObtenerPorGrupoDeArchivo", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_Expedientes_ObtenerCheckListPorIdExpediente", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDExpediente", pcIDExpediente);
-                    sqlComando.Parameters.AddWithValue("@piIDGrupoDeArchivo", idExpediente);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -529,11 +530,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                         {
                             checkList.Documentos.Add(new Expediente_Documento_ViewModel()
                             {
-                                IdExpedienteDocumento = (int)sqlResultado["fiIDExpedienteDocumento"],
-                                IdDocumento = (int)sqlResultado["fiIDDocumento"],
-                                IdExpediente = (int)sqlResultado["fiIDExpediente"],
                                 DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
-                                DescripcionDetalladaDelDocumento = sqlResultado["fcDescripcionDetallada"].ToString(),
                                 IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
                             });
                         }
@@ -544,13 +541,11 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                         {
                             checkList.TiposDeSolicitud.Add(new TipoDeSolicitud_ViewModel()
                             {
-                                //IdExpedienteDocumento = (int)sqlResultado["fiIDExpedienteDocumento"],
-                                //IdDocumento = (int)sqlResultado["fiIDDocumento"],
-                                //IdExpediente = (int)sqlResultado["fiIDExpediente"],
-                                //DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
+                                IdTipoDeSolicitud = (byte)sqlResultado["fiIDTipoSolicitud"],
+                                TipoDeSolicitud = sqlResultado["fcTipoSolicitud"].ToString(),
+                                Marcado = sqlResultado["fcMarcado"].ToString(),
                             });
                         }
-
                     } // using sqlResultado
                 } // using sqlComando
             } // using sqlConexion
@@ -612,7 +607,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
                     documentosAdjuntados.ForEach(item =>
                     {
-    /* si el archivo existe, que se agregue a la lista de los documentos que se van a guardar */
+                        /* si el archivo existe, que se agregue a la lista de los documentos que se van a guardar */
                         if (File.Exists(item.fcRutaArchivo + "\\" + item.NombreAntiguo))
                         {
                             nuevoNombreDocumento = GenerarNombre(pcIDExpediente, item.fiTipoDocumento.ToString());

@@ -373,24 +373,6 @@ public partial class Expedientes_Consultar
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblGestor_Expediente;
 
     /// <summary>
-    /// Control tblDocumentos_Expediente.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Table tblDocumentos_Expediente;
-
-    /// <summary>
-    /// Control tblTipoDeSolicitud_Expediente.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Table tblTipoDeSolicitud_Expediente;
-
-    /// <summary>
     /// Control lblEspecifiqueOtros_Expediente.
     /// </summary>
     /// <remarks>
