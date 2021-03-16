@@ -544,7 +544,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                     {
                         foreach (var item in documentosAGuardarEnBBDD)
                         {
-                            using (var sqlComando = new SqlCommand(guardarDocumentoSP, sqlConexion, sqlTransaction))
+                            using (var sqlComando = new SqlCommand("guardarDocumentoSP", sqlConexion, sqlTransaction))
                             {
                                 sqlComando.CommandType = CommandType.StoredProcedure;
                                 sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);

@@ -193,7 +193,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                             if (sqlResultado["fdTiempoTomaDecisionFinal"] == DBNull.Value)
                             {
-                                MostrarMensaje("No puede imprimir los documentos de esta solicitud antes de que esta sea aprobada");
+                                MostrarMensaje("No puede imprimir los documentos de esta solicitud antes de que esta sea aprobada.");
                             }
 
                             var fechaOtorgamiento = (DateTime)sqlResultado["fdTiempoTomaDecisionFinal"];
@@ -671,7 +671,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                 mensajeExtra = ". Esta opción está disponible a partir de la solicitud de crédito No. 802.";
 
             MostrarMensaje("Error al cargar información de la solicitud " + pcIDSolicitud + ": " + ex.Message.ToString() + mensajeExtra);
-            divContenedorInspeccionSeguro.Visible = false;
+            divInspeccionSeguroPDF.Visible = false;
+            divPortadaExpedientePDF.Visible = false;
         }
     }
 
@@ -1296,7 +1297,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     {
         PanelMensajeErrores.Visible = true;
         lblMensaje.Visible = true;
-        lblMensaje.Text = mensaje;
+        lblMensaje.Text += mensaje + " ";
     }
 
     public static InformacionUsuario_ViewModel ObtenerInformacionUsuarioLogueado(string pcIDApp, string pcIDUsuario, string pcIDSesion)
