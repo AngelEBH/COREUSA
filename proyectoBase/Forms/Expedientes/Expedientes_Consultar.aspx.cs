@@ -60,13 +60,13 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                 var uploadDir = @"C:\inetpub\wwwroot\Documentos\Expedientes\Temp\";
 
                 var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-                    { "limit", 1 },
-                    { "title", "auto" },
-                    { "uploadDir", uploadDir },
-                    { "extensions", new string[] { "jpg", "png", "jpeg"} },
-                    { "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
-                    { "fileMaxSize", 20 }, /* Peso máximo por archivo */
-                });
+{ "limit", 1 },
+{ "title", "auto" },
+{ "uploadDir", uploadDir },
+{ "extensions", new string[] { "jpg", "png", "jpeg"} },
+{ "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
+{ "fileMaxSize", 20 }, /* Peso máximo por archivo */
+});
 
                 switch (type)
                 {
@@ -140,6 +140,35 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
                             if ((byte)sqlResultado["fiActivo"] == 0)
                                 lblExpedienteInactivo.Visible = true;
+
+                            /* Informacion del PDF del checklist */
+                            lblNoSolicitudCredito_Expediente.InnerText = sqlResultado["fiIDSolicitud"].ToString();
+                            lblNoSolicitud_Expediente.InnerText = sqlResultado["fiIDSolicitud"].ToString();
+                            lblFechaActual_Expediente.InnerText = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt");
+                            lblNombreCliente_Expediente.InnerText = sqlResultado["fcNombreCliente"].ToString();
+                            lblIdentidadCliente_Expediente.InnerText = sqlResultado["fcIdentidadCliente"].ToString();
+                            lblDepartamento_Expediente.InnerText = sqlResultado["fcDepartamento"].ToString();
+                            lblDireccionCliente_Expediente.InnerText = sqlResultado["fcDireccionCliente"].ToString();
+                            lblTelefonoCliente_Expediente.InnerText = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
+                            lblTipoDeTrabajo_Expediente.InnerText = sqlResultado["fcNombreTrabajo"].ToString();
+                            lblPuestoAsignado_Expediente.InnerText = sqlResultado["fcPuestoAsignado"].ToString();
+                            lblTelefonoTrabajo_Expediente.InnerText = sqlResultado["fcTelefonoEmpresa"].ToString();
+                            lblDirecciónTrabajo_Expediente.InnerText = sqlResultado["fcDireccionDetalladaEmpresa"].ToString();
+                            lblOficialNegocios_Expediente.InnerText = sqlResultado["fcNombreUsuarioAsignado"].ToString();
+                            lblGestor_Expediente.InnerText = sqlResultado["fcNombreGestor"].ToString();
+                            lblRazonSocial.Text = sqlResultado["fcRazonSocial"].ToString();
+                            lblNombreComercial.Text = sqlResultado["fcNombreComercial"].ToString();
+                            var usuarioLogueado = ObtenerInformacionUsuarioPorIdUsuario(pcIDApp, pcIDUsuario, pcIDSesion);
+                            lblNombreFirmaEntrega_Expediente.InnerText = usuarioLogueado.NombreCorto;
+                            lblEspecifiqueOtros_Expediente.Text = sqlResultado["fcComentarios"].ToString();
+
+                            lblFechaOtorgamiento_Expediente.InnerText = ((DateTime)sqlResultado["fdTiempoTomaDecisionFinal"]).ToString("dd/MM/yyyy");
+                            lblCantidadCuotas_Expediente.InnerText = sqlResultado["fiPlazo"] + " Cuotas";
+                            lblMontoOtorgado_Expediente.InnerText = DecimalToString(decimal.Parse(sqlResultado["fnValorTotalFinanciamiento"].ToString()));
+                            lblValorCuota_Expediente.InnerText = DecimalToString(decimal.Parse(sqlResultado["fnCuotaTotal"].ToString()));
+                            lblFechaPrimerPago_Expediente.InnerText = ((DateTime)sqlResultado["fdFechaPrimerCuota"]).ToString("dd/MM/yyyy");
+                            lblFrecuenciaPlazo_Expediente.InnerText = sqlResultado["fcTipoPlazoSufijoAl"].ToString();
+                            lblFechaVencimiento_Expediente.InnerText = "";
                         }
                     } // using sqlComando
                 } // using sqlComando
@@ -466,6 +495,76 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
     #endregion
 
+    #region Obtener información del checklist
+
+    [WebMethod]
+    public static CheckList_ViewModel ObtenerInformacionCheckListPorIdExpediente(int idExpediente, string dataCrypt)
+    {
+        var checkList = new CheckList_ViewModel();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_Expedientes_Documentos_ObtenerPorGrupoDeArchivo", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDExpediente", pcIDExpediente);
+                    sqlComando.Parameters.AddWithValue("@piIDGrupoDeArchivo", idExpediente);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            checkList.Documentos.Add(new Expediente_Documento_ViewModel()
+                            {
+                                IdExpedienteDocumento = (int)sqlResultado["fiIDExpedienteDocumento"],
+                                IdDocumento = (int)sqlResultado["fiIDDocumento"],
+                                IdExpediente = (int)sqlResultado["fiIDExpediente"],
+                                DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
+                                DescripcionDetalladaDelDocumento = sqlResultado["fcDescripcionDetallada"].ToString(),
+                                IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
+                            });
+                        }
+
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            checkList.TiposDeSolicitud.Add(new TipoDeSolicitud_ViewModel()
+                            {
+                                //IdExpedienteDocumento = (int)sqlResultado["fiIDExpedienteDocumento"],
+                                //IdDocumento = (int)sqlResultado["fiIDDocumento"],
+                                //IdExpediente = (int)sqlResultado["fiIDExpediente"],
+                                //DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
+                            });
+                        }
+
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            checkList = null;
+        }
+        return checkList;
+    }
+
+    #endregion
+
     #region Guardar Documentos
 
     [WebMethod]
@@ -513,7 +612,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
                     documentosAdjuntados.ForEach(item =>
                     {
-                        /* si el archivo existe, que se agregue a la lista de los documentos que se van a guardar */
+    /* si el archivo existe, que se agregue a la lista de los documentos que se van a guardar */
                         if (File.Exists(item.fcRutaArchivo + "\\" + item.NombreAntiguo))
                         {
                             nuevoNombreDocumento = GenerarNombre(pcIDExpediente, item.fiTipoDocumento.ToString());
@@ -524,14 +623,20 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                                 NombreAntiguo = item.NombreAntiguo,
                                 fcTipoArchivo = item.fcTipoArchivo,
                                 fcRutaArchivo = item.fcRutaArchivo.Replace("Temp", "") + nombreCarpetaDestino,
-                                URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDestino + "/" + nuevoNombreDocumento + ".png",
+                                URLArchivo = "/Documentos/Expedientes/" + nombreCarpetaDestino + "/" + nuevoNombreDocumento + ".png",
                                 fiTipoDocumento = item.fiTipoDocumento
                             });
                         }
                     }); // foreach documentos adjunstados
                 } // if documentosAdjuntados != null
             } // if HttpContext.Current.Session["ListaDeDocumentosAGuardarPorTipoDocumento"] != null
-
+            else
+            {
+                resultadoProceso.ResultadoExitoso = false;
+                resultadoProceso.MensajeResultado = "No se ha adjuntado ningún documento. Asegúrate de que hayas adjuntado al menos un documento o vuelve a subirlos.";
+                resultadoProceso.MensajeDebug = "lista de documentos null";
+                return resultadoProceso;
+            }
 
             if (documentosAGuardarEnBBDD.Count > 0)
             {
@@ -544,9 +649,17 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                     {
                         foreach (var item in documentosAGuardarEnBBDD)
                         {
-                            using (var sqlComando = new SqlCommand("guardarDocumentoSP", sqlConexion, sqlTransaction))
+                            using (var sqlComando = new SqlCommand("sp_Expedientes_Documentos_Guardar", sqlConexion, sqlTransaction))
                             {
                                 sqlComando.CommandType = CommandType.StoredProcedure;
+                                sqlComando.Parameters.AddWithValue("@piIDExpediente", pcIDExpediente);
+                                sqlComando.Parameters.AddWithValue("@piIDDocumento", item.fiTipoDocumento);
+                                sqlComando.Parameters.AddWithValue("@piIDEstadoDocumento", 1);
+                                sqlComando.Parameters.AddWithValue("@pcNombreArchivo", item.fcNombreArchivo);
+                                sqlComando.Parameters.AddWithValue("@pcExtension", ".png");
+                                sqlComando.Parameters.AddWithValue("@pcRutaArchivo", item.fcRutaArchivo);
+                                sqlComando.Parameters.AddWithValue("@pcURL", item.URLArchivo);
+                                sqlComando.Parameters.AddWithValue("@pcComentarios", "");
                                 sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                                 sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                                 sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -582,6 +695,12 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                         }
 
                         sqlTransaction.Commit();
+
+                        resultadoProceso.ResultadoExitoso = true;
+                        resultadoProceso.MensajeResultado = "¡Los documentos se guardaron existosamente!";
+                        resultadoProceso.MensajeDebug = "Todo ok";
+
+                        HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                         HttpContext.Current.Session["ListaDeDocumentosAGuardarPorTipoDocumento"] = null;
                     } // using sqlTransaction
                 } // using sqlConexion
@@ -641,6 +760,43 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         return ("EXP" + idLlavePrimaria + "D" + idTipoDocumento + "_" + Guid.NewGuid()).Replace("*", "").Replace("/", "").Replace("\\", "").Replace(":", "").Replace("?", "").Replace("<", "").Replace(">", "").Replace("|", "");
     }
 
+    public static InformacionUsuario_ViewModel ObtenerInformacionUsuarioPorIdUsuario(string pcIDApp, string pcIDUsuario, string pcIDSesion)
+    {
+        var usuarioLogueado = new InformacionUsuario_ViewModel();
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreSeguridad.dbo.sp_InformacionUsuario", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            usuarioLogueado.NombreCorto = sqlResultado["fcNombreCorto"].ToString();
+                            usuarioLogueado.CentroDeCosto = sqlResultado["fcCentroDeCosto"].ToString();
+                            usuarioLogueado.NombreAgencia = sqlResultado["fcNombreAgencia"].ToString();
+                            usuarioLogueado.BuzonDeCorreo = sqlResultado["fcBuzondeCorreo"].ToString();
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            usuarioLogueado = null;
+        }
+        return usuarioLogueado;
+    }
+
     public static Uri DesencriptarURL(string URL)
     {
         Uri lURLDesencriptado = null;
@@ -663,6 +819,11 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         return lURLDesencriptado;
     }
 
+    public static string DecimalToString(decimal valor)
+    {
+        return string.Format("{0:#,###0.00##}", valor);
+    }
+
     #endregion
 
     #region View Models
@@ -675,10 +836,31 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         public string MensajeDebug { get; set; }
     }
 
+    public class InformacionUsuario_ViewModel
+    {
+        public int IdUsuario { get; set; }
+        public string NombreCorto { get; set; }
+        public string CentroDeCosto { get; set; }
+        public string NombreAgencia { get; set; }
+        public string BuzonDeCorreo { get; set; }
+    }
+
     public class GrupoDeArchivos_Documento_ViewModel : Expediente_Documento_ViewModel
     {
         public int IdGrupoDeArchivosDocumento { get; set; } // Llave primaria relacion GruposDeArchivos - Documentos
         public int IdGrupoDeArchivos { get; set; } // Llave foranea Grupo de archivos
+    }
+
+    public class CheckList_ViewModel
+    {
+        public List<Expediente_Documento_ViewModel> Documentos { get; set; }
+        public List<TipoDeSolicitud_ViewModel> TiposDeSolicitud { get; set; }
+
+        public CheckList_ViewModel()
+        {
+            Documentos = new List<Expediente_Documento_ViewModel>();
+            TiposDeSolicitud = new List<TipoDeSolicitud_ViewModel>();
+        }
     }
 
     public class Expediente_Documento_ViewModel : Documento
@@ -686,6 +868,13 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         public int IdExpedienteDocumento { get; set; } // Llave primaria relación Expedientes - Catalogo Documentos
         public int IdExpediente { get; set; } // Llave foranea Expedientes Maestro
         public int IdDocumento { get; set; } // Llave foranea Catalogo de documentos
+    }
+
+    public class TipoDeSolicitud_ViewModel
+    {
+        public int IdTipoDeSolicitud { get; set; }
+        public string TipoDeSolicitud { get; set; }
+        public string Marcado { get; set; }
     }
 
     public abstract class Documento

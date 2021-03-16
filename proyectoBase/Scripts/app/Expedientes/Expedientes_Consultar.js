@@ -339,7 +339,7 @@ $("#btnAgrearNuevoTipoDocumento").click(function () {
     if (idTipoDeDocumento == 0) {
         return false;
     }
-    
+
     $("#divFormularioDocumentos").empty();
     $("#lblTituloTipoDocumento").text(nombreTipoDeDocumento);
     $("#lblDescripcionTipoDocumento").text(descripcionTipoDeDocumento);
@@ -350,8 +350,8 @@ $("#btnAgrearNuevoTipoDocumento").click(function () {
 
     $.ajax({
         type: "POST",
-        url: "Expedientes_Consultar.aspx/ReiniciarListaDocumentosAdjuntados",
-        data: JSON.stringify({ reiniciarListaDocumentosAdjuntados: true }),
+        url: "Expedientes_Consultar.aspx/ReiniciarListaDeDocumentosAGuardarPorTipoDocumento",
+        data: JSON.stringify({ reiniciarListaDeDocumentosAGuardarPorTipoDocumento: true }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Ocurrió un error al cargar la información del documento seleccionado, contacte al administrador.');
@@ -480,6 +480,36 @@ $("#btnAgrearNuevoTipoDocumento").click(function () {
             $("#modalGuardarDocumentos").modal({ backdrop: 'static' });
         }
     }); /* Termina Ajax */
+});
+
+$("#btnGuardarDocumentos_Confirmar").click(function () {
+
+    $("#btnGuardarDocumentos_Confirmar").prop('disabled', true);
+
+    $.ajax({
+        type: "POST",
+        url: "Expedientes_Consultar.aspx/GuardarDocumentos",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo guardar los documentos, contacte al administrador.');
+        },
+        success: function (data) {
+
+            data.d.ResultadoExitoso == true ? MensajeExito(data.d.MensajeResultado) : MensajeError(data.d.MensajeResultado);
+
+            console.log(data.d.MensajeDebug);
+
+            CargarDocumentosDelExpediente();
+            CargarDocumentosGuardadosPorTipoDeDocumento(idTipoDeDocumento, nombreTipoDeDocumento, descripcionTipoDeDocumento, EstadoNoAdjuntado, EstadoNoAplica, cantidadMinimaDocumentos, cantidadMaximaDocumentos, cantidadDocumentosGuardados, documentoObligatorio);
+
+            $("#modalGuardarDocumentos").modal('hide');
+        },
+        complete: function () {
+            $("#btnGuardarDocumentos_Confirmar").prop('disabled', false);
+        }
+    });
+
 });
 
 /***********************************************************************************************/
