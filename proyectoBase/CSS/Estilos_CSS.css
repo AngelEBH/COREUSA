@@ -146,3 +146,37 @@ body {
 .cursor-zoom-in {
     cursor: zoom-in;
 }
+
+.FormatoBotonesIconoCuadrado40 {
+    position: absolute;
+    background-color: white;
+    border-style: solid;
+    /*color: white;*/
+    /*padding: 5px 5px;*/
+    border-color: lightgray;
+    border-width: 1px;
+    margin: 0;
+    white-space: normal !important;
+    vertical-align: text-top;
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 55px;
+    padding-bottom: 5px;
+    height: 95px;
+    width: 80px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: 10px;
+    background-position-x: center;
+    display: inline-block;
+    text-wrap: normal;
+    color: #808080;
+}
+
+    .FormatoBotonesIconoCuadrado40:hover {
+        background-color: #b3ecff;
+        color: black;
+        /*color: white;*/
+    }

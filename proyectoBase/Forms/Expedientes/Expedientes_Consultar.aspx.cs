@@ -57,7 +57,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
             if (type != null || Request.HttpMethod == "POST")
             {
                 Session["tipoDoc"] = Convert.ToInt32(Request.QueryString["IdTipoDocumento"]);
-                var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
+                var uploadDir = @"C:\inetpub\wwwroot\Documentos\Expedientes\Temp\";
 
                 var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
                     { "limit", 1 },
@@ -82,7 +82,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                         var list = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaSolicitudesDocumentos"];
 
                         /* Guardar listado de documentos en una session propia de esta pantalla */
-                        Session["ListaDocumentosParaAsegurar"] = list;
+                        Session["ListaDeDocumentosAGuardarPorTipoDocumento"] = list;
                         break;
 
                     case "remove":
@@ -418,9 +418,9 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static ResultadoProceso_ViewModel CambiarEstadoDocumentosPorIdDocumento(int idTipoDeDocumento, int idEstadoDocumento, string dataCrypt)
+    public static Resultado_ViewModel CambiarEstadoDocumentosPorIdDocumento(int idTipoDeDocumento, int idEstadoDocumento, string dataCrypt)
     {
-        var resultado = new ResultadoProceso_ViewModel();
+        var resultado = new Resultado_ViewModel();
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
@@ -466,7 +466,180 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
     #endregion
 
+    #region Guardar Documentos
+
+    [WebMethod]
+    public static bool ReiniciarListaDeDocumentosAGuardarPorTipoDocumento(bool reiniciarListaDeDocumentosAGuardarPorTipoDocumento)
+    {
+        try
+        {
+            if (reiniciarListaDeDocumentosAGuardarPorTipoDocumento)
+            {
+                HttpContext.Current.Session["ListaDeDocumentosAGuardarPorTipoDocumento"] = null;
+                HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            return false;
+        }
+    }
+
+    [WebMethod]
+    public static Resultado_ViewModel GuardarDocumentos(string dataCrypt)
+    {
+        var resultadoProceso = new Resultado_ViewModel() { ResultadoExitoso = false };
+        try
+        {
+            var urlDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr");
+            var pcIDExpediente = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("idExpediente");
+            var documentosAGuardarEnBBDD = new List<SolicitudesDocumentosViewModel>();
+
+            /* Validar si se adjuntaron Documentos. Si se adjuntaron, guardarlos en la base de datos y moverlos al nuevo directorio respectivo */
+            if (HttpContext.Current.Session["ListaDeDocumentosAGuardarPorTipoDocumento"] != null)
+            {
+                var documentosAdjuntados = (List<SolicitudesDocumentosViewModel>)HttpContext.Current.Session["ListaDeDocumentosAGuardarPorTipoDocumento"];
+
+                if (documentosAdjuntados != null)
+                {
+                    var nombreCarpetaDestino = "Expediente" + pcIDExpediente;
+                    var nuevoNombreDocumento = string.Empty;
+
+                    documentosAdjuntados.ForEach(item =>
+                    {
+                        /* si el archivo existe, que se agregue a la lista de los documentos que se van a guardar */
+                        if (File.Exists(item.fcRutaArchivo + "\\" + item.NombreAntiguo))
+                        {
+                            nuevoNombreDocumento = GenerarNombre(pcIDExpediente, item.fiTipoDocumento.ToString());
+
+                            documentosAGuardarEnBBDD.Add(new SolicitudesDocumentosViewModel()
+                            {
+                                fcNombreArchivo = nuevoNombreDocumento,
+                                NombreAntiguo = item.NombreAntiguo,
+                                fcTipoArchivo = item.fcTipoArchivo,
+                                fcRutaArchivo = item.fcRutaArchivo.Replace("Temp", "") + nombreCarpetaDestino,
+                                URLArchivo = "/Documentos/Solicitudes/" + nombreCarpetaDestino + "/" + nuevoNombreDocumento + ".png",
+                                fiTipoDocumento = item.fiTipoDocumento
+                            });
+                        }
+                    }); // foreach documentos adjunstados
+                } // if documentosAdjuntados != null
+            } // if HttpContext.Current.Session["ListaDeDocumentosAGuardarPorTipoDocumento"] != null
+
+
+            if (documentosAGuardarEnBBDD.Count > 0)
+            {
+                /* Si se adjuntaron documentos para asegurar, guardarlos en la base de datos */
+                using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+                {
+                    sqlConexion.Open();
+
+                    using (SqlTransaction sqlTransaction = sqlConexion.BeginTransaction())
+                    {
+                        foreach (var item in documentosAGuardarEnBBDD)
+                        {
+                            using (var sqlComando = new SqlCommand(guardarDocumentoSP, sqlConexion, sqlTransaction))
+                            {
+                                sqlComando.CommandType = CommandType.StoredProcedure;
+                                sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                                sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                                sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                                sqlComando.CommandTimeout = 120;
+
+                                using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                                {
+                                    while (sqlResultado.Read())
+                                    {
+                                        if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                                        {
+                                            resultadoProceso.ResultadoExitoso = false;
+                                            resultadoProceso.MensajeResultado = "Ocurrió un error al registrar el documento" + item.fcNombreArchivo + "., contacte al administrador.";
+                                            resultadoProceso.MensajeDebug = sqlResultado["MensajeError"].ToString();
+                                            sqlTransaction.Rollback();
+                                            return resultadoProceso;
+                                        }
+                                    }
+                                } // using sqlResultado
+                            } // using sqlComando
+                        } // ForEach documentos que se van a guardar en BBDD
+
+
+                        /* Mover al directorio de la solicitud los documentos para asegurar adjuntados por el usuario que se guardaron en la base de datos */
+                        if (!MoverDocumentos(pcIDExpediente, documentosAGuardarEnBBDD))
+                        {
+                            resultadoProceso.ResultadoExitoso = false;
+                            resultadoProceso.MensajeResultado = "Ocurrió un error al guadar los documentos para asegurar, contacte al administrador.";
+                            resultadoProceso.MensajeDebug = "Error al mover los documentos al nuevo directorio";
+                            sqlTransaction.Rollback();
+
+                            return resultadoProceso;
+                        }
+
+                        sqlTransaction.Commit();
+                        HttpContext.Current.Session["ListaDeDocumentosAGuardarPorTipoDocumento"] = null;
+                    } // using sqlTransaction
+                } // using sqlConexion
+            }
+        }
+        catch (Exception ex)
+        {
+            resultadoProceso.ResultadoExitoso = false;
+            resultadoProceso.MensajeResultado = "Ocurrió un error al enviar la información, contacte al administrador.";
+            resultadoProceso.MensajeDebug = ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
+
+    #endregion
+
     #region Metodos Utilitarios
+
+    public static bool MoverDocumentos(string idLlavePrimaria, List<SolicitudesDocumentosViewModel> listaDocumentos)
+    {
+        bool resultado;
+        try
+        {
+            if (listaDocumentos != null)
+            {
+                /* Definir el nuevo directorio al que se van a mover los documentos */
+                var directorioTemporal = @"C:\inetpub\wwwroot\Documentos\Expedientes\Temp\";
+                var nombreCarpetaDocumentos = "Expediente" + idLlavePrimaria;
+                var directorioDestino = @"C:\inetpub\wwwroot\Documentos\Expedientes\" + nombreCarpetaDocumentos + "\\";
+
+                if (!Directory.Exists(directorioDestino))
+                    Directory.CreateDirectory(directorioDestino);
+
+                foreach (SolicitudesDocumentosViewModel documento in listaDocumentos)
+                {
+                    string viejoDirectorio = directorioTemporal + documento.NombreAntiguo;
+                    string nuevoNombreDocumento = documento.fcNombreArchivo;
+                    string nuevoDirectorio = directorioDestino + nuevoNombreDocumento + ".png";
+
+                    if (File.Exists(viejoDirectorio))
+                        File.Move(viejoDirectorio, nuevoDirectorio);
+                }
+            }
+            HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
+            resultado = true;
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    private static string GenerarNombre(string idLlavePrimaria, string idTipoDocumento)
+    {
+        return ("EXP" + idLlavePrimaria + "D" + idTipoDocumento + "_" + Guid.NewGuid()).Replace("*", "").Replace("/", "").Replace("\\", "").Replace(":", "").Replace("?", "").Replace("<", "").Replace(">", "").Replace("|", "");
+    }
 
     public static Uri DesencriptarURL(string URL)
     {
@@ -494,10 +667,12 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
     #region View Models
 
-    public class ResultadoProceso_ViewModel
+    public class Resultado_ViewModel
     {
+        public int IdInsertado { get; set; }
         public bool ResultadoExitoso { get; set; }
         public string MensajeResultado { get; set; }
+        public string MensajeDebug { get; set; }
     }
 
     public class GrupoDeArchivos_Documento_ViewModel : Expediente_Documento_ViewModel
@@ -541,5 +716,6 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         public bool NoAdjuntado { get; set; }
         public bool NoAplica { get; set; }
     }
+
     #endregion
 }

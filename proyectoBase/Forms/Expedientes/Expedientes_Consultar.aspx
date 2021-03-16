@@ -21,7 +21,6 @@
     <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
     <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
-    <link href="/CSS/Estilos.css" rel="stylesheet" />
     <style>
         h6 {
             font-size: 1rem;
@@ -52,7 +51,6 @@
                         <asp:Label runat="server" ID="lblEstadoExpediente"></asp:Label>
                     </div>
                 </div>
-
             </div>
             <div class="card-body">
                 <div class="row mt-3 mb-0">
@@ -282,18 +280,35 @@
                     <div class="modal-header pb-2">
                         <div class="form-group row mb-0">
                             <div class="col-12">
-                                <h6 class="m-0" id="modalGuardarDocumentosLabel">Guardar Documentos</h6>
-                            </div>
-                            <div class="col-12">
-                                <label class="text-muted">Tipo de documento: <span class="font-weight-bold">Comprobante de ingresos</span></label>
+                                <h6 class="m-0" id="modalGuardarDocumentosLabel">Guardar Documentos
+
+                                    (<span id="lblTituloTipoDocumento" class="m-0 font-weight-bold text-muted">Solicitud de póliza de seguros</span>)
+                                </h6>
                             </div>
                         </div>
                     </div>
                     <div class="modal-body">
 
-                        <h6 class="font-weight-bold">Documentos pendientes</h6>
-
-                        <div class="mb-3" id="DivDocumentacionParaAsegurar"></div>
+                        <div class="row">
+                            <div class="col-12 text-muted font-12 mb-2">
+                                <span id="lblDocumentoObligatorio" class="text-danger">Documento obligatorio</span>
+                                / Mínimo:
+                            <span id="lblCantidadMinimaDocumentos">3</span>
+                                / Máximo:
+                            <span id="lblCantidadMaximaDocumentos">3</span>
+                                / Guardados:
+                            <span id="lblCantidadDocumentosGuardados">0</span>
+                            </div>
+                            <div class="col-12">
+                                <div class="alert alert-info bg-info text-white pt-1 pb-1" role="alert">
+                                    <i class="fas fa-exclamation-circle text-white"></i><b>Descripción del documento:</b>
+                                    <span id="lblDescripcionTipoDocumento"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div id="divFormularioDocumentos"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="btnGuardarDocumentos_Confirmar" class="btn btn-primary">

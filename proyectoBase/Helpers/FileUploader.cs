@@ -397,43 +397,42 @@ namespace adminfiles
             }
         }
 
-        // guardar documentos de la solicitud en su respectiva carpeta de documentos
-        public static bool GuardarSolicitudDocumentos(int idSolicitud, List<SolicitudesDocumentosViewModel> ListaDocumentos)
+        /* Guardar documentos de la solicitud en su respectiva carpeta de documentos */
+        public static bool GuardarSolicitudDocumentos(int idSolicitud, List<SolicitudesDocumentosViewModel> listaDocumentos)
         {
-            bool result;
+            bool resultado;
             try
             {
-                if (ListaDocumentos != null)
+                if (listaDocumentos != null)
                 {
-                    /* CREAR EL NUEVO DIRECTORIO PARA LOS DOCUMENTOS DE LA SOLICITUD */
-                    string DirectorioTemporal = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
-                    string NombreCarpetaDocumentos = "Solicitud" + idSolicitud;
-                    string DirectorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + NombreCarpetaDocumentos + "\\";
-                    bool CarpetaExistente = System.IO.Directory.Exists(DirectorioDocumentosSolicitud);
+                    /* Definir el nuevo directorio al que se van a mover los documentos */
+                    var directorioTemporal = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
+                    var nombreCarpetaDocumentos = "Solicitud" + idSolicitud;
+                    var directorioDocumentosSolicitud = @"C:\inetpub\wwwroot\Documentos\Solicitudes\" + nombreCarpetaDocumentos + "\\";
+                    var carpetaExistente = Directory.Exists(directorioDocumentosSolicitud);
 
-                    if (!CarpetaExistente)
-                        System.IO.Directory.CreateDirectory(DirectorioDocumentosSolicitud);
+                    if (!carpetaExistente)
+                        Directory.CreateDirectory(directorioDocumentosSolicitud);
 
-                    foreach (SolicitudesDocumentosViewModel Documento in ListaDocumentos)
+                    foreach (SolicitudesDocumentosViewModel documento in listaDocumentos)
                     {
-                        string ViejoDirectorio = DirectorioTemporal + Documento.NombreAntiguo;
-                        string NuevoNombreDocumento = Documento.fcNombreArchivo;
-                        string NuevoDirectorio = DirectorioDocumentosSolicitud + NuevoNombreDocumento + ".png";
+                        string viejoDirectorio = directorioTemporal + documento.NombreAntiguo;
+                        string nuevoNombreDocumento = documento.fcNombreArchivo;
+                        string nuevoDirectorio = directorioDocumentosSolicitud + nuevoNombreDocumento + ".png";
 
-                        if (File.Exists(ViejoDirectorio))
-                            File.Move(ViejoDirectorio, NuevoDirectorio);
+                        if (File.Exists(viejoDirectorio))
+                            File.Move(viejoDirectorio, nuevoDirectorio);
                     }
                 }
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
-                result = true;
+                resultado = true;
             }
             catch (Exception ex)
             {
                 ex.Message.ToString();
-                result = false;
-                //ExceptionLogging.SendExcepToDB(ex);
+                resultado = false;
             }
-            return result;
+            return resultado;
         }
 
         private bool rename_file(string source, string destination)
