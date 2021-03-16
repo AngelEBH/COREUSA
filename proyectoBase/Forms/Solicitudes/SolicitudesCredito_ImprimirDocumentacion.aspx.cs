@@ -529,7 +529,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblIdentidadCliente_CorreoSeguro.Text = identidad;
 
                                     /* Nota de entrega */
-                                    lblVendedorGarantia_NotaEntrega.Text = nombreVendedorGarantia;
+                                    lblPropietarioGarantia_NotaEntrega.Text = nombrePropietarioGarantia;
                                     lblNombreCliente_NotaEntrega.Text = nombreCliente;
                                     lblValorAPrestarEnPalabras_NotaEntrega.Text = ConvertirCantidadALetras(valorParaCompraDeVehiculo.ToString());
                                     lblValorAPrestar_NotaEntrega.Text = monedaSimbolo + " " + DecimalToString(valorParaCompraDeVehiculo);
@@ -543,6 +543,12 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblColor_NotaEntrega.Text = color;
                                     lblCilindraje_NotaEntrega.Text = cilindraje;
                                     lblPlaca_NotaEntrega.Text = matricula;
+
+                                    var parrafoFinalProductoMotosNotaEntrega = ". Se le pide a la concesionaria entregar una COPIA de factura al cliente y retener una llave original para ser entregada a Prestadito.";
+                                    var parrafoFinalProductoAutoNotaEntrega = " al señor: " + nombreVendedorGarantia + " en un máximo de diez (10) días hábiles mismos que serán para inscribir dicho vehículo en el Instituto de la Propiedad Mercantil a favor de " + fondosPrestamo.NombreComercial + ", salvo que la documentación entregada no se encuentre completa y/o no pueda ser inscrito en el IP.";
+                                    var parraforFinalNotaEntrega = "En virtud de lo anterior se le emite esta <b>NOTA DE ENTREGA</b> y al mismo tiempo ratificamos nuestro compromiso de hacer el pago correspondiente en efectivo, en cheque o en transferencia";
+                                    parraforFinalNotaEntrega += idProducto == "201" ? parrafoFinalProductoMotosNotaEntrega : parrafoFinalProductoAutoNotaEntrega;
+                                    lblParrafoFinal_NotaEntrega.InnerHtml = parraforFinalNotaEntrega;
 
                                     /* Portada del expediente */
                                     lblNoSolicitud_PortadaExpediente.Text = "Solicitud de crédito #" + pcIDSolicitud;

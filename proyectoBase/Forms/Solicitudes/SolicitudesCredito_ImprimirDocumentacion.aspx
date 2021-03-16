@@ -1803,7 +1803,7 @@
                         <div class="col-12">
                             <p>
                                 Estimado (s)
-                                <asp:Label runat="server" CssClass="font-weight-bold" ID="lblVendedorGarantia_NotaEntrega"></asp:Label>,
+                                <asp:Label runat="server" CssClass="font-weight-bold" ID="lblPropietarioGarantia_NotaEntrega"></asp:Label>,
                                 por este medio hacemos de su conocimiento que el cliente
                                 <asp:Label runat="server" ID="lblNombreCliente_NotaEntrega"></asp:Label>,
                                 cuenta con un crédito aprobado con
@@ -1883,11 +1883,7 @@
                         </div>
 
                         <div class="col-12">
-                            <p>
-                                En virtud de lo anterior se le emite esta <b>NOTA DE ENTREGA</b> y al mismo tiempo ratificamos nuestro
-                                compromiso de hacer el pago correspondiente en efectivo o en Cheque.
-                                Se le pide a la concesionaria entregar una COPIA de factura al cliente y retener una llave original para ser entregada a Prestadito.
-                            </p>
+                            <p runat="server" id="lblParrafoFinal_NotaEntrega"></p>
                             <p>
                                 Y para los fines que estime conveniente, se le extiende la presente en la ciudad de
                                 <span class="lblCiudad_Firma"></span>,

@@ -1975,13 +1975,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divNotaDeEntregaPDF;
 
     /// <summary>
-    /// Control lblVendedorGarantia_NotaEntrega.
+    /// Control lblPropietarioGarantia_NotaEntrega.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblVendedorGarantia_NotaEntrega;
+    protected global::System.Web.UI.WebControls.Label lblPropietarioGarantia_NotaEntrega;
 
     /// <summary>
     /// Control lblNombreCliente_NotaEntrega.
@@ -2099,6 +2099,15 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblPlaca_NotaEntrega;
+
+    /// <summary>
+    /// Control lblParrafoFinal_NotaEntrega.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblParrafoFinal_NotaEntrega;
 
     /// <summary>
     /// Control divContenedorPortadaExpediente.
