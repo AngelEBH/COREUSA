@@ -7,6 +7,10 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Web;
 using System.Web.Services;
@@ -20,7 +24,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
     public string UrlCodigoQR { get; set; }
 
-    #region Page_Load, CargarInformacionDelExpediente, CargarGruposDeArchivos
+    #region Page_Load, CargarInformacionDelExpediente
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -182,6 +186,10 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         }
     }
 
+    #endregion
+
+    #region Grupos de archivos
+
     public void CargarGruposDeArchivos()
     {
         try
@@ -220,9 +228,64 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         }
     }
 
+    [WebMethod]
+    public static List<DocumentoDelExpediente_ViewModel> CargarDocumentosPorGrupoDeArchivos(int idGrupoDeArchivos, string dataCrypt)
+    {
+        var documentos = new List<DocumentoDelExpediente_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_Expedientes_Documentos_ObtenerPorGrupoDeArchivo", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDExpediente", pcIDExpediente);
+                    sqlComando.Parameters.AddWithValue("@piIDGrupoDeArchivo", idGrupoDeArchivos);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            documentos.Add(new DocumentoDelExpediente_ViewModel()
+                            {
+                                IdDocumento = (int)sqlResultado["fiIDDocumento"],
+                                DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
+                                DescripcionDetalladaDelDocumento = sqlResultado["fcDescripcionDetallada"].ToString(),
+                                Obligatorio = (bool)sqlResultado["fbObligatorio"],
+                                CantidadMinima = (int)sqlResultado["fiCantidadMinima"],
+                                CantidadMaxima = (int)sqlResultado["fiCantidadMaxima"],
+                                CantidadGuardados = (int)sqlResultado["fiDocumentosGuardados"],
+                                NoAdjuntado = (bool)sqlResultado["fbNoAdjuntado"],
+                                NoAplica = (bool)sqlResultado["fbNoAplica"]
+                            });
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            documentos = null;
+        }
+        return documentos;
+    }
+
     #endregion
 
-    #region CargarDocumentosDelExpediente, CargarDocumentosDelExpedientePorIdDocumento, CargarDocumentosPorGrupoDeArchivos, ElimiarDocumentoExpediente, CambiarEstadoDocumentosPorIdDocumento
+    #region Administrar documentos del expediente
 
     [WebMethod]
     public static List<DocumentoDelExpediente_ViewModel> CargarDocumentosDelExpediente(string dataCrypt)
@@ -344,61 +407,6 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<DocumentoDelExpediente_ViewModel> CargarDocumentosPorGrupoDeArchivos(int idGrupoDeArchivos, string dataCrypt)
-    {
-        var documentos = new List<DocumentoDelExpediente_ViewModel>();
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
-
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("sp_Expedientes_Documentos_ObtenerPorGrupoDeArchivo", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDExpediente", pcIDExpediente);
-                    sqlComando.Parameters.AddWithValue("@piIDGrupoDeArchivo", idGrupoDeArchivos);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            documentos.Add(new DocumentoDelExpediente_ViewModel()
-                            {
-                                IdDocumento = (int)sqlResultado["fiIDDocumento"],
-                                DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
-                                DescripcionDetalladaDelDocumento = sqlResultado["fcDescripcionDetallada"].ToString(),
-                                Obligatorio = (bool)sqlResultado["fbObligatorio"],
-                                CantidadMinima = (int)sqlResultado["fiCantidadMinima"],
-                                CantidadMaxima = (int)sqlResultado["fiCantidadMaxima"],
-                                CantidadGuardados = (int)sqlResultado["fiDocumentosGuardados"],
-                                NoAdjuntado = (bool)sqlResultado["fbNoAdjuntado"],
-                                NoAplica = (bool)sqlResultado["fbNoAplica"]
-                            });
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            documentos = null;
-        }
-        return documentos;
-    }
-
-    [WebMethod]
     public static bool ElimiarDocumentoExpediente(int idDocumentoExpediente, string dataCrypt)
     {
         var resultado = false;
@@ -490,73 +498,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         return resultado;
     }
 
-    #endregion
-
-    #region Obtener información del checklist
-
-    [WebMethod]
-    public static CheckList_ViewModel ObtenerInformacionCheckListPorIdExpediente(string dataCrypt)
-    {
-        var checkList = new CheckList_ViewModel();
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
-
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("sp_Expedientes_ObtenerCheckListPorIdExpediente", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDExpediente", pcIDExpediente);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            checkList.Documentos.Add(new Expediente_Documento_ViewModel()
-                            {
-                                DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
-                                IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
-                            });
-                        }
-
-                        sqlResultado.NextResult();
-
-                        while (sqlResultado.Read())
-                        {
-                            checkList.TiposDeSolicitud.Add(new TipoDeSolicitud_ViewModel()
-                            {
-                                IdTipoDeSolicitud = (byte)sqlResultado["fiIDTipoSolicitud"],
-                                TipoDeSolicitud = sqlResultado["fcTipoSolicitud"].ToString(),
-                                Marcado = sqlResultado["fcMarcado"].ToString(),
-                            });
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            checkList = null;
-        }
-        return checkList;
-    }
-
-    #endregion
-
-    #region Guardar Documentos
-
+    /* Guardar documentos */
     [WebMethod]
     public static bool ReiniciarListaDeDocumentosAGuardarPorTipoDocumento(bool reiniciarListaDeDocumentosAGuardarPorTipoDocumento)
     {
@@ -602,7 +544,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
                     documentosAdjuntados.ForEach(item =>
                     {
-                        /* si el archivo existe, que se agregue a la lista de los documentos que se van a guardar */
+    /* si el archivo existe, que se agregue a la lista de los documentos que se van a guardar */
                         if (File.Exists(item.fcRutaArchivo + "\\" + item.NombreAntiguo))
                         {
                             nuevoNombreDocumento = GenerarNombre(pcIDExpediente, item.fiTipoDocumento.ToString());
@@ -705,6 +647,178 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         return resultadoProceso;
     }
 
+    #endregion
+
+    #region CHECKLIST del expediente
+
+    [WebMethod]
+    public static CheckList_ViewModel ObtenerInformacionCheckListPorIdExpediente(string dataCrypt)
+    {
+        var checkList = new CheckList_ViewModel();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_Expedientes_ObtenerCheckListPorIdExpediente", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDExpediente", pcIDExpediente);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            checkList.Documentos.Add(new Expediente_Documento_ViewModel()
+                            {
+                                DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
+                                IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
+                            });
+                        }
+
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            checkList.TiposDeSolicitud.Add(new TipoDeSolicitud_ViewModel()
+                            {
+                                IdTipoDeSolicitud = (byte)sqlResultado["fiIDTipoSolicitud"],
+                                TipoDeSolicitud = sqlResultado["fcTipoSolicitud"].ToString(),
+                                Marcado = sqlResultado["fcMarcado"].ToString(),
+                            });
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            checkList = null;
+        }
+        return checkList;
+    }
+
+    #endregion
+
+    #region Enviar grupo de archivos por correo electrónico
+
+    [WebMethod]
+    public static Resultado_ViewModel EnviarGrupoDeArchivosPorCorreo(int idGrupoDeArchivos, string comentarios, string dataCrypt)
+    {
+        var resultadoProceso = new Resultado_ViewModel() { ResultadoExitoso = false };
+        try
+        {
+            var urlDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr");
+            var pcIDExpediente = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("idExpediente");
+
+            var grupoDeArchivos = string.Empty;
+            var descripcionGrupoDeArchivos = string.Empty;
+            
+            var listaCC = new List<string>();
+            var listaDestinatarios = new List<string>();
+            var listaAdjuntados = new List<string>();
+            var incluirInformacionCliente = false;
+            var incluirInformacionPrestamo = false;
+            var incluirInformacionGarantia = false;
+            var incluirInformacionSolicitud = false;
+            var contenidoCorreoHTML = new StringBuilder();
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                /* Obtener información del grupo de archivos */
+                using (var sqlComando = new SqlCommand("sp_Expedientes_GruposDeArchivos_ObtenerPorId", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDGrupoDeArchivos", idGrupoDeArchivos);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            grupoDeArchivos = sqlResultado["fcNombre"].ToString();
+                            descripcionGrupoDeArchivos = sqlResultado["fcDescripcion"].ToString();
+                            incluirInformacionCliente = (bool)sqlResultado["fbIncluirInformacionClienteEnCorreo"];                            
+                            incluirInformacionPrestamo = (bool)sqlResultado["fbIncluirInformacionPrestamoEnCorreo"];
+                            incluirInformacionGarantia = (bool)sqlResultado["fbIncluirInformacionGarantiaEnCorreo"];
+                            incluirInformacionSolicitud = (bool)sqlResultado["fbIncluirInformacionSolicitudEnCorreo"];
+                        }
+
+                        sqlResultado.NextResult();
+
+                        while (sqlResultado.Read())
+                        {
+                            if (!(bool)sqlResultado["fbCC"])
+                                listaDestinatarios.Add(sqlResultado["fcBuzonDeCorreo"].ToString());
+                            else
+                                listaCC.Add(sqlResultado["fcBuzonDeCorreo"].ToString());
+                        }
+                    }
+                } // using sqlComando
+
+                /* Obtener informacion del expediente, cliente, solicitud de credito, prestamo, garantia, fondos */
+                using (var sqlComando = new SqlCommand("sp_Expedientes_Maestro_ObtenerPorIdExpediente", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDExpediente", pcIDExpediente);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (incluirInformacionCliente)
+                            {
+
+                            }
+                            if (incluirInformacionPrestamo)
+                            {
+
+                            }
+                            if (incluirInformacionGarantia)
+                            {
+
+                            }
+                            if (incluirInformacionSolicitud)
+                            {
+
+                            }
+                        }
+                    }
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            resultadoProceso.ResultadoExitoso = false;
+            resultadoProceso.MensajeResultado = "Ocurrió un error al enviar la información, contacte al administrador.";
+            resultadoProceso.MensajeDebug = ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
     #endregion
 
     #region Metodos Utilitarios
@@ -814,6 +928,89 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         return string.Format("{0:#,###0.00##}", valor);
     }
 
+    public static bool EnviarCorreo(string pcAsunto, string pcTituloGeneral, string pcSubtitulo, string pcContenidodelMensaje, List<string> listaDestinatarios, List<string>listaCC, List<string> listaAdjuntos)
+    {
+        var resultado = false;
+        try
+        {
+            using (var smtpCliente = new SmtpClient("mail.miprestadito.com", 587))
+            {
+                smtpCliente.Credentials = new System.Net.NetworkCredential("systembot@miprestadito.com", "iPwf@p3q");
+                smtpCliente.EnableSsl = true;
+
+                using (var pmmMensaje = new MailMessage())
+                {
+                    pmmMensaje.Subject = pcAsunto;
+                    pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
+                    pmmMensaje.IsBodyHtml = true;
+                    pmmMensaje.To.Add("sistemas@miprestadito.com");
+
+                    if (listaDestinatarios != null)
+                    {
+                        foreach (var item in listaDestinatarios)
+                            pmmMensaje.To.Add(item);
+                    }
+
+                    if (listaCC != null)
+                    {
+                        foreach (var item in listaCC)
+                            pmmMensaje.CC.Add(item);
+                    }
+
+                    if (listaAdjuntos != null)
+                    {
+                        foreach (var item in listaAdjuntos)
+                            if (File.Exists(item))
+                                pmmMensaje.Attachments.Add(new Attachment(item));
+                    }
+
+                    string htmlString = @"<!DOCTYPE html> " +
+                    "<html>" +
+                    "<body>" +
+                    " <div style=\"width: 500px;\">" +
+                    " <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
+                    " <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
+                    " <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td>&nbsp;</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td style=\"background-color:whitesmoke; text-align:center;\">" + pcSubtitulo + "</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td>&nbsp;</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td>&nbsp;</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
+                    " <td>System Bot Prestadito</td>" +
+                    " </tr>" +
+                    " </table>" +
+                    " </div>" +
+                    "</body> " +
+                    "</html> ";
+
+                    pmmMensaje.Body = htmlString;
+                    ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+                    smtpCliente.Send(pmmMensaje);
+                    resultado = true;
+                    //smtpCliente.Dispose();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
     #endregion
 
     #region View Models
@@ -891,7 +1088,6 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         public int CantidadMinima { get; set; }
         public int CantidadMaxima { get; set; }
         public int CantidadGuardados { get; set; }
-
         public bool NoAdjuntado { get; set; }
         public bool NoAplica { get; set; }
     }

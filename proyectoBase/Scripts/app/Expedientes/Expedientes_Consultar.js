@@ -199,7 +199,7 @@ function CargarDocumentosGuardadosPorTipoDeDocumento(idDocumento, Documento, des
 /***************************************************************************************************************/
 function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArchivos, descripcionGrupoDeArchivos) {
 
-    $("#btnEnviarGrupoArchivoPorCorreo,#btnGuardarGrupoArchivoEnPDF").prop('disabled', true).prop('title', '');
+    $("#btnEnviarGrupoArchivoPorCorreo,#btnGuardarGrupoArchivoEnPDF").css('display', true).prop('disabled', true).prop('title', '');
 
     $.ajax({
         type: "POST",
@@ -254,7 +254,7 @@ function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArch
                     MensajeAdvertencia(erroresHabilitarOpciones);
                 }
 
-                $("#btnEnviarGrupoArchivoPorCorreo,#btnGuardarGrupoArchivoEnPDF").prop('disabled', !habilitarOpciones).prop('title', 'Mirar los errores');
+                $("#btnEnviarGrupoArchivoPorCorreo,#btnGuardarGrupoArchivoEnPDF").css('display', habilitarOpciones).prop('disabled', !habilitarOpciones).prop(habilitarOpciones == false ? 'Primero debes corregir los errores del expediente' : '');
 
 
                 $('#tblDocumentosDelGrupoDeArchivos').DataTable({
@@ -358,6 +358,8 @@ function EliminarDocumentoExpediente(idDocumentoExpediente) {
 
             if (data.d == true) {
 
+                cantidadDocumentosGuardados--;
+                cantidadMaximaDocumentos++;
                 MensajeExito('¡El documento se eliminó exitosamente!');
                 CargarDocumentosDelExpediente();
                 CargarDocumentosGuardadosPorTipoDeDocumento(idTipoDeDocumento, nombreTipoDeDocumento, descripcionTipoDeDocumento, estadoNoAdjuntado, estadoNoAplica, cantidadMinimaDocumentos, cantidadMaximaDocumentos, cantidadDocumentosGuardados, documentoObligatorio);
@@ -496,6 +498,9 @@ $("#btnAgrearNuevoTipoDocumento").click(function () {
                         if (data.isSuccess && data.files[0]) {
                             item.name = data.files[0].name;
                             item.html.find('.column-title > div:first-child').text(data.files[0].name).attr('title', data.files[0].name);
+
+                            cantidadDocumentosGuardados++;
+                            cantidadMaximaDocumentos--;
                         }
 
                         /* Validar si se produjo un error */
@@ -541,10 +546,7 @@ $("#btnAgrearNuevoTipoDocumento").click(function () {
                 },
                 dialogs: {
                     alert: function (text) {
-                        return iziToast.warning({
-                            title: 'Atencion',
-                            message: text
-                        });
+                        return MensajeAdvertencia(text);
                     },
                     confirm: function (text, callback) {
                         confirm(text) ? callback() : null;
@@ -626,13 +628,13 @@ $("#btnGenerarCheckList").click(function () {
 
             if (!ValidarEstadoDeDocumentosExpediente(expedienteDocumentosCheckList)) {
 
-                let documentosPendientesTemplate = '';
+                let documentosPendientesTemplate = '<div class="text-left">Los siguientes documentos obligatorios están pedientes: <ul>';
 
                 for (var i = 0; i < expedienteDocumentosCheckList.length; i++) {
                     if (expedienteDocumentosCheckList[i].IdEstadoDocumento == 0)
-                        documentosPendientesTemplate += '* ' + expedienteDocumentosCheckList[i].DescripcionNombreDocumento + '<br/>';
+                        documentosPendientesTemplate += '<li>' + expedienteDocumentosCheckList[i].DescripcionNombreDocumento + '</li>';
                 }
-                MensajeError("Los siguientes documentos obligatorios están pedientes: <br/>" + documentosPendientesTemplate + "<br/> Asegúrate de subir todos los documentos marcados como obligatorios y/o marcar como NO o N/A a los que correspondan para poder continuar.");
+                MensajeError(documentosPendientesTemplate + "</ul> Asegúrate de subir todos los documentos marcados como OBLIGATORIOS y/o marcar como NO o N/A a los que correspondan para poder descargar el CHECK LIST.");
                 return false;
             }
 

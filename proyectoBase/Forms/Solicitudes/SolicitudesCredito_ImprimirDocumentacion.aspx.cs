@@ -956,7 +956,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                 } // if documentosParaAsegurarAdjuntados != null
             } // if HttpContext.Current.Session["ListaDocumentosParaAsegurar"] != null
 
-
             if (documentosParaAsegurarGuardarEnBbdd.Count > 0)
             {
                 /* Si se adjuntaron documentos para asegurar, guardarlos en la base de datos */
@@ -1088,7 +1087,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                 resultadoProceso.ResultadoExitoso = false;
                                 resultadoProceso.MensajeResultado = "Ocurrió un error al cambiar el estado de la garantía a asegurado. vuelva a intentarlo o contacte al administrador.";
                                 resultadoProceso.MensajeDebug = sqlResultado["MensajeError"].ToString();
-
                                 return resultadoProceso;
                             }
                         }
