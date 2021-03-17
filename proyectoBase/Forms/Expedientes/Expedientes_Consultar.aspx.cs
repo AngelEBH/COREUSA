@@ -344,9 +344,9 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static List<GrupoDeArchivos_Documento_ViewModel> CargarDocumentosPorGrupoDeArchivos(int idGrupoDeArchivos, string dataCrypt)
+    public static List<DocumentoDelExpediente_ViewModel> CargarDocumentosPorGrupoDeArchivos(int idGrupoDeArchivos, string dataCrypt)
     {
-        var documentos = new List<GrupoDeArchivos_Documento_ViewModel>();
+        var documentos = new List<DocumentoDelExpediente_ViewModel>();
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
@@ -373,22 +373,17 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            documentos.Add(new GrupoDeArchivos_Documento_ViewModel()
+                            documentos.Add(new DocumentoDelExpediente_ViewModel()
                             {
-                                IdGrupoDeArchivosDocumento = (int)sqlResultado["fiIDGrupoDeArchivosDocumento"],
-                                IdGrupoDeArchivos = (int)sqlResultado["fiIDGrupoDeArchivos"],
                                 IdDocumento = (int)sqlResultado["fiIDDocumento"],
-                                IdExpediente = (int)sqlResultado["fiIDExpediente"],
-                                IdExpedienteDocumento = (int)sqlResultado["fiIDExpedienteDocumento"],
-
                                 DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
                                 DescripcionDetalladaDelDocumento = sqlResultado["fcDescripcionDetallada"].ToString(),
-                                NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
-                                Extension = sqlResultado["fcExtension"].ToString(),
-                                Ruta = sqlResultado["fcRutaArchivo"].ToString(),
-                                URL = sqlResultado["fcURL"].ToString(),
-                                Comentarios = sqlResultado["fcComentario"].ToString(),
-                                IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
+                                Obligatorio = (bool)sqlResultado["fbObligatorio"],
+                                CantidadMinima = (int)sqlResultado["fiCantidadMinima"],
+                                CantidadMaxima = (int)sqlResultado["fiCantidadMaxima"],
+                                CantidadGuardados = (int)sqlResultado["fiDocumentosGuardados"],
+                                NoAdjuntado = (bool)sqlResultado["fbNoAdjuntado"],
+                                NoAplica = (bool)sqlResultado["fbNoAplica"]
                             });
                         }
                     } // using sqlResultado

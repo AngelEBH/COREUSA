@@ -27,9 +27,9 @@
 
 var idTipoDeDocumento = 0;
 var nombreTipoDeDocumento = 'Ningún documento seleccionado';
-var descripcionTipoDeDocumento = '';
-var EstadoNoAdjuntado = false;
-var EstadoNoAplica = false;
+var descripcionTipoDeDocumento = 'Ningún documento seleccionado';
+var estadoNoAdjuntado = false;
+var estadoNoAplica = false;
 var documentoObligatorio = false;
 var cantidadMinimaDocumentos = 0;
 var cantidadMaximaDocumentos = 0;
@@ -81,7 +81,7 @@ function CargarDocumentosDelExpediente() {
 
                                 return '<span title="' + row["DescripcionDetalladaDelDocumento"] + '">' +
                                     row["DescripcionNombreDocumento"] +
-                                    '<small class="badge badge-' + className + ' ml-1" title="' + (documentoObligatorio == true ? 'Este documento es obligatorio. Documentos guardados: ' + row["CantidadGuardados"] + '. Cantidad minima a guardar: ' + row["CantidadMinima"] : '') + '">' +
+                                    '<small class="badge badge-' + className + ' ml-1" title="' + (documentoObligatorio == true ? 'Este documento es obligatorio. Documentos guardados: ' + row["CantidadGuardados"] + '. Cantidad minima requerida: ' + row["CantidadMinima"] : '') + '">' +
                                     row["CantidadGuardados"] +
                                     '</small>' +
                                     (row["NoAplica"] == true || row["NoAdjuntado"] == true ? '<small class="badge badge-' + (documentoObligatorio == true ? 'danger' : 'warning') + ' float-right">' + (row["NoAplica"] == true ? "N/A" : row["NoAdjuntado"] == true ? "NO" : '') + '</small>' : '') + '</span>'
@@ -114,8 +114,8 @@ function CargarDocumentosGuardadosPorTipoDeDocumento(idDocumento, Documento, des
     idTipoDeDocumento = idDocumento;
     nombreTipoDeDocumento = Documento;
     descripcionTipoDeDocumento = descripcionDocumento;
-    EstadoNoAdjuntado = noAdjuntado;
-    EstadoNoAplica = noAplica;
+    estadoNoAdjuntado = noAdjuntado;
+    estadoNoAplica = noAplica;
     documentoObligatorio = obligatorio;
     cantidadMinimaDocumentos = documentosMinimos;
     cantidadMaximaDocumentos = documentosMaximos;
@@ -133,11 +133,10 @@ function CargarDocumentosGuardadosPorTipoDeDocumento(idDocumento, Documento, des
 
             if (data.d != null) {
 
-                if (data.d.length > 0) {
+                if (data.d.length > 0)
                     MostrarVistaPrevia(data.d[0].URL, data.d[0].DescripcionNombreDocumento, 'divPrevisualizacionDocumento_TipoDeDocumento');
-                }
                 else
-                    $("#divPrevisualizacionDocumento_TipoDeDocumento").empty();
+                    MostrarVistaPrevia('/Imagenes/Imagen_no_disponible.png', 'No hay archivos disponibles', 'divPrevisualizacionDocumento_TipoDeDocumento');
 
                 /* Inicializar datatables de documentos */
                 $('#tblListadoTipoDocumento').DataTable({
@@ -169,23 +168,23 @@ function CargarDocumentosGuardadosPorTipoDeDocumento(idDocumento, Documento, des
 
                 $("#btnAgrearNuevoTipoDocumento").prop('disabled', idTipoDeDocumento == 0 ? true : false);
 
-                if (EstadoNoAdjuntado == true && idTipoDeDocumento != 0) // si ya está marcado como no adjunto no mostrar el boton
+                if (estadoNoAdjuntado == true && idTipoDeDocumento != 0) // si ya está marcado como no adjunto no mostrar el boton
                     $("#btnCambiarEstadoANoAdjuntado").prop('disabled', true).css('display', 'none');
-                else if (EstadoNoAdjuntado == false && idTipoDeDocumento != 0 && data.d.length == 0) // si no está marcado como no y el tipo de documento es diferente a cero y no hay ningun documento del tipo de documento seleccionado, mostrar el boton
+                else if (estadoNoAdjuntado == false && idTipoDeDocumento != 0 && data.d.length == 0) // si no está marcado como no y el tipo de documento es diferente a cero y no hay ningun documento del tipo de documento seleccionado, mostrar el boton
                     $("#btnCambiarEstadoANoAdjuntado").prop('disabled', false).css('display', '');
                 else if (idTipoDeDocumento != 0) // si el tipo de documento es diferente a cero, no mostrar el boton
                     $("#btnCambiarEstadoANoAdjuntado").prop('disabled', true).css('display', 'none');
-                else if (idTipoDeDocumento == 0 && EstadoNoAdjuntado != undefined) // si el tipo de documento es igual a cero y el estado ha sido definido, mostrar el boton
+                else if (idTipoDeDocumento == 0 && estadoNoAdjuntado != undefined) // si el tipo de documento es igual a cero y el estado ha sido definido, mostrar el boton
                     $("#btnCambiarEstadoANoAdjuntado").prop('disabled', false).css('display', '');
 
 
-                if (EstadoNoAplica == true && idTipoDeDocumento != 0)
+                if (estadoNoAplica == true && idTipoDeDocumento != 0)
                     $("#btnCambiarEstadoANoAplica").prop('disabled', true).css('display', 'none');
-                else if (EstadoNoAplica == false && idTipoDeDocumento != 0 && data.d.length == 0)
+                else if (estadoNoAplica == false && idTipoDeDocumento != 0 && data.d.length == 0)
                     $("#btnCambiarEstadoANoAplica").prop('disabled', false).css('display', '');
                 else if (idTipoDeDocumento != 0)
                     $("#btnCambiarEstadoANoAplica").prop('disabled', true).css('display', 'none');
-                else if (idTipoDeDocumento == 0 && EstadoNoAplica != undefined)
+                else if (idTipoDeDocumento == 0 && estadoNoAplica != undefined)
                     $("#btnCambiarEstadoANoAplica").prop('disabled', false).css('display', '');
             }
             else
@@ -196,9 +195,11 @@ function CargarDocumentosGuardadosPorTipoDeDocumento(idDocumento, Documento, des
 }
 
 /***************************************************************************************************************/
-/************** Cargar documentos del expedientes agrupado por el grupo de archivos seleccionado ***************/
+/************** Cargar tipos de documentos del expedientes agrupado por el GRUPO DE ARCHIVOS seleccionado ******/
 /***************************************************************************************************************/
 function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArchivos, descripcionGrupoDeArchivos) {
+
+    $("#btnEnviarGrupoArchivoPorCorreo,#btnGuardarGrupoArchivoEnPDF").prop('disabled', true).prop('title', '');
 
     $.ajax({
         type: "POST",
@@ -212,32 +213,80 @@ function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArch
 
             if (data.d != null) {
 
-                if (data.d.length == 0) {
-                    $("#btnEnviarGrupoArchivoPorPDF,#btnGuardarGrupoArchivo").prop('disabled', true).prop('title', '');
-                }
-                else {
-                    $("#btnEnviarGrupoArchivoPorPDF,#btnGuardarGrupoArchivo").prop('disabled', false).prop('title', '');
+                let tiposDeDocumentos = data.d;
+                let habilitarOpciones = true;
+                let erroresHabilitarOpciones = '<div class="text-left">Las opciones han sido deshabilitadas porque se detectaron los siguientes errores: <ul class="font-14">';
+
+                /* Si el grupo de archivos no contiene tipos de documentos asociados */
+                if (tiposDeDocumentos.length == 0) {
+
+                    habilitarOpciones = false;
+                    erroresHabilitarOpciones += '<li>No se encontraron tipos de documentos asociados a este grupo de archivos. El grupo de archivos debe ser re-configurado en el mantenimientos de expedientes. </li>';
                 }
 
-                /* Inicializar datatables de documentos */
+                for (var i = 0; i < tiposDeDocumentos.length; i++) {
+
+                    /* Si el tipo de documento es obligatorio */
+                    if (tiposDeDocumentos[i].Obligatorio == true) {
+
+                        /* si la cantidad de documentos guardados es menor a la cantidad minima requerida */
+                        if (tiposDeDocumentos[i].CantidadGuardados < tiposDeDocumentos[i].CantidadMinima && tiposDeDocumentos[i].NoAdjuntado == false && tiposDeDocumentos[i].NoAplica == false) {
+
+                            habilitarOpciones = false;
+                            erroresHabilitarOpciones += '<li> El tipo de documento ' + tiposDeDocumentos[i].DescripcionNombreDocumento + ' es obligatorio y no se han subido la cantidad de archivos minimos requeridos (' + tiposDeDocumentos[i].CantidadGuardados + ' de ' + tiposDeDocumentos[i].CantidadMinima + '). </li>';
+                        }
+                        else if (tiposDeDocumentos[i].NoAdjuntado) {
+
+                            habilitarOpciones = false;
+                            erroresHabilitarOpciones += '<li> El tipo de documento ' + tiposDeDocumentos[i].DescripcionNombreDocumento + ' es obligatorio y está marcado como "NO" (No adjuntado). </li>';
+                        }
+                        else if (tiposDeDocumentos[i].NoAplica) {
+
+                            habilitarOpciones = false;
+                            erroresHabilitarOpciones += '<li> El tipo de documento ' + tiposDeDocumentos[i].DescripcionNombreDocumento + ' es obligatorio y está marcado como "N/A" (No aplica). </li>';
+                        }
+                    }
+                }
+
+                if (habilitarOpciones == false) {
+
+                    erroresHabilitarOpciones += '</ul> Corrige estos desaciertos para poder continuar. </div>';
+                    MensajeAdvertencia(erroresHabilitarOpciones);
+                }
+
+                $("#btnEnviarGrupoArchivoPorCorreo,#btnGuardarGrupoArchivoEnPDF").prop('disabled', !habilitarOpciones).prop('title', 'Mirar los errores');
+
+
                 $('#tblDocumentosDelGrupoDeArchivos').DataTable({
                     "destroy": true,
                     "pageLength": 100,
                     "aaSorting": [],
                     "language": language,
                     dom: 'f',
-                    data: data.d,
+                    data: tiposDeDocumentos,
                     "columns": [
-                        { "data": "DescripcionNombreDocumento", "className": "font-12" },
                         {
-                            "data": "URL", "className": "text-center",
+                            "data": "DescripcionNombreDocumento", "className": "font-12",
                             "render": function (data, type, row) {
 
-                                if (row["IdExpedienteDocumento"] == 0) {
-                                    $("#btnEnviarGrupoArchivoPorPDF,#btnGuardarGrupoArchivo").prop('disabled', true).prop('title', 'Grupo de archivos incompleto.');
-                                }
+                                let documentoObligatorio = ((row["Obligatorio"] == true && row["CantidadGuardados"] == 0) || (row["Obligatorio"] == true && row["CantidadGuardados"] < row["CantidadMinima"]) || (row["Obligatorio"] == true && row["NoAdjuntado"] == true));
+                                let className = documentoObligatorio == true ? 'danger' : 'secondary';
 
-                                return row["IdExpedienteDocumento"] != 0 ? '<button class="btn btn-sm btn-secondary" onclick="MostrarVistaPrevia(' + "'" + row["URL"] + "'" + ',' + "'" + row["DescripcionNombreDocumento"] + "'" + ',' + "'divPrevisualizacionDocumento_GrupoDeArchivos'" + ')" type="button" aria-label="Vista previa del documento"><i class="fas fa-search"></i></button>' : '<span class="badge badge-danger">Pendiente</span>'
+                                return '<span title="' + row["DescripcionDetalladaDelDocumento"] + '">' +
+                                    row["DescripcionNombreDocumento"] +
+                                    '<small class="badge badge-' + className + ' ml-1" title="' + (documentoObligatorio == true ? 'Este documento es obligatorio. Documentos guardados: ' + row["CantidadGuardados"] + '. Cantidad minima requerida: ' + row["CantidadMinima"] : '') + '">' +
+                                    row["CantidadGuardados"] +
+                                    '</small>' +
+                                    (row["NoAplica"] == true || row["NoAdjuntado"] == true ? '<small class="badge badge-' + (documentoObligatorio == true ? 'danger' : 'warning') + ' float-right">' + (row["NoAplica"] == true ? "N/A" : row["NoAdjuntado"] == true ? "NO" : '') + '</small>' : '') + '</span>'
+                            }
+                        },
+                        {
+                            "data": "IdDocumento", "className": "text-center",
+                            "render": function (data, type, row) {
+
+                                return '<button class="btn btn-sm btn-secondary" onclick="CargarPrevisualizacionDeGrupoDeArchivos(' + "'" + row["IdDocumento"] + "'" + ',' + "'" + row["DescripcionNombreDocumento"] + "'" + ',' + "'" + row["DescripcionDetalladaDelDocumento"] + "'" + ')" ' + (row["CantidadGuardados"] == 0 ? 'disabled' : '') + ' type="button" title="Cargar ' + row["DescripcionNombreDocumento"] + ' guardados." aria-label="Cargar ' + row["DescripcionNombreDocumento"] + ' guardados">' +
+                                    '<i class="fas fa-search"></i >' +
+                                    '</button>';
                             }
                         },
                     ],
@@ -248,14 +297,48 @@ function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArch
 
                 $("#lblNombreGrupoDeArchivos").text(nombreGrupoDeArchivos);
                 $("#lblDescripcionDetalladaGrupoDeArchivos").text(descripcionGrupoDeArchivos);
+                $("#divPrevisualizacionDocumento_GrupoDeArchivos").empty();
+                MostrarVistaPrevia('/Imagenes/Imagen_no_disponible.png', 'Ningún archivo seleccionado', 'divPrevisualizacionDocumento_GrupoDeArchivos');
 
-                $("#divPrevisualizacionDocumento").empty();
                 $("#modalGrupoDeDocumentos").modal();
             }
             else
                 MensajeError('No se pudo cargar el expediente, contacte al administrador.');
         }
     });
+}
+
+function CargarPrevisualizacionDeGrupoDeArchivos(idDocumento, Documento, descripcionDocumento) {
+
+
+    $.ajax({
+        type: "POST",
+        url: "Expedientes_Consultar.aspx/CargarDocumentosDelExpedientePorIdDocumento",
+        data: JSON.stringify({ idTipoDocumento: idDocumento, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudieron cargar los ' + Documento + ' guardados, contacte al administrador.');
+        },
+        success: function (data) {
+
+            $("#lblTituloTipoDocumentoGrupoDeArchivos").text(Documento);
+            $("#lblDescripcionTipoDeDocumentoGrupoDeArchivos").prop('title', descripcionDocumento);
+
+            if (data.d != null) {
+
+                let imgTemplate = '';
+
+                for (var i = 0; i < data.d.length; i++) {
+                    imgTemplate += '<img alt="' + Documento + '" src="' + data.d[i].URL + '" data-image="' + data.d[i].URL + '" data-description="' + Documento + '"/>';
+                }
+
+                $("#divPrevisualizacionDocumento_GrupoDeArchivos").empty().append(imgTemplate).unitegallery();
+            }
+            else
+                MensajeError('No se pudieron cargar los documentos de tipo ' + nombreTipoDeDocumento + ' guardados, contacte al administrador.');
+        }
+    });
+
 }
 
 /***********************************************************************************************/
@@ -277,7 +360,7 @@ function EliminarDocumentoExpediente(idDocumentoExpediente) {
 
                 MensajeExito('¡El documento se eliminó exitosamente!');
                 CargarDocumentosDelExpediente();
-                CargarDocumentosGuardadosPorTipoDeDocumento(idTipoDeDocumento, nombreTipoDeDocumento, descripcionTipoDeDocumento, EstadoNoAdjuntado, EstadoNoAplica, cantidadMinimaDocumentos, cantidadMaximaDocumentos, cantidadDocumentosGuardados, documentoObligatorio);
+                CargarDocumentosGuardadosPorTipoDeDocumento(idTipoDeDocumento, nombreTipoDeDocumento, descripcionTipoDeDocumento, estadoNoAdjuntado, estadoNoAplica, cantidadMinimaDocumentos, cantidadMaximaDocumentos, cantidadDocumentosGuardados, documentoObligatorio);
             }
             else {
                 MensajeError('Ocurrió un error al eliminar el documento, contacte al administrador.');
@@ -306,20 +389,20 @@ $("#btnCambiarEstadoANoAdjuntado,#btnCambiarEstadoANoAplica").click(function () 
             success: function (data) {
 
                 if (idNuevoEstadoDocumento === 2)
-                    EstadoNoAdjuntado = true;
+                    estadoNoAdjuntado = true;
                 else
-                    EstadoNoAdjuntado = false;
+                    estadoNoAdjuntado = false;
 
                 if (idNuevoEstadoDocumento === 3)
-                    EstadoNoAplica = true;
+                    estadoNoAplica = true;
                 else
-                    EstadoNoAplica = false;
+                    estadoNoAplica = false;
 
                 if (data.d.ResultadoExitoso == true) {
 
                     MensajeExito(data.d.MensajeResultado);
                     CargarDocumentosDelExpediente();
-                    CargarDocumentosGuardadosPorTipoDeDocumento(idTipoDeDocumento, nombreTipoDeDocumento, descripcionTipoDeDocumento, EstadoNoAdjuntado, EstadoNoAplica, cantidadMinimaDocumentos, cantidadMaximaDocumentos, cantidadDocumentosGuardados, documentoObligatorio);
+                    CargarDocumentosGuardadosPorTipoDeDocumento(idTipoDeDocumento, nombreTipoDeDocumento, descripcionTipoDeDocumento, estadoNoAdjuntado, estadoNoAplica, cantidadMinimaDocumentos, cantidadMaximaDocumentos, cantidadDocumentosGuardados, documentoObligatorio);
                 }
                 else {
                     MensajeError(data.d.MensajeResultado);
@@ -501,7 +584,7 @@ $("#btnGuardarDocumentos_Confirmar").click(function () {
             console.log(data.d.MensajeDebug);
 
             CargarDocumentosDelExpediente();
-            CargarDocumentosGuardadosPorTipoDeDocumento(idTipoDeDocumento, nombreTipoDeDocumento, descripcionTipoDeDocumento, EstadoNoAdjuntado, EstadoNoAplica, cantidadMinimaDocumentos, cantidadMaximaDocumentos, cantidadDocumentosGuardados, documentoObligatorio);
+            CargarDocumentosGuardadosPorTipoDeDocumento(idTipoDeDocumento, nombreTipoDeDocumento, descripcionTipoDeDocumento, estadoNoAdjuntado, estadoNoAplica, cantidadMinimaDocumentos, cantidadMaximaDocumentos, cantidadDocumentosGuardados, documentoObligatorio);
 
             $("#modalGuardarDocumentos").modal('hide');
         },
@@ -511,7 +594,6 @@ $("#btnGuardarDocumentos_Confirmar").click(function () {
     });
 
 });
-
 
 /***********************************************************************************************/
 /************************************ GENERAR CHECK LIST PDF ***********************************/
@@ -533,8 +615,6 @@ $("#btnGenerarCheckList").click(function () {
         },
         success: function (data) {
 
-            debugger;
-
             if (data.d == null) {
 
                 MensajeError('Ocurrió un error al cargar el Check List del expediente, contacte al administrador');
@@ -549,8 +629,8 @@ $("#btnGenerarCheckList").click(function () {
                 let documentosPendientesTemplate = '';
 
                 for (var i = 0; i < expedienteDocumentosCheckList.length; i++) {
-                    if (expedienteDocumentosCheckList[i].IdEstadoDocumento == 0 /* y que sean obligatorios!! */)
-                        documentosPendientesTemplate += '   * ' + expedienteDocumentosCheckList[i].DescripcionNombreDocumento + '<br/>';
+                    if (expedienteDocumentosCheckList[i].IdEstadoDocumento == 0)
+                        documentosPendientesTemplate += '* ' + expedienteDocumentosCheckList[i].DescripcionNombreDocumento + '<br/>';
                 }
                 MensajeError("Los siguientes documentos obligatorios están pedientes: <br/>" + documentosPendientesTemplate + "<br/> Asegúrate de subir todos los documentos marcados como obligatorios y/o marcar como NO o N/A a los que correspondan para poder continuar.");
                 return false;
@@ -563,9 +643,9 @@ $("#btnGenerarCheckList").click(function () {
 
                 templateCheckListDocumento += '<tr>' +
                     '<td class="mt-0 mb-0 pt-0 pb-0">' + expedienteDocumentosCheckList[i].DescripcionNombreDocumento + '</td>' +
-                    '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (expedienteDocumentosCheckList[i].IdEstadoDocumento == '1' ? 'X' : '') + '</td>' +
-                    '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (expedienteDocumentosCheckList[i].IdEstadoDocumento == '2' ? 'X' : '') + '</td>' +
-                    '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (expedienteDocumentosCheckList[i].IdEstadoDocumento == '3' ? 'X' : '') + '</td>' +
+                    '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (expedienteDocumentosCheckList[i].IdEstadoDocumento === 1 ? 'X' : '') + '</td>' +
+                    '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (expedienteDocumentosCheckList[i].IdEstadoDocumento === 2 ? 'X' : '') + '</td>' +
+                    '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (expedienteDocumentosCheckList[i].IdEstadoDocumento === 3 ? 'X' : '') + '</td>' +
                     '</tr>';
             }
 
@@ -674,7 +754,6 @@ function EnviarCorreo(asunto, tituloGeneral, idContenidoHtml) {
     });
 }
 
-/* Mostrar vista previa del documento */
 function MostrarVistaPrevia(url, descripcion, idDivPrevisualizacion) {
 
     let imgTemplate = '<img alt="' + descripcion + '" src="' + url + '" data-image="' + url + '" data-description="' + descripcion + '"/>';
@@ -682,18 +761,16 @@ function MostrarVistaPrevia(url, descripcion, idDivPrevisualizacion) {
     $("#" + idDivPrevisualizacion + "").empty().append(imgTemplate).unitegallery();
 }
 
-function MensajeError(mensaje) {
-    iziToast.error({
-        title: 'Error',
-        message: mensaje
-    });
+function MensajeExito(mensaje) {
+    Swal.fire({ title: '¡Genial!', html: mensaje, type: 'success' });
 }
 
-function MensajeExito(mensaje) {
-    iziToast.success({
-        title: 'Éxito',
-        message: mensaje
-    });
+function MensajeAdvertencia(mensaje) {
+    Swal.fire({ title: 'Atención', html: mensaje, type: 'warning' });
+}
+
+function MensajeError(mensaje) {
+    Swal.fire({ title: 'Ocurrió un error', html: mensaje, type: 'error' });
 }
 
 function MostrarLoader() {

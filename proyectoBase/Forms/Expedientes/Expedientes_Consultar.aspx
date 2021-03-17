@@ -11,7 +11,7 @@
     <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/Content/css/icons.css" rel="stylesheet" />
     <link href="/Content/css/style.css" rel="stylesheet" />
-    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
@@ -58,12 +58,12 @@
                     <div class="col-sm-6">
                         <div class="table-responsive">
                             <table class="table table-sm" style="margin-bottom: 0px;">
-                                <tbody>
+                                <thead>
                                     <tr>
-                                        <td><span class="font-weight-bold">Información del cliente</span></td>
-                                        <td></td>
-                                        <td></td>
+                                        <th colspan="3"><span class="font-weight-bold">Información del cliente</span></th>
                                     </tr>
+                                </thead>
+                                <tbody>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Cliente</span></td>
                                         <td>
@@ -93,9 +93,7 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td colspan="3"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -104,12 +102,12 @@
                     <div class="col-sm-6">
                         <div class="table-responsive">
                             <table class="table table-sm" style="margin-bottom: 0px;">
-                                <tbody>
+                                <thead>
                                     <tr>
-                                        <td><span class="font-weight-bold">Información de la solicitud</span></td>
-                                        <td></td>
-                                        <td></td>
+                                        <th colspan="3"><span class="font-weight-bold">Información de la solicitud</span></th>
                                     </tr>
+                                </thead>
+                                <tbody>
                                     <tr>
                                         <td><span class="font-weight-bold text-muted">Producto</span></td>
                                         <td>
@@ -139,9 +137,7 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td colspan="3"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -158,7 +154,7 @@
                 <h6 class="font-weight-bold">Documentos del expediente</h6>
 
                 <div class="row">
-                    <div class="col-lg-3 col-md-6 pt-3 border">
+                    <div class="col-xl-3 col-lg-6 pt-3 border">
                         <label class="font-weight-bold font-14">Lista de documentos del expediente</label>
                         <button type="button" id="btnGenerarCheckList" class="btn btn-sm p-0 float-right" title="Descargar Check List">
                             <i class="fas fa-download font-14"></i>
@@ -180,13 +176,13 @@
                             </table>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 pt-3 border">
+                    <div class="col-xl-4 col-lg-6 pt-3 border">
                         <div class="row justify-content-between">
                             <div class="col-auto pr-0">
-                                <label class="font-14 font-weight-bold text-muted" id="lblTituloListadoTipoDocumento">
+                                <label class="font-weight-bold text-muted" id="lblTituloListadoTipoDocumento">
                                     Ningún documento seleccionado
-                                    <i class="far fa-question-circle" id="lblDescripcionTipoDeDocumento" title=""></i>
                                 </label>
+                                <i class="far fa-question-circle" id="lblDescripcionTipoDeDocumento" title=""></i>
                             </div>
                             <div class="col-auto pl-0 text-right">
                                 <button type="button" id="btnCambiarEstadoANoAdjuntado" class="btn btn-sm btn-danger btnCambiarEstadoDocumento" data-idestado="2" disabled="disabled">
@@ -201,7 +197,7 @@
                                 </button>
                             </div>
                         </div>
-                        <table class="table table-sm table-borderless table-hover cursor-pointer" id="tblListadoTipoDocumento" style="width: 100%">
+                        <table id="tblListadoTipoDocumento" class="table table-sm table-borderless table-hover cursor-pointer" style="width: 100%">
                             <thead>
                                 <tr>
                                     <th>Nombre del archivo</th>
@@ -215,7 +211,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-lg-5 col-md-12 pt-3 border">
+                    <div class="col-xl-5 col-lg-12 pt-3 border">
 
                         <label class="font-weight-bold font-14">Previsualización del documento</label>
                         <div class="align-self-center" id="divPrevisualizacionDocumento_TipoDeDocumento" style="display: none;"></div>
@@ -244,7 +240,7 @@
                                     <span id="lblDescripcionDetalladaGrupoDeArchivos"></span>
                                 </div>
                             </div>
-                            <div class="col-sm-4 border-right border-top pt-3">
+                            <div class="col-lg-4 border-right border-top pt-3">
                                 <div class="table-responsive border-right border p-2" style="max-height: 50vh; overflow: auto;">
                                     <table id="tblDocumentosDelGrupoDeArchivos" class="table table-sm table-hover cursor-pointer" style="width: 100%">
                                         <thead>
@@ -253,23 +249,31 @@
                                                 <th class="text-center no-sort"></th>
                                             </tr>
                                         </thead>
-                                        <tbody></tbody>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2">Cargando información...</td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="col-sm-8 border-top pt-3">
-                                <h6 class="font-weight-bold mt-0">Previsualización</h6>
+                            <div class="col-lg-8 border-top pt-3">
+                                <h6 class="mt-0">Previsualización de archivos adjuntados:
+                                    <span class="text-muted" id="lblTituloTipoDocumentoGrupoDeArchivos">Ningún documento seleccionado
+                                    </span>
+                                    <i class="far fa-question-circle text-muted" id="lblDescripcionTipoDeDocumentoGrupoDeArchivos" title="Ningún documento seleccionado"></i>
+                                </h6>
 
                                 <div class="align-self-center" id="divPrevisualizacionDocumento_GrupoDeArchivos" runat="server" style="display: none;"></div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btnGuardarGrupoArchivo" class="btn btn-secondary">
+                        <button type="button" id="btnGuardarGrupoArchivoEnPDF" class="btn btn-secondary">
                             <i class="far fa-file-pdf"></i>
                             Guardar PDF
                         </button>
-                        <button type="button" id="btnEnviarGrupoArchivoPorPDF" class="btn btn-secondary">
+                        <button type="button" id="btnEnviarGrupoArchivoPorCorreo" class="btn btn-secondary">
                             <i class="mdi mdi-email-outline"></i>
                             Enviar por E-Mail
                         </button>
@@ -289,7 +293,7 @@
                         <div class="form-group row mb-0">
                             <div class="col-12">
                                 <h6 class="m-0" id="modalGuardarDocumentosLabel">Guardar Documentos
-                                    (<span id="lblTituloTipoDocumento" class="m-0 font-weight-bold text-muted"></span>)
+(<span id="lblTituloTipoDocumento" class="m-0 font-weight-bold text-muted"></span>)
                                 </h6>
                             </div>
                         </div>
@@ -298,12 +302,12 @@
                         <div class="row">
                             <div class="col-12 text-muted font-12 mb-2">
                                 <span id="lblDocumentoObligatorio" class="text-danger">Documento obligatorio</span>
-                                / Mínimo:
-                                <span id="lblCantidadMinimaDocumentos">3</span>
-                                / Máximo:
-                                <span id="lblCantidadMaximaDocumentos">3</span>
                                 / Guardados:
-                                <span id="lblCantidadDocumentosGuardados">0</span>
+                                <span id="lblCantidadDocumentosGuardados"></span>
+                                / Mínimo:
+                                <span id="lblCantidadMinimaDocumentos"></span>
+                                / Máximo o restante:
+                                <span id="lblCantidadMaximaDocumentos"></span>
                             </div>
                             <div class="col-12">
                                 <div class="alert alert-info bg-info text-white pt-1 pb-1" role="alert">
@@ -340,7 +344,8 @@
                                 Solicitud de crédito N°:
                                 <b runat="server" id="lblNoSolicitudCredito_Expediente"></b>
                             </label>
-                            <label class="font-weight-bold">Fecha:
+                            <label class="font-weight-bold">
+                                Fecha:
                                 <span runat="server" id="lblFechaActual_Expediente"></span>
                             </label>
                         </div>
@@ -529,7 +534,7 @@
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
-    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
+    <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
     <script src="/Scripts/plugins/moment/moment.js"></script>
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
