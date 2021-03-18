@@ -356,11 +356,61 @@ function CargarPrevisualizacionDeGrupoDeArchivos(idDocumento, Documento, descrip
 
 $("#btnEnviarGrupoArchivoPorCorreo").click(function () {
 
-    $("txtComentariosCorreoGrupoDeArchivos").val('');
+    debugger;
+
+    $("#txtComentariosCorreoGrupoDeArchivos").val('');
     $("#btnEnviarGrupoArchivoPorCorreo").prop('disabled', false);
     $("#modalGrupoDeDocumentos").modal('hide');
     $("#modalEnviarGrupoDeArchivosPorCorreo").modal();
     
+});
+
+$("#btnEnviarGrupoArchivoPorCorreo_Confirmar").click(function () {
+
+    debugger;
+
+    $("#btnEnviarGrupoArchivoPorCorreo_Confirmar").prop('disabled', true);
+    $("#lblComentariosAdicionalesCorreo").text($("#txtComentariosCorreoGrupoDeArchivos").val());
+
+    let contenidoHTML = '';
+
+    if (incluirInformacionClienteEnCorreo)
+        contenidoHTML += $("#tblInformacionCliente").html() + '<br/>';
+
+    if (incluirInformacionSolicitudEnCorreo)
+        contenidoHTML += $("#tblInformacionSolicitudDeCredito").html() + '<br/>';
+
+    if (incluirInformacionPrestamoEnCorreo)
+        contenidoHTML += $("#tblInformacionDelPrestamo").html() + '<br/>';
+
+    if (incluirInformacionGarantiaEnCorreo)
+        contenidoHTML += $("#tblInformacionDeLaGarantia").html() + '<br/>';
+
+    contenidoHTML += $("#tblComentariosAdicionales").html();
+
+    $.ajax({
+        type: "POST",
+        url: "Expedientes_Consultar.aspx/EnviarGrupoDeArchivosPorCorreo",
+        data: JSON.stringify({ idGrupoDeArchivos: idGrupoDeArchivosSeleccionado, contenidoHTML: contenidoHTML, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo enviar el grupo de archivos por correo electrónico, contacte al administrador.');
+        },
+        success: function (data) {
+
+            debugger;
+
+            data.d.ResultadoExitoso == true ? MensajeExito(data.d.MensajeResultado) : MensajeError(data.d.MensajeResultado);
+
+            console.log(data.d.MensajeDebug);
+
+            $("#modalEnviarGrupoDeArchivosPorCorreo").modal('hide');
+        },
+        complete: function () {
+            $("#btnEnviarGrupoArchivoPorCorreo_Confirmar").prop('disabled', false);
+        }
+    });
+
 });
 
 /***********************************************************************************************/

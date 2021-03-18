@@ -564,7 +564,7 @@
 
 
         <!-- ================================== HTML Que se enviará por correo =========================== -->
-        <div id="divContenedorContenidoCorreoGruposDeArchivos" style="/*display: none;*/">
+        <div id="divContenedorContenidoCorreoGruposDeArchivos" style="display: none; ">
             <div id="divContenidoCorreoGruposDeArchivos">
                 <table id="tblInformacionCliente" border="1" style="width: 100%; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
                     <tr>
@@ -573,16 +573,16 @@
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>NOMBRE</th>
                         <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
-                            <asp:Label runat="server" ID="lblNombreCliente_Correo">Willian Onandy Diaz Serrano</asp:Label>
+                            <asp:Label runat="server" ID="lblNombreCliente_Correo"></asp:Label>
                         </td>
                     </tr>
                     <tr>
                         <th style='text-align: left; padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #80ced6; width: 80px;'>IDENTIDAD</th>
                         <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
-                            <asp:Label runat="server" ID="lblIdentidadCliente_Correo">0502200002944</asp:Label>
+                            <asp:Label runat="server" ID="lblIdentidadCliente_Correo"></asp:Label>
                         </td>
                     </tr>
-                </table>                
+                </table>
                 <table id="tblInformacionSolicitudDeCredito" border="1" style="width: 100%; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
                     <tr>
                         <th colspan='2' style='text-align: center; font-weight: bold; background-color: #fefbd8'>INFORMACIÓN DE LA SOLICITUD DE CRÉDITO</th>
@@ -616,8 +616,8 @@
                         <td style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
                             <asp:Label runat="server" ID="lblGestorAsignado_Correo"></asp:Label>
                         </td>
-                    </tr>                    
-                </table>                
+                    </tr>
+                </table>
                 <table id="tblInformacionDelPrestamo" border="1" style="width: 100%; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
                     <tr>
                         <th colspan='2' style='text-align: center; font-weight: bold; background-color: #fefbd8'>INFORMACIÓN DEL PRÉSTAMO APROBADO</th>
@@ -658,7 +658,7 @@
                             <asp:Label runat="server" ID="lblFechaDePrimerPago_Correo"></asp:Label>
                         </td>
                     </tr>
-                </table>                
+                </table>
                 <table id="tblInformacionDeLaGarantia" border="1" style="width: 100%; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
                     <tr>
                         <th colspan='2' style='text-align: center; font-weight: bold; background-color: #fefbd8'>DATOS DE LA GARANTÍA</th>
@@ -718,7 +718,16 @@
                         </td>
                     </tr>
                 </table>
-                <br />
+                <table id="tblComentariosAdicionales" border="1" style="width: 100%; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
+                    <tr>
+                        <th colspan='2' style='text-align: center; font-weight: bold; background-color: #fefbd8'>COMENTARIOS ADICIONALES</th>
+                    </tr>
+                    <tr>
+                        <td colspan='2' style="padding: 5px; border: 1px solid darkgray; border-collapse: collapse; background-color: #d5f4e6; font-weight: normal">
+                            <asp:Label runat="server" ID="lblComentariosAdicionalesCorreo"></asp:Label>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </form>

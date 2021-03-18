@@ -759,7 +759,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
             var listaDestinatarios = new List<string>();
 
             var usuarioLogueado = ObtenerInformacionUsuarioPorIdUsuario(pcIDApp, pcIDUsuario, pcIDSesion);
-            listaDestinatarios.Add(usuarioLogueado.BuzonDeCorreo);
+            //listaDestinatarios.Add("sistemas@miprestadito.com");
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -814,7 +814,6 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                         }
                     }
                 } // using sqlComando
-
             } // using sqlConexion
 
             if (!EnviarCorreo(grupoDeArchivos, grupoDeArchivos, grupoDeArchivos, contenidoHTML, listaDestinatarios, listaCC, listaAdjuntados))
@@ -826,7 +825,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
             else
             {
                 resultadoProceso.ResultadoExitoso = true;
-                resultadoProceso.MensajeResultado = "¡La información de envió por correo electrónico exitosamente!";
+                resultadoProceso.MensajeResultado = "¡La información se envió por correo electrónico exitosamente!";
                 resultadoProceso.MensajeDebug = "Todo cheque";
             }
         }
@@ -962,7 +961,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                     pmmMensaje.Subject = pcAsunto;
                     pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
                     pmmMensaje.IsBodyHtml = true;
-                    pmmMensaje.To.Add("sistemas@miprestadito.com");
+                    //pmmMensaje.To.Add("sistemas@miprestadito.com");
 
                     if (listaDestinatarios != null)
                     {
@@ -989,13 +988,13 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                     " <div style=\"width: 500px;\">" +
                     " <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
                     " <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
-                    " <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
+                    " <td colspan=\"2\" style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
                     " </tr>" +
                     " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
                     " <td>&nbsp;</td>" +
                     " </tr>" +
                     " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-                    " <td style=\"background-color:whitesmoke; text-align:center;\">" + pcSubtitulo + "</td>" +
+                    " <td colspan=\"2\" style=\"background-color:whitesmoke; text-align:center;\">" + pcSubtitulo + "</td>" +
                     " </tr>" +
                     " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
                     " <td>&nbsp;</td>" +
@@ -1007,7 +1006,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                     " <td>&nbsp;</td>" +
                     " </tr>" +
                     " <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
-                    " <td>System Bot Prestadito</td>" +
+                    " <td colspan=\"2\">System Bot Prestadito</td>" +
                     " </tr>" +
                     " </table>" +
                     " </div>" +
