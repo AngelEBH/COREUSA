@@ -175,6 +175,30 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                             lblFechaPrimerPago_Expediente.InnerText = ((DateTime)sqlResultado["fdFechaPrimerCuota"]).ToString("dd/MM/yyyy");
                             lblFrecuenciaPlazo_Expediente.InnerText = sqlResultado["fcTipoPlazoSufijoAl"].ToString();
                             lblFechaVencimiento_Expediente.InnerText = "";
+
+                            /* Información de la plantilla HTML del correo */
+                            lblNombreCliente_Correo.Text = sqlResultado["fcNombreCliente"].ToString();
+                            lblIdentidadCliente_Correo.Text = sqlResultado["fcIdentidadCliente"].ToString();
+                            lblNoSolicitud_Correo.Text = sqlResultado["fiIDSolicitud"].ToString();
+                            lblTipoDeSolicitud_Correo.Text = sqlResultado["fcTipoSolicitud"].ToString();
+                            lblOficialNegocios_Correo.Text = sqlResultado["fcNombreUsuarioAsignado"].ToString();
+                            lblCentroDeCosto_Correo.Text = sqlResultado["fcNombreAgencia"].ToString();
+                            lblGestorAsignado_Correo.Text = sqlResultado["fcNombreGestor"].ToString();
+                            lblMontoOtorgado_Correo.Text = DecimalToString(decimal.Parse(sqlResultado["fnValorTotalFinanciamiento"].ToString()));
+                            lblMontoOtorgadoEnPalabras_Correo.Text = ConvertirCantidadALetras(sqlResultado["fnValorTotalFinanciamiento"].ToString());
+                            lblPlazo_Correo.Text = sqlResultado["fiPlazo"].ToString() + " Cuotas";
+                            lblFrecuencia_Correo.Text = sqlResultado["fcTipoPlazoSufijoAl"].ToString();
+                            lblValorDeLaCuota_Correo.Text = DecimalToString(decimal.Parse(sqlResultado["fnCuotaTotal"].ToString()));
+                            lblFechaDePrimerPago_Correo.Text = ((DateTime)sqlResultado["fdFechaPrimerCuota"]).ToString("dd/MM/yyyy");
+                            lblMarca_Correo.Text = sqlResultado["fcMarca"].ToString();
+                            lblModelo_Correo.Text = sqlResultado["fcModelo"].ToString();
+                            lblAño_Correo.Text = sqlResultado["fiAnio"].ToString();
+                            lblTipoVehiculo_Correo.Text = sqlResultado["fcTipoVehiculo"].ToString();
+                            lblColor_Correo.Text = sqlResultado["fcColor"].ToString();
+                            lblPlaca_Correo.Text = sqlResultado["fcMatricula"].ToString();
+                            lblSerieMotor_Correo.Text = sqlResultado["fcMotor"].ToString();
+                            lblSerieChasis_Correo.Text = sqlResultado["fcChasis"].ToString();
+                            lblVIN_Correo.Text = sqlResultado["fcVIN"].ToString();
                         }
                     } // using sqlComando
                 } // using sqlComando
@@ -212,9 +236,11 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
                         while (sqlResultado.Read())
                         {
-                            grupoArchivosTemplate.Append("<button type='button' onclick='CargarDocumentosPorGrupoDeArchivos(" + sqlResultado["fiIDGrupoDeArchivo"] + ", " + '"' + sqlResultado["fcNombre"] + '"' + ", " + '"' + sqlResultado["fcDescripcion"] + '"' + ")' class='FormatoBotonesIconoCuadrado40' style='height: 115px; width: 100px; position: relative; margin-top: 5px; margin-left: 5px; background-image: url(/Imagenes/folder_40px.png);'>" +
-                            sqlResultado["fcNombre"].ToString() +
-                            "</button>");
+                            grupoArchivosTemplate.Append("<button type='button' " +
+                                "onclick='CargarDocumentosPorGrupoDeArchivos(" + sqlResultado["fiIDGrupoDeArchivo"] + ", " + '"' + sqlResultado["fcNombre"] + '"' + ", " + '"' + sqlResultado["fcDescripcion"] + '"' + ", " + sqlResultado["fbIncluirInformacionClienteEnCorreo"].ToString().ToLower() + ", " + sqlResultado["fbIncluirInformacionSolicitudEnCorreo"].ToString().ToLower() + ", " + sqlResultado["fbIncluirInformacionPrestamoEnCorreo"].ToString().ToLower() + ", " + sqlResultado["fbIncluirInformacionGarantiaEnCorreo"].ToString().ToLower() + ")' " +
+                                "class='FormatoBotonesIconoCuadrado40' style='height: 115px; width: 100px; position: relative; margin-top: 5px; margin-left: 5px; background-image: url(/Imagenes/folder_40px.png);'>" +
+                                 sqlResultado["fcNombre"].ToString() +
+                                "</button>");
                         }
 
                         divGruposDeArchivos.InnerHtml = grupoArchivosTemplate.ToString();
@@ -544,7 +570,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
                     documentosAdjuntados.ForEach(item =>
                     {
-    /* si el archivo existe, que se agregue a la lista de los documentos que se van a guardar */
+                        /* si el archivo existe, que se agregue a la lista de los documentos que se van a guardar */
                         if (File.Exists(item.fcRutaArchivo + "\\" + item.NombreAntiguo))
                         {
                             nuevoNombreDocumento = GenerarNombre(pcIDExpediente, item.fiTipoDocumento.ToString());
@@ -715,7 +741,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
     #region Enviar grupo de archivos por correo electrónico
 
     [WebMethod]
-    public static Resultado_ViewModel EnviarGrupoDeArchivosPorCorreo(int idGrupoDeArchivos, string comentarios, string dataCrypt)
+    public static Resultado_ViewModel EnviarGrupoDeArchivosPorCorreo(int idGrupoDeArchivos, string contenidoHTML, string dataCrypt)
     {
         var resultadoProceso = new Resultado_ViewModel() { ResultadoExitoso = false };
         try
@@ -728,15 +754,12 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
 
             var grupoDeArchivos = string.Empty;
             var descripcionGrupoDeArchivos = string.Empty;
-            
             var listaCC = new List<string>();
-            var listaDestinatarios = new List<string>();
             var listaAdjuntados = new List<string>();
-            var incluirInformacionCliente = false;
-            var incluirInformacionPrestamo = false;
-            var incluirInformacionGarantia = false;
-            var incluirInformacionSolicitud = false;
-            var contenidoCorreoHTML = new StringBuilder();
+            var listaDestinatarios = new List<string>();
+
+            var usuarioLogueado = ObtenerInformacionUsuarioPorIdUsuario(pcIDApp, pcIDUsuario, pcIDSesion);
+            listaDestinatarios.Add(usuarioLogueado.BuzonDeCorreo);
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -758,10 +781,6 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                         {
                             grupoDeArchivos = sqlResultado["fcNombre"].ToString();
                             descripcionGrupoDeArchivos = sqlResultado["fcDescripcion"].ToString();
-                            incluirInformacionCliente = (bool)sqlResultado["fbIncluirInformacionClienteEnCorreo"];                            
-                            incluirInformacionPrestamo = (bool)sqlResultado["fbIncluirInformacionPrestamoEnCorreo"];
-                            incluirInformacionGarantia = (bool)sqlResultado["fbIncluirInformacionGarantiaEnCorreo"];
-                            incluirInformacionSolicitud = (bool)sqlResultado["fbIncluirInformacionSolicitudEnCorreo"];
                         }
 
                         sqlResultado.NextResult();
@@ -776,11 +795,12 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                     }
                 } // using sqlComando
 
-                /* Obtener informacion del expediente, cliente, solicitud de credito, prestamo, garantia, fondos */
-                using (var sqlComando = new SqlCommand("sp_Expedientes_Maestro_ObtenerPorIdExpediente", sqlConexion))
+                /* Obtener Lista de adjuntos */
+                using (var sqlComando = new SqlCommand("sp_Expedientes_GruposDeArchivos_ObtenerDocumentosDelExpedientePorIdGrupoDeArchivos", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDExpediente", pcIDExpediente);
+                    sqlComando.Parameters.AddWithValue("@piIDGrupoDeArchivos", idGrupoDeArchivos);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -790,26 +810,25 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            if (incluirInformacionCliente)
-                            {
-
-                            }
-                            if (incluirInformacionPrestamo)
-                            {
-
-                            }
-                            if (incluirInformacionGarantia)
-                            {
-
-                            }
-                            if (incluirInformacionSolicitud)
-                            {
-
-                            }
+                            listaAdjuntados.Add(sqlResultado["fcRutaArchivo"].ToString());
                         }
                     }
                 } // using sqlComando
+
             } // using sqlConexion
+
+            if (!EnviarCorreo(grupoDeArchivos, grupoDeArchivos, grupoDeArchivos, contenidoHTML, listaDestinatarios, listaCC, listaAdjuntados))
+            {
+                resultadoProceso.ResultadoExitoso = false;
+                resultadoProceso.MensajeResultado = "Ocurrió un error al enviar la información por correo electrónico, contacta al administrador.";
+                resultadoProceso.MensajeDebug = "Error al EnviarCorreo";
+            }
+            else
+            {
+                resultadoProceso.ResultadoExitoso = true;
+                resultadoProceso.MensajeResultado = "¡La información de envió por correo electrónico exitosamente!";
+                resultadoProceso.MensajeDebug = "Todo cheque";
+            }
         }
         catch (Exception ex)
         {
@@ -928,7 +947,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         return string.Format("{0:#,###0.00##}", valor);
     }
 
-    public static bool EnviarCorreo(string pcAsunto, string pcTituloGeneral, string pcSubtitulo, string pcContenidodelMensaje, List<string> listaDestinatarios, List<string>listaCC, List<string> listaAdjuntos)
+    public static bool EnviarCorreo(string pcAsunto, string pcTituloGeneral, string pcSubtitulo, string pcContenidodelMensaje, List<string> listaDestinatarios, List<string> listaCC, List<string> listaAdjuntos)
     {
         var resultado = false;
         try
@@ -1011,6 +1030,105 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         return resultado;
     }
 
+    #endregion
+
+    #region Convertir cantidad a palabras
+
+    // si, otra vez..........
+    public static string ConvertirCantidadALetras(string cantidad)
+    {
+        string resultado, centavos = string.Empty;
+        Int64 entero;
+        int decimales;
+        double cantidadNumerica;
+
+        try
+        {
+            cantidadNumerica = Convert.ToDouble(cantidad);
+            entero = Convert.ToInt64(Math.Truncate(cantidadNumerica));
+            decimales = Convert.ToInt32(Math.Round((cantidadNumerica - entero) * 100, 2));
+            centavos = " CON " + PadNum(decimales) + "/100 CTVS";
+            resultado = ToText(Convert.ToDouble(entero)) + centavos;
+        }
+        catch
+        {
+            return "";
+        }
+
+        return resultado;
+    }
+
+    private static string ToText(double value)
+    {
+        var Num2Text = string.Empty;
+        value = Math.Truncate(value);
+
+        if (value == 0) Num2Text = "CERO";
+        else if (value == 1) Num2Text = "UNO";
+        else if (value == 2) Num2Text = "DOS";
+        else if (value == 3) Num2Text = "TRES";
+        else if (value == 4) Num2Text = "CUATRO";
+        else if (value == 5) Num2Text = "CINCO";
+        else if (value == 6) Num2Text = "SEIS";
+        else if (value == 7) Num2Text = "SIETE";
+        else if (value == 8) Num2Text = "OCHO";
+        else if (value == 9) Num2Text = "NUEVE";
+        else if (value == 10) Num2Text = "DIEZ";
+        else if (value == 11) Num2Text = "ONCE";
+        else if (value == 12) Num2Text = "DOCE";
+        else if (value == 13) Num2Text = "TRECE";
+        else if (value == 14) Num2Text = "CATORCE";
+        else if (value == 15) Num2Text = "QUINCE";
+        else if (value < 20) Num2Text = "DIECI" + ToText(value - 10);
+        else if (value == 20) Num2Text = "VEINTE";
+        else if (value < 30) Num2Text = "VEINTI" + ToText(value - 20);
+        else if (value == 30) Num2Text = "TREINTA";
+        else if (value == 40) Num2Text = "CUARENTA";
+        else if (value == 50) Num2Text = "CINCUENTA";
+        else if (value == 60) Num2Text = "SESENTA";
+        else if (value == 70) Num2Text = "SETENTA";
+        else if (value == 80) Num2Text = "OCHENTA";
+        else if (value == 90) Num2Text = "NOVENTA";
+        else if (value < 100) Num2Text = ToText(Math.Truncate(value / 10) * 10) + " Y " + ToText(value % 10);
+        else if (value == 100) Num2Text = "CIEN";
+        else if (value < 200) Num2Text = "CIENTO " + ToText(value - 100);
+        else if ((value == 200) || (value == 300) || (value == 400) || (value == 600) || (value == 800)) Num2Text = ToText(Math.Truncate(value / 100)) + "CIENTOS";
+        else if (value == 500) Num2Text = "QUINIENTOS";
+        else if (value == 700) Num2Text = "SETECIENTOS";
+        else if (value == 900) Num2Text = "NOVECIENTOS";
+        else if (value < 1000) Num2Text = ToText(Math.Truncate(value / 100) * 100) + " " + ToText(value % 100);
+        else if (value == 1000) Num2Text = "MIL";
+        else if (value < 2000) Num2Text = "MIL " + ToText(value % 1000);
+        else if (value < 1000000)
+        {
+            Num2Text = ToText(Math.Truncate(value / 1000)) + " MIL";
+            if ((value % 1000) > 0) Num2Text = Num2Text + " " + ToText(value % 1000);
+        }
+
+        else if (value == 1000000) Num2Text = "UN MILLON";
+        else if (value < 2000000) Num2Text = "UN MILLON " + ToText(value % 1000000);
+        else if (value < 1000000000000)
+        {
+            Num2Text = ToText(Math.Truncate(value / 1000000)) + " MILLONES ";
+            if ((value - Math.Truncate(value / 1000000) * 1000000) > 0) Num2Text = Num2Text + " " + ToText(value - Math.Truncate(value / 1000000) * 1000000);
+        }
+
+        else if (value == 1000000000000) Num2Text = "UN BILLON";
+        else if (value < 2000000000000) Num2Text = "UN BILLON " + ToText(value - Math.Truncate(value / 1000000000000) * 1000000000000);
+
+        else
+        {
+            Num2Text = ToText(Math.Truncate(value / 1000000000000)) + " BILLONES";
+            if ((value - Math.Truncate(value / 1000000000000) * 1000000000000) > 0) Num2Text = Num2Text + " " + ToText(value - Math.Truncate(value / 1000000000000) * 1000000000000);
+        }
+        return Num2Text;
+
+    }
+
+    private static string PadNum(int entero)
+    {
+        return entero < 9 ? "0" + entero : entero.ToString();
+    }
     #endregion
 
     #region View Models

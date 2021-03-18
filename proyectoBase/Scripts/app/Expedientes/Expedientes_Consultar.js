@@ -197,7 +197,13 @@ function CargarDocumentosGuardadosPorTipoDeDocumento(idDocumento, Documento, des
 /***************************************************************************************************************/
 /************** Cargar tipos de documentos del expedientes agrupado por el GRUPO DE ARCHIVOS seleccionado ******/
 /***************************************************************************************************************/
-function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArchivos, descripcionGrupoDeArchivos) {
+var incluirInformacionClienteEnCorreo = false;
+var incluirInformacionSolicitudEnCorreo = false;
+var incluirInformacionPrestamoEnCorreo = false;
+var incluirInformacionGarantiaEnCorreo = false;
+var idGrupoDeArchivosSeleccionado = 0;
+
+function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArchivos, descripcionGrupoDeArchivos, incluirCliente, incluirSolicitud, IncluirPrestamo, incluirGarantia) {
 
     $("#btnEnviarGrupoArchivoPorCorreo,#btnGuardarGrupoArchivoEnPDF").css('display', true).prop('disabled', true).prop('title', '');
 
@@ -212,6 +218,16 @@ function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArch
         success: function (data) {
 
             if (data.d != null) {
+
+                idGrupoDeArchivosSeleccionado = idGrupoDeArchivos;
+                incluirInformacionClienteEnCorreo = incluirCliente;
+                incluirInformacionSolicitudEnCorreo = incluirSolicitud;
+                incluirInformacionPrestamoEnCorreo = IncluirPrestamo;
+                incluirInformacionGarantiaEnCorreo = incluirGarantia;
+                $("#lblTitutloGrupoDeArchivosCorreo").text(nombreGrupoDeArchivos);
+
+                $("#lblNombreGrupoDeArchivos").text(nombreGrupoDeArchivos);
+                $("#lblDescripcionDetalladaGrupoDeArchivos").text(descripcionGrupoDeArchivos);
 
                 let tiposDeDocumentos = data.d;
                 let habilitarOpciones = true;
@@ -294,12 +310,9 @@ function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArch
                         { targets: 'no-sort', orderable: false },
                     ]
                 });
-
-                $("#lblNombreGrupoDeArchivos").text(nombreGrupoDeArchivos);
-                $("#lblDescripcionDetalladaGrupoDeArchivos").text(descripcionGrupoDeArchivos);
+                
                 $("#divPrevisualizacionDocumento_GrupoDeArchivos").empty();
                 MostrarVistaPrevia('/Imagenes/Imagen_no_disponible.png', 'Ningún archivo seleccionado', 'divPrevisualizacionDocumento_GrupoDeArchivos');
-
                 $("#modalGrupoDeDocumentos").modal();
             }
             else
@@ -340,6 +353,15 @@ function CargarPrevisualizacionDeGrupoDeArchivos(idDocumento, Documento, descrip
     });
 
 }
+
+$("#btnEnviarGrupoArchivoPorCorreo").click(function () {
+
+    $("txtComentariosCorreoGrupoDeArchivos").val('');
+    $("#btnEnviarGrupoArchivoPorCorreo").prop('disabled', false);
+    $("#modalGrupoDeDocumentos").modal('hide');
+    $("#modalEnviarGrupoDeArchivosPorCorreo").modal();
+    
+});
 
 /***********************************************************************************************/
 /*************************** ELIMINAR DOCUMENTO DEL EXPEDIENTE *********************************/
