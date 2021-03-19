@@ -564,7 +564,7 @@
 
 
         <!-- ================================== HTML Que se enviará por correo =========================== -->
-        <div id="divContenedorContenidoCorreoGruposDeArchivos" style="display: none; ">
+        <div id="divContenedorContenidoCorreoGruposDeArchivos" style="display: none;">
             <div id="divContenidoCorreoGruposDeArchivos">
                 <table id="tblInformacionCliente" border="1" style="width: 100%; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;">
                     <tr>
@@ -730,6 +730,37 @@
                 </table>
             </div>
         </div>
+
+        <div id="divContenedorGrupoDeArchivosPDF" style="max-width:700px !important;">
+            <div class="card m-0" id="divGrupoDeArchivosPDF" style="/*display: none; */">
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div class="col-6 m-0 p-0">
+                            <asp:Image runat="server" ID="imgLogoEmpresa" class="img-fluid pt-4" alt="Logo de la empresa" />
+                        </div>
+                        <div class="col-6 m-0 p-0 justify-content-end">
+                            <table class="table table-borderless m-0" style="width: 100%">
+                                <tr runat="server" id="tr1">
+                                    <td class="p-0 text-right">
+                                        <asp:Label ID="lblImpresoPor" CssClass="col-8 p-0 font-weight-bold" Text="" runat="server"></asp:Label></td>
+                                </tr>
+                            </table>
+                            <table class="table table-borderless m-0" style="width: 100%">
+                                <tr>
+                                    <td class="p-0 text-right">
+                                        <asp:Label ID="lblFechaImpresion" CssClass="col-8 p-0 font-weight-bold" Text="01/01/1900" runat="server"></asp:Label></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mb-0 pl-0">
+                            <div id="divDocumentosGrupoDeArchivos" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden;" runat="server"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
     <!-- jQuery -->
     <script src="/Scripts/js/jquery.min.js"></script>
@@ -747,6 +778,7 @@
     <script src="/Scripts/plugins/datatables/responsive.bootstrap4.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
     <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/tiles/ug-theme-tiles.js"></script>
     <script src="/Scripts/plugins/html2pdf/html2pdf.bundle.js"></script>
     <script src="/Scripts/plugins/qrcode/qrcode.js"></script>
     <script src="/Scripts/app/uploader/js/jquery.fileuploader.min.js"></script>

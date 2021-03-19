@@ -37,13 +37,6 @@ var cantidadDocumentosGuardados = 0;
 
 $(function () {
 
-    /*
-    Buenas tardes, Amilcar, qué tal?
-    Le escribía para comentarle algo que considero es de mucha importancia y realmente hubiese preferido hablarlo en persona pero en realidad no contaba con que iría de viaje. Es acerca de mi estancia en la empresa.
-    En busca de crecimiento y desarrollo personal y profesional, además de otros factores de fuerza mayor, eh tomado la desición de finalizar mi relación con la empresa
-    Por supuesto antes de hacerlo formal quería comentárselo por si tenía algún comentario al respecto
-    */
-
     CargarDocumentosDelExpediente();
     CargarDocumentosGuardadosPorTipoDeDocumento(idTipoDeDocumento, nombreTipoDeDocumento, descripcionTipoDeDocumento, undefined, undefined, cantidadMinimaDocumentos, cantidadMaximaDocumentos, cantidadDocumentosGuardados, documentoObligatorio);
     InicializarCodigosQR();
@@ -177,7 +170,6 @@ function CargarDocumentosGuardadosPorTipoDeDocumento(idDocumento, Documento, des
                 else if (idTipoDeDocumento == 0 && estadoNoAdjuntado != undefined) // si el tipo de documento es igual a cero y el estado ha sido definido, mostrar el boton
                     $("#btnCambiarEstadoANoAdjuntado").prop('disabled', false).css('display', '');
 
-
                 if (estadoNoAplica == true && idTipoDeDocumento != 0)
                     $("#btnCambiarEstadoANoAplica").prop('disabled', true).css('display', 'none');
                 else if (estadoNoAplica == false && idTipoDeDocumento != 0 && data.d.length == 0)
@@ -197,11 +189,12 @@ function CargarDocumentosGuardadosPorTipoDeDocumento(idDocumento, Documento, des
 /***************************************************************************************************************/
 /************** Cargar tipos de documentos del expedientes agrupado por el GRUPO DE ARCHIVOS seleccionado ******/
 /***************************************************************************************************************/
+var idGrupoDeArchivosSeleccionado = 0;
+var nombreGrupoDeArchivosSeleccionado = '';
 var incluirInformacionClienteEnCorreo = false;
 var incluirInformacionSolicitudEnCorreo = false;
 var incluirInformacionPrestamoEnCorreo = false;
 var incluirInformacionGarantiaEnCorreo = false;
-var idGrupoDeArchivosSeleccionado = 0;
 
 function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArchivos, descripcionGrupoDeArchivos, incluirCliente, incluirSolicitud, IncluirPrestamo, incluirGarantia) {
 
@@ -220,6 +213,7 @@ function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArch
             if (data.d != null) {
 
                 idGrupoDeArchivosSeleccionado = idGrupoDeArchivos;
+                nombreGrupoDeArchivosSeleccionado = nombreGrupoDeArchivos;
                 incluirInformacionClienteEnCorreo = incluirCliente;
                 incluirInformacionSolicitudEnCorreo = incluirSolicitud;
                 incluirInformacionPrestamoEnCorreo = IncluirPrestamo;
@@ -228,6 +222,9 @@ function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArch
 
                 $("#lblNombreGrupoDeArchivos").text(nombreGrupoDeArchivos);
                 $("#lblDescripcionDetalladaGrupoDeArchivos").text(descripcionGrupoDeArchivos);
+
+                $("#divDocumentosGrupoDeArchivos").empty();
+                var templateDocumentosParaPDF = '';
 
                 let tiposDeDocumentos = data.d;
                 let habilitarOpciones = true;
@@ -262,16 +259,32 @@ function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArch
                             erroresHabilitarOpciones += '<li> El tipo de documento ' + tiposDeDocumentos[i].DescripcionNombreDocumento + ' es obligatorio y está marcado como "N/A" (No aplica). </li>';
                         }
                     }
+
+                    // agregar documentos para pdfs
+                    if (habilitarOpciones === true) {
+
+                        let archivosDelTipoDeDocumento = tiposDeDocumentos[i].Documentos;
+                        for (var e = 0; e < archivosDelTipoDeDocumento.length; e++) {
+                            templateDocumentosParaPDF += '<img alt="' + archivosDelTipoDeDocumento[e].DescripcionNombreDocumento + '" src="' + archivosDelTipoDeDocumento[e].URL + '" class="img-fluid"/>';
+                        }
+                    }
                 }
 
                 if (habilitarOpciones == false) {
 
                     erroresHabilitarOpciones += '</ul> Corrige estos desaciertos para poder continuar. </div>';
                     MensajeAdvertencia(erroresHabilitarOpciones);
+                    $("#divDocumentosGrupoDeArchivos").empty();
+                }
+                else {
+                    $("#divDocumentosGrupoDeArchivos").html(templateDocumentosParaPDF).unitegallery({
+                        gallery_theme: "tiles",
+                        tiles_min_columns: 1,
+                        tiles_max_columns: 1,
+                    });
                 }
 
                 $("#btnEnviarGrupoArchivoPorCorreo,#btnGuardarGrupoArchivoEnPDF").css('display', habilitarOpciones).prop('disabled', !habilitarOpciones).prop(habilitarOpciones == false ? 'Primero debes corregir los errores del expediente' : '');
-
 
                 $('#tblDocumentosDelGrupoDeArchivos').DataTable({
                     "destroy": true,
@@ -310,7 +323,7 @@ function CargarDocumentosPorGrupoDeArchivos(idGrupoDeArchivos, nombreGrupoDeArch
                         { targets: 'no-sort', orderable: false },
                     ]
                 });
-                
+
                 $("#divPrevisualizacionDocumento_GrupoDeArchivos").empty();
                 MostrarVistaPrevia('/Imagenes/Imagen_no_disponible.png', 'Ningún archivo seleccionado', 'divPrevisualizacionDocumento_GrupoDeArchivos');
                 $("#modalGrupoDeDocumentos").modal();
@@ -356,34 +369,36 @@ function CargarPrevisualizacionDeGrupoDeArchivos(idDocumento, Documento, descrip
 
 $("#btnEnviarGrupoArchivoPorCorreo").click(function () {
 
-    debugger;
-
     $("#txtComentariosCorreoGrupoDeArchivos").val('');
     $("#btnEnviarGrupoArchivoPorCorreo").prop('disabled', false);
     $("#modalGrupoDeDocumentos").modal('hide');
     $("#modalEnviarGrupoDeArchivosPorCorreo").modal();
-    
+
+});
+
+$("#btnGuardarGrupoArchivoEnPDF").click(function () {
+
+    $("#lblFechaImpresion").text(moment().locale('es').format('YYYY/MM/DD hh:mm a'));
+    ExportToPDF('Grupo de archivos ' + nombreGrupoDeArchivosSeleccionado.replace(/_/g, '').replace(/:/g, '').replace(/-/g, ''), 'divContenedorGrupoDeArchivosPDF', 'divGrupoDeArchivosPDF');
 });
 
 $("#btnEnviarGrupoArchivoPorCorreo_Confirmar").click(function () {
-
-    debugger;
 
     $("#btnEnviarGrupoArchivoPorCorreo_Confirmar").prop('disabled', true);
     $("#lblComentariosAdicionalesCorreo").text($("#txtComentariosCorreoGrupoDeArchivos").val());
 
     let contenidoHTML = '';
 
-    if (incluirInformacionClienteEnCorreo)
+    if (incluirInformacionClienteEnCorreo === true)
         contenidoHTML += $("#tblInformacionCliente").html() + '<br/>';
 
-    if (incluirInformacionSolicitudEnCorreo)
+    if (incluirInformacionSolicitudEnCorreo === true)
         contenidoHTML += $("#tblInformacionSolicitudDeCredito").html() + '<br/>';
 
-    if (incluirInformacionPrestamoEnCorreo)
+    if (incluirInformacionPrestamoEnCorreo === true)
         contenidoHTML += $("#tblInformacionDelPrestamo").html() + '<br/>';
 
-    if (incluirInformacionGarantiaEnCorreo)
+    if (incluirInformacionGarantiaEnCorreo === true)
         contenidoHTML += $("#tblInformacionDeLaGarantia").html() + '<br/>';
 
     contenidoHTML += $("#tblComentariosAdicionales").html();
@@ -398,8 +413,6 @@ $("#btnEnviarGrupoArchivoPorCorreo_Confirmar").click(function () {
         },
         success: function (data) {
 
-            debugger;
-
             data.d.ResultadoExitoso == true ? MensajeExito(data.d.MensajeResultado) : MensajeError(data.d.MensajeResultado);
 
             console.log(data.d.MensajeDebug);
@@ -410,7 +423,6 @@ $("#btnEnviarGrupoArchivoPorCorreo_Confirmar").click(function () {
             $("#btnEnviarGrupoArchivoPorCorreo_Confirmar").prop('disabled', false);
         }
     });
-
 });
 
 /***********************************************************************************************/

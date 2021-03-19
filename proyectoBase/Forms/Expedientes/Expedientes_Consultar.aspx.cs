@@ -147,6 +147,8 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                             if ((byte)sqlResultado["fiActivo"] == 0)
                                 lblExpedienteInactivo.Visible = true;
 
+                            var usuarioLogueado = ObtenerInformacionUsuarioPorIdUsuario(pcIDApp, pcIDUsuario, pcIDSesion);
+
                             /* Informacion del PDF del checklist */
                             lblNoSolicitudCredito_Expediente.InnerText = sqlResultado["fiIDSolicitud"].ToString();
                             lblNoSolicitud_Expediente.InnerText = sqlResultado["fiIDSolicitud"].ToString();
@@ -163,8 +165,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                             lblOficialNegocios_Expediente.InnerText = sqlResultado["fcNombreUsuarioAsignado"].ToString();
                             lblGestor_Expediente.InnerText = sqlResultado["fcNombreGestor"].ToString();
                             lblRazonSocial.Text = sqlResultado["fcRazonSocial"].ToString().ToUpper();
-                            lblNombreComercial.Text = sqlResultado["fcNombreComercial"].ToString().ToUpper();
-                            var usuarioLogueado = ObtenerInformacionUsuarioPorIdUsuario(pcIDApp, pcIDUsuario, pcIDSesion);
+                            lblNombreComercial.Text = sqlResultado["fcNombreComercial"].ToString().ToUpper();                            
                             lblNombreFirmaEntrega_Expediente.InnerText = usuarioLogueado.NombreCorto;
                             lblEspecifiqueOtros_Expediente.Text = sqlResultado["fcComentarios"].ToString();
 
@@ -199,6 +200,9 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                             lblSerieMotor_Correo.Text = sqlResultado["fcMotor"].ToString();
                             lblSerieChasis_Correo.Text = sqlResultado["fcChasis"].ToString();
                             lblVIN_Correo.Text = sqlResultado["fcVIN"].ToString();
+
+                            imgLogoEmpresa.ImageUrl = sqlResultado["fcUrlLogo"].ToString();
+                            lblImpresoPor.Text = "Impreso por " + usuarioLogueado.NombreCorto;
                         }
                     } // using sqlComando
                 } // using sqlComando
@@ -257,7 +261,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
     [WebMethod]
     public static List<DocumentoDelExpediente_ViewModel> CargarDocumentosPorGrupoDeArchivos(int idGrupoDeArchivos, string dataCrypt)
     {
-        var documentos = new List<DocumentoDelExpediente_ViewModel>();
+        var tipoDeDocumentosExpedienteDelGrupoDeArchivos = new List<DocumentoDelExpediente_ViewModel>();
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
@@ -284,7 +288,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            documentos.Add(new DocumentoDelExpediente_ViewModel()
+                            tipoDeDocumentosExpedienteDelGrupoDeArchivos.Add(new DocumentoDelExpediente_ViewModel()
                             {
                                 IdDocumento = (int)sqlResultado["fiIDDocumento"],
                                 DescripcionNombreDocumento = sqlResultado["fcDocumento"].ToString(),
@@ -294,7 +298,8 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                                 CantidadMaxima = (int)sqlResultado["fiCantidadMaxima"],
                                 CantidadGuardados = (int)sqlResultado["fiDocumentosGuardados"],
                                 NoAdjuntado = (bool)sqlResultado["fbNoAdjuntado"],
-                                NoAplica = (bool)sqlResultado["fbNoAplica"]
+                                NoAplica = (bool)sqlResultado["fbNoAplica"],
+                                Documentos = ObtenerDocumentosExpedientePorIdDocumento((int)sqlResultado["fiIDDocumento"], pcIDExpediente, pcIDSesion, pcIDApp, pcIDUsuario)
                             });
                         }
                     } // using sqlResultado
@@ -304,9 +309,9 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         catch (Exception ex)
         {
             ex.Message.ToString();
-            documentos = null;
+            tipoDeDocumentosExpedienteDelGrupoDeArchivos = null;
         }
-        return documentos;
+        return tipoDeDocumentosExpedienteDelGrupoDeArchivos;
     }
 
     #endregion
@@ -370,15 +375,20 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
     [WebMethod]
     public static List<Expediente_Documento_ViewModel> CargarDocumentosDelExpedientePorIdDocumento(int idTipoDocumento, string dataCrypt)
     {
+        var lURLDesencriptado = DesencriptarURL(dataCrypt);
+        var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+        var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+        var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+        var pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
+
+        return ObtenerDocumentosExpedientePorIdDocumento(idTipoDocumento, pcIDExpediente, pcIDSesion, pcIDApp, pcIDUsuario);
+    }
+
+    public static List<Expediente_Documento_ViewModel> ObtenerDocumentosExpedientePorIdDocumento(int idTipoDocumento, string pcIDExpediente, string pcIDSesion, string pcIDApp, string pcIDUsuario)
+    {
         var listaDocumentos = new List<Expediente_Documento_ViewModel>();
         try
         {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
-
             if (idTipoDocumento == 0)
                 return listaDocumentos;
 
@@ -409,11 +419,9 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                                 DescripcionDetalladaDelDocumento = sqlResultado["fcDescripcionDetallada"].ToString(),
                                 IdEstadoDocumento = (int)sqlResultado["fiIDEstadoDocumento"],
                                 NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
-                                //NombreArchivo = "CTES1177D1-20211212T041219-0",
                                 Extension = sqlResultado["fcExtension"].ToString(),
                                 Ruta = sqlResultado["fcRutaArchivo"].ToString(),
                                 URL = sqlResultado["fcURL"].ToString(),
-                                //URL = "/Documentos/Solicitudes/Solicitud1177/CTES1177D1-20211212T041219-0.png",
                                 Comentarios = sqlResultado["fcComentario"].ToString(),
                                 IdUsuarioCreador = (int)sqlResultado["fiIDUsuarioCreador"],
                                 UsuarioCreador = sqlResultado["fcUsuarioCreador"].ToString(),
@@ -1207,6 +1215,12 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         public int CantidadGuardados { get; set; }
         public bool NoAdjuntado { get; set; }
         public bool NoAplica { get; set; }
+        public List<Expediente_Documento_ViewModel> Documentos { get; set; }
+
+        public DocumentoDelExpediente_ViewModel()
+        {
+            Documentos = new List<Expediente_Documento_ViewModel>();
+        }
     }
 
     #endregion
