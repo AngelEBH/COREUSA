@@ -154,7 +154,7 @@
                 <h6 class="font-weight-bold">Documentos del expediente</h6>
 
                 <div class="row">
-                    <div class="col-xl-3 col-lg-6 pt-3 border">
+                    <div class="col-xl-6 col-lg-6 pt-3 border">
                         <label class="font-weight-bold font-14">Lista de documentos del expediente</label>
                         <button type="button" id="btnGenerarCheckList" class="btn btn-sm p-0 float-right" title="Descargar Check List">
                             <i class="fas fa-download font-14"></i>
@@ -176,7 +176,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-6 pt-3 border">
+                    <div class="col-xl-6 col-lg-6 pt-3 border">
                         <div class="row justify-content-between">
                             <div class="col-auto pr-0">
                                 <label class="font-weight-bold text-muted" id="lblTituloListadoTipoDocumento">
@@ -211,7 +211,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-xl-5 col-lg-12 pt-3 border">
+                    <div class="col-xl-12 col-lg-12 pt-3 border">
 
                         <label class="font-weight-bold font-14">Previsualización del documento</label>
                         <div class="align-self-center" id="divPrevisualizacionDocumento_TipoDeDocumento" style="display: none;"></div>
