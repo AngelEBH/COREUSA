@@ -211,10 +211,15 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-xl-12 col-lg-12 pt-3 border">
-
-                        <label class="font-weight-bold font-14">Previsualización del documento</label>
-                        <div class="align-self-center" id="divPrevisualizacionDocumento_TipoDeDocumento" style="display: none;"></div>
+                    <div class="col-xl-12 col-lg-12 pt-3 border h-75">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <label class="font-weight-bold font-14">Previsualización del documento</label>
+                                <div class="align-self-center" id="divPrevisualizacionDocumento_TipoDeDocumento" style="display: none;"></div>
+                            </div>
+                            <div class="col-sm-2"></div>
+                        </div>
                     </div>
                 </div>
                 <!-- Mensaje de advertencias y errores -->
@@ -731,8 +736,9 @@
             </div>
         </div>
 
+
         <div id="divContenedorGrupoDeArchivosPDF" style="max-width: 700px !important;">
-            <div class="card m-0" id="divGrupoDeArchivosPDF" style="display: none;">
+            <div class="card m-0 divImprimir" runat="server" visible="true" id="divGrupoDeArchivosPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-6 m-0 p-0">
@@ -786,6 +792,6 @@
         const URL_CODIGO_QR = '<%=UrlCodigoQR%>';
         const ID_EXPEDIENTE = '<%=pcIDExpediente%>';
     </script>
-    <script src="/Scripts/app/Expedientes/Expedientes_Consultar.js?20210315081528"></script>
+    <script src="/Scripts/app/Expedientes/Expedientes_Consultar.js?20210319102925"></script>
 </body>
 </html>

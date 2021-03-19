@@ -376,12 +376,6 @@ $("#btnEnviarGrupoArchivoPorCorreo").click(function () {
 
 });
 
-$("#btnGuardarGrupoArchivoEnPDF").click(function () {
-
-    $("#lblFechaImpresion").text(moment().locale('es').format('YYYY/MM/DD hh:mm a'));
-    ExportToPDF('Grupo de archivos ' + nombreGrupoDeArchivosSeleccionado.replace(/_/g, '').replace(/:/g, '').replace(/-/g, ''), 'divContenedorGrupoDeArchivosPDF', 'divGrupoDeArchivosPDF');
-});
-
 $("#btnEnviarGrupoArchivoPorCorreo_Confirmar").click(function () {
 
     $("#btnEnviarGrupoArchivoPorCorreo_Confirmar").prop('disabled', true);
@@ -423,6 +417,11 @@ $("#btnEnviarGrupoArchivoPorCorreo_Confirmar").click(function () {
             $("#btnEnviarGrupoArchivoPorCorreo_Confirmar").prop('disabled', false);
         }
     });
+});
+
+$("#btnGuardarGrupoArchivoEnPDF").click(function () {
+    $("#lblFechaImpresion").text(moment().locale('es').format('YYYY/MM/DD hh:mm a'));
+    ExportToPDF('Grupo de archivos ' + nombreGrupoDeArchivosSeleccionado.replace(/_/g, '').replace(/:/g, '').replace(/-/g, ''), 'divContenedorGrupoDeArchivosPDF', 'divGrupoDeArchivosPDF');
 });
 
 /***********************************************************************************************/
