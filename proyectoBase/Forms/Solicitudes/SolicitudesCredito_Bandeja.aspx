@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <meta name="description" content="Bandeja de solicitudes de crédito" />
     <title>Bandeja de solicitudes</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031105" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031105" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
