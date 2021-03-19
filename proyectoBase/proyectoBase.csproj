@@ -1074,6 +1074,7 @@
     <Content Include="Forms\Aval\Aval_Registrar.aspx" />
     <Content Include="Forms\Clientes\GestionCobranzaClienteDocumentos.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
+    <Content Include="Forms\Expedientes\Expedientes_Mantenimiento.aspx" />
     <Content Include="Forms\Expedientes\Expedientes_Consultar.aspx" />
     <Content Include="Forms\Movil\CotizadorCarros.aspx" />
     <Content Include="Forms\Operaciones\CFRM.aspx" />
@@ -1450,6 +1451,7 @@
     <Content Include="Scripts\app\CoreMovil\BandejaMisSolicitudes.js" />
     <Content Include="Scripts\app\CoreMovil\Clientes_BandejaPrecalificados.js" />
     <Content Include="Scripts\app\CoreMovil\CotizadorMovil.js" />
+    <Content Include="Scripts\app\Expedientes\Expedientes_Mantenimiento.js" />
     <Content Include="Scripts\app\Expedientes\Expedientes_Consultar.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_RegistroInstalacionGPS.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.js" />
@@ -1921,6 +1923,13 @@
     </Compile>
     <Compile Include="Forms\Clientes\Precalificado_Resolucion.aspx.designer.cs">
       <DependentUpon>Precalificado_Resolucion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Expedientes\Expedientes_Mantenimiento.aspx.cs">
+      <DependentUpon>Expedientes_Mantenimiento.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Expedientes\Expedientes_Mantenimiento.aspx.designer.cs">
+      <DependentUpon>Expedientes_Mantenimiento.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Expedientes\Expedientes_Consultar.aspx.cs">
       <DependentUpon>Expedientes_Consultar.aspx</DependentUpon>
