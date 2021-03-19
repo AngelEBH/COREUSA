@@ -588,7 +588,7 @@ $("#btnCrearExpediente_Confirmar").click(function () {
 
             if (data.d != "-1") {
                 idExpediente = data.d;
-                RedirigirAccion('SolicitudesCredito_Expedientes.aspx', 'expediente del préstamo');
+                RedirigirAccion('../Expedientes/Expedientes_Consultar.aspx', 'expediente del préstamo');
             }
             else
                 MensajeError('Ocurrió un error al crear el expediente del préstamo, contacte al administrador');
