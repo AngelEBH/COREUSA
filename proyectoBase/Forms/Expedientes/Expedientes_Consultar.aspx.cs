@@ -165,7 +165,7 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                             lblOficialNegocios_Expediente.InnerText = sqlResultado["fcNombreUsuarioAsignado"].ToString();
                             lblGestor_Expediente.InnerText = sqlResultado["fcNombreGestor"].ToString();
                             lblRazonSocial.Text = sqlResultado["fcRazonSocial"].ToString().ToUpper();
-                            lblNombreComercial.Text = sqlResultado["fcNombreComercial"].ToString().ToUpper();                            
+                            lblNombreComercial.Text = sqlResultado["fcNombreComercial"].ToString().ToUpper();
                             lblNombreFirmaEntrega_Expediente.InnerText = usuarioLogueado.NombreCorto;
                             lblEspecifiqueOtros_Expediente.Text = sqlResultado["fcComentarios"].ToString();
 

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Expedientes_Consultar.aspx.cs" Inherits="Expedientes_Consultar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Expedientes_Consultar.aspx.cs" Inherits="Expedientes_Consultar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -8,18 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <meta name="description" content="Expediente del préstamo" />
     <title>Expediente del préstamo</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
-    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <link href="/CSS/SolicitudesCredito_ImprimirDocumentacion.css?v=20210106150602" rel="stylesheet" />
     <style>
@@ -731,7 +731,7 @@
             </div>
         </div>
 
-        <div id="divContenedorGrupoDeArchivosPDF" style="max-width:700px !important;">
+        <div id="divContenedorGrupoDeArchivosPDF" style="max-width: 700px !important;">
             <div class="card m-0" id="divGrupoDeArchivosPDF" style="/*display: none; */">
                 <div class="card-body pt-0">
                     <div class="row">
