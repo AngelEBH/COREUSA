@@ -732,7 +732,7 @@
         </div>
 
         <div id="divContenedorGrupoDeArchivosPDF" style="max-width: 700px !important;">
-            <div class="card m-0" id="divGrupoDeArchivosPDF" style="/*display: none; */">
+            <div class="card m-0" id="divGrupoDeArchivosPDF" style="display: none;">
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-6 m-0 p-0">
