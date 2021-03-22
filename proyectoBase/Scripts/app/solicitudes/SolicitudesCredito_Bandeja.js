@@ -70,7 +70,7 @@ $(document).ready(function () {
                 "render": function (data, type, row) {
 
                     return '<div class="dropdown mo-mb-2">' +
-                        '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Opciones"><i class="fa fa-bars"></i></button >' +
+                        '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="'+ 'Opciones solicitud de credito ' + row["IdSolicitud"] + '"><i class="fa fa-bars"></i></button >' +
                         '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
                         (row["PermitirAbrirAnalisis"] == true ? '<button type="button" class="dropdown-item" id="btnAbrirAnalisis" onclick="RedirigirAccion(' + "'SolicitudesCredito_Analisis.aspx'" + ',' + "'análisis de la solicitud'" + ')" aria-label="Analisis"><i class="far fa-edit"></i> Abrir análisis</button>' : '') +
                         '<button type="button" class="dropdown-item" id="btnAbrirDetalles" onclick="RedirigirAccion(' + "'SolicitudesCredito_Detalles.aspx'" + ',' + "'detalles de la solicitud'" + ')" aria-label="Detalles"><i class="far fa-file-alt"></i> Ver detalles</button>' +
