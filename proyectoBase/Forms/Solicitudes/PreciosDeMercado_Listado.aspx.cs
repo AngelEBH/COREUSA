@@ -64,13 +64,11 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDPreciosDeMercado_ListarPreciosDeMercadoActuales", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_ListarPreciosDeMercadoActuales", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -134,13 +132,11 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDPreciosDeMercado_ListarModelos", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_ListarModelos", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -176,14 +172,12 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDPreciosDeMercado_Catalogo_Modelos_Anios_ObtenerAniosPorIdModelo", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Modelos_Anios_ObtenerAniosPorIdModelo", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDModelo", idModelo);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);                    
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -217,14 +211,12 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDPreciosDeMercado_ObtenerDevaluacionPorIdModeloAnio", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_ObtenerDevaluacionPorIdModeloAnio", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDModeloAnio", idModeloAnio);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
@@ -298,7 +290,12 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
 
     private void MostrarMensajeError(string mensaje)
     {
-        lblMensajeError.InnerText = mensaje;
+        lblMensajeError.InnerText += mensaje;
+    }
+
+    public static SqlCommand CrearSqlComando(string nombreSP, SqlConnection sqlConexion)
+    {
+        return new SqlCommand(nombreSP, sqlConexion) { CommandType = CommandType.StoredProcedure, CommandTimeout = 120 };
     }
 
     #endregion
@@ -310,7 +307,6 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
     {
         public int IdPrecioDeMercado { get; set; }
         public int IdModeloAnio { get; set; }
-
         public int IdMarca { get; set; }
         public string Marca { get; set; }
         public int IdModelo { get; set; }
@@ -355,7 +351,6 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
         public string Modelo { get; set; }
         public string Version { get; set; }
         public List<AnioViewModel> Anios { get; set; }
-
         public HistorialDevaluacionPorModelo_ViewModel()
         {
             Anios = new List<AnioViewModel>();
@@ -368,7 +363,6 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
         public int IdAnio { get; set; }
         public int Anio { get; set; }
         public List<Devaluacion_ViewModel> HistorialDevaluaciones { get; set; }
-
         public AnioViewModel()
         {
             HistorialDevaluaciones = new List<Devaluacion_ViewModel>();

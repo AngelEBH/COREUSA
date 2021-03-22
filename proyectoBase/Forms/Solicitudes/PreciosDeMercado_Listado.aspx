@@ -121,10 +121,10 @@
                             <thead>
                                 <tr>
                                     <%--<th><span class="mr-3">Acciones</span></th>--%>
-                                    <th><span class="mr-3">Marca</span></th>
-                                    <th><span class="mr-3">Modelo</span></th>
-                                    <th><span class="mr-3">Version</span></th>
-                                    <th><span class="mr-3">Años disponibles</span></th>
+                                    <th><span class="mr-3 not-sort">Marca</span></th>
+                                    <th><span class="mr-3 not-sort">Modelo</span></th>
+                                    <th><span class="mr-3 not-sort">Version</span></th>
+                                    <th><span class="mr-3 not-sort">Años disponibles</span></th>
                                     <th></th>
                                 </tr>
                             </thead>
