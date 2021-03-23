@@ -634,6 +634,15 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblCAT_Contrato;
 
     /// <summary>
+    /// Control lblValorPrimaContrato.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblValorPrimaContrato;
+
+    /// <summary>
     /// Control lblMontoPrima_Contrato.
     /// </summary>
     /// <remarks>
@@ -769,6 +778,15 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     protected global::System.Web.UI.WebControls.Label lblMontoTotalPrestamo_Contrato;
 
     /// <summary>
+    /// Control lblRevisionGpsAutos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblRevisionGpsAutos;
+
+    /// <summary>
     /// Control lblCorreo_Contrato.
     /// </summary>
     /// <remarks>
@@ -776,6 +794,15 @@ public partial class SolicitudesCredito_ImprimirDocumentacion
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblCorreo_Contrato;
+
+    /// <summary>
+    /// Control lblNegarseRevisionGpsAuto.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNegarseRevisionGpsAuto;
 
     /// <summary>
     /// Control lblNombreFirma_Contrato.

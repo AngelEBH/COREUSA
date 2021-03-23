@@ -33,7 +33,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     #endregion
 
-    #region Page Load
+    #region Page Load, CargarPrecalificado, CargarInformacionProducto, ValidarClienteSolicitudesActivas, ValidarPreSolicitud, CargarListas, CargarOrigenes, ObtenerInformacionCliente
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -104,6 +104,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         ddlTipoDeSeguro.Items.Add("A - Full Cover");
                         ddlTipoDeSeguro.Items.Add("B - Basico + Garantía");
                         ddlTipoDeSeguro.Items.Add("C - Basico");
+
+                        btnSeleccionarPrecioDeMercado.Visible = true;
+                        txtValorGlobal.ReadOnly = true;
                         break;
 
                     case 203:
@@ -130,6 +133,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         ddlTipoDeSeguro.Items.Add("A - Full Cover");
                         ddlTipoDeSeguro.Items.Add("B - Basico + Garantía");
                         ddlTipoDeSeguro.Items.Add("C - Basico");
+
+                        btnSeleccionarPrecioDeMercado.Visible = true;
+                        txtValorGlobal.ReadOnly = true;
                         break;
 
                     case 101:
@@ -155,7 +161,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         /* Guardar documentos de la solicitud que son enviados a través de peticiones AJAX */
         if (type != null || Request.HttpMethod == "POST")
         {
-            Session["tipoDoc"] = Convert.ToInt32(Request.QueryString["doc"]); ;
+            Session["tipoDoc"] = Convert.ToInt32(Request.QueryString["doc"]);
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
@@ -192,10 +198,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         }
     }
 
-    #endregion
-
-    #region CargarPrecalificado, CargarInformacionProducto, ValidarClienteSolicitudesActivas, ValidarPreSolicitud, CargarListas, CargarOrigenes, ObtenerInformacionCliente
-
     public void CargarPrecalificado()
     {
         try
@@ -204,9 +206,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion)) /* Cargar precalificado del cliente */
+                using (var sqlComando = CrearSqlComando("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion)) /* Cargar precalificado del cliente */
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
@@ -268,9 +269,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 } // using sp consulta ejecutivos
 
                 /* Obtener el préstamo máximo que se le puede ofertar al cliente para validaciones */
-                using (var sqlComando = new SqlCommand("sp_CotizadorProductos", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CotizadorProductos", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                     sqlComando.Parameters.AddWithValue("@piIDProducto", Precalificado.IdProducto);
                     sqlComando.Parameters.AddWithValue("@pcIdentidad", Precalificado.Identidad);
@@ -324,9 +324,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 /* Verificar el tipo de cliente cuando se trate de renoviaciones y refinanciamiento para validar que solo se ingresen clientes excelentes y muy buenos*/
                 if (Precalificado.IdClienteSAF != "")
                 {
-                    using (var sqlComando = new SqlCommand("Sp_Creditos_ClienteClasificacion", sqlConexion))
+                    using (var sqlComando = CrearSqlComando("Sp_Creditos_ClienteClasificacion", sqlConexion))
                     {
-                        sqlComando.CommandType = CommandType.StoredProcedure;
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@IDCliente", Precalificado.IdClienteSAF);
@@ -371,9 +370,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_Catalogo_Productos_Listar", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_Catalogo_Productos_Listar", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -400,9 +398,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
                 }
 
-                using (var sqlComando = new SqlCommand("sp_Catalogo_Productos_ObtenerPlazosPorIdProducto", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_Catalogo_Productos_ObtenerPlazosPorIdProducto", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -448,9 +445,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 sqlConexion.Open();
 
                 /* Validar si este cliente tiene solicitudes de crédito activas */
-                using (var sqlComando = new SqlCommand("dbo.sp_CredSolicitud_ValidarClienteSolicitudesActivas", sqlConexion))
+                using (var sqlComando = CrearSqlComando("dbo.sp_CredSolicitud_ValidarClienteSolicitudesActivas", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@fiIDCliente", 0);
                     sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", pcID);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
@@ -488,9 +484,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 sqlConexion.Open();
 
                 /* Validar si existe una pre solicitud de este cliente y el estado de la misma */
-                using (var sqlComando = new SqlCommand("dbo.sp_CREDPreSolicitudes_Maestro_ObtenerPorIdentidad", sqlConexion))
+                using (var sqlComando = CrearSqlComando("dbo.sp_CREDPreSolicitudes_Maestro_ObtenerPorIdentidad", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
@@ -659,9 +654,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDSolicitud_Guardar_LlenarListas", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CREDSolicitud_Guardar_LlenarListas", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -816,6 +810,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 ddlUnidadDeMedida.Items.Clear();
                 ddlUnidadDeMedida.Items.Add(new ListItem("Kilómetros", "KM"));
                 ddlUnidadDeMedida.Items.Add(new ListItem("Millas", "M"));
+
+                ddlMarca.Items.Add(new ListItem("Seleccionar", ""));
+                ddlModelo.Items.Add(new ListItem("Seleccione una marca", ""));
+                ddlAnio.Items.Add(new ListItem("Seleccione un modelo", ""));
             }
         }
         catch (Exception ex)
@@ -832,9 +830,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CredCatalogo_Origenes", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CredCatalogo_Origenes", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDProducto", Precalificado.IdProducto);
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
@@ -865,9 +862,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDCliente_ObtenerInformacionPorIdentidad", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CREDCliente_ObtenerInformacionPorIdentidad", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@fcIdentidadCliente", pcID);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -1050,9 +1046,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_GeoMunicipio", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_GeoMunicipio", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piPais", 1);
                     sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
                     sqlComando.Parameters.AddWithValue("@piMunicipio", 0);
@@ -1089,9 +1084,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_GeoPoblado", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_GeoPoblado", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piPais", 1);
                     sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
                     sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
@@ -1130,9 +1124,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_GeoBarrios", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_GeoBarrios", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piPais", 1);
                     sqlComando.Parameters.AddWithValue("@piDepartamento", idDepartamento);
                     sqlComando.Parameters.AddWithValue("@piMunicipio", idMunicipio);
@@ -1210,7 +1203,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CredSolicitud_CalculoPrestamo", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CredSolicitud_CalculoPrestamo", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
@@ -1264,7 +1257,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
                 {
                     valorPrima = (idProducto == 203) ? valorGlobal - valorPrima : valorPrima;
                     var montoPrestamo = (idProducto == 203) ? valorGlobal - valorPrima : valorGlobal - valorPrima;
@@ -1960,6 +1953,11 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     #region Funciones varias/utilitarias
 
+    public static SqlCommand CrearSqlComando(string nombreSP, SqlConnection sqlConexion)
+    {
+        return new SqlCommand(nombreSP, sqlConexion) { CommandType = CommandType.StoredProcedure, CommandTimeout = 120 };
+    }
+
     private static decimal CalcularTotalAFinanciarConIntereses(decimal totalAFinanciar, int plazoSeleccionado, decimal tasaInteresAnual, int idProducto)
     {
         decimal interesAnual = tasaInteresAnual > 1 ? (totalAFinanciar * tasaInteresAnual) / 100 : totalAFinanciar * tasaInteresAnual;
@@ -1980,16 +1978,15 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CatalogoProductos", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CatalogoProductos", sqlConexion))
                 {
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
                         while (sqlResultado.Read())
                         {
                             if (idProducto == (int)sqlResultado["fiIDProducto"])
-                            {
                                 tasaInteresAnual = (decimal)sqlResultado["fnTasadeInteres"];
-                            }
+
                         } // while sqlResultado.Read()
                     } // using sqlResultado
                 } // using sqlComando
@@ -2060,7 +2057,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 diaPrimerPago = 15;
             }
         }
-
         fechaDelPrimerPago = new DateTime(anioPrimerPago, mesPrimerPago, diaPrimerPago);
 
         return fechaDelPrimerPago;
@@ -2122,7 +2118,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     public static bool MoverDocumentosPreSolicitud(List<SolicitudesDocumentosViewModel> ListaDocumentosRenombrados, List<SolicitudesDocumentosViewModel> ListaDocumentosPreSolicitud, string nombreCarpetaDestino)
     {
-        bool result;
+        bool resultado;
         try
         {
             if (ListaDocumentosPreSolicitud != null)
@@ -2148,14 +2144,14 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
                 }
             }
-            result = true;
+            resultado = true;
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
-            result = false;
+            resultado = false;
         }
-        return result;
+        return resultado;
     }
 
     public static Uri DesencriptarURL(string URL)
@@ -2170,7 +2166,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             {
                 var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
@@ -2192,20 +2187,19 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");            
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
-            var buzonCorreoUsuario = string.Empty;
             var nombreUsuario = string.Empty;
+            var buzonCorreoUsuario = string.Empty;
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("CoreSeguridad.dbo.sp_InformacionUsuario", sqlConexion))
+                using (var sqlComando = CrearSqlComando("CoreSeguridad.dbo.sp_InformacionUsuario", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -2244,62 +2238,58 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         var resultado = false;
         try
         {
-            var pmmMensaje = new MailMessage();
-            var smtpCliente = new SmtpClient();
+            using (var smtpCliente = new SmtpClient("mail.miprestadito.com", 587))
+            {
+                smtpCliente.Credentials = new System.Net.NetworkCredential("systembot@miprestadito.com", "iPwf@p3q");
+                smtpCliente.EnableSsl = true;
 
-            smtpCliente.Host = "mail.miprestadito.com";
-            smtpCliente.Port = 587;
-            smtpCliente.Credentials = new System.Net.NetworkCredential("systembot@miprestadito.com", "iPwf@p3q");
-            smtpCliente.EnableSsl = true;
+                using (var pmmMensaje = new MailMessage())
+                {
+                    pmmMensaje.Subject = pcAsunto;
+                    pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
+                    pmmMensaje.To.Add("sistemas@miprestadito.com");
+                    pmmMensaje.CC.Add(buzonCorreoUsuario);
+                    pmmMensaje.CC.Add("edwin.aguilar@miprestadito.com");
+                    pmmMensaje.CC.Add("keyla.hernandez@miprestadito.com");
+                    pmmMensaje.IsBodyHtml = true;
 
-            pmmMensaje.Subject = pcAsunto;
-            pmmMensaje.From = new MailAddress("systembot@miprestadito.com", "System Bot");
-            pmmMensaje.To.Add("sistemas@miprestadito.com");
-            //pmmMensaje.To.Add("willian.diaz@miprestadito.com");
-            pmmMensaje.CC.Add(buzonCorreoUsuario);
-            pmmMensaje.CC.Add("edwin.aguilar@miprestadito.com");
-            pmmMensaje.CC.Add("keyla.hernandez@miprestadito.com");
-            pmmMensaje.IsBodyHtml = true;
+                    string htmlString = @"<!DOCTYPE html> " +
+                    "<html>" +
+                    "<body>" +
+                    " <div style=\"width: 500px;\">" +
+                    " <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
+                    " <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
+                    " <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td>&nbsp;</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td style=\"background-color:whitesmoke; text-align:center;\">" + pcSubtitulo + "</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td>&nbsp;</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
+                    " <td>&nbsp;</td>" +
+                    " </tr>" +
+                    " <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
+                    " <td>System Bot Prestadito</td>" +
+                    " </tr>" +
+                    " </table>" +
+                    " </div>" +
+                    "</body> " +
+                    "</html> ";
 
-            string htmlString = @"<!DOCTYPE html> " +
-            "<html>" +
-            "<body>" +
-            " <div style=\"width: 500px;\">" +
-            " <table style=\"width: 500px; border-collapse: collapse; border-width: 0; border-style: none; border-spacing: 0; padding: 0;\">" +
-            " <tr style=\"height: 30px; background-color:#56396b; font-family: 'Microsoft Tai Le'; font-size: 14px; font-weight: bold; color: white;\">" +
-            " <td style=\"vertical-align: central; text-align:center;\">" + pcTituloGeneral + "</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td>&nbsp;</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td style=\"background-color:whitesmoke; text-align:center;\">" + pcSubtitulo + "</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td>&nbsp;</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td style=\"vertical-align: central;\">" + pcContenidodelMensaje + "</td>" +
-            " </tr>" +
-            " <tr style=\"height: 24px; font-family: 'Microsoft Tai Le'; font-size: 12px; font-weight: bold;\">" +
-            " <td>&nbsp;</td>" +
-            " </tr>" +
-            " <tr style=\"height: 20px; font-family: 'Microsoft Tai Le'; font-size: 12px; text-align:center;\">" +
-            " <td>System Bot Prestadito</td>" +
-            " </tr>" +
-            " </table>" +
-            " </div>" +
-            "</body> " +
-            "</html> ";
-
-            pmmMensaje.Body = htmlString;
-
-            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
-            smtpCliente.Send(pmmMensaje);
-
-            smtpCliente.Dispose();
-
-            resultado = true;
+                    pmmMensaje.Body = htmlString;
+                    ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+                    smtpCliente.Send(pmmMensaje);
+                    resultado = true;
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -2309,6 +2299,186 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
         return resultado;
     }
+    #endregion
+
+    #region Seleccionar precios de mercado
+
+    [WebMethod]
+    public static List<EntidadGenerica_ViewModel> CargarMarcas(string dataCrypt)
+    {
+        var marcas = new List<EntidadGenerica_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Marcas_Listar", sqlConexion))
+                {
+                    sqlComando.Parameters.AddWithValue("@piIDMarca", 0);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            marcas.Add(new EntidadGenerica_ViewModel()
+                            {
+                                Id = (int)sqlResultado["fiIDMarca"],                                
+                                Descripcion = sqlResultado["fcMarca"].ToString(),
+                            });
+                        }
+                    }
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            marcas = null;
+        }
+        return marcas;
+    }
+
+    [WebMethod]
+    public static List<EntidadGenerica_ViewModel> CargarModelosPorIdMarca(string idMarca, string dataCrypt)
+    {
+        var marcas = new List<EntidadGenerica_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Modelos_ObtenerPorIdMarca", sqlConexion))
+                {
+                    sqlComando.Parameters.AddWithValue("@piIDMarca", idMarca);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            marcas.Add(new EntidadGenerica_ViewModel()
+                            {
+                                Id = (int)sqlResultado["fiIDModelo"],
+                                Descripcion = sqlResultado["fcModelo"].ToString() + " " + sqlResultado["fcVersion"].ToString(),
+                            });
+                        }
+                    }
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            marcas = null;
+        }
+        return marcas;
+    }
+
+    [WebMethod]
+    public static List<EntidadGenerica_ViewModel> CargarAniosDisponiblesPorIdModelo(string idModelo, string dataCrypt)
+    {
+        var marcas = new List<EntidadGenerica_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Modelos_Anios_ObtenerPorIdModelo", sqlConexion))
+                {
+                    sqlComando.Parameters.AddWithValue("@piIDModelo", idModelo);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            marcas.Add(new EntidadGenerica_ViewModel()
+                            {
+                                Id = (int)sqlResultado["fiIDModeloAnio"],
+                                Descripcion = sqlResultado["fiAnio"].ToString(),
+                            });
+                        }
+                    }
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            marcas = null;
+        }
+        return marcas;
+    }
+
+    [WebMethod]
+    public static EntidadGenerica_ViewModel CargarPrecioDeMercadoPorIdModeloAnio(string idModeloAnio, string dataCrypt)
+    {
+        var precioDeMercadoActual = new EntidadGenerica_ViewModel();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Maestro_ObtenerPrecioActualPorIdModeloAnio", sqlConexion))
+                {
+                    sqlComando.Parameters.AddWithValue("@piIDModeloAnio", idModeloAnio);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            precioDeMercadoActual = new EntidadGenerica_ViewModel()
+                            {
+                                Id = (int)sqlResultado["fiIDPrecioDeMercado"],
+                                Descripcion = sqlResultado["fnPrecioDeMercado"].ToString(),
+                            };
+                        }
+                    }
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            precioDeMercadoActual = null;
+        }
+        return precioDeMercadoActual;
+    }
+
     #endregion
 
     #region View Models
@@ -2587,6 +2757,12 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public string NombreVendedor { get; set; }
         public int IdNacionalidadVendedor { get; set; }
         public int IdEstadoCivilVendedor { get; set; }
+    }
+
+    public class EntidadGenerica_ViewModel
+    {
+        public int Id { get; set; }
+        public string Descripcion { get; set; }
     }
 
     #endregion

@@ -380,7 +380,6 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
         var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
         var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
         var pcIDExpediente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("idExpediente");
-
         return ObtenerDocumentosExpedientePorIdDocumento(idTipoDocumento, pcIDExpediente, pcIDSesion, pcIDApp, pcIDUsuario);
     }
 
@@ -1025,7 +1024,6 @@ public partial class Expedientes_Consultar : System.Web.UI.Page
                     ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
                     smtpCliente.Send(pmmMensaje);
                     resultado = true;
-                    //smtpCliente.Dispose();
                 }
             }
         }

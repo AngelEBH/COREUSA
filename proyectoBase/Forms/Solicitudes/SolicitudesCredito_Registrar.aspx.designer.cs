@@ -193,6 +193,15 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.Label lblTituloMontoPrestmo;
 
     /// <summary>
+    /// Control btnSeleccionarPrecioDeMercado.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnSeleccionarPrecioDeMercado;
+
+    /// <summary>
     /// Control txtValorGlobal.
     /// </summary>
     /// <remarks>
@@ -256,13 +265,22 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.DropDownList ddlPlazosDisponibles;
 
     /// <summary>
-    /// Control ddlMoneda.
+    /// Control divOrigen.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlMoneda;
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divOrigen;
+
+    /// <summary>
+    /// Control ddlOrigen.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlOrigen;
 
     /// <summary>
     /// Control divCotizadorAutos.
@@ -301,6 +319,15 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.DropDownList ddlGps;
 
     /// <summary>
+    /// Control txtValorDePrestamo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtValorDePrestamo;
+
+    /// <summary>
     /// Control divValorFinanciar.
     /// </summary>
     /// <remarks>
@@ -328,22 +355,13 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtValorCuota;
 
     /// <summary>
-    /// Control divOrigen.
+    /// Control txtTasaDeInteresAnual.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divOrigen;
-
-    /// <summary>
-    /// Control ddlOrigen.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlOrigen;
+    protected global::System.Web.UI.WebControls.TextBox txtTasaDeInteresAnual;
 
     /// <summary>
     /// Control step_garantia.
@@ -632,15 +650,6 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlEstadoCivil;
-
-    /// <summary>
-    /// Control ddlTipoDeCliente.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeCliente;
 
     /// <summary>
     /// Control txtFechaDeNacimiento.
@@ -1055,4 +1064,40 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtCambiarScoreComentarioAdicional;
+
+    /// <summary>
+    /// Control ddlMarca.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlMarca;
+
+    /// <summary>
+    /// Control ddlModelo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlModelo;
+
+    /// <summary>
+    /// Control ddlAnio.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlAnio;
+
+    /// <summary>
+    /// Control txtPrecioDeMercadoActual.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtPrecioDeMercadoActual;
 }

@@ -544,12 +544,6 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblCilindraje_NotaEntrega.Text = cilindraje;
                                     lblPlaca_NotaEntrega.Text = matricula;
 
-                                    var parrafoFinalProductoMotosNotaEntrega = ". Se le pide a la concesionaria entregar una COPIA de factura al cliente y retener una llave original para ser entregada a Prestadito.";
-                                    var parrafoFinalProductoAutoNotaEntrega = " al señor: " + nombreVendedorGarantia + " en un máximo de diez (10) días hábiles mismos que serán para inscribir dicho vehículo en el Instituto de la Propiedad Mercantil a favor de " + fondosPrestamo.NombreComercial + ", salvo que la documentación entregada no se encuentre completa y/o no pueda ser inscrito en el IP.";
-                                    var parraforFinalNotaEntrega = "En virtud de lo anterior se le emite esta <b>NOTA DE ENTREGA</b> y al mismo tiempo ratificamos nuestro compromiso de hacer el pago correspondiente en efectivo, en cheque o en transferencia";
-                                    parraforFinalNotaEntrega += idProducto == "201" ? parrafoFinalProductoMotosNotaEntrega : parrafoFinalProductoAutoNotaEntrega;
-                                    lblParrafoFinal_NotaEntrega.InnerHtml = parraforFinalNotaEntrega;
-
                                     /* Portada del expediente */
                                     lblNoSolicitud_PortadaExpediente.Text = "Solicitud de crédito #" + pcIDSolicitud;
                                     lblOficialNegocios_PortadaExpediente.Text = "Oficial de negocios: " + oficialDeNegocios;
@@ -610,6 +604,26 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblColor_ActaDeCompromiso.Text = color;
                                     lblMotor_ActaDeCompromiso.Text = serieMotor;
 
+                                    /**** DIFERENCIAS ENTRE CONTRAROS SEGÚN EL TIPO DE PRODUCTO ***********/
+                                    var parraforFinalNotaEntrega = "En virtud de lo anterior se le emite esta <b>NOTA DE ENTREGA</b> y al mismo tiempo ratificamos nuestro compromiso de hacer el pago correspondiente en efectivo, en cheque o en transferencia";
+
+                                    if (idProducto == "202" || idProducto == "203" || idProducto == "204") // (Automovil Financiamiento, empeño, crediEmpeño)
+                                    {
+                                        lblValorPrimaContrato.Visible = false;
+
+                                        var parrafoFinalProductoAutoNotaEntrega = " al señor: " + nombreVendedorGarantia + " en un máximo de diez (10) días hábiles mismos que serán para inscribir dicho vehículo en el Instituto de la Propiedad Mercantil a favor de " + fondosPrestamo.NombreComercial + ", salvo que la documentación entregada no se encuentre completa y/o no pueda ser inscrito en el IP.";
+                                        parraforFinalNotaEntrega += parrafoFinalProductoAutoNotaEntrega;
+                                        lblRevisionGpsAutos.Visible = true;
+                                        lblNegarseRevisionGpsAuto.Visible = true;
+                                    }
+                                    else// if (idProducto == "201")
+                                    {
+                                        lblValorPrimaContrato.Visible = true;
+                                        var parrafoFinalProductoMotosNotaEntrega = ". Se le pide a la concesionaria entregar una COPIA de factura al cliente y retener una llave original para ser entregada a Prestadito.";
+                                        parraforFinalNotaEntrega += parrafoFinalProductoMotosNotaEntrega;
+                                    }
+
+                                    lblParrafoFinal_NotaEntrega.InnerHtml = parraforFinalNotaEntrega;
                                 }
 
                                 /* Fotografías de la garantía */

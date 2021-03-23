@@ -1483,6 +1483,7 @@
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Registrar.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_RegistrarAval.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Registrar_CoreFinanciero.js" />
+    <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Registrar_SeleccionarPrecioDeMercado.js" />
     <Content Include="Scripts\app\solicitudes\SolicitudesCredito_Utilitarios.js" />
     <Content Include="Scripts\app\Solicitudes_CANEX\SolicitudesCANEX_BandejaSeguimiento.js" />
     <Content Include="Scripts\app\Solicitudes_CANEX\SolicitudesCANEX_SeguimientoDetalles.js" />

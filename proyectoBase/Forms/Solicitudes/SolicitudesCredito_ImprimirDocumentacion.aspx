@@ -391,9 +391,11 @@
                             </p>
                             <p>
                                 <b>C) FORMA Y PLAZO DEL FINANCIAMENTO:</b>
-                                <b>Anticipo por concepto de prima de:
-                                    <asp:Label runat="server" ID="lblMontoPrima_Contrato"></asp:Label>
-                                    y plazo de
+                                <b>
+                                    <span runat="server" id="lblValorPrimaContrato" visible="false">Anticipo por concepto de prima de:
+                                        <asp:Label runat="server" ID="lblMontoPrima_Contrato"></asp:Label>,
+                                    </span>
+                                    El plazo de financiamiento es de
                                     <asp:Label runat="server" ID="lblPlazo_Contrato"></asp:Label>
                                     <asp:Label runat="server" ID="lblFrecuenciaPago_Contrato"></asp:Label>,
                                     valor de la cuota:
@@ -442,7 +444,7 @@
                                 <b>I-</b> Los gastos que se incurra por matricula, mantenimiento, reparación y todas las relacionadas para conservación del vehículo en perfecto estado, deberá ser pagadas por el <b>CLIENTE</b>,
                                 <b>II-</b> Los gastos que se ocasione en la recuperación del vehículo en caso de mora será de 3,000.00 Lempiras por concepto de grúa más lo generado por concepto de parqueo, Una vez recuperado el vehículo cuando se encuentre en mora,
                                 <b class="lblNombreComercial"></b>
-                                lo tendrá en custodia un máximo de 2 meses para que el cliente se ponga al día y pague todo lo adeudo, pasado ese tiempo
+                                lo tendrá en custodia un máximo de 30 días para que el cliente se ponga al día y pague todo lo adeudo, pasado ese tiempo
                                 <b class="lblNombreComercial"></b>
                                 podrá vender el vehículo para poder recuperar el dinero invertido.
                                 <b>III-</b> En caso que un gestor se movilice a traer el dinero del pago de una o más cuotas, bien sea al domicilio o lugar de trabajo, tendrá un costo de 250.00 Lempiras.
@@ -457,10 +459,21 @@
                                 para que en cualquier tiempo pueda acceder a la información de la Central de Riesgos de la Comisión Nacional de Bancos y Seguros u otra central de riesgo pública o privada, para gestionar y conocer la situación crediticia de <b>EL CLIENTE</b> frente a las demás instituciones del sistema financiero nacional.
                                 <b>- C) EL CLIENTE</b> Autoriza de manera Irrevocable, a que
                                 <b class="lblNombreComercial"></b>
-                                pueda entrar en su domicilio, para solo efecto de retirar el vehículo comprado con este préstamo, o que lo retire de una tercera persona sin necesidad de intervención judicial, esta cláusula solo se ejecutara en caso de mora de 1 o más cuotas vencidas y mientras no haya sido cancelado el total adeudado.
+                                pueda entrar en su domicilio, para solo efecto de retirar el vehículo comprado con este préstamo, o que lo retire de una tercera persona sin necesidad de intervención judicial, esta cláusula solo se ejecutara en caso de mora de 15 días y mientras no haya sido cancelado el total adeudado.
                                 <b>D- El cliente</b> Autoriza que
                                 <b class="lblNombreComercial"></b>
                                 pueda revisar el funcionamiento del GPS mientras no se haya cancelado la totalidad del prestamo.
+                                
+                                <span runat="server" id="lblRevisionGpsAutos" visible="false">
+
+                                    <b>EL CLIENTE</b> se obliga a venir a las instalaciones de 
+                                    <b class="lblNombreComercial"></b>
+                                    a revisión y mantenimiento de su GPS en cualquier momento que 
+                                    <b class="lblNombreComercial"></b>
+                                    lo requiera.
+
+                                </span>
+
                                 <b>- CUARTO: OBLIGACIONES GENERALES.- EL CLIENTE</b> durante la vigencia del presente contrato también se obliga a:
                                 <b>A)</b> Permitir que
                                 <b class="lblNombreComercial"></b>
@@ -488,7 +501,7 @@
                                 <b class="lblNombreComercial"></b>, quien no asumirá ni incurrirá en responsabilidad por no hacer el pago de las primas de seguro.
                                 <b>D)</b> Mantenerse al día en el pago de los impuestos que graven a <b>EL CLIENTE</b> o al <b>VEHÍCULO</b> dado en garantía.
                                 <b>- E)</b> Cuidar como buen padre de familia el vehículo dado en garantía, mientras se encuentre en su poder y no se haya cancelado el precio total pactado para la terminación del presente contrato, quedando a su cargo los riesgos de dicho bien mueble por lo que será responsable de la perdida, destrucción o deterioro que sufra aun por caso fortuito o fuerza mayor.
-                                <b>- F)</b> Mantener la licencia de conducir vigente, mientras no se haya cancelado la totalidad del préstamo, en caso que <b>EL CLIENTE</b> haya solicitado excepción al momento de otorgarse el Préstamo por no poseer licencia vigente, entonces dispondrá solamente de un máximo de 40 días para presentar la Licencia de conducir a
+                                <b>- F)</b> Mantener la licencia de conducir vigente, mientras no se haya cancelado la totalidad del préstamo, en caso que <b>EL CLIENTE</b> haya solicitado excepción al momento de otorgarse el Préstamo por no poseer licencia vigente, entonces dispondrá solamente de un máximo de 30 días para presentar la Licencia de conducir a
                                 <b class="lblNombreComercial"></b>,
                                 caso contrario <b>AUTORIZA</b> anticipadamente a
                                 <b class="lblNombreComercial"></b>
@@ -537,7 +550,7 @@
                                 la existencia de obligaciones de <b>EL CLIENTE</b> pendientes de pago con el Estado, en tal cantidad que a su criterio ponga en peligro la recuperación de los adeudos debido a la preferencia del Estado para obtener el pago a su favor antes que
                                 <b class="lblNombreComercial"></b>;
                                 <b>h)</b> El incumplimiento de parte de <b>EL CLIENTE</b> de cualquiera de las obligaciones contraídas en este contrato.
-                                <b>i)</b> Por retirar, desconectar, adulterar, o de cualquier forma hacer que el GPS del Vehiculo no funcione correctamente.
+                                <b>i)</b> Por retirar, desconectar, manipular, adulterar, o de cualquier forma hacer que el GPS del Vehiculo no funcione correctamente.
                                 <b>- NOVENO: COBROS EXTRAJUDICIALES.-</b> En caso de ser necesarias las gestiones de cobranzas extrajudiciales por la mora en el pago o el vencimiento anticipado del contrato, estas se realizarán de la siguiente manera:
                                 <b>1)</b> Para Mora de 1 a 180 días: alternativamente podrán ser llamadas telefónicas, correos electrónicos, mensajes por cualquier medio electrónico, visitas por gestores, cartas de cobro escritas solicitando el pago y dirigidas a las direcciones indicadas. Estas gestiones tendrán un costo de doscientos cincuenta lempiras (L250.00), cargados al estado de cuenta del préstamo otorgado, son acumulables por cada cuota vencida y serán pagados por <b>EL CLIENTE</b> en todos los casos y sin excepción;
                                 <b>2)</b> Si su caso fuere trasladado a Profesionales del Derecho, cuyas gestiones iniciales podrán ser: llamadas telefónicas, envió de correos electrónicos, cartas de cobro escritas, y visitas, causaran el cobro de honorarios
@@ -577,7 +590,10 @@
                                 <b>- DÉCIMO TERCERA: PROHIBICIONES PARA EL CLIENTE:</b> Mientras este contrato no haya sido cancelado en su totalidad es se le Prohibe realizar las siguientes acciones:
                                 <b>A)</b> utilizar el vehiculo para transporte publico como ser taxi en todas sus modalidades incluyendo VIP,
                                 <b>B)</b> utilzar el vehiculo como transporte de carga comercial.
-                                <b>-C)</b>, Adulterar el GPS o mandarlo a retirar o negarse.
+                                <b>-C)</b> Adulterar el GPS o mandarlo a retirar o negarse
+                                <span runat="server" id="lblNegarseRevisionGpsAuto" visible="false">a la revisión o al mantenimiento programado por
+                                    <b class="lblNombreComercial"></b>
+                                </span>.
                                 <b>D)</b> Enajenar, vender, permutar, donar, gravar, alquilar, rentar, prestar o dar en prenda el vehículo dado en propiedad, sin la autorización por escrito otorgada por
                                 <b class="lblNombreComercial"></b>,
                                 la inobservacias de las prohibiciones faculta a
@@ -2345,7 +2361,7 @@
                                 <asp:Label runat="server" ID="lblNombreCliente_ActaDeCompromiso"></asp:Label>,
                                 con numero de identidad
                                 <asp:Label runat="server" ID="lblIdentidadCliente_ActaDeCompromiso"></asp:Label>,
-                                me comprometo a realizar y entregar el documento de LICENCIA DE CONDUCIR en los próximos 40 días, proceso que no he podido realizar debido a que la Dirección Nacional de Vialidad y Transporte (Departamento de Tránsito) se encontraba cerrada por la emergencia del COVID-19. 
+                                me comprometo a realizar y entregar el documento de LICENCIA DE CONDUCIR en los próximos 30 días, proceso que no he podido realizar debido a que la Dirección Nacional de Vialidad y Transporte (Departamento de Tránsito) se encontraba cerrada por la emergencia del COVID-19. 
                                 Dicho documento me es solicitado por
                                 <b class="lblNombreComercial"></b>,
                                 y ________________________________
@@ -2366,7 +2382,9 @@
                             </p>
                             <p>
                                 <b>IMPORTANTE:</b>
-                                es de mi conocimiento que de no entregar dicho documento en los próximos 40 días doy autorización a PRESTADITO a recuperar la vehiculo adquirida mediante el financiamiento de ellos, y también me doy por enterado de que no se me hará entrega de placas y boleta de revisión.                               
+                                es de mi conocimiento que de no entregar dicho documento en los próximos 30 días doy autorización a
+                                <span class="lblNombreComercial"></span>
+                                a recuperar la vehiculo adquirida mediante el financiamiento de ellos, y también me doy por enterado de que no se me hará entrega de placas y boleta de revisión.
                             </p>
                             <p>
                                 Doy fe y constancia de que firmo este documento libre y espontáneamente
@@ -2489,6 +2507,6 @@
         const URL_CODIGO_QR = '<%=UrlCodigoQR%>';
         var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=ListaDocumentosDelExpedienteJSON%>');
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210304050118"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210323105125"></script>
 </body>
 </html>

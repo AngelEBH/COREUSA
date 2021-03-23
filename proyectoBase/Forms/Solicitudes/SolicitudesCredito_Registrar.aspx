@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Registrar.aspx.cs" Inherits="SolicitudesCredito_Registrar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Ingresar solicitud de crédito</title>
-    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style>
@@ -139,7 +139,10 @@
                                         <!-- Monto global -->
                                         <div class="col-sm-3">
                                             <asp:Label CssClass="col-form-label" ID="lblTituloMontoPrestmo" runat="server" Text="Valor global" AssociatedControlID="txtValorGlobal" />
-                                            <asp:TextBox ID="txtValorGlobal" CssClass="form-control form-control-sm mascara-cantidad" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <button id="btnSeleccionarPrecioDeMercado" class="btn btn-sm btn-secondary pt-0 pb-0" type="button" visible="false" title="Seleccionar precio de mercado" runat="server">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <asp:TextBox ID="txtValorGlobal" Enabled="true" CssClass="form-control form-control-sm mascara-cantidad" type="text" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
                                         <!-- Valor de la prima -->
                                         <div class="col-sm-3" id="divPrima" runat="server">
@@ -840,6 +843,79 @@
                 </div>
             </div>
         </div>
+
+        <div id="modalSeleccionarPrecioDeMercado" class="modal fade" role="dialog" aria-labelledby="modalSeleccionarPrecioDeMercadoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title mt-0" id="modalSeleccionarPrecioDeMercadoLabel">Seleccionar precio de mercado</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="alert alert-info bg-info text-white text-justify" role="alert">
+                            <i class="fas fa-exclamation-circle text-white"></i>
+                            <strong>Seleccionar precio de mercado</strong> de la garantía.
+                            <br />
+                            Si la garantía que buscas no está registrada en el sistema o no tiene un precio de mercado asignado, <b>crea la solicitud de precio de mercado </b> para ser <b>validada</b> por el departamento de crédito.
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">                                
+                                <label class="col-form-label" for="ddlMarca">Marca</label>
+                                <button type="button" id="btnAgregarMarca" class="btn btn-sm btn-secondary pt-1 pb-1 float-rightx" title="Agregar marca">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                                <asp:DropDownList ID="ddlMarca" runat="server" CssClass="form-control form-control-sm" data-parsley-group="solicitarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlMarca"></asp:DropDownList>
+                                <div id="error-ddlMarca"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Modelo - Versión</label>
+                                <button type="button" id="btnAgregarModelo" class="btn btn-sm btn-secondary pt-1 pb-1 float-rightx" title="Agregar modelo">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                                <asp:DropDownList ID="ddlModelo" Enabled="false" runat="server" CssClass="form-control form-control-sm" data-parsley-group="solicitarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlModelo"></asp:DropDownList>
+                                <div id="error-ddlModelo"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Año</label>
+                                <button type="button" id="btnAgregarAnio" class="btn btn-sm btn-secondary pt-1 pb-1 float-rightx mt-1" title="Agregar año">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                                <asp:DropDownList ID="ddlAnio" Enabled="false" runat="server" CssClass="form-control form-control-sm" data-parsley-group="solicitarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlAnio"></asp:DropDownList>
+                                <div id="error-ddlAnio"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Precio de mercado actual</label>                                
+                                <asp:TextBox ID="txtPrecioDeMercadoActual" CssClass="form-control form-control-sm mascara-cantidad" type="text" ReadOnly="true" required="required" data-parsley-group="solicitarPrecioDeMercado" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-6 text-center mt-3">
+                                <button type="button" id="btnSeleccionarPrecioDeMercadoConfirmar" class="btn btn-block btn-secondary" title="Seleccionar precio" disabled="disabled">
+                                    <i class="far fa-check-circle"></i>
+                                    Seleccionar precio
+                                </button>
+                            </div>
+                            <div class="col-6 text-center mt-3">
+                                <button type="button" id="btnSolicitarPrecioDeMercado" class="btn btn-block btn-secondary" title="Solicitar reevaluación" disabled="disabled">
+                                    <i class="far fa-edit"></i>
+                                    Solicitar precio de mercado
+                                </button>
+                            </div>
+                        </div>
+                        <%--<div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Comentario adicional</label>
+                                <textarea id="Textarea1" runat="server" class="form-control form-control-sm" data-parsley-group="cambiarScore" data-parsley-maxlength="150" rows="2"></textarea>
+                            </div>
+                        </div>--%>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -898,5 +974,6 @@
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar.js?v=20210118015352"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_SeleccionarPrecioDeMercado.js?v=20210118015352"></script>
 </body>
 </html>
