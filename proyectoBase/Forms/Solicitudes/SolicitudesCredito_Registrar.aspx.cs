@@ -2765,5 +2765,15 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public string Descripcion { get; set; }
     }
 
+    public class PrecioDeMercado_ViewModel
+    {
+        public int IdPrecioDeMercado { get; set; }
+        public int IdModeloAnio { get; set; }
+        public decimal PrecioDeMercado { get; set; }
+        public int IdEstado { get; set; }
+        public string Estado { get; set; }
+        public string EstadoClassName { get; set; }
+    }
+
     #endregion
 }

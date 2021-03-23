@@ -172,7 +172,7 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Modelos_Anios_ObtenerAniosPorIdModelo", sqlConexion))
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Modelos_Anios_ObtenerPorIdModelo", sqlConexion))
                 {
                     sqlComando.Parameters.AddWithValue("@piIDModelo", idModelo);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
