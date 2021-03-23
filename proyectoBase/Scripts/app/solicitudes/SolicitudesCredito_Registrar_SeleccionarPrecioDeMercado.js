@@ -1,4 +1,11 @@
-﻿/* Seleccionar precio de mercado de la garantía */
+﻿var idMarcaSeleccionada = 0;
+var marcaSeleccionada = '';
+var idModeloSeleccionado = 0;
+var modeloSeleccionado = '';
+var idModeloAnioSeleccionado = 0;
+var anioSeleccionado = 0;
+
+/* Seleccionar precio de mercado de la garantía */
 $("#btnSeleccionarPrecioDeMercado").click(function () {
 
     var ddlMarca = $('#ddlMarca').empty().append("<option value=''>Seleccione una opción</option>");
@@ -61,6 +68,9 @@ $("#ddlMarca").change(function () {
                 });
 
                 ddlModelo.append(templateModelos).prop('disabled', false); // Agregar modelos de la marca seleccionada al ddl de modelos
+
+                idMarcaSeleccionada = idMarca;
+                marcaSeleccionada = $("#ddlMarca option:selected").text();
             }
         });
     }
@@ -99,6 +109,9 @@ $("#ddlModelo").change(function () {
                     templateAnios += "<option value='" + iter.Id + "'>" + iter.Descripcion + "</option>";
                 });
                 ddlAnio.append(templateAnios).prop('disabled', false); // agregar lista de años al ddl de años
+
+                idModeloSeleccionado = idModelo;
+                modeloSeleccionado = $("#ddlModelo option:selected").text();
             }
         });
     }
@@ -134,8 +147,11 @@ $("#ddlAnio").change(function () {
                     $('#txtPrecioDeMercadoActual').val('');
                     $('#btnSolicitarPrecioDeMercado').prop('disabled', false); // habilitar opciones
                     $('#btnSeleccionarPrecioDeMercadoConfirmar').prop('disabled', true); // deshabilitar opciones
-                    MensajeAdvertencia("No hay ningún precio de mercado asignado a la garantía seleccionado. <br /> <b>NOTA: Recuerda que puedes solicitar los precios de mercado.</b>");
+                    MensajeAdvertencia("No hay ningún precio de mercado asignado a la garantía seleccionada. <br /> <b>NOTA: Recuerda que puedes solicitar los precios de mercado.</b>");
                 }
+
+                idModeloAnioSeleccionado = idModeloAnio;
+                anioSeleccionado = $("#ddlAnio option:selected").text();
             }
         });
     }
@@ -150,3 +166,41 @@ $("#btnSeleccionarPrecioDeMercadoConfirmar").click(function () {
     $("#txtValorGlobal").val($('#txtPrecioDeMercadoActual').val());
     $("#modalSeleccionarPrecioDeMercado").modal('hide');
 });
+
+
+/* Soliciar precio de mercado */
+$("#btnSolicitarPrecioDeMercado").click(function () {
+
+    if (idMarcaSeleccionada == 0) {
+        MensajeError('No se ha seleccionado ninguna marca');
+        $("#ddlMarca").focus();
+        return false
+    }
+
+    if (idModeloSeleccionado == 0) {
+        MensajeError('No se ha seleccionado ningún modelo');
+        $("#ddlModelo").focus();
+        return false
+    }
+    if (idModeloAnioSeleccionado == 0) {
+        MensajeError('No se ha seleccionado ningún año');
+        $("#ddlAnio").focus();
+        return false
+    }
+
+    $("#modalSeleccionarPrecioDeMercado").modal('hide');
+
+    $("#lblMarca").text(marcaSeleccionada);
+    $("#lblModelo").text(modeloSeleccionado);
+    $("#lblAnio").text(anioSeleccionado);
+
+    $("#txtPrecioDeMercadoSolicitado").val('');
+    $("#txtComentarioSolicitarPrecioDeMercado").val('');
+
+    $("#modalSolicitarPrecioDeMercado").modal();
+
+});
+
+
+
+/* Agregar items que no estén disponibles (Marcas, modelos, años y solicitar el precio de mercado)*/

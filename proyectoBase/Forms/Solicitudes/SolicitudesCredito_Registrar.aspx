@@ -862,31 +862,31 @@
                         <div class="form-group row">
                             <div class="col-sm-6">                                
                                 <label class="col-form-label" for="ddlMarca">Marca</label>
-                                <button type="button" id="btnAgregarMarca" class="btn btn-sm btn-secondary pt-1 pb-1 float-rightx" title="Agregar marca">
+                                <button type="button" id="btnAgregarMarca" class="btn btn-sm btn-secondary pt-1 pb-1 float-right" title="Agregar marca">
                                     <i class="fa fa-plus"></i>
                                 </button>
-                                <asp:DropDownList ID="ddlMarca" runat="server" CssClass="form-control form-control-sm" data-parsley-group="solicitarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlMarca"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlMarca" runat="server" CssClass="form-control form-control-sm buscadorddl" data-parsley-group="seleccionarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlMarca"></asp:DropDownList>
                                 <div id="error-ddlMarca"></div>
                             </div>
                             <div class="col-sm-6">
                                 <label class="col-form-label">Modelo - Versión</label>
-                                <button type="button" id="btnAgregarModelo" class="btn btn-sm btn-secondary pt-1 pb-1 float-rightx" title="Agregar modelo">
+                                <button type="button" id="btnAgregarModelo" class="btn btn-sm btn-secondary pt-1 pb-1 float-right" title="Agregar modelo">
                                     <i class="fa fa-plus"></i>
                                 </button>
-                                <asp:DropDownList ID="ddlModelo" Enabled="false" runat="server" CssClass="form-control form-control-sm" data-parsley-group="solicitarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlModelo"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlModelo" Enabled="false" runat="server" CssClass="form-control form-control-sm buscadorddl" data-parsley-group="seleccionarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlModelo"></asp:DropDownList>
                                 <div id="error-ddlModelo"></div>
                             </div>
                             <div class="col-sm-6">
                                 <label class="col-form-label">Año</label>
-                                <button type="button" id="btnAgregarAnio" class="btn btn-sm btn-secondary pt-1 pb-1 float-rightx mt-1" title="Agregar año">
+                                <button type="button" id="btnAgregarAnio" class="btn btn-sm btn-secondary pt-1 pb-1 float-right mt-1" title="Agregar año">
                                     <i class="fa fa-plus"></i>
                                 </button>
-                                <asp:DropDownList ID="ddlAnio" Enabled="false" runat="server" CssClass="form-control form-control-sm" data-parsley-group="solicitarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlAnio"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlAnio" Enabled="false" runat="server" CssClass="form-control form-control-sm buscadorddl" data-parsley-group="seleccionarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlAnio"></asp:DropDownList>
                                 <div id="error-ddlAnio"></div>
                             </div>
                             <div class="col-sm-6">
                                 <label class="col-form-label">Precio de mercado actual</label>                                
-                                <asp:TextBox ID="txtPrecioDeMercadoActual" CssClass="form-control form-control-sm mascara-cantidad" type="text" ReadOnly="true" required="required" data-parsley-group="solicitarPrecioDeMercado" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="txtPrecioDeMercadoActual" CssClass="form-control form-control-sm mascara-cantidad" type="text" ReadOnly="true" required="required" data-parsley-group="seleccionarPrecioDeMercado" runat="server"></asp:TextBox>
                             </div>
                             <div class="col-6 text-center mt-3">
                                 <button type="button" id="btnSeleccionarPrecioDeMercadoConfirmar" class="btn btn-block btn-secondary" title="Seleccionar precio" disabled="disabled">
@@ -910,6 +910,55 @@
                     </div>
                     <div class="modal-footer">
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalSolicitarPrecioDeMercado" class="modal fade" role="dialog" aria-labelledby="modalSolicitarPrecioDeMercadoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                        <div class="col-12">
+                            <h6 class="m-0" id="modalSolicitarPrecioDeMercadoLabel">Soliciar precio de mercado</h6>
+                        </div>
+                        <div class="col-12 text-muted font-weight-bold">
+                            Marca:
+                            <span id="lblMarca"></span>
+                            / Modelo:
+                            <span id="lblModelo"></span>
+                            / Año:
+                            <span id="lblAnio"></span>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="alert alert-info bg-info text-white" role="alert">
+                            <i class="fas fa-exclamation-circle text-white"></i>
+                            <strong>Solicitar precio de mercado</strong>.
+                            <br />
+                            La solicitud de precio de mercado será <b>recibida y validad por el departamento de crédito</b>.
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Precio solicitado</label>
+                                <asp:TextBox ID="txtPrecioDeMercadoSolicitado" CssClass="form-control form-control-sm mascara-cantidad" type="text" required="required" data-parsley-group="solicitarPrecioDeMercado" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-12">
+                                <label class="col-form-label">Comentarios para el depto. de crédito</label>
+                                <textarea id="txtComentarioSolicitarPrecioDeMercado" runat="server" class="form-control form-control-sm" data-parsley-group="solicitarPrecioDeMercado" data-parsley-maxlength="500" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnSolicitarPrecioDeMercadoConfirmar" class="btn btn-secondary">
+                        Confirmar
+                    </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
                     </div>
