@@ -2205,7 +2205,7 @@
                     </div>
                     <div class="row">
                         <div class="col-6 p-0">
-                            <asp:Table ID="tblDocumentos_Expediente" CssClass="table table-sm table-condensed table-bordered" runat="server">
+                            <asp:Table ID="tblDocumentos_Expediente" CssClass="table table-condensed table-bordered" runat="server">
                                 <asp:TableHeaderRow TableSection="TableHeader">
                                     <asp:TableHeaderCell>Tipo de documento</asp:TableHeaderCell>
                                     <asp:TableHeaderCell CssClass="text-center">SI</asp:TableHeaderCell>
@@ -2225,7 +2225,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row pt-5 justify-content-center">
+                    <div class="row pt-2 justify-content-center">
                         <div class="col-5 text-center">
                             <label class="form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px; border-width: 1px; border-color: black;"></label>
                             <label class="mt-0 d-block">Firma de entrega</label>

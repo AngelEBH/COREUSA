@@ -742,10 +742,10 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                         while (sqlResultado.Read())
                         {
                             tRowDocumentoExpediente = new TableRow();
-                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fcDocumento"].ToString() });
-                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "1" ? "X" : "", HorizontalAlign = HorizontalAlign.Center });
-                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "2" ? "X" : "", HorizontalAlign = HorizontalAlign.Center });
-                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "3" ? "X" : "", HorizontalAlign = HorizontalAlign.Center });
+                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fcDocumento"].ToString(), CssClass= "mt-0 mb-0 pt-0 pb-0" });
+                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "1" ? "X" : "", CssClass = "mt-0 mb-0 pt-0 pb-0", HorizontalAlign = HorizontalAlign.Center });
+                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "2" ? "X" : "", CssClass = "mt-0 mb-0 pt-0 pb-0", HorizontalAlign = HorizontalAlign.Center });
+                            tRowDocumentoExpediente.Cells.Add(new TableCell() { Text = sqlResultado["fiIDEstadoDocumento"].ToString() == "3" ? "X" : "", CssClass = "mt-0 mb-0 pt-0 pb-0", HorizontalAlign = HorizontalAlign.Center });
                             tblDocumentos_Expediente.Rows.Add(tRowDocumentoExpediente);
 
                             listaDocumentosExpediente.Add(new Expediente_Documento_ViewModel()

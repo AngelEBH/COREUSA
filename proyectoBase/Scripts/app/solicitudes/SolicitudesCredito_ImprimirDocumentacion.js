@@ -213,10 +213,10 @@ $("#btnGuardarExpedienteSolicitud").click(function () {
                     for (var i = 0; i < LISTA_DOCUMENTOS_EXPEDIENTES.length; i++) {
 
                         template += '<tr>' +
-                            '<td>' + LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento + '</td>' +
-                            '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '1' ? 'X' : '') + '</td>' +
-                            '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '2' ? 'X' : '') + '</td>' +
-                            '<td class="text-center">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '3' ? 'X' : '') + '</td>' +
+                            '<td class="mt-0 mb-0 pt-0 pb-0">' + LISTA_DOCUMENTOS_EXPEDIENTES[i].DescripcionDocumento + '</td>' +
+                            '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '1' ? 'X' : '') + '</td>' +
+                            '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '2' ? 'X' : '') + '</td>' +
+                            '<td class="text-center mt-0 mb-0 pt-0 pb-0">' + (LISTA_DOCUMENTOS_EXPEDIENTES[i].IdEstadoDocumento == '3' ? 'X' : '') + '</td>' +
                             '</tr>';
                     }
 
