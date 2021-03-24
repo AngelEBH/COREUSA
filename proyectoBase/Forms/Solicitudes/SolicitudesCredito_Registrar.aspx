@@ -870,7 +870,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label class="col-form-label">Modelo - Versión</label>
-                                <button type="button" id="btnAgregarModelo" class="btn btn-sm btn-secondary pt-1 pb-1 float-right" title="Agregar modelo">
+                                <button type="button" id="btnAgregarModelo" class="btn btn-sm btn-secondary pt-1 pb-1 float-right" title="Agregar modelo" disabled="disabled">
                                     <i class="fa fa-plus"></i>
                                 </button>
                                 <asp:DropDownList ID="ddlModelo" Enabled="false" runat="server" CssClass="form-control form-control-sm buscadorddl" data-parsley-group="seleccionarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlModelo"></asp:DropDownList>
@@ -878,7 +878,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label class="col-form-label">Año</label>
-                                <button type="button" id="btnAgregarAnio" class="btn btn-sm btn-secondary pt-1 pb-1 float-right mt-1" title="Agregar año">
+                                <button type="button" id="btnAgregarAnio" class="btn btn-sm btn-secondary pt-1 pb-1 float-right mt-1" title="Agregar año" disabled="disabled">
                                     <i class="fa fa-plus"></i>
                                 </button>
                                 <asp:DropDownList ID="ddlAnio" Enabled="false" runat="server" CssClass="form-control form-control-sm buscadorddl" data-parsley-group="seleccionarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlAnio"></asp:DropDownList>
@@ -901,12 +901,6 @@
                                 </button>
                             </div>
                         </div>
-                        <%--<div class="form-group row">
-                            <div class="col-12">
-                                <label class="col-form-label">Comentario adicional</label>
-                                <textarea id="Textarea1" runat="server" class="form-control form-control-sm" data-parsley-group="cambiarScore" data-parsley-maxlength="150" rows="2"></textarea>
-                            </div>
-                        </div>--%>
                     </div>
                     <div class="modal-footer">
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -960,6 +954,82 @@
                         </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalAgregarMarcaPrecioMercado" class="modal fade" role="dialog" aria-labelledby="modalAgregarMarcaPrecioMercadoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalAgregarMarcaPrecioMercadoLabel">Agregar nueva marca</h6>
+                            </div>
+                            <%--<div class="col-12 text-muted font-weight-bold" id="lblModalAgregarDetalleTitulo">
+                                Marca:
+                                <span id="lblMarca"></span>
+                                / Modelo:
+                                <span id="lblModelo"></span>
+                                / Año:
+                                <span id="lblAnio"></span>
+                            </div>--%>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Descripción</label>
+                                <asp:TextBox ID="txtMarcaAgregar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-maxlength="150" data-parsley-group="agregarMarca" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnAgregarMarcaConfirmar" class="btn btn-secondary">
+                            Confirmar
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="btnAgregarMarcaCancelar">
+                            Cancelar y volver
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalAgregarModelosPrecioMercado" class="modal fade" role="dialog" aria-labelledby="modalAgregarModelosPrecioMercadoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalAgregarModelosPrecioMercadoLabel">Agregar nuevo modelo</h6>
+                            </div>
+                            <%--<div class="col-12 text-muted font-weight-bold" id="lblModalAgregarDetalleTitulo">
+                                Marca:
+                                <span id="lblMarca"></span>
+                                / Modelo:
+                                <span id="lblModelo"></span>
+                                / Año:
+                                <span id="lblAnio"></span>
+                            </div>--%>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Descripción</label>
+                                <asp:TextBox ID="TextBox1" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-maxlength="150" data-parsley-group="agregarMarca" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnAgregarModeloConfirmar" class="btn btn-secondary">
+                            Confirmar
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="btnAgregarModeloCancelar">
+                            Cancelar y volver
                         </button>
                     </div>
                 </div>

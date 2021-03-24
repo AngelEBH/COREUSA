@@ -2473,7 +2473,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                 using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Marcas_Guardar", sqlConexion))
                 {
-                    sqlComando.Parameters.AddWithValue("@pcMarca", marca);
+                    sqlComando.Parameters.AddWithValue("@pcMarca", marca.Trim());
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -2497,7 +2497,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 Resultado.MensajeDebug = resultadoSP;
 
                                 if (resultadoSP.Contains("Violation of UNIQUE KEY"))
-                                    Resultado.MensajeResultado = "La marca que intenta guardar ya está registrada. Si la marca ha sido INACTIVADA, cambie el estado a ACTIVA. Si cree que se trata de un error, contacte al administrador.";
+                                    Resultado.MensajeResultado = "La marca que intenta guardar ya ha sido registrada. Si la marca ha sido INACTIVADA, cambie el estado a ACTIVA. Si cree que se trata de un error, contacte al administrador.";
                             }
                         } // using sqlResultado.Read()
                     } // using sqlResultado
@@ -2556,7 +2556,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 Resultado.MensajeDebug = resultadoSP;
 
                                 if (resultadoSP.Contains("Violation of UNIQUE KEY"))
-                                    Resultado.MensajeResultado = "El modelo que intenta guardar ya está registrada. Si el modelo ha sido INACTIVADA, cambie el estado a ACTIVA. Si cree que se trata de un error, contacte al administrador.";
+                                    Resultado.MensajeResultado = "El modelo que intenta guardar ya ha sido registrado. Si el modelo ha sido INACTIVADA, cambie el estado a ACTIVA. Si cree que se trata de un error, contacte al administrador.";
                             }
                         } // using sqlResultado.Read()
                     } // using sqlResultado
@@ -2614,7 +2614,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 Resultado.MensajeDebug = resultadoSP;
 
                                 if (resultadoSP.Contains("Violation of UNIQUE KEY"))
-                                    Resultado.MensajeResultado = "El año del modelo seleccionado que intenta guardar ya está registrado. Si el año del modelo seleccionado ha sido INACTIVADO, cambie el estado a ACTIVO. Si cree que se trata de un error, contacte al administrador.";
+                                    Resultado.MensajeResultado = "El año del modelo seleccionado que intenta guardar ya ha sido registrado. Si el año del modelo seleccionado ha sido INACTIVADO, cambie el estado a ACTIVO. Si cree que se trata de un error, contacte al administrador.";
                             }
                         } // using sqlResultado.Read()
                     } // using sqlResultado

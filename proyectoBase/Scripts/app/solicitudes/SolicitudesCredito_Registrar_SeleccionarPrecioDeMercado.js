@@ -8,79 +8,14 @@ var anioSeleccionado = 0;
 /* Seleccionar precio de mercado de la garantía */
 $("#btnSeleccionarPrecioDeMercado").click(function () {
 
-    var ddlMarca = $('#ddlMarca').empty().append("<option value=''>Seleccione una opción</option>");
-    $('#ddlModelo').empty().append("<option value=''>Seleccione una marca</option>").prop('disabled', true); // reiniciar ddl marcas
-    $('#ddlAnio').empty().append("<option value=''>Seleccione un modelo</option>").prop('disabled', true); // reiniciar ddl anios
-
-    $('#btnSeleccionarPrecioDeMercadoConfirmar,#btnSolicitarPrecioDeMercado').prop('disabled', true); // inhabilitar opcion
-    $('#txtPrecioDeMercadoActual').val(''); // reiniciar precio de mercado
-
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Registrar.aspx/CargarMarcas",
-        data: JSON.stringify({ dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudieron cargar las marcas disponibles, contacte al administrador.');
-        },
-        success: function (data) {
-
-            var listaMarcas = data.d;
-            var templateMarcas = '';
-
-            $.each(listaMarcas, function (i, iter) {
-                templateMarcas += "<option value='" + iter.Id + "'>" + iter.Descripcion + "</option>";
-            });
-            ddlMarca.append(templateMarcas).prop('disabled', false); // llenar ddl marcas
-
-            $("#modalSeleccionarPrecioDeMercado").modal(); // mostrar modal
-        }
-    });
+    CargarMarcas(0);
 });
 
 // Cargar los modelos de la marca seleccionada
 $("#ddlMarca").change(function () {
 
     var idMarca = $("#ddlMarca option:selected").val(); // id marca seleccionada
-    var ddlModelo = $('#ddlModelo');
-    var ddlAnio = $('#ddlAnio');
-
-    if (idMarca != '') { // si se seleccionó una marca
-
-        ddlModelo.empty().append("<option value=''>Seleccione una marca</option>").prop('disabled', true); // reiniciar ddl de modelos
-        ddlAnio.empty().append("<option value=''>Seleccione un modelo</option>").prop('disabled', true); // reiniciar ddl de años
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Registrar.aspx/CargarModelosPorIdMarca",
-            data: JSON.stringify({ idMarca: idMarca, dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudieron cargar los modelos de la marca seleccionada, contacte al administrador.');
-            },
-            success: function (data) {
-
-                let listaModelos = data.d;
-                let templateModelos = '';
-
-                $.each(listaModelos, function (i, iter) {
-                    templateModelos += "<option value='" + iter.Id + "'>" + iter.Descripcion + "</option>";
-                });
-
-                ddlModelo.append(templateModelos).prop('disabled', false); // Agregar modelos de la marca seleccionada al ddl de modelos
-
-                idMarcaSeleccionada = idMarca;
-                marcaSeleccionada = $("#ddlMarca option:selected").text();
-            }
-        });
-    }
-    else {
-        ddlModelo.empty().append("<option value=''>Seleccione una marca</option>").prop('disabled', true); // reiniciar ddl de modelos
-        ddlAnio.empty().append("<option value=''>Seleccione un modelo</option>").prop('disabled', true); // reiniciar ddl de años
-
-        $('#btnSeleccionarPrecioDeMercadoConfirmar,#btnSolicitarPrecioDeMercado').prop('disabled', true); // deshabilitar opciones
-        $('#txtPrecioDeMercadoActual').val(''); // reiniciar precio de mercado
-    }
+    CargarModelos(idMarca,0);
 });
 
 $("#ddlModelo").change(function () {
@@ -91,6 +26,8 @@ $("#ddlModelo").change(function () {
     if (idModelo != '') { // si se seleccionó un modelo
 
         ddlAnio.empty().append("<option value=''>Seleccione un modelo</option>").prop('disabled', true); // reiniciar ddl de años
+
+        $("#btnAgregarAnio").prop('disabled', false);
 
         $.ajax({
             type: "POST",
@@ -119,6 +56,8 @@ $("#ddlModelo").change(function () {
         ddlAnio.empty().append("<option value=''>Seleccione un modelo</option>").prop('disabled', true); // reiniciar ddl de años
         $('#btnSeleccionarPrecioDeMercadoConfirmar,#btnSolicitarPrecioDeMercado').prop('disabled', true); // deshabilitar opciones
         $('#txtPrecioDeMercadoActual').val(''); // reiniciar precios de mercado
+
+        $("#btnAgregarAnio").prop('disabled', true);
     }
 });
 
@@ -202,5 +141,192 @@ $("#btnSolicitarPrecioDeMercado").click(function () {
 });
 
 
+/* Agregar items que no estén disponibles (Marcas, modelos, años del modelo seleccionado y solicitar el precio de mercado)*/
 
-/* Agregar items que no estén disponibles (Marcas, modelos, años y solicitar el precio de mercado)*/
+/* Agregar marcas */
+$("#btnAgregarMarca").click(function () {
+
+    $("#txtMarcaAgregar").val('');
+    $('#txtMarcaAgregar').parsley().reset();
+    $("#modalSeleccionarPrecioDeMercado").modal('hide');
+    $("#modalAgregarMarcaPrecioMercado").modal();
+});
+
+$("#btnAgregarMarcaCancelar").click(function () {
+    $("#modalAgregarMarcaPrecioMercado").modal('hide');
+    $("#modalSeleccionarPrecioDeMercado").modal();
+});
+
+
+$("#btnAgregarMarcaConfirmar").click(function () {
+
+    /* Validar formulario de agregar referencia personal */
+    if ($("#txtMarcaAgregar").parsley().isValid()) {
+
+        $('#btnAgregarMarcaConfirmar').prop('disabled', true);
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Registrar.aspx/GuardarMarca",
+            data: JSON.stringify({ marca: $("#txtMarcaAgregar").val(), dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError("No se pudo guardar la marca, contacte al administrador.");
+            },
+            success: function (data) {
+
+                if (data.d.ResultadoExitoso == true) {
+                    MensajeExito(data.d.MensajeResultado);
+
+                    CargarMarcas(data.d.IdInsertado, true);
+
+                    $("#modalAgregarMarcaPrecioMercado").modal('hide');
+                    $("#modalSeleccionarPrecioDeMercado").modal();
+                }
+                else
+                    MensajeError(data.d.MensajeResultado);
+
+                console.log(data.d.MensajeDebug);
+            },
+            complete: function (data) {
+                $('#btnAgregarMarcaConfirmar').prop('disabled', false);
+            }
+        });
+    }
+    else
+        $("#txtMarcaAgregar").parsley().validate();
+});
+
+/* Agregar Modelos */
+$("#btnAgregarMarca").click(function () {
+
+    $("#txtMarcaAgregar").val('');
+    $('#txtMarcaAgregar').parsley().reset();
+    $("#modalSeleccionarPrecioDeMercado").modal('hide');
+    $("#modalAgregarMarcaPrecioMercado").modal();
+});
+
+$("#btnAgregarMarcaCancelar").click(function () {
+    $("#modalAgregarMarcaPrecioMercado").modal('hide');
+    $("#modalSeleccionarPrecioDeMercado").modal();
+});
+
+
+$("#btnAgregarMarcaConfirmar").click(function () {
+
+    /* Validar formulario de agregar referencia personal */
+    if ($("#txtMarcaAgregar").parsley().isValid()) {
+
+        $('#btnAgregarMarcaConfirmar').prop('disabled', true);
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Registrar.aspx/GuardarMarca",
+            data: JSON.stringify({ marca: $("#txtMarcaAgregar").val(), dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError("No se pudo guardar la marca, contacte al administrador.");
+            },
+            success: function (data) {
+
+                if (data.d.ResultadoExitoso == true) {
+                    MensajeExito(data.d.MensajeResultado);
+
+                    CargarMarcas(data.d.IdInsertado, true);
+
+                    $("#modalAgregarMarcaPrecioMercado").modal('hide');
+                    $("#modalSeleccionarPrecioDeMercado").modal();
+                }
+                else
+                    MensajeError(data.d.MensajeResultado);
+
+                console.log(data.d.MensajeDebug);
+            },
+            complete: function (data) {
+                $('#btnAgregarMarcaConfirmar').prop('disabled', false);
+            }
+        });
+    }
+    else
+        $("#txtMarcaAgregar").parsley().validate();
+});
+
+/******** F U N C I O N E S   U T I L I T A R I A S *********/
+function CargarMarcas(idMarcaSeleccionar) {
+
+    var ddlMarca = $('#ddlMarca').empty().append("<option value=''>Seleccione una opción</option>");
+    $('#ddlModelo').empty().append("<option value=''>Seleccione una marca</option>").prop('disabled', true); // reiniciar ddl marcas
+    $('#ddlAnio').empty().append("<option value=''>Seleccione un modelo</option>").prop('disabled', true); // reiniciar ddl anios
+
+    $('#btnSeleccionarPrecioDeMercadoConfirmar,#btnSolicitarPrecioDeMercado').prop('disabled', true); // inhabilitar opcion
+    $('#txtPrecioDeMercadoActual').val(''); // reiniciar precio de mercado
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Registrar.aspx/CargarMarcas",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudieron cargar las marcas disponibles, contacte al administrador.');
+        },
+        success: function (data) {
+
+            var listaMarcas = data.d;
+            var templateMarcas = '';
+
+            $.each(listaMarcas, function (i, iter) {
+                templateMarcas += "<option value='" + iter.Id + "' " + (iter.Id == idMarcaSeleccionar ? 'selected' : '') + ">" + iter.Descripcion + "</option>";
+            });
+            ddlMarca.append(templateMarcas).prop('disabled', false); // llenar ddl marcas
+
+            $("#modalSeleccionarPrecioDeMercado").modal(); // mostrar modal
+        }
+    });
+}
+
+function CargarModelos(idMarca, idModeloSeleccionar) {
+    
+    var ddlModelo = $('#ddlModelo');
+    var ddlAnio = $('#ddlAnio');
+
+    if (idMarca != '') { // si se seleccionó una marca
+
+        ddlModelo.empty().append("<option value=''>Seleccione una marca</option>").prop('disabled', true); // reiniciar ddl de modelos
+        ddlAnio.empty().append("<option value=''>Seleccione un modelo</option>").prop('disabled', true); // reiniciar ddl de años
+
+        idMarcaSeleccionada = idMarca;
+        marcaSeleccionada = $("#ddlMarca option:selected").text();
+
+        $("#btnAgregarModelo").prop('disabled', false);
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Registrar.aspx/CargarModelosPorIdMarca",
+            data: JSON.stringify({ idMarca: idMarca, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('No se pudieron cargar los modelos de la marca seleccionada, contacte al administrador.');
+            },
+            success: function (data) {
+
+                let listaModelos = data.d;
+                let templateModelos = '';
+
+                $.each(listaModelos, function (i, iter) {
+                    templateModelos += "<option value='" + iter.Id + "' " + (iter.Id == idModeloSeleccionar ? 'selected' : '') + ">" + iter.Descripcion + "</option>";
+                });
+
+                ddlModelo.append(templateModelos).prop('disabled', false); // Agregar modelos de la marca seleccionada al ddl de modelos
+            }
+        });
+    }
+    else {
+        ddlModelo.empty().append("<option value=''>Seleccione una marca</option>").prop('disabled', true); // reiniciar ddl de modelos
+        ddlAnio.empty().append("<option value=''>Seleccione un modelo</option>").prop('disabled', true); // reiniciar ddl de años
+
+        $('#btnSeleccionarPrecioDeMercadoConfirmar,#btnSolicitarPrecioDeMercado').prop('disabled', true); // deshabilitar opciones
+        $('#txtPrecioDeMercadoActual').val(''); // reiniciar precio de mercado
+
+        $("#btnAgregarModelo,#btnAgregarAnio").prop('disabled', true);
+    }
+}
