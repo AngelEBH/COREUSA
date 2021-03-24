@@ -165,13 +165,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
             var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
             var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-                { "limit", 1 },
-                { "title", "auto" },
-                { "uploadDir", uploadDir },
-                { "extensions", new string[] { "jpg", "png", "jpeg"} },
-                { "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
-                { "fileMaxSize", 10 }, //peso máximo por archivo
-            });
+{ "limit", 1 },
+{ "title", "auto" },
+{ "uploadDir", uploadDir },
+{ "extensions", new string[] { "jpg", "png", "jpeg"} },
+{ "maxSize", 500 }, //peso máximo de todos los archivos seleccionado en megas (MB)
+{ "fileMaxSize", 10 }, //peso máximo por archivo
+});
 
             switch (type)
             {
@@ -2187,7 +2187,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");            
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
 
@@ -2331,7 +2331,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         {
                             marcas.Add(new EntidadGenerica_ViewModel()
                             {
-                                Id = (int)sqlResultado["fiIDMarca"],                                
+                                Id = (int)sqlResultado["fiIDMarca"],
                                 Descripcion = sqlResultado["fcMarca"].ToString(),
                             });
                         }
