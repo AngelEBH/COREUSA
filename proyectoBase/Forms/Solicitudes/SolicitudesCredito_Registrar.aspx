@@ -878,7 +878,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label class="col-form-label">Año</label>
-                                <button type="button" id="btnAgregarAnio" class="btn btn-sm btn-secondary pt-1 pb-1 float-right mt-1" title="Agregar año" disabled="disabled">
+                                <button type="button" id="btnAgregarModeloAnio" class="btn btn-sm btn-secondary pt-1 pb-1 float-right mt-1" title="Agregar año" disabled="disabled">
                                     <i class="fa fa-plus"></i>
                                 </button>
                                 <asp:DropDownList ID="ddlAnio" Enabled="false" runat="server" CssClass="form-control form-control-sm buscadorddl" data-parsley-group="seleccionarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlAnio"></asp:DropDownList>
@@ -921,11 +921,11 @@
                             </div>
                             <div class="col-12 text-muted font-weight-bold">
                                 Marca:
-                            <span id="lblMarca"></span>
+                            <span class="lblMarca"></span>
                                 / Modelo:
-                            <span id="lblModelo"></span>
+                            <span class="lblModelo"></span>
                                 / Año:
-                            <span id="lblAnio"></span>
+                            <span class="lblAnio"></span>
                             </div>
                         </div>
                     </div>
@@ -968,14 +968,6 @@
                             <div class="col-12">
                                 <h6 class="m-0" id="modalAgregarMarcaPrecioMercadoLabel">Agregar nueva marca</h6>
                             </div>
-                            <%--<div class="col-12 text-muted font-weight-bold" id="lblModalAgregarDetalleTitulo">
-                                Marca:
-                                <span id="lblMarca"></span>
-                                / Modelo:
-                                <span id="lblModelo"></span>
-                                / Año:
-                                <span id="lblAnio"></span>
-                            </div>--%>
                         </div>
                     </div>
                     <div class="modal-body">
@@ -990,7 +982,7 @@
                         <button type="button" id="btnAgregarMarcaConfirmar" class="btn btn-secondary">
                             Confirmar
                         </button>
-                        <button type="button" class="btn btn-secondary" id="btnAgregarMarcaCancelar">
+                        <button type="button" id="btnAgregarMarcaCancelar" class="btn btn-secondary">
                             Cancelar y volver
                         </button>
                     </div>
@@ -1006,21 +998,21 @@
                             <div class="col-12">
                                 <h6 class="m-0" id="modalAgregarModelosPrecioMercadoLabel">Agregar nuevo modelo</h6>
                             </div>
-                            <%--<div class="col-12 text-muted font-weight-bold" id="lblModalAgregarDetalleTitulo">
+                            <div class="col-12 text-muted font-weight-bold">
                                 Marca:
-                                <span id="lblMarca"></span>
-                                / Modelo:
-                                <span id="lblModelo"></span>
-                                / Año:
-                                <span id="lblAnio"></span>
-                            </div>--%>
+                                <span class="lblMarca"></span>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-body">
                         <div class="form-group row">
-                            <div class="col-12">
-                                <label class="col-form-label">Descripción</label>
-                                <asp:TextBox ID="TextBox1" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-maxlength="150" data-parsley-group="agregarMarca" runat="server"></asp:TextBox>
+                            <div class="col-6">
+                                <label class="col-form-label">Modelo</label>
+                                <asp:TextBox ID="txtModeloAgregar" CssClass="form-control form-control-sm" type="text" required="required" data-parsley-maxlength="100" data-parsley-group="agregarModelo" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-6">
+                                <label class="col-form-label">Versión</label>
+                                <asp:TextBox ID="txtVersionAgregar" CssClass="form-control form-control-sm" type="text" data-parsley-maxlength="20" data-parsley-group="agregarModelo" runat="server"></asp:TextBox>
                             </div>
                         </div>
                     </div>
@@ -1028,7 +1020,46 @@
                         <button type="button" id="btnAgregarModeloConfirmar" class="btn btn-secondary">
                             Confirmar
                         </button>
-                        <button type="button" class="btn btn-secondary" id="btnAgregarModeloCancelar">
+                        <button type="button" id="btnAgregarModeloCancelar" class="btn btn-secondary">
+                            Cancelar y volver
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalAgregarAnioModeloPrecioMercado" class="modal fade" role="dialog" aria-labelledby="modalAgregarAnioModeloPrecioMercadoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalAgregarAnioModeloPrecioMercadoLabel">Agregar nuevo año del modelo seleccionado</h6>
+                            </div>
+                            <div class="col-12 text-muted font-weight-bold">
+                                Marca:
+                                <span class="lblMarca"></span>
+                                / Modelo:
+                                <span class="lblModelo"></span>
+                                <%--/ Año:
+                                <span class="lblAnio"></span>--%>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Año</label>
+                                <asp:DropDownList ID="ddlAnioAgregarAnioModelo" runat="server" CssClass="form-control form-control-sm buscadorddl" data-parsley-group="seleccionarPrecioDeMercado" required="required" data-parsley-errors-container="#error-ddlAnioAgregarAnioModelo"></asp:DropDownList>
+                                <div id="error-ddlAnioAgregarAnioModelo"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnAgregarAnioModeloConfirmar" class="btn btn-secondary">
+                            Confirmar
+                        </button>
+                        <button type="button" id="btnAgregarAnioModeloCancelar" class="btn btn-secondary">
                             Cancelar y volver
                         </button>
                     </div>

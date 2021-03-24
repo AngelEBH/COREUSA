@@ -1129,11 +1129,29 @@ public partial class SolicitudesCredito_Registrar
     protected global::System.Web.UI.WebControls.TextBox txtMarcaAgregar;
 
     /// <summary>
-    /// Control TextBox1.
+    /// Control txtModeloAgregar.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBox1;
+    protected global::System.Web.UI.WebControls.TextBox txtModeloAgregar;
+
+    /// <summary>
+    /// Control txtVersionAgregar.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtVersionAgregar;
+
+    /// <summary>
+    /// Control ddlAnioAgregarAnioModelo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlAnioAgregarAnioModelo;
 }

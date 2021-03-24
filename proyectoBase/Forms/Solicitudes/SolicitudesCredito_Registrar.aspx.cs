@@ -2369,6 +2369,50 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     }
 
     [WebMethod]
+    public static List<EntidadGenerica_ViewModel> CargarCatalogoDeAnios(string dataCrypt)
+    {
+        var marcas = new List<EntidadGenerica_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Anios_Listar", sqlConexion))
+                {
+                    sqlComando.Parameters.AddWithValue("@piIDAnio", 0);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            marcas.Add(new EntidadGenerica_ViewModel()
+                            {
+                                Id = (int)sqlResultado["fiIDAnio"],
+                                Descripcion = sqlResultado["fiAnio"].ToString(),
+                            });
+                        }
+                    }
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            marcas = null;
+        }
+        return marcas;
+    }
+
+    [WebMethod]
     public static List<EntidadGenerica_ViewModel> CargarAniosDisponiblesPorIdModelo(string idModelo, string dataCrypt)
     {
         var marcas = new List<EntidadGenerica_ViewModel>();
@@ -2531,8 +2575,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Modelos_Guardar", sqlConexion))
                 {
                     sqlComando.Parameters.AddWithValue("@piIDMarca", idMarca);
-                    sqlComando.Parameters.AddWithValue("@pcModelo", modelo);
-                    sqlComando.Parameters.AddWithValue("@pcVersion", version);
+                    sqlComando.Parameters.AddWithValue("@pcModelo", modelo.Trim());
+                    sqlComando.Parameters.AddWithValue("@pcVersion", version.Trim());
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
