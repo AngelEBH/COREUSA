@@ -1102,7 +1102,6 @@
     <Content Include="Forms\Solicitudes\Garantia_Detalles.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ImprimirDocumentacion.aspx" />
-    <Content Include="Forms\Solicitudes\SolicitudesCredito_ListadoExpedientes.aspx" />
     <Content Include="Forms\Solicitudes\PreciosDeMercado_Listado.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Expedientes.aspx" />
@@ -2120,13 +2119,6 @@
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_ImprimirDocumentacion.aspx.designer.cs">
       <DependentUpon>SolicitudesCredito_ImprimirDocumentacion.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListadoExpedientes.aspx.cs">
-      <DependentUpon>SolicitudesCredito_ListadoExpedientes.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListadoExpedientes.aspx.designer.cs">
-      <DependentUpon>SolicitudesCredito_ListadoExpedientes.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\PreciosDeMercado_Listado.aspx.cs">
       <DependentUpon>PreciosDeMercado_Listado.aspx</DependentUpon>

@@ -72,14 +72,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                 Session.Timeout = 10080;
 
                 if (Constantes.RequiereOrigen == 1)
-                {
                     CargarOrigenes();
-                }
 
                 if (Constantes.RequierePrima == 1)
-                {
                     txtValorPrima.Enabled = true;
-                }
 
                 switch (Precalificado.IdProducto)
                 {
@@ -216,12 +212,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     {
                         /* Si no está precalificado, retornar a pantalla de precalificacion */
                         if (!sqlResultado.HasRows)
-                        {
-                            string lcScript = "window.open('precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')";
-                            Response.Write("<script>");
-                            Response.Write(lcScript);
-                            Response.Write("</script>");
-                        }
+                            Response.Write("<script>window.open('precalificado_buscador.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario) + "','_self')</script>");
 
                         while (sqlResultado.Read())
                         {
@@ -333,9 +324,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         using (var sqlResultado = sqlComando.ExecuteReader())
                         {
                             while (sqlResultado.Read())
-                            {
                                 Precalificado.TipoDeClienteSAF = sqlResultado["fcClasificacionCliente"].ToString();
-                            }
 
                             if (Precalificado.TipoDeClienteSAF == "A - Excelente" || Precalificado.TipoDeClienteSAF == "B - Muy Bueno")
                             {
@@ -410,9 +399,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         ddlPlazosDisponibles.Items.Clear();
 
                         while (sqlResultado.Read())
-                        {
                             ddlPlazosDisponibles.Items.Add(new ListItem(sqlResultado["fcPlazo"].ToString(), sqlResultado["fiPlazo"].ToString()));
-                        }
                     }
                 }
             }
@@ -840,9 +827,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         ddlOrigen.Items.Add(new ListItem("Seleccionar origen", ""));
 
                         while (sqlResultado.Read())
-                        {
                             ddlOrigen.Items.Add(new ListItem(sqlResultado["fcOrigen"].ToString(), sqlResultado["fiIDOrigen"].ToString()));
-                        }
+
                         ddlOrigen.Enabled = true;
                     }
                 } // using comando
@@ -893,13 +879,10 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             txtProfesion.Text = sqlResultado["fcProfesionOficioCliente"].ToString();
 
                             if (sqlResultado["fcSexoCliente"].ToString() == "F")
-                            {
                                 rbSexoFemenino.Checked = true;
-                            }
                             else
-                            {
                                 rbSexoMasculino.Checked = true;
-                            }
+
                             ddlEstadoCivil.SelectedValue = sqlResultado["fiIDEstadoCivil"].ToString();
                             //ddlTipoDeCliente.SelectedValue = sqlResultado["fiTipoCliente"].ToString();
                             ddlTipoDeVivienda.SelectedValue = sqlResultado["fiIDVivienda"].ToString();
@@ -1187,7 +1170,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     #endregion
 
-    #region Calculos de prestamos por producto
+    #region C A L C U L O S   D E   P R E S T A M O S  por producto
 
     [WebMethod]
     public static CalculoPrestamo_ViewModel CalculoPrestamo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string dataCrypt)
@@ -1205,7 +1188,6 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                 using (var sqlComando = CrearSqlComando("sp_CredSolicitud_CalculoPrestamo", sqlConexion))
                 {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
                     sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", valorGlobal);
                     sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
@@ -1215,22 +1197,23 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
                     {
-                        sqlResultado.Read();
-
-                        calculo = new CalculoPrestamo_ViewModel()
+                        while (sqlResultado.Read())
                         {
-                            SegurodeDeuda = decimal.Parse(sqlResultado["fnSegurodeDeuda"].ToString()),
-                            TotalSeguroVehiculo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()) : decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
-                            CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
-                            GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
-                            TotalAFinanciar = decimal.Parse(sqlResultado["fnValoraFinanciar"].ToString()),
-                            CuotaDelPrestamo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()) : (decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()) - decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString())),
-                            CuotaTotal = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
-                            CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
-                            TipoCuota = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? "Meses" : "Quincenas",
-                            ValorDelPrestamo = valorGlobal - valorPrima,
-                            TasaInteresAnual = decimal.Parse(sqlResultado["fnTasaDeInteresAnual"].ToString()),
-                        };
+                            calculo = new CalculoPrestamo_ViewModel()
+                            {
+                                SegurodeDeuda = decimal.Parse(sqlResultado["fnSegurodeDeuda"].ToString()),
+                                TotalSeguroVehiculo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()) : decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
+                                CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
+                                GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
+                                TotalAFinanciar = decimal.Parse(sqlResultado["fnValoraFinanciar"].ToString()),
+                                CuotaDelPrestamo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()) : (decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()) - decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString())),
+                                CuotaTotal = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
+                                CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
+                                TipoCuota = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? "Meses" : "Quincenas",
+                                ValorDelPrestamo = valorGlobal - valorPrima,
+                                TasaInteresAnual = decimal.Parse(sqlResultado["fnTasaDeInteresAnual"].ToString()),
+                            };
+                        }
                     } // using sqlResultado.ExecuteReader()
                 } // using sqlComando
             } // using sqlConexion
@@ -1313,12 +1296,12 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     #endregion
 
-    #region Ingresar solicitud de crédito
+    #region I N G R E S A R   S O L I C I T U D   D E   C R E D I T O
 
     [WebMethod]
-    public static ResponseEntitie IngresarSolicitud(Solicitud_Maestro_ViewModel solicitud, Cliente_ViewModel cliente, Precalificado_ViewModel precalificado, Garantia_ViewModel garantia, bool esClienteNuevo, string dataCrypt, CalculoPrestamo_ViewModel cotizador)
+    public static Resultado_ViewModel IngresarSolicitud(Solicitud_Maestro_ViewModel solicitud, Cliente_ViewModel cliente, Precalificado_ViewModel precalificado, Garantia_ViewModel garantia, bool esClienteNuevo, string dataCrypt, CalculoPrestamo_ViewModel cotizador)
     {
-        var resultadoProceso = new ResponseEntitie();
+        var resultadoProceso = new Resultado_ViewModel();
         var mensajeError = string.Empty;
 
         using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
@@ -1334,8 +1317,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
                     var pcIDSesion = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("SID") ?? "0";
                     var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr");
-                    var nombreUsuario = string.Empty;
+
                     var fechaActual = DateTime.Now;
+                    var nombreUsuario = string.Empty;
                     var contadorErrores = 0;
                     var idClienteInsertado = 0;
 
@@ -1368,20 +1352,14 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             var mensajeDuplicidad = string.Empty;
 
                             if (duplicidadIdentidad > 0 && duplicidadRTN > 0)
-                            {
                                 mensajeDuplicidad = "Error de duplicidad, el número de identidad y RTN ingresados ya existen";
-                            }
                             else if (duplicidadIdentidad > 0)
-                            {
                                 mensajeDuplicidad = "Error de duplicidad, el número de identidad ingresado ya existe";
-                            }
                             else if (duplicidadRTN > 0)
-                            {
                                 mensajeDuplicidad = "Error de duplicidad, el número de RTN ingresado ya existe";
-                            }
 
-                            resultadoProceso.response = false;
-                            resultadoProceso.message = mensajeDuplicidad;
+                            resultadoProceso.ResultadoExitoso = false;
+                            resultadoProceso.MensajeResultado = mensajeDuplicidad;
                             return resultadoProceso;
                         }
 
@@ -1428,8 +1406,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                         if (contadorErrores > 0 || idClienteInsertado == 0)
                         {
-                            resultadoProceso.response = false;
-                            resultadoProceso.message = "Error al guardar informacion personal del cliente";
+                            resultadoProceso.ResultadoExitoso = false;
+                            resultadoProceso.MensajeResultado = "Error al guardar informacion personal del cliente";
                             return resultadoProceso;
                         }
                         solicitud.IdCliente = idClienteInsertado;
@@ -1451,15 +1429,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 while (sqlResultado.Read())
-                                {
                                     solicitudesActivas = (int)sqlResultado["fiClienteSolicitudesActivas"];
-                                }
                             }
                         }
                         if (solicitudesActivas > 0)
                         {
-                            resultadoProceso.response = false;
-                            resultadoProceso.message = "Hay una solicitud de crédito activa de este cliente, esperar resolución.";
+                            resultadoProceso.ResultadoExitoso = false;
+                            resultadoProceso.MensajeResultado = "Hay una solicitud de crédito activa de este cliente, esperar resolución.";
                             return resultadoProceso;
                         }
                     }
@@ -1532,15 +1508,15 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     } // if listaDeDocumentosAdjuntadosYPreSolicitud != null
                     else
                     {
-                        resultadoProceso.response = false;
-                        resultadoProceso.message = "Error al registrar la documentación, compruebe los documentos adjuntados o vuelva a cargarlos.";
+                        resultadoProceso.ResultadoExitoso = false;
+                        resultadoProceso.MensajeResultado = "Error al registrar la documentación, compruebe los documentos adjuntados o vuelva a cargarlos.";
                         return resultadoProceso;
                     }
 
                     if (listaDeDocumentosAdjuntadosYPreSolicitud.Count <= 0) // si no hay ningun documento de la solicitud, mostrar mensaje de error.
                     {
-                        resultadoProceso.response = false;
-                        resultadoProceso.message = "Error al guardar documentación, compruebe que haya cargado los documentos correctamente o vuelva a cargarlos";
+                        resultadoProceso.ResultadoExitoso = false;
+                        resultadoProceso.MensajeResultado = "Error al guardar documentación, compruebe que haya cargado los documentos correctamente o vuelva a cargarlos";
                         return resultadoProceso;
                     }
 
@@ -1589,8 +1565,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                     if (contadorErrores > 0)
                     {
-                        resultadoProceso.response = false;
-                        resultadoProceso.message = "Error al guardar la solicitud, contacte al administrador";
+                        resultadoProceso.ResultadoExitoso = false;
+                        resultadoProceso.MensajeResultado = "Error al guardar la solicitud, contacte al administrador";
                         return resultadoProceso;
                     }
 
@@ -1643,8 +1619,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
                         if (contadorErrores > 0)
                         {
-                            resultadoProceso.response = false;
-                            resultadoProceso.message = "Error al guardar informacion de la solicitud, contacte al administrador";
+                            resultadoProceso.ResultadoExitoso = false;
+                            resultadoProceso.MensajeResultado = "Error al guardar informacion de la solicitud, contacte al administrador";
                             return resultadoProceso;
                         }
                     }
@@ -1684,8 +1660,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                         if (contadorErrores > 0)
                         {
-                            resultadoProceso.response = false;
-                            resultadoProceso.message = "Error al registrar documentación de la solicitud";
+                            resultadoProceso.ResultadoExitoso = false;
+                            resultadoProceso.MensajeResultado = "Error al registrar documentación de la solicitud";
                             return resultadoProceso;
                         }
                     }
@@ -1693,16 +1669,16 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     /* Mover documentos adjuntados renombrados al nuevo directorio de la solicitud */
                     if (!FileUploader.GuardarSolicitudDocumentos(idSolicitudInsertada, listaDeDocumentosAdjuntadosPreSolicitudRenombrados))
                     {
-                        resultadoProceso.response = false;
-                        resultadoProceso.message = "Error al guardar la documentación de la solicitud";
+                        resultadoProceso.ResultadoExitoso = false;
+                        resultadoProceso.MensajeResultado = "Error al guardar la documentación de la solicitud";
                         return resultadoProceso;
                     }
 
                     /* Mover documentos adjuntados renombrados al nuevo directorio de la solicitud */
                     if (!MoverDocumentosPreSolicitud(listaDeDocumentosAdjuntadosPreSolicitudRenombrados, listaDeDocumentosPreSolicitud, "Solicitud" + idSolicitudInsertada))
                     {
-                        resultadoProceso.response = false;
-                        resultadoProceso.message = "Error al importar los documentos de la pre solicitud, contacte al administrador.";
+                        resultadoProceso.ResultadoExitoso = false;
+                        resultadoProceso.MensajeResultado = "Error al importar los documentos de la pre solicitud, contacte al administrador.";
                         return resultadoProceso;
                     }
 
@@ -1735,6 +1711,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
                         sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
+
                         using (var sqlResultado = sqlComando.ExecuteReader())
                         {
                             while (sqlResultado.Read())
@@ -1746,8 +1723,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
                     if (contadorErrores > 0)
                     {
-                        resultadoProceso.response = false;
-                        resultadoProceso.message = "Error al registrar información laboral del cliente";
+                        resultadoProceso.ResultadoExitoso = false;
+                        resultadoProceso.MensajeResultado = "Error al registrar información laboral del cliente";
                         return resultadoProceso;
                     }
 
@@ -1770,6 +1747,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                         sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
                         sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
+
                         using (var sqlResultado = sqlComando.ExecuteReader())
                         {
                             while (sqlResultado.Read())
@@ -1781,8 +1759,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     }
                     if (contadorErrores > 0)
                     {
-                        resultadoProceso.response = false;
-                        resultadoProceso.message = "Error al guardar informacion domiciliar del cliente";
+                        resultadoProceso.ResultadoExitoso = false;
+                        resultadoProceso.MensajeResultado = "Error al guardar informacion domiciliar del cliente";
                         return resultadoProceso;
                     }
 
@@ -1807,6 +1785,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
                             sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
                             sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
+
                             using (var sqlResultado = sqlComando.ExecuteReader())
                             {
                                 while (sqlResultado.Read())
@@ -1818,8 +1797,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                         if (contadorErrores > 0)
                         {
-                            resultadoProceso.response = false;
-                            resultadoProceso.message = "Error al guardar informacion conyugal del cliente";
+                            resultadoProceso.ResultadoExitoso = false;
+                            resultadoProceso.MensajeResultado = "Error al guardar informacion conyugal del cliente";
                             return resultadoProceso;
                         }
                     }
@@ -1853,16 +1832,14 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                         while (sqlResultado.Read())
                                         {
                                             if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                                            {
                                                 contadorErrores++;
-                                            }
                                         }
                                     }
                                 }
                                 if (contadorErrores > 0)
                                 {
-                                    resultadoProceso.response = false;
-                                    resultadoProceso.message = "Error al guardar referencias personales del cliente";
+                                    resultadoProceso.ResultadoExitoso = false;
+                                    resultadoProceso.MensajeResultado = "Error al guardar referencias personales del cliente";
                                     return resultadoProceso;
                                 }
                             }
@@ -1926,23 +1903,23 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         }
                         if (contadorErrores > 0)
                         {
-                            resultadoProceso.response = false;
-                            resultadoProceso.message = "No se pudo guardar la información de la garantía, contacte al administrador";
+                            resultadoProceso.ResultadoExitoso = false;
+                            resultadoProceso.MensajeResultado = "No se pudo guardar la información de la garantía, contacte al administrador";
                             return resultadoProceso;
                         }
                     }
 
                     sqlTransaction.Commit();
-                    resultadoProceso.idInsertado = 0;
-                    resultadoProceso.response = true;
-                    resultadoProceso.message = "¡La solicitud ha sido ingresada exitosamente!";
+                    resultadoProceso.IdInsertado = 0;
+                    resultadoProceso.ResultadoExitoso = true;
+                    resultadoProceso.MensajeResultado = "¡La solicitud ha sido ingresada exitosamente!";
                 }
                 catch (Exception ex)
                 {
                     sqlTransaction.Rollback();
                     ex.Message.ToString();
-                    resultadoProceso.response = false;
-                    resultadoProceso.message = "Error al guardar solicitud, contacte al administrador";
+                    resultadoProceso.ResultadoExitoso = false;
+                    resultadoProceso.MensajeResultado = "Error al guardar solicitud, contacte al administrador";
                 }
             }
         }
@@ -1951,7 +1928,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     #endregion
 
-    #region Funciones varias/utilitarias
+    #region FUNCIONES VARIAS - UTILITARIAS
 
     public static SqlCommand CrearSqlComando(string nombreSP, SqlConnection sqlConexion)
     {
@@ -2178,7 +2155,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     #endregion
 
-    #region Enviar correo de solicitud de cambio de Score
+    #region ENVIAR CORREO de solicitud de cambio de Score
 
     [WebMethod]
     public static bool EnviarSolicitudCambioScore(string identidadCliente, string nombreCliente, string scoreActual, string nuevoScore, string comentarioAdicional, string dataCrypt)
@@ -2301,7 +2278,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     }
     #endregion
 
-    #region Seleccionar precios de mercado
+    #region P R E C I O S   D E   M E R C A D O
 
     [WebMethod]
     public static List<EntidadGenerica_ViewModel> CargarMarcas(string dataCrypt)
@@ -2479,14 +2456,190 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         return precioDeMercadoActual;
     }
 
+    [WebMethod]
+    public static Resultado_ViewModel GuardarMarca(string marca, string dataCrypt)
+    {
+        var Resultado = new Resultado_ViewModel() { ResultadoExitoso = false };
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Marcas_Guardar", sqlConexion))
+                {
+                    sqlComando.Parameters.AddWithValue("@pcMarca", marca);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            var resultadoSP = sqlResultado["MensajeError"].ToString();
+
+                            if (!resultadoSP.StartsWith("-1"))
+                            {
+                                Resultado.ResultadoExitoso = true;
+                                Resultado.MensajeResultado = "La marca se registró existosamente";
+                                Resultado.IdInsertado = int.Parse(resultadoSP);
+                            }
+                            else
+                            {
+                                Resultado.ResultadoExitoso = false;
+                                Resultado.MensajeResultado = "No se pudo guardar la marca, contacte al administrador.";
+                                Resultado.MensajeDebug = resultadoSP;
+
+                                if (resultadoSP.Contains("Violation of UNIQUE KEY"))
+                                    Resultado.MensajeResultado = "La marca que intenta guardar ya está registrada. Si la marca ha sido INACTIVADA, cambie el estado a ACTIVA. Si cree que se trata de un error, contacte al administrador.";
+                            }
+                        } // using sqlResultado.Read()
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            Resultado.ResultadoExitoso = false;
+            Resultado.MensajeResultado = "Ocurrió un error al guardar la marca, contacte al administrador.";
+            Resultado.MensajeDebug = ex.Message.ToString();
+        }
+        return Resultado;
+    }
+
+    [WebMethod]
+    public static Resultado_ViewModel GuardarModelo(int idMarca, string modelo, string version, string dataCrypt)
+    {
+        var Resultado = new Resultado_ViewModel() { ResultadoExitoso = false };
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Modelos_Guardar", sqlConexion))
+                {
+                    sqlComando.Parameters.AddWithValue("@piIDMarca", idMarca);
+                    sqlComando.Parameters.AddWithValue("@pcModelo", modelo);
+                    sqlComando.Parameters.AddWithValue("@pcVersion", version);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            var resultadoSP = sqlResultado["MensajeError"].ToString();
+
+                            if (!resultadoSP.StartsWith("-1"))
+                            {
+                                Resultado.ResultadoExitoso = true;
+                                Resultado.MensajeResultado = "El modelo se registró existosamente";
+                                Resultado.IdInsertado = int.Parse(resultadoSP);
+                            }
+                            else
+                            {
+                                Resultado.ResultadoExitoso = false;
+                                Resultado.MensajeResultado = "No se pudo guardar el modelo, contacte al administrador.";
+                                Resultado.MensajeDebug = resultadoSP;
+
+                                if (resultadoSP.Contains("Violation of UNIQUE KEY"))
+                                    Resultado.MensajeResultado = "El modelo que intenta guardar ya está registrada. Si el modelo ha sido INACTIVADA, cambie el estado a ACTIVA. Si cree que se trata de un error, contacte al administrador.";
+                            }
+                        } // using sqlResultado.Read()
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            Resultado.ResultadoExitoso = false;
+            Resultado.MensajeResultado = "Ocurrió un error al guardar el modelo, contacte al administrador.";
+            Resultado.MensajeDebug = ex.Message.ToString();
+        }
+        return Resultado;
+    }
+
+    [WebMethod]
+    public static Resultado_ViewModel GuardarModeloAnio(int idModelo, int idAnio, string dataCrypt)
+    {
+        var Resultado = new Resultado_ViewModel() { ResultadoExitoso = false };
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Catalogo_Modelos_Anios_Guardar", sqlConexion))
+                {
+                    sqlComando.Parameters.AddWithValue("@piIDModelo", idModelo);
+                    sqlComando.Parameters.AddWithValue("@piIDAnio", idAnio);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            var resultadoSP = sqlResultado["MensajeError"].ToString();
+
+                            if (!resultadoSP.StartsWith("-1"))
+                            {
+                                Resultado.ResultadoExitoso = true;
+                                Resultado.MensajeResultado = "El año del modelo seleccionado se registró existosamente";
+                                Resultado.IdInsertado = int.Parse(resultadoSP);
+                            }
+                            else
+                            {
+                                Resultado.ResultadoExitoso = false;
+                                Resultado.MensajeResultado = "No se pudo guardar el año del modelo seleccionado, contacte al administrador.";
+                                Resultado.MensajeDebug = resultadoSP;
+
+                                if (resultadoSP.Contains("Violation of UNIQUE KEY"))
+                                    Resultado.MensajeResultado = "El año del modelo seleccionado que intenta guardar ya está registrado. Si el año del modelo seleccionado ha sido INACTIVADO, cambie el estado a ACTIVO. Si cree que se trata de un error, contacte al administrador.";
+                            }
+                        } // using sqlResultado.Read()
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            Resultado.ResultadoExitoso = false;
+            Resultado.MensajeResultado = "Ocurrió un error al guardar el año del modelo seleccionado, contacte al administrador.";
+            Resultado.MensajeDebug = ex.Message.ToString();
+        }
+        return Resultado;
+    }
+
     #endregion
 
-    #region View Models
+    #region V I E W  M O D E L S
 
-    public class Origenes_ViewModel
+    public class Resultado_ViewModel
     {
-        public int IdOrigen { get; set; }
-        public string Origen { get; set; }
+        public int IdInsertado { get; set; }
+        public bool ResultadoExitoso { get; set; }
+        public string MensajeResultado { get; set; }
+        public string MensajeDebug { get; set; }
     }
 
     public class Precalificado_ViewModel

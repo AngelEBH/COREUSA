@@ -857,10 +857,10 @@
                             <i class="fas fa-exclamation-circle text-white"></i>
                             <strong>Seleccionar precio de mercado</strong> de la garantía.
                             <br />
-                            Si la garantía que buscas no está registrada en el sistema o no tiene un precio de mercado asignado, <b>crea la solicitud de precio de mercado </b> para ser <b>validada</b> por el departamento de crédito.
+                            Si la garantía que buscas no está registrada en el sistema o no tiene un precio de mercado asignado, <b>crea la solicitud de precio de mercado </b>para ser <b>validada</b> por el departamento de crédito.
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-6">                                
+                            <div class="col-sm-6">
                                 <label class="col-form-label" for="ddlMarca">Marca</label>
                                 <button type="button" id="btnAgregarMarca" class="btn btn-sm btn-secondary pt-1 pb-1 float-right" title="Agregar marca">
                                     <i class="fa fa-plus"></i>
@@ -885,7 +885,7 @@
                                 <div id="error-ddlAnio"></div>
                             </div>
                             <div class="col-sm-6">
-                                <label class="col-form-label">Precio de mercado actual</label>                                
+                                <label class="col-form-label">Precio de mercado actual</label>
                                 <asp:TextBox ID="txtPrecioDeMercadoActual" CssClass="form-control form-control-sm mascara-cantidad" type="text" ReadOnly="true" required="required" data-parsley-group="seleccionarPrecioDeMercado" runat="server"></asp:TextBox>
                             </div>
                             <div class="col-6 text-center mt-3">
@@ -922,18 +922,18 @@
                 <div class="modal-content">
                     <div class="modal-header pb-2">
                         <div class="form-group row mb-0">
-                        <div class="col-12">
-                            <h6 class="m-0" id="modalSolicitarPrecioDeMercadoLabel">Soliciar precio de mercado</h6>
-                        </div>
-                        <div class="col-12 text-muted font-weight-bold">
-                            Marca:
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalSolicitarPrecioDeMercadoLabel">Soliciar precio de mercado</h6>
+                            </div>
+                            <div class="col-12 text-muted font-weight-bold">
+                                Marca:
                             <span id="lblMarca"></span>
-                            / Modelo:
+                                / Modelo:
                             <span id="lblModelo"></span>
-                            / Año:
+                                / Año:
                             <span id="lblAnio"></span>
+                            </div>
                         </div>
-                    </div>
                     </div>
                     <div class="modal-body">
 
@@ -956,8 +956,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="btnSolicitarPrecioDeMercadoConfirmar" class="btn btn-secondary">
-                        Confirmar
-                    </button>
+                            Confirmar
+                        </button>
                         <button type="reset" data-dismiss="modal" class="btn btn-secondary">
                             Cancelar
                         </button>
