@@ -336,7 +336,7 @@ function MostrarHistorialDePreciosEnModal(historialPrecios) {
             {
                 "data": "UltimaDevaluacion", "className": "text-center",
                 "render": function (data, type, row) {
-                    return ((row["UltimaDevaluacion"] * 100) / row["PrecioDeMercado"]).toFixed(2) + '%';
+                    return ((row["UltimaDevaluacion"] * 100) / (row["PrecioDeMercado"] + row["UltimaDevaluacion"] )).toFixed(2) + '%';
                 }
             },
         ],

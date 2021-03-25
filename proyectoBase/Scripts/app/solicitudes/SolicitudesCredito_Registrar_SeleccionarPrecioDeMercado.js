@@ -63,8 +63,6 @@ $("#btnSolicitarPrecioDeMercado").click(function () {
         return false
     }
 
-    $("#modalSeleccionarPrecioDeMercado").modal('hide');
-
     $(".lblMarca").text(marcaSeleccionada);
     $(".lblModelo").text(modeloSeleccionado);
     $(".lblAnio").text(modeloAnioSeleccionado);
@@ -72,8 +70,51 @@ $("#btnSolicitarPrecioDeMercado").click(function () {
     $("#txtPrecioDeMercadoSolicitado").val('');
     $("#txtComentarioSolicitarPrecioDeMercado").val('');
 
-    $("#modalSolicitarPrecioDeMercado").modal();
+    $('#frmSolicitud').parsley().reset({ group: 'solicitarPrecioDeMercado', force: true });
 
+    $("#modalSeleccionarPrecioDeMercado").modal('hide');
+    $("#modalSolicitarPrecioDeMercado").modal();
+});
+
+$("#btnSolicitarPrecioDeMercadoConfirmar").click(function () {
+
+    if ($('#frmSolicitud').parsley().isValid({ group: 'solicitarPrecioDeMercado', excluded: ':disabled' })) {
+
+        $('#btnSolicitarPrecioDeMercadoConfirmar').prop('disabled', true);
+
+        let precioSolicitado = $("#txtPrecioDeMercadoSolicitado").val().replace(/,/g, '') == '' ? 0 : $("#txtPrecioDeMercadoSolicitado").val().replace(/,/g, '');
+        let comentariosParaCreditos = $("#txtComentarioSolicitarPrecioDeMercado").val();
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Registrar.aspx/SolicitarPrecioDeMercado",
+            data: JSON.stringify({ idModeloAnio: idModeloAnioSeleccionado, precioSolicitado: precioSolicitado, comentarios: comentariosParaCreditos, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError("No se pudo solicitar el precio de mercado, contacte al administrador.");
+            },
+            success: function (data) {
+
+                if (data.d.ResultadoExitoso == true) {
+                    MensajeExito(data.d.MensajeResultado);
+
+                    CargarPrecioDeMercadoPorIdModeloAnio(idModeloAnioSeleccionado);
+
+                    $("#modalSolicitarPrecioDeMercado").modal('hide');
+                    $("#modalSeleccionarPrecioDeMercado").modal();
+                }
+                else
+                    MensajeError(data.d.MensajeResultado);
+
+                console.log(data.d.MensajeDebug);
+            },
+            complete: function (data) {
+                $('#btnSolicitarPrecioDeMercadoConfirmar').prop('disabled', false);
+            }
+        });
+    }
+    else
+        $('#frmSolicitud').parsley().validate({ group: 'solicitarPrecioDeMercado', excluded: ':disabled', force: true });
 });
 
 
@@ -399,7 +440,6 @@ function CargarAniosDisponiblesPorModelo(idModelo, idModeloAnioSeleccionar) {
     }
 }
 
-
 function CargarPrecioDeMercadoPorIdModeloAnio(idModeloAnio) {
 
     if (idModeloAnio != '' && idModeloAnio != 0) {
@@ -414,15 +454,27 @@ function CargarPrecioDeMercadoPorIdModeloAnio(idModeloAnio) {
             },
             success: function (data) {
 
-                if (data.d.Id != 0) {
-                    $('#txtPrecioDeMercadoActual').val(data.d.Descripcion); // Setear precio de mercado actual del marca-modelo-año seleccionado
-                    $('#btnSeleccionarPrecioDeMercadoConfirmar').prop('disabled', false); // habilitar opciones
-                    $('#btnSolicitarPrecioDeMercado').prop('disabled', true); // habilitar opciones
+                if (data.d.IdPrecioDeMercado != 0) {
+
+                    debugger;
+
+
+                    if (data.d.IdEstado == 1) {
+                        $('#txtPrecioDeMercadoActual').val(data.d.PrecioDeMercado); // Setear precio de mercado actual del marca-modelo-año seleccionado
+                        $('#btnSeleccionarPrecioDeMercadoConfirmar').prop('disabled', false).prop('title',''); // habilitar opciones
+                        $('#btnSolicitarPrecioDeMercado').prop('disabled', true).prop('title', ''); // habilitar opciones
+                    }
+                    else if (data.d.IdEstado == 0) {
+
+                        $('#txtPrecioDeMercadoActual').val(data.d.PrecioDeMercado);
+                        $('#btnSolicitarPrecioDeMercado,#btnSeleccionarPrecioDeMercadoConfirmar').prop('disabled', true).prop('title','Este precio de mercado todavía no ha sido aprobado, espere la resolución del departamento de crédito.'); // habilitar opciones
+                        MensajeAdvertencia('Este precio de mercado todavía no ha sido aprobado, espere la resolución del departamento de crédito.')
+                    }
                 }
                 else {
                     $('#txtPrecioDeMercadoActual').val('');
-                    $('#btnSolicitarPrecioDeMercado').prop('disabled', false); // habilitar opciones
-                    $('#btnSeleccionarPrecioDeMercadoConfirmar').prop('disabled', true); // deshabilitar opciones
+                    $('#btnSolicitarPrecioDeMercado').prop('disabled', false).prop('title', ''); // habilitar opciones
+                    $('#btnSeleccionarPrecioDeMercadoConfirmar').prop('disabled', true).prop('title', ''); // deshabilitar opciones
                     MensajeAdvertencia("No hay ningún precio de mercado asignado a la garantía seleccionada. <br /> <b>NOTA: Recuerda que puedes solicitar los precios de mercado.</b>");
                 }
 

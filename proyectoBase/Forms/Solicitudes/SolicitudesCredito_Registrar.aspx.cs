@@ -2457,9 +2457,9 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static EntidadGenerica_ViewModel CargarPrecioDeMercadoPorIdModeloAnio(string idModeloAnio, string dataCrypt)
+    public static PrecioDeMercado_ViewModel CargarPrecioDeMercadoPorIdModeloAnio(string idModeloAnio, string dataCrypt)
     {
-        var precioDeMercadoActual = new EntidadGenerica_ViewModel();
+        var precioDeMercadoActual = new PrecioDeMercado_ViewModel();
         try
         {
             var lURLDesencriptado = DesencriptarURL(dataCrypt);
@@ -2482,10 +2482,13 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
-                            precioDeMercadoActual = new EntidadGenerica_ViewModel()
+                            precioDeMercadoActual = new PrecioDeMercado_ViewModel()
                             {
-                                Id = (int)sqlResultado["fiIDPrecioDeMercado"],
-                                Descripcion = sqlResultado["fnPrecioDeMercado"].ToString(),
+                                IdPrecioDeMercado = (int)sqlResultado["fiIDPrecioDeMercado"],
+                                PrecioDeMercado = (decimal)sqlResultado["fnPrecioDeMercado"],
+                                IdEstado = (int)sqlResultado["fiIDEstadoPrecioDeMercado"],
+                                Estado = sqlResultado["fcEstadoPrecioDeMercado"].ToString(),
+                                EstadoClassName = sqlResultado["fcEstadoPrecioDeMercadoClassName"].ToString()
                             };
                         }
                     }
@@ -2669,6 +2672,67 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         {
             Resultado.ResultadoExitoso = false;
             Resultado.MensajeResultado = "Ocurrió un error al guardar el año del modelo seleccionado, contacte al administrador.";
+            Resultado.MensajeDebug = ex.Message.ToString();
+        }
+        return Resultado;
+    }
+
+    [WebMethod]
+    public static Resultado_ViewModel SolicitarPrecioDeMercado(int idModeloAnio, decimal precioSolicitado, string comentarios, string dataCrypt)
+    {
+        var Resultado = new Resultado_ViewModel() { ResultadoExitoso = false };
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_Maestro_Guardar", sqlConexion))
+                {
+                    sqlComando.Parameters.AddWithValue("@piIDModeloAnio", idModeloAnio);
+                    sqlComando.Parameters.AddWithValue("@pnPrecioDeMercado", precioSolicitado);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuarioSolicitante", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@pcComentariosSolicitante", comentarios);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuarioAprobador", DBNull.Value);
+                    sqlComando.Parameters.AddWithValue("@pcComentariosAprobador", DBNull.Value);
+                    sqlComando.Parameters.AddWithValue("@piIDEstadoPrecioDeMercado", 0);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            var resultadoSP = sqlResultado["lcResultadoProceso"].ToString();
+
+                            if (!resultadoSP.StartsWith("-1"))
+                            {
+                                Resultado.ResultadoExitoso = true;
+                                Resultado.IdInsertado = int.Parse(resultadoSP);
+                            }
+                            else
+                            {
+                                Resultado.ResultadoExitoso = false;
+                                Resultado.MensajeDebug = resultadoSP;
+                            }
+
+                            Resultado.MensajeResultado = sqlResultado["lcMensajeValidaciones"].ToString();
+
+                        } // using sqlResultado.Read()
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            Resultado.ResultadoExitoso = false;
+            Resultado.MensajeResultado = "Ocurrió un error al solicitar el precio de mercado, contacte al administrador.";
             Resultado.MensajeDebug = ex.Message.ToString();
         }
         return Resultado;

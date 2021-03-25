@@ -917,7 +917,7 @@
                     <div class="modal-header pb-2">
                         <div class="form-group row mb-0">
                             <div class="col-12">
-                                <h6 class="m-0" id="modalSolicitarPrecioDeMercadoLabel">Soliciar precio de mercado</h6>
+                                <h6 class="m-0" id="modalSolicitarPrecioDeMercadoLabel">Solicitar precio de mercado</h6>
                             </div>
                             <div class="col-12 text-muted font-weight-bold">
                                 Marca:
