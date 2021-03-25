@@ -76,6 +76,13 @@
                         <span class="d-none d-sm-block">Precios de mercado</span>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tab_listado_solicitudes_precios_de_mercado" id="tab_listado_solicitudes_link" role="tab" aria-selected="false">
+                        <span class="d-block d-sm-none">Solicitudes</span>
+                        <span class="d-none d-sm-block">Solicitudes de precios de mercado</span>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#tab_listado_devaluacion" id="tab_listado_devaluacion_link" role="tab" aria-selected="false">
                         <span class="d-block d-sm-none">Historial
@@ -109,7 +116,25 @@
                         </table>
                     </div>
                 </div>
-                <!-- Listado garantías sin solicitudes -->
+                <div class="tab-pane" id="tab_listado_solicitudes_precios_de_mercado" role="tabpanel">
+                    <div class="table-responsive mt-2">
+                        <table id="datatable-listado-solicitudes-precios-de-mercado" class="table-bordered display compact nowrap table-sm table-hover dataTable" style="width: 100%" role="grid">
+                            <thead>
+                                <tr>
+                                    <th class="no-sort">Acciones</th>
+                                    <th class="report-data">Marca</th>
+                                    <th class="report-data">Modelo</th>
+                                    <th class="report-data">Version</th>
+                                    <th class="report-data">Año</th>
+                                    <th class="report-data">Precio mercado</th>
+                                    <th class="report-data">Estado actual</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot></tfoot>
+                        </table>
+                    </div>
+                </div>
                 <div class="tab-pane" id="tab_listado_devaluacion" role="tabpanel">
 
                     <div class="form-group mt-3 text-right">

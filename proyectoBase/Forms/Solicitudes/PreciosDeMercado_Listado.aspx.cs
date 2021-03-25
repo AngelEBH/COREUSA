@@ -163,6 +163,73 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
         return listado;
     }
 
+    [WebMethod]
+    public static List<PrecioDeMercado_ViewModel> CargarSolicitudesDePreciosDeMercado(string dataCrypt)
+    {
+        var listado = new List<PrecioDeMercado_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_ListarSolicitudesDePreciosDeMercado", sqlConexion))
+                {
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            listado.Add(new PrecioDeMercado_ViewModel()
+                            {
+                                IdPrecioDeMercado = (int)sqlResultado["fiIDPrecioDeMercado"],
+                                IdModeloAnio = (int)sqlResultado["fiIDModeloAnio"],
+                                IdMarca = (int)sqlResultado["fiIDMarca"],
+                                Marca = sqlResultado["fcMarca"].ToString(),
+                                IdModelo = (int)sqlResultado["fiIDModelo"],
+                                Modelo = sqlResultado["fcModelo"].ToString(),
+                                Version = sqlResultado["fcVersion"].ToString(),
+                                IdAnio = (int)sqlResultado["fiIDAnio"],
+                                Anio = (int)sqlResultado["fiAnio"],
+                                PrecioDeMercado = (decimal)sqlResultado["fnPrecioDeMercado"],
+                                IdUsuarioSolicitante = (int)sqlResultado["fiIDUsuarioSolicitante"],
+                                UsuarioSolicitante = sqlResultado["fcUsuarioSolicitante"].ToString(),
+                                ComentariosSolicitante = sqlResultado["fcComentariosSolicitante"].ToString(),
+                                IdUsuarioAprobador = (int)sqlResultado["fiIDUsuarioAprobador"],
+                                UsuarioAprobador = sqlResultado["fcUsuarioAprobador"].ToString(),
+                                ComentariosAprobador = sqlResultado["fcComentariosAprobador"].ToString(),
+                                //FechaInicio = (DateTime)sqlResultado["fdFechaInicio"],
+                                //FechaFin = (DateTime)sqlResultado["fdFechaFin"],
+                                IdEstadoPrecioDeMercado = (int)sqlResultado["fiIDEstadoPrecioDeMercado"],
+                                EstadoPrecioDeMercado = sqlResultado["fcEstadoPrecioDeMercado"].ToString(),
+                                EstadoPrecioDeMercadoClassName = sqlResultado["fcEstadoPrecioDeMercadoClassName"].ToString(),
+                                IdUsuarioCreador = (int)sqlResultado["fiIDUsuarioCreador"],
+                                UsuarioCreador = sqlResultado["fcUsuarioCreador"].ToString(),
+                                FechaCreado = (DateTime)sqlResultado["fdFechaCreacion"],
+                                IdUsuarioUltimaModificacion = (int)sqlResultado["fiIDUsuarioUltimaModificacion"],
+                                UsuarioUltimaModificacion = sqlResultado["fcUsuarioUltimaModificacion"].ToString(),
+                                FechaUltimaModificacion = (DateTime)sqlResultado["fdFechaUltimaModificacion"],
+                            });
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return listado;
+    }
+
     public static List<AnioViewModel> ObtenerAniosPorIdModelo(int idModelo, string pcIDSesion, string pcIDApp, string pcIDUsuario)
     {
         var listado = new List<AnioViewModel>();
@@ -240,6 +307,52 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
             ex.Message.ToString();
         }
         return listado;
+    }
+
+
+    [WebMethod]
+    public static bool CargarSolicitudesDePreciosDeMercado(int idPrecioDeMercado, int idModeloAnio, decimal precio, string comentarios, int idEstado, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = CrearSqlComando("sp_CREDPreciosDeMercado_ResolucionSolicitudPrecioDeMercado", sqlConexion))
+                {
+                    sqlComando.Parameters.AddWithValue("@piIDPrecioDeMercado", idPrecioDeMercado);
+                    sqlComando.Parameters.AddWithValue("@piIDModeloAnio", idModeloAnio);
+                    sqlComando.Parameters.AddWithValue("@pnPrecioDeMercado", precio);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuarioAprobador", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@pcComentariosAprobador", comentarios);
+                    sqlComando.Parameters.AddWithValue("@piIDEstadoPrecioDeMercado", idEstado);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                            if (!sqlResultado["lcResultadoProceso"].ToString().StartsWith("-1"))
+                                resultado = true;
+
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
     }
 
     #region Métodos utilitarios
@@ -376,6 +489,41 @@ public partial class PreciosDeMercado_Listado : System.Web.UI.Page
         public DateTime FechaFin { get; set; }
         public decimal PrecioDeMercado { get; set; }
         public decimal UltimaDevaluacion { get; set; }
+    }
+
+
+    public class SolicitudPrecioDeMercado_ViewModel
+    {
+        public int IdPrecioDeMercado { get; set; }
+        public int IdModeloAnio { get; set; }
+        public int IdMarca { get; set; }
+        public string Marca { get; set; }
+        public int IdModelo { get; set; }
+        public string Modelo { get; set; }
+        public string Version { get; set; }
+        public int IdAnio { get; set; }
+        public int Anio { get; set; }
+        public decimal PrecioSolicitado { get; set; }
+        public int IdUsuarioSolicitante { get; set; }
+        public string UsuarioSolicitante { get; set; }
+        public DateTime ComentariosSolicitante { get; set; }
+
+        public int IdUsuarioValidador { get; set; }
+        public string UsuarioValidador { get; set; }
+        public string ComentariosValidador { get; set; }
+
+        public int IdEstadoPrecioDeMercado { get; set; }
+        public string EstadoPrecioDeMercado { get; set; }
+        public string EstadoPrecioDeMercadoClassName { get; set; }
+
+
+        public int IdUsuarioCreador { get; set; }
+        public string UsuarioCreador { get; set; }
+        public DateTime FechaCreado { get; set; }
+        public int IdUsuarioUltimaModificacion { get; set; }
+        public string UsuarioUltimaModificacion { get; set; }
+        public DateTime FechaUltimaModificacion { get; set; }
+
     }
 
     #endregion

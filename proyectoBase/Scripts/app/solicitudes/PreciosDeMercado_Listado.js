@@ -130,6 +130,87 @@ $(document).ready(function () {
         ],
     });
 
+    dtListadoSolicitudesDePreciosDeMercado = $('#datatable-listado-solicitudes-precios-de-mercado').DataTable({
+        "pageLength": 15,
+        "aaSorting": [],
+        "dom": "<'row'<'col-sm-12'Bf>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+        "language": languageDatatable,
+        "ajax": {
+            type: "POST",
+            url: "PreciosDeMercado_Listado.aspx/CargarSolicitudesDePreciosDeMercado",
+            contentType: 'application/json; charset=utf-8',
+            data: function (dtParms) {
+                return JSON.stringify({ dataCrypt: window.location.href });
+            },
+            "dataSrc": function (json) {
+                var return_data = json.d;
+                return return_data;
+            }
+        },
+        "columns": [
+            {
+                "data": "IdPrecioDeMercado", "className": "text-center",
+                "render": function (data, type, row) {
+
+                    return '<div class="dropdown mo-mb-2">' +
+                        '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button >' +
+                        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+                        '<button type="button" class="dropdown-item" id="btnResolucionSolicitud" data-toggle="modal" data-target="#modalGuardarGarantia"><i class="fas fa-plus"></i> Resolución</button>' +
+                        '<button type="button" class="dropdown-item" id="btnDetalles" data-toggle="modal" data-target="#modalDetallesGarantia"><i class="fas fa-tasks"></i> Detalles</button>' +
+                        '</div>' +
+                        '</div >';
+                }
+            },
+            { "data": "Marca" },
+            { "data": "Modelo" },
+            { "data": "Version" },
+            { "data": "Anio", "className": "text-center" },
+            {
+                "data": "PrecioDeMercado", "className": "text-right",
+                render: function (value) {
+                    return ConvertirADecimal(value);
+                }
+            },
+            {
+                "data": "EstadoPrecioDeMercado", "className": "text-center",
+                "render": function (data, type, row) {
+                    return '<span class="badge badge-' + row["EstadoPrecioDeMercadoClassName"] + ' p-1">' + row["EstadoPrecioDeMercado"] + '</span>';
+                }
+            },
+        ],
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="far fa-file-excel"></i> Exportar',
+                title: 'Garantias_' + moment(),
+                autoFilter: true,
+                messageTop: 'Precios de mercado ' + moment().format('YYYY/MM/DD'),
+                exportOptions: {
+                    columns: '.report-data'
+                }
+            },
+            {
+                extend: 'colvis',
+                text: '<i class="mdi mdi-table-column-remove"></i> Columnas',
+                columns: [1, 2, 3, 4, 5, 6,]
+            },
+            {
+                extend: 'print',
+                text: '<i class="fas fa-print"></i> Imprimir',
+                autoFilter: true,
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6]
+                }
+            },
+        ],
+        columnDefs: [
+            { targets: 'no-sort', orderable: false },
+            { "width": "1%", "targets": [0, 1, 2, 3, 4, 5, 6] }
+        ],
+    });
+
     /* Inicializar datable del listado modelos */
     dtListado_Historial_Devaluacion = $('#datatable-listado-devaluacion').DataTable({
         "pageLength": 15,

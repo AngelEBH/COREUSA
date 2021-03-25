@@ -1170,7 +1170,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     #endregion
 
-    #region C A L C U L O S   D E   P R E S T A M O S  por producto
+    #region C A L C U L O S D E P R E S T A M O S por producto
 
     [WebMethod]
     public static CalculoPrestamo_ViewModel CalculoPrestamo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string dataCrypt)
@@ -1296,7 +1296,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     #endregion
 
-    #region I N G R E S A R   S O L I C I T U D   D E   C R E D I T O
+    #region I N G R E S A R S O L I C I T U D D E C R E D I T O
 
     [WebMethod]
     public static Resultado_ViewModel IngresarSolicitud(Solicitud_Maestro_ViewModel solicitud, Cliente_ViewModel cliente, Precalificado_ViewModel precalificado, Garantia_ViewModel garantia, bool esClienteNuevo, string dataCrypt, CalculoPrestamo_ViewModel cotizador)
@@ -2278,7 +2278,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
     }
     #endregion
 
-    #region P R E C I O S   D E   M E R C A D O
+    #region P R E C I O S D E M E R C A D O
 
     [WebMethod]
     public static List<EntidadGenerica_ViewModel> CargarMarcas(string dataCrypt)
@@ -2740,7 +2740,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
 
     #endregion
 
-    #region V I E W  M O D E L S
+    #region V I E W M O D E L S
 
     public class Resultado_ViewModel
     {
