@@ -521,12 +521,13 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
             return false;
         }
     }
-
+    
     /* Informacion personal */
+    
     else if (idTipoDeCondicion == '10') {
-
+        debugger;
         if ($('#frmSolicitud').parsley().isValid({ group: 'informacionPersonal' })) {
-
+           
             objSeccion = {
                 IdCliente: ID_CLIENTE,
                 IdTipoCliente: $("#ddlTipoDeCliente :selected").val(),
@@ -544,7 +545,12 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
                 Sexo: $("input[name='sexoCliente']:checked").val(),
                 IdEstadoCivil: $("#ddlEstadoCivil :selected").val(),
                 IdVivienda: $("#ddlTipoDeVivienda :selected").val(),
-                IdTiempoResidir: $("#ddlTiempoDeResidir :selected").val()
+                IdTiempoResidir: $("#ddlTiempoDeResidir :selected").val(),
+                DocumentoIDPersonal: $("#dllDoctoIdPersonal :selected").val(),
+                fcDescripcionDoctosFiscal: $("#txtNoIdFiscal").val(),
+                IDDocumentoFiscal: $("#dllDocumentoIDFiscal :selected").val(),
+                IdOrigenEtnico: $("#dllOrigenEtnico :selected").val()
+                
             }
         }
         else {
@@ -641,7 +647,7 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
 
 /* Finalizar condicionamientos de una seccion del formulario */
 function FinalizarSeccionCondicionamientos(idSolicitudCondicion, idTipoDeCondicion, objSeccion, cotizador) {
-
+    debugger;
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_ActualizarSolicitud.aspx/ActualizarCondicionamiento',
@@ -883,7 +889,7 @@ function RecargarInformacion() {
     });
 }
 
-$('#txtValorGlobal,#txtValorPrima,#txtPlazoSeleccionado,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps').blur(function () {
+$('#txtValorGlobal,#txtValorPrima,#txtPlazoSeleccionado,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps, #ddlPagoGps').blur(function () {
 
     var valorGlobal = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
     var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
@@ -902,6 +908,7 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
 
         var lcSeguro = '';
         var lcGPS = '';
+		var lcPagoGPS = '';
         var lcGastosdeCierre = '';
 
         if ($("#ddlTipoDeSeguro :selected").val() == "A - Full Cover") {
@@ -927,6 +934,15 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
             lcGPS = "0";
         }
 
+		if ($("#ddlPagoGPS :selected").val() == "Si") {
+            lcPagoGPS = "1";
+        }
+        if ($("#ddlPagoGPS :selected").val() == "No") {
+            lcPagoGPS = "0";
+        }
+		
+		lcPagoGPS="1";
+		
         if (lcSeguro != '' && lcGPS != '' && lcGastosdeCierre != '') {
 
             $.ajax({
@@ -941,6 +957,7 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
                         scorePromedio: PRECALIFICADO.ScorePromedio,
                         tipoSeguro: lcSeguro,
                         tipoGps: lcGPS,
+						pagoGPS: lcPagoGPS,
                         gastosDeCierreFinanciados: lcGastosdeCierre,
                         dataCrypt: window.location.href
                     }),

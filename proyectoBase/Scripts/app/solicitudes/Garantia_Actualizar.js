@@ -41,7 +41,15 @@ var btnFinalizar = $('<button type="button" id="btnGuardarGarantia"></button>').
                 IdentidadVendedor: $("#txtIdentidadVendedor").val(),
                 NombreVendedor: $("#txtNombreVendedor").val(),
                 IdNacionalidadVendedor: $("#ddlNacionalidadVendedor :selected").val() == '' ? 0 : $("#ddlNacionalidadVendedor :selected").val(),
-                IdEstadoCivilVendedor: $("#ddlEstadoCivilVendedor :selected").val() == '' ? 0 : $("#ddlEstadoCivilVendedor :selected").val()
+                IdEstadoCivilVendedor: $("#ddlEstadoCivilVendedor :selected").val() == '' ? 0 : $("#ddlEstadoCivilVendedor :selected").val(),
+
+
+                IdTipoSolicitudPago: $("#ddlFormaDePagoDesembolso :selected").val() == '' ? 0 : $("#ddlFormaDePagoDesembolso :selected").val(),
+                RTNVendedorGarantia: $("#txtRTNVendedor").val(),
+                IdBancoDesembolso: $("#ddlBancoDesembolso :selected").val() == '' ? 0 : $("#ddlBancoDesembolso :selected").val(),
+                IdTipoBancoDesembolso: $("#ddlTipoCuentaBancaria :selected").val() == '' ? 0 : $("#ddlTipoCuentaBancaria :selected").val(),
+                CuentaBancoDesembolso: $("#txtCuentaBancariaDeposito").val(),
+
             }
 
             $.ajax({

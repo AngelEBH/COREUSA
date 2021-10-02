@@ -155,6 +155,9 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                         var idNacionalidadPropietario = "0";
                         var idEstadoCivilVendedor = "0";
                         var idNacionalidadVendedor = "0";
+                        var idFormaDePago = "0";
+                        var idBancoDesembolso = "0";
+                        var idTipoCuentaBancaria = "";
 
                         while (sqlResultado.Read())
                         {
@@ -191,6 +194,13 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                             txtNombreVendedor.Text = sqlResultado["fcNombreVendedorGarantia"].ToString();
                             idEstadoCivilVendedor = sqlResultado["fiIDEstadoCivilVendedorGarantia"].ToString();
                             idNacionalidadVendedor = sqlResultado["fiIDNacionalidadVendedorGarantia"].ToString();
+                           
+                            idFormaDePago = sqlResultado["fiTipoSolicituddePago"].ToString();
+                            txtRTNVendedor.Text = sqlResultado["fcRTNVendedorGarantia"].ToString();
+                            txtCuentaBancariaDeposito.Text = sqlResultado["fcCuentaBancoDesembolso"].ToString();
+                            idBancoDesembolso = sqlResultado["fiIDBancoDesembolso"].ToString();
+                            idTipoCuentaBancaria = sqlResultado["fcTipoCuentaBancoDesembolso"].ToString();
+
                         }
 
                         /* Cuarto resultado: Catalogo de estados civiles */
@@ -229,6 +239,34 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                         ddlNacionalidadPropietario.SelectedValue = idNacionalidadPropietario;
                         ddlNacionalidadVendedor.SelectedValue = idNacionalidadVendedor;
 
+                      
+                        sqlResultado.NextResult();
+
+                        ddlBancoDesembolso.Items.Clear();
+                        ddlBancoDesembolso.Items.Add(new ListItem("Seleccionar", "0"));
+
+                        while (sqlResultado.Read())
+                        {
+                            ddlBancoDesembolso.Items.Add(new ListItem(sqlResultado["fcNombreBanco"].ToString(), sqlResultado["fiIDBanco"].ToString()));
+                        }
+
+                        ddlBancoDesembolso.SelectedValue = idBancoDesembolso;
+
+
+                        ddlFormaDePagoDesembolso.Items.Clear();
+                        ddlFormaDePagoDesembolso.Items.Add(new ListItem("Seleccionar", "0"));
+                        ddlFormaDePagoDesembolso.Items.Add(new ListItem("CHEQUE", "1"));
+                        ddlFormaDePagoDesembolso.Items.Add(new ListItem("TRANSFERENCIA BANCARIA", "2"));
+                        ddlFormaDePagoDesembolso.Items.Add(new ListItem("EFECTIVO (CAJA)", "3"));
+                        ddlFormaDePagoDesembolso.SelectedValue = idFormaDePago;
+
+                        ddlTipoCuentaBancaria.Items.Clear();
+                        ddlTipoCuentaBancaria.Items.Add(new ListItem("Seleccionar", ""));
+                        ddlTipoCuentaBancaria.Items.Add(new ListItem("CHEQUE", "CHEQUE"));
+                        ddlTipoCuentaBancaria.Items.Add(new ListItem("AHORRO", "AHORRO"));
+                        ddlTipoCuentaBancaria.SelectedValue = idTipoCuentaBancaria;
+
+
                     } // using sqlComando.ExecuteReader()
                 } // using sqlComando
             } // using sqlConexion
@@ -236,6 +274,9 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
             ddlUnidadDeMedida.Items.Clear();
             ddlUnidadDeMedida.Items.Add(new ListItem("Kilómetros", "KM"));
             ddlUnidadDeMedida.Items.Add(new ListItem("Millas", "M"));
+
+         
+
         }
         catch (Exception ex)
         {
@@ -277,7 +318,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDGarantia", pcIDGarantia);
                             sqlComando.Parameters.AddWithValue("@piIDCanal", 1);
                             sqlComando.Parameters.AddWithValue("@pcPrestamo", garantia.NumeroPrestamo);
-                            sqlComando.Parameters.AddWithValue("@pcVin", garantia.VIN);
+                            sqlComando.Parameters.AddWithValue("@pcVin", garantia.VIN.Trim());
                             sqlComando.Parameters.AddWithValue("@pcTipoGarantia", garantia.TipoDeGarantia);
                             sqlComando.Parameters.AddWithValue("@pcTipoVehiculo", garantia.TipoDeVehiculo);
                             sqlComando.Parameters.AddWithValue("@pcMarca", garantia.Marca);
@@ -312,6 +353,19 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                            //sqlComando.Parameters.AddWithValue("@pcRTNVendedorGarantia", garantia.RTNVendedorGarantia);
+                            //sqlComando.Parameters.AddWithValue("@piIDTipoSolicitudPago", garantia.IdTipoSolicitudPago);
+                            //sqlComando.Parameters.AddWithValue("@pcIDBancoDesembolso", garantia.IdBancoDesembolso);
+                            //sqlComando.Parameters.AddWithValue("@pcCuentaBancoDesembolso", garantia.CuentaBancoDesembolso);
+                            //sqlComando.Parameters.AddWithValue("@pcTipoCuentaBancoDesembolso", garantia.IdTipoBancoDesembolso);
+
+                            sqlComando.Parameters.AddWithValue("@pcRTNVendedorGarantia", "");
+                            sqlComando.Parameters.AddWithValue("@piIDTipoSolicitudPago", "");
+                            sqlComando.Parameters.AddWithValue("@pcIDBancoDesembolso", "");
+                            sqlComando.Parameters.AddWithValue("@pcCuentaBancoDesembolso", "");
+                            sqlComando.Parameters.AddWithValue("@pcTipoCuentaBancoDesembolso","");
+
                             sqlComando.CommandTimeout = 120;
 
                             using (var sqlResultado = sqlComando.ExecuteReader())
@@ -441,7 +495,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
 
     private static string GenerarNombreDocumento(string idSolicitud, string vin)
     {
-        return ("G_" + idSolicitud + "_" + vin + "_" + Guid.NewGuid()).Replace("*", "").Replace("/", "").Replace("\\", "").Replace(":", "").Replace("?", "").Replace("<", "").Replace(">", "").Replace("|", "");
+        return ("G_" + idSolicitud + "_" + vin.Trim() + "_" + Guid.NewGuid()).Replace("*", "").Replace("/", "").Replace("\\", "").Replace(":", "").Replace("?", "").Replace("<", "").Replace(">", "").Replace("|", "");
     }
 
     public static bool GuardarDocumentosGarantia(List<SolicitudesDocumentosViewModel> ListaDocumentos, string idSolicitud)
@@ -546,6 +600,13 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
         public string NombreVendedor { get; set; }
         public int IdNacionalidadVendedor { get; set; }
         public int IdEstadoCivilVendedor { get; set; }
+
+        public int IdTipoSolicitudPago { get; set; }
+        public string RTNVendedorGarantia { get; set; }
+        public int IdBancoDesembolso { get; set; }
+        public string IdTipoBancoDesembolso { get; set; }
+        public string CuentaBancoDesembolso { get; set; }
+
     }
 
     public class Garantia_Documentos_ViewModel

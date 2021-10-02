@@ -1,0 +1,81 @@
+﻿td.details-control {
+    background: url('../../img/mas.png') no-repeat center center;
+    cursor: pointer;
+}
+
+tr.shown td.details-control {
+    background: url('../../img/menos.png') no-repeat center center;
+}
+
+.no-sort::after {
+    display: none !important;
+}
+
+.no-sort {
+    pointer-events: none !important;
+    cursor: default !important;
+    padding: 13px !important;
+}
+
+.data {
+    max-width: 370px;
+    max-height: 400px;
+    overflow: auto;
+}
+
+.data::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.data::-webkit-scrollbar-track {
+background : rgb(131, 131, 131);
+border-radius: 10px;
+}
+
+.data::-webkit-scrollbar-thumb {
+background : rgba(168, 168, 168, 0.5);
+border-radius: 10px;
+box-shadow:  0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+.data-details {
+    width: 460px;
+    height: 300px;
+    overflow: auto;
+}
+
+.data-details::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.data-details::-webkit-scrollbar-track {
+background : rgb(131, 131, 131);
+border-radius: 10px;
+}
+
+.data-details::-webkit-scrollbar-thumb {
+background : rgba(168, 168, 168, 0.5);
+border-radius: 10px;
+box-shadow:  0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+
+.dataTables_wrapper{
+    padding-bottom: 10px !important;
+}
+
+div.dt-buttons {
+    position: relative;
+    float: right;
+}
+
+td.dt-center {
+    text-align: center;
+}
+
+table.cart th, #main-content table.cart th, table.cart td, #main-content table.cart td, table.cart tr, #main-content table.cart tr, #content-area table tr, #content-area table td, #content-area table th {
+    max-width: 100px;
+    padding: 0.857em 0.587em;
+}

@@ -9,6 +9,7 @@ public partial class Aval_CondicionamientoRegistrarAval : System.Web.UI.Page
     private string pcIDUsuario = "";
     private string pcIDApp = "";
     private DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    private String lcSQLInstruccion = "";
 
     protected void Page_Load(object sender, EventArgs e)
     {

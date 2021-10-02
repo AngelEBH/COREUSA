@@ -52,6 +52,16 @@ td, th, tr {
     text-indent: 5px;
 }
 
+
+.TableFormatoTituloXGrande {
+    color: #656565;
+    font-family: 'Microsoft Tai Le';
+    Font-Size: 20px;
+    font-weight: bold;
+    text-indent: 5px;
+    vertical-align:middle;
+}
+
 form {
     background-color: var(--Formulario-fondo-color);
     position: absolute;
@@ -142,6 +152,19 @@ form {
     font-family: 'Microsoft Tai Le';
     Font-Size: small;
     font-weight: bold;
+}
+
+.DivTituloPanelXGrande {
+    height: 40px;
+    /*background-color: #4c4f53;*/
+    background-color: whitesmoke;
+    color: white;
+    font-family: 'Microsoft Tai Le';
+    Font-Size: small;
+    font-weight: bold;
+    border-bottom: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: lightgray;
 }
 
 .DivTituloGrid {
@@ -257,6 +280,15 @@ background-color:white;
 .DivPanelGridScrollAutoSub {
     width: 100%;
     height: 100%;
+    background-color: white;
+    border-color: var(--CuadroPrincipal-borde-color);
+    border-width: 1px;
+    border-style: solid;
+    height: calc(100vh - 211px);
+    overflow-y: scroll;
+}
+
+.DivPanelGridScrollSub {
     background-color: white;
     border-color: var(--CuadroPrincipal-borde-color);
     border-width: 1px;
@@ -481,10 +513,11 @@ background-color:white;
 .FormatoPanelFlotante {
     position: absolute;
     border-color: var(--CuadroPrincipal-borde-color);
-    border-width: 2px;
+    border-width: 1px;
     border-style: solid;
     background-color: white;
     border-radius: 2px;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .FormatoPanelElevado {
@@ -502,6 +535,11 @@ background-color:white;
     border-width: 0;
     background-repeat:repeat;
     background-image: url('/Imagenes/fondoTransparencia.png');
+}
+
+.FormatoPanelSobraCompletaSinImagen {
+    position: absolute;
+    border-width: 0;
 }
 
 .FormatoPanelContenedor {
@@ -790,14 +828,14 @@ background-color:white;
     text-align: center;
     padding-left: 0px;
     padding-right: 0px;
-    padding-top: 30px;
+    padding-top: 40px;
     padding-bottom: 5px;
-    height: 50px;
+    height: 75px;
     width: 100px;
     font-size: 12px;
     cursor: pointer;
     background-repeat: no-repeat;
-    background-position-y: 5px;
+    background-position-y: 10px;
     background-position-x: center;
 }
 
@@ -867,6 +905,39 @@ background-color:white;
     .FormatoBotonesIconoCuadrado40:hover {
         background-color: #b3ecff;
 	color: black;
+        /*color: white;*/
+    }
+
+.FormatoBotonesIconoFiltros40 {
+    position: relative; 
+    background-color: transparent;
+    /*border-style: solid;
+    border-color: lightgray;
+    border-width: 1px;*/
+    border-width: 0px;
+    margin: 0;
+    white-space: normal !important;
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    height: 32px;
+    width: 160px;
+    font-size: 14px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: 4px;
+    background-position-x: 5px;
+    display: inline-block;
+    /*color: #808080;*/
+    color: white;
+}
+
+    .FormatoBotonesIconoFiltros40:hover {
+        /*background-color: #b3ecff;*/
+        background-color: #767676;
+	/*color: black;*/
         /*color: white;*/
     }
 
@@ -957,6 +1028,20 @@ background-color:white;
         padding-right: 5px;
     }
 
+.GridViewFormatoGeneralLista {
+    font-family: 'Microsoft Tai Le';
+    font-size: 14px;
+    cursor: default;
+}
+
+    .GridViewFormatoGeneralLista tr td {
+        padding-left: 5px;
+    }
+
+    .GridViewFormatoGeneralLista tr td {
+        padding-right: 5px;
+    }
+
 
 .GridViewFormatoSIE {
     font-family: 'Microsoft Tai Le';
@@ -983,6 +1068,21 @@ background-color:white;
     text-align: center;
 	cursor: default;
 }
+
+.GridViewCabecera32 {
+    background-color: #646464;
+    color: White;
+    border: none 0 transparent;
+    height: 32px;
+    cursor: default;
+}
+    .GridViewCabecera32 th {
+        padding-left: 5px;
+    }
+
+    .GridViewCabecera32 th {
+        padding-right: 5px;
+    }
 
 .GridViewFilasNeutral {
     background-color: #fff;
@@ -1126,8 +1226,69 @@ background-color:white;
 }
 
 
+.GridViewSpan{
+    display: inline-block;
+    padding:2px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-word;
+    padding:2px;
+}
 .GridViewSpanNegro{
+    color: #333333;
     font-weight: bold;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-word;
+    padding:2px;
+}
+.GridViewSpanLista{
+    display: inline-block;
+    padding:2px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-word;
+    padding: 0px;
+    padding-top: 4px;
+    height: 14px;
+}
+.GridViewSpanListaNegro{
+    color: #333333;
+    font-weight: bold;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-word;
+    padding: 0px;
+    padding-top: 4px;
+    height: 14px;
+}
+.GridViewSpanAzul{
+    color: dodgerblue;
+    display: inline-block;
+    padding: 0px;
+    padding-bottom: 4px;
+    height: 12px;
+}
+.GridViewSpanAzulNegro{
+    color: dodgerblue;
+    font-weight: bold;
+    display: inline-block;
+    padding: 0px;
+    padding-bottom: 4px;
+    height: 12px;
+}
+.GridViewSpanRojo{
+    color: red;
+    display: inline-block;
+    padding: 0px;
+    padding-bottom: 4px;
+    height: 12px;
 }
 /*---------------------------------------------*/
 /*      Formatos para Etiquetas y TextBox      */
@@ -1329,6 +1490,20 @@ background-color:white;
         border-color: royalblue;
     }
 
+.FormatoDDL30 {
+    position: absolute;
+    border: solid;
+    border-color: silver;
+    border-width: 1px;
+    font-family: 'Microsoft Tai Le';
+    height: 30px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+    .FormatoDDL30:hover {
+        border-color: royalblue;
+    }
+
 .FormatotxtGrande {
     font-family: 'Microsoft Tai Le';
     position: absolute;
@@ -1426,11 +1601,11 @@ background-color:white;
     vertical-align: text-top;
     text-align: center;
     padding-left: 40px;
-    padding-right: 40px;
+    padding-right: 30px;
     padding-top: 0px;
     padding-bottom: 0px;
     height: 40px;
-    width: 140px;
+    width: 130px;
     font-size: 12px;
     cursor: pointer;
     background-repeat: no-repeat;
@@ -1463,7 +1638,7 @@ background-color:white;
 }
 
     .btnMenuLateral:hover {
-        background-color: whitesmoke;
+        background-color: #b3ecff;
         color: black;
     }
 
@@ -1471,11 +1646,12 @@ background-color:white;
 /*        Formato para TabViews                */
 /*---------------------------------------------*/
 .btnTabButton {
-    position: absolute;
+    position: relative;
     color: gray;
     background-color: transparent;
     border-style:solid;
     border-width: 1px;
+    margin-right: 1px;
     /*border-color: darkgray;*/
     border-color: lightgray;
     border-bottom-width: 0;
@@ -1520,8 +1696,8 @@ background-color:white;
     position: absolute;
     width: 30px;
     height: 30px;
-    border-width: 2px;
     border: solid;
+    border-width: 1px;
     border-color: darkgrey;
     background-color: whitesmoke;
 }
@@ -1529,8 +1705,8 @@ background-color:white;
     position: absolute;
     width: 32px;
     height: 32px;
-    border-width: 2px;
     border: solid;
+    border-width: 1px;
     border-color: darkgrey;
     background-color: whitesmoke;
 }
@@ -1539,10 +1715,10 @@ background-color:white;
     position: absolute;
     width: 48px;
     height: 48px;
-    border-width: 2px;
     border: solid;
+    border-width: 1px;
     border-color: darkgrey;
-    background-color: whitesmoke;
+    background-color: white;
 }
 
 /*---------------------------------------------*/
@@ -1556,6 +1732,13 @@ background-color:white;
     border: solid;
 }
 
+.GraficoBarrasMiniAvance {
+    position: relative;
+    height: 20px;
+    width: 310px;
+    border-color: Gainsboro;
+    border: solid;
+}
 
 /*---------------------------------------------*/
 /*     Formato para Etiqueta de solicitudes    */

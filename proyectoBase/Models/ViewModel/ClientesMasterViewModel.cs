@@ -31,6 +31,11 @@ namespace proyectoBase.Models.ViewModel
         public string fcPrimerApellidoCliente { get; set; }
         public string fcSegundoApellidoCliente { get; set; }
 
+        // datos
+        public string DocumentosFiscal { get; set; }
+        public int IdFiscal { get; set; }
+        public string DocumentoIdPersonal { get; set; }
+
         // nacionalidad del cliente
         public string fcDescripcionNacionalidad { get; set; }
         public bool fbNacionalidadActivo { get; set; }
@@ -40,5 +45,14 @@ namespace proyectoBase.Models.ViewModel
 
         public string fcDescripcionVivienda { get; set; }
         public bool fbViviendaActivo { get; set; }
+
+        // Datos Tabla EquifaxCliente
+
+        public string fcDescripcionDoctosFiscal { get; set; }
+        public string fcDescricpcionOrigenEtnicoORacial { get; set; }
+        public string fcNombreDoctosIdPersonal { get; set; }
+        public string fcNombrePaisNacimiento { get; set; }
+        public string fcNoIdFiscal { get; set; }
+        public int fiIDProducto { get; set; }
     }
 }

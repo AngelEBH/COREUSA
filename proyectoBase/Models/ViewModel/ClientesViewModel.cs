@@ -9,5 +9,8 @@ namespace proyectoBase.Models.ViewModel
         public ClientesInformacionDomicilioViewModel ClientesInformacionDomiciliar { get; set; }
         public ClientesInformacionLaboralViewModel ClientesInformacionLaboral { get; set; }
         public List<ClientesReferenciasViewModel> ClientesReferenciasPersonales { get; set; }
+
+        //AVALES DEL CLIENTE (SOLO PUEDE TENER 1 ACTIVO)
+        public List<ClienteAvalesViewModel> Avales { get; set; }
     }
 }

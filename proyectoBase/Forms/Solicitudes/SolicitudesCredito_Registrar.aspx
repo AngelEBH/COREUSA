@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Ingresar solicitud de crédito</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031033" rel="stylesheet" />
-    <link href="/Content/css/icons.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031033" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css?v=202010031033" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="/Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" />
     <style>
@@ -30,12 +30,16 @@
     </style>
 </head>
 <body>
+
     <form runat="server" id="frmSolicitud" class="" action="#" data-parsley-excluded="[disabled]">
         <div class="card mb-0">
             <div class="card-header pb-1 pt-1">
                 <div class="row justify-content-between">
                     <div class="col-auto">
                         <h5>Nueva solicitud de crédito <small><span runat="server" id="lblMensaje" class="text-danger" visible="false"></span></small></h5>
+                    </div>
+                    <div class="col-auto">
+                        <asp:HyperLink ID="btnLinkAplicacionCredito" runat="server" target="_blank" class="btn btn-primary text-white">Ver Aplicacion de Credito</asp:HyperLink>
                     </div>
                     <div class="col-1 align-self-center">
                         <!-- loader -->
@@ -68,10 +72,10 @@
                                     <h6 class="mt-1">Información del préstamo</h6>
                                 </div>
                                 <div class="col-8 align-self-end text-right">
-                                    <label>Tipo de solicitud: <span class="btn btn-sm btn-info mb-0" id="lblTipodeSolicitud" runat="server">NUEVO</span></label>
-                                    <label>Producto: <span class="btn btn-sm btn-info mb-0" id="lblProducto" runat="server">Prestadito Motos</span></label>
-                                    <label>Score: <span class="btn btn-sm btn-info mb-0" id="lblScoreCliente" runat="server">N/A</span></label>
-                                    <button type="button" class="btn btn-md p-0" title="Solicitar cambio de SCORE" data-toggle="modal" data-target="#modalCambiarScore"><i class="far fa-edit p-0 m-0"></i></button>
+                                    <label style="visibility: hidden;">Tipo de solicitud: <span class="btn btn-sm btn-info mb-0" id="lblTipodeSolicitud" runat="server">NUEVO</span></label>
+                                    <label style="visibility: hidden;">Producto: <span class="btn btn-sm btn-info mb-0" id="lblProducto" runat="server">Prestadito Motos</span></label>
+                                    <label style="visibility: hidden;">Score: <span class="btn btn-sm btn-info mb-0" id="lblScoreCliente" runat="server">N/A</span></label>
+                                    <button type="button" class="btn btn-md p-0" title="Solicitar cambio de SCORE" data-toggle="modal" data-target="#modalCambiarScore" style="visibility: hidden;"><i class="far fa-edit p-0 m-0"></i></button>
                                 </div>
                             </div>
                             <div class="row mb-0">
@@ -80,15 +84,35 @@
                                     <h6 class="mt-3 mb-1">Datos del cliente</h6>
 
                                     <div class="form-group row">
-                                        <div class="col-6">
-                                            <label class="col-form-label">No. Identidad</label>
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">No. Identificacion</label>
                                             <asp:TextBox ID="txtIdentidadCliente" CssClass="form-control form-control-sm mascara-identidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
-                                        <div class="col-6">
+                                     <%--   <div class="col-6" style="display:none;">
                                             <label class="col-form-label">RTN numérico</label>
                                             <asp:TextBox ID="txtRtnCliente" CssClass="form-control form-control-sm mascara-rtn" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>--%>
+                                        
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Docto Id.Personal</label>
+                                            <asp:TextBox ID="txtDocumentoIdPersonal" CssClass="form-control form-control-sm " type="text" Enabled="false"  data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
-                                    </div>
+                                        <div class="col-sm-3" >
+                                            <label class="col-form-label">No. Id Fiscal</label>
+                                            <asp:TextBox ID="txtNoIdFiscal" CssClass="form-control form-control-sm " type="text"  Enabled="false" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                    
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Docto Id.Personal</label>
+                                            <asp:TextBox ID="txtDoctoIdFiscal" CssClass="form-control form-control-sm " type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                  
+                                     </div>
+                                   <%--  desarrollo angel--%>
+                                  <%--    <div class="form-group row">
+                                     
+                                     </div>--%>
+                                  <%-- end--%>
                                     <div class="form-group row">
                                         <div class="col-sm-3">
                                             <label class="col-form-label">Primer nombre</label>
@@ -106,35 +130,75 @@
                                             <label class="col-form-label">Segundo apellido</label>
                                             <asp:TextBox ID="txtSegundoApellido" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
-                                        <div class="col-12">
+                                     </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-3">
                                             <label class="col-form-label">Ingresos precalificado</label>
                                             <asp:TextBox ID="txtIngresosPrecalificados" CssClass="form-control form-control-sm mascara-cantidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
+                                           <div class="col-sm-3">
+                                            <label class="col-form-label">Pais de Nacimiento</label>
+                                            <asp:TextBox ID="txtPaisNaciemiento" CssClass="form-control form-control-sm " type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>                                       
+                                        <div class="col-sm-3" >
+                                            <label class="col-form-label">Origen Etnico</label>
+                                            <asp:TextBox ID="txtOrigenEtnico" CssClass="form-control form-control-sm " type="text"  Enabled="false"  data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <!-- Información del préstamo máximo -->
                                 <div class="col-lg-6 border-left border-gray">
-                                    <h6 class="mt-3 mb-1">Información préstamo máximo</h6>
+                                    <h6 class="mt-3 mb-1">Información De Cuotas</h6>
                                     <div class="form-group row">
+                                     
                                         <div class="col-sm-4">
-                                            <label class="col-form-label">PMO máximo sugerido</label>
-                                            <asp:TextBox ID="txtPrestamoMaximo" CssClass="form-control form-control-sm mascara-cantidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <asp:Label CssClass="col-form-label" ID="lblTituloPlazoMaximo" runat="server" Text="Plazo" AssociatedControlID="txtPlazoMaximo" />
+                                            <asp:Label CssClass="col-form-label" ID="lblTituloPlazoMaximo" runat="server" Text="Cuota del Auto" AssociatedControlID="txtPlazoMaximo" />
                                             <asp:TextBox ID="txtPlazoMaximo" CssClass="form-control form-control-sm" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-4">
-                                            <asp:Label CssClass="col-form-label" ID="lblTituloCuotaMaxima" runat="server" Text="Cuota" AssociatedControlID="txtCuotaMaxima" />
+                                            <asp:Label CssClass="col-form-label" ID="lblTituloCuotaMaxima" runat="server" Text="Cuota Collateral" AssociatedControlID="txtCuotaMaxima" />
                                             <asp:TextBox ID="txtCuotaMaxima" CssClass="form-control form-control-sm mascara-cantidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
+                                           <div class="col-sm-4">
+                                            <label class="col-form-label">Cuota Final</label>
+                                            <asp:TextBox ID="txtPrestamoMaximo" CssClass="form-control form-control-sm mascara-cantidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
                                     </div>
+
+                            
                                 </div>
                             </div>
                             <!-- Montos de la solicitud -->
                             <div class="row">
                                 <div class="col-12">
-                                    <h6 class="mb-1 border-top border-gray pt-3">Montos de la solicitud</h6>
+                                    <h6 class="mb-1 border-top border-gray pt-3">Producto / Montos de la solicitud</h6>
+                                    <div class="form-group row mb-0">
+                                        <!-- Producto -->
+                                        <div class="col-sm-3" runat="server" id="divProducto">
+                                            <label class="col-form-label">Producto</label>
+                                            <asp:DropDownList ID="ddlProducto" runat="server" CssClass="form-control form-control-sm" data-parsley-group="informacionPrestamo" required="required" data-parsley-errors-container="#error-ddlProducto"></asp:DropDownList>
+                                            <div id="error-ddlProducto"></div>
+                                        </div>
+                                        <!-- Origen -->
+                                        <div class="col-sm-3" runat="server" id="divOrigen">
+                                            <label class="col-form-label">Origen</label>
+                                            <asp:DropDownList ID="ddlOrigen" runat="server" CssClass="form-control form-control-sm" Enabled="true" data-parsley-group="informacionPrestamo" required="required" data-parsley-errors-container="#error-ddlOrigen"></asp:DropDownList>
+                                            <div id="error-ddlOrigen"></div>
+                                        </div>
+                                        <!-- Frecuencia -->
+                                        <div class="col-sm-3" runat="server" id="divFrecuencia">
+                                            <label class="col-form-label">Frecuencia</label>
+                                            <asp:DropDownList ID="ddlFrecuencia" runat="server" CssClass="form-control form-control-sm" data-parsley-group="informacionPrestamo" required="required" data-parsley-errors-container="#error-ddlFrecuencia"></asp:DropDownList>
+                                            <div id="error-ddlFrecuencia"></div>
+                                        </div>
+                                        <!-- Fecha de inicio de contrato -->
+                                        <div class="col-sm-3" id="divContrato" runat="server">
+                                            <label class="col-form-label" runat="server" id="lblInicioContrato">Fecha inicio de contrato</label>
+                                            <asp:TextBox ID="txtIniciodeContrato" CssClass="form-control form-control-sm mascara-cantidad" Enabled="true" required="required" type="date" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+
+                                    </div>
                                     <div class="form-group row mb-0">
                                         <!-- Monto global -->
                                         <div class="col-sm-3">
@@ -149,23 +213,28 @@
                                             <label class="col-form-label" runat="server" id="lblTituloPrima">Valor de la prima</label>
                                             <asp:TextBox ID="txtValorPrima" CssClass="form-control form-control-sm mascara-cantidad" Enabled="false" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
-                                        <div class="col-sm-3" id="divPlazo" runat="server">
+
+                                        <div class="col-sm-3">
+                                            <asp:Label CssClass="col-form-label" ID="lblTituloPlazo" runat="server" Text="Plazo" AssociatedControlID="txtPlazosDisponibles" />
+                                            <asp:TextBox ID="txtPlazosDisponibles" CssClass="form-control form-control-sm mascara-enteros" type="text" Enabled="true" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label">Tasa de interés anual(APR)</label>
+                                            <asp:TextBox ID="txtTasaDeInteresAnual" CssClass="form-control form-control-sm font-weight-bold text-right" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+
+                                        <%--<div class="col-sm-3" id="divPlazo" runat="server">
                                             <asp:Label CssClass="col-form-label" ID="lblTituloPlazo" runat="server" Text="Plazos disponibles" AssociatedControlID="ddlPlazosDisponibles" />
                                             <asp:DropDownList ID="ddlPlazosDisponibles" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="informacionPrestamo" data-parsley-errors-container="#error-ddlPlazosDisponibles"></asp:DropDownList>
                                             <div id="error-ddlPlazosDisponibles"></div>
-                                        </div>
+                                        </div>--%>
                                         <!-- Tipo de moneda -->
                                         <%--<div class="col-sm-3">
                                             <label class="col-form-label">Moneda</label>
                                             <asp:DropDownList ID="ddlMoneda" runat="server" CssClass="form-control form-control-sm" required="required" data-parsley-group="informacionPrestamo" data-parsley-errors-container="#error-ddlMoneda"></asp:DropDownList>
                                             <div id="error-ddlMoneda"></div>
                                         </div>--%>
-                                        <!-- Origen -->
-                                        <div class="col-sm-3" runat="server" id="divOrigen">
-                                            <label class="col-form-label">Origen</label>
-                                            <asp:DropDownList ID="ddlOrigen" runat="server" CssClass="form-control form-control-sm" Enabled="false" data-parsley-group="informacionPrestamo" required="required" data-parsley-errors-container="#error-ddlOrigen"></asp:DropDownList>
-                                            <div id="error-ddlOrigen"></div>
-                                        </div>
                                     </div>
 
                                     <!-- Parámetros de cotizador de autos -->
@@ -189,22 +258,24 @@
 
                                     <div class="form-group row">
                                         <div class="col-sm-3">
-                                            <label class="col-form-label">Valor del préstamo</label>
+                                            <label class="col-form-label">Valor del préstamo del vehiculo</label>
                                             <asp:TextBox ID="txtValorDePrestamo" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
+                                             <%--Valor Lienholder--%>
+                                          <div class="col-sm-3" id="divLienHolder" runat="server">
+                                            <label class="col-form-label">Lien Holder Fee</label>
+                                            <asp:TextBox ID="txtLienHolder" CssClass="form-control form-control-sm mascara-cantidad"   type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
                                         <!-- Valor a Financiar -->
                                         <div class="col-sm-3" id="divValorFinanciar" runat="server">
                                             <label class="col-form-label">Valor total a Financiar <small id="lblTasaAnual" class="font-weight-bold"></small></label>
                                             <asp:TextBox ID="txtValorFinanciar" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
+                                    
                                         <!-- Valor de la cuota calculada -->
                                         <div class="col-sm-3">
                                             <label class="col-form-label">Valor total de la cuota</label>
-                                            <asp:TextBox ID="txtValorCuota" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label class="col-form-label">Tasa de interés anual</label>
-                                            <asp:TextBox ID="txtTasaDeInteresAnual" CssClass="form-control form-control-sm font-weight-bold text-right" ReadOnly="true" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtValorCuota" CssClass="form-control form-control-sm mascara-cantidad" ReadOnly="true" Enabled="false" required="required" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
@@ -215,7 +286,7 @@
                         <div id="step_garantia" class="form-section" runat="server" visible="true">
 
                             <div class="row justify-content-between m-0 border-bottom border-gray">
-                                <div class="col-auto">
+                                <div class="col-auto" style="display:none;">
                                     <div class="form-group row align-items-center mb-1">
                                         <div class="col-sm-auto pr-0 pl-0">
                                             <asp:TextBox ID="txtBuscarVIN" placeholder="Buscar VIN" CssClass="form-control form-control-sm mascara-vin" type="text" runat="server"></asp:TextBox>
@@ -225,14 +296,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-auto pr-0 align-items-center">
+                              <%--  <div class="col-auto pr-0 align-items-center">
                                     <div class="m-0 p-0">
                                         <div class="alert alert-info bg-info text-white mb-0 pt-1 pb-1" role="alert">
                                             <i class="fas fa-exclamation-circle text-white"></i>
                                             <strong>Estimado usuario,</strong> solo los campos con <strong>*</strong> son requeridos.
                                         </div>
                                     </div>
-                                </div>
+                                </div>--%>
                             </div>
                             <div class="row mb-0">
                                 <!-- Información del cliente -->
@@ -270,7 +341,7 @@
                                             <label class="col-form-label">Color</label>
                                             <asp:TextBox ID="txtColor" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
                                         </div>
-                                        <div class="col-12">
+                                        <div class="col-12" style="display:none;">
                                             <label class="col-form-label">Matrícula</label>
                                             <asp:TextBox ID="txtMatricula" placeholder="EJ. AAA 9999" CssClass="form-control form-control-sm mascara-matricula" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
                                         </div>
@@ -294,11 +365,11 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Transmisión</label>
-                                            <asp:TextBox ID="txtTransmision" placeholder="EJ. Automático" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                            <asp:TextBox ID="txtTransmision" placeholder="" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Tipo de combustible</label>
-                                            <asp:TextBox ID="txtTipoDeCombustible" placeholder="EJ. Gasolina" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                            <asp:TextBox ID="txtTipoDeCombustible" placeholder="" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
                                         </div>
                                     </div>
                                     <h6 class="mb-1">Otros datos de la garantía</h6>
@@ -309,11 +380,11 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Serie motor</label>
-                                            <asp:TextBox ID="txtSerieMotor" placeholder="EJ. 0XX-0000000" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                            <asp:TextBox ID="txtSerieMotor" placeholder="" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Serie chasis</label>
-                                            <asp:TextBox ID="txtSerieChasis" placeholder="EJ. 0XXXX00X0XX000000" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
+                                            <asp:TextBox ID="txtSerieChasis" placeholder="" CssClass="form-control form-control-sm" type="text" runat="server" data-parsley-group="informacionGarantia"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Otra serie (Opcional)</label>
@@ -453,7 +524,7 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Email</label>
-                                            <asp:TextBox ID="txtCorreoElectronico" CssClass="form-control form-control-sm" type="email" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtCorreoElectronico" CssClass="form-control form-control-sm" type="email" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Télefono</label>
@@ -485,26 +556,31 @@
                             <div class="row">
                                 <div class="col-sm-8 border-right border-gray">
                                     <div class="form-group row">
-                                        <div class="col-sm-3">
-                                            <label class="col-form-label">Departamento</label>
+                                        <div class="col-sm-8">
+                                            <label class="col-form-label">Codigo Postal</label>
+                                            <asp:DropDownList ID="ddlBarrioColoniaDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl"  required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlBarrioColoniaDomicilio"></asp:DropDownList>
+                                            <div id="error-ddlBarrioColoniaDomicilio"></div>
+                                        </div>
+                                      <%--  <div class="col-sm-3">
+                                            <label class="col-form-label">Estado</label>
                                             <asp:DropDownList ID="ddlDepartamentoDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlDepartamentoDomicilio"></asp:DropDownList>
                                             <div id="error-ddlDepartamentoDomicilio"></div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label class="col-form-label">Municipio</label>
+                                        </div>--%>
+                                  <%--      <div class="col-sm-3">
+                                            <label class="col-form-label">Condado</label>
                                             <asp:DropDownList ID="ddlMunicipioDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlMunicipioDomicilio"></asp:DropDownList>
                                             <div id="error-ddlMunicipioDomicilio"></div>
                                         </div>
                                         <div class="col-sm-3">
-                                            <label class="col-form-label">Ciudad/Poblado</label>
+                                            <label class="col-form-label">Ciudad</label>
                                             <asp:DropDownList ID="ddlCiudadPobladoDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlCiudadPobladoDomicilio"></asp:DropDownList>
                                             <div id="error-ddlCiudadPobladoDomicilio"></div>
                                         </div>
                                         <div class="col-sm-3">
-                                            <label class="col-form-label">Barrio/Colonia</label>
-                                            <asp:DropDownList ID="ddlBarrioColoniaDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlBarrioColoniaDomicilio"></asp:DropDownList>
+                                            <label class="col-form-label">Codigo Postal</label>
+                                            <asp:DropDownList ID="ddlBarrioColoniaDomicilio" runat="server" CssClass="form-control form-control-sm buscadorddl"  required="required" data-parsley-group="informacionDomicilio" data-parsley-errors-container="#error-ddlBarrioColoniaDomicilio"></asp:DropDownList>
                                             <div id="error-ddlBarrioColoniaDomicilio"></div>
-                                        </div>
+                                        </div>--%>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -539,11 +615,12 @@
                                     <div class="form-group row">
                                         <div class="col-12">
                                             <label class="col-form-label">Referencias del domicilio</label>
-                                            <textarea id="txtReferenciasDelDomicilio" runat="server" required="required" class="form-control form-control-sm" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2" data-parsley-group="informacionDomicilio"></textarea>
+                                            <textarea id="txtReferenciasDelDomicilio" runat="server" required="required" class="form-control form-control-sm" data-parsley-maxlength="255" data-parsley-minlength="5" rows="2" data-parsley-group="informacionDomicilio"></textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        
                         </div>
 
                         <!-- Información laboral del cliente -->
@@ -619,27 +696,33 @@
                             <h6 class="mb-1 border-top border-gray pt-2">Dirección del trabajo</h6>
 
                             <div class="form-group row">
-                                <div class="col-sm-3">
-                                    <label class="col-form-label">Departamento</label>
+                                    <div class="col-sm-8">
+                                            <label class="col-form-label">Codigo Postal</label>
+                                            <asp:DropDownList ID="ddlBarrioColoniaEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl"  required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlBarrioColoniaEmpresa"></asp:DropDownList>
+                                            <div id="error-ddlBarrioColoniaEmpresa"></div>
+                                        </div>
+                            <%--    <div class="col-sm-3">
+                                    <label class="col-form-label">Estado</label>
                                     <asp:DropDownList ID="ddlDepartamentoEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlDepartamentoEmpresa"></asp:DropDownList>
                                     <div id="error-ddlDepartamentoEmpresa"></div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="col-form-label">Municipio</label>
-                                    <asp:DropDownList ID="ddlMunicipioEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlMunicipioEmpresa"></asp:DropDownList>
+                                    <label class="col-form-label">Condado</label>
+                                    <asp:DropDownList ID="ddlMunicipioEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="true" required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlMunicipioEmpresa"></asp:DropDownList>
                                     <div id="error-ddlMunicipioEmpresa"></div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="col-form-label">Ciudad/Poblado</label>
-                                    <asp:DropDownList ID="ddlCiudadPobladoEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlCiudadPobladoEmpresa"></asp:DropDownList>
+                                    <label class="col-form-label">Ciudad</label>
+                                    <asp:DropDownList ID="ddlCiudadPobladoEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="true" required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlCiudadPobladoEmpresa"></asp:DropDownList>
                                     <div id="error-ddlCiudadPobladoEmpresa"></div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="col-form-label">Barrio/Colonia</label>
-                                    <asp:DropDownList ID="ddlBarrioColoniaEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl" Enabled="false" required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlBarrioColoniaEmpresa"></asp:DropDownList>
+                                    <label class="col-form-label">Codigo Postal</label>
+                                    <asp:DropDownList ID="ddlBarrioColoniaEmpresa" runat="server" CssClass="form-control form-control-sm buscadorddl" required="required" data-parsley-group="informacionLaboral" data-parsley-errors-container="#error-ddlBarrioColoniaEmpresa"></asp:DropDownList>
                                     <div id="error-ddlBarrioColoniaEmpresa"></div>
-                                </div>
+                                </div>--%>
                             </div>
+
                             <div class="form-group row">
                                 <div class="col-12">
                                     <label class="col-form-label">Dirección detallada del trabajo</label>
@@ -649,7 +732,7 @@
                             <div class="form-group row">
                                 <div class="col-12">
                                     <label class="col-form-label">Referencias de la ubicación del trabajo</label>
-                                    <textarea id="txtReferenciasEmpresa" runat="server" required="required" class="form-control form-control-sm" data-parsley-maxlength="255" data-parsley-minlength="15" rows="2" data-parsley-group="informacionLaboral"></textarea>
+                                    <textarea id="txtReferenciasEmpresa" runat="server" required="required" class="form-control form-control-sm" data-parsley-maxlength="255" data-parsley-minlength="5" rows="2" data-parsley-group="informacionLaboral"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -705,18 +788,44 @@
                         <!-- Referencias personales del cliente -->
                         <div id="step-6" class="form-section">
 
-                            <div class="form-group row m-0 border-bottom border-gray">
+                              <div class="col-sm-6">
                                 <div class="col-12 p-0">
-                                    <h6 class="mt-1">Referencias personales del cliente</h6>
+                                    <h6 class="mt-1">Referencias ingresadas en la aplicacion</h6>
+                                </div>
+                                <div class="col- p-0" >
+                                      <div class="table-responsive">
+                                   <table class="table table-sm table-bordered table-hover cursor-pointer">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Telefono</th>
+                                            <th>Parentesco</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="BodyReferenciasDeAplicacion">
+                                    </tbody>
+                                </table>
+                               </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                  <div class="form-group row m-0 border-bottom border-gray">
+                                <div class="col-12 p-0">
+                                    <h6 class="mt-1">Referencias personales para la solicitud</h6>
                                 </div>
                             </div>
                             <div class="mt-2 header-title">
-                                <label class="col-form-label">Mínimo 4 referencias personales. Entre ellas 2 familiares. <small class="text-info">(Consejo: Si te equivocas en el dato de una referencia, quítala y vuleve a agregarla.)</small></label>
+                                <label class="col-form-label">Mínimo 4 referencias personales.<small class="text-info">(Consejo: Si te equivocas en el dato de una referencia, quítala y vuleve a agregarla.)</small></label>
                                 <button id="btnNuevaReferencia" type="button" class="btn btn-info waves-effect waves-light float-right">
                                     Agregar referencia
                                 </button>
                             </div>
-                            <div class="table-responsive">
+                            </div>
+                          
+                          
+                            <div class="col-sm-12">
+                               <div class="table-responsive">
                                 <table class="table table-sm table-bordered table-hover cursor-pointer" id="tblReferenciasPersonales">
                                     <thead>
                                         <tr>
@@ -731,7 +840,9 @@
                                     <tbody>
                                     </tbody>
                                 </table>
+                               </div>
                             </div>
+                           
                         </div>
 
                         <!-- Documentación de la solicitud -->
@@ -741,9 +852,15 @@
                                     <h6 class="mt-1">Documentación de la solicitud <small class="text-info">(Estimado usuario, recuerda subir toda la documentación hasta que ya vayas a guardar la solicitud)</small></h6>
                                 </div>
                             </div>
+                                <!--<div class="col-12 text-center">
+                                <br />
+                                <br />
+                                <asp:HyperLink ID="btnLinkDocumentos" runat="server" target="_blank" class="text-info text-lg"> <h4>Ir a Verificacion de Documentos</h4></asp:HyperLink>
+                            </div>-->
                             <!-- Div donde se generan dinamicamente los inputs para la documentación -->
-                            <div class="row pr-1 pl-1 text-center" id="DivDocumentacion">
-                            </div>
+                        <!-- Div donde se generan dinamicamente los inputs para la documentación -->
+                        <div class="row pr-1 pl-1 text-center" id="DivDocumentacion">
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -1067,6 +1184,7 @@
             </div>
         </div>
     </form>
+
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
@@ -1077,6 +1195,9 @@
     </script>
     <script>
         $(document).ready(function () {
+            //BuscarVIN();
+            $("#ddlDepartamentoDomicilio").trigger("change");
+            $("#ddlDepartamentoEmpresa").trigger("change");
 
             $(".mascara-cantidad").inputmask("decimal", {
                 alias: 'numeric',
@@ -1089,9 +1210,9 @@
                 autoGroup: true,
                 min: 0.00
             });
-            $(".mascara-telefono").inputmask("9999-9999");
-            $(".mascara-extension").inputmask("999999");
-            $(".mascara-identidad").inputmask("9999999999999");
+            $(".mascara-telefono").inputmask("999-999-9999");
+           // $(".mascara-extension").inputmask("999999");
+          //  $(".mascara-identidad").inputmask("999-99-9999");
             $(".mascara-rtn").inputmask("99999999999999");
             $(".mascara-enteros").inputmask("decimal", {
                 alias: "numeric",
@@ -1124,6 +1245,6 @@
     <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
     <script src="/Scripts/plugins/sweet-alert2/sweetalert2.min.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar.js?v=20210118015352"></script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_SeleccionarPrecioDeMercado.js?v=20210118015352"></script>
+    <!-- <script src="/Scripts/app/solicitudes/SolicitudesCredito_Registrar_SeleccionarPrecioDeMercado.js?v=20210118015352"></script> -->
 </body>
 </html>

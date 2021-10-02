@@ -1,1483 +1,764 @@
-﻿using System;
+﻿using proyectoBase.Models.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using proyectoBase.Models.ViewModel;
+using System.IO;
+using System.Threading.Tasks;
+using System.Diagnostics;
 
 public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
 {
-    #region Propiedades publicas
-
-    public int IdCliente = 0; /* Id del cliente */
-    public string pcID = ""; /* Identidad del cliente */
-    public string pcIDApp = ""; /* Id de la aplicacion */
-    public string IdProducto = ""; /* Id del producto ver tabla Catalogo_Productos*/
-    public string pcIDSesion = ""; /* Id de la sesión*/
-    public string pcIDUsuario = ""; /* Id del usuario logueado */
-    public string pcIDSolicitud = ""; /* Id de la solicitud */
-
-    public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-    private static string ConnectionString { get; set; }
-
-    public SolicitudesCredito_Analisis()
-    {
-        ConnectionString = ConnectionString ?? DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString);
-    }
-
-    #endregion
-
-    #region Page load
+    private String pcEncriptado = "";
+    private string pcIDUsuario = "";
+    private string pcIDApp = "";
+    private string pcIDSesion = "";
+    private int IdSolicitud = 0;
+    //public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        try
+        if (!IsPostBack)
         {
-            if (!IsPostBack)
+            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+            string lcURL = Request.Url.ToString();
+            int liParamStart = lcURL.IndexOf("?");
+            string lcParametros;
+
+            if (liParamStart > 0)
+                lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
+            else
+                lcParametros = String.Empty;
+
+            if (lcParametros != String.Empty)
             {
-                var lcURL = Request.Url.ToString();
-                var liParamStart = lcURL.IndexOf("?");
-                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
-
-                if (lcParametros != string.Empty)
-                {
-                    var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
-                    var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-
-                    pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
-                    pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-                    CargarListados();
-                    CargarInformacionClienteSolicitud();
-                    CargarInformacionGarantia();
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-    }
-
-    #endregion
-
-    #region Cargar información del cliente, de la solicitud, de la garantía, cargar listados * Listo *
-
-    public void CargarInformacionClienteSolicitud()
-    {
-        try
-        {
-            Estados_Solicitud idEstadoSolicitud;
-            var logo = string.Empty;
-            var estadoSolicitud = string.Empty;
-            var procesoPendiente = DateTime.Parse("1900-01-01 00:00:00.000");
-            var iconoRojo = "<i class='mdi mdi-close-circle-outline mdi-18px text-danger'></i>";
-            var iconoExito = "<i class='mdi mdi-check-circle-outline mdi-18px text-success'></i>";
-            var iconoPendiente = "<i class='mdi mdi-check-circle-outline mdi-18px text-warning'></i>";
-            var iconoCancelado = "<i class='mdi mdi-check-circle-outline mdi-18px text-secondary'></i>";
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_SolicitudClientePorIdSolicitud", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            /****** Informacion de la solicitud ******/
-                            IdCliente = (int)sqlResultado["fiIDCliente"];
-                            idEstadoSolicitud = (Estados_Solicitud)(byte)sqlResultado["fiEstadoSolicitud"];
-                            estadoSolicitud = sqlResultado["fcEstadoSolicitud"].ToString();
-                            var fechaEnInvestigacionInicio = (DateTime)sqlResultado["fdEnRutaDeInvestigacionInicio"];
-
-                            /* Estado del procesamiento de la solicitud crediticia */
-                            var estadoIngreso = string.Empty;
-                            var estadoEnCola = string.Empty;
-                            var estadoAnalisis = string.Empty;
-                            var estadoCampo = string.Empty;
-                            var estadoCondicionado = string.Empty;
-                            var estadoReprogramado = string.Empty;
-                            var estadoPasoFinal = string.Empty;
-                            var estadoResolucion = string.Empty;
-
-                            // Si el proceso de ingreso ya se inició validar si el proceso de ingreso ya finalizó, en caso de que haya finalizado poner icono exito sino icono pendiente
-                            if (DateTime.Parse(sqlResultado["fdEnIngresoInicio"].ToString()) != procesoPendiente)
-                            {
-                                estadoIngreso = DateTime.Parse(sqlResultado["fdEnIngresoFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
-                            }
-
-                            // Si el proceso "En trámite" ya inició, validar si el proceso "En trámite" ya finalizó
-                            if (DateTime.Parse(sqlResultado["fdEnColaInicio"].ToString()) != procesoPendiente)
-                            {
-                                estadoEnCola = DateTime.Parse(sqlResultado["fdEnColaFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
-
-                                if (DateTime.Parse(sqlResultado["fdEnColaFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == Estados_Solicitud.RechazadaPorAnalistas || idEstadoSolicitud == Estados_Solicitud.RechazadaPorGestores || idEstadoSolicitud == Estados_Solicitud.Autorizada))
-                                {
-                                    estadoEnCola = idEstadoSolicitud == Estados_Solicitud.Autorizada ? iconoExito : iconoCancelado;
-                                }
-                            }
-
-                            if (DateTime.Parse(sqlResultado["fdEnAnalisisInicio"].ToString()) != procesoPendiente)
-                            {
-                                estadoAnalisis = DateTime.Parse(sqlResultado["fdEnAnalisisFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
-
-                                if (DateTime.Parse(sqlResultado["fdEnAnalisisFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == Estados_Solicitud.RechazadaPorAnalistas || idEstadoSolicitud == Estados_Solicitud.Autorizada || idEstadoSolicitud == Estados_Solicitud.Autorizada))
-                                {
-                                    estadoAnalisis = idEstadoSolicitud == Estados_Solicitud.Autorizada ? iconoExito : iconoCancelado;
-                                }
-
-                                if (idEstadoSolicitud == Estados_Solicitud.RechazadaPorAnalistas)
-                                {
-                                    estadoAnalisis = iconoRojo;
-                                }
-                            }
-
-                            if (DateTime.Parse(sqlResultado["fdEnvioARutaAnalista"].ToString()) != procesoPendiente)
-                            {
-                                estadoCampo = DateTime.Parse(sqlResultado["fdEnRutaDeInvestigacionFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
-
-                                if (DateTime.Parse(sqlResultado["fdEnRutaDeInvestigacionFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == Estados_Solicitud.RechazadaPorAnalistas || idEstadoSolicitud == Estados_Solicitud.RechazadaPorGestores || idEstadoSolicitud == Estados_Solicitud.Autorizada))
-                                {
-                                    estadoCampo = idEstadoSolicitud == Estados_Solicitud.Autorizada ? iconoExito : iconoCancelado;
-                                }
-
-                                if (idEstadoSolicitud == Estados_Solicitud.RechazadaPorGestores)
-                                {
-                                    estadoCampo = iconoRojo;
-                                }
-                            }
-
-                            if (DateTime.Parse(sqlResultado["fdCondicionadoInicio"].ToString()) != procesoPendiente)
-                            {
-                                estadoCondicionado = DateTime.Parse(sqlResultado["fdCondificionadoFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
-
-                                if (DateTime.Parse(sqlResultado["fdCondificionadoFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == Estados_Solicitud.RechazadaPorAnalistas || idEstadoSolicitud == Estados_Solicitud.RechazadaPorGestores || idEstadoSolicitud == Estados_Solicitud.Autorizada))
-                                {
-                                    estadoCondicionado = idEstadoSolicitud == Estados_Solicitud.Autorizada ? iconoExito : iconoCancelado;
-                                }
-                            }
-
-                            if (DateTime.Parse(sqlResultado["fdReprogramadoInicio"].ToString()) != procesoPendiente)
-                            {
-                                estadoReprogramado = DateTime.Parse(sqlResultado["fdReprogramadoFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
-
-                                if (DateTime.Parse(sqlResultado["fdReprogramadoFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == Estados_Solicitud.RechazadaPorAnalistas || idEstadoSolicitud == Estados_Solicitud.RechazadaPorGestores || idEstadoSolicitud == Estados_Solicitud.Autorizada))
-                                {
-                                    estadoReprogramado = idEstadoSolicitud == Estados_Solicitud.Autorizada ? iconoExito : iconoCancelado;
-                                }
-                            }
-
-                            if (DateTime.Parse(sqlResultado["fdPasoFinalInicio"].ToString()) != procesoPendiente)
-                            {
-                                estadoPasoFinal = DateTime.Parse(sqlResultado["fdPasoFinalFin"].ToString()) != procesoPendiente ? iconoExito : iconoPendiente;
-
-                                if (DateTime.Parse(sqlResultado["fdPasoFinalFin"].ToString()) == procesoPendiente && (idEstadoSolicitud == Estados_Solicitud.RechazadaPorAnalistas || idEstadoSolicitud == Estados_Solicitud.RechazadaPorGestores || idEstadoSolicitud == Estados_Solicitud.Autorizada))
-                                {
-                                    estadoPasoFinal = idEstadoSolicitud == Estados_Solicitud.Autorizada ? iconoExito : iconoCancelado;
-                                }
-                            }
-
-                            if (idEstadoSolicitud == Estados_Solicitud.RechazadaPorAnalistas || idEstadoSolicitud == Estados_Solicitud.RechazadaPorGestores || idEstadoSolicitud == Estados_Solicitud.Autorizada)
-                            {
-                                estadoResolucion = idEstadoSolicitud == Estados_Solicitud.Autorizada ? iconoExito : iconoRojo;
-                            }
-                            else if (DateTime.Parse(sqlResultado["fdPasoFinalInicio"].ToString()) != procesoPendiente)
-                            {
-                                estadoResolucion = iconoPendiente;
-                            }
-
-                            var tRowEstadoProcesamiento = new TableRow();
-                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoIngreso });
-                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoEnCola });
-                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoAnalisis });
-                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoCampo });
-                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoCondicionado });
-                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoReprogramado });
-                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoPasoFinal });
-                            tRowEstadoProcesamiento.Cells.Add(new TableCell() { Text = estadoResolucion });
-                            tblEstadoSolicitud.Rows.Add(tRowEstadoProcesamiento);
-
-                            IdProducto = sqlResultado["fiIDProducto"].ToString();
-                            lblProducto.Text = sqlResultado["fcProducto"].ToString();
-                            lblNoSolicitud.Text = sqlResultado["fiIDSolicitud"].ToString();
-                            lblTipoSolicitud.Text = sqlResultado["fcTipoSolicitud"].ToString();
-                            lblAgenteDeVentas.Text = sqlResultado["fcNombreUsuarioAsignado"].ToString();
-                            lblAgencia.Text = sqlResultado["fcNombreAgencia"].ToString();
-                            lblNombreGestor.Text = sqlResultado["fcNombreGestor"].ToString();
-
-                            /* Información del precalificado */
-                            txtIngresosPrecalificado.Text = DecimalToString((decimal)sqlResultado["fnIngresoPrecalificado"]);
-                            txtObligacionesPrecalificado.Text = DecimalToString((decimal)sqlResultado["fnObligacionesPrecalificado"]);
-                            txtDisponiblePrecalificado.Text = DecimalToString((decimal)sqlResultado["fnDisponiblePrecalificado"]);
-                            txtCapacidadDePagoMensual.Text = DecimalToString((decimal)sqlResultado["fnDisponiblePrecalificado"]);
-                            txtCapacidadDePagoQuincenal.Text = DecimalToString((decimal)sqlResultado["fnDisponiblePrecalificado"] / 2);
-
-                            /* Informacion del prestamo solicitado */
-                            txtValorAFinanciarSeleccionado.Text = DecimalToString((decimal)sqlResultado["fnValorSeleccionado"]);
-                            txtMonedaSolicitada.Text = sqlResultado["fcNombreMoneda"].ToString();
-                            txtValorGarantia.Text = DecimalToString((decimal)sqlResultado["fnValorGarantia"]);
-                            txtValorPrima.Text = DecimalToString((decimal)sqlResultado["fnValorPrima"]);
-                            txtPlazoSeleccionado.Text = sqlResultado["fiPlazoSeleccionado"].ToString();
-                            lblTipoDePlazo_Solicitado.InnerText = (IdProducto == "202" || IdProducto == "203" || IdProducto == "204") ? "Mensual" : "Quincenal";
-                            txtOrigen.Text = sqlResultado["fcOrigen"].ToString();
-
-                            /*** Calculo del prestamo solicitado ***/
-                            var montoPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : decimal.Parse(sqlResultado["fnValorSeleccionado"].ToString());
-                            var valorPrimaPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
-                            var plazoSeleccionado = int.Parse(sqlResultado["fiPlazoSeleccionado"].ToString());
-
-                            var calculoPrestamoSolicitado = new SolicitudesCredito_Analisis_Calculo_ViewModel();
-
-                            if (IdProducto == "101" || IdProducto == "301" || IdProducto == "201" || IdProducto == "302")
-                            {
-                                calculoPrestamoSolicitado = CalcularPrestamo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
-
-                                txtMontoTotalAFinanciar_Calculo.Text = DecimalToString(calculoPrestamoSolicitado.ValorAFinanciar);
-                                txtCuotaDelPrestamo_Calculo.Text = DecimalToString(calculoPrestamoSolicitado.ValorCuotaPrestamo);
-                                txtCuotaDelSeguro_Calculo.Text = DecimalToString(calculoPrestamoSolicitado.ValorCuotaSeguroDeVehiculo);
-                                txtCuotaGPS_Calculo.Text = DecimalToString(calculoPrestamoSolicitado.ValorCuotaServicioGPS);
-                                txtCuotaTotal_Calculo.Text = DecimalToString(calculoPrestamoSolicitado.ValorCuotaNeta);
-                                txtCostoAparatoGPS_Calculo.Text = DecimalToString(calculoPrestamoSolicitado.CostoAparatoGPS);
-                                txtGastosDeCierre_Calculo.Text = DecimalToString(calculoPrestamoSolicitado.ValorGastosDeCierre);
-                                txtTasaAnualAplicada_Calculo.Text = DecimalToString(calculoPrestamoSolicitado.TasaAnualAplicada) + "%";
-                                txtTasaMensualAplicada_Calculo.Text = DecimalToString(calculoPrestamoSolicitado.TasaMensualAplicada) + "%";
-
-                            }
-                            else if (IdProducto == "202" || IdProducto == "203" || IdProducto == "204")
-                            {
-                                /* Haciendo pruebas, si el prestamo es 202, 203 o 204 no se mostrará préstamo solicitado
-                                * solo se mostrará el div del monto final a financiar actual
-                                * mismo que se va a extraer de la tabla CredSolicitud_InformacionPrestamo
-                                */
-                                divCalculoPrestamoSolicitado.Visible = false;
-                            }
-
-                            var montoFinalAFinanciar = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString());
-
-                            /*** Prestamo FINAL APROBADO ***/
-                            if (montoFinalAFinanciar != 0 || IdProducto == "202" || IdProducto == "203" || IdProducto == "204")
-                            {
-                                var valorTotalFinalAFinanciar = 0m;
-                                var valorPrimaFinal = 0m;
-                                var plazoFinal = 0;
-                                var calculoPrestamoFinal = new SolicitudesCredito_Analisis_Calculo_ViewModel();
-
-                                if (IdProducto == "101" || IdProducto == "301" || IdProducto == "201" || IdProducto == "302")
-                                {
-                                    valorTotalFinalAFinanciar = montoFinalAFinanciar;
-                                    valorPrimaFinal = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
-                                    plazoFinal = int.Parse(sqlResultado["fiPlazoFinalAprobado"].ToString());
-
-                                    calculoPrestamoFinal = CalcularPrestamo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
-                                }
-                                else if (IdProducto == "202" || IdProducto == "203" || IdProducto == "204")
-                                {
-                                    calculoPrestamoFinal = CargarPrestamoSolicitadoVehiculo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
-
-                                    valorTotalFinalAFinanciar = calculoPrestamoFinal.ValorAFinanciar;
-                                    plazoFinal = calculoPrestamoFinal.Plazo;
-                                }
-
-                                lblEstadoDelMontoFinalAFinanciar.InnerText = idEstadoSolicitud == Estados_Solicitud.Autorizada ? "(Aprobado)" : "(No Aprobado)";
-                                lblEstadoDelMontoFinalAFinanciar.Attributes.Add("class", idEstadoSolicitud == Estados_Solicitud.Autorizada ? "font-weight-bold text-success" : "font-weight-bold text-danger");
-                                txtMontoTotalAFinanciar_FinalAprobado.Text = DecimalToString(valorTotalFinalAFinanciar);
-                                txtPlazoFinal_FinalAprobado.Text = plazoFinal.ToString();
-                                lblTipoDePlazo_FinalAprobado.InnerText = (IdProducto == "202" || IdProducto == "203" || IdProducto == "204") ? "Mensual" : "Quincenal";
-
-                                /* Culcular préstamo final a financiar */
-                                txtCuotaDelPrestamo_FinalAprobado.Text = DecimalToString(calculoPrestamoFinal.ValorCuotaPrestamo);
-                                txtCuotaDelSeguro_FinalAprobado.Text = DecimalToString(calculoPrestamoFinal.ValorCuotaSeguroDeVehiculo);
-                                txtCuotaGPS_FinalAprobado.Text = DecimalToString(calculoPrestamoFinal.ValorCuotaServicioGPS);
-                                txtCuotaTotal_FinalAprobado.Text = DecimalToString(calculoPrestamoFinal.ValorCuotaNeta);
-                                txtCostoAparatoGPS_FinalAprobado.Text = DecimalToString(calculoPrestamoFinal.CostoAparatoGPS);
-                                txtGastosDeCierre_FinalAprobado.Text = DecimalToString(calculoPrestamoFinal.ValorGastosDeCierre);
-                                txtTasaAnualAplicada_FinalAprobado.Text = DecimalToString(calculoPrestamoFinal.TasaAnualAplicada) + "%";
-                                txtTasaMensualAplicada_FinalAprobado.Text = DecimalToString(calculoPrestamoFinal.TasaMensualAplicada) + "%";
-
-                                divPrestamoFinalAprobado.Visible = true;
-                            }
-                            else
-                            {
-                                divPrestamoFinalAprobado.Visible = false;
-                            }
-
-                            var sueldoBaseReal = decimal.Parse(sqlResultado["fnSueldoBaseReal"].ToString());
-
-                            /*** Recalculo capacidad de pago cuando los ingresos son diferentes ***/
-                            if (sueldoBaseReal != 0)
-                            {
-                                var bonosComisiones = decimal.Parse(sqlResultado["fnBonosComisionesReal"].ToString());
-                                var ingresosReales = sueldoBaseReal + bonosComisiones;
-                                var obligacionesPrecalificado = decimal.Parse(sqlResultado["fnObligacionesPrecalificado"].ToString());
-
-                                txtIngresos_Recalculo.Text = DecimalToString(ingresosReales);
-                                txtObligaciones_Recalculo.Text = DecimalToString(obligacionesPrecalificado);
-                                txtDisponible_Recalculo.Text = DecimalToString(ingresosReales - obligacionesPrecalificado);
-                                txtCapacidadDePagoMensual_Recalculo.Text = DecimalToString((decimal)sqlResultado["fnDisponiblePrecalificado"]);
-                                txtCapacidadDePagoQuicenal_Recalculo.Text = DecimalToString(((decimal)sqlResultado["fnDisponiblePrecalificado"]) / 2);
-                                divRecalculoCapacidadDePago.Visible = true;
-
-                                divPrestamosSueridos_CapacidadDePagoReal.Visible = true;
-
-                                if (idEstadoSolicitud != Estados_Solicitud.Autorizada && idEstadoSolicitud != Estados_Solicitud.RechazadaPorGestores && idEstadoSolicitud != Estados_Solicitud.RechazadaPorAnalistas)
-                                {
-                                    /*** Mostrar prestamos sugeridos para la nueva capacidad de pago ***/
-                                    using (var sqlComandoCotizador = CrearSqlComando("CoreFinanciero.dbo.sp_CotizadorProductos", sqlConexion))
-                                    {
-                                        sqlComandoCotizador.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                                        sqlComandoCotizador.Parameters.AddWithValue("@piIDProducto", IdProducto);
-                                        sqlComandoCotizador.Parameters.AddWithValue("@pcIdentidad", pcID);
-                                        sqlComandoCotizador.Parameters.AddWithValue("@piConObligaciones", obligacionesPrecalificado == 0 ? "0" : "1");
-                                        sqlComandoCotizador.Parameters.AddWithValue("@pnIngresosBrutos", ingresosReales);
-                                        sqlComandoCotizador.Parameters.AddWithValue("@pnIngresosDisponible", ingresosReales - obligacionesPrecalificado);
-
-                                        using (var sqlResultadoCotizador = sqlComandoCotizador.ExecuteReader())
-                                        {
-                                            if (sqlResultadoCotizador.HasRows)
-                                            {
-                                                divTablaNuevosPrestamosSugeridos.Visible = true;
-                                            }
-                                            else
-                                            {
-                                                divSinCapacidadDePago.Visible = true;
-                                            }
-
-                                            HtmlTableRow tRowPrestamoSugerido = null;
-
-                                            while (sqlResultadoCotizador.Read())
-                                            {
-                                                tRowPrestamoSugerido = new HtmlTableRow();
-                                                tRowPrestamoSugerido.Cells.Add(new HtmlTableCell() { InnerText = DecimalToString((decimal)sqlResultadoCotizador["fnMontoOfertado"]) });
-                                                tRowPrestamoSugerido.Cells.Add(new HtmlTableCell() { InnerText = sqlResultadoCotizador["fiPlazo"].ToString() + " " + sqlResultadoCotizador["fcTipodeCuota"].ToString() });
-                                                tRowPrestamoSugerido.Cells.Add(new HtmlTableCell() { InnerText = DecimalToString((decimal)sqlResultadoCotizador["fnCuotaQuincenal"]) });
-                                                tblPrestamosSugeridosReales.Rows.Add(tRowPrestamoSugerido);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (sqlResultado["fcTipoEmpresa"].ToString() != "")
-                            {
-                                ddlTipoDeEmpresa.SelectedValue = sqlResultado["fcTipoEmpresa"].ToString();
-                                ddlTipoDeEmpresa.Enabled = false;
-                            }
-
-                            if (sqlResultado["fcTipoPerfil"].ToString() != "")
-                            {
-                                ddlTipoDePerfil.SelectedValue = sqlResultado["fcTipoPerfil"].ToString();
-                                ddlTipoDePerfil.Enabled = false;
-                            }
-
-                            if (sqlResultado["fcTipoEmpleado"].ToString() != "")
-                            {
-                                ddlTipoDeEmpleo.SelectedValue = sqlResultado["fcTipoEmpleado"].ToString();
-                                ddlTipoDeEmpleo.Enabled = false;
-                            }
-
-                            if (sqlResultado["fcBuroActual"].ToString() != "")
-                            {
-                                ddlBuroActual.SelectedValue = sqlResultado["fcBuroActual"].ToString();
-                                ddlBuroActual.Enabled = false;
-                            }
-
-                            /****** Comentarios del procesamiento de la solicitud *ESTA PARTE SE HACE EN EL .JS DEL FRONTEND (SolicitudesCredito_Analisis.js)* ******/
-
-                            /****** Documentos de la solicitud ******/
-                            sqlResultado.NextResult();
-                            var documentacionIdentidad = new StringBuilder();
-                            var documentacionDomicilio = new StringBuilder();
-                            var documentacionLaboral = new StringBuilder();
-                            var documentacionSolicitudFisica = new StringBuilder();
-                            var documentacionCampoDomicilio = new StringBuilder();
-                            var documentacionCampoTrabajo = new StringBuilder();
-                            var documentacionOtros = new StringBuilder();
-                            var idTipoDocumento = string.Empty;
-
-                            while (sqlResultado.Read())
-                            {
-                                idTipoDocumento = sqlResultado["fiTipoDocumento"].ToString();
-
-                                // Ver contenido de la tabla Catalogo_TipoDocumento
-                                switch (idTipoDocumento)
-                                {
-                                    case "1": // Identidad cara frontal
-                                    case "2": // Identidad cara trasera
-                                    case "18": // Licencia cara frontal
-                                    case "19": // Licencia cara trasera
-                                    case "24": // RTN cara frontal
-                                    case "25": // RTN cara trasera
-                                        documentacionIdentidad.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
-                                        break;
-                                    case "3": // Comprobante de domicilio
-                                    case "5": // Croquis de domicilio
-                                        documentacionDomicilio.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
-                                        break;
-                                    case "4": // Comprobante de ingresos
-                                    case "6": // Croquis de trabajo
-                                        documentacionLaboral.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
-                                        break;
-                                    case "7": // Solicitud Fisica
-                                        documentacionSolicitudFisica.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
-                                        break;
-                                    case "8": // Campo - Foto de casa
-                                        documentacionCampoDomicilio.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + ".jpg" + "' data-image='" + sqlResultado["fcURL"] + ".jpg" + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
-                                        break;
-                                    case "9": // Campo - Foto de trabajo
-                                        documentacionCampoTrabajo.Append("<img alt='" + sqlResultado["fcDescripcionTipoDocumento"] + "' src='" + sqlResultado["fcURL"] + ".jpg" + "' data-image='" + sqlResultado["fcURL"] + ".jpg" + "' data-description='" + sqlResultado["fcDescripcionTipoDocumento"] + "' data-identificador='" + sqlResultado["fcDescripcionTipoDocumento"] + "'/>");
-                                        break;
-                                    default:
-                                        break;
-
-                                }
-                            }
-
-                            divDocumentacionCedula.InnerHtml = documentacionIdentidad.ToString();
-                            divDocumentacionCedulaModal.InnerHtml = documentacionIdentidad.ToString();
-                            divDocumentacionDomicilio.InnerHtml = documentacionDomicilio.ToString();
-                            divDocumentacionDomicilioModal.InnerHtml = documentacionDomicilio.ToString();
-                            divDocumentacionLaboral.InnerHtml = documentacionLaboral.ToString();
-                            divDocumentacionLaboral.InnerHtml += documentacionSolicitudFisica.ToString();
-                            divDocumentacionLaboralModal.InnerHtml = documentacionLaboral.ToString();
-                            divDocumentacionSoliFisicaModal.InnerHtml = documentacionSolicitudFisica.ToString();
-
-                            if (documentacionDomicilio.ToString() == "")
-                            {
-                                divDocumentacionDomicilioModal.Visible = false;
-                            }
-
-                            if (documentacionLaboral.ToString() == "")
-                            {
-                                divDocumentacionLaboralModal.Visible = false;
-                            }
-
-                            if (documentacionCampoDomicilio.ToString() != "")
-                            {
-                                divDocumentacionCampoDomicilio.InnerHtml = documentacionCampoDomicilio.ToString();
-                                divDocumentacionCampoDomicilioModal.InnerHtml = documentacionCampoDomicilio.ToString();
-                                divDocumentacionCampoDomicilio.Visible = true;
-                                divContenedorCampoDomicilioModal.Visible = true;
-                            }
-
-                            if (documentacionCampoTrabajo.ToString() != "")
-                            {
-                                divDocumentacionCampoTrabajo.InnerHtml = documentacionCampoTrabajo.ToString();
-                                divDocumentacionCampoTrabajoModal.InnerHtml = documentacionCampoTrabajo.ToString();
-                                divDocumentacionCampoTrabajo.Visible = true;
-                                divContenedorCampoTrabajoModal.Visible = true;
-                            }
-
-                            /****** Condicionamientos de la solicitud *SE HACE EN EL FRONTEND* ******/
-                            sqlResultado.NextResult();
-
-                            /****** Información del cliente ******/
-                            sqlResultado.NextResult();
-                            sqlResultado.Read();
-
-                            var fechaNacimientoCliente = (DateTime)sqlResultado["fdFechaNacimientoCliente"];
-
-                            /* Calcular edad del cliente */
-                            var hoy = DateTime.Today;
-                            var edad = hoy.Year - fechaNacimientoCliente.Year;
-
-                            if (fechaNacimientoCliente.Date > hoy.AddYears(-edad))
-                                edad--;
-
-                            lblNombreCliente.Text = sqlResultado["fcPrimerNombreCliente"].ToString() + " " + sqlResultado["fcSegundoNombreCliente"].ToString() + " " + sqlResultado["fcPrimerApellidoCliente"].ToString() + " " + sqlResultado["fcSegundoApellidoCliente"].ToString();
-                            lblIdentidadCliente.Text = sqlResultado["fcIdentidadCliente"].ToString();
-                            txtRTNCliente.Text = sqlResultado["fcRTN"].ToString();
-                            txtTelefonoCliente.Text = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
-                            txtNacionalidad.Text = sqlResultado["fcDescripcionNacionalidad"].ToString();
-                            txtFechaNacimientoCliente.Text = fechaNacimientoCliente.ToString("MM/dd/yyyy");
-                            txtEdadCliente.Text = edad.ToString() + " " + "años";
-                            txtCorreoCliente.Text = sqlResultado["fcCorreoElectronicoCliente"].ToString();
-                            txtProfesionCliente.Text = sqlResultado["fcProfesionOficioCliente"].ToString();
-                            txtSexoCliente.Text = sqlResultado["fcSexoCliente"].ToString() == "M" ? "Masculino" : "Femenino";
-                            txtEstadoCivilCliente.Text = sqlResultado["fcDescripcionEstadoCivil"].ToString();
-                            txtTipoDeVivienda.Text = sqlResultado["fcDescripcionViviEnda"].ToString();
-                            txtTiempoDeResidir.Text = sqlResultado["fcTiempoDeResidir"].ToString();
-
-                            /****** Información laboral ******/
-                            sqlResultado.NextResult();
-                            sqlResultado.Read();
-
-                            int arraigoLaboralMeses = GetMonthDifference(hoy, DateTime.Parse(sqlResultado["fdFechaIngreso"].ToString()));
-
-                            txtNombreTrabajoCliente.Text = sqlResultado["fcNombreTrabajo"].ToString();
-                            txtPuestoAsignado.Text = sqlResultado["fcPuestoAsignado"].ToString();
-                            txtIngresosMensuales.Text = DecimalToString((decimal)sqlResultado["fnIngresosMensuales"]);
-                            txtFechaIngreso.Text = DateTime.Parse(sqlResultado["fdFechaIngreso"].ToString()).ToString("MM/dd/yyyy");
-                            txtArraigoLaboral.Text = arraigoLaboralMeses.ToString() + " meses";
-                            txtTelefonoEmpresa.Text = sqlResultado["fcTelefonoEmpresa"].ToString();
-                            txtExtensionCliente.Text = sqlResultado["fcExtensionCliente"].ToString();
-                            txtExtensionRecursosHumanos.Text = sqlResultado["fcExtensionRecursosHumanos"].ToString();
-                            txtDepartamentoEmpresa.Text = sqlResultado["fcDepartamento"].ToString();
-                            txtMunicipioEmpresa.Text = sqlResultado["fcMunicipio"].ToString();
-                            txtCiudadPobladoEmpresa.Text = sqlResultado["fcPoblado"].ToString();
-                            txtBarrioColoniaEmpresa.Text = sqlResultado["fcBarrio"].ToString();
-                            txtDireccionDetalladaEmpresa.InnerText = sqlResultado["fcDireccionDetalladaEmpresa"].ToString();
-                            txtReferenciaDetalladaEmpresa.InnerText = sqlResultado["fcReferenciasDireccionDetalladaEmpresa"].ToString();
-                            txtFuenteDeOtrosIngresos.Text = sqlResultado["fcFuenteOtrosIngresos"].ToString();
-                            txtValorDeOtrosIngresos.Text = DecimalToString((decimal)sqlResultado["fnValorOtrosIngresosMensuales"]);
-
-                            if (sqlResultado["fiIDInvestigacionDeCampo"].ToString() != "0")
-                            {
-                                lblResolucionCampoTrabajo.InnerText = sqlResultado["fcResultadodeCampo"].ToString();
-                                txtGestorValidador_Trabajo.Text = sqlResultado["fcGestorValidadorTrabajo"].ToString();
-                                txtResultadoInvestigacion_Trabajo.Text = sqlResultado["fcGestionTrabajo"].ToString();
-                                txtFechaRecibida_Trabajo.Text = fechaEnInvestigacionInicio.ToString("MM/dd/yyyy hh:mm tt");
-                                txtFechaRendida_Trabajo.Text = DateTime.Parse(sqlResultado["fdFechaValidacion"].ToString()).ToString("MM/dd/yyyy hh:mm tt");
-                                txtObservacionesDeCampo_Trabajo.InnerText = sqlResultado["fcObservacionesCampo"].ToString();
-
-                                divResolucionTrabajo.Visible = true;
-                                divInformaciondeCampo.Visible = true;
-                            }
-
-                            /****** Informacion domicilio ******/
-                            sqlResultado.NextResult();
-                            sqlResultado.Read();
-
-                            txtDepartamentoDomicilio.Text = sqlResultado["fcDepartamento"].ToString();
-                            txtMunicipioDomicilio.Text = sqlResultado["fcMunicipio"].ToString();
-                            txtCiudadPobladoDomicilio.Text = sqlResultado["fcPoblado"].ToString();
-                            txtBarrioColoniaDomicilio.Text = sqlResultado["fcBarrio"].ToString();
-                            txtDireccionDetalladaDomicilio.InnerText = sqlResultado["fcDireccionDetalladaDomicilio"].ToString();
-                            txtReferenciasDomicilio.InnerText = sqlResultado["fcReferenciasDireccionDetalladaDomicilio"].ToString();
-
-                            if (sqlResultado["fiIDInvestigacionDeCampo"].ToString() != "0")
-                            {
-                                lblResolucionCampoDomicilio.InnerText = sqlResultado["fcResultadodeCampo"].ToString();
-                                txtGestorValidador_Domicilio.Text = sqlResultado["fcGestorValidadorDomicilio"].ToString();
-                                txtResultadoInvestigacionCampo_Domicilio.Text = sqlResultado["fcGestionDomicilio"].ToString();
-                                txtFechaRecibida_Domicilio.Text = fechaEnInvestigacionInicio.ToString("MM/dd/yyyy hh:mm tt");
-                                txtFechaValidacion_Domicilio.Text = DateTime.Parse(sqlResultado["fdFechaValidacion"].ToString()).ToString("MM/dd/yyyy hh:mm tt");
-                                txtObservacionesDeCampo_Domicilio.InnerText = sqlResultado["fcObservacionesCampo"].ToString();
-
-                                divResolucionDomicilio.Visible = true;
-                                divInformaciondeCampo.Visible = true;
-                            }
-
-                            /****** Informacion del conyugue ******/
-                            sqlResultado.NextResult();
-                            while (sqlResultado.Read())
-                            {
-                                if (!sqlResultado.HasRows)
-                                {
-                                    divPanelInformacionConyugal.Visible = false;
-                                }
-                                else
-                                {
-                                    txtNombreDelConyugue.Text = sqlResultado["fcNombreCompletoConyugue"].ToString();
-                                    txtIdentidadConyugue.Text = sqlResultado["fcIndentidadConyugue"].ToString();
-                                    txtTelefonoConyugue.Text = sqlResultado["fcTelefonoConyugue"].ToString();
-                                    txtFechaNacimientoConyugue.Text = DateTime.Parse(sqlResultado["fdFechaNacimientoConyugue"].ToString()).ToString("MM/dd/yyyy");
-                                    txtLugarDeTrabajoConyugue.Text = sqlResultado["fcLugarTrabajoConyugue"].ToString();
-                                    txtTelefonoTrabajoConyugue.Text = sqlResultado["fcTelefonoConyugue"].ToString();
-                                    txtIngresosMensualesConyugue.Text = DecimalToString((decimal)sqlResultado["fnIngresosMensualesConyugue"]);
-                                }
-                            }
-
-                            /****** Referencias de la solicitud ******/
-                            sqlResultado.NextResult();
-
-                            TableRow tRowReferencias = null;
-                            string btnComentarioReferenciaPersonal, btnEliminarReferencia, btnActualizarReferencia = string.Empty;
-                            var colorClass = string.Empty;
-                            var stringDatas = string.Empty;
-
-                            while (sqlResultado.Read())
-                            {
-
-                                stringDatas = "data-id='" + sqlResultado["fiIDReferencia"].ToString() + "' data-nombrereferencia='" + sqlResultado["fcNombreCompletoReferencia"].ToString() + "' data-telefono='" + sqlResultado["fcTelefonoReferencia"].ToString() + "' data-idtiempodeconocer='" + sqlResultado["fiTiempoConocerReferencia"].ToString() + "' data-idparentesco='" + sqlResultado["fiIDParentescoReferencia"].ToString() + "' data-lugardetrabajo='" + sqlResultado["fcLugarTrabajoReferencia"].ToString() + "' data-observaciones='" + sqlResultado["fcComentarioDeptoCredito"].ToString() + "' data-analista='" + sqlResultado["fcNombreCorto"] + "' data-sincomunicacion=" + sqlResultado["fbSinComunicacion"].ToString().ToLower() + " data-fechaanalisis='" + (DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()) == procesoPendiente ? (sqlResultado["fcNombreCorto"].ToString() != "" ? "Fecha no disponible" : "") : DateTime.Parse(sqlResultado["fdFechaAnalisis"].ToString()).ToString("MM/dd/yyyy hh:mm tt")) + "'";
-                                btnComentarioReferenciaPersonal = "<button type='button' id='btnComentarioReferencia' " + stringDatas + " class='btn btn-sm btn-info far fa-comments' title='Ver observaciones del depto. de crédito'></button>";
-                                btnActualizarReferencia = "<button type='button' id='btnActualizarReferencia' " + stringDatas + " onclick='AbrirModalActualizarReferenciaPersonal(this)' class='btn btn-sm btn-info far fa-edit' title='Editar'></button>";
-                                btnEliminarReferencia = "<button type='button' id='btnEliminarReferencia' onclick='AbrirModalEliminarReferenciaPersonal(" + sqlResultado["fiIDReferencia"].ToString() + ")' class='btn btn-sm btn-danger far fa-trash-alt' title='Eliminar'></button>";
-
-                                tRowReferencias = new TableRow();
-                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcNombreCompletoReferencia"].ToString() });
-                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcLugarTrabajoReferencia"].ToString() });
-                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTiempoDeConocer"].ToString() });
-                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcTelefonoReferencia"].ToString() });
-                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcDescripcionParentesco"].ToString() });
-                                tRowReferencias.Cells.Add(new TableCell() { Text = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? bool.Parse(sqlResultado["fbSinComunicacion"].ToString()) != true ? "<i class='far fa-check-circle' title='Validación realizada'></i>" : "<i class='fas fa-phone-slash' title='Sin comunicación'></i>" : "<i class='fas fa-phone' title='Validación pendiente'></i>", HorizontalAlign = HorizontalAlign.Center });
-                                tRowReferencias.Cells.Add(new TableCell() { Text = btnComentarioReferenciaPersonal + " " + btnActualizarReferencia + " " + btnEliminarReferencia, HorizontalAlign = HorizontalAlign.Center });
-                                colorClass = sqlResultado["fcComentarioDeptoCredito"].ToString() != "" ? bool.Parse(sqlResultado["fbSinComunicacion"].ToString()) != true ? "tr-exito" : "text-danger" : "";
-
-                                tRowReferencias.Attributes.Add("class", colorClass);
-                                tblReferenciasPersonales.Rows.Add(tRowReferencias);
-                            }
-                        }
-                    } // using sqlComando.ExecuteReader
-                } // using sqlComando obtener información del cliente y de la solicitud a través del id solicitud
-            } // using sqlConexion
-
-            logo = IdProducto == "101" ? "iconoRecibirDinero48.png" : IdProducto == "201" ? "iconoMoto48.png" : (IdProducto == "202" || IdProducto == "203" || IdProducto == "204") ? "iconoAuto48.png" : (IdProducto == "301" || IdProducto == "302") ? "iconoConsumo48.png" : "iconoConsumo48.png";
-            imgLogo.ImageUrl = "/Imagenes/" + logo;
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-    }
-
-    public void CargarInformacionGarantia()
-    {
-        try
-        {
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitud_CREDGarantia_ObtenerPorIdSolicitud", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        if (!sqlResultado.HasRows)
-                            Response.Write("<script>window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp) + "','_self')</script>");
-
-                        while (sqlResultado.Read())
-                        {
-                            /* El primer resultado es información de la solicitud y el cliente */
-
-                            /* El segundo resultado es la información de la garantía*/
-                            sqlResultado.NextResult();
-
-                            if (!sqlResultado.HasRows)
-                            {
-                                panelInformacionGarantia.Visible = false;
-                            }
-                            else
-                            {
-                                /* Informacion del garantía */
-                                while (sqlResultado.Read())
-                                {
-                                    txtVIN.Text = sqlResultado["fcVin"].ToString();
-                                    txtTipoDeGarantia.Text = sqlResultado["fcTipoGarantia"].ToString();
-                                    txtTipoDeVehiculo.Text = sqlResultado["fcTipoVehiculo"].ToString();
-                                    txtMarca.Text = sqlResultado["fcMarca"].ToString();
-                                    txtModelo.Text = sqlResultado["fcModelo"].ToString();
-                                    txtAnio.Text = sqlResultado["fiAnio"].ToString();
-                                    txtColor.Text = sqlResultado["fcColor"].ToString();
-                                    txtMatricula.Text = sqlResultado["fcMatricula"].ToString();
-                                    txtSerieMotor.Text = sqlResultado["fcMotor"].ToString();
-                                    txtSerieChasis.Text = sqlResultado["fcChasis"].ToString();
-                                    txtGPS.Text = sqlResultado["fcGPS"].ToString();
-                                    txtCilindraje.Text = sqlResultado["fcCilindraje"].ToString();
-                                    txtRecorrido.Text = string.Format("{0:#,###0.00}", Convert.ToDecimal(sqlResultado["fnRecorrido"].ToString())) + " " + sqlResultado["fcUnidadDeDistancia"].ToString();
-                                    txtTransmision.Text = sqlResultado["fcTransmision"].ToString();
-                                    txtTipoDeCombustible.Text = sqlResultado["fcTipoCombustible"].ToString();
-                                    txtSerieUno.Text = sqlResultado["fcSerieUno"].ToString();
-                                    txtSerieDos.Text = sqlResultado["fcSerieDos"].ToString();
-                                    txtComentario.InnerText = sqlResultado["fcComentario"].ToString().Trim();
-                                    txtNombrePropietarioGarantia.Text = sqlResultado["fcNombrePropietarioGarantia"].ToString();
-                                    txtIdentidadPropietarioGarantia.Text = sqlResultado["fcIdentidadPropietarioGarantia"].ToString();
-                                    txtNacionalidadPropietarioGarantia.Text = sqlResultado["fcNacionalidadPropietarioGarantia"].ToString();
-                                    txtEstadoCivilPropietarioGarantia.Text = sqlResultado["fcEstadoCivilPropietarioGarantia"].ToString();
-                                    txtNombreVendedorGarantia.Text = sqlResultado["fcNombreVendedorGarantia"].ToString();
-                                    txtIdentidadVendedorGarantia.Text = sqlResultado["fcIdentidadVendedorGarantia"].ToString();
-                                    txtNacionalidadVendedorGarantia.Text = sqlResultado["fcNacionalidadVendedorGarantia"].ToString();
-                                    txtEstadoCivilVendedorGarantia.Text = sqlResultado["fcEstadoCivilVendedorGarantia"].ToString();
-                                }
-
-                                /* El tercer resultado son las fotografías de la garantía */
-                                sqlResultado.NextResult();
-
-                                if (!sqlResultado.HasRows)
-                                {
-                                    divGaleriaGarantia.InnerHtml = "<img alt='No hay fotografías disponibles' src='/Imagenes/Imagen_no_disponible.png' data-image='/Imagenes/Imagen_no_disponible.png' data-description='No hay fotografías disponibles'/>";
-                                }
-                                else
-                                {
-                                    var imagenesGarantia = new StringBuilder();
-
-                                    while (sqlResultado.Read())
-                                    {
-                                        imagenesGarantia.Append("<img alt='" + sqlResultado["fcSeccionGarantia"] + "' src='" + sqlResultado["fcURL"] + "' data-image='" + sqlResultado["fcURL"] + "' data-description='" + sqlResultado["fcSeccionGarantia"] + "'/>");
-                                    }
-                                    divGaleriaGarantia.InnerHtml = imagenesGarantia.ToString();
-                                }
-                            }
-                        } // while sqlResultado.Read()
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-    }
-
-    public void CargarListados()
-    {
-        try
-        {
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDCatalogo_Parentescos_Listar", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@fiIDParentesco", 0);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        ddlParentescos.Items.Clear();
-                        ddlParentescos.Items.Add(new ListItem("Seleccionar", ""));
-
-                        ddlParentesco_Editar.Items.Clear();
-                        ddlParentesco_Editar.Items.Add(new ListItem("Seleccionar", ""));
-
-                        if (sqlResultado.HasRows)
-                        {
-                            while (sqlResultado.Read())
-                            {
-                                ddlParentescos.Items.Add(new ListItem(sqlResultado["fcDescripcionParentesco"].ToString(), sqlResultado["fiIDParentesco"].ToString()));
-                                ddlParentesco_Editar.Items.Add(new ListItem(sqlResultado["fcDescripcionParentesco"].ToString(), sqlResultado["fiIDParentesco"].ToString()));
-                            }
-                        }
-                    }
-                } // using cammnd catalogo parentescos
-
-                using (var sqlComando = CrearSqlComando("sp_CREDCatalogo_TiempoDeConocer_Listar", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        ddlTiempoDeConocerReferencia.Items.Clear();
-                        ddlTiempoDeConocerReferencia.Items.Add(new ListItem("Seleccionar", ""));
-
-                        ddlTiempoDeConocerReferencia_Editar.Items.Clear();
-                        ddlTiempoDeConocerReferencia_Editar.Items.Add(new ListItem("Seleccionar", ""));
-
-                        if (sqlResultado.HasRows)
-                        {
-                            while (sqlResultado.Read())
-                            {
-                                ddlTiempoDeConocerReferencia.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
-                                ddlTiempoDeConocerReferencia_Editar.Items.Add(new ListItem(sqlResultado["fcDescripcion"].ToString(), sqlResultado["fiIDTiempoDeConocer"].ToString()));
-                            }
-                        }
-                    }
-                } // using cammnd catalogo tiempo de conocer
-            } // using connection
-
-            ddlTipoDeEmpresa.Items.Add(new ListItem("Seleccionar", ""));
-            ddlTipoDeEmpresa.Items.Add(new ListItem("Privada", "Privada"));
-            ddlTipoDeEmpresa.Items.Add(new ListItem("Publica", "Publica"));
-            ddlTipoDeEmpresa.Items.Add(new ListItem("Propia", "Propia"));
-
-            ddlTipoDePerfil.Items.Add(new ListItem("Seleccionar", ""));
-            ddlTipoDePerfil.Items.Add(new ListItem("Formal", "Formal"));
-            ddlTipoDePerfil.Items.Add(new ListItem("Informal", "Informal"));
-
-            ddlTipoDeEmpleo.Items.Add(new ListItem("Seleccionar", ""));
-            ddlTipoDeEmpleo.Items.Add(new ListItem("Asalariado", "Asalariado"));
-            ddlTipoDeEmpleo.Items.Add(new ListItem("Comerciante", "Comerciante"));
-
-            ddlBuroActual.Items.Add(new ListItem("Seleccionar", ""));
-            ddlBuroActual.Items.Add(new ListItem("Con Historial", "Con Historial"));
-            ddlBuroActual.Items.Add(new ListItem("Sin Historial", "Sin Historial"));
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-    }
-
-    #endregion
-
-    #region Funciones de analisis *Pendiente*
-
-    public SolicitudesCredito_Analisis_Calculo_ViewModel CargarPrestamoSolicitadoVehiculo(string idProducto, decimal valorPrestamo, decimal valorPrima, int plazo, SqlConnection sqlConexion)
-    {
-        SolicitudesCredito_Analisis_Calculo_ViewModel resultado = null;
-        try
-        {
-            /* Si la información */
-            if (int.Parse(pcIDSolicitud) < 802 && pcIDSolicitud != "773")
-            {
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_CalculoPrestamo", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
-                    sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", valorPrestamo);
-                    sqlComando.Parameters.AddWithValue("@liPlazo", plazo);
-                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            resultado = new SolicitudesCredito_Analisis_Calculo_ViewModel()
-                            {
-                                ValorSeguroDeDeuda = (decimal)sqlResultado["fnSegurodeDeuda"],
-                                ValorSeguroDeVehiculo = (decimal)sqlResultado["fnSegurodeVehiculo"],
-                                ValorGastosDeCierre = (decimal)sqlResultado["fnGastosdeCierre"],
-                                ValorAFinanciar = (decimal)sqlResultado["fnValoraFinanciar"],
-                                ValorCuotaPrestamo = (decimal)sqlResultado["fnValorCuota"],
-                                CostoAparatoGPS = (decimal)sqlResultado["fnCostoGPS"],
-                                ValorCuotaServicioGPS = (decimal)sqlResultado["fnCuotaServicioGPS"],
-                                TotalSeguroVehiculo = (decimal)sqlResultado["fnTotalSeguroVehiculo"],
-                                ValorCuotaSeguroDeVehiculo = (decimal)sqlResultado["fnCuotaSegurodeVehiculo"],
-                                ValorCuotaNeta = (decimal)sqlResultado["fnValorCuotaNeta"],
-                                Plazo = (short)sqlResultado["fiPlazo"],
-                                TipoDePlazo = sqlResultado["fcTipodeCuota"].ToString(),
-                                TasaAnualAplicada = (decimal)sqlResultado["fnTasaDeInteresAnual"],
-                                TasaMensualAplicada = (decimal)sqlResultado["fnTasaDeInteresMensual"]
-                            };
-                        }
-                    } // using sqlComando.ExecuteReader()
-                } // using sqlComando
+                pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+                Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                IdSolicitud = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+                pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+                pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                //pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+                pcIDSesion = "1";
+
+                bool AccesoAlAnalisis = ValidarAnalista(IdSolicitud);
+
+                //if (AccesoAlAnalisis == false) {
+                //string lcScript = "window.open('SolicitudesCredito_Bandeja.aspx?" + pcEncriptado + "','_self')";
+                //Response.Write("<script>");
+                //Response.Write(lcScript);
+                //Response.Write("</script>");
+                //}
+                //CargarSolicitud(IDSOL);
+          
             }
             else
             {
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_InformacionPrestamo_ObtenerPorIdSolicitud", sqlConexion))
+                string lcScript = "window.open('SolicitudesCredito_Bandeja.aspx?" + pcEncriptado + "','_self')";
+                Response.Write("<script>");
+                Response.Write(lcScript);
+                Response.Write("</script>");
+            }
+        }
+    }
+    public static void MensajeExterno(string lcMensaje)
+    {
+        string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+        // Write the string array to a new file named "WriteLines.txt".
+        using (StreamWriter outputFile = new StreamWriter(@"C:\Temp\WriteLines.txt"))
+        {
+                outputFile.WriteLine(lcMensaje);
+        }
+    }
+
+    public bool ValidarAnalista(int IDSolicitud)
+    {
+
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+
+        bool resultado = true;
+        int IDPRODUCTO = 0;       
+        int IDAPPLICATIONFORM = 0; 
+        BandejaSolicitudesViewModel solicitudes = new BandejaSolicitudesViewModel();
+        try
+        {
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion))
                 {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitud);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
 
-                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
                     {
-                        while (sqlResultado.Read())
+                        while (reader.Read())
                         {
-                            resultado = new SolicitudesCredito_Analisis_Calculo_ViewModel()
+                            solicitudes = new BandejaSolicitudesViewModel()
                             {
-                                ValorSeguroDeDeuda = 0,
-                                ValorSeguroDeVehiculo = (decimal)sqlResultado["fnValorTotalSeguro"],
-                                ValorGastosDeCierre = (decimal)sqlResultado["fnGastosDeCierre"],
-                                ValorAFinanciar = (decimal)sqlResultado["fnValorTotalFinanciamiento"],
-                                ValorCuotaPrestamo = (decimal)sqlResultado["fnCuotaMensualPrestamo"],
-                                CostoAparatoGPS = (decimal)sqlResultado["fnCostoGPS"],
-                                ValorCuotaServicioGPS = (decimal)sqlResultado["fnCuotaMensualGPS"],
-                                TotalSeguroVehiculo = (decimal)sqlResultado["fnValorTotalSeguro"],
-                                ValorCuotaSeguroDeVehiculo = (decimal)sqlResultado["fnCuotaMensualSeguro"],
-                                ValorCuotaNeta = (decimal)sqlResultado["fnCuotaTotal"],
-                                Plazo = (int)sqlResultado["fiPlazo"],
-                                TipoDePlazo = sqlResultado["fcTipoDePlazo"].ToString(),
-                                TasaAnualAplicada = (decimal)sqlResultado["fnTasaAnualAplicada"] < 0 ? ((decimal)sqlResultado["fnTasaAnualAplicada"] * 100) : (decimal)sqlResultado["fnTasaAnualAplicada"],
-                                TasaMensualAplicada = (decimal)sqlResultado["fnTasaMensualAplicada"] < 0 ? ((decimal)sqlResultado["fnTasaMensualAplicada"] * 100) : (decimal)sqlResultado["fnTasaMensualAplicada"]
+                                fiIDAnalista = (int)reader["fiIDAnalista"],
+                                fcNombreCortoAnalista = (string)reader["fcNombreCortoAnalista"]
                             };
+                              IDPRODUCTO = (int)reader["fiIDTipoProducto"];
+                              IDAPPLICATIONFORM = (int)reader["fiIDForm"];
+                             
+                            //  btnLinkDocumentos.Text = idForm;
+                            //lblArraigoLaboral.Text = (string)reader["fcClienteArraigoLaboral"].ToString();
+
+                            /* Llenar ficha de resumen */
+                            //lblResumenCliente.Text = ((string)reader["fcPrimerNombreCliente"] + " " + (string)reader["fcSegundoNombreCliente"] + " " + (string)reader["fcPrimerApellidoCliente"] + " " + (string)reader["fcSegundoApellidoCliente"]).Replace(" ","");
+                            //lblResumenEdad.Text = ((short)reader["fiEdadCliente"]).ToString() + " Años";
+                            //lblResumenTrabajo.Text = (string)"N/A";
+                            //lblResumenPuesto.Text = (string)"N/A";
+                            //lblResumenCapacidadPagoMensual.Text = (string)"N/A";
+                            //lblResumenCapacidadPagoQuincenal.Text = (string)"N/A";
+                            //lblResumenDeptoResidencia.Text = (string)"N/A";
+                            //lblResumenMuniResidencia.Text = (string)"N/A";
+                            //lblResumenColResidencia.Text = (string)"N/A";
+                            //lblResumenTipoVivienda.Text = (string)"N/A";
+                            //lblResumenTiempoResidir.Text = (string)"N/A";
+                            //lblResumenValorGarantia.Text = (string)"N/A";
+                            //lblResumenValorPrima.Text = (string)"N/A";
+                            //lblResumenValorFinanciar.Text = (string)"N/A";
+                            //lblResumenCuota.Text = (string)"N/A";
+                            //lblResumenTipoEmpresa.Text = (string)"N/A";
+                            //lblResumenTipoPerfil.Text = (string)"N/A";
+                            //lblResumenTipoEmpleo.Text = (string)"N/A";
+                            //lblResumenBuroActual.Text = (string)"N/A";
+                            //lblResumenVendedor.Text = (string)"N/A";
+                            //lblResumenAnalista.Text = (string)"N/A";
+                            //lblResumenGestor.Text = (string)"N/A";
                         }
-                    } // using sqlComando.ExecuteReader()
-                } // using sqlComando
+                    }
+                }
+
+                //btnLinkDocumentos.NavigateUrl = "http://crediflash.prestadito.corp/DealerApplication/ViewMainApplicationForm?id=" +  IDAPPLICATIONFORM;
+
+                
+                string NombreLogo = IDPRODUCTO == 101 ? "iconoAuto48.png" : IDPRODUCTO == 201 ? "iconoRecibirDinero48.png" : (IDPRODUCTO == 100|| IDPRODUCTO == 102) ? "iconoAuto48.png" : IDPRODUCTO == 301 ? "iconoAuto48.png" : "iconoAuto48.png";
+                LogoPrestamo.ImageUrl = "http://172.20.3.148/Imagenes/" + NombreLogo;
+
+                if (solicitudes.fiIDAnalista == Convert.ToInt32(pcIDUsuario))
+                {
+                    resultado = true;
+                }
+                else if (solicitudes.fiIDAnalista == 0)
+                {
+                    /* Si la solicitud no está siendo analizada, asignar solicitud al usuario actual */
+                    using (SqlCommand cmd = new SqlCommand("sp_CredSolicitud_Analizar", sqlConexion))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitud);
+                        cmd.Parameters.AddWithValue("@fiIDAnalista", pcIDUsuario);
+                        cmd.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                        cmd.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                        cmd.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                        using (SqlDataReader readerAnalisis = cmd.ExecuteReader())
+                        {
+                            readerAnalisis.Read();
+
+                            if (readerAnalisis["MensajeError"].ToString().StartsWith("-1"))
+                                resultado = false;
+                            else
+                                resultado = true;
+                        }
+                    }
+                }
+                else
+                    resultado = false;
+
+                /* Verficar si la solicitud tiene condicionamientos pendientes */
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_SolicitudCondiciones_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IdSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            pestanaListaSolicitudCondiciones.Style.Add("display", "");
+
+                            HtmlTableRow tRowSolicitudCondiciones = null;
+                            string EstadoCondicion = String.Empty;
+                            int contadorCondiciones = 1;
+                            while (reader.Read())
+                            {
+                                EstadoCondicion = (bool)reader["fbEstadoCondicion"] != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-danger mb-0'>Pendiente</label>";
+                                tRowSolicitudCondiciones = new HtmlTableRow();
+                                tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = reader["fcCondicion"].ToString() });
+                                tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = reader["fcDescripcionCondicion"].ToString() });
+                                tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerText = reader["fcComentarioAdicional"].ToString() });
+                                tRowSolicitudCondiciones.Cells.Add(new HtmlTableCell() { InnerHtml = EstadoCondicion });
+                                tblListaSolicitudCondiciones.Rows.Add(tRowSolicitudCondiciones);
+                                contadorCondiciones++;
+                            }
+                        }
+                    }
+                }
+
             }
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
-            resultado = null;
-        }
-        return resultado;
-    }
-
-    public SolicitudesCredito_Analisis_Calculo_ViewModel CalcularPrestamo(string idProducto, decimal valorPrestamo, decimal valorPrima, int plazo, SqlConnection sqlConexion)
-    {
-        SolicitudesCredito_Analisis_Calculo_ViewModel resultado = null;
-        try
-        {
-            using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_CalculoPrestamo", sqlConexion))
-            {
-                sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
-                sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", valorPrestamo);
-                sqlComando.Parameters.AddWithValue("@liPlazo", plazo);
-                sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
-                sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                using (var sqlResultado = sqlComando.ExecuteReader())
-                {
-                    while (sqlResultado.Read())
-                    {
-                        resultado = new SolicitudesCredito_Analisis_Calculo_ViewModel()
-                        {
-                            ValorSeguroDeDeuda = (decimal)sqlResultado["fnSegurodeDeuda"],
-                            ValorSeguroDeVehiculo = (decimal)sqlResultado["fnSegurodeVehiculo"],
-                            ValorGastosDeCierre = (decimal)sqlResultado["fnGastosdeCierre"],
-                            ValorAFinanciar = (decimal)sqlResultado["fnValoraFinanciar"],
-                            ValorCuotaPrestamo = (decimal)sqlResultado["fnValorCuota"],
-                            CostoAparatoGPS = (decimal)sqlResultado["fnCostoGPS"],
-                            ValorCuotaServicioGPS = (decimal)sqlResultado["fnCuotaServicioGPS"],
-                            TotalSeguroVehiculo = (decimal)sqlResultado["fnTotalSeguroVehiculo"],
-                            ValorCuotaSeguroDeVehiculo = (decimal)sqlResultado["fnCuotaSegurodeVehiculo"],
-                            ValorCuotaNeta = (decimal)sqlResultado["fnValorCuotaNeta"],
-                            Plazo = (short)sqlResultado["fiPlazo"],
-                            TipoDePlazo = sqlResultado["fcTipodeCuota"].ToString(),
-                            TasaAnualAplicada = (decimal)sqlResultado["fnTasaDeInteresAnual"],
-                            TasaMensualAplicada = (decimal)sqlResultado["fnTasaDeInteresMensual"]
-                        };
-                    }
-                } // using sqlComando.ExecuteReader()
-            } // using sqlComando
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            resultado = null;
+            resultado = false;
         }
         return resultado;
     }
 
     [WebMethod]
-    public static SolicitudesCredito_Analisis_EstadoProcesos_ViewModel CargarEstadoSolicitud(string dataCrypt)
+    public static SolicitudAnalisisViewModel CargarInformacionSolicitud(string dataCrypt)
     {
-        var estadoSolicitud = new SolicitudesCredito_Analisis_EstadoProcesos_ViewModel();
-
+        string lcIDCliente="";
+        string lcPasoOperativo="";
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        SolicitudAnalisisViewModel ObjSolicitud = new SolicitudAnalisisViewModel();
         try
         {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            ////string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
+                BandejaSolicitudesViewModel SolicitudMaestro = new BandejaSolicitudesViewModel();
 
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_CargarEstadoProcesos", sqlConexion))
+                /* Información de la solicitud */
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion))
                 {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
                     {
-                        while (sqlResultado.Read())
+                        while (reader.Read())
                         {
-                            estadoSolicitud = new SolicitudesCredito_Analisis_EstadoProcesos_ViewModel()
+                            lcIDCliente = reader["fiIDCliente"].ToString();
+                            SolicitudMaestro = new BandejaSolicitudesViewModel()
                             {
-                                EnIngresoInicio = (DateTime)sqlResultado["fdEnIngresoInicio"],
-                                EnIngresoFin = (DateTime)sqlResultado["fdEnIngresoFin"],
-                                UsuarioEnIngreso = sqlResultado["fcUsuarioEnIngreso"].ToString(),
-                                EnColaInicio = (DateTime)sqlResultado["fdEnColaInicio"],
-                                EnColaFin = (DateTime)sqlResultado["fdEnColaFin"],
-                                EnAnalisisInicio = (DateTime)sqlResultado["fdEnAnalisisInicio"],
-                                UsuarioAnalista = sqlResultado["fcUsuarioAnalista"].ToString(),
-                                DocumentacionIdentidadesValidada = (byte)sqlResultado["fbValidacionDocumentcionIdentidades"],
-                                DocumentacionDomicilioValidada = (byte)sqlResultado["fbValidacionDocumentacionDomiciliar"],
-                                DocumentacionLaboralValidada = (byte)sqlResultado["fbValidacionDocumentacionLaboral"],
-                                DocumentacionSolicitudFisicaValidada = (byte)sqlResultado["fbValidacionDocumentacionSolicitudFisica"],
-                                FechaValidacionInformacionPersonal = (DateTime)sqlResultado["fdAnalisisTiempoValidarInformacionPersonal"],
-                                ComentarioValidacionInformacionPersonal = sqlResultado["fcComentarioValidacionInfoPersonal"].ToString(),
-                                FechaValidacionDocumentacion = (DateTime)sqlResultado["fdAnalisisTiempoValidarDocumentos"],
-                                ComentarioValidacionDocumentacion = sqlResultado["fcComentarioValidacionDocumentacion"].ToString(),
-                                FechaValidacionReferenciasPersonales = (DateTime)sqlResultado["fdAnalisisTiempoValidacionReferenciasPersonales"],
-                                ComentarioValidacionReferenciasPersonales = sqlResultado["fcComentarioValidacionReferenciasPersonales"].ToString(),
-                                FechaValidacionInformacionLaboral = (DateTime)sqlResultado["fdAnalisisTiempoValidarInformacionLaboral"],
-                                ComentarioValidacionInformacionLaboral = sqlResultado["fcComentarioValidacionInfoLaboral"].ToString(),
-                                ComentarioResolucion = sqlResultado["fcComentarioResolucion"].ToString(),
-                                TiempoTomaDecisionFinal = (DateTime)sqlResultado["fdTiempoTomaDecisionFinal"],
-                                EnAnalisisFin = (DateTime)sqlResultado["fdEnAnalisisFin"],
-                                CondicionadoInicio = (DateTime)sqlResultado["fdCondicionadoInicio"],
-                                ComentarioCondicionado = sqlResultado["fcCondicionadoComentario"].ToString(),
-                                UsuarioCondicionado = sqlResultado["fcUsuarioEnIngreso"].ToString(),
-                                CondicionadoFin = (DateTime)sqlResultado["fdCondificionadoFin"],
-                                FechaEnvioARuta = (DateTime)sqlResultado["fdEnvioARutaAnalista"],
-                                ObservacionesDeCreditos = sqlResultado["fcObservacionesDeCredito"].ToString(),
-                                EnRutaDeInvestigacionInicio = (DateTime)sqlResultado["fdEnRutaDeInvestigacionInicio"],
-                                UsuarioGestorAsignado = sqlResultado["fcGestorAsignado"].ToString(),
-                                ObservacionesDeCampo = sqlResultado["fcObservacionesDeCampo"].ToString(),
-                                EnRutaDeInvestigacionFin = (DateTime)sqlResultado["fdEnRutaDeInvestigacionFin"],
-                                ReprogramadoInicio = (DateTime)sqlResultado["fdReprogramadoInicio"],
-                                ComentarioReprogramado = sqlResultado["fcReprogramadoComentario"].ToString(),
-                                ReprogramadoFin = (DateTime)sqlResultado["fdReprogramadoFin"],
-                                PasoFinalInicio = (DateTime)sqlResultado["fdPasoFinalInicio"],
-                                UsuarioPasoFinal = sqlResultado["fcUsuarioPasoFinal"].ToString(),
-                                ComentarioPasoFinal = sqlResultado["fcComentarioPasoFinal"].ToString(),
-                                PasoFinalFin = (DateTime)sqlResultado["fdPasoFinalFin"],
-                                IdEstadoSolicitud = (byte)sqlResultado["fiEstadoSolicitud"],
-                                EstadoSolicitud = sqlResultado["fcEstadoSolicitud"].ToString(),
-                                SolicitudActiva = (byte)sqlResultado["fiSolicitudActiva"]
+                                fiIDSolicitud = (int)reader["fiIDSolicitud"],
+                                fiIDTipoPrestamo = (int)reader["fiIDTipoProducto"],
+                                fcDescripcion = (string)reader["fcProducto"],
+                                fiTipoSolicitud = (short)reader["fiTipoSolicitud"],
+                                TipoNegociacion = (short)reader["fiTipoNegociacion"],
+                                // Informacion del precalificado
+                                fdValorPmoSugeridoSeleccionado = (decimal)reader["fnValorSeleccionado"],
+                                fiPlazoPmoSeleccionado = (int)reader["fiPlazoSeleccionado"],
+                                fdIngresoPrecalificado = (decimal)reader["fnIngresoPrecalificado"],
+                                fdObligacionesPrecalificado = (decimal)reader["fnObligacionesPrecalificado"],
+                                fdDisponiblePrecalificado = (decimal)reader["fnDisponiblePrecalificado"],
+                                fnPrima = (decimal)reader["fnValorPrima"],
+                                fnValorGarantia = (decimal)reader["fnValorGarantia"],
+                                fiEdadCliente = (short)reader["fiEdadCliente"],
+                                fnSueldoBaseReal = (decimal)reader["fnSueldoBaseReal"],
+                                fnBonosComisionesReal = (decimal)reader["fnBonosComisionesReal"],
+                                // Informacion del vendedor
+                                fiIDUsuarioVendedor = (int)reader["fiIDUsuarioVendedor"],
+                                fcNombreCortoVendedor = (string)reader["fcNombreCortoVendedor"],
+                                fdFechaCreacionSolicitud = (DateTime)reader["fdFechaCreacionSolicitud"],
+                                // Informacion del analista
+                                fiIDUsuarioModifica = (int)reader["fiIDAnalista"],
+                                fcNombreUsuarioModifica = (string)reader["fcNombreCortoAnalista"],
+                                fcTipoEmpresa = (string)reader["fcTipoEmpresa"],
+                                fcTipoPerfil = (string)reader["fcTipoPerfil"],
+                                fcTipoEmpleado = (string)reader["fcTipoEmpleado"],
+                                fcBuroActual = (string)reader["fcBuroActual"],
+                                fiMontoFinalSugerido = (decimal)reader["fnMontoFinalSugerido"],
+                                fiMontoFinalFinanciar = (decimal)reader["fnMontoFinalFinanciar"],
+                                fiPlazoFinalAprobado = (int)reader["fiPlazoFinalAprobado"],
+                                fiEstadoSolicitud = (byte)reader["fiEstadoSolicitud"],
+                                fiSolicitudActiva = (byte)reader["fiSolicitudActiva"],
+                                // Informacion cliente
+                                fiIDCliente = (int)reader["fiIDCliente"],
+                                fcNoAgencia = (string)reader["fcCentrodeCosto"],
+                                fcAgencia = (string)reader["fcNombreAgencia"],
+                                // Bitacora
+                                fdEnIngresoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnIngresoInicio"]),
+                                fdEnIngresoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnIngresoFin"]),
+                                fdEnTramiteInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnColaInicio"]),
+                                fdEnTramiteFin = ConvertFromDBVal<DateTime>((object)reader["fdEnColaFin"]),
+                                // Todo el proceso de analisis
+                                fdEnAnalisisInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisInicio"]),
+                                ftAnalisisTiempoValidarInformacionPersonal = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarInformacionPersonal"]),
+                                fcComentarioValidacionInfoPersonal = (string)reader["fcComentarioValidacionInfoPersonal"],
+                                ftAnalisisTiempoValidarDocumentos = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarDocumentos"]),
+                                fcComentarioValidacionDocumentacion = (string)reader["fcComentarioValidacionDocumentacion"],
+                                fbValidacionDocumentcionIdentidades = (byte)reader["fbValidacionDocumentcionIdentidades"],
+                                fbValidacionDocumentacionDomiciliar = (byte)reader["fbValidacionDocumentacionDomiciliar"],
+                                fbValidacionDocumentacionLaboral = (byte)reader["fbValidacionDocumentacionLaboral"],
+                                fbValidacionDocumentacionSolicitudFisica = (byte)reader["fbValidacionDocumentacionSolicitudFisica"],
+                                ftAnalisisTiempoValidacionReferenciasPersonales = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidacionReferenciasPersonales"]),
+                                fcComentarioValidacionReferenciasPersonales = (string)reader["fcComentarioValidacionReferenciasPersonales"],
+                                ftAnalisisTiempoValidarInformacionLaboral = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarInformacionLaboral"]),
+                                fcComentarioValidacionInfoLaboral = (string)reader["fcComentarioValidacionInfoLaboral"],
+                                ftTiempoTomaDecisionFinal = ConvertFromDBVal<DateTime>((object)reader["fdTiempoTomaDecisionFinal"]),
+                                fcObservacionesDeCredito = (string)reader["fcObservacionesDeCredito"],
+                                fcComentarioResolucion = (string)reader["fcComentarioResolucion"],
+                                fdEnAnalisisFin = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisFin"]),
+                                // Todo el proceso de analisis
+                                fdCondicionadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdCondicionadoInicio"]),
+                                fcCondicionadoComentario = (string)reader["fcCondicionadoComentario"],
+                                fdCondificionadoFin = ConvertFromDBVal<DateTime>((object)reader["fdCondificionadoFin"]),
+                                fiIDOrigen = (short)reader["fiIDOrigen"],
+                                // Proceso de campo
+                                fdEnvioARutaAnalista = ConvertFromDBVal<DateTime>((object)reader["fdEnvioARutaAnalista"]),
+                                fiEstadoDeCampo = (byte)reader["fiEstadoDeCampo"],
+                                fdEnCampoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionInicio"]),
+                                fcObservacionesDeGestoria = (string)reader["fcObservacionesDeCampo"],
+                                fdEnCampoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionFin"]),
+                                fdReprogramadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoInicio"]),
+                                fcReprogramadoComentario = (string)reader["fcReprogramadoComentario"],
+                                fdReprogramadoFin = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoFin"]),
+                                PasoFinalInicio = (DateTime)reader["fdPasoFinalInicio"],
+                                IDUsuarioPasoFinal = (int)reader["fiIDUsuarioPasoFinal"],
+                                ComentarioPasoFinal = (string)reader["fcComentarioPasoFinal"],
+                                PasoFinalFin = (DateTime)reader["fdPasoFinalFin"],
+                                // Informacion del gestor
+                                IDGestor = (int)reader["fiIDGestor"],
+                                NombreGestor = (string)reader["fcNombreGestor"],
+                              
+                               
                             };
 
-                        } // while sqlResultado.Read()
-                    } // using executeReader
-                } // using command
+                            
+                  
+                        }
+                    }
+                    ObjSolicitud.solicitud = SolicitudMaestro;
+                }
 
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_Condiciones_ObtenerPorIdSolicitud", sqlConexion))
+                lcPasoOperativo="ObtenerDocumentos";
+
+                /* Documentos de la solicitud */
+                List<SolicitudesDocumentosViewModel> ListadoDocumentos = new List<SolicitudesDocumentosViewModel>();
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ObtenerSolicitudDocumentos", sqlConexion))
                 {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
                     {
-                        while (sqlResultado.Read())
+                        while (reader.Read())
                         {
-                            estadoSolicitud.Condiciones.Add(new SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel()
+                            ListadoDocumentos.Add(new SolicitudesDocumentosViewModel()
                             {
-                                IdSolicitudCondicion = (int)sqlResultado["fiIDSolicitudCondicion"],
-                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                IdCondicion = (int)sqlResultado["fiIDCondicion"],
-                                Condicion = sqlResultado["fcCondicion"].ToString(),
-                                DescripcionCondicion = sqlResultado["fcDescripcionCondicion"].ToString(),
-                                ComentarioAdicional = sqlResultado["fcComentarioAdicional"].ToString(),
-                                EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"]
+                                fiIDSolicitud = (int)reader["fiIDSolicitud"],
+                                fiIDSolicitudDocs = (int)reader["fiIDSolicitudDocs"],
+                                fcNombreArchivo = (string)reader["fcNombreArchivo"],
+                                fcTipoArchivo = (string)reader["fcTipoArchivo"],
+                                fcRutaArchivo = (string)reader["fcRutaArchivo"],
+                                URLArchivo = (string)reader["fcURL"],
+                                fcArchivoActivo = (byte)reader["fiArchivoActivo"],
+                                fiTipoDocumento = (int)reader["fiTipoDocumento"],
+                                DescripcionTipoDocumento = (string)reader["fcDescripcionTipoDocumento"]
                             });
                         }
-                    } // using executeReader()
-                } // using command
-            } // using connection
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return estadoSolicitud;
-    }
-
-    [WebMethod]
-    public static bool ValidacionesDeAnalisis(string tipoDeValidacion, string comentario, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_Analisis_Validaciones", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@pcTipoDeValidacion", tipoDeValidacion);
-                    sqlComando.Parameters.AddWithValue("@pcComentario", comentario.Trim());
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            resultado = sqlResultado["MensajeError"].ToString().StartsWith("-1") ? false : true;
-                        }
                     }
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return resultado;
-    }
+                    ObjSolicitud.documentos = ListadoDocumentos;
+                }
+                lcPasoOperativo="InformacionCliente";
+                /* Informacion del cliente */
+                ClientesViewModel objCliente = new ClientesViewModel();
 
-    [WebMethod]
-    public static bool EnviarACampo(string observacionesDeCredito, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_Analisis_EnviarACampo", sqlConexion))
+                /* Cliente Maestro */
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_Maestro_Listar", sqlConexion))
                 {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@pcObservacionesDeCredito", observacionesDeCredito);
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    //lblNoSolicitud.Text="Cliente:"+lcIDCliente;
+                    //sqlComando.Parameters.AddWithValue("@fiIDCliente", ObjSolicitud.solicitud.fiIDCliente);
+                    sqlComando.Parameters.AddWithValue("@fiIDCliente", lcIDCliente);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
                     {
-                        while (sqlResultado.Read())
+                        if (reader.Read())
                         {
-                            resultado = sqlResultado["MensajeError"].ToString().StartsWith("-1") ? false : true;
-                        }
-                    }
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return resultado;
-    }
-
-    [WebMethod]
-    public static bool ResolucionDeLaSolicitud(SolicitudesMasterViewModel solicitud, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDSolictudes_Resolucion", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piEstadoSolicitud", solicitud.fiEstadoSolicitud);
-                    sqlComando.Parameters.AddWithValue("@pnMontoFinalSugerido", (decimal)solicitud.fiMontoFinalSugerido);
-                    sqlComando.Parameters.AddWithValue("@pnMontoFinalFinanciar", (decimal)solicitud.fiMontoFinalFinanciar);
-                    sqlComando.Parameters.AddWithValue("@piPlazoFinalAprobado", solicitud.fiPlazoFinalAprobado);
-                    sqlComando.Parameters.AddWithValue("@pcComentarioResolucion", solicitud.fiPlazoFinalAprobado);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            resultado = sqlResultado["MensajeError"].ToString().StartsWith("-1") ? false : true;
-                        }
-                    }
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return resultado;
-    }
-
-    [WebMethod]
-    public static bool ActualizarIngresosDelCliente(int idCliente, decimal sueldoBaseReal, decimal bonosComisionesReal, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_Analisis_ActualizarIngresosCliente", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDCliente", idCliente);
-                    sqlComando.Parameters.AddWithValue("@pnSueldoBaseReal", sueldoBaseReal);
-                    sqlComando.Parameters.AddWithValue("@pnBonosComisionesReal", bonosComisionesReal);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            resultado = sqlResultado["MensajeError"].ToString().StartsWith("-1") ? false : false;
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return resultado;
-    }
-
-    [WebMethod]
-    public static bool ActualizarInformacionPerfil(string tipoEmpresa, string tipoPerfil, string tipoEmpleo, string buroActual, string dataCrypt)
-    {
-        var resultadoProceso = false;
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_Analisis_ActualizarInformacionPerfil", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@pcTipoEmpresa", tipoEmpresa);
-                    sqlComando.Parameters.AddWithValue("@pcTipoPerfil", tipoPerfil);
-                    sqlComando.Parameters.AddWithValue("@pcTipoEmpleado", tipoEmpleo);
-                    sqlComando.Parameters.AddWithValue("@pcBuroActual", buroActual);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            resultadoProceso = !sqlResultado["MensajeError"].ToString().StartsWith("-1") ? true : false;
-                        }
-                    }
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return resultadoProceso;
-    }
-
-    [WebMethod]
-    public static SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel CalculoPrestamo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string dataCrypt)
-    {
-        SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel calculoPrestamo = null;
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CredSolicitud_CalculoPrestamo", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
-                    sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", valorGlobal);
-                    sqlComando.Parameters.AddWithValue("@liPlazo", plazo);
-                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            calculoPrestamo = new SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel()
+                            objCliente.clientesMaster = new ClientesMasterViewModel()
                             {
-                                SegurodeDeuda = decimal.Parse(sqlResultado["fnSegurodeDeuda"].ToString()),
-                                TotalSeguroVehiculo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()) : decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
-                                CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
-                                GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
-                                TotalAFinanciar = decimal.Parse(sqlResultado["fnValoraFinanciar"].ToString()),
-                                CuotaDelPrestamo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()) : (decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()) - decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString())),
-                                CuotaTotal = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
-                                CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
-                                TipoCuota = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? "Meses" : "Quincenas",
-                                ValorDelPrestamo = valorGlobal + valorPrima,
-                                TasaInteresAnual = decimal.Parse(sqlResultado["fnTasaDeInteresAnual"].ToString()),
+                                fiIDCliente = (int)reader["fiIDCliente"],
+                                fcIdentidadCliente = (string)reader["fcIdentidadCliente"],
+                                RTNCliente = (string)reader["fcRTN"],
+                                fcTelefonoCliente = (string)reader["fcTelefonoPrimarioCliente"],
+                                //nacionalidad del cliente
+                                fiNacionalidadCliente = (int)reader["fiNacionalidadCliente"],
+                                fcDescripcionNacionalidad = (string)reader["fcDescripcionNacionalidad"],
+                                fbNacionalidadActivo = (bool)reader["fbNacionalidadActivo"],
+                                fdFechaNacimientoCliente = (DateTime)reader["fdFechaNacimientoCliente"],
+                                fcCorreoElectronicoCliente = (string)reader["fcCorreoElectronicoCliente"],
+                                fcProfesionOficioCliente = (string)reader["fcProfesionOficioCliente"],
+                                fcSexoCliente = (string)reader["fcSexoCliente"],
+                                //estado civil del cliente
+                                fiIDEstadoCivil = (int)reader["fiIDEstadoCivil"],
+                                fcDescripcionEstadoCivil = (string)reader["fcDescripcionEstadoCivil"],
+                                fbEstadoCivilActivo = (bool)reader["fbEstadoCivilActivo"],
+                                //informacion de la vivienda del cliente
+                                fiIDVivienda = (int)reader["fiIDVivienda"],
+                                fcDescripcionVivienda = (string)reader["fcDescripcionVivienda"],
+                                fbViviendaActivo = (bool)reader["fbViviendaActivo"],
+                                fiTiempoResidir = (short)reader["fiTiempoResidir"],
+                                fbClienteActivo = (bool)reader["fbClienteActivo"],
+                                fcRazonInactivo = (string)reader["fcRazonInactivo"],
+                                //nombres del cliente
+                                fcPrimerNombreCliente = (string)reader["fcPrimerNombreCliente"],
+                                fcSegundoNombreCliente = (string)reader["fcSegundoNombreCliente"],
+                                fcPrimerApellidoCliente = (string)reader["fcPrimerApellidoCliente"],
+                                fcSegundoApellidoCliente = (string)reader["fcSegundoApellidoCliente"],
+                                //data de auditoria
+                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
                             };
-                        } // using sqlResultado.Read()
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return calculoPrestamo;
-    }
+                        }
+                    }
+                }
 
-    [WebMethod]
-    public static SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel CalculoPrestamoVehiculo(int idProducto, decimal valorGlobal, decimal valorPrima, int plazo, string scorePromedio, int tipoSeguro, int tipoGps, int gastosDeCierreFinanciados, string dataCrypt)
-    {
-        var calculo = new SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel();
-        try
-        {
-            var urlDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("IDApp");
-            var pcIDUsuario = HttpUtility.ParseQueryString(urlDesencriptado.Query).Get("usr");
 
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ToString())))
-            {
-                sqlConexion.Open();
 
-                using (var sqlComando = CrearSqlComando("sp_CredCotizadorProductos_Vehiculos", sqlConexion))
+                lcPasoOperativo="ListaLaboral";
+
+                /* Informacion laboral */
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_Laboral_Listar", sqlConexion))
                 {
-                    var montoPrestamo = (idProducto == 203 || idProducto == 204) ? valorPrima : valorGlobal - valorPrima;
-                    valorPrima = (idProducto == 203 || idProducto == 204) ? valorGlobal - valorPrima : valorPrima;
-
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
-                    sqlComando.Parameters.AddWithValue("@pnMontoaPrestamo", montoPrestamo);
-                    sqlComando.Parameters.AddWithValue("@pnValorPrima", valorPrima);
-                    sqlComando.Parameters.AddWithValue("@piScorePromedio", scorePromedio);
-                    sqlComando.Parameters.AddWithValue("@piTipodeSeguro", tipoSeguro);
-                    sqlComando.Parameters.AddWithValue("@piTipodeGPS", tipoGps);
-                    sqlComando.Parameters.AddWithValue("@piFinanciandoGastosdeCierre", gastosDeCierreFinanciados);
 
-                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
                     {
-                        while (sqlResultado.Read())
+                        while (reader.Read())
                         {
-                            if (sqlResultado["fiIDPlazo"].ToString() == plazo.ToString())
+                            objCliente.ClientesInformacionLaboral = new ClientesInformacionLaboralViewModel()
                             {
-                                calculo = new SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel()
-                                {
-                                    IdOrden = (int)sqlResultado["fiOrden"],
-                                    Plazo = (byte)sqlResultado["fiIDPlazo"],
-                                    TasaInteresAnual = decimal.Parse(sqlResultado["fiInteresAnual"].ToString()),
-                                    ValorGarantia = decimal.Parse(sqlResultado["fnValorVehiculo"].ToString()),
-                                    GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
-                                    CostoGPS = decimal.Parse(sqlResultado["fnCostoGPS"].ToString()),
-                                    TotalAFinanciar = decimal.Parse(sqlResultado["fnTotalaFinanciar"].ToString()),
-                                    TotalIntereses = decimal.Parse(sqlResultado["fnTotalIntereses"].ToString()),
-                                    TotalFinanciadoConIntereses = decimal.Parse(sqlResultado["fnTotalFinanciado"].ToString()),
-                                    CuotaDelPrestamo = decimal.Parse(sqlResultado["fnCuotadelPrestamo"].ToString()),
-                                    CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
-                                    CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
-                                    CuotaTotal = decimal.Parse(sqlResultado["fnTotalCuota"].ToString()),
-                                    TipoCuota = "Meses",
-                                    ValorDelPrestamo = montoPrestamo
-                                };
-                            }
-                        } // using sqlResultadot.Read()
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            calculo = null;
-        }
-        return calculo;
-    }
-
-    [WebMethod]
-    public static List<SolicitudesCredito_Analisis_CotizadorProductosViewModel> ObtenerPrestamosOfertados(decimal valorProducto, decimal valorPrima, string dataCrypt)
-    {
-        var listaCotizadorProductos = new List<SolicitudesCredito_Analisis_CotizadorProductosViewModel>();
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var identidad = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CredCotizador_ConPrima", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@pcIdentidad", identidad);
-                    sqlComando.Parameters.AddWithValue("@pnValorProducto", valorProducto);
-                    sqlComando.Parameters.AddWithValue("@pnPrima", valorPrima);
-
-                    int idContador = 1;
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            listaCotizadorProductos.Add(new SolicitudesCredito_Analisis_CotizadorProductosViewModel()
-                            {
-                                IdCotizacion = idContador,
-                                IdProducto = (short)sqlResultado["fiIDProducto"],
-                                Producto = sqlResultado["fcProducto"].ToString(),
-                                MontoOfertado = decimal.Parse(sqlResultado["fnMontoOfertado"].ToString()),
-                                Plazo = int.Parse(sqlResultado["fiIDPlazo"].ToString()),
-                                ValorCuota = decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
-                                TipoDeCuota = sqlResultado["fcTipodeCuota"].ToString()
-                            });
-                            idContador += 1;
+                                fiIDCliente = (int)reader["fiIDCliente"],
+                                fiIDInformacionLaboral = (int)reader["fiIDInformacionLaboral"],
+                                fcNombreTrabajo = (string)reader["fcNombreTrabajo"],
+                                fiIngresosMensuales = (decimal)reader["fnIngresosMensuales"],
+                                //nacionalidad del cliente
+                                fcPuestoAsignado = (string)reader["fcPuestoAsignado"],
+                                fcFechaIngreso = (DateTime)reader["fdFechaIngreso"],
+                                fdTelefonoEmpresa = (string)reader["fcTelefonoEmpresa"],
+                                fcExtensionRecursosHumanos = (string)reader["fcExtensionRecursosHumanos"],
+                                fcExtensionCliente = (string)reader["fcExtensionCliente"],
+                                fcDireccionDetalladaEmpresa = (string)reader["fcDireccionDetalladaEmpresa"],
+                                fcReferenciasDireccionDetallada = (string)reader["fcReferenciasDireccionDetalladaEmpresa"],
+                                fcFuenteOtrosIngresos = (string)reader["fcFuenteOtrosIngresos"],
+                                fiValorOtrosIngresosMensuales = (decimal)reader["fnValorOtrosIngresosMensuales"],
+                                //barrio de la empresa
+                                fiIDBarrioColonia = Convert.ToInt32(reader["fiIDBarrioColonia"]),
+                                fcNombreBarrioColonia = (string)reader["fcBarrio"],
+                                //ciudad de la empresa
+                                fiIDCiudad =  Convert.ToInt32(reader["fiIDCiudad"]),
+                                fcNombreCiudad = (string)reader["fcPoblado"],
+                                //municipio de la empresa
+                                fiIDMunicipio =  Convert.ToInt32(reader["fiIDMunicipio"]),
+                                fcNombreMunicipio = (string)reader["fcMunicipio"],
+                                //departamento de la empresa
+                                fiIDDepto =  Convert.ToInt32(reader["fiIDDepartamento"]),
+                                fcNombreDepto = (string)reader["fcDepartamento"],
+                                //data de auditoria
+                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
+                                // proceso de campo
+                                fcLatitud = (string)reader["fcLatitud"],
+                                fcLongitud = (string)reader["fcLongitud"],
+                                fiIDGestorValidador = (int)reader["fiIDGestorValidador"],
+                                fcGestorValidadorTrabajo = (string)reader["fcGestorValidadorTrabajo"],
+                                fiIDInvestigacionDeCampo = (byte)reader["fiIDInvestigacionDeCampo"],
+                                fcGestionTrabajo = (string)reader["fcGestionTrabajo"],
+                                IDTipoResultado = (byte)reader["fiTipodeResultado"],
+                                fcResultadodeCampo = (string)reader["fcResultadodeCampo"],
+                                fdFechaValidacion = (DateTime)reader["fdFechaValidacion"],
+                                fcObservacionesCampo = (string)reader["fcObservacionesCampo"],
+                                fiIDEstadoDeGestion = (byte)reader["fiIDEstadoDeGestion"],
+                                fiEstadoLaboral = (byte)reader["fiEstadoLaboral"]
+                            };
                         }
-                    } // using sqlComando.ExecuteReader()
-                }// using sqlComando
-            } // using sqlConexion
+                    }
+                }
+
+                /* Informacion del conyugue */
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_InformacionConyugal_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
+                    sqlComando.Parameters.AddWithValue("@fiIDSOlicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            objCliente.ClientesInformacionConyugal = new ClientesInformacionConyugalViewModel()
+                            {
+                                fiIDInformacionConyugal = (int)reader["fiIDInformacionConyugal"],
+                                fiIDCliente = (int)reader["fiIDCliente"],
+                                fcNombreCompletoConyugue = (string)reader["fcNombreCompletoConyugue"],
+                                fcIndentidadConyugue = (string)reader["fcIndentidadConyugue"],
+                                fdFechaNacimientoConyugue = (DateTime)reader["fdFechaNacimientoConyugue"],
+                                fcTelefonoConyugue = (string)reader["fcTelefonoConyugue"],
+                                fcLugarTrabajoConyugue = (string)reader["fcLugarTrabajoConyugue"],
+                                fcIngresosMensualesConyugue = (decimal)reader["fnIngresosMensualesConyugue"],
+                                fcTelefonoTrabajoConyugue = (string)reader["fcTelefonoTrabajoConyugue"],
+                                //data de auditoria
+                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
+
+                            };
+                        }
+                    }
+                }
+                lcPasoOperativo="Domicilio";
+                /* Informacion del domicilio */
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_InformacionDomiciliar_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            lcPasoOperativo = reader["fiCodBarrio"].ToString();
+
+                            objCliente.ClientesInformacionDomiciliar = new ClientesInformacionDomiciliarViewModel()
+                            {
+                                fiIDInformacionDomicilio = (int)reader["fiIDInformacionDomicilio"],
+                                fiIDCliente = (int)reader["fiIDCliente"],
+                                fcTelefonoCasa = (string)reader["fcTelefonoCasa"],
+                                fcDireccionDetallada = (string)reader["fcDireccionDetalladaDomicilio"],
+                                fcReferenciasDireccionDetallada = (string)reader["fcReferenciasDireccionDetalladaDomicilio"],
+                                //barrio del cliente
+                                fiIDBarrioColonia =  Convert.ToInt32(reader["fiCodBarrio"]),
+                                fcNombreBarrioColonia = (string)reader["fcBarrio"],
+                                //ciudad del cliente
+                                fiIDCiudad =  Convert.ToInt32(reader["fiCodPoblado"]),
+                                fcNombreCiudad = (string)reader["fcPoblado"],
+                                //municipio del cliente
+                                fiIDMunicipio =  Convert.ToInt32(reader["fiCodMunicipio"]),
+                                fcNombreMunicipio = (string)reader["fcMunicipio"],
+                                //departamento del cliente
+                                fiIDDepto =  Convert.ToInt32(reader["fiCodDepartamento"]),
+                                fcNombreDepto = (string)reader["fcDepartamento"],
+                                //data de auditoria
+                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
+                                // proceso de campo
+                                fcLatitud = (string)reader["fcLatitud"],
+                                fcLongitud = (string)reader["fcLongitud"],
+                                fiIDGestorValidador = (int)reader["fiIDGestorValidador"],
+                                fcGestorValidadorDomicilio = (string)reader["fcGestorValidadorDomicilio"],
+                                fiIDInvestigacionDeCampo = (byte)reader["fiIDInvestigacionDeCampo"],
+                                fcGestionDomicilio = (string)reader["fcGestionDomicilio"],
+                                IDTipoResultado = (byte)reader["fiTipodeResultado"],
+                                fcResultadodeCampo = (string)reader["fcResultadodeCampo"],
+                                fdFechaValidacion = (DateTime)reader["fdFechaValidacion"],
+                                fcObservacionesCampo = (string)reader["fcObservacionesCampo"],
+                                fiIDEstadoDeGestion = (byte)reader["fiIDEstadoDeGestion"],
+                                fiEstadoDomicilio = (byte)reader["fiEstadoDomicilio"]
+                            };
+                        }
+                    }
+                }
+                lcPasoOperativo="Referencia";
+                /* Referencias personales */
+                objCliente.ClientesReferenciasPersonales = new List<ClientesReferenciasViewModel>();
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            objCliente.ClientesReferenciasPersonales.Add(new ClientesReferenciasViewModel()
+                            {
+                                fiIDReferencia = (int)reader["fiIDReferencia"],
+                                fiIDCliente = (int)reader["fiIDCliente"],
+                                fcNombreCompletoReferencia = (string)reader["fcNombreCompletoReferencia"],
+                                fcLugarTrabajoReferencia = (string)reader["fcLugarTrabajoReferencia"],
+                                fiTiempoConocerReferencia = (short)reader["fiTiempoConocerReferencia"],
+                                fcTelefonoReferencia = (string)reader["fcTelefonoReferencia"],
+                                fiIDParentescoReferencia = (int)reader["fiIDParentescoReferencia"],
+                                fcDescripcionParentesco = (string)reader["fcDescripcionParentesco"],
+                                fbReferenciaActivo = (bool)reader["fbReferenciaActivo"],
+                                fcRazonInactivo = (string)reader["fcRazonInactivo"],
+                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
+                                fcComentarioDeptoCredito = (string)reader["fcComentarioDeptoCredito"],
+                                fiAnalistaComentario = (int)reader["fiAnalistaComentario"]
+
+                            });
+                        }
+                    }
+                }
+                lcPasoOperativo="Avales";
+                /* Avales de la solicitud */
+                objCliente.Avales = new List<ClienteAvalesViewModel>();
+                using (SqlCommand sqlComando = new SqlCommand("sp_CredAval_Maestro_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
+                    sqlComando.Parameters.AddWithValue("@fiIDAval", 0);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            objCliente.Avales.Add(new ClienteAvalesViewModel()
+                            {
+                                fiIDAval = (int)reader["fiIDAval"],
+                                fiIDCliente = (int)reader["fiIDCliente"],
+                                fiIDSolicitud = (int)reader["fiIDSolicitud"],
+                                fiTipoAval = (int)reader["fiTipoAval"],
+                                fcIdentidadAval = (string)reader["fcIdentidadAval"],
+                                RTNAval = (string)reader["fcRTNAval"],
+                                fcPrimerNombreAval = (string)reader["fcPrimerNombreAval"],
+                                fcSegundoNombreAval = (string)reader["fcSegundoNombreAval"],
+                                fcPrimerApellidoAval = (string)reader["fcPrimerApellidoAval"],
+                                fcSegundoApellidoAval = (string)reader["fcSegundoApellidoAval"],
+                                fcTelefonoAval = (string)reader["fcTelefonoPrimarioAval"],
+                                fdFechaNacimientoAval = (DateTime)reader["fdFechaNacimientoAval"],
+                                fcCorreoElectronicoAval = (string)reader["fcCorreoElectronicoAval"],
+                                fcProfesionOficioAval = (string)reader["fcProfesionOficioAval"],
+                                fcSexoAval = (string)reader["fcSexoAval"],
+                                fbAvalActivo = (bool)reader["fbAvalActivo"],
+                                fcRazonInactivo = (string)reader["fcRazonInactivo"],
+                                fcNombreTrabajo = (string)reader["fcNombreTrabajo"],
+                                fdTelefonoEmpresa = (string)reader["fcTelefonoEmpresa"],
+                                fcExtensionRecursosHumanos = (string)reader["fcExtensionRecursosHumanos"],
+                                fcExtensionAval = (string)reader["fcExtensionAval"],
+                                fiIngresosMensuales = (decimal)reader["fiIngresosMensuales"],
+                                fcPuestoAsignado = (string)reader["fcPuestoAsignado"],
+                                fcFechaIngreso = (DateTime)reader["fdFechaIngresoAval"],
+                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
+
+                            });
+                        }
+                    }
+                }
+                ObjSolicitud.cliente = objCliente;
+
+                //using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
+                //{
+                //    sqlComando.CommandType = CommandType.StoredProcedure;
+                //    sqlComando.Parameters.AddWithValue("@piIDApp", 107);
+                //    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                //    sqlComando.Parameters.AddWithValue("@pcIdentidad", fcIdentidadCliente);
+                //    sqlComando.CommandTimeout = 120;
+                //    using (var sqlResultado = sqlComando.ExecuteReader())
+                //    {
+                //        while (sqlResultado.Read())
+                //        {
+                //            //  var  LbLDocumentoCliente = sqlResultado["fcNombreDoctosIdPersonal"].ToString();
+                //            lblDocumentoCliente.Text = sqlResultado["fcNombreDoctosIdPersonal"].ToString();
+                //            txtNIdFiscal.Text = sqlResultado["fcNoIdFiscal"].ToString();
+                //            txtDocumentoFiscal.Text = sqlResultado["fcDescripcionDoctosFiscal"].ToString();
+                //        }
+
+                //    }
+
+                //}
+            }
         }
         catch (Exception ex)
         {
+
+                var st = new StackTrace(ex, true);
+                // Get the top stack frame
+                var frame = st.GetFrame(0);
+                // Get the line number from the stack frame
+                var line = frame.GetFileLineNumber();
+
             ex.Message.ToString();
+            MensajeExterno(lcPasoOperativo+" / " +st.ToString()+"-" + frame.ToString() + " // "+ line.ToString() + " / " +ex.Message.ToString());
+            //objCliente.clientesMaster.fcIdentidadCliente=ex.Message.ToString();
         }
-        return listaCotizadorProductos;
+        return ObjSolicitud;
     }
 
     [WebMethod]
-    public static bool ActualizarPlazoMontoFinanciar(decimal ValorGlobal, decimal ValorPrima, int CantidadPlazos, string dataCrypt)
+    public static bool ValidacionesAnalisis(string validacion, string observacion, string dataCrypt)
     {
         bool resultadoProceso = false;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
 
-            using (SqlConnection sqlConexion = new SqlConnection(ConnectionString))
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (SqlCommand sqlComando = CrearSqlComando("sp_CREDSolicitud_ActualizarPlazoMontoFinanciar", sqlConexion))
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ValidacionesAnalisis", sqlConexion))
                 {
-                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@fnValorGlobal", ValorGlobal);
-                    sqlComando.Parameters.AddWithValue("@fnValorPrima", ValorPrima);
-                    sqlComando.Parameters.AddWithValue("@fiCantidadPlazos", CantidadPlazos);
-                    sqlComando.Parameters.AddWithValue("@fiIDUsuarioModifica", pcIDUsuario);
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@fcValidacion", validacion);
+                    sqlComando.Parameters.AddWithValue("@fcComentario", observacion);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
+                    sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
 
-                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
                     {
-                        while (sqlResultado.Read())
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                        while (reader.Read())
+                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
                                 resultadoProceso = true;
                     }
                 }
@@ -1490,135 +771,902 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         return resultadoProceso;
     }
 
-    #endregion
-
-    #region Administrar condiciones de la solicitud * Listo *
-
     [WebMethod]
-    public static CatalogoCondiciones_SolicitudCondiciones_ViewModel ObtenerCatalogoCondicionesYSolicitudCondiciones(string dataCrypt)
+    public static bool EnviarACampo(string fcObservacionesDeCredito, string dataCrypt)
     {
-        var resultado = new CatalogoCondiciones_SolicitudCondiciones_ViewModel();
+        bool resultadoProceso = false;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
 
-            using (var sqlConexion = new SqlConnection(ConnectionString))
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = CrearSqlComando("sp_CREDCatalogo_Condiciones_Listar", sqlConexion))
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_EnviarACampo", sqlConexion))
                 {
-                    sqlComando.Parameters.AddWithValue("@fiIDCondicion", "0");
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@fcObservacionesDeCredito", fcObservacionesDeCredito);
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (SqlDataReader sqlResultado = sqlComando.ExecuteReader())
+                    sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
+                    sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
                     {
-                        while (sqlResultado.Read())
-                        {
-                            resultado.CatalogoCondiciones.Add(new Solicitudes_Credito_Analisis_Condicion_ViewModel()
-                            {
-                                IdCondicion = (int)sqlResultado["fiIDCondicion"],
-                                Condicion = sqlResultado["fcCondicion"].ToString(),
-                                DescripcionCondicion = sqlResultado["fcDescripcionCondicion"].ToString()
-                            });
-                        }
+                        while (reader.Read())
+                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
+                                resultadoProceso = true;
                     }
-                } // using comando obtener catalogo de condiciones
-
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_Condiciones_ObtenerPorIdSolicitud", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            resultado.CondicionesDeLaSolicitud.Add(new SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel()
-                            {
-                                IdSolicitudCondicion = (int)sqlResultado["fiIDSolicitudCondicion"],
-                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                IdCondicion = (int)sqlResultado["fiIDCondicion"],
-                                Condicion = sqlResultado["fcCondicion"].ToString(),
-                                DescripcionCondicion = sqlResultado["fcDescripcionCondicion"].ToString(),
-                                ComentarioAdicional = sqlResultado["fcComentarioAdicional"].ToString(),
-                                EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"]
-                            });
-                        }
-                    } // using sqlResultado
-                } // using sqlComando obtener condiciones de la solicitud
-            } // using sqlConexion
+                }
+            }
         }
         catch (Exception ex)
         {
             ex.Message.ToString();
         }
-        return resultado;
+        return resultadoProceso;
     }
 
     [WebMethod]
-    public static bool CondicionarSolicitud(List<SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel> listaCondiciones, string observacionesOtrasCondiciones, string dataCrypt)
+    public static int SolicitudResolucion(SolicitudesBitacoraViewModel objBitacora, SolicitudesMasterViewModel objSolicitud, string dataCrypt)
     {
-        var resultadoProceso = false;
+        int resultadoProceso = 0;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
         try
         {
             Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
 
-            using (var sqlConexion = new SqlConnection(ConnectionString))
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
                 sqlConexion.Open();
 
-                using (var transaccion = sqlConexion.BeginTransaction("insercionSolicitudCondiciones"))
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolictud_Resolucion", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@fiEstadoSolicitud", objSolicitud.fiEstadoSolicitud);
+
+                    if (objSolicitud.fiMontoFinalSugerido != null)
+                        sqlComando.Parameters.AddWithValue("@fnMontoFinalSugerido", (decimal)objSolicitud.fiMontoFinalSugerido);
+                    else
+                        sqlComando.Parameters.AddWithValue("@fnMontoFinalSugerido", DBNull.Value);
+
+                    if (objSolicitud.fiMontoFinalSugerido != null)
+                        sqlComando.Parameters.AddWithValue("@fnMontoFinalFinanciar", (decimal)objSolicitud.fiMontoFinalFinanciar);
+                    else
+                        sqlComando.Parameters.AddWithValue("@fnMontoFinalFinanciar", DBNull.Value);
+
+                    if (objSolicitud.fiPlazoFinalAprobado != null)
+                        sqlComando.Parameters.AddWithValue("@fiPlazoFinalAprobado", objSolicitud.fiPlazoFinalAprobado);
+                    else
+                        sqlComando.Parameters.AddWithValue("@fiPlazoFinalAprobado", DBNull.Value);
+
+                    sqlComando.Parameters.AddWithValue("@fcComentarioResolucion", objBitacora.fcComentarioResolucion);
+                    sqlComando.Parameters.AddWithValue("@fiIDUsuarioPasoFinal", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        string MensajeError = string.Empty;
+                        while (reader.Read())
+                            MensajeError = (string)reader["MensajeError"];
+
+                        if (!MensajeError.StartsWith("-1"))
+                            resultadoProceso = Convert.ToInt32(MensajeError);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
+
+    [WebMethod]
+    public static BandejaSolicitudesViewModel CargarEstadoSolicitud(string dataCrypt)
+    {
+        BandejaSolicitudesViewModel objEstadoSolicitud = new BandejaSolicitudesViewModel();
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_CredSolicitud_SolicitudEstadoProcesamiento", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            objEstadoSolicitud = new BandejaSolicitudesViewModel()
+                            {
+                                fiIDSolicitud = (int)reader["fiIDSolicitud"],
+                                fiEstadoSolicitud = (byte)reader["fiEstadoSolicitud"],
+                                fiSolicitudActiva = (byte)reader["fiSolicitudActiva"],
+                                fdEnIngresoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnIngresoInicio"]),
+                                fdEnIngresoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnIngresoFin"]),
+                                fdEnTramiteInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnColaInicio"]),
+                                fdEnTramiteFin = ConvertFromDBVal<DateTime>((object)reader["fdEnColaFin"]),
+                                //todo el proceso de analisis
+                                fdEnAnalisisInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisInicio"]),
+                                ftAnalisisTiempoValidarInformacionPersonal = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarInformacionPersonal"]),
+                                fcComentarioValidacionInfoPersonal = (string)reader["fcComentarioValidacionInfoPersonal"],
+                                ftAnalisisTiempoValidarDocumentos = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarDocumentos"]),
+                                fcComentarioValidacionDocumentacion = (string)reader["fcComentarioValidacionDocumentacion"],
+                                fbValidacionDocumentcionIdentidades = (byte)reader["fbValidacionDocumentcionIdentidades"],
+                                fbValidacionDocumentacionDomiciliar = (byte)reader["fbValidacionDocumentacionDomiciliar"],
+                                fbValidacionDocumentacionLaboral = (byte)reader["fbValidacionDocumentacionLaboral"],
+                                fbValidacionDocumentacionSolicitudFisica = (byte)reader["fbValidacionDocumentacionSolicitudFisica"],
+                                ftAnalisisTiempoValidacionReferenciasPersonales = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidacionReferenciasPersonales"]),
+                                fcComentarioValidacionReferenciasPersonales = (string)reader["fcComentarioValidacionReferenciasPersonales"],
+                                ftAnalisisTiempoValidarInformacionLaboral = ConvertFromDBVal<DateTime>((object)reader["fdAnalisisTiempoValidarInformacionLaboral"]),
+                                fcComentarioValidacionInfoLaboral = (string)reader["fcComentarioValidacionInfoLaboral"],
+                                ftTiempoTomaDecisionFinal = ConvertFromDBVal<DateTime>((object)reader["fdTiempoTomaDecisionFinal"]),
+                                fcObservacionesDeCredito = (string)reader["fcObservacionesDeCredito"],
+                                fcComentarioResolucion = (string)reader["fcComentarioResolucion"],
+                                fdEnAnalisisFin = ConvertFromDBVal<DateTime>((object)reader["fdEnAnalisisFin"]),
+                                //todo el proceso de analisis
+                                fdCondicionadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdCondicionadoInicio"]),
+                                fcCondicionadoComentario = (string)reader["fcCondicionadoComentario"],
+                                fdCondificionadoFin = ConvertFromDBVal<DateTime>((object)reader["fdCondificionadoFin"]),
+                                //proceso de campo
+                                fdEnvioARutaAnalista = ConvertFromDBVal<DateTime>((object)reader["fdEnvioARutaAnalista"]),
+                                fiEstadoDeCampo = (byte)reader["fiEstadoDeCampo"],
+                                fdEnCampoInicio = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionInicio"]),
+                                fcObservacionesDeGestoria = (string)reader["fcObservacionesDeCampo"],
+                                fdEnCampoFin = ConvertFromDBVal<DateTime>((object)reader["fdEnRutaDeInvestigacionFin"]),
+                                fdReprogramadoInicio = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoInicio"]),
+                                fcReprogramadoComentario = (string)reader["fcReprogramadoComentario"],
+                                fdReprogramadoFin = ConvertFromDBVal<DateTime>((object)reader["fdReprogramadoFin"]),
+                                PasoFinalInicio = (DateTime)reader["fdPasoFinalInicio"],
+                                IDUsuarioPasoFinal = (int)reader["fiIDUsuarioPasoFinal"],
+                                ComentarioPasoFinal = (string)reader["fcComentarioPasoFinal"],
+                                PasoFinalFin = (DateTime)reader["fdPasoFinalFin"],
+                                fcTiempoTotalTranscurrido = (string)reader["fcTiempoTotalTranscurrido"],
+
+                                // informacion de perfil
+                                fcTipoEmpresa = (string)reader["fcTipoEmpresa"],
+                                fcTipoPerfil = (string)reader["fcTipoPerfil"],
+                                fcTipoEmpleado = (string)reader["fcTipoEmpleado"],
+                                fcBuroActual = (string)reader["fcBuroActual"]
+                            };
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return objEstadoSolicitud;
+    }
+
+    [WebMethod]
+    public static string ObtenerUrlEncriptado(string dataCrypt)
+    {
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+
+        Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+        string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+        string pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
+        string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+        //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+        string pcIDSesion = "1";
+
+        string parametrosEncriptados = DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
+        return parametrosEncriptados;
+    }
+
+    [WebMethod]
+    public static string EncriptarParametroDetallesAval(int parametro, string dataCrypt)
+    {
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+
+        Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+        string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+        string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+        string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+        //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+        string pcIDSesion = "1";
+
+        string parametrosEncriptados = DSC.Encriptar("usr=" + pcIDUsuario + "&IDAval=" + parametro + "&IDSOL=" + IDSOL + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
+        return parametrosEncriptados;
+    }
+
+    [WebMethod]
+    public static bool ActualizarIngresosCliente(decimal sueldoBaseReal, decimal bonosComisionesReal, string dataCrypt)
+    {
+        bool resultadoProceso = false;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ActualizarIngresosClienteSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@fnSueldoBaseReal", sueldoBaseReal);
+                    sqlComando.Parameters.AddWithValue("@fnBonosComisionesReal", bonosComisionesReal);
+                    sqlComando.Parameters.AddWithValue("@fiIDUsuarioModifica", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
+                    sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
+                                resultadoProceso = true;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
+
+    [WebMethod]
+    public static bool GuardarInformacionAnalisis(string tipoEmpresa, string tipoPerfil, string tipoEmpleo, string buroActual, string dataCrypt)
+    {
+        bool resultadoProceso = false;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_CredSolicitud_GuardarInformaciondePerfil", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@fcTipoEmpresa", tipoEmpresa);
+                    sqlComando.Parameters.AddWithValue("@fcTipoPerfil", tipoPerfil);
+                    sqlComando.Parameters.AddWithValue("@fcTipoEmpleado", tipoEmpleo);
+                    sqlComando.Parameters.AddWithValue("@fcBuroActual", buroActual);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
+                                resultadoProceso = true;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
+
+    [WebMethod]
+    public static CalculoPrestamoViewModel CalculoPrestamo(decimal ValorPrestamo, decimal ValorPrima, decimal CantidadPlazos, string dataCrypt)
+    {
+        CalculoPrestamoViewModel objCalculo = null;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+            int idProducto = 0;
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            idProducto = (int)reader["fiIDTipoProducto"];
+                    }
+                }
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_CredSolicitud_CalculoPrestamoCallBack", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
+                    sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", ValorPrestamo);
+                    sqlComando.Parameters.AddWithValue("@liPlazo", CantidadPlazos);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", ValorPrima);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            objCalculo = new CalculoPrestamoViewModel()
+                            {
+                                SegurodeDeuda = (decimal)reader["fnSegurodeDeuda"],
+                                SegurodeVehiculo = (decimal)reader["fnSegurodeVehiculo"],
+                                GastosdeCierre = (decimal)reader["fnGastosdeCierre"],
+                                ValoraFinanciar = (decimal)reader["fnValoraFinanciar"],
+                                CuotaQuincenal = (decimal)reader["fnCuotaQuincenal"],
+                                CuotaMensual = (decimal)reader["fnCuotaMensual"],
+                                CuotaServicioGPS = (decimal)reader["fnCuotaServicioGPS"],
+                                CuotaSegurodeVehiculo = (decimal)reader["fnCuotaSegurodeVehiculo"],
+                                CuotaMensualNeta = (decimal)reader["fnCuotaMensualNeta"],
+                                TotalSeguroVehiculo = (decimal)reader["fnTotalSeguroVehiculo"],
+                                TipoCuota = (string)reader["fcTipodeCuota"]
+                            };
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+              objCalculo = objCalculo = new CalculoPrestamoViewModel();
+            ex.Message.ToString();
+        }
+        return objCalculo;
+    }
+
+    [WebMethod]
+    public static CalculoPrestamoViewModel CalculoPrestamoVehiculo(decimal ValorPrestamo, decimal ValorPrima, decimal CantidadPlazos, string dataCrypt)
+    {
+        CalculoPrestamoViewModel objCalculo = null;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+            int idProducto = 0;
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            idProducto = (int)reader["fiIDTipoProducto"];
+                    }
+                }
+
+                if (int.Parse(IDSOL) < 802 && IDSOL != "773" && IDSOL != "694" && IDSOL != "323")
+                {
+                    using (var sqlComando = new SqlCommand("sp_CredSolicitud_CalculoPrestamo", sqlConexion))
+                    {
+                        sqlComando.CommandType = CommandType.StoredProcedure;
+                        sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
+                        sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", ValorPrestamo);
+                        sqlComando.Parameters.AddWithValue("@liPlazo", CantidadPlazos);
+                        sqlComando.Parameters.AddWithValue("@pnValorPrima", ValorPrima);
+                        sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                        sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                        using (var reader = sqlComando.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                objCalculo = new CalculoPrestamoViewModel()
+                                {
+                                    SegurodeDeuda = (decimal)reader["fnSegurodeDeuda"],
+                                    SegurodeVehiculo = (decimal)reader["fnSegurodeVehiculo"],
+                                    GastosdeCierre = (decimal)reader["fnGastosdeCierre"],
+                                    ValoraFinanciar = (decimal)reader["fnValoraFinanciar"],
+                                    CuotaQuincenal = (decimal)reader["fnCuotaQuincenal"],
+                                    CuotaMensual = (decimal)reader["fnCuotaMensual"],
+                                    CuotaServicioGPS = (decimal)reader["fnCuotaServicioGPS"],
+                                    CuotaSegurodeVehiculo = (decimal)reader["fnCuotaSegurodeVehiculo"],
+                                    CuotaMensualNeta = (decimal)reader["fnCuotaMensualNeta"],
+                                    TotalSeguroVehiculo = (decimal)reader["fnTotalSeguroVehiculo"],
+                                    TipoCuota = (string)reader["fcTipodeCuota"]
+                                };
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_ObtenerPorIdSolicitud", sqlConexion))
+                    {
+                        sqlComando.CommandType = CommandType.StoredProcedure;
+                        sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                        sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                        sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                        sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                        using (SqlDataReader reader = sqlComando.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                objCalculo = new CalculoPrestamoViewModel()
+                                {
+                                    SegurodeDeuda = 0,
+                                    SegurodeVehiculo = (decimal)reader["fnValorTotalSeguro"],
+                                    GastosdeCierre = (decimal)reader["fnGastosDeCierre"],
+                                    ValoraFinanciar = (decimal)reader["fnValorTotalFinanciamiento"],
+                                    CuotaQuincenal = (decimal)reader["fnCuotaTotal"],
+                                    CuotaMensual = (decimal)reader["fnCuotaTotal"],
+                                    CuotaServicioGPS = (decimal)reader["fnCuotaMensualGPS"],
+                                    CuotaSegurodeVehiculo = (decimal)reader["fnCuotaMensualSeguro"],
+                                    CuotaMensualNeta = (decimal)reader["fnCuotaTotal"],
+                                    TotalSeguroVehiculo = (decimal)reader["fnValorTotalSeguro"],
+                                    TipoCuota = (string)reader["fcTipoDePlazo"]
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return objCalculo;
+    }
+
+    [WebMethod]
+    public static ClienteAvalesViewModel DetallesAval(int IDAval, string dataCrypt)
+    {
+        ClienteAvalesViewModel AvalInfo = null;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_CredAval_InformacionPrincipal", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDAval", IDAval);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            AvalInfo = new ClienteAvalesViewModel()
+                            {
+                                fiIDAval = (int)reader["fiIDAval"],
+                                fiIDCliente = (int)reader["fiIDCliente"],
+                                fcIdentidadAval = (string)reader["fcIdentidadAval"],
+                                RTNAval = (string)reader["fcRTNAval"],
+                                fcPrimerNombreAval = (string)reader["fcPrimerNombreAval"],
+                                fcSegundoNombreAval = (string)reader["fcSegundoNombreAval"],
+                                fcPrimerApellidoAval = (string)reader["fcPrimerApellidoAval"],
+                                fcSegundoApellidoAval = (string)reader["fcSegundoApellidoAval"],
+                                fcTelefonoAval = (string)reader["fcTelefonoPrimarioAval"],
+                                fdFechaNacimientoAval = (DateTime)reader["fdFechaNacimientoAval"],
+                                fcCorreoElectronicoAval = (string)reader["fcCorreoElectronicoAval"],
+                                fcProfesionOficioAval = (string)reader["fcProfesionOficioAval"],
+                                fcSexoAval = (string)reader["fcSexoAval"],
+                                fbAvalActivo = (bool)reader["fbAvalActivo"],
+                                fcRazonInactivo = (string)reader["fcRazonInactivo"],
+                                fiTipoAval = (int)reader["fiTipoAval"],
+                                fcNombreTrabajo = (string)reader["fcNombreTrabajo"],
+                                fdTelefonoEmpresa = (string)reader["fcTelefonoEmpresa"],
+                                fcExtensionRecursosHumanos = (string)reader["fcExtensionRecursosHumanos"],
+                                fcExtensionAval = (string)reader["fcExtensionAval"],
+                                fiIngresosMensuales = (decimal)reader["fiIngresosMensuales"],
+                                fcPuestoAsignado = (string)reader["fcPuestoAsignado"],
+                                fcFechaIngreso = (DateTime)reader["fdFechaIngresoAval"],
+                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
+                            };
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return AvalInfo;
+    }
+
+    [WebMethod]
+    public static PrecalificadoViewModel GetPrestamosSugeridos(decimal ValorProducto, decimal ValorPrima, string dataCrypt)
+    {
+        PrecalificadoViewModel objPrecalificado = new PrecalificadoViewModel();
+        List<cotizadorProductosViewModel> listaCotizadorProductos = new List<cotizadorProductosViewModel>();
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string identidad = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID").ToString();
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand cmd = new SqlCommand("sp_CredCotizador_ConPrima", sqlConexion))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@pcIdentidad", identidad);
+                    cmd.Parameters.AddWithValue("@pnValorProducto", ValorProducto);
+                    cmd.Parameters.AddWithValue("@pnPrima", ValorPrima);
+
+                    int IDContador = 1;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            listaCotizadorProductos.Add(new cotizadorProductosViewModel()
+                            {
+                                IDCotizacion = IDContador,
+                                IDProducto = (short)reader["fiIDProducto"],
+                                ProductoDescripcion = reader["fcProducto"].ToString(),
+                                fnMontoOfertado = decimal.Parse(reader["fnMontoOfertado"].ToString()),
+                                fiPlazo = int.Parse(reader["fiIDPlazo"].ToString()),
+                                fnCuotaQuincenal = decimal.Parse(reader["fnCuotaQuincenal"].ToString()),
+                                TipoCuota = (string)reader["fcTipodeCuota"]
+                            });
+                            IDContador += 1;
+                        }
+                    }
+                }
+                objPrecalificado.cotizadorProductos = listaCotizadorProductos;
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return objPrecalificado;
+    }
+
+    [WebMethod]
+    public static bool ActualizarPlazoMontoFinanciar(decimal ValorGlobal, decimal ValorPrima, int CantidadPlazos, string dataCrypt)
+    {
+        bool resultadoProceso = false;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_ActualizarPlazoMontoFinanciar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@fnValorGlobal", ValorGlobal);
+                    sqlComando.Parameters.AddWithValue("@fnValorPrima", ValorPrima);
+                    sqlComando.Parameters.AddWithValue("@fiCantidadPlazos", CantidadPlazos);
+                    sqlComando.Parameters.AddWithValue("@fiIDUsuarioModifica", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
+                                resultadoProceso = true;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
+
+    [WebMethod]
+    public static bool ComentarioReferenciaPersonal(int IDReferencia, string comentario, string dataCrypt)
+    {
+        bool resultadoProceso = false;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Comentario", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDReferencia", IDReferencia);
+                    sqlComando.Parameters.AddWithValue("@fcComentarioDeptoCredito", comentario);
+                    sqlComando.Parameters.AddWithValue("@fiAnalistaComentario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
+                    sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
+                                resultadoProceso = true;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
+
+    [WebMethod]
+    public static bool EliminarReferenciaPersonal(int IDReferencia, string dataCrypt)
+    {
+        bool resultadoProceso = false;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("dbo.sp_CREDCliente_Referencias_Eliminar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDReferencia", IDReferencia);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
+                                resultadoProceso = true;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
+
+    [WebMethod]
+    public static List<SolicitudesCondicionamientosViewModel> GetCondiciones(string dataCrypt)
+    {
+        List<SolicitudesCondicionamientosViewModel> ListaCondiciones = new List<SolicitudesCondicionamientosViewModel>();
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDCatalogo_Condiciones_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDCondicion", "0");
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ListaCondiciones.Add(new SolicitudesCondicionamientosViewModel()
+                            {
+                                fiIDCondicion = (int)reader["fiIDCondicion"],
+                                fcCondicion = (string)reader["fcCondicion"],
+                                fcDescripcionCondicion = (string)reader["fcDescripcionCondicion"]
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return ListaCondiciones;
+    }
+
+    [WebMethod]
+    public static bool CondicionarSolicitud(List<SolicitudesCondicionamientosViewModel> SolicitudCondiciones, string fcCondicionadoComentario, string dataCrypt)
+    {
+        bool resultadoProceso = false;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            ////string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (SqlTransaction transaccion = sqlConexion.BeginTransaction("insercionSolicitudCondiciones"))
                 {
                     try
                     {
-                        foreach (SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel item in listaCondiciones)
+                        using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitud_CondicionarSolicitudBitacora", sqlConexion, transaccion))
                         {
-                            using (var sqlComandoList = new SqlCommand("sp_CREDSolicitudes_Condiciones_Guardar", sqlConexion, transaccion))
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                            if (fcCondicionadoComentario == null)
+                                sqlComando.Parameters.AddWithValue("@fcCondicionadoComentario", "");
+                            else
+                                sqlComando.Parameters.AddWithValue("@fcCondicionadoComentario", fcCondicionadoComentario);
+
+                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                            sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
+                            sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
+
+                            using (SqlDataReader reader = sqlComando.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    if (reader["MensajeError"].ToString().StartsWith("-1"))
+                                        return false;
+                                }
+                            }
+                        }
+
+                        foreach (SolicitudesCondicionamientosViewModel item in SolicitudCondiciones)
+                        {
+                            using (SqlCommand sqlComandoList = new SqlCommand("sp_CREDSolicitud_Condicionamientos_Insert", sqlConexion, transaccion))
                             {
                                 sqlComandoList.CommandType = CommandType.StoredProcedure;
-                                sqlComandoList.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                                sqlComandoList.Parameters.AddWithValue("@piIDCondicion", item.IdCondicion);
-                                sqlComandoList.Parameters.AddWithValue("@pcComentarioAdicional", item.ComentarioAdicional);
-                                sqlComandoList.Parameters.AddWithValue("@pcComentarioOtrasCondiciones", observacionesOtrasCondiciones);
+                                sqlComandoList.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                                sqlComandoList.Parameters.AddWithValue("@fiIDCondicion", item.fiIDCondicion);
+                                sqlComandoList.Parameters.AddWithValue("@fcComentarioAdicional", item.fcComentarioAdicional);
                                 sqlComandoList.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                                 sqlComandoList.Parameters.AddWithValue("@piIDApp", pcIDApp);
                                 sqlComandoList.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                                sqlComandoList.CommandTimeout = 120;
-
-                                using (var sqlResultado = sqlComandoList.ExecuteReader())
+                                sqlComandoList.Parameters.AddWithValue("@pcUserNameCreated", "");
+                                sqlComandoList.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
+                                using (SqlDataReader readerList = sqlComandoList.ExecuteReader())
                                 {
-                                    while (sqlResultado.Read())
-                                    {
-                                        if (sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                                        {
-                                            resultadoProceso = false;
-                                            break;
-                                        }
-                                        else
-                                            resultadoProceso = true;
-                                    }
-                                } // using sqlResultado
-                            } // using sqlComandoList
-                        } // using for each listaCondiciones
+                                    readerList.Read();
 
-                        if (resultadoProceso != false)
-                        {
-                            transaccion.Commit();
-                            resultadoProceso = true;
+                                    if (!readerList["MensajeError"].ToString().StartsWith("-1"))
+                                        resultadoProceso = true;
+                                    else
+                                    {
+                                        resultadoProceso = false;
+                                        break;
+                                    }
+                                }
+                            }
                         }
+
+                        if (SolicitudCondiciones.Count == 0)
+                            resultadoProceso = true;
+
+                        if (resultadoProceso == true)
+                            transaccion.Commit();
                     }
                     catch (Exception ex)
                     {
@@ -1635,311 +1683,25 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         return resultadoProceso;
     }
 
-    [WebMethod]
-    public static bool AnularCondicionDeLaSolicitud(int idSolicitudCondicion, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDSolicitudes_Condiciones_Actualizar", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitudCondicion", idSolicitudCondicion);
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                            {
-                                resultado = true;
-                            }
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            resultado = false;
-        }
-        return resultado;
-    }
-
-    #endregion
-
-    #region Administracion de referencias personales * Listo *
-
-    [WebMethod]
-    public static List<SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel> ListadoReferenciasPersonalesPorIdSolicitud(string dataCrypt)
-    {
-        var listadoReferenciasPersonales = new List<SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel>();
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDCliente_Referencias_ObtenerPorIdSolicitud", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            listadoReferenciasPersonales.Add(new SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel()
-                            {
-                                IdReferencia = (int)sqlResultado["fiIDReferencia"],
-                                IdCliente = (int)sqlResultado["fiIDCliente"],
-                                IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
-                                NombreCompleto = sqlResultado["fcNombreCompletoReferencia"].ToString(),
-                                LugarTrabajo = sqlResultado["fcLugarTrabajoReferencia"].ToString(),
-                                IdTiempoDeConocer = (short)sqlResultado["fiTiempoConocerReferencia"],
-                                TiempoDeConocer = sqlResultado["fcTiempoDeConocer"].ToString(),
-                                TelefonoReferencia = sqlResultado["fcTelefonoReferencia"].ToString(),
-                                IdParentescoReferencia = (int)sqlResultado["fiIDParentescoReferencia"],
-                                DescripcionParentesco = sqlResultado["fcDescripcionParentesco"].ToString(),
-                                ReferenciaActivo = (bool)sqlResultado["fbReferenciaActivo"],
-                                RazonInactivo = sqlResultado["fcRazonInactivo"].ToString(),
-                                AnalistaComentario = sqlResultado["fcAnalistaComentario"].ToString(),
-                                ComentarioDeptoCredito = sqlResultado["fcComentarioDeptoCredito"].ToString(),
-                                SinComunicacion = (bool)sqlResultado["fbSinComunicacion"],
-                                FechaAnalisis = (DateTime)sqlResultado["fdFechaAnalisis"]
-                            });
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            listadoReferenciasPersonales = null;
-        }
-        return listadoReferenciasPersonales;
-    }
-
-    [WebMethod]
-    public static bool ActualizarObservacionesReferenciaPersonal(int idReferencia, string observaciones, bool sinComunicacion, string dataCrypt)
-    {
-        var resultadoProceso = false;
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDCliente_Referencias_ActualizarObservacionesDeCredito", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDReferencia", idReferencia);
-                    sqlComando.Parameters.AddWithValue("@pcObservacionesDeCredito", observaciones);
-                    sqlComando.Parameters.AddWithValue("@pbSinComunicacion", sinComunicacion);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                            resultadoProceso = !sqlResultado["MensajeError"].ToString().StartsWith("-1") ? true : false;
-                    }
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-        return resultadoProceso;
-    }
-
-    [WebMethod]
-    public static bool RegistrarReferenciaPersonal(SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDCliente_Referencias_Guardar", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDCliente", referenciaPersonal.IdCliente);
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.Parameters.AddWithValue("@pcNombreCompletoReferencia", referenciaPersonal.NombreCompleto.Trim());
-                    sqlComando.Parameters.AddWithValue("@pcLugarTrabajoReferencia", referenciaPersonal.LugarTrabajo.Trim());
-                    sqlComando.Parameters.AddWithValue("@piTiempoConocerReferencia", referenciaPersonal.IdTiempoDeConocer);
-                    sqlComando.Parameters.AddWithValue("@pcTelefonoReferencia", referenciaPersonal.TelefonoReferencia.Trim());
-                    sqlComando.Parameters.AddWithValue("@piIDParentescoReferencia", referenciaPersonal.IdParentescoReferencia);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                                resultado = true;
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            resultado = false;
-        }
-        return resultado;
-    }
-
-    [WebMethod]
-    public static bool ActualizarReferenciaPersonal(SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDCliente_Referencias_Actualizar", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@piIDReferenciaPersonal", referenciaPersonal.IdReferencia);
-                    sqlComando.Parameters.AddWithValue("@pcNombreCompletoReferencia", referenciaPersonal.NombreCompleto.Trim());
-                    sqlComando.Parameters.AddWithValue("@pcLugarTrabajoReferencia", referenciaPersonal.LugarTrabajo.Trim());
-                    sqlComando.Parameters.AddWithValue("@piTiempoConocerReferencia", referenciaPersonal.IdTiempoDeConocer);
-                    sqlComando.Parameters.AddWithValue("@pcTelefonoReferencia", referenciaPersonal.TelefonoReferencia.Trim());
-                    sqlComando.Parameters.AddWithValue("@piIDParentescoReferencia", referenciaPersonal.IdParentescoReferencia);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                                resultado = true;
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            resultado = false;
-        }
-        return resultado;
-    }
-
-    [WebMethod]
-    public static bool EliminarReferenciaPersonal(int idReferenciaPersonal, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = CrearSqlComando("sp_CREDCliente_Referencias_Eliminar", sqlConexion))
-                {
-                    sqlComando.Parameters.AddWithValue("@fiIDReferencia", idReferenciaPersonal);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                                resultado = true;
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            resultado = false;
-        }
-        return resultado;
-    }
-
-    #endregion
-
-    #region Funciones utilitarias * Listo *
-
-    public static SqlCommand CrearSqlComando(string nombreSP, SqlConnection sqlConexion)
-    {
-        return new SqlCommand(nombreSP, sqlConexion) { CommandType = CommandType.StoredProcedure, CommandTimeout = 120 };
-    }
-
     public static Uri DesencriptarURL(string URL)
     {
         Uri lURLDesencriptado = null;
         try
         {
-            var liParamStart = URL.IndexOf("?");
-            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
+            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+            int liParamStart = 0;
+            string lcParametros = "";
+            String pcEncriptado = "";
+            liParamStart = URL.IndexOf("?");
+            if (liParamStart > 0)
+                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
+            else
+                lcParametros = String.Empty;
 
-            if (lcParametros != string.Empty)
+            if (lcParametros != String.Empty)
             {
-                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
-                var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-
+                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
+                string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
@@ -1950,200 +1712,72 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         return lURLDesencriptado;
     }
 
-    public static int GetMonthDifference(DateTime startDate, DateTime endDate)
+    public static T ConvertFromDBVal<T>(object obj)
     {
-        int monthsApart = 12 * (startDate.Year - endDate.Year) + startDate.Month - endDate.Month;
-        return Math.Abs(monthsApart);
+        if (obj == null || obj == DBNull.Value)
+            return default(T);
+        else
+            return (T)obj;
     }
 
-    [WebMethod]
-    public static string ObtenerUrlEncriptado(string dataCrypt)
+    public static EquifaxClientesViewModel CargarInformacionClienteEquifax(string dataCrypt)
     {
-        Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-        var pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
-        var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-        var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-        var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-        return DSC.Encriptar("usr=" + pcIDUsuario + "&ID=" + pcID + "&IDApp=" + pcIDApp + "&SID=" + pcIDSesion);
-    }
-
-    public static string DecimalToString(decimal valor)
-    {
-        return string.Format("{0:#,###0.00##}", valor);
-    }
-
-    #endregion
-
-    #region View Models * Listo *
-
-    public class SolicitudesCredito_Analisis_CalculoPrestamo_ViewModel
-    {
-        public int IdOrden { get; set; }
-        public int Plazo { get; set; }
-        public decimal TasaInteresAnual { get; set; }
-        public decimal ValorGarantia { get; set; }
-        public decimal TotalSeguroVehiculo { get; set; }
-        public decimal GastosdeCierre { get; set; }
-        public decimal CostoGPS { get; set; }
-        public decimal TotalAFinanciar { get; set; }
-        public decimal TotalIntereses { get; set; }
-        public decimal TotalFinanciadoConIntereses { get; set; }
-        public decimal CuotaDelPrestamo { get; set; }
-        public decimal CuotaSegurodeVehiculo { get; set; }
-        public decimal CuotaServicioGPS { get; set; }
-        public decimal CuotaTotal { get; set; }
-        public string TipoCuota { get; set; }
-        public decimal SegurodeDeuda { get; set; }
-        public decimal ValorDelPrestamo { get; set; }
-    }
-
-    public class SolicitudesCredito_Analisis_CotizadorProductosViewModel
-    {
-        public int IdCotizacion { get; set; }
-        public int IdProducto { get; set; }
-        public string Producto { get; set; }
-        public decimal MontoOfertado { get; set; }
-        public int Plazo { get; set; }
-        public string TipoDeCuota { get; set; }
-        public decimal ValorCuota { get; set; }
-    }
-
-    public class SolicitudesCredito_Analisis_Cliente_ReferenciaPersonal_ViewModel
-    {
-        public int IdReferencia { get; set; }
-        public int IdCliente { get; set; }
-        public int IdSolicitud { get; set; }
-        public string NombreCompleto { get; set; }
-        public string LugarTrabajo { get; set; }
-        public int IdTiempoDeConocer { get; set; }
-        public string TiempoDeConocer { get; set; }
-        public string TelefonoReferencia { get; set; }
-        public int IdParentescoReferencia { get; set; }
-        public string DescripcionParentesco { get; set; }
-        public bool ReferenciaActivo { get; set; }
-        public string RazonInactivo { get; set; }
-        public string AnalistaComentario { get; set; }
-        public string ComentarioDeptoCredito { get; set; }
-        public bool SinComunicacion { get; set; }
-        public DateTime FechaAnalisis { get; set; }
-    }
-
-    public class SolicitudesCredito_Analisis_Calculo_ViewModel
-    {
-        public decimal ValorSeguroDeDeuda { get; set; }
-        public decimal ValorSeguroDeVehiculo { get; set; }
-        public decimal ValorGastosDeCierre { get; set; }
-        public decimal ValorAFinanciar { get; set; }
-        public decimal ValorCuotaPrestamo { get; set; }
-        public decimal CostoAparatoGPS { get; set; }
-        public decimal ValorCuotaServicioGPS { get; set; }
-        public decimal TotalSeguroVehiculo { get; set; }
-        public decimal ValorCuotaSeguroDeVehiculo { get; set; }
-        public decimal ValorCuotaNeta { get; set; }
-        public int Plazo { get; set; }
-        public string TipoDePlazo { get; set; }
-        public decimal TasaAnualAplicada { get; set; }
-        public decimal TasaMensualAplicada { get; set; }
-    }
-
-    public class SolicitudesCredito_Analisis_EstadoProcesos_ViewModel
-    {
-        public DateTime EnIngresoInicio { get; set; }
-        public DateTime EnIngresoFin { get; set; }
-        public string UsuarioEnIngreso { get; set; }
-        public DateTime EnColaInicio { get; set; }
-        public DateTime EnColaFin { get; set; }
-        public DateTime EnAnalisisInicio { get; set; }
-        public string UsuarioAnalista { get; set; }
-
-        public int DocumentacionIdentidadesValidada { get; set; }
-        public int DocumentacionDomicilioValidada { get; set; }
-        public int DocumentacionLaboralValidada { get; set; }
-        public int DocumentacionSolicitudFisicaValidada { get; set; }
-
-        public DateTime FechaValidacionInformacionPersonal { get; set; }
-        public string ComentarioValidacionInformacionPersonal { get; set; }
-        public DateTime FechaValidacionDocumentacion { get; set; }
-        public string ComentarioValidacionDocumentacion { get; set; }
-        public DateTime FechaValidacionReferenciasPersonales { get; set; }
-        public string ComentarioValidacionReferenciasPersonales { get; set; }
-        public DateTime FechaValidacionInformacionLaboral { get; set; }
-        public string ComentarioValidacionInformacionLaboral { get; set; }
-        public string ComentarioResolucion { get; set; }
-        public DateTime TiempoTomaDecisionFinal { get; set; }
-        public DateTime EnAnalisisFin { get; set; }
-        public DateTime CondicionadoInicio { get; set; }
-        public string ComentarioCondicionado { get; set; }
-        public string UsuarioCondicionado { get; set; }
-        public DateTime CondicionadoFin { get; set; }
-        public DateTime FechaEnvioARuta { get; set; }
-        public string ObservacionesDeCreditos { get; set; }
-        public DateTime EnRutaDeInvestigacionInicio { get; set; }
-        public string UsuarioGestorAsignado { get; set; }
-        public string ObservacionesDeCampo { get; set; }
-        public DateTime EnRutaDeInvestigacionFin { get; set; }
-        public DateTime ReprogramadoInicio { get; set; }
-        public string ComentarioReprogramado { get; set; }
-        public DateTime ReprogramadoFin { get; set; }
-        public DateTime PasoFinalInicio { get; set; }
-        public string UsuarioPasoFinal { get; set; }
-        public string ComentarioPasoFinal { get; set; }
-        public DateTime PasoFinalFin { get; set; }
-        public int IdEstadoSolicitud { get; set; }
-        public string EstadoSolicitud { get; set; }
-        public int SolicitudActiva { get; set; }
-        public List<SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel> Condiciones { get; set; }
-
-        public SolicitudesCredito_Analisis_EstadoProcesos_ViewModel()
+        EquifaxClientesViewModel DatosEquifaxModel = new EquifaxClientesViewModel();
+        try
         {
-            Condiciones = new List<SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel>();
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", 107);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", 1);
+                    sqlComando.Parameters.AddWithValue("@pcIdentidad", IdentidadPersona);
+                    sqlComando.CommandTimeout = 120;
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+
+                            DatosEquifaxModel = new EquifaxClientesViewModel()
+                            {
+                                fcDescripcionDoctosFiscal = (string)sqlResultado["fcDescripcionDoctosFiscal"]
+
+                            };
+
+                                // //  var  LbLDocumentoCliente = sqlResultado["fcNombreDoctosIdPersonal"].ToString();
+                                // spanDocumentoPersonal.Text = sqlResultado["fcNombreDoctosIdPersonal"].ToString();
+                                // lblNIdFiscal.Text = sqlResultado["fcNoIdFiscal"].ToString();
+                                // lblDocumentoFiscal.Text = sqlResultado["fcDescripcionDoctosFiscal"].ToString();
+
+
+                        }
+
+                    }
+
+                }
+            }
+            // lblDocumentoCliente.Text = LbLDocumentoClie;
         }
-    }
-
-    /* Estructua tabla Catalogo_Condiciones */
-    public class Solicitudes_Credito_Analisis_Condicion_ViewModel
-    {
-        public int IdCondicion { get; set; }
-        public string Condicion { get; set; }
-        public string DescripcionCondicion { get; set; }
-    }
-
-    /* Estructura tabla CredSolicitud_Condicionamientos */
-    public class SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel
-    {
-        public int IdSolicitudCondicion { get; set; }
-        public int IdCondicion { get; set; }
-        public int IdSolicitud { get; set; }
-        public string Condicion { get; set; }
-        public string DescripcionCondicion { get; set; }
-        public string ComentarioAdicional { get; set; }
-        public bool EstadoCondicion { get; set; }
-    }
-
-    /* View Model listado del catalogo de condiciones y listado de condicionamientos de una solicitud */
-    public class CatalogoCondiciones_SolicitudCondiciones_ViewModel
-    {
-        public List<Solicitudes_Credito_Analisis_Condicion_ViewModel> CatalogoCondiciones { get; set; }
-        public List<SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel> CondicionesDeLaSolicitud { get; set; }
-
-        public CatalogoCondiciones_SolicitudCondiciones_ViewModel()
+        catch (Exception ex)
         {
-            CatalogoCondiciones = new List<Solicitudes_Credito_Analisis_Condicion_ViewModel>();
-            CondicionesDeLaSolicitud = new List<SolicitudesCredito_Analisis_SolicitudCondicion_ViewModel>();
+
+            ex.Message.ToString();
         }
+        return DatosEquifaxModel;
+
     }
 
-    enum Estados_Solicitud
+    /* View Models */
+    public class EquifaxClientesViewModel
     {
-        /* Catalogo de estados de las solicitudes de crédito (Catalogo_Solicitudes_Estados) - 02/05/2021 */
-        Ingresada = 0,
-        EnCola = 1,
-        EnAnalisis = 2,
-        Condicionada = 3,
-        RechazadaPorAnalistas = 4,
-        RechazadaPorGestores = 5,
-        ValidacionPasoFinal = 6,
-        Autorizada = 7
+        public string fcDescripcionDoctosFiscal { get; set; }
+        public string fcDescricpcionOrigenEtnicoORacial { get; set; }
+        public string fcNombreDoctosIdPersonal { get; set; }
+        public string fcNombrePaisNacimiento { get; set; }
+        public string fcNoIdFiscal { get; set; }
+        public int fiIDProducto { get; set; }
     }
-    #endregion
 }

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Detalles.aspx.cs" Inherits="SolicitudesCredito_Detalles" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" codebehind="SolicitudesCredito_Detalles.aspx.cs" Inherits="SolicitudesCredito_Detalles" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Detalles de la solicitud</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
@@ -74,7 +74,11 @@
                         <asp:Label ID="lblNombreCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label>
                     </div>
                     <div class="col-lg-auto col-md-auto col-sm-auto col-auto align-self-end">
-                        <asp:Label runat="server" class="h6 font-weight-bold">Identidad:</asp:Label>
+                        <asp:Label runat="server" class="h6 font-weight-bold">Documento Personal:</asp:Label>
+                        <asp:Label ID="lblDocumentoCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label>
+                    </div>
+                    <div class="col-lg-auto col-md-auto col-sm-auto col-auto align-self-end">
+                        <asp:Label runat="server" class="h6 font-weight-bold">Numero de ID Personal:</asp:Label>
                         <asp:Label ID="lblIdentidadCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label>
                     </div>
                     <div class="col-lg-12">
@@ -117,7 +121,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body pr-3 pl-3">
+            <div class="card-body">
                 <div class="collapse-group">
                     <div class="panel panel-default">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingOne">
@@ -133,9 +137,17 @@
                                 <div class="row mb-0" id="divInformacionPersonal" runat="server">
                                     <div class="col-md-6">
                                         <div class="form-group row">
-                                            <div class="col-12">
+                                            <div class="col-12" style="display:none;" >
                                                 <label class="col-form-label">RTN numérico</label>
                                                 <asp:TextBox ID="txtRTNCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">No. Id Fiscal</label>
+                                                <asp:TextBox ID="txtNIdFiscal" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label">Docto Id.Fiscal</label>
+                                                <asp:TextBox ID="txtDocumentoFiscal" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
                                                 <label class="col-form-label">Número de teléfono</label>
@@ -209,19 +221,19 @@
                                                 <asp:TextBox ID="txtTiempoDeResidir" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
-                                                <label class="col-form-label">Departamento</label>
+                                                <label class="col-form-label">Estado</label>
                                                 <asp:TextBox ID="txtDepartamentoDomicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
-                                                <label class="col-form-label">Municipio</label>
+                                                <label class="col-form-label">Condado</label>
                                                 <asp:TextBox ID="txtMunicipioDomicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
-                                                <label class="col-form-label">Ciudad/Poblado</label>
+                                                <label class="col-form-label">Ciudad</label>
                                                 <asp:TextBox ID="txtCiudadPobladoDomicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
-                                                <label class="col-form-label">Barrio/colonia</label>
+                                                <label class="col-form-label">Codigo Postal</label>
                                                 <asp:TextBox ID="txtBarrioColoniaDomicilio" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-12">
@@ -339,28 +351,28 @@
                                                 <label class="col-form-label">Teléfono empresa</label>
                                                 <asp:TextBox ID="txtTelefonoEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-3 col-6">
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-6"  style="display:none;" >
                                                 <label class="col-form-label">Extensión cliente</label>
                                                 <asp:TextBox ID="txtExtensionCliente" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-3 col-6">
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-6"  style="display:none;">
                                                 <label class="col-form-label">Extensión RRHH</label>
                                                 <asp:TextBox ID="txtExtensionRecursosHumanos" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
-                                                <label class="col-form-label">Departamento</label>
+                                                <label class="col-form-label">Estado</label>
                                                 <asp:TextBox ID="txtDepartamentoEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
-                                                <label class="col-form-label">Municipio</label>
+                                                <label class="col-form-label">Condado</label>
                                                 <asp:TextBox ID="txtMunicipioEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
-                                                <label class="col-form-label">Ciudad/Poblado</label>
+                                                <label class="col-form-label">Ciudad</label>
                                                 <asp:TextBox ID="txtCiudadPobladoEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
-                                                <label class="col-form-label">Barrio/colonia</label>
+                                                <label class="col-form-label">Codigo Postal</label>
                                                 <asp:TextBox ID="txtBarrioColoniaEmpresa" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-12">
@@ -616,19 +628,19 @@
                                                 <label class="col-form-label">Ingresos</label>
                                                 <asp:TextBox ID="txtIngresosPrecalificado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-6"  style="display:none;">
                                                 <label class="col-form-label">Obligaciones</label>
                                                 <asp:TextBox ID="txtObligacionesPrecalificado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-6"  style="display:none;" >
                                                 <label class="col-form-label">Disponible</label>
                                                 <asp:TextBox ID="txtDisponiblePrecalificado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-6"  style="display:none;" >
                                                 <label class="col-form-label">Capacidad de pago (Mensual)</label>
                                                 <asp:TextBox ID="txtCapacidadDePagoMensual" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-6"  style="display:none;">
                                                 <label class="col-form-label">Capacidad de pago (Quincenal)</label>
                                                 <asp:TextBox ID="txtCapacidadDePagoQuincenal" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
@@ -720,9 +732,14 @@
                                                 <asp:TextBox ID="txtPlazoSeleccionado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
                                             <div class="col-6">
+                                                <label class="col-form-label">Frecuencia</label>
+                                                <asp:TextBox ID="txtFrecuencia" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
+                                            <div class="col-6">
                                                 <label class="col-form-label">Origen</label>
                                                 <asp:TextBox ID="txtOrigen" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
+                                          
                                         </div>
 
                                         <div id="divCalculoPrestamoSolicitado" runat="server">
@@ -735,14 +752,17 @@
                                                 MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                             -->
                                             <div class="form-group row">
-                                                <div class="col-sm-12 col-6">
+                                                <div class="col-sm-4 col-4">
                                                     <label class="col-form-label">Monto total a financiar</label>
                                                     <asp:TextBox ID="txtMontoTotalAFinanciar_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                                 </div>
-                                                <div class="col-sm-4 col-6">
-                                                    <label class="col-form-label">Couta del préstamo</label>
-                                                    <asp:TextBox ID="txtCuotaDelPrestamo_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                
+                                                <div class="col-4">
+                                                    <label class="col-form-label">Tasa anual aplicada</label>
+                                                    <asp:TextBox ID="txtTasaAnualAplicada_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                                 </div>
+                                             
+                                                <!--
                                                 <div class="col-sm-4 col-6">
                                                     <label class="col-form-label">Couta del seguro</label>
                                                     <asp:TextBox ID="txtCuotaDelSeguro_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
@@ -762,22 +782,36 @@
                                                 <div class="col-6">
                                                     <label class="col-form-label">Gastos de cierre</label>
                                                     <asp:TextBox ID="txtGastosDeCierre_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                                </div>
+                                                </div>-->
 
-                                                <div class="col-6">
-                                                    <label class="col-form-label">Tasa anual aplicada</label>
-                                                    <asp:TextBox ID="txtTasaAnualAplicada_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
-                                                </div>
-                                                <div class="col-6">
+                                                <div class="col-4">
                                                     <label class="col-form-label">Tasa mensual aplicada</label>
                                                     <asp:TextBox ID="txtTasaMensualAplicada_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                   <div class="col-sm-4 col-4">
+                                                    <label class="col-form-label">Couta Auto</label>
+                                                    <asp:TextBox ID="txtCuotaDelPrestamo_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label class="col-form-label">Collateral</label>
+                                                    <asp:TextBox ID="txtCollateral" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+
+                                                  <div class="col-4">
+                                                    <label class="col-form-label">Cuota Total</label>
+                                                    <asp:TextBox ID="txtCuotaAuto" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+
+                                                   <div class="col-4">
+                                                    <label class="col-form-label">Lien Holder</label>
+                                                    <asp:TextBox ID="txtLienholder" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                                 </div>
                                             </div>
 
                                         </div>
 
 
-                                        <div id="divPrestamoFinalAprobado" runat="server">
+                                        <div id="divPrestamoFinalAprobado" runat="server"  style="display:none;">
 
                                             <h6 class="font-weight-bold">Monto final a financiar <span class="font-weight-bold" runat="server" id="lblEstadoDelMontoFinalAFinanciar">(En análisis)</span></h6>
 
@@ -868,7 +902,7 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default" id="divInformaciondeCampo" runat="server" visible="false">
+                    <div class="panel panel-default" id="divInformaciondeCampo" runat="server" visible="false"  style="display:none;">
                         <div class="panel-heading p-1 bg-light border-bottom" role="tab" id="headingEight">
                             <h6 class="panel-title m-0 font-14">
                                 <a href="#collapseInformaciondeCampo" class="text-dark collapsed h6 collapsed font-weight-bold" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo">
@@ -1199,45 +1233,126 @@
     <script src="/Scripts/plugins/moment/moment-with-locales.min.js"></script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_Detalles.js?v=20201228115752"></script>
     <script>
-        InicializarGaleria('divDocumentacionCedula');
-
-        InicializarGaleria('divDocumentacionCedulaModal');
-
-        InicializarGaleria('divDocumentacionDomicilio');
-
-        InicializarGaleria('divDocumentacionDomicilioModal');
-
-        InicializarGaleria('divDocumentacionLaboral');
-
-        InicializarGaleria('divDocumentacionLaboralModal');
-
-        InicializarGaleria('divDocumentacionSoliFisicaModal');
-
-        InicializarGaleria('divDocumentacionCampoDomicilio');
-
-        InicializarGaleria('divDocumentacionCampoDomicilioModal');
-
-        InicializarGaleria('divDocumentacionCampoTrabajo');
-
-        InicializarGaleria('divDocumentacionCampoTrabajoModal');
-
-        $("#divGaleriaGarantia").unitegallery({
+        $("#divDocumentacionCedula").unitegallery({
+            gallery_theme: "tilesgrid",
             tile_width: 180,
-            tile_height: 120
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
         });
 
-        function InicializarGaleria(idGaleria) {
+        $("#divDocumentacionCedulaModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
 
-            $('#' + idGaleria + '').unitegallery({
-                gallery_theme: "tilesgrid",
-                tile_width: 180,
-                tile_height: 120,
-                lightbox_type: "compact",
-                grid_num_rows: 15,
-                tile_enable_textpanel: true,
-                tile_textpanel_title_text_align: "center"
-            });
-        }
+        $("#divDocumentacionDomicilio").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divDocumentacionDomicilioModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divDocumentacionLaboral").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divDocumentacionLaboralModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divDocumentacionSoliFisicaModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divDocumentacionCampoDomicilio").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divDocumentacionCampoDomicilioModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divDocumentacionCampoTrabajo").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divDocumentacionCampoTrabajoModal").unitegallery({
+            gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            lightbox_type: "compact",
+            grid_num_rows: 15,
+            tile_enable_textpanel: true,
+            tile_textpanel_title_text_align: "center"
+        });
+
+        $("#divGaleriaGarantia").unitegallery({
+            //gallery_theme: "tilesgrid",
+            tile_width: 180,
+            tile_height: 120,
+            //lightbox_type: "compact",
+            //grid_num_rows: 15,
+            //tile_enable_textpanel: true,
+            //tile_textpanel_title_text_align: "center"
+        });
+
     </script>
 </body>
 </html>

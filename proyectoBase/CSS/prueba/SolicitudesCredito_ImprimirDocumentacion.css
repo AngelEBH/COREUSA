@@ -1,0 +1,120 @@
+﻿html {
+    background-color: rgb(255,255,255) !important;
+}
+
+.FormatoBotonesIconoCuadrado40 {
+    position: absolute;
+    background-color: white;
+    border-style: solid;
+    border-color: lightgray;
+    border-width: 1px;
+    margin: 0;
+    white-space: normal !important;
+    vertical-align: text-top;
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 55px;
+    padding-bottom: 5px;
+    height: 95px;
+    width: 80px;
+    font-size: 12px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-y: 10px;
+    background-position-x: center;
+    display: inline-block;
+    text-wrap: normal;
+    color: #808080;
+}
+
+    .FormatoBotonesIconoCuadrado40:hover {
+        background-color: #b3ecff;
+        color: black;
+    }
+
+.card {
+    border: none;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+p {
+    font-size: 15.5px !important;
+    text-align: justify !important;
+    text-justify: inter-word !important;
+}
+
+#divContratoPDF p {
+    font-size: 10px !important;
+    text-align: justify !important;
+    text-justify: inter-word !important;
+    color: black;
+}
+
+#divContratoPDF label {
+    font-size: 11px !important;
+    color: black;
+}
+
+.page-break {
+    page-break-after: always;
+}
+
+.ug-thumbs-grid {
+    left: 50px !important;
+}
+
+.divImprimir {
+    color: black !important;
+}
+
+#divConevionCyVPDF p, #divBasicoCPIPDF p, #divBasicoCPIPDF li {
+    font-size: 12px !important;
+}
+
+#divNotaDeEntregaPDF p {
+    font-size: 12px !important;
+    text-align: justify !important;
+    text-justify: inter-word !important;
+    color: black;
+}
+
+.pl-100px{
+    padding-left: 100px !important;
+}
+
+.pl-80px {
+    padding-left: 80px !important;
+}
+
+.pl-60px {
+    padding-left: 60px !important;
+}
+
+.pl-70px {
+    padding-left: 70px !important;
+}
+
+.contenedorPDF {
+    margin-top: 999px !important;
+    display: none !important;
+}
+
+#divExpedientePDF * {
+    font-size: 9px !important;
+    color: black !important;
+}
+
+table.table-bordered > thead > tr > th {
+    border: 0.1px solid black;
+}
+table.table-bordered > thead > tr > td {
+    border: 0.1px solid black;
+}
+table.table-bordered > tbody > tr > td {
+    border: 0.1px solid black;
+}
+table.table-bordered > tbody > tr > th {
+    border: 0.1px solid black;
+}

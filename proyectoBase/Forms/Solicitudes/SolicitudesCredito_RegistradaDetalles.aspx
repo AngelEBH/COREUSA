@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_RegistradaDetalles.aspx.cs" Inherits="SolicitudesCredito_RegistradaDetalles" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Codebehind="SolicitudesCredito_RegistradaDetalles.aspx.cs" Inherits="SolicitudesCredito_RegistradaDetalles" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -60,6 +60,9 @@
                                     <i class="fas fa-info-circle"></i>
                                     Más detalles
                                 </button>
+<!-- 
+                                <asp:HyperLink ID="btnLinkDocumentos" runat="server" type="button" target="_blank" class="btn btn-warning waves-effect waves-light"> Ver Documentos</asp:HyperLink> -->
+
                             </div>
                         </div>
                     </div>
@@ -71,7 +74,9 @@
                     </div>
                     <div class="col-lg-auto col-md-auto col-sm-auto col-auto align-self-end">
                         <asp:Label runat="server" class="h6 font-weight-bold">Identidad:</asp:Label>
-                        <asp:Label ID="lblIdentidadCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label>
+                        <asp:Label ID="lblIdentidadCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label> 
+                        <asp:Label runat="server" class="h6 font-weight-bold">Score promedio:</asp:Label>
+                        <asp:Label ID="lblScorePromedio" CssClass="col-form-label h6 font-weight-bold" runat="server"></asp:Label>
                     </div>
                     <div class="col-lg-12">
                         <table class="table table-condensed mb-0">
@@ -87,8 +92,7 @@
                                         <asp:Label ID="lblAgencia" CssClass="col-form-label" runat="server"></asp:Label></th>
                                     <th class="text-center pt-1 pb-1">Gestor:
                                         <asp:Label ID="lblNombreGestor" CssClass="col-form-label" runat="server"></asp:Label></th>
-                                    <th class="text-center pt-1 pb-1">Score promedio:
-                                        <asp:Label ID="lblScorePromedio" CssClass="col-form-label" runat="server"></asp:Label></th>
+                                        
                                 </tr>
                             </tbody>
                         </table>
@@ -717,6 +721,11 @@
                                                 <label class="col-form-label">Plazo <span id="lblTipoDePlazo_Solicitado" class="font-weight-bold" runat="server"></span></label>
                                                 <asp:TextBox ID="txtPlazoSeleccionado" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                             </div>
+
+                                            <div class="col-6">
+                                                <label class="col-form-label">Frecuencia <span id="prueba" class="font-weight-bold" runat="server"></span></label>
+                                                <asp:TextBox ID="txtFrecuencia" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                            </div>
                                             <div class="col-6">
                                                 <label class="col-form-label">Origen</label>
                                                 <asp:TextBox ID="txtOrigen" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
@@ -733,14 +742,15 @@
                                                 MOSTRAR EL RECALCULO CON LAS CANTIDADES REALES
                                             -->
                                             <div class="form-group row">
-                                                <div class="col-sm-12 col-6">
+                                                <div class="col-sm-4 col-4">
                                                     <label class="col-form-label">Monto total a financiar</label>
                                                     <asp:TextBox ID="txtMontoTotalAFinanciar_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                                 </div>
-                                                <div class="col-sm-4 col-6">
-                                                    <label class="col-form-label">Couta del préstamo</label>
+                                                <div class="col-sm-4 col-4">
+                                                    <label class="col-form-label">Cuota del préstamo</label>
                                                     <asp:TextBox ID="txtCuotaDelPrestamo_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                                 </div>
+                                                <!--
                                                 <div class="col-sm-4 col-6">
                                                     <label class="col-form-label">Couta del seguro</label>
                                                     <asp:TextBox ID="txtCuotaDelSeguro_Calculo" CssClass="form-control form-control-sm text-right" type="text" ReadOnly="true" runat="server"></asp:TextBox>
@@ -761,14 +771,19 @@
                                                     <label class="col-form-label">Gastos de cierre</label>
                                                     <asp:TextBox ID="txtGastosDeCierre_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                                 </div>
-
-                                                <div class="col-6">
+-->
+                                                <div class="col-4">
                                                     <label class="col-form-label">Tasa anual aplicada</label>
                                                     <asp:TextBox ID="txtTasaAnualAplicada_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-4">
                                                     <label class="col-form-label">Tasa mensual aplicada</label>
                                                     <asp:TextBox ID="txtTasaMensualAplicada_Calculo" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
+                                                </div>
+
+                                                <div class="col-4">
+                                                    <label class="col-form-label">Collateral</label>
+                                                    <asp:TextBox ID="txtCollateral" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>
@@ -819,6 +834,7 @@
                                                     <label class="col-form-label">Tasa mensual aplicada</label>
                                                     <asp:TextBox ID="txtTasaMensualAplicada_FinalAprobado" CssClass="form-control form-control-sm" type="text" ReadOnly="true" runat="server"></asp:TextBox>
                                                 </div>
+                                              
                                             </div>
                                         </div>
                                     </div>

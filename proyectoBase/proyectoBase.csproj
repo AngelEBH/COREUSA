@@ -1068,10 +1068,6 @@
     <Content Include="Documentos\Solicitudes\Solicitud962\G_962_1G1BE5SM6H7150309_bbdda80d-60c7-42a5-8c09-af6e7d0cb17d.png" />
     <Content Include="Documentos\Solicitudes\Solicitud962\G_962_1G1BE5SM6H7150309_f1a577cb-7800-46ad-a06e-5fdffa817536.png" />
     <Content Include="favicon.ico" />
-    <Content Include="Forms\Aval\Aval_Actualizar.aspx" />
-    <Content Include="Forms\Aval\Aval_Detalles.aspx" />
-    <Content Include="Forms\Aval\Aval_Precalificar.aspx" />
-    <Content Include="Forms\Aval\Aval_Registrar.aspx" />
     <Content Include="Forms\Clientes\GestionCobranzaClienteDocumentos.aspx" />
     <Content Include="Forms\Clientes\Precalificado_Resolucion.aspx" />
     <Content Include="Forms\Expedientes\Expedientes_Mantenimiento.aspx" />
@@ -1084,9 +1080,6 @@
     <Content Include="Forms\SolicitudesGPS\SolicitudesGPS_RegistroInstalacionGPS.aspx" />
     <Content Include="Forms\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.aspx" />
     <Content Include="Forms\SolicitudesGPS\SolicitudesGPS_Listado.aspx" />
-    <Content Include="Forms\Solicitudes\Garantia_Actualizar.aspx" />
-    <Content Include="Forms\Solicitudes\GarantiaSinSolicitud_Detalles.aspx" />
-    <Content Include="Forms\Solicitudes\Garantia_Registrar.aspx" />
     <Content Include="Forms\Movil\SolicitudesCredito_Bandeja_Movil.aspx" />
     <Content Include="Forms\Movil\BandejaPrecalificados.aspx" />
     <Content Include="Forms\Movil\precalificado_buscador.aspx" />
@@ -1099,24 +1092,25 @@
     <Content Include="Forms\CoreFinancieroMovil\ImprimirCotizacion.aspx" />
     <Content Include="Forms\PreSolicitudes\PreSolicitud_Guardar.aspx" />
     <Content Include="Forms\PreSolicitudes\PreSolicitud_Listado.aspx" />
+    <Content Include="Forms\SolicitudesV2\SolicitudesCredito_Analisisv2.aspx" />
+    <Content Include="Forms\Solicitudes\GarantiaSinSolicitud_Detalles.aspx" />
+    <Content Include="Forms\Solicitudes\Garantia_Actualizar.aspx" />
     <Content Include="Forms\Solicitudes\Garantia_Detalles.aspx" />
-    <Content Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx" />
-    <Content Include="Forms\Solicitudes\SolicitudesCredito_ImprimirDocumentacion.aspx" />
+    <Content Include="Forms\Solicitudes\Garantia_Registrar.aspx" />
     <Content Include="Forms\Solicitudes\PreciosDeMercado_Listado.aspx" />
-    <Content Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx" />
-    <Content Include="Forms\Solicitudes\SolicitudesCredito_Expedientes.aspx" />
-    <Content Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx" />
-    <Content Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx" />
-    <Content Include="Forms\Solicitudes\SolicitudesCredito_Analisis.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Bandeja.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ClientesPrecalificados.aspx" />
+    <Content Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Detalles.aspx" />
+    <Content Include="Forms\Solicitudes\SolicitudesCredito_Expedientes.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Ingresadas.aspx" />
+    <Content Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Mantenimiento.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_NoAsignadas.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Precalificar.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_RegistradaDetalles.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Registrar.aspx" />
+    <Content Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx" />
     <Content Include="Forms\Solicitudes_CANEX\SolicitudesCANEX_BandejaSeguimiento.aspx" />
     <Content Include="Forms\Solicitudes_CANEX\SolicitudesCANEX_SeguimientoDetalles.aspx" />
     <Content Include="Forms\Solicitudes_CANEX\Solicitudes_CANEX.aspx" />
@@ -1882,34 +1876,6 @@
     <Compile Include="App_Data\Funciones.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Forms\Aval\Aval_Actualizar.aspx.cs">
-      <DependentUpon>Aval_Actualizar.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Aval\Aval_Actualizar.aspx.designer.cs">
-      <DependentUpon>Aval_Actualizar.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Aval\Aval_Detalles.aspx.cs">
-      <DependentUpon>Aval_Detalles.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Aval\Aval_Detalles.aspx.designer.cs">
-      <DependentUpon>Aval_Detalles.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Aval\Aval_Precalificar.aspx.cs">
-      <DependentUpon>Aval_Precalificar.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Aval\Aval_Precalificar.aspx.designer.cs">
-      <DependentUpon>Aval_Precalificar.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Aval\Aval_Registrar.aspx.cs">
-      <DependentUpon>Aval_Registrar.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Aval\Aval_Registrar.aspx.designer.cs">
-      <DependentUpon>Aval_Registrar.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Clientes\GestionCobranzaClienteDocumentos.aspx.cs">
       <DependentUpon>GestionCobranzaClienteDocumentos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1993,27 +1959,6 @@
     </Compile>
     <Compile Include="Forms\SolicitudesGPS\SolicitudesGPS_Listado.aspx.designer.cs">
       <DependentUpon>SolicitudesGPS_Listado.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\Garantia_Actualizar.aspx.cs">
-      <DependentUpon>Garantia_Actualizar.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\Garantia_Actualizar.aspx.designer.cs">
-      <DependentUpon>Garantia_Actualizar.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\GarantiaSinSolicitud_Detalles.aspx.cs">
-      <DependentUpon>GarantiaSinSolicitud_Detalles.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\GarantiaSinSolicitud_Detalles.aspx.designer.cs">
-      <DependentUpon>GarantiaSinSolicitud_Detalles.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\Garantia_Registrar.aspx.cs">
-      <DependentUpon>Garantia_Registrar.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\Garantia_Registrar.aspx.designer.cs">
-      <DependentUpon>Garantia_Registrar.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Movil\SolicitudesCredito_Bandeja_Movil.aspx.cs">
       <DependentUpon>SolicitudesCredito_Bandeja_Movil.aspx</DependentUpon>
@@ -2099,6 +2044,24 @@
     <Compile Include="Forms\PreSolicitudes\PreSolicitud_Listado.aspx.designer.cs">
       <DependentUpon>PreSolicitud_Listado.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SolicitudesV2\SolicitudesCredito_Analisisv2.aspx.cs">
+      <DependentUpon>SolicitudesCredito_Analisisv2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\GarantiaSinSolicitud_Detalles.aspx.cs">
+      <DependentUpon>GarantiaSinSolicitud_Detalles.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\GarantiaSinSolicitud_Detalles.aspx.designer.cs">
+      <DependentUpon>GarantiaSinSolicitud_Detalles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\Garantia_Actualizar.aspx.cs">
+      <DependentUpon>Garantia_Actualizar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\Garantia_Actualizar.aspx.designer.cs">
+      <DependentUpon>Garantia_Actualizar.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Solicitudes\Garantia_Detalles.aspx.cs">
       <DependentUpon>Garantia_Detalles.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2106,19 +2069,12 @@
     <Compile Include="Forms\Solicitudes\Garantia_Detalles.aspx.designer.cs">
       <DependentUpon>Garantia_Detalles.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx.cs">
-      <DependentUpon>SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx</DependentUpon>
+    <Compile Include="Forms\Solicitudes\Garantia_Registrar.aspx.cs">
+      <DependentUpon>Garantia_Registrar.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx.designer.cs">
-      <DependentUpon>SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ImprimirDocumentacion.aspx.cs">
-      <DependentUpon>SolicitudesCredito_ImprimirDocumentacion.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ImprimirDocumentacion.aspx.designer.cs">
-      <DependentUpon>SolicitudesCredito_ImprimirDocumentacion.aspx</DependentUpon>
+    <Compile Include="Forms\Solicitudes\Garantia_Registrar.aspx.designer.cs">
+      <DependentUpon>Garantia_Registrar.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\PreciosDeMercado_Listado.aspx.cs">
       <DependentUpon>PreciosDeMercado_Listado.aspx</DependentUpon>
@@ -2126,41 +2082,6 @@
     </Compile>
     <Compile Include="Forms\Solicitudes\PreciosDeMercado_Listado.aspx.designer.cs">
       <DependentUpon>PreciosDeMercado_Listado.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx.cs">
-      <DependentUpon>SolicitudesCredito_ListadoGarantias.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx.designer.cs">
-      <DependentUpon>SolicitudesCredito_ListadoGarantias.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Expedientes.aspx.cs">
-      <DependentUpon>SolicitudesCredito_Expedientes.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Expedientes.aspx.designer.cs">
-      <DependentUpon>SolicitudesCredito_Expedientes.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx.cs">
-      <DependentUpon>SolicitudesCredito_Registrar_Supervisor.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx.designer.cs">
-      <DependentUpon>SolicitudesCredito_Registrar_Supervisor.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx.cs">
-      <DependentUpon>SolicitudesCredito_ActualizarSolicitud.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ActualizarSolicitud.aspx.designer.cs">
-      <DependentUpon>SolicitudesCredito_ActualizarSolicitud.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Analisis.aspx.cs">
-      <DependentUpon>SolicitudesCredito_Analisis.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Analisis.aspx.designer.cs">
-      <DependentUpon>SolicitudesCredito_Analisis.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Bandeja.aspx.cs">
       <DependentUpon>SolicitudesCredito_Bandeja.aspx</DependentUpon>
@@ -2176,6 +2097,13 @@
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_ClientesPrecalificados.aspx.designer.cs">
       <DependentUpon>SolicitudesCredito_ClientesPrecalificados.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx.cs">
+      <DependentUpon>SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx.designer.cs">
+      <DependentUpon>SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Detalles.aspx.cs">
       <DependentUpon>SolicitudesCredito_Detalles.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2183,12 +2111,26 @@
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Detalles.aspx.designer.cs">
       <DependentUpon>SolicitudesCredito_Detalles.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Expedientes.aspx.cs">
+      <DependentUpon>SolicitudesCredito_Expedientes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Expedientes.aspx.designer.cs">
+      <DependentUpon>SolicitudesCredito_Expedientes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Ingresadas.aspx.cs">
       <DependentUpon>SolicitudesCredito_Ingresadas.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Ingresadas.aspx.designer.cs">
       <DependentUpon>SolicitudesCredito_Ingresadas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx.cs">
+      <DependentUpon>SolicitudesCredito_ListadoGarantias.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_ListadoGarantias.aspx.designer.cs">
+      <DependentUpon>SolicitudesCredito_ListadoGarantias.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Mantenimiento.aspx.cs">
       <DependentUpon>SolicitudesCredito_Mantenimiento.aspx</DependentUpon>
@@ -2224,6 +2166,13 @@
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Registrar.aspx.designer.cs">
       <DependentUpon>SolicitudesCredito_Registrar.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx.cs">
+      <DependentUpon>SolicitudesCredito_Registrar_Supervisor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Registrar_Supervisor.aspx.designer.cs">
+      <DependentUpon>SolicitudesCredito_Registrar_Supervisor.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes_CANEX\SolicitudesCANEX_BandejaSeguimiento.aspx.cs">
       <DependentUpon>SolicitudesCANEX_BandejaSeguimiento.aspx</DependentUpon>
@@ -2352,6 +2301,7 @@
     <Compile Include="Models\ViewModel\SolicitudesCondicionamientosViewModel.cs" />
     <Compile Include="Models\ViewModel\SolicitudesDocumentosViewModel.cs" />
     <Compile Include="Models\ViewModel\SolicitudesMasterViewModel.cs" />
+    <Compile Include="Models\ViewModel\SolicitudIngresarDDLViewModel.cs" />
     <Compile Include="Models\ViewModel\tbObjetoViewModel.cs" />
     <Compile Include="Models\ViewModel\TipoClienteViewModel.cs" />
     <Compile Include="Models\ViewModel\TipoDocumentoViewModel.cs" />
@@ -2391,6 +2341,7 @@
     <Folder Include="Content\icons\ionicons\png\512\" />
     <Folder Include="Content\images\small\" />
     <Folder Include="Content\images\users\" />
+    <Folder Include="Forms\Solicitudes\respaldo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\.editorconfig">

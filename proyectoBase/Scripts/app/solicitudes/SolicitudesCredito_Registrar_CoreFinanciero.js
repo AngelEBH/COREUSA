@@ -1,15 +1,16 @@
 ﻿COTIZADOR = null;
 
 if (PRECALIFICADO.PermitirIngresarSolicitud == false && (PRECALIFICADO.MensajePermitirIngresarSolicitud != '' && PRECALIFICADO.MensajePermitirIngresarSolicitud != null)) {
-
-    Swal.fire({
-        title: '¡Oh no!',
-        text: PRECALIFICADO.MensajePermitirIngresarSolicitud,
-        type: 'warning',
-        showCancelButton: false,
-        confirmButtonColor: "#58db83",
-        confirmButtonText: "OMITIR"
-    });
+    Swal.fire(
+        {
+            title: '¡Oh no!',
+            text: PRECALIFICADO.MensajePermitirIngresarSolicitud,
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: "#58db83",
+            confirmButtonText: "OMITIR"
+        }
+    )
 }
 
 var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>').text('Finalizar').addClass('btn btn-info').css('display', 'none')
@@ -757,6 +758,7 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
         var lcSeguro = '';
         var lcGPS = '';
         var lcGastosdeCierre = '';
+		var lcPagoGPS = '';
 
         if ($("#ddlTipoDeSeguro :selected").val() == "A - Full Cover") {
             lcSeguro = "1";
@@ -780,8 +782,15 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
         if ($("#ddlGps :selected").val() == "No") {
             lcGPS = "0";
         }
-
-        if (lcSeguro != '' && lcGPS != '' && lcGastosdeCierre != '') {
+		
+		if ($("#ddlPagoGPS :selected").val() == "Si") {
+            lcPagoGPS = "1";
+        }
+        if ($("#ddlPagoGPS :selected").val() == "No") {
+            lcPagoGPS = "0";
+        }
+		lcPagoGPS = "1";
+        if (lcSeguro != '' && lcGPS != '' && lcGastosdeCierre != '' && lcPagoGPS != '') {
 
             $.ajax({
                 type: "POST",
@@ -795,6 +804,7 @@ function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
                         scorePromedio: PRECALIFICADO.ScorePromedio,
                         tipoSeguro: lcSeguro,
                         tipoGps: lcGPS,
+						pagoGPS: lcPagoGPS,
                         gastosDeCierreFinanciados: lcGastosdeCierre,
                         dataCrypt: window.location.href
                     }),
@@ -922,7 +932,7 @@ $("select").on('change', function () {
     $(this).parsley().validate();
 });
 
-$('#txtValorGlobal,#txtValorPrima,#ddlPlazosDisponibles,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps').blur(function () {
+$('#txtValorGlobal,#txtValorPrima,#ddlPlazosDisponibles,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps,#ddlPagoGPS').blur(function () {
 
     var valorGlobal = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
     var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
@@ -1173,7 +1183,8 @@ function GuardarRespaldoInformacionPrestamo() {
         /* Parametros de cotizador de vehiculos */
         ddlTipoGastosDeCierre: $("#ddlTipoGastosDeCierre :selected").val(),
         ddlTipoDeSeguro: $("#ddlTipoDeSeguro :selected").val(),
-        ddlGps: $("#ddlGps :selected").val()
+        ddlGps: $("#ddlGps :selected").val(),
+		ddlPagoGPS: $("#ddlPagoGPS :selected").val()
     }
     localStorage.setItem('RespaldoInformacionPrestamo', JSON.stringify(respaldoInformacionPrestamo));
 }
@@ -1315,6 +1326,7 @@ function RecuperarRespaldos() {
         $("#ddlTipoGastosDeCierre").val(RespaldoInformacionPrestamo.ddlTipoGastosDeCierre);
         $("#ddlTipoDeSeguro").val(RespaldoInformacionPrestamo.ddlTipoDeSeguro);
         $("#ddlGps").val(RespaldoInformacionPrestamo.ddlGps);
+		$("#ddlPagoGPS").val(RespaldoInformacionPrestamo.ddlPagoGPS);
 
         if (valorGlobal > 0 && plazo > 0) {
             CalculoPrestamo(valorGlobal.toString(), valorPrima.toString(), plazo.toString());

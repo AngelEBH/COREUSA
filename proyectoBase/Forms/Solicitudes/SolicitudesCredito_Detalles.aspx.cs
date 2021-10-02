@@ -16,40 +16,67 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
     public string pcIDSesion = "";
     public string pcIDUsuario = "";
     public string pcIDSolicitud = "";
+    public static decimal TotaCuota = 0;
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        try
+        if (!IsPostBack)
         {
-            if (!IsPostBack)
+            var lcURL = string.Empty;
+            var liParamStart = 0;
+            var lcParametros = string.Empty;
+            var lcEncriptado = string.Empty;
+            var lcParametroDesencriptado = string.Empty;
+            Uri lURLDesencriptado = null;
+
+            try
             {
-                var lcURL = Request.Url.ToString();
-                var liParamStart = lcURL.IndexOf("?");
-                var lcParametros = liParamStart > 0 ? lcURL.Substring(liParamStart, lcURL.Length - liParamStart) : string.Empty;
+                lcURL = Request.Url.ToString();
+                liParamStart = lcURL.IndexOf("?");
+
+                if (liParamStart > 0)
+                {
+                    lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
+                }
+                else
+                {
+                    lcParametros = string.Empty;
+                }
 
                 if (lcParametros != string.Empty)
                 {
-                    var pcEncriptado = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1)).Replace("%2f", "/");
-                    var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
-                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                    lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                    lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+                    lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
 
+                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                     pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("pcID");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-                    pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                    pcIDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
 
                     CargarInformacionClienteSolicitud();
                     CargarInformacionGarantia();
+                    CargarInformacionClienteEquifax();
+                    CargarInformacionPlanPago();
+                }
+                else
+                {
+                    string lcScript = "window.open('SolicitudesCredito_Bandeja.aspx?" + lcEncriptado + "','_self')";
+                    Response.Write("<script>");
+                    Response.Write(lcScript);
+                    Response.Write("</script>");
                 }
             }
+            catch
+            {
+                string lcScript = "window.open('SolicitudesCredito_Bandeja.aspx?" + lcEncriptado + "','_self')";
+                Response.Write("<script>");
+                Response.Write(lcScript);
+                Response.Write("</script>");
+            }
         }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-        }
-
     }
 
     public void CargarInformacionClienteSolicitud()
@@ -216,6 +243,9 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                             txtPlazoSeleccionado.Text = sqlResultado["fiPlazoSeleccionado"].ToString();
                             lblTipoDePlazo_Solicitado.InnerText = (IdProducto == "202" || IdProducto == "203" || IdProducto == "204") ? "Mensual" : "Quincenal";
                             txtOrigen.Text = sqlResultado["fcOrigen"].ToString();
+                            // txtFrecuencia.Text = sqlResultado["fcTipoDePlazo"].ToString();
+                            //txtCollateral.Text = "";
+                            txtLienholder.Text = sqlResultado["lienholder"].ToString();
 
                             /*** Calculo del prestamo SOLICITADO ***/
                             var montoPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : decimal.Parse(sqlResultado["fnValorSeleccionado"].ToString());
@@ -224,31 +254,15 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
 
                             var calculoPrestamoSolicitado = new SolicitudesCredito_Detalles_Calculo_ViewModel();
 
-                            if (IdProducto == "101" || IdProducto == "301" || IdProducto == "201" || IdProducto == "302")
-                            {
-                                calculoPrestamoSolicitado = CalcularPrestamo(IdProducto, montoPrestamoSolicitado, valorPrimaPrestamoSolicitado, plazoSeleccionado, sqlConexion);
 
-                                txtMontoTotalAFinanciar_Calculo.Text = calculoPrestamoSolicitado.ValorAFinanciar.ToString("N");
-                                txtCuotaDelPrestamo_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaPrestamo.ToString("N");
-                                txtCuotaDelSeguro_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaSeguroDeVehiculo.ToString("N");
-                                txtCuotaGPS_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaServicioGPS.ToString("N");
-                                txtCuotaTotal_Calculo.Text = calculoPrestamoSolicitado.ValorCuotaNeta.ToString("N");
-                                txtCostoAparatoGPS_Calculo.Text = calculoPrestamoSolicitado.CostoAparatoGPS.ToString("N");
-                                txtGastosDeCierre_Calculo.Text = calculoPrestamoSolicitado.ValorGastosDeCierre.ToString("N");
-                                txtTasaAnualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaAnualAplicada.ToString("N");
-                                txtTasaMensualAplicada_Calculo.Text = calculoPrestamoSolicitado.TasaMensualAplicada.ToString("N");
-
-                            }
-                            else if (IdProducto == "202" || IdProducto == "203" || IdProducto == "204")
-                            {
-                                /* Haciendo pruebas, si el prestamo es 202, 203 o 204 no se mostrará préstamo solicitado
-                                * solo se mostrará el div del monto final a financiar actual
-                                * mismo que se va a extraer de la tabla CredSolicitud_InformacionPrestamo
-                                */
-                                divCalculoPrestamoSolicitado.Visible = false;
-                            }
-
+                            lblTipoDePlazo_Solicitado.InnerText = sqlResultado["fcTipoDePlazo"].ToString();
+                            txtMontoTotalAFinanciar_Calculo.Text = (decimal.Parse(sqlResultado["fnValorAPrestar"].ToString())).ToString("N");
+                            txtCuotaDelPrestamo_Calculo.Text = sqlResultado["fnCuotaTotal"].ToString();
+                            txtTasaAnualAplicada_Calculo.Text = sqlResultado["fnTasaAnualAplicada"].ToString();
+                            txtTasaMensualAplicada_Calculo.Text = sqlResultado["fnTasaMensualAplicada"].ToString();
                             var montoFinalAFinanciar = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString());
+
+                            TotaCuota = Convert.ToDecimal(txtCuotaDelPrestamo_Calculo.Text);
 
                             /*** Prestamo FINAL APROBADO ***/
                             if (montoFinalAFinanciar != 0 || IdProducto == "202" || IdProducto == "203" || IdProducto == "204")
@@ -258,7 +272,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                                 var plazoFinal = 0;
                                 var calculoPrestamoFinal = new SolicitudesCredito_Detalles_Calculo_ViewModel();
 
-                                if (IdProducto == "101" || IdProducto == "301" || IdProducto == "201" || IdProducto == "302")
+                                if (IdProducto == "100")
                                 {
                                     valorTotalFinalAFinanciar = montoFinalAFinanciar;
                                     valorPrimaFinal = decimal.Parse(sqlResultado["fnValorPrima"].ToString());
@@ -466,7 +480,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                             txtRTNCliente.Text = sqlResultado["fcRTN"].ToString();
                             txtTelefonoCliente.Text = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
                             txtNacionalidad.Text = sqlResultado["fcDescripcionNacionalidad"].ToString();
-                            txtFechaNacimientoCliente.Text = fechaNacimientoCliente.ToString("MM/dd/yyyy");
+                            txtFechaNacimientoCliente.Text = fechaNacimientoCliente.ToString("dd/MMM/yyyy");
                             txtEdadCliente.Text = edad.ToString() + " " + "años";
                             txtCorreoCliente.Text = sqlResultado["fcCorreoElectronicoCliente"].ToString();
                             txtProfesionCliente.Text = sqlResultado["fcProfesionOficioCliente"].ToString();
@@ -614,8 +628,9 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                     {
                         if (!sqlResultado.HasRows)
                         {
+                            string lcScript = "window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp) + "','_self')";
                             Response.Write("<script>");
-                            Response.Write("window.open('SolicitudesCredito_ListadoGarantias.aspx?" + DSC.Encriptar("usr=" + pcIDUsuario + "&SID=" + pcIDSesion + "&IDApp=" + pcIDApp) + "','_self')");
+                            Response.Write(lcScript);
                             Response.Write("</script>");
                         }
 
@@ -688,6 +703,76 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         }
         catch (Exception ex)
         {
+            ex.Message.ToString();
+        }
+    }
+
+public void CargarInformacionClienteEquifax()
+    {
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", 107);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@pcIdentidad", pcID);
+                    sqlComando.CommandTimeout = 120;
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            lblDocumentoCliente.Text = sqlResultado["fcNombreDoctosIdPersonal"].ToString();
+                            txtNIdFiscal.Text = sqlResultado["fcNoIdFiscal"].ToString();
+                            txtDocumentoFiscal.Text = sqlResultado["fcDescripcionDoctosFiscal"].ToString();
+                        }
+                    }
+
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+            ex.Message.ToString();
+        }
+    }
+
+    public void CargarInformacionPlanPago()
+    {
+        try
+        {
+            decimal Collateral = 0;
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (var sqlComando = new SqlCommand("sp_Prestamo_PlandePago_ConsultarPorSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    //sqlComando.Parameters.AddWithValue("@piIDApp", 107);
+                    //sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.CommandTimeout = 120;
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        sqlResultado.NextResult();
+                        while (sqlResultado.Read())
+                        {
+                            txtCollateral.Text =  "$" + Convert.ToDecimal(sqlResultado["fnSeguro1"].ToString()).ToString("n");
+                            Collateral = Convert.ToDecimal(sqlResultado["fnSeguro1"].ToString()); 
+                        }
+                    }
+                    var TotalCuotaC = Collateral + TotaCuota;
+                    txtCuotaAuto.Text = TotalCuotaC.ToString();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
             ex.Message.ToString();
         }
     }
@@ -856,7 +941,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         try
         {
             /* Si la información */
-            if (int.Parse(pcIDSolicitud) < 802 && pcIDSolicitud != "773")
+            if (int.Parse(pcIDSolicitud) < 802 && pcIDSolicitud != "773" && pcIDSolicitud != "323")
             {
                 using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_CalculoPrestamo", sqlConexion))
                 {
@@ -955,12 +1040,23 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
         Uri lURLDesencriptado = null;
         try
         {
-            var liParamStart = URL.IndexOf("?");
-            var lcParametros = liParamStart > 0 ? URL.Substring(liParamStart, URL.Length - liParamStart) : string.Empty;
+            var liParamStart = 0;
+            var lcParametros = string.Empty;
+            var pcEncriptado = string.Empty;
+            liParamStart = URL.IndexOf("?");
+
+            if (liParamStart > 0)
+            {
+                lcParametros = URL.Substring(liParamStart, URL.Length - liParamStart);
+            }
+            else
+            {
+                lcParametros = string.Empty;
+            }
 
             if (lcParametros != string.Empty)
             {
-                var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
+                pcEncriptado = URL.Substring((liParamStart + 1), URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }

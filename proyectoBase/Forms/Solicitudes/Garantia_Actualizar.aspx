@@ -107,10 +107,9 @@
                                             <asp:TextBox ID="txtMatricula" placeholder="EJ. AAA 9999" CssClass="form-control form-control-sm mascara-matricula" type="text" required="required" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- Información del préstamo máximo -->
-                                <div class="col-lg-6 border-left border-gray">
-                                    <h6 class="mb-1">Características mecánicas</h6>
+
+                                     <h6 class="mb-1 border-top border-gray pt-2">Características mecánicas</h6>
+                                   
                                     <div class="form-group row mb-4">
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Cilindraje</label>
@@ -135,7 +134,51 @@
                                         </div>
                                     </div>
 
-                                    <h6 class="mb-1">Valores de la garantía</h6>
+                             <div class="row">
+                                <div class="col-12">
+                                    <h6 class="mb-0 border-top border-gray pt-2"></h6>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    <label class="col-form-label">Serie 1</label>
+                                    <asp:TextBox ID="txtSerieUno" CssClass="form-control form-control-sm" ReadOnly="true" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    <label class="col-form-label">Serie Motor</label>
+                                    <asp:TextBox ID="txtSerieMotor" placeholder="EJ. 0XX-0000000" CssClass="form-control form-control-sm" required="required" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    <label class="col-form-label">Serie Chasis</label>
+                                    <asp:TextBox ID="txtSerieChasis" placeholder="EJ. 0XXXX00X0XX000000" CssClass="form-control form-control-sm" required="required" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    <label class="col-form-label">Otra serie (opcional)</label>
+                                    <asp:TextBox ID="txtSerieDos" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
+                                </div>
+                               <div class="col-sm-6 col-md-6 col-lg-4">
+                                    <label class="col-form-label">GPS</label>
+                                    <asp:TextBox ID="txtGPS" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    <label class="col-form-label">No. Préstamo (opcional)</label>
+                                    <asp:TextBox ID="txtNumeroPrestamo" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
+                                </div>
+                                <!-- Préstamos disponibles -->
+                                <div class="col-12">
+                                    <label class="col-form-label">Comentario</label>
+                                    <textarea id="txtComentario" runat="server" class="form-control form-control-sm" data-parsley-maxlength="300" rows="2"></textarea>
+                                </div>
+                            </div>
+
+                                  
+                                </div>
+                                <!-- Información del préstamo máximo -->
+                               <%-- <div class="col-lg-6 border-left border-gray">
+                                   
+                                </div>--%>
+
+                                <div class="col-lg-6">
+
+                                     <h6 class="mb-1">Valores de la garantía</h6>
                                     <div class="form-group row mb-0">
                                         <div class="col-sm-3">
                                             <label class="col-form-label">Precio mercado</label>
@@ -154,14 +197,13 @@
                                             <asp:TextBox ID="txtGastosDeCierre" CssClass="form-control form-control-sm mascara-cantidad" type="text" Text="0" required="required" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="col-lg-6">
+
                                     <h6 class="mb-1 border-top border-gray pt-2">Propietario de la garantía</h6>
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Identidad</label>
-                                            <asp:TextBox ID="txtIdentidadPropietario" CssClass="form-control form-control-sm mascara-identidad" type="text" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtIdentidadPropietario" CssClass="form-control form-control-sm " type="text" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Nombre completo</label>
@@ -178,14 +220,13 @@
                                             <div id="error-ddlNacionalidadPropietario"></div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="col-lg-6 border-left border-gray">
-                                    <h6 class="mb-1 border-top border-gray pt-2">Vendedor de la garantía</h6>
+
+                                     <h6 class="mb-1 border-top border-gray pt-2">Vendedor de la garantía</h6>
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Identidad</label>
-                                            <asp:TextBox ID="txtIdentidadVendedor" CssClass="form-control form-control-sm mascara-identidad" type="text" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtIdentidadVendedor" CssClass="form-control form-control-sm " type="text" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="col-form-label">Nombre completo</label>
@@ -202,42 +243,46 @@
                                             <div id="error-ddlNacionalidadVendedor"></div>
                                         </div>
                                     </div>
+
+                                    <div style="display:none;">
+                                          <h6 class="mb-1 border-top border-gray pt-2">Datos Para Desembolso</h6>
+                                        <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">RTN</label>
+                                            <asp:TextBox ID="txtRTNVendedor" CssClass="form-control form-control-sm mascara-rtn" type="text" runat="server"></asp:TextBox>
+                                        </div>
+                                      
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Forma de Pago</label>
+                                            <asp:DropDownList ID="ddlFormaDePagoDesembolso" runat="server" CssClass="form-control form-control-sm col-form-label" data-parsley-errors-container="#error-ddlFormaDePagoDesembolso"></asp:DropDownList>
+                                            <div id="error-ddlFormaDePagoDesembolso"></div>
+                                        </div>
+                                    <%--     <div class="col-sm-6">
+                                            <label class="col-form-label">Banco a Depositar</label>
+                                            <asp:TextBox ID="txtBancoDeposito" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
+                                        </div>--%>
+                                         <div class="col-sm-6">
+                                            <label class="col-form-label">Banco a Depositar</label>
+                                            <asp:DropDownList ID="ddlBancoDesembolso" runat="server" CssClass="form-control form-control-sm col-form-label" data-parsley-errors-container="#error-ddlBancoDesembolso"></asp:DropDownList>
+                                            <div id="error-ddlBancoDesembolso"></div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">Tipo Cuenta Bancaria</label>
+                                            <asp:DropDownList ID="ddlTipoCuentaBancaria" runat="server" CssClass="form-control form-control-sm col-form-label" data-parsley-errors-container="#error-ddlTipoCuentaBancaria"></asp:DropDownList>
+                                            <div id="error-ddlTipoCuentaBancaria"></div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">No. Cuenta Bancaria</label>
+                                            <asp:TextBox ID="txtCuentaBancariaDeposito" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                  
+
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <h6 class="mb-0 border-top border-gray pt-2"></h6>
-                                </div>
-                                <div class="col-sm-4 col-md-4 col-lg-2">
-                                    <label class="col-form-label">Serie 1</label>
-                                    <asp:TextBox ID="txtSerieUno" CssClass="form-control form-control-sm" ReadOnly="true" type="text" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-sm-4 col-md-4 col-lg-2">
-                                    <label class="col-form-label">Serie Motor</label>
-                                    <asp:TextBox ID="txtSerieMotor" placeholder="EJ. 0XX-0000000" CssClass="form-control form-control-sm" required="required" type="text" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-sm-4 col-md-4 col-lg-2">
-                                    <label class="col-form-label">Serie Chasis</label>
-                                    <asp:TextBox ID="txtSerieChasis" placeholder="EJ. 0XXXX00X0XX000000" CssClass="form-control form-control-sm" required="required" type="text" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-sm-4 col-md-4 col-lg-2">
-                                    <label class="col-form-label">Otra serie (opcional)</label>
-                                    <asp:TextBox ID="txtSerieDos" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-sm-4 col-md-4 col-lg-2">
-                                    <label class="col-form-label">GPS</label>
-                                    <asp:TextBox ID="txtGPS" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-sm-4 col-md-4 col-lg-2">
-                                    <label class="col-form-label">No. Préstamo (opcional)</label>
-                                    <asp:TextBox ID="txtNumeroPrestamo" CssClass="form-control form-control-sm" type="text" runat="server"></asp:TextBox>
-                                </div>
-                                <!-- Préstamos disponibles -->
-                                <div class="col-12">
-                                    <label class="col-form-label">Comentario</label>
-                                    <textarea id="txtComentario" runat="server" class="form-control form-control-sm" data-parsley-maxlength="300" rows="2"></textarea>
-                                </div>
-                            </div>
+                         
                         </div>
 
                         <!-- Documentación de la garantía -->

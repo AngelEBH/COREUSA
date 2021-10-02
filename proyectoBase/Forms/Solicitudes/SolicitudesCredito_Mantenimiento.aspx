@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <title>Mantenimiento de solicitud</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css" rel="stylesheet" />
     <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
@@ -147,6 +147,9 @@
                                     <button type="button" id="btnReiniciarResolucion" runat="server" class="FormatoBotonesIconoCuadrado40 disabled" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/refresh_40px.png');">
                                         Cambiar Resolución
                                     </button>
+                                    <button type="button" id="btnCambiarTasa" runat="server" class="FormatoBotonesIconoCuadrado40" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/icons8-percentage-40.png');">
+                                        Cambiar Tasa
+                                    </button>
                                     <button type="button" id="btnCambiarFondos" runat="server" class="FormatoBotonesIconoCuadrado40" aria-disabled="true" style="position: relative; margin-top: 5px; margin-left: 5px; background-image: url('/Imagenes/money_bag_40px.png');">
                                         Cambiar Fondos
                                     </button>
@@ -206,6 +209,50 @@
                 <!-- Mensaje de advertencias y errores -->
                 <div class="form-group row mb-0" runat="server" id="PanelMensajeErrores">
                     <asp:Label CssClass="col-sm-2 col-form-label text-danger" ID="lblMensaje" runat="server"></asp:Label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasa del préstamo -->
+        <div id="modalCambiarTasa" class="modal fade" role="dialog" aria-labelledby="modalCambiarTasaLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header pb-2">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <h6 class="m-0" id="modalCambiarTasaLabel">Cambiar Tasa</h6>
+                            </div>
+                            <div class="col-12 text-muted">
+                                Tasa actual:
+                                <span class="text-muted" id="lblTasaActual"></span>
+                            </div>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row mb-0">
+                            <div class="col-12">
+                                <label class="col-form-label font-weight-bold">Nueva tasa</label>
+                            </div>
+                            <div class="col-12">
+                                <asp:TextBox ID="txtNuevaTasa" runat="server" CssClass="form-control form-control-sm" required="required"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label">Observaciones</label>
+                                <textarea id="txtObservacionesCambiarTasa" runat="server" class="form-control form-control-sm" required="required" data-parsley-maxlength="500" data-parsley-minlength="15" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnCambiarTasaConfirmar" type="button" class="btn btn-danger">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary">
+                            Cancelar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -443,7 +490,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="table-responsive">
-                            <table id="tblCondiciones" class="table table-sm table-bordered table-hover cursor-pointer w-100">
+                            <table id="tblCondiciones" class="table table-sm table-bordered table-hover cursor-pointer" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th>Tipo Condición</th>

@@ -1,7 +1,6 @@
 ﻿using proyectoBase.Models.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web;
@@ -11,81 +10,79 @@ namespace proyectoBase.Forms.Aval
 {
     public partial class Aval_Detalles : System.Web.UI.Page
     {
+        private DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        private string lcURL = "";
+        private int liParamStart = 0;
+        private string lcParametros = "";
+        private string lcEncriptado = "";
+        private string lcParametroDesencriptado = "";
+        private Uri lURLDesencriptado = null;
         private string pcIDApp = "";
-        //private string pcIDSesion = "";
-        //private string pcIDUsuario = "";
-        public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                var lcURL = Request.Url.ToString();
-                var liParamStart = lcURL.IndexOf("?");
-                string lcParametros;
-
+                lcURL = Request.Url.ToString();
+                liParamStart = lcURL.IndexOf("?");
                 if (liParamStart > 0)
-                {
                     lcParametros = lcURL.Substring(liParamStart, lcURL.Length - liParamStart);
-                }
                 else
-                {
-                    lcParametros = string.Empty;
-                }
+                    lcParametros = String.Empty;
 
-                if (lcParametros != string.Empty)
+                if (lcParametros != String.Empty)
                 {
-                    var lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
-                    var lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
-                    var lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                    lcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
+                    lcParametroDesencriptado = DSC.Desencriptar(lcEncriptado);
+                    lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+                    int IDAval = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDAval"));
+                    int IDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+                    string IDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+                    string NombreCliente = String.Empty;
+                    string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                    
+                    //informacion del cliente y la solicitud la que pertenece el usuario
+                    SqlConnection sqlConexion = new SqlConnection(sqlConnectionString);
+                    SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion);
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", IDUsuario);
+                    sqlConexion.Open();
+                    SqlDataReader reader = sqlComando.ExecuteReader();
 
-                    var idAval = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDAval");
-                    var idUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                    var idSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");                    
-                    var nombreCliente = string.Empty;
-                    var idCliente = 0;
-
-                    using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+                    int IDCliente = 0;
+                    while (reader.Read())
                     {
-                        sqlConexion.Open();
-
-                        using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion))
-                        {
-                            sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", idSolicitud);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
-                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                            sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);
-
-                            using (var sqlResultado = sqlComando.ExecuteReader())
-                            {
-                                while (sqlResultado.Read())
-                                {
-                                    idCliente = (int)sqlResultado["fiIDCliente"];
-                                }
-                            }
-                        }
-
-                        using (var sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Listar", sqlConexion))
-                        {
-                            sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDCliente", idCliente);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
-                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                            sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);
-
-                            using (var sqlResultado = sqlComando.ExecuteReader())
-                            {
-                                while (sqlResultado.Read())
-                                {
-                                    nombreCliente = (string)sqlResultado["fcPrimerNombreCliente"] + " " + (string)sqlResultado["fcSegundoNombreCliente"] + " " + (string)sqlResultado["fcPrimerApellidoCliente"] + " " + (string)sqlResultado["fcSegundoApellidoCliente"];
-                                }
-                            }
-                        }
+                        IDCliente = (int)reader["fiIDCliente"];
                     }
-                    lblIDSolicitud.Text = idSolicitud;
-                    lblNombreCliente.Text = nombreCliente;
+                    if (reader != null)
+                        reader.Close();
+                    sqlComando.Dispose();
+
+                    sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Listar", sqlConexion);
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDCliente", IDCliente);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", IDUsuario);
+                    reader = sqlComando.ExecuteReader();
+                    
+                    while (reader.Read())
+                        NombreCliente = (string)reader["fcPrimerNombreCliente"] + " " + (string)reader["fcSegundoNombreCliente"] + " " + (string)reader["fcPrimerApellidoCliente"] + " " + (string)reader["fcSegundoApellidoCliente"];
+
+                    if (sqlConexion != null)
+                    {
+                        if (sqlConexion.State == ConnectionState.Open)
+                            sqlConexion.Close();
+                    }
+                    if (reader != null)
+                        reader.Close();
+
+                    lblIDSolicitud.Text = IDSolicitud;
+                    lblNombreCliente.Text = NombreCliente;
                 }
             }
         }
@@ -127,7 +124,7 @@ namespace proyectoBase.Forms.Aval
                         {
                             while (reader.Read())
                             {
-                                Aval.AvalMaster = new AvalMaestroViewModel()
+                                Aval.AvalMaster = new AvalMasterViewModel()
                                 {
                                     fiIDAval = (int)reader["fiIDAval"],
                                     fiIDSolicitud = (int)reader["fiIDSolicitud"],
@@ -240,7 +237,7 @@ namespace proyectoBase.Forms.Aval
                                 int fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"];
                                 DateTime fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"];
 
-                                Aval.AvalInformacionDomiciliar = new AvalInformacionDomicilioViewModel()
+                                Aval.AvalInformacionDomiciliar = new AvalInformacionDomiciliarViewModel()
                                 {
                                     fiIDInformacionDomicilioAval = (int)reader["fiIDInformacionDomicilioAval"],
                                     fiIDAval = (int)reader["fiIDAval"],

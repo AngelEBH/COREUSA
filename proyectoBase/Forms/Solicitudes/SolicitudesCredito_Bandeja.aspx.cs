@@ -100,7 +100,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                                 CuotaSeguro = (decimal)sqlResultado["fnCuotaMensualSeguro"],
                                 CuotaGPS = (decimal)sqlResultado["fnCuotaMensualGPS"],
                                 IdExpediente = (int)sqlResultado["fiIDExpediente"],
-                                PermitirAbrirAnalisis = pcIDUsuario.Trim() == "142" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "146",
+                                PermitirAbrirAnalisis = pcIDUsuario.Trim() == "27" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "28",
                             });
                         }
                     } // using sqlResultado
@@ -224,7 +224,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                                 NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
                                 Extension = sqlResultado["fcTipoArchivo"].ToString(),
                                 RutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),
-                                URLArchivo = sqlResultado["fcURL"].ToString() + ((int)sqlResultado["fiTipoDocumento"] == 8 || (int)sqlResultado["fiTipoDocumento"] == 9 ? ".jpg" : ""),
+                                URLArchivo = sqlResultado["fcURL"].ToString() + ((int)sqlResultado["fiTipoDocumento"] == 8 || (int)sqlResultado["fiTipoDocumento"] == 9 ? ".png" : ""),
                                 IdTipoDocumento = (int)sqlResultado["fiTipoDocumento"],
                                 DescripcionTipoDocumento = sqlResultado["fcDescripcionTipoDocumento"].ToString(),
                                 ArchivoActivo = (byte)sqlResultado["fiArchivoActivo"]

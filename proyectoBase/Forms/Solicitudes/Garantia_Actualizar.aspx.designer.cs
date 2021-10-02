@@ -49,15 +49,6 @@ public partial class Garantia_Actualizar
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl Loader;
 
     /// <summary>
-    /// Control spinnerCargando.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl spinnerCargando;
-
-    /// <summary>
     /// Control txtBuscarVIN.
     /// </summary>
     /// <remarks>
@@ -184,6 +175,69 @@ public partial class Garantia_Actualizar
     protected global::System.Web.UI.WebControls.TextBox txtTipoDeCombustible;
 
     /// <summary>
+    /// Control txtSerieUno.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtSerieUno;
+
+    /// <summary>
+    /// Control txtSerieMotor.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtSerieMotor;
+
+    /// <summary>
+    /// Control txtSerieChasis.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtSerieChasis;
+
+    /// <summary>
+    /// Control txtSerieDos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtSerieDos;
+
+    /// <summary>
+    /// Control txtGPS.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtGPS;
+
+    /// <summary>
+    /// Control txtNumeroPrestamo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtNumeroPrestamo;
+
+    /// <summary>
+    /// Control txtComentario.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtComentario;
+
+    /// <summary>
     /// Control txtPrecioMercado.
     /// </summary>
     /// <remarks>
@@ -292,65 +346,47 @@ public partial class Garantia_Actualizar
     protected global::System.Web.UI.WebControls.DropDownList ddlNacionalidadVendedor;
 
     /// <summary>
-    /// Control txtSerieUno.
+    /// Control txtRTNVendedor.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtSerieUno;
+    protected global::System.Web.UI.WebControls.TextBox txtRTNVendedor;
 
     /// <summary>
-    /// Control txtSerieMotor.
+    /// Control ddlFormaDePagoDesembolso.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtSerieMotor;
+    protected global::System.Web.UI.WebControls.DropDownList ddlFormaDePagoDesembolso;
 
     /// <summary>
-    /// Control txtSerieChasis.
+    /// Control ddlBancoDesembolso.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtSerieChasis;
+    protected global::System.Web.UI.WebControls.DropDownList ddlBancoDesembolso;
 
     /// <summary>
-    /// Control txtSerieDos.
+    /// Control ddlTipoCuentaBancaria.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtSerieDos;
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoCuentaBancaria;
 
     /// <summary>
-    /// Control txtGPS.
+    /// Control txtCuentaBancariaDeposito.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtGPS;
-
-    /// <summary>
-    /// Control txtNumeroPrestamo.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtNumeroPrestamo;
-
-    /// <summary>
-    /// Control txtComentario.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlTextArea txtComentario;
+    protected global::System.Web.UI.WebControls.TextBox txtCuentaBancariaDeposito;
 }

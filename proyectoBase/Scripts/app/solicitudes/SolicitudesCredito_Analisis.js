@@ -1,1172 +1,902 @@
-﻿// #region variables globales
-
-/* ====== Esta variable almacena el ID del estado actual de la solicitud ============== */
-/* ====== Se actualiza cada vez que se cargan los detalles de la solicitud ============ */
-/* ====== Se utiliza para realizar validaciones al cargar detalles de la solicitud ==== */
-var ID_ESTADO_SOLICITUD = '0';
-
-/* ====== Esta variable (objeto) almacena el estado actual de la solicitud ============ */
-/* ====== Se actualiza cada vez que se cargan los detalles de la solicitud ============ */
-/* ====== Se utiliza para realizar validaciones durante todo el analisis ============== */
-var ESTADO_SOLICITUD = [];
-
-/* ====== Esta variable se utiliza para validar si el valor de una fecha es nula ============== */
-var PROCESO_PENDIENTE = '/Date(-2208967200000)/';
-
-/* ====== Esta variable almacena durante el analisis el monto final por el que se va a autorizar la solicitud ============== */
-/* ====== Esta variable almacena durante el analisis el plazo final por el que se va a autorizar la solicitud ============== */
-var gMontoFinal = 0;
-var gPlazoFinal = 0;
-
-
+﻿gMontoFinal = 0;
+gPlazoFinal = 0;
+var objSolicitud = [];
 var resolucionHabilitada = false;
-var resolucion = false;
+cargarInformacionSolicitud();
 
-var datatableLanguage = {
-    "sProcessing": "Cargando información...",
-    "sLengthMenu": "Mostrar _MENU_ registros",
-    "sZeroRecords": "No se encontraron resultados",
-    "sEmptyTable": "Ningún dato disponible en esta tabla",
-    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-    "sInfoPostFix": "",
-    "sSearch": "Buscar:",
-    "sUrl": "",
-    "sInfoThousands": ",",
-    "sLoadingRecords": "Cargando información...",
-    "oPaginate": {
-        "sFirst": "Primero",
-        "sLast": "Último",
-        "sNext": "Siguiente",
-        "sPrevious": "Anterior"
-    },
-    "oAria": {
-        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-    },
-    "decimal": ".",
-    "thousands": ","
-}
-
-var select2language = {
-    errorLoading: function () { return "No se pudieron cargar los resultados" },
-    inputTooLong: function (e) { var n = e.input.length - e.maximum, r = "Por favor, elimine " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-    inputTooShort: function (e) { var n = e.minimum - e.input.length, r = "Por favor, introduzca " + n + " car"; return r += 1 == n ? "ácter" : "acteres" },
-    loadingMore: function () { return "Cargando más resultados…" },
-    maximumSelected: function (e) { var n = "Sólo puede seleccionar " + e.maximum + " elemento"; return 1 != e.maximum && (n += "s"), n },
-    noResults: function () { return "No se encontraron resultados" },
-    searching: function () { return "Buscando…" },
-    removeAllItems: function () { return "Eliminar todos los elementos" }
-}
-
-// #endregion
-
-// #region Document Ready * Listo *
-
-$(document).ready(function () {
-
-    CargarDetallesDelProcesamientoDeLaSolicitud();
-
-    InicializarDataTableReferenciasPersonales();
-});
-
-// #endregion
-
-// #region Cargar detalles de la solicitud * Listo * 
-
-function AgregarFilaATablaDeEstatusDeLaSolicitud(descripcionProceso, procesoInicio, procesoFin, idTimerDelProceso, usuarioEncargado) {
-
-    $('#tblDetalleEstado tbody').append('<tr>' +
-        '<td class="text-center">' + descripcionProceso + '</td>' +
-        '<td class="text-center">' + procesoInicio + '</td>' +
-        '<td class="text-center">' + procesoFin + '</td>' +
-        '<td class="text-center"><span id="' + idTimerDelProceso + '"></span></td>' +
-        '<td class="text-center">' + usuarioEncargado + '</td>' +
-        '</tr>');
-}
-
-/* ====== Carga el estado actual del procesamiento de la solicitud =============================== */
-/* ====== Muestra el procesamiento de la solicitud en el modal "modalEstadoSolicitud" ============ */
-/* ====== Además actualiza variables globales y realiza otras validaciones ======================= */
-function CargarDetallesDelProcesamientoDeLaSolicitud(mostrarModalDeDetalles) {
+/* Cargar la informacion de la solicitud que se va a analizar */
+function cargarInformacionSolicitud() {
 
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/CargarEstadoSolicitud",
-        contentType: 'application/json; charset=utf-8',
+        url: "SolicitudesCredito_Analisis.aspx/CargarInformacionSolicitud",
         data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudo cargar la información de la solicitud de crédito, contacte al administrador');
-        },
-        beforeSend: function () {
-            MostrarLoader();
+            MensajeError('No se pudo carga la información, contacte al administrador');
         },
         success: function (data) {
 
-            if (data.d != null) {
+           // debugger;
 
-                var informacionSolicitud = data.d;
-                var tablaEstatusSolicitud = $('#tblDetalleEstado tbody').empty();
+            /* Variable de informacion del cliente */
+            var rowDataCliente = data.d.cliente;
 
-                ID_ESTADO_SOLICITUD = informacionSolicitud.IdEstadoSolicitud;
-                ESTADO_SOLICITUD = informacionSolicitud;
+            /* Variable de informacion de la solicitud */
+            var rowDataSolicitud = data.d.solicitud;
 
-                /* En ingreso */
-                var enIngresoInicio = ObtenerFechaFormateada(informacionSolicitud.EnIngresoInicio);
-                var enIngresoFin = ObtenerFechaFormateada(informacionSolicitud.EnIngresoFin);
-                var enIngresoUsuario = informacionSolicitud.UsuarioEnIngreso;
+            /* Variable de documentacion de la solicitud */
+            var rowDataDocumentos = data.d.documentos;
+            objSolicitud = data.d.solicitud;
 
-                if (ValidarFecha(informacionSolicitud.EnIngresoInicio) == null) {
-                    enIngresoUsuario = '-';
-                }
+            /* Variable para determinar si se puede dar resolucion a una solicitud dependiendo del estado de su procesamiento */
+            var habilitarResolucion = true;
+            $("#btnHistorialExterno,#btnHistorialInterno").prop('disabled', false);
+            var ProcesoPendiente = '/Date(-2208967200000)/';
+            var IconoExito = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
+            var IconoPendiente = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
+            var IconoRojo = '<i class="mdi mdi mdi-close-circle-outline mdi-18px text-danger"></i>';
 
-                AgregarFilaATablaDeEstatusDeLaSolicitud('Ingreso', enIngresoInicio, enIngresoFin, 'lblTiempoTranscurrido_EnIngreso', enIngresoUsuario);
+            /* Cargar status de la solicitud */
+            var statusIngreso = '';
+            if (rowDataSolicitud.fdEnIngresoInicio != ProcesoPendiente) {
+                statusIngreso = rowDataSolicitud.fdEnIngresoFin != ProcesoPendiente ? IconoExito : IconoPendiente;
+            }
 
-                InicializarContador(informacionSolicitud.EnIngresoInicio, informacionSolicitud.EnIngresoFin, 'lblTiempoTranscurrido_EnIngreso');
+            /* Estado en tramite de la solicitud */
+            var statusTramite = '';
+            if (rowDataSolicitud.fdEnTramiteInicio != ProcesoPendiente) {
 
-                /* En tramite */
-                var enColaInicio = ObtenerFechaFormateada(informacionSolicitud.EnColaInicio);
-                var enColaFin = ObtenerFechaFormateada(informacionSolicitud.EnColaFin);
-
-                AgregarFilaATablaDeEstatusDeLaSolicitud('Recepción', enColaInicio, enColaFin, 'lblTiempoTranscurrido_EnCola', 'N/A');
-
-                InicializarContador(informacionSolicitud.EnColaInicio, informacionSolicitud.EnColaFin, 'lblTiempoTranscurrido_EnCola');
-
-                /* En análisis */
-                var enAnalisisInicio = ObtenerFechaFormateada(informacionSolicitud.EnAnalisisInicio);
-                var enAnalisisFin = ObtenerFechaFormateada(informacionSolicitud.EnAnalisisFin);
-                var enAnalisisUsuario = informacionSolicitud.UsuarioAnalista;
-
-                if (ValidarFecha(informacionSolicitud.EnAnalisisInicio) == null) {
-                    enAnalisisUsuario = '-';
-                }
-
-                AgregarFilaATablaDeEstatusDeLaSolicitud('Análisis', enAnalisisInicio, enAnalisisFin, 'lblTiempoTranscurrido_EnAnalisis', enAnalisisUsuario);
-
-                InicializarContador(informacionSolicitud.EnAnalisisInicio, informacionSolicitud.EnAnalisisFin, 'lblTiempoTranscurrido_EnAnalisis');
-
-                /* En campo */
-                var enCampoInicio = ObtenerFechaFormateada(informacionSolicitud.EnRutaDeInvestigacionInicio);
-                var enCampoFin = ObtenerFechaFormateada(informacionSolicitud.EnRutaDeInvestigacionFin);
-                var enCampoUsuario = informacionSolicitud.UsuarioGestorAsignado;
-
-                if (ValidarFecha(informacionSolicitud.EnRutaDeInvestigacionInicio) == null) {
-                    enCampoUsuario = '-';
-                }
-
-                AgregarFilaATablaDeEstatusDeLaSolicitud('Campo', enCampoInicio, enCampoFin, 'lblTiempoTranscurrido_EnCampo', enCampoUsuario);
-
-                InicializarContador(informacionSolicitud.EnRutaDeInvestigacionInicio, informacionSolicitud.EnRutaDeInvestigacionFin, 'lblTiempoTranscurrido_EnCampo');
-
-                /* Condicionado */
-                var condicionadoInicio = ObtenerFechaFormateada(informacionSolicitud.CondicionadoInicio);
-                var condicionadoFin = ObtenerFechaFormateada(informacionSolicitud.CondicionadoFin);
-                var condicionadoUsuario = informacionSolicitud.UsuarioCondicionado;
-
-                if (ValidarFecha(informacionSolicitud.CondicionadoInicio) == null) {
-                    condicionadoUsuario = '-';
-                }
-
-                AgregarFilaATablaDeEstatusDeLaSolicitud('Condicionado', condicionadoInicio, condicionadoFin, 'lblTiempoTranscurrido_Condicionado', condicionadoUsuario);
-
-                InicializarContador(informacionSolicitud.CondicionadoInicio, informacionSolicitud.CondicionadoFin, 'lblTiempoTranscurrido_Condicionado');
-
-                /* Reprogramado */
-                var reprogramadoInicio = ObtenerFechaFormateada(informacionSolicitud.ReprogramadoInicio);
-                var reprogramadoFin = ObtenerFechaFormateada(informacionSolicitud.ReprogramadoFin);
-                var reprogramadoUsuario = informacionSolicitud.UsuarioGestorAsignado;
-
-                if (ValidarFecha(informacionSolicitud.ReprogramadoInicio) == null) {
-                    reprogramadoUsuario = '-';
-                }
-
-                AgregarFilaATablaDeEstatusDeLaSolicitud('Reprogramado', reprogramadoInicio, reprogramadoFin, 'lblTiempoTranscurrido_Reprogramado', reprogramadoUsuario);
-
-                InicializarContador(informacionSolicitud.ReprogramadoInicio, informacionSolicitud.ReprogramadoFin, 'lblTiempoTranscurrido_Reprogramado');
-
-                /* Validación */
-                var validacionInicio = ObtenerFechaFormateada(informacionSolicitud.PasoFinalInicio);
-                var validacionFin = ObtenerFechaFormateada(informacionSolicitud.PasoFinalFin);
-                var validacionUsuario = informacionSolicitud.UsuarioPasoFinal;
-
-                if (ValidarFecha(informacionSolicitud.PasoFinalInicio) == null) {
-                    validacionUsuario = '-';
-                }
-
-                AgregarFilaATablaDeEstatusDeLaSolicitud('Validación', validacionInicio, validacionFin, 'lblTiempoTranscurrido_Validacion', (validacionUsuario == '' ? '-' : validacionUsuario));
-
-                InicializarContador(informacionSolicitud.PasoFinalInicio, informacionSolicitud.PasoFinalFin, 'lblTiempoTranscurrido_Validacion');
-
-                /* Tiempo total transcurrido */
-                tablaEstatusSolicitud.append('<tr>' +
-                    '<td colspan="5" class="text-center">Tiempo total transcurrido: <span id="lblTiempoTotal"></span></td>' +
-                    '</tr >');
-
-                InicializarContador(informacionSolicitud.EnColaInicio, informacionSolicitud.TiempoTomaDecisionFinal, 'lblTiempoTotal');
-
-                /* Verificar estado de la solicitud */
-                $("#lblEstadoSolicitud").text(informacionSolicitud.EstadoSolicitud);
-
-                var estadoSolicitudColorClass = informacionSolicitud.IdEstadoSolicitud == "7" ? "success" : (informacionSolicitud.IdEstadoSolicitud == "5" || informacionSolicitud.IdEstadoSolicitud == "4") ? "danger" : "warning";
-
-                $("#lblEstadoSolicitud").removeClass('text-danger').removeClass('text-warning').removeClass('text-success').addClass('text-' + estadoSolicitudColorClass);
-
-                var contadorComentario = 0;
-
-                /* Reprogramado comentario */
-                if (informacionSolicitud.ComentarioReprogramado != '') {
-                    $("#lblUsuario_ComentarioReprogramacion").text(informacionSolicitud.UsuarioGestorAsignado);
-                    $("#lblFecha_ComentarioReprogramacion").text(ObtenerFechaFormateada(informacionSolicitud.ReprogramadoInicio));
-                    $("#lblComentario_Reprogramacion").text(informacionSolicitud.ComentarioReprogramado);
-                    $("#liObservacionesReprogramacion").css('display', '');
-                    contadorComentario++;
+                if (rowDataSolicitud.fdEnTramiteFin != ProcesoPendiente) {
+                    statusTramite = IconoExito;
                 }
                 else {
-                    $("#liObservacionesReprogramacion").css('display', 'none');
+                    statusTramite = IconoPendiente;
+                    habilitarResolucion = false;
                 }
 
-                /* Condicionado comentario */
-                if (informacionSolicitud.ComentarioCondicionado != '') {
-                    $("#lblUsuario_ComentarioOtrosCondicionamientos").text(informacionSolicitud.UsuarioAnalista);
-                    $("#lblFecha_OtrosCondicionamientos").text(ObtenerFechaFormateada(informacionSolicitud.CondicionadoInicio));
-                    $("#lblComentario_OtrosCondicionamientos").text(informacionSolicitud.ComentarioCondicionado);
-                    $("#liObservaciones_OtrosCondicionamientos").css('display', '');
-                    contadorComentario++;
+                if (rowDataSolicitud.fdEnTramiteFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusTramite = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
                 }
-                else {
-                    $("#liObservaciones_OtrosCondicionamientos").css('display', 'none');
-                }
+            }
 
-                /* Informacion personal comentario */
-                if (informacionSolicitud.ComentarioValidacionInformacionPersonal != '') {
-                    $("#lblUsuario_ComentarioInformacionPerosnal").text(informacionSolicitud.UsuarioAnalista);
-                    $("#lblFecha_ComentarioInformacionPersonal").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionInformacionPersonal));
-                    $("#lblComentario_InformacionPersonal").text(informacionSolicitud.ComentarioValidacionInformacionPersonal);
-                    $("#liObservacionesInformacionPersonal").css('display', '');
-                    contadorComentario++;
+            /* Validar si ya se inició y terminó el proceso de analisis de la solicitud */
+            var statusAnalisis = '';
+            if (rowDataSolicitud.fdEnAnalisisInicio != ProcesoPendiente) {
+                if (rowDataSolicitud.fdEnAnalisisFin != ProcesoPendiente) {
+                    statusAnalisis = IconoExito;
                 }
                 else {
-                    $("#liObservacionesInformacionPersonal").css('display', 'none');
+                    statusAnalisis = IconoPendiente;
+                    habilitarResolucion = false;
                 }
 
-                /* Informacion laboral comentario */
-                if (informacionSolicitud.ComentarioValidacionInformacionLaboral != '') {
-                    $("#lblUsuario_ComentarioInformacionLaboral").text(informacionSolicitud.UsuarioAnalista);
-                    $("#lblFecha_ComentarioInformacionLaboral").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionInformacionLaboral));
-                    $("#lblComentario_InformacionLaboral").text(informacionSolicitud.ComentarioValidacionInformacionLaboral);
-                    $("#liObservacionesInformacionLaboral").css('display', '');
-                    contadorComentario++;
+                if (rowDataSolicitud.fdEnAnalisisFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusAnalisis = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
                 }
-                else {
-                    $("#liObservacionesInformacionLaboral").css('display', 'none');
-                }
-
-                /* Referencias personales comentario */
-                if (informacionSolicitud.ComentarioValidacionReferenciasPersonales != '') {
-                    $("#lblUsuario_ComentarioReferenciasPersonales").text(informacionSolicitud.UsuarioAnalista);
-                    $("#lblFecha_ComentarioReferenciasPersonales").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionReferenciasPersonales));
-                    $("#lblComentario_ReferenciasPersonales").text(informacionSolicitud.ComentarioValidacionReferenciasPersonales);
-                    $("#liObservacionesReferenciasPersonales").css('display', '');
-                    contadorComentario++;
-                }
-                else {
-                    $("#liObservacionesReferenciasPersonales").css('display', 'none');
-                }
-
-                /* Documentación comentario */
-                if (informacionSolicitud.ComentarioValidacionDocumentacion != '') {
-                    $("#lblUsuario_ComentarioDocumentacion").text(informacionSolicitud.UsuarioAnalista);
-                    $("#lblFecha_ComentarioDocumentacion").text(ObtenerFechaFormateada(informacionSolicitud.FechaValidacionDocumentacion));
-                    $("#lblComentario_Documentacion").text(informacionSolicitud.ComentarioValidacionDocumentacion);
-                    $("#liObservacionesDocumentacion").css('display', '');
-                    contadorComentario++;
-                }
-                else {
-                    $("#liObservacionesDocumentacion").css('display', 'none');
-                }
-
-                /* Observaciones de crédito */
-                if (informacionSolicitud.ObservacionesDeCreditos != '') {
-                    $("#lblUsuario_ComentarioParaGestoria").text(informacionSolicitud.UsuarioAnalista);
-                    $("#lblFecha_ComentarioParaGestoria").text(ObtenerFechaFormateada(informacionSolicitud.FechaEnvioARuta));
-                    $("#lblComentario_ParaGestoria").text(informacionSolicitud.ObservacionesDeCreditos);
-                    $("#liObservacionesParaGestoria").css('display', '');
-                    contadorComentario++;
-                }
-                else {
-                    $("#liObservacionesParaGestoria").css('display', 'none');
-                }
-
-                /* Observaciones de gestoria */
-                if (informacionSolicitud.ObservacionesDeCampo != '') {
-                    $("#lblUsuario_ComentarioDeGestoria").text(informacionSolicitud.UsuarioGestorAsignado);
-                    $("#lblFecha_ComentarioDeGestoria").text(ObtenerFechaFormateada(informacionSolicitud.EnRutaDeInvestigacionFin));
-                    $("#lblComentario_DeGestoria").text(informacionSolicitud.ObservacionesDeCampo);
-                    $("#liObservacionesDeGestoria").css('display', '');
-                    contadorComentario++;
-                }
-                else {
-                    $("#liObservacionesDeGestoria").css('display', 'none');
-                }
-
-                /* Comentarios de la resolución */
-                if (informacionSolicitud.ComentarioResolucion != '') {
-                    $("#lblUsuario_ComentarioDeLaResolucion").text(informacionSolicitud.UsuarioAnalista);
-                    $("#lblFecha_ComentarioDeLaResolucion").text(ObtenerFechaFormateada(informacionSolicitud.TiempoTomaDecisionFinal));
-                    $("#lblComentario_Resolicion").text(informacionSolicitud.ComentarioResolucion);
-                    $("#liComentariosDeLaResolucion").css('display', '');
-                    contadorComentario++;
-                }
-                else {
-                    $("#liComentariosDeLaResolucion").css('display', 'none');
-                }
-
-                if (contadorComentario > 0) {
-                    $("#divNoHayMasDetalles").css('display', 'none');
-                    $("#divLineaDeTiempo").css('display', '');
-                }
-                else {
-                    $("#divNoHayMasDetalles").css('display', '');
-                    $("#divLineaDeTiempo").css('display', 'none');
-                }
-
-                if (informacionSolicitud.SolicitudActiva == 0) {
-                    $("#divSolicitudInactiva").css('display', '');
-                }
-                else {
-                    $("#divSolicitudInactiva").css('display', 'none');
-                }
-
-                /* Inicializar datatables de condiciones de la solicitud de credito */
-                $('#tblListaCondicionesDeLaSolicitud').DataTable({
-                    "destroy": true,
-                    "pageLength": 10,
-                    "aaSorting": [],
-                    "responsive": true,
-                    "language": datatableLanguage,
-                    data: informacionSolicitud.Condiciones,
-                    "columns": [
-                        { "data": "Condicion" },
-                        { "data": "DescripcionCondicion" },
-                        { "data": "ComentarioAdicional" },
-                        {
-                            "data": "EstadoCondicion",
-                            "render": function (value) {
-                                return value != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>"
-                            }
-                        }
-                    ]
-                });
-
-                /* iconos del procesamiento de la solicitud que está debajo de la información principal de la solicitud */
-                var iconoRojo = "<i class='mdi mdi-close-circle-outline mdi-18px text-danger'></i>";
-                var iconoExito = "<i class='mdi mdi-check-circle-outline mdi-18px text-success'></i>";
-                var iconoPendiente = "<i class='mdi mdi-check-circle-outline mdi-18px text-warning'></i>";
-                var iconoCancelado = "<i class='mdi mdi-check-circle-outline mdi-18px text-secondary'></i>";
-                var estadoIngreso = '', estadoEnCola = '', estadoAnalisis = '', estadoCampo = '', estadoCondicionado = '', estadoReprogramado = '', estadoPasoFinal = '', estadoResolucion = '';
-                var tblEstadoSolicitud = $("#tblEstadoSolicitud tbody");
-
-                /* Estado en ingreso */
-                if (ValidarFecha(informacionSolicitud.EnIngresoInicio) != null) {
-                    estadoIngreso = ValidarFecha(informacionSolicitud.EnIngresoFin) != null ? iconoExito : iconoPendiente;
-                }
-
-                /* Estado en cola o recepción */
-                if (ValidarFecha(informacionSolicitud.EnColaInicio) != null) {
-
-                    estadoEnCola = ValidarFecha(informacionSolicitud.EnColaFin) != null ? iconoExito : iconoPendiente;
-
-                    if (ValidarFecha(informacionSolicitud.EnColaFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
-                        estadoEnCola = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
-                    }
-                }
-
-                /* Estado en analisis */
-                if (ValidarFecha(informacionSolicitud.EnAnalisisInicio) != null) {
-
-                    estadoAnalisis = ValidarFecha(informacionSolicitud.EnAnalisisFin) != null ? iconoExito : iconoPendiente;
-
-                    if (ValidarFecha(informacionSolicitud.EnAnalisisFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
-                        estadoAnalisis = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
-                    }
-                    if (ID_ESTADO_SOLICITUD == "4") {
-                        estadoAnalisis = iconoRojo;
-                    }
-                }
-
-                /* Estado en campo */
-                if (ValidarFecha(informacionSolicitud.FechaEnvioARuta) != null) {
-
-                    estadoCampo = ValidarFecha(informacionSolicitud.EnRutaDeInvestigacionFin) != null ? iconoExito : iconoPendiente;
-
-                    if (ValidarFecha(informacionSolicitud.EnRutaDeInvestigacionFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
-                        estadoCampo = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
-                    }
-                    if (ID_ESTADO_SOLICITUD == "5") {
-                        estadoCampo = iconoRojo;
-                    }
-                }
-
-                /* Estado condicionada */
-                if (ValidarFecha(informacionSolicitud.CondicionadoInicio) != null) {
-
-                    estadoCondicionado = ValidarFecha(informacionSolicitud.CondicionadoFin) != null ? iconoExito : iconoPendiente;
-
-                    if (ValidarFecha(informacionSolicitud.CondicionadoFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
-                        estadoCondicionado = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
-                    }
-                }
-
-                /* Estado Reprogramado */
-                if (ValidarFecha(informacionSolicitud.ReprogramadoInicio) != null) {
-
-                    estadoReprogramado = ValidarFecha(informacionSolicitud.ReprogramadoFin) != null ? iconoExito : iconoPendiente;
-
-                    if (ValidarFecha(informacionSolicitud.ReprogramadoFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
-                        estadoReprogramado = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
-                    }
-                }
-
-                /* Estado validacion final */
-                if (ValidarFecha(informacionSolicitud.PasoFinalInicio) != null) {
-
-                    estadoPasoFinal = ValidarFecha(informacionSolicitud.PasoFinalFin) != null ? iconoExito : iconoPendiente;
-
-                    if (ValidarFecha(informacionSolicitud.PasoFinalFin) == null && (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7")) {
-                        estadoPasoFinal = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoCancelado;
-                    }
-                }
-
-                if (ID_ESTADO_SOLICITUD == "4" || ID_ESTADO_SOLICITUD == "5" || ID_ESTADO_SOLICITUD == "7") {
-                    estadoResolucion = ID_ESTADO_SOLICITUD == "7" ? iconoExito : iconoRojo;
-                }
-                else if (ValidarFecha(informacionSolicitud.PasoFinalInicio) != null) {
-                    estadoResolucion = iconoPendiente;
-                }
-
-                tblEstadoSolicitud.empty().append('<tr><td> ' + estadoIngreso + ' </td><td> ' + estadoEnCola + ' </td><td> ' + estadoAnalisis + ' </td><td> ' + estadoCampo + ' </td><td> ' + estadoCondicionado + ' </td><td> ' + estadoReprogramado + ' </td><td> ' + estadoPasoFinal + ' </td><td> ' + estadoResolucion + ' </td></tr>');
-
-                if (mostrarModalDeDetalles == true) {
-                    $("#modalEstadoSolicitud").modal();
-                }
-
-            } // if data.d != null
+            }
             else {
-                MensajeError('No se pudo cargar la información de la solicitud de crédito, contacte al administrador');
-            }
-        }, // success
-        complete: function () {
-            OcultarLoader()
-        }
-    }); // $.ajax
-}
-
-// #endregion Cargar detalles de la solicitud
-
-// #region Administrar condiciones de la solicitud * Listo *
-
-/* ====== Almacena la cantidad de nuevas condiciones que se estan agregando ================ */
-/* ====== Se utiliza para validar que se agregue por lo menos una condición ================ */
-var contadorNuevasCondiciones = 0;
-
-/* ====== Arreglo que almacena las nuevas condiciones que se van a agregar ================= */
-/* ====== Se actualiza al mismo tiempo que se van agregando las nuevas condiciones al DOM == */
-var listaNuevasCondiciones = [];
-
-/* Abrir modal para condicionar solicitud y ver las condiciones que ha tenido la solicitud */
-$("#btnCondicionarSolicitud").click(function () {
-
-    /* Reiniciar el listado de nuevas condiciones cada vez que se abra esta opción */
-    listaNuevasCondiciones = [];
-    contadorNuevasCondiciones = 0;
-    $("#btnCondicionarSolicitudConfirmar").prop('disabled', true);
-    $("#txtComentarioAdicional").val('');
-
-    $("#tblNuevasCondiciones tbody").empty().append('<tr><td class="text-center" colspan="3">No hay registros disponibles...</td></tr>');
-
-    $.ajax({
-        type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/ObtenerCatalogoCondicionesYSolicitudCondiciones",
-        data: JSON.stringify({ dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-
-            MensajeError('Error al cargar el catalogo de condiciones y/o condiciones de la solicitud.');
-        },
-        success: function (data) {
-
-            let catalogoCondiciones = data.d.CatalogoCondiciones;
-            let ddlCondiciones = $("#ddlCondiciones");
-
-            /* Catalogo de condiciones */
-            ddlCondiciones.empty();
-
-            ddlCondicionesTemplate = '';
-            let grupoDdlCondicion = '';
-
-            for (var i = 0; i < catalogoCondiciones.length; i++) {
-
-                if (grupoDdlCondicion != catalogoCondiciones[i].Condicion) {
-                    ddlCondicionesTemplate += ' <optgroup label="' + catalogoCondiciones[i].Condicion + '">';
-                }
-
-                ddlCondicionesTemplate += '<option value="' + catalogoCondiciones[i].IdCondicion + '">' + catalogoCondiciones[i].DescripcionCondicion + '</option>';
-
-                if (grupoDdlCondicion != catalogoCondiciones[i].Condicion) {
-                    ddlCondicionesTemplate += ' </optgroup>';
-                }
-
-                grupoDdlCondicion = catalogoCondiciones[i].Condicion;
+                habilitarResolucion = false; // Si la solicitud no ha iniciado el analisis, no se puede tomar una resolucion
             }
 
-            ddlCondiciones.append(ddlCondicionesTemplate);
+            /* Validar si ya se envió a campo y si ya se recibió respuesta de gestoria */
+            var statusCampo = '';
+            if (rowDataSolicitud.fdEnvioARutaAnalista != ProcesoPendiente) {
 
-            ddlCondiciones.select2({ language: select2language });
+                if (rowDataSolicitud.fdEnCampoFin != ProcesoPendiente || rowDataSolicitud.fiEstadoDeCampo == 2) {
+                    statusCampo = IconoExito;
+                }
+                else {
+                    statusCampo = IconoPendiente;
+                    habilitarResolucion = false;
+                }
 
-            /* Inicializar datatables de condiciones */
-            $('#tblListaSolicitudCondiciones').DataTable({
-                "destroy": true,
-                "pageLength": 10,
-                "aaSorting": [],
-                "responsive": true,
-                "language": datatableLanguage,
-                data: data.d.CondicionesDeLaSolicitud,
-                "columns": [
-                    { "data": "Condicion" },
-                    { "data": "DescripcionCondicion" },
-                    { "data": "ComentarioAdicional" },
-                    {
-                        "data": "EstadoCondicion",
-                        "render": function (value) {
-                            return value != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-warning mb-0'>Pendiente</label>"
-                        }
-                    },
-                    {
-                        "data": "EstadoCondicion", "className": "text-center",
-                        "render": function (data, type, row) {
-                            return row["EstadoCondicion"] != true ? '' : '<button id="btnAnularCondicion" data-id="' + row["IdSolicitudCondicion"] + '" class="btn btn-sm btn-block btn-danger mb-0" type="button" title="Anular condición"><i class="far fa-trash-alt"></i> Anular</button>';
-                        }
-                    },
-                ]
+                if (rowDataSolicitud.fdEnCampoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusCampo = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
+                }
+                if (rowDataSolicitud.fiEstadoSolicitud == 5) {
+                    statusCampo = IconoRojo;
+                    habilitarResolucion = false;
+                }
+            }
+            else {
+                habilitarResolucion = false; // Si la solicitud no se ha enviado a campo, no se puede tomar una resolucion
+            }
+
+            /* Validar si la solicitud está condicionada y sigue sin recibirse actualizacion del agente de ventas */
+            var statusCondicionada = '';
+            if (rowDataSolicitud.fdCondicionadoInicio != ProcesoPendiente) {
+
+                if (rowDataSolicitud.fdCondificionadoFin != ProcesoPendiente) {
+                    statusCondicionada = IconoExito;
+                }
+                else {
+                    statusCondicionada = IconoPendiente;
+                    habilitarResolucion = false;
+                }
+
+                if (rowDataSolicitud.fdCondificionadoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusCondicionada = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
+                }
+            }
+
+            /* Validar si la solicitud está reprogramada */
+            var statusReprogramado = '';
+            if (rowDataSolicitud.fdReprogramadoInicio != ProcesoPendiente) {
+
+                if (rowDataSolicitud.fdReprogramadoFin != ProcesoPendiente) {
+                    statusReprogramado = IconoExito;
+                }
+                else {
+                    statusReprogramado = IconoPendiente;
+                    habilitarResolucion = false;
+                }
+
+                if (rowDataSolicitud.fdReprogramadoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusReprogramado = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
+                }
+            }
+
+            /* Validar proceso de validacion */
+            var statusValidacion = '';
+            if (rowDataSolicitud.PasoFinalInicio != ProcesoPendiente) {
+
+                if (rowDataSolicitud.PasoFinalFin != ProcesoPendiente) {
+                    statusValidacion = IconoExito;
+                } else {
+                    statusValidacion = IconoPendiente;
+                }
+
+                if (rowDataSolicitud.PasoFinalFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                    statusValidacion = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
+                }
+            }
+            else {
+                habilitarResolucion = false;
+            }
+
+            /* Validar si la solicitud ya ha sido aprobada o rechazada */
+            var resolucionFinal = '';
+            if (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7) {
+
+                if (rowDataSolicitud.fiEstadoSolicitud == 7) {
+                    resolucionFinal = IconoExito;
+                    habilitarResolucion = false;
+                }
+                else {
+                    resolucionFinal = IconoRojo;
+                    habilitarResolucion = false; // Si ya se determinó una resolucion para la solicitud, no se puede tomar una resolucion
+                }
+            }
+            else {
+                if (rowDataSolicitud.PasoFinalInicio != ProcesoPendiente) {
+                    resolucionFinal = IconoPendiente;
+                }
+            }
+            $('#tblEstadoSolicitud tbody').append('<tr>' +
+                '<td class="text-center">' + statusIngreso + '</td>' +
+                '<td class="text-center">' + statusTramite + '</td>' +
+                '<td class="text-center">' + statusAnalisis + '</td>' +
+                '<td class="text-center">' + statusCampo + '</td>' +
+                '<td class="text-center">' + statusCondicionada + '</td>' +
+                '<td class="text-center">' + statusReprogramado + '</td>' +
+                '<td class="text-center">' + statusValidacion + '</td>' +
+                '<td class="text-center">' + resolucionFinal + '</td>' +
+                '</tr>');
+
+            /* Verificar si la solicitud está condicionada */
+            if ((rowDataSolicitud.fiEstadoSolicitud == 3)) {
+                $("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('title', 'La solicitud ya está condicionada, esperando actualización de agente de ventas');
+            }
+            else if (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7) {
+                var decision = rowDataSolicitud.fiEstadoSolicitud == 7 ? 'aprobada' : 'rechazada';
+                $("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('disabled', true).prop('title', 'La solicitud ya fue ' + decision);
+            }
+            if (rowDataSolicitud.fbValidacionDocumentcionIdentidades != 0) {
+                $("#btnValidarIdentidades").prop('disabled', true).prop('title', 'Documentación validada').addClass('text-success');
+            }
+            if (rowDataSolicitud.fbValidacionDocumentacionDomiciliar != 0) {
+                $("#btnValidarDomiciliar").prop('disabled', true).prop('title', 'Documentación validada').addClass('text-success');
+            }
+            if (rowDataSolicitud.fbValidacionDocumentacionLaboral != 0) {
+                $("#btnValidarLaboral").prop('disabled', true).prop('title', 'Documentación validada').addClass('text-success');
+            }
+            if (rowDataSolicitud.fbValidacionDocumentacionSolicitudFisica != 0) {
+                $("#btnValidarSoliFisica").prop('disabled', true).prop('title', 'Documentación validada').addClass('text-success');
+            }
+            if (rowDataSolicitud.ftAnalisisTiempoValidarDocumentos != ProcesoPendiente) {
+                $("#btnValidoDocumentacionConfirmar,#comentariosDocumentacion").prop('disabled', true);
+                $("#btnValidoDocumentacionModal").removeClass('btn-warning').addClass('btn-success');
+                $("#btnValidoDocumentacionConfirmar").removeClass('btn-warning').addClass('btn-primary');
+                $("#btnValidoDocumentacionConfirmar").prop('title', 'La documentación ya fue validada');
+                $("#btnValidoDocumentacionModal").text('Ver docs');
+                $("#btnValidarSoliFisica,#btnValidarLaboral,#btnValidarDomiciliar,#btnValidarIdentidades").prop('disabled', true);
+            }
+            if (rowDataSolicitud.ftAnalisisTiempoValidarInformacionPersonal != ProcesoPendiente) {
+                $("#btnValidoInfoPersonalModal, #btnValidoInfoPersonalConfirmar").prop('disabled', true).prop('title', 'La información personal ya fue validada').removeClass('btn-warning').addClass('btn-success');
+            }
+            if (rowDataSolicitud.ftAnalisisTiempoValidarInformacionLaboral != ProcesoPendiente) {
+                $("#btnValidoInfoLaboralModal, #btnValidoInfoLaboralConfirmar").prop('disabled', true).prop('title', 'La información laboral ya fue validada').removeClass('btn-warning').addClass('btn-success');
+            }
+            if (rowDataSolicitud.ftAnalisisTiempoValidacionReferenciasPersonales != ProcesoPendiente) {
+                $("#btnEliminarReferenciaConfirmar, #btnValidoReferenciasModal, #btnValidoReferenciasConfirmar,#btnEliminarReferencia,#btnReferenciaSinComunicacion,#btnComentarioReferenciaConfirmar").prop('disabled', true).prop('title', 'Las referencias personales ya fueron validadas').removeClass('btn-warning').addClass('btn-success');
+            }
+            if (rowDataSolicitud.fiEstadoDeCampo == 1) {
+                $("#btnEnviarCampo, #btnEnviarCampoConfirmar").prop('disabled', true).prop('title', 'La solicitud ya fue enviada a campo').removeClass('btn-warning').addClass('btn-success');
+            }
+            else if (rowDataSolicitud.fiEstadoDeCampo == 2) {
+                $("#btnEnviarCampo, #btnEnviarCampoConfirmar").prop('disabled', true).prop('title', 'El proceso de campo ya fue realizado').removeClass('btn-warning').addClass('btn-success');
+            }
+            else if (rowDataSolicitud.fcTipoEmpresa != '' && rowDataSolicitud.fcTipoPerfil != '' && rowDataSolicitud.fcTipoEmpleado != '' && rowDataSolicitud.fcBuroActual != '' && rowDataSolicitud.fiEstadoDeCampo == 0 && rowDataSolicitud.ftAnalisisTiempoValidarDocumentos != ProcesoPendiente && rowDataSolicitud.ftAnalisisTiempoValidarInformacionPersonal != ProcesoPendiente && rowDataSolicitud.ftAnalisisTiempoValidarInformacionLaboral != ProcesoPendiente) {
+                $("#btnEnviarCampo, #btnEnviarCampoConfirmar").prop('disabled', false);
+            }
+            /* Informacion principal de la solicitud */
+            $('#lblNoSolicitud').text(rowDataSolicitud.fiIDSolicitud);
+            $('#lblNoCliente').text(rowDataSolicitud.fiIDCliente);
+            //MensajeError('Mensaje '+rowDataCliente.clientesMaster.fiIDCliente);
+            $('#lblNombreGestor').text(rowDataSolicitud.NombreGestor);
+            var nombreCompletoCliente = rowDataCliente.clientesMaster.fcPrimerNombreCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoNombreCliente + ' ' + rowDataCliente.clientesMaster.fcPrimerApellidoCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoApellidoCliente;
+            $('#lblNombreCliente').text(nombreCompletoCliente);
+            $('#lblResumenCliente').text(nombreCompletoCliente); // Ficha de resumen
+            $("#spanNombreCliente").text(nombreCompletoCliente);
+            $('#lblIdentidadCliente').text(rowDataCliente.clientesMaster.fcIdentidadCliente);
+            $("#spanIdentidadCliente").text(rowDataCliente.clientesMaster.fcIdentidadCliente);
+            $('#lblTipoPrestamo').text(rowDataSolicitud.fcDescripcion);
+            $('#lblTipoPrestamo').css('display', '');
+            $('#lblTipoSolicitud').text(rowDataSolicitud.fiTipoSolicitud == 1 ? 'NUEVO' : rowDataSolicitud.fiTipoSolicitud == 2 ? 'REFINANCIAMIENTO' : rowDataSolicitud.fiTipoSolicitud == 3 ? 'RECOMPRA' : '');
+            $('#lblAgenteDeVentas').text(rowDataSolicitud.fcNombreCortoVendedor);
+            $('#lblAgencia').text(rowDataSolicitud.fcAgencia);
+            /* Informacion personal */
+            var infoPersonal = rowDataCliente.clientesMaster;
+            $('#lblRtnCliente').text(infoPersonal.RTNCliente);
+            $('#lblNumeroTelefono').text(infoPersonal.fcTelefonoCliente);
+            $('#lblNumeroTelefono').attr('href', 'tel:+' + infoPersonal.fcTelefonoCliente.replace(' ', '').replace('-', '').replace('(', '').replace(')', ''));
+            $('#lblNacionalidad').text(infoPersonal.fcDescripcionNacionalidad);
+            var fechaNacimientoCliente = FechaFormato(infoPersonal.fdFechaNacimientoCliente);
+            $('#lblFechaNacimientoCliente').text(fechaNacimientoCliente.split(' ')[0]);
+            $('#lblCorreoCliente').text(infoPersonal.fcCorreoElectronicoCliente);
+            $('#lblCorreoCliente').attr('href', 'mailto:' + infoPersonal.fcCorreoElectronicoCliente);
+            $('#lblProfesionCliente').text(infoPersonal.fcProfesionOficioCliente);
+            $('#lblSexoCliente').text(infoPersonal.fcSexoCliente == 'M' ? 'Masculino' : 'Femenino');
+            $('#lblEstadoCivilCliente').text(infoPersonal.fcDescripcionEstadoCivil);
+            $('#lblViviendaCliente').text(infoPersonal.fcDescripcionVivienda);
+            $('#lblTiempoResidirCliente').text(infoPersonal.fiTiempoResidir > 2 ? 'Más de 2 años' : infoPersonal.fiTiempoResidir + ' años');
+            /* Informacion domiciliar */
+            var infoDomiciliar = rowDataCliente.ClientesInformacionDomiciliar;
+            $('#lblDeptoCliente').text(infoDomiciliar.fcNombreDepto);
+            $('#lblMunicipioCliente').text(infoDomiciliar.fcNombreMunicipio);
+            $('#lblCiudadCliente').text(infoDomiciliar.fcNombreCiudad);
+            $('#lblBarrioColoniaCliente').text(infoDomiciliar.fcNombreBarrioColonia);
+            $('#lblDireccionDetalladaCliente').text(infoDomiciliar.fcDireccionDetallada);
+            $('#lblReferenciaDomicilioCliente').text(infoDomiciliar.fcReferenciasDireccionDetallada);
+            $('#lblResumenDeptoResidencia').text(infoDomiciliar.fcNombreDepto); // Ficha de resumen
+            $('#lblResumenMuniResidencia').text(infoDomiciliar.fcNombreMunicipio); // Ficha de resumen
+            $('#lblResumenColResidencia').text(infoDomiciliar.fcNombreBarrioColonia); // Ficha de resumen
+            $('#lblResumenTipoVivienda').text(infoPersonal.fcDescripcionVivienda); // Ficha de resumen
+            $('#lblResumenTiempoResidir').text(infoPersonal.fiTiempoResidir > 2 ? 'Más de 2 años' : infoPersonal.fiTiempoResidir + ' años'); // Ficha de resumen
+
+            /* Si el proceso de campo del domicilio ya se completo, mostrarlo */
+            if (infoDomiciliar.fiIDInvestigacionDeCampo != 0) {
+                $("#divInformaciondeCampo,#divResolucionDomicilio,#tituloCampoDomicilioModal").css('display', '');
+                var ClassResultadodeCampo = infoDomiciliar.IDTipoResultado == 1 ? 'text-success' : infoDomiciliar.IDTipoResultado == 2 ? 'text-danger' : '';
+                $("#lblResolucionCampoDomicilio").text('(' + infoDomiciliar.fcResultadodeCampo + ')').addClass(ClassResultadodeCampo);
+                $("#lblGestorValidadorDomicilio").text(infoDomiciliar.fcGestorValidadorDomicilio);
+                $("#lblResolucionDomicilio").text(infoDomiciliar.fcGestionDomicilio);
+                $("#lblFechaValidacionDomicilio").text(FechaFormato(infoDomiciliar.fdFechaValidacion));
+                $("#lblObservacionesCampoDomicilio").text(infoDomiciliar.fcObservacionesCampo);
+                $("#lblResumenGestorDomicilio").text(infoDomiciliar.fcGestorValidadorDomicilio); // ficha de resumen
+            }
+            /* Informacion laboral */
+            var infoLaboral = rowDataCliente.ClientesInformacionLaboral;
+            $('#lblNombreTrabajoCliente').text(infoLaboral.fcNombreTrabajo);
+            $('#lblResumenTrabajo').text(infoLaboral.fcNombreTrabajo); // ficha de resumen
+            $('#lblIngresosMensualesCliente').text(addFormatoNumerico(infoLaboral.fiIngresosMensuales));
+            $('#lblPuestoAsignadoCliente').text(infoLaboral.fcPuestoAsignado);
+            $('#lblResumenPuesto').text(infoLaboral.fcPuestoAsignado); // ficha de resumen
+            var fechaIngresoCliente = FechaFormato(infoLaboral.fcFechaIngreso);
+            $('#lblFechaIngresoCliente').text(fechaIngresoCliente.split(' ')[0]);
+            $('#lblTelefonoEmpresaCliente').text(infoLaboral.fdTelefonoEmpresa);
+            $('#lblTelefonoEmpresaCliente').attr('href', 'tel:+' + infoLaboral.fdTelefonoEmpresa.replace(' ', '').replace('-', '').replace('(', '').replace(')', ''));
+            $('#lblExtensionRecursosHumanos').text(infoLaboral.fcExtensionRecursosHumanos);
+            $('#lblExtensionCliente').text(infoLaboral.fcExtensionCliente);
+            $('#lblDeptoEmpresa').text(infoLaboral.fcNombreDepto);
+            $('#lblMunicipioEmpresa').text(infoLaboral.fcNombreMunicipio);
+            $('#lblCiudadEmpresa').text(infoLaboral.fcNombreCiudad);
+            $('#lblBarrioColoniaEmpresa').text(infoLaboral.fcNombreBarrioColonia);
+            $('#lblDireccionDetalladaEmpresa').text(infoLaboral.fcDireccionDetalladaEmpresa);
+            $('#lblReferenciaUbicacionEmpresa').text(infoLaboral.fcReferenciasDireccionDetallada);
+
+            /* Si el proceso de campo del trabajo ya se completo, mostrarlo */
+            if (infoLaboral.fiIDInvestigacionDeCampo != 0) {
+                $("#divInformaciondeCampo,#divResolucionTrabajo,#tituloCampoTrabajoModal").css('display', '');
+                var ClassResultadodeCampoLaboral = infoLaboral.IDTipoResultado == 1 ? 'text-success' : infoLaboral.IDTipoResultado == 2 ? 'text-danger' : '';
+                $("#lblResolucionCampoTrabajo").text('(' + infoLaboral.fcResultadodeCampo + ')').addClass(ClassResultadodeCampoLaboral);
+                $("#lblGestorValidadorTrabajo").text(infoLaboral.fcGestorValidadorTrabajo);
+                $("#lblResolucionTrabajo").text(infoLaboral.fcGestionTrabajo);
+                $("#lblFechaValidacionTrabajo").text(FechaFormato(infoLaboral.fdFechaValidacion));
+                $("#lblObservacionesCampoTrabajo").text(infoLaboral.fcObservacionesCampo);
+                $("#lblResumenGestorTrabajo").text(infoLaboral.fcGestorValidadorTrabajo); // ficha de resumen
+            }
+
+            /* Informacion conyugal */
+            if (rowDataCliente.ClientesInformacionConyugal != null) {
+                var infoConyugue = rowDataCliente.ClientesInformacionConyugal;
+                $('#lblNombreConyugue').text(infoConyugue.fcNombreCompletoConyugue);
+                $('#lblIdentidadConyuge').text(infoConyugue.fcIndentidadConyugue);
+                var fechaNacimientoConyuge = infoConyugue.fdFechaNacimientoConyugue != '/Date(-2208967200000)/' ? FechaFormato(infoConyugue.fdFechaNacimientoConyugue) : '';
+                $('#lblFechaNacimientoConygue').text(fechaNacimientoConyuge != '' ? fechaNacimientoConyuge.split(' ')[0] : '');
+                $('#lblTelefonoConyugue').text(infoConyugue.fcTelefonoConyugue);
+                $('#lblLugarTrabajoConyugue').text(infoConyugue.fcLugarTrabajoConyugue);
+                $('#lblTelefonoTrabajoConyugue').text(infoConyugue.fcTelefonoTrabajoConyugue);
+                $('#lblIngresosConyugue').text(addFormatoNumerico(infoConyugue.fcIngresosMensualesConyugue));
+            }
+            else {
+                $("#titleConyugal").css('display', 'none');
+                $("#divConyugueCliente").css('display', 'none');
+            }
+            /* Referencias personales del cliente */
+            if (rowDataCliente.ClientesReferenciasPersonales != null) {
+                if (rowDataCliente.ClientesReferenciasPersonales.length > 0) {
+
+                    var ListaReferencias = rowDataCliente.ClientesReferenciasPersonales;
+
+                    var tblReferencias = $('#tblReferencias tbody');
+                    for (var i = 0; i < ListaReferencias.length; i++) {
+                        var pencil = ListaReferencias[i].fcComentarioDeptoCredito != '' ? ListaReferencias[i].fcComentarioDeptoCredito != 'Sin comunicacion' ? 'tr-exito' : 'text-danger' : '';
+
+                        var ClaseBoton = ListaReferencias[i].fcComentarioDeptoCredito != '' ?
+                            ListaReferencias[i].fcComentarioDeptoCredito != 'Sin comunicacion' ?
+                                'btn mdi mdi-check-circle-outline tr-exito' :
+                                'btn mdi mdi-call-missed text-danger' :
+                            'btn mdi mdi-pencil';
+
+                        var btnAgregarComentarioReferencia = '<button id="btnComentarioReferencia" data-id="' + ListaReferencias[i].fiIDReferencia + '" data-comment="' + ListaReferencias[i].fcComentarioDeptoCredito + '" data-nombreref="' + ListaReferencias[i].fcNombreCompletoReferencia + '" class="' + ClaseBoton + '" title="Observaciones"></button>';
+                        var tiempoConocerRef = ListaReferencias[i].fiTiempoConocerReferencia <= 2 ? ListaReferencias[i].fiTiempoConocerReferencia + ' años' : 'Más de 2 años'
+                        tblReferencias.append('<tr class="' + pencil + '">' +
+                            '<td class="FilaCondensada">' + ListaReferencias[i].fcNombreCompletoReferencia + '</td>' +
+                            '<td class="FilaCondensada">' + ListaReferencias[i].fcLugarTrabajoReferencia + '</td>' +
+                            '<td class="FilaCondensada">' + tiempoConocerRef + '</td>' +
+                            '<td class="FilaCondensada">' +
+                            '<a href="tel:+' + ListaReferencias[i].fcTelefonoReferencia.replace(' ', '').replace('-', '').replace('(', '').replace(')', '') + '" class="col-form-label">' + ListaReferencias[i].fcTelefonoReferencia + '</a>' +
+                            '</td>' +
+                            '<td class="FilaCondensada">' + ListaReferencias[i].fcDescripcionParentesco + '</td>' +
+                            '<td class="FilaCondensada">' + btnAgregarComentarioReferencia + '</td>' +
+                            '</tr>');
+                    }
+                }
+            }
+            /* Avales del cliente */
+            if (rowDataCliente.Avales != null) {
+
+                var listaAvales = rowDataCliente.Avales;
+                if (listaAvales.length > 0) {
+
+                    var tblReferencias = $('#tblAvales tbody');
+                    for (var i = 0; i < listaAvales.length; i++) {
+
+                        var estadoAval = listaAvales[i].fbAvalActivo == false ? 'Inactivo' : 'Activo';
+                        var classEstadoAval = estadoAval == false ? 'text-danger' : '';
+                        var btnDetalleAvalModal = '<button id="btnDetalleAvalModal" data-id="' + listaAvales[i].fiIDAval + '" class="btn btn-sm ' + (classEstadoAval != '' ? 'btn-danger' : 'btn-info') + '" title="Detalles del aval">Detalles</button>';
+                        var nombreCompletoAval = listaAvales[i].fcPrimerNombreAval + ' ' + listaAvales[i].fcSegundoNombreAval + ' ' + listaAvales[i].fcPrimerApellidoAval + ' ' + listaAvales[i].fcSegundoApellidoAval;
+
+                        tblReferencias.append('<tr class="' + classEstadoAval + '">' +
+                            '<td class="FilaCondensada">' + nombreCompletoAval + '</td>' +
+                            '<td class="FilaCondensada">' + listaAvales[i].fcIdentidadAval + '</td>' +
+                            '<td class="FilaCondensada">' +
+                            '<a href="tel:+' + listaAvales[i].fcTelefonoAval.replace(' ', '').replace('-', '').replace('(', '').replace(')', '') + '" class="col-form-label ' + classEstadoAval + '">' + listaAvales[i].fcTelefonoAval + '</a>' +
+                            '</td>' +
+                            '<td class="FilaCondensada">' + listaAvales[i].fcNombreTrabajo + '</td>' +
+                            '<td class="FilaCondensada">' + listaAvales[i].fcPuestoAsignado + '</td>' +
+                            '<td class="FilaCondensada">' + addFormatoNumerico(listaAvales[i].fiIngresosMensuales) + '</td>' +
+                            '<td class="FilaCondensada">' + estadoAval + '</td>' +
+                            '<td class="FilaCondensada">' + btnDetalleAvalModal + '</td>' +
+                            '</tr>');
+                    }
+                }
+                else { $('#divAval').css('display', 'none'); }
+            }
+            else { $('#divAval').css('display', 'none'); }
+
+            /* Cargar documentación de la solicitud */
+            var divDocumentacionCedula = $("#divDocumentacionCedula");
+            var divDocumentacionCedulaModal = $("#divDocumentacionCedulaModal");
+            var divDocumentacionDomicilio = $("#divDocumentacionDomicilio");
+            var divDocumentacionDomicilioModal = $("#divDocumentacionDomicilioModal");
+            var divDocumentacionLaboral = $("#divDocumentacionLaboral");
+            var divDocumentacionLaboralModal = $("#divDocumentacionLaboralModal");
+            var divDocumentacionFisicaModal = $("#divDocumentacionSoliFisicaModal");
+            var divDocumentacionCampoDomicilio = $("#divDocumentacionCampoDomicilio");
+            var divDocumentacionCampoDomicilioModal = $("#divDocumentacionCampoDomicilioModal");
+
+            var divDocumentacionCampoTrabajo = $("#divDocumentacionCampoTrabajo");
+            var divDocumentacionCampoTrabajoModal = $("#divDocumentacionCampoTrabajoModal");
+            var contador = 0;
+            var ruta = '';
+            var img = '';
+            var imgModal = '';
+
+            for (var i = 0; i < rowDataDocumentos.length; i++) {
+
+                ruta = rowDataDocumentos[i].URLArchivo;
+
+                img = '<img class="img" class="img-responsive" src="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />'
+                imgModal = '<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '">' +
+                    '<div class="img-responsive">' +
+                    '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
+                    '</div>' +
+                    '</a>'
+
+                if (rowDataDocumentos[i].fiTipoDocumento == 1 || rowDataDocumentos[i].fiTipoDocumento == 2 || rowDataDocumentos[i].fiTipoDocumento == 18 || rowDataDocumentos[i].fiTipoDocumento == 19 || rowDataDocumentos[i].fiTipoDocumento == 24 || rowDataDocumentos[i].fiTipoDocumento == 25) {
+
+                    if (contador < 2) {
+                        divDocumentacionCedula.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '">' +
+                            '<div class="img-responsive">' +
+                            '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 100%; height: auto; float: left; cursor: zoom-in;" />' +
+                            '</div>' +
+                            '</a>');
+                    }
+                    divDocumentacionCedulaModal.append('<a class="float-left" href="' + ruta + '" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '">' +
+                        '<div class="img-responsive">' +
+                        '<img class="img" src="' + ruta + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
+                        '</div>' +
+                        '</a>');
+                    contador = contador + 1;
+
+                }
+                else if (rowDataDocumentos[i].fiTipoDocumento == 3) {
+
+                    divDocumentacionDomicilio.append(img);
+                    divDocumentacionDomicilioModal.append();
+
+                }
+                else if (rowDataDocumentos[i].fiTipoDocumento == 5) {
+
+                    divDocumentacionDomicilio.append(img);
+                    divDocumentacionDomicilioModal.append(imgModal);
+
+                }
+                else if (rowDataDocumentos[i].fiTipoDocumento == 4) {
+
+                    divDocumentacionLaboral.append(img);
+                    divDocumentacionLaboralModal.append(imgModal);
+                }
+                else if (rowDataDocumentos[i].fiTipoDocumento == 6) {
+
+                    divDocumentacionLaboral.append(img);
+                    divDocumentacionLaboralModal.append(imgModal);
+
+                }
+                else if (rowDataDocumentos[i].fiTipoDocumento == 7 || rowDataDocumentos[i].fiTipoDocumento == 5 || rowDataDocumentos[i].fiTipoDocumento == 8 || rowDataDocumentos[i].fiTipoDocumento == 9 || rowDataDocumentos[i].fiTipoDocumento == 10
+                     || rowDataDocumentos[i].fiTipoDocumento == 11 || rowDataDocumentos[i].fiTipoDocumento == 12 || rowDataDocumentos[i].fiTipoDocumento == 13 || rowDataDocumentos[i].fiTipoDocumento == 14
+                     || rowDataDocumentos[i].fiTipoDocumento == 15 || rowDataDocumentos[i].fiTipoDocumento == 16 || rowDataDocumentos[i].fiTipoDocumento == 17 || rowDataDocumentos[i].fiTipoDocumento == 18) {
+                    divDocumentacionLaboral.append(img);
+                    divDocumentacionFisicaModal.append(imgModal);
+                }
+
+
+                /*else if (rowDataDocumentos[i].fiTipoDocumento == 8) {
+                    divDocumentacionCampoDomicilio.append('<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />');
+                    divDocumentacionCampoDomicilioModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de casa">' +
+                        '<div class="img-responsive">' +
+                        '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
+                        '</div>' +
+                        '</a>');
+                }
+                else if (rowDataDocumentos[i].fiTipoDocumento == 9) {
+
+                    divDocumentacionCampoTrabajo.append('<img class="img" class="img-responsive" src="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" style="width: 50%; height: auto; float:left;" />');
+                    divDocumentacionCampoTrabajoModal.append('<a class="float-left" href="' + ruta + '.jpg" title="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" alt="Campo - Foto de trabajo">' +
+                        '<div class="img-responsive">' +
+                        '<img class="img" src="' + ruta + '.jpg" alt="' + rowDataDocumentos[i].DescripcionTipoDocumento + '" width="100" />' +
+                        '</div>' +
+                        '</a>');
+                }*/
+            }
+            $(".img").imgbox({
+                zoom: true,
+                drag: true
             });
 
-            $("#modalCondicionarSolicitud").modal();
+            $('#lblValorPmoSugeridoSeleccionado').text(addFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado));
+            $('#lblPlazoSeleccionado').text(addFormatoNumerico(rowDataSolicitud.fiPlazoPmoSeleccionado));
+            $('#lblIngresosPrecalificado').text(addFormatoNumerico(rowDataSolicitud.fdIngresoPrecalificado));
+            $('#lblObligacionesPrecalificado').text(addFormatoNumerico(rowDataSolicitud.fdObligacionesPrecalificado));
+            $('#lblDisponiblePrecalificado').text(addFormatoNumerico(rowDataSolicitud.fdDisponiblePrecalificado));
 
-        } // success
-    }); // $.ajax
-});
+            /* Calcular capacidad de pago mensual */
+            var capacidadPago = calcularCapacidadPago(rowDataSolicitud.fiIDTipoPrestamo, rowDataSolicitud.fdObligacionesPrecalificado, rowDataSolicitud.fdIngresoPrecalificado);
+            $('#lblCapacidadPagoMensual').text(addFormatoNumerico(capacidadPago));
+            $('#lblResumenCapacidadPagoMensual').text(addFormatoNumerico(capacidadPago)); // ficha de resumen
+            var CapacidaddePagoQuincenal = (capacidadPago / 2).toFixed(2);
+            $('#lblCapacidadPagoQuincenal').text(addFormatoNumerico(capacidadPago / 2));
+            $('#lblResumenCapacidadPagoQuincenal').text(addFormatoNumerico(CapacidaddePagoQuincenal)); // ficha de resumen
+            $('#lblResumenPrestamoSugeridoSeleccionado').text(addFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // ficha de resumen
 
-/* Agregar nueva condición al DOM y al arreglo (listaNuevasCondiciones) de nuevas condiciones que se guardarán */
-$("#btnAgregarNuevaCondicion").click(function () {
+            var tipodeCuota = 'Quincenal';
+            if (rowDataSolicitud.fiIDTipoPrestamo == '101') {
 
-    if ($($("#frmPrincipal")).parsley().isValid({ group: 'agregarCondiciones' })) {
-
-        var tblNuevasCondiciones = $("#tblNuevasCondiciones tbody");
-
-        /* Si es la primera condición que se agrega al DOM de la tabla de nuevas condiciones, eliminar mensaje "No hay registros disponibles" */
-        if (contadorNuevasCondiciones == 0) {
-            tblNuevasCondiciones.empty();
-        }
-
-        var IdCondicion = $("#ddlCondiciones :selected").val();
-        var DescripcionCondicion = $("#ddlCondiciones :selected").text();
-        var ComentarioAdicional = $("#txtComentarioAdicional").val();
-        var btnQuitarCondicion = '<button data-id=' + IdCondicion + ' data-comentario="' + ComentarioAdicional + '" id="btnQuitarCondicion" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Quitar</button>';
-
-        tblNuevasCondiciones.append('<tr><td>' + DescripcionCondicion + '</td><td>' + ComentarioAdicional + '</td><td>' + btnQuitarCondicion + '</td></tr>');
-
-        listaNuevasCondiciones.push({
-            IdCondicion: IdCondicion,
-            ComentarioAdicional: ComentarioAdicional
-        });
-
-        contadorNuevasCondiciones++;
-
-        $("#btnCondicionarSolicitudConfirmar").prop('disabled', false);
-
-        $("#txtComentarioAdicional").val('');
-    }
-    else {
-        $($("#frmPrincipal")).parsley().validate({ group: 'agregarCondiciones', force: true });
-    }
-});
-
-/* Quitar nueva condición del DOM de la tabla y del arreglo (listaNuevasCondiciones) de nuevas condiciones que se guardará */
-$(document).on('click', 'button#btnQuitarCondicion', function () {
-
-    let nuevaListaDeCondiciones = [];
-
-    let condicionAQuitar = {
-        IdCondicion: $(this).data('id').toString(),
-        ComentarioAdicional: $(this).data('comentario')
-    };
-
-    if (listaNuevasCondiciones.length > 0) {
-
-        let item;
-
-        for (var i = 0; i < listaNuevasCondiciones.length; i++) {
-
-            item = {
-                IdCondicion: listaNuevasCondiciones[i].IdCondicion,
-                ComentarioAdicional: listaNuevasCondiciones[i].ComentarioAdicional
-            };
-
-            if (JSON.stringify(item) != JSON.stringify(condicionAQuitar)) {
-                nuevaListaDeCondiciones.push(item);
+                prestamoEfectivo(rowDataSolicitud.fiPlazoPmoSeleccionado, rowDataSolicitud.fdValorPmoSugeridoSeleccionado);
             }
+            else if (rowDataSolicitud.fiIDTipoPrestamo == '301' || rowDataSolicitud.fiIDTipoPrestamo == '302') {
+
+                $('#lblValorVehiculo,#lblMontoValorVehiculo').css('display', '');
+                $('#lblMontoValorVehiculo').text(addFormatoNumerico(rowDataSolicitud.fnValorGarantia));
+
+                prestamoConsumo(rowDataSolicitud.fnPrima, rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fiPlazoPmoSeleccionado);
+            }
+            else if (rowDataSolicitud.fiIDTipoPrestamo == '201') {
+
+                $('#lblValorVehiculo,#lblMontoValorVehiculo').css('display', '');
+                $('#lblMontoValorVehiculo').text(addFormatoNumerico(rowDataSolicitud.fnValorGarantia));
+                prestamoMoto(rowDataSolicitud.fnPrima, rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fiPlazoPmoSeleccionado);
+
+                $('#divPrimaManual').css('display', '');
+                $('#txtMontoPrimaManual').prop('disabled', false);
+            }
+            else if (rowDataSolicitud.fiIDTipoPrestamo == '102' || rowDataSolicitud.fiIDTipoPrestamo == '100') {
+                tipodeCuota = 'Mensual';
+                $('#lblValorVehiculo,#lblMontoValorVehiculo').css('display', '');
+                $('#lblMontoValorVehiculo').text(addFormatoNumerico(rowDataSolicitud.fnValorGarantia));
+                prestamoAuto(rowDataSolicitud.fnPrima, rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fiPlazoPmoSeleccionado)
+
+                $('#divPrimaManual').css('display', '');
+                $('#txtMontoPrimaManual').prop('disabled', false);
+            }
+            $('#lblMontoPrima').text(addFormatoNumerico(rowDataSolicitud.fnPrima));
+            $('#lblEdadCliente').text(rowDataSolicitud.fiEdadCliente + ' años');
+            $('#lblResumenEdad').text(rowDataSolicitud.fiEdadCliente + ' años'); // Ficha de resumen
+
+            /* Validar si ya se definio un monto a financiar */
+            if (rowDataSolicitud.fiMontoFinalFinanciar != 0) {
+                gMontoFinal = rowDataSolicitud.fiMontoFinalFinanciar;
+                $('#lblResumenMontoFinalFinanciar').text(rowDataSolicitud.fiMontoFinalFinanciar); // Ficha de resumen
+            } else {
+                gMontoFinal = rowDataSolicitud.fdValorPmoSugeridoSeleccionado;
+            }
+            if (rowDataSolicitud.fiPlazoFinalAprobado != 0) {
+                gPlazoFinal = rowDataSolicitud.fiPlazoFinalAprobado;
+                rowDataSolicitud.fiIDTipoPrestamo
+                $('#lblResumenCuotaFinalFinanciarTitulo').text('Cuotas ' + tipodeCuota); // Ficha de resumen
+                $('#lblResumenCuotaFinalFinanciar').text(rowDataSolicitud.fiPlazoFinalAprobado); // Ficha de resumen
+            } else {
+                gPlazoFinal = rowDataSolicitud.fiPlazoPmoSeleccionado;
+            }
+
+            /* Informacion del analisis */
+            if (rowDataSolicitud.fcTipoEmpresa != '') {
+                $("#tipoEmpresa").prop('disabled', true);
+                $("#tipoEmpresa").val(rowDataSolicitud.fcTipoEmpresa);
+                $("#lblResumenTipoEmpresa").text(rowDataSolicitud.fcTipoEmpresa); // Ficha de resumen
+            }
+            if (rowDataSolicitud.fcTipoPerfil != '') {
+                $("#tipoPerfil").prop('disabled', true);
+                $("#tipoPerfil").val(rowDataSolicitud.fcTipoPerfil);
+                $("#lblResumenTipoPerfil").text(rowDataSolicitud.fcTipoPerfil); // Ficha de resumen
+            }
+            if (rowDataSolicitud.fcTipoEmpleado != '') {
+                $("#tipoEmpleo").prop('disabled', true);
+                $("#tipoEmpleo").val(rowDataSolicitud.fcTipoEmpleado);
+                $("#lblResumenTipoEmpleo").text(rowDataSolicitud.fcTipoEmpleado); // Ficha de resumen
+            }
+            if (rowDataSolicitud.fcBuroActual != '') {
+                $("#buroActual").prop('disabled', true);
+                $("#buroActual").val(rowDataSolicitud.fcBuroActual);
+                $("#lblResumenBuroActual").text(rowDataSolicitud.fcBuroActual); // Ficha de resumen
+            }
+            if (rowDataSolicitud.fiMontoFinalSugerido != 0) {
+                $("#montoFinalAprobado").prop('disabled', true);
+                $("#montoFinalAprobado").val(rowDataSolicitud.fiMontoFinalSugerido);
+            }
+            if (rowDataSolicitud.fiMontoFinalFinanciar != 0) {
+                $("#montoFinalFinanciar").prop('disabled', true);
+                $("#montoFinalFinanciar").val(rowDataSolicitud.fiMontoFinalFinanciar);
+            }
+            if (rowDataSolicitud.fiPlazoFinalAprobado != 0) {
+                $("#plazoFinalAprobado").prop('disabled', true);
+                $("#plazoFinalAprobado").val(rowDataSolicitud.fiPlazoFinalAprobado);
+            }
+
+            /* Si se modificaron los ingresos del cliente debido a incongruencia con los comprobantes de ingreso mostrar recalculo con dicho valor */
+            if (rowDataSolicitud.fnSueldoBaseReal != 0) {
+
+                var bonosComisiones = rowDataSolicitud.fnBonosComisionesReal != 0 ? rowDataSolicitud.fnBonosComisionesReal : 0;
+                var totalIngresosReales = bonosComisiones + rowDataSolicitud.fnSueldoBaseReal;
+                $("#lblIngresosReales").text(addFormatoNumerico(totalIngresosReales));
+                $('#lblObligacionesReales').text(addFormatoNumerico(rowDataSolicitud.fdObligacionesPrecalificado));
+                $('#lblDisponibleReal').text(addFormatoNumerico(totalIngresosReales - rowDataSolicitud.fdObligacionesPrecalificado));
+                var capacidadPagoReal = calcularCapacidadPago(rowDataSolicitud.fiIDTipoPrestamo, rowDataSolicitud.fdObligacionesPrecalificado, rowDataSolicitud.fnSueldoBaseReal + bonosComisiones);
+                $('#lblCapacidadPagoMensualReal').text(addFormatoNumerico(capacidadPagoReal));
+                $('#lblCapacidadPagoQuincenalReal').text(addFormatoNumerico(capacidadPagoReal / 2));
+                $("#divPmoSugeridoReal,#divRecalculoReal").css('display', '');
+            }
+            /* Si ya se determinó un monto a financiar, mostrarlo */
+            if (rowDataSolicitud.fiMontoFinalFinanciar != 0) {
+
+                /* Mostrar div del préstamo que se escogió */
+                $("#lblMontoPrestamoEscogido").text(addFormatoNumerico(rowDataSolicitud.fiMontoFinalFinanciar));
+                $("#lblPlazoEscogido").text(rowDataSolicitud.fiPlazoFinalAprobado);
+                $("#divPrestamoElegido").css('display', '');
+            }
+
+            /* Si se modificaron los ingresos del cliente y no se ha definido una resolucion para la solicitud, mostrar los PMO sugeridos */
+            if (rowDataSolicitud.fiEstadoSolicitud != 4 && rowDataSolicitud.fiEstadoSolicitud != 5 && rowDataSolicitud.fiEstadoSolicitud != 7 && rowDataSolicitud.fnSueldoBaseReal != 0) {
+                cargarPrestamosSugeridos(rowDataSolicitud.fnValorGarantia, rowDataSolicitud.fnPrima);
+            }
+            /* Validar si ya se puede tomar una resolucion */
+            rowDataSolicitud.ftAnalisisTiempoValidacionReferenciasPersonales == ProcesoPendiente ? habilitarResolucion = false : '';
+            rowDataSolicitud.ftAnalisisTiempoValidarDocumentos == ProcesoPendiente ? habilitarResolucion = false : '';
+            rowDataSolicitud.ftAnalisisTiempoValidarInformacionLaboral == ProcesoPendiente ? habilitarResolucion = false : '';
+            rowDataSolicitud.ftAnalisisTiempoValidarInformacionPersonal == ProcesoPendiente ? habilitarResolucion = false : '';
+            resolucionHabilitada = habilitarResolucion;
+
+            if (habilitarResolucion == true) {
+                $("#btnAprobar").prop('disabled', false);
+                $("#btnAprobar").prop('title', 'Resolución final de la solicitud');
+
+                $("#btnRechazar").prop('disabled', false);
+                $("#btnRechazar").prop('title', 'Resolución final de la solicitud');
+            } else {
+                $("#btnRechazar").prop('disabled', false);
+                $("#btnRechazar").prop('title', 'Resolución final de la solicitud');
+            }
+
+            if (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7) {
+
+                var decision = rowDataSolicitud.fiEstadoSolicitud == 7 ? 'aprobada' : 'rechazada';
+                $("#btnRechazar, #btnAprobar").prop('disabled', true);
+                $("#btnRechazar, #btnAprobar").prop('title', 'La solicitud ya fue ' + decision);
+                $("#actualizarIngresosCliente").css('display', 'none');
+                $("#pencilOff").css('display', '');
+                $("#btnValidarSoliFisica,#btnValidarLaboral,#btnValidarDomiciliar,#btnValidarIdentidades, #btnDigitarValoresManualmente").prop('disabled', true);
+                $("#btnValidarSoliFisica,#btnValidarLaboral,#btnValidarDomiciliar,#btnValidarIdentidades, #btnDigitarValoresManualmente").prop('title', 'La solicitud ya fue ' + decision);
+                $("#tipoEmpresa,#tipoPerfil,#tipoEmpleo,#buroActual").prop('disabled', true);
+                $("#btnValidoDocumentacionModal").text('Ver Docs');
+                $("#btnValidoDocumentacionModal").removeClass('btn-warning').addClass('btn-success');
+
+                $(".validador").prop('disabled', true);
+                $(".validador").prop('title', 'La solicitud ya fue ' + decision);
+            }
+            else {
+                $("#pencilOff").css('display', 'none');
+                $("#actualizarIngresosCliente").css('display', '');
+            }
+
+            /* Ficha de resumen*/
+            $("#lblResumenVendedor").text(rowDataSolicitud.fcNombreCortoVendedor); // Ficha de resumen
+            $("#lblResumenAnalista").text(rowDataSolicitud.fcNombreUsuarioModifica); // Ficha de resumen
         }
-    }
-    listaNuevasCondiciones = nuevaListaDeCondiciones;
-    contadorNuevasCondiciones -= 1;
+    });
+}
 
-    $(this).closest('tr').remove();
 
-    if (contadorNuevasCondiciones == 0) {
-        $("#tblNuevasCondiciones tbody").append('<tr><td class="text-center" colspan="5">No hay registros disponibles...</td></tr>');
-        $("#btnCondicionarSolicitudConfirmar").prop('disabled', true);
+/* Validaciones de analisis */
+$("#btnValidoInfoPersonalModal").click(function () {
+    /* Verificar si la informacion personal ya fue validada antes */
+    if (objSolicitud.ftAnalisisTiempoValidarInformacionPersonal == '/Date(-2208967200000)/') {
+        $("#modalFinalizarValidarPersonal").modal();
     }
 });
 
-/* Confirmar condicionar la solicitud, guardar todas las nuuevas condiciones y cambiar el estado de la solicitud */
-$("#btnCondicionarSolicitudConfirmar").click(function () {
+$("#btnValidoInfoPersonalConfirmar").click(function () {
 
-    if (contadorNuevasCondiciones >= 1 && listaNuevasCondiciones.length >= 1) {
+    if ($($("#comentariosInfoPersonal")).parsley().isValid()) {
+
+        var observacion = $("#comentariosInfoPersonal").val();
+        var validacion = 'InformacionPersonal';
         $.ajax({
             type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/CondicionarSolicitud",
-            data: JSON.stringify({ listaCondiciones: listaNuevasCondiciones, observacionesOtrasCondiciones: $("#razonCondicion").val(), dataCrypt: window.location.href }),
+            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
+            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
             contentType: 'application/json; charset=utf-8',
             error: function (xhr, ajaxOptions, thrownError) {
                 MensajeError('No se pudo cargar la información, contacte al administrador');
             },
             success: function (data) {
-
-                if (data.d == true) {
-                    $("#modalCondicionarSolicitud").modal('hide');
-
-                    MensajeExito('Estado de la solicitud actualizado. Actualizando información de la solicitud...');
-                    CargarDetallesDelProcesamientoDeLaSolicitud(false);
+                if (data.d != false) {
+                    $("#modalFinalizarValidarPersonal").modal('hide');
+                    $("#btnValidoInfoPersonalModal, #btnValidoInfoPersonalConfirmar").prop('disabled', true);
+                    $("#btnValidoInfoPersonalModal, #btnValidoInfoPersonalConfirmar").removeClass('btn-warning').addClass('btn-success');
+                    $("#btnValidoInfoPersonalModal, #btnValidoInfoPersonalConfirmar").prop('title', 'La información personal ya fue validada');
+                    MensajeExito('Estado de la solicitud actualizado');
+                    actualizarEstadoSolicitud();
                 }
-                else {
-                    MensajeError('Error al condicionar la solicitud, contacte al administrador');
-                }
-            } // success
-        }); // $.ajax
-    } // if contadorNuevasCondiciones >= 1 && listaNuevasCondiciones.length >= 1
-    else {
-        MensajeError('Debes agregar por lo menos una condición');
+                else { MensajeError('E001 Error al actualizar estado de la solicitud, contacte al administrador'); }
+            }
+        });
+    } else { $($("#comentariosInfoPersonal")).parsley().validate(); }
+});
+
+$("#btnValidoInfoLaboralModal").click(function () {
+    /* Verificar si la informacion laboral ya fue validada antes */
+    if (objSolicitud.ftAnalisisTiempoValidarInformacionLaboral == '/Date(-2208967200000)/') {
+        $("#modalFinalizarValidarLaboral").modal();
     }
 });
 
-/* Anular o cancelar condiciones de la solicitud. Estas condiciones son las que se muestran dinamicamente en el modal de condicionar solicitud (modalCondicionarSolicitud) */
-$(document).on('click', 'button#btnAnularCondicion', function () {
+$("#btnValidoInfoLaboralConfirmar").click(function () {
 
-    var buttonAnularCondicion = $(this);
+    if ($($("#comentariosInfoLaboral")).parsley().isValid()) {
+
+        var observacion = $("#comentariosInfoLaboral").val();
+        var validacion = 'InformacionLaboral';
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
+            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('No se pudo cargar la información, contacte al administrador');
+            },
+            success: function (data) {
+                if (data.d != false) {
+                    $("#modalFinalizarValidarLaboral").modal('hide');
+                    $("#btnValidoInfoLaboralModal, #btnValidoInfoLaboralConfirmar").prop('disabled', true);
+                    $("#btnValidoInfoLaboralModal, #btnValidoInfoLaboralConfirmar").removeClass('btn-warning').addClass('btn-success');
+                    $("#btnValidoInfoLaboralModal, #btnValidoInfoLaboralConfirmar").prop('title', 'La información laboral ya fue validada');
+                    MensajeExito('Estado de la solicitud actualizado');
+                    actualizarEstadoSolicitud();
+                }
+                else { MensajeError('E002 Error al actualizar estado de la solicitud, contacte al administrador'); }
+            }
+        });
+    }
+    else { $($("#comentariosInfoLaboral")).parsley().validate(); }
+});
+
+$("#btnValidoReferenciasModal").click(function () {
+    if (objSolicitud.ftAnalisisTiempoValidacionReferenciasPersonales == '/Date(-2208967200000)/') {
+        $("#modalFinalizarValidarReferencias").modal();
+    }
+});
+
+$("#btnValidoReferenciasConfirmar").click(function () {
+
+    if ($($("#comentarioReferenciasPersonales")).parsley().isValid()) {
+
+        var observacion = $("#comentarioReferenciasPersonales").val();
+        var validacion = 'Referencias';
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
+            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('No se pudo cargar la información, contacte al administrador');
+            },
+            success: function (data) {
+                if (data.d != 0) {
+                    $("#btnValidoReferenciasModal, #btnValidoReferenciasConfirmar").prop('disabled', true);
+                    $("#btnValidoReferenciasModal, #btnValidoReferenciasConfirmar").removeClass('btn-warning').addClass('btn-success');
+                    $("#btnValidoReferenciasModal, #btnValidoReferenciasConfirmar").prop('title', 'Las referencias personales ya fueron validadas');
+                    $("#modalFinalizarValidarReferencias").modal('hide');
+                    MensajeExito('Estado de la solicitud actualizado');
+                    actualizarEstadoSolicitud();
+                }
+                else { MensajeError('E003 Error al actualizar estado de la solicitud, contacte al administrador'); }
+            }
+        });
+    } else { $($("#comentarioReferenciasPersonales")).parsley().validate(); }
+});
+
+$("#btnValidoDocumentacionModal").click(function () {
+    $("#modalFinalizarValidarDocumentacion").modal();
+});
+
+$("#btnValidoDocumentacionConfirmar").click(function () {
+
+    if ($($("#comentariosDocumentacion")).parsley().isValid() && objSolicitud.ftAnalisisTiempoValidarDocumentos == '/Date(-2208967200000)/') {
+
+        var observacion = $("#comentariosDocumentacion").val();
+        var validacion = 'Documentacion';
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
+            data: JSON.stringify({ validacion: validacion, observacion: observacion, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('No se pudo cargar la información, contacte al administrador');
+            },
+            success: function (data) {
+                if (data.d != 0) {
+                    $("#btnValidoDocumentacionModal").removeClass('btn-warning').addClass('btn-success');
+                    $("#btnValidoDocumentacionConfirmar").removeClass('btn-warning').addClass('btn-primary');
+                    $("#btnValidoDocumentacionConfirmar").prop('title', 'La documentación ya fue validada');
+                    $("#btnValidoDocumentacionModal").text('Ver docs');
+                    $("#btnValidoDocumentacionConfirmar,#btnValidarSoliFisica,#btnValidarLaboral,#btnValidarDomiciliar,#btnValidarIdentidades").prop('disabled', true);
+                    $("#btnValidarSoliFisica,#btnValidarLaboral,#btnValidarDomiciliar,#btnValidarIdentidades").prop('title', 'La documentación ya fue validada');
+                    $("#modalFinalizarValidarDocumentacion").modal('hide');
+                    MensajeExito('Estado de la solicitud actualizado');
+                    actualizarEstadoSolicitud();
+                }
+                else { MensajeError('E004 Error al actualizar estado de la solicitud, contacte al administrador'); }
+            }
+        });
+    } else { $($("#comentariosDocumentacion")).parsley().validate(); }
+});
+
+var tipoDoc = 0;
+$(document).on('click', 'button#btnValidarIdentidades,#btnValidarDomiciliar,#btnValidarLaboral,#btnValidarSoliFisica', function () {
+
+    tipoDoc = $(this).data('id');
+    $("#modalFinalizarValidarDocumentacion").modal('hide');
+    $("#modalValidarTipoDocs").modal();
+});
+
+$("#btnValidarTipoDocConfirmar").click(function () {
+
+    var btn = 0;
+    var validacion = '';
+
+    switch (tipoDoc) {
+        case 1:
+            validacion = 'ValidacionDocumentcionIdentidades';
+            btn = 1;
+            break;
+        case 2:
+            validacion = 'ValidacionDocumentacionDomicilio';
+            btn = 2;
+            break;
+        case 3:
+            validacion = 'ValidacionDocumentacionLaboral';
+            btn = 3;
+            break;
+        case 4:
+            validacion = 'ValidacionDocumentacionSolicitudFisica';
+            btn = 4;
+            break;
+        default:
+            MensajeError('Error al validar tipo de documentación');
+    }
 
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/AnularCondicionDeLaSolicitud',
-        data: JSON.stringify({ idSolicitudCondicion: buttonAnularCondicion.data('id'), dataCrypt: window.location.href }),
+        url: "SolicitudesCredito_Analisis.aspx/ValidacionesAnalisis",
+        data: JSON.stringify({ validacion: validacion, observacion: '', dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al anular la condición, contacte al administrador.');
+            MensajeError('No se pudo realizar la validacion, contacte al administrador');
+            $("#modalValidarTipoDocs").modal('hide');
+            $("#modalFinalizarValidarDocumentacion").modal();
         },
         success: function (data) {
+            if (data.d != 0) {
+                $("#modalValidarTipoDocs").modal('hide');
+                $("#modalFinalizarValidarDocumentacion").modal();
 
-            if (data.d == true) {
-                buttonAnularCondicion.replaceWith('<label class="btn btn-sm btn-success mb-0"><i class="far fa-check-circle"></i> Anulada</label>');
-
-                MensajeExito('La condición se anuló correctamente. Actualizando información de la solicitud...');
-                CargarDetallesDelProcesamientoDeLaSolicitud();
+                switch (btn) {
+                    case 1:
+                        $("#btnValidarIdentidades").prop('disabled', true);
+                        $("#btnValidarIdentidades").addClass('text-success');
+                        $("#btnValidarIdentidades").prop('title', 'Documentación validada');
+                        break;
+                    case 2:
+                        $("#btnValidarDomiciliar").prop('disabled', true);
+                        $("#btnValidarDomiciliar").addClass('text-success');
+                        $("#btnValidarDomiciliar").prop('title', 'Documentación validada');
+                        break;
+                    case 3:
+                        $("#btnValidarLaboral").prop('disabled', true);
+                        $("#btnValidarLaboral").addClass('text-success');
+                        $("#btnValidarLaboral").prop('title', 'Documentación validada');
+                        break;
+                    case 4:
+                        $("#btnValidarSoliFisica").prop('disabled', true);
+                        $("#btnValidarSoliFisica").addClass('text-success');
+                        $("#btnValidarSoliFisica").prop('title', 'Documentación validada');
+                        break;
+                }
+                MensajeExito('Estado de la solicitud actualizado');
             }
             else {
-                MensajeError('Error al anular la condición, contacte al administrador.');
+                MensajeError('E005 Error al actualizar estado de la solicitud, contacte al administrador');
+                $("#modalValidarTipoDocs").modal('hide');
+                $("#modalFinalizarValidarDocumentacion").modal();
             }
         }
     });
 });
-
-// #endregion Administrar condiciones de la solicitud
-
-// #region Administrar referencias personales * Listo *
-
-/* Actualizar comentario sobre una referencia personal radiofaro */
-var idReferenciaPersonalSeleccionada = '';
-var btnReferenciaPersonalSeleccionada = '';
-
-
-/* Actualizar comentario de la referencia */
-$(document).on('click', 'button#btnComentarioReferencia', function () {
-
-    btnReferenciaPersonalSeleccionada = $(this);
-    idReferenciaPersonalSeleccionada = btnReferenciaPersonalSeleccionada.data('id');
-
-    $("#txtNombreReferenciaModal").val(btnReferenciaPersonalSeleccionada.data('nombrereferencia'));
-    $("#txtAnalistaDeCredito").val(btnReferenciaPersonalSeleccionada.data('analista'));
-    $("#txtFechaDeAnalisis").val(btnReferenciaPersonalSeleccionada.data('fechaanalisis'));
-    $("#txtObservacionesReferencia").val(btnReferenciaPersonalSeleccionada.data('observaciones'));
-
-    if (btnReferenciaPersonalSeleccionada.data('sincomunicacion') == true)
-        $("#cbSinComunicacion").prop('checked', true);
-    else
-        $("#cbSinComunicacion").prop('checked', false);
-
-    $("#modalObservacionesReferenciaPersonal").modal();
-});
-
-$("#btnActualizarObservacionReferencia").click(function () {
-
-    if ($($("#txtObservacionesReferencia")).parsley().isValid()) {
-
-        DeshabilitarElementoPorId('btnActualizarObservacionReferencia');
-
-        let observacionesReferenciaPersonal = $('#txtObservacionesReferencia').val();
-
-        $.ajax({
-            type: "POST",
-            url: 'SolicitudesCredito_Analisis.aspx/ActualizarObservacionesReferenciaPersonal',
-            data: JSON.stringify({ idReferencia: idReferenciaPersonalSeleccionada, observaciones: observacionesReferenciaPersonal, sinComunicacion: $("#cbSinComunicacion").prop('checked'), dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Error al actualizar observaciones de la referencia personal, contacte al administrador.');
-            },
-            success: function (data) {
-
-                if (data.d == true) {
-                    MensajeExito('Las observaciones/comentarios se actualizaron correctamente. Actualizando listado...');
-                    CargarReferenciasPersonales();
-                }
-                else
-                    MensajeError('Error al actualizar observaciones de la referencia personal');
-
-                $("#modalObservacionesReferenciaPersonal").modal('hide');
-            },
-            complete: function (data) {
-                HabilitarElementoPorId('btnActualizarObservacionReferencia');
-            }
-        });
-    }
-    else
-        $($("#txtObservacionesReferencia")).parsley().validate();
-});
-
-
-/* Agregar referencia personal */
-$("#btnAgregarReferencia").click(function () {
-
-    $("#txtNombreReferencia,#txtTelefonoReferencia,#ddlTiempoDeConocerReferencia, #ddlParentescos, #txtLugarTrabajoReferencia, #txtObservacionesNuevaReferencia").val('');
-    $('#modalAgregarReferenciaPersonal').parsley().reset();
-    $("#modalAgregarReferenciaPersonal").modal();
-});
-
-$("#btnAgregarReferenciaConfirmar").click(function () {
-
-    /* Validar formulario de agregar referencia personal */
-    if ($($('#frmPrincipal')).parsley().isValid({ group: 'referenciasPersonales' })) {
-
-        DeshabilitarElementoPorId('btnAgregarReferenciaConfirmar');
-
-        var referenciaPersonal = {
-            IdCliente: ID_CLIENTE,
-            NombreCompleto: $("#txtNombreReferencia").val(),
-            TelefonoReferencia: $("#txtTelefonoReferencia").val(),
-            LugarTrabajo: $("#txtLugarTrabajoReferencia").val(),
-            IdTiempoDeConocer: $("#ddlTiempoDeConocerReferencia :selected").val(),
-            IdParentescoReferencia: $("#ddlParentescos :selected").val(),
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/RegistrarReferenciaPersonal",
-            data: JSON.stringify({ referenciaPersonal: referenciaPersonal, dataCrypt: window.location.href }),
-            contentType: "application/json; charset=utf-8",
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError("No se pudo agregar la referencia personal, contacte al administrador.");
-            },
-            success: function (data) {
-
-                if (data.d == true) {
-                    MensajeExito('La referencia personal se agregó correctamente.');
-                    CargarReferenciasPersonales();
-                }
-                else
-                    MensajeError("No se pudo agregar la referencia personal, contacte al administrador.");
-
-                $("#modalAgregarReferenciaPersonal").modal('hide');
-            },
-            complete: function (data) {
-                HabilitarElementoPorId('btnAgregarReferenciaConfirmar');
-            }
-        });
-    }
-    else
-        $($("#frmPrincipal")).parsley().validate({ group: 'referenciasPersonales', force: true });
-});
-
-
-/* Actualizar referencia personal */
-function AbrirModalActualizarReferenciaPersonal(btnReferenciaPersonal) {
-
-    let referenciaPersonal = $(btnReferenciaPersonal);
-
-    idReferenciaPersonalSeleccionada = referenciaPersonal.data('id');
-
-    $("#txtNombreReferenciaPersonal_Editar").val(referenciaPersonal.data('nombrereferencia'));
-    $("#txtTelefonoReferenciaPersonal_Editar").val(referenciaPersonal.data('telefono'));
-    $("#ddlTiempoDeConocerReferencia_Editar").val(referenciaPersonal.data('idtiempodeconocer'));
-    $("#ddlParentesco_Editar").val(referenciaPersonal.data('idparentesco'));
-    $("#txtLugarDeTrabajoReferencia_Editar").val(referenciaPersonal.data('lugardetrabajo'));
-    $("#modalEditarReferenciaPersonal").modal();
-};
-
-$("#btnEditarReferenciaConfirmar").click(function (e) {
-
-    /* Validar formulario de actualizar referencia personal */
-    if ($('#frmPrincipal').parsley().isValid({ group: 'referenciasPersonalesEditar' })) {
-
-        DeshabilitarElementoPorId('btnEditarReferenciaConfirmar');
-
-        var referenciaPersonal = {
-            IdReferencia: idReferenciaPersonalSeleccionada,
-            NombreCompleto: $("#txtNombreReferenciaPersonal_Editar").val(),
-            TelefonoReferencia: $("#txtTelefonoReferenciaPersonal_Editar").val(),
-            LugarTrabajo: $("#txtLugarDeTrabajoReferencia_Editar").val(),
-            IdTiempoDeConocer: $("#ddlTiempoDeConocerReferencia_Editar :selected").val(),
-            IdParentescoReferencia: $("#ddlParentesco_Editar :selected").val()
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/ActualizarReferenciaPersonal",
-            data: JSON.stringify({ referenciaPersonal: referenciaPersonal, dataCrypt: window.location.href }),
-            contentType: "application/json; charset=utf-8",
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError("No se pudo editar la referencia personal, contacte al administrador.");
-            },
-            success: function (data) {
-
-                if (data.d == true) {
-                    MensajeExito('La referencia personal se editó correctamente.');
-                    CargarReferenciasPersonales();
-                }
-                else
-                    MensajeError("No se pudo editar la referencia personal, contacte al administrador.");
-
-                $("#modalEditarReferenciaPersonal").modal('hide');
-            },
-            complete: function (data) {
-                HabilitarElementoPorId('btnEditarReferenciaConfirmar');
-            }
-        });
-    }
-    else
-        $('#frmPrincipal').parsley().validate({ group: 'referenciasPersonalesEditar', force: true });
-});
-
-
-/* Eliminar referencia personal */
-function AbrirModalEliminarReferenciaPersonal(idReferenciaPersonal) {
-
-    idReferenciaPersonalSeleccionada = idReferenciaPersonal;
-    $("#modalEliminarReferencia").modal('show');
-}
-
-$("#btnEliminarReferenciaConfirmar").click(function () {
-
-    DeshabilitarElementoPorId('btnEliminarReferenciaConfirmar');
-
-    $.ajax({
-        type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/EliminarReferenciaPersonal',
-        data: JSON.stringify({ idReferenciaPersonal: idReferenciaPersonalSeleccionada, dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al eliminar la referencia personal, contacte al administrador.');
-        },
-        success: function (data) {
-
-
-            debugger;
-
-            if (data.d == true) {
-                MensajeExito('La referencia personal se eliminó correctamente');
-                CargarReferenciasPersonales();
-            }
-            else
-                MensajeError('Error al eliminar la referencia personal, contacte al administrador.');
-
-            $("#modalEliminarReferencia").modal('hide');
-        },
-        complete: function (data) {
-            HabilitarElementoPorId('btnEliminarReferenciaConfirmar');
-        }
-    });
-});
-
-
-function CargarReferenciasPersonales() {
-
-    $.ajax({
-        type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/ListadoReferenciasPersonalesPorIdSolicitud',
-        data: JSON.stringify({ dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar las referencias personales de la solicitud, contacte al administrador.');
-        },
-        success: function (data) {
-
-            debugger;
-
-            var listaReferenciasPersonales = data.d;
-            var tblReferenciasPersonales = $("#tblReferenciasPersonales tbody").empty().append('<tr><td class="text-center" colspan="7">No hay registros disponibles...</td></tr>');
-
-            if (listaReferenciasPersonales != null) {
-
-                if (listaReferenciasPersonales.length > 0) {
-
-                    let templateReferenciasPersonales = '';
-                    let btnComentarioReferenciaPersonal, btnEliminarReferencia, btnActualizarReferencia = '';
-                    let estado, colorClass, stringDatas = '';
-                    tblReferenciasPersonales.empty();
-
-                    for (var i = 0; i < listaReferenciasPersonales.length; i++) {
-
-                        stringDatas = 'data-id="' + listaReferenciasPersonales[i].IdReferencia + '" data-nombrereferencia="' + listaReferenciasPersonales[i].NombreCompleto + '" data-telefono="' + listaReferenciasPersonales[i].TelefonoReferencia + '" data-idtiempodeconocer="' + listaReferenciasPersonales[i].IdTiempoDeConocer + '" data-idparentesco="' + listaReferenciasPersonales[i].IdParentescoReferencia + '" data-lugardetrabajo="' + listaReferenciasPersonales[i].LugarTrabajo + '" data-observaciones="' + listaReferenciasPersonales[i].ComentarioDeptoCredito + '" data-analista="' + listaReferenciasPersonales[i].AnalistaComentario + '" data-sincomunicacion="' + listaReferenciasPersonales[i].SinComunicacion + '" data-fechaanalisis="' + (listaReferenciasPersonales[i].FechaAnalisis == PROCESO_PENDIENTE ? (listaReferenciasPersonales[i].AnalistaComentario != '' ? 'Fecha no disponible' : '') : moment(listaReferenciasPersonales[i].FechaAnalisis).format('YYYY/MM/DD hh:mm A')) + '"';
-
-                        btnComentarioReferenciaPersonal = '<button type="button" id="btnComentarioReferencia" ' + stringDatas + ' class="btn btn-sm btn-info far fa-comments" title="Ver observaciones del departamento de crédito"></button>';
-                        btnActualizarReferencia = '<button id="btnActualizarReferencia" ' + stringDatas + ' onclick="AbrirModalActualizarReferenciaPersonal(this)" class="btn btn-sm btn-info far fa-edit" type="button" title="Editar"></button>';
-                        btnEliminarReferencia = '<button id="btnEliminarReferencia" ' + stringDatas + ' onclick="AbrirModalEliminarReferenciaPersonal(' + listaReferenciasPersonales[i].IdReferencia + ')" class="btn btn-sm btn-danger far fa-trash-alt" type="button" title="Eliminar"></button>';
-                        colorClass = listaReferenciasPersonales[i].ComentarioDeptoCredito != '' ? listaReferenciasPersonales[i].SinComunicacion != true ? 'tr-exito' : 'text-danger' : '';
-                        estado = listaReferenciasPersonales[i].ComentarioDeptoCredito != '' ? listaReferenciasPersonales[i].SinComunicacion != true ? '<i class="far fa-check-circle" title="Validación realizada"></i>' : '<i class="fas fa-phone-slash" title="Sin comunicación"></i>' : '<i class="fas fa-phone" title="Validación pendiente"></i>';
-
-                        templateReferenciasPersonales += '<tr class=' + colorClass + '><td>' + listaReferenciasPersonales[i].NombreCompleto + '</td><td>' + listaReferenciasPersonales[i].LugarTrabajo + '</td><td>' + listaReferenciasPersonales[i].TiempoDeConocer + '</td><td>' + listaReferenciasPersonales[i].TelefonoReferencia + '</td><td>' + listaReferenciasPersonales[i].DescripcionParentesco + '</td><td class="text-center">' + estado + '</td><td class="text-center">' + btnComentarioReferenciaPersonal + ' ' + btnActualizarReferencia + ' ' + btnEliminarReferencia + '</td></tr>';
-                    }
-                    tblReferenciasPersonales.append(templateReferenciasPersonales);
-
-                    InicializarDataTableReferenciasPersonales();
-                }
-            }
-        }
-    });
-}
-
-function InicializarDataTableReferenciasPersonales() {
-
-    /* Inicializar datatables de Referencias personales de la solicitud */
-    $('#tblReferenciasPersonales').DataTable({
-        "destroy": true,
-        "pageLength": 10,
-        "aaSorting": [],
-        "responsive": true,
-        "dom": "<'row'<'col-sm-12'>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-        "language": datatableLanguage,
-        columnDefs: [
-            { targets: 'no-sort', orderable: false },
-        ]
-    });
-}
-
-// #endregion
-
-// #region validaciones de analisis
-
-var descripcionTipoDeValidacion = '';
-var btnValidacion = '';
-
-/* Validaciones de analisis, información del cliente y la solicitud */
-function ValidacionDeAnalisis(element) {
-
-    btnValidacion = $(element);
-    descripcionTipoDeValidacion = btnValidacion.data('validacion');
-
-    $("#txtComentarioValidacionDeAnalisis").val('');
-
-    $($("#frmPrincipal")).parsley().reset({ group: 'validacionDeAnalisis' });
-
-    $("#modalValidacionDeAnalisis").modal();
-}
-
-/* Validaciones de la documentación de la solicitud */
-function ValidacionDeDocumentacion(element) {
-
-    btnValidacion = $(element);
-    descripcionTipoDeValidacion = btnValidacion.data('validacion');
-
-    let documentosPendientesDeValidar = 0;
-
-    if (ESTADO_SOLICITUD.DocumentacionIdentidadesValidada != 1)
-        documentosPendientesDeValidar++;
-
-    if (ESTADO_SOLICITUD.DocumentacionDomicilioValidada != 1)
-        documentosPendientesDeValidar++;
-
-    if (ESTADO_SOLICITUD.DocumentacionLaboralValidada != 1)
-        documentosPendientesDeValidar++;
-
-    if (ESTADO_SOLICITUD.DocumentacionSolicitudFisicaValidada != 1)
-        documentosPendientesDeValidar++;
-
-    /* Si unicamente falta validar un tipo de documentación mostrar modal y solicitar comentario */
-    if (documentosPendientesDeValidar == 1) {
-
-        $("#txtComentarioValidacionDeAnalisis").val('');
-
-        $($("#frmPrincipal")).parsley().reset({ group: 'validacionDeAnalisis' });
-
-        $("#modalDocumentacion").modal('hide');
-        $("#modalValidacionDeAnalisis").modal();
-    }
-    else
-        RealizarValidacion();
-}
-
-$("#btnValidacionDeAnalisisConfirmar").click(function () {
-
-    if ($($('#frmPrincipal')).parsley().isValid({ group: 'validacionDeAnalisis' }))
-        RealizarValidacion();
-    else
-        $($("#frmPrincipal")).parsley().validate({ group: 'validacionDeAnalisis', force: true });
-});
-
-function RealizarValidacion() {
-
-    btnValidacion.prop('disabled', true);
-    DeshabilitarElementoPorId('btnValidacionDeAnalisisConfirmar');
-
-    $.ajax({
-        type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/ValidacionesDeAnalisis',
-        data: JSON.stringify({ tipoDeValidacion: descripcionTipoDeValidacion, comentario: $("#txtComentarioValidacionDeAnalisis").val(), dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al realizar validación, contacte al administrador.');
-        },
-        success: function (data) {
-
-            if (data.d == true) {
-
-                MensajeExito('La validación se realizó correctamente.');
-                CargarDetallesDelProcesamientoDeLaSolicitud();
-            }
-            else
-                MensajeError('Error al realizar validación, contacte al administrador.');
-
-            $("#modalValidacionDeAnalisis").modal('hide');
-        },
-        complete: function (data) {
-            btnValidacion.prop('disabled', false);
-            HabilitarElementoPorId('btnValidacionDeAnalisisConfirmar');
-        }
-    });
-}
-
-// #endregion
-
-// #region Enviar a solicitud a investigación campo * Listo *
-
-$("#btnEnviarACampo").click(function () {
-
-    if (ESTADO_SOLICITUD.FechaEnvioARuta == PROCESO_PENDIENTE) {
-        $("#modalEnviarACampo").modal();
-    }
-});
-
-$("#btnEnviarACampoConfirmar").click(function () {
-
-    if ($($("#txtComentariosParaGestoria")).parsley().isValid()) {
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/EnviarACampo",
-            data: JSON.stringify({ observacionesDeCredito: $("#txtComentariosParaGestoria").val(), dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo enviar a investigación de campo, contacte al administrador');
-            },
-            success: function (data) {
-
-                if (data.d != false) {
-
-                    $("#btnEnviarACampo, #btnEnviarACampoConfirmar").prop('disabled', true).removeClass('btn-warning').addClass('btn-success').prop('title', 'La solicitud ya fue enviada a investigación de campo');
-
-                    CargarDetallesDelProcesamientoDeLaSolicitud();
-
-                    $("#modalEnviarACampo").modal('hide');
-
-                    MensajeExito('La solicitud se envió a investigación de campo correctamente.');
-                }
-                else
-                    MensajeError('Error al enviar la solicitud a investigación de campo, contacte al administrador');
-            }
-        });
-    }
-    else
-        $($("#txtComentariosParaGestoria")).parsley().validate();
-});
-
-// #endregion
-
-//#region Funciones de analisis * Pendiente *
-
-function CargarBuroExterno() {
-
-    $.ajax({
-        type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/ObtenerUrlEncriptado',
-        data: JSON.stringify({ dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Error al cargar buro externo');
-        },
-        success: function (data) {
-            window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + data.d, "_blank", "toolbar=yes, scrollbars=yes, resizable=yes, top=0, left=window.screen.availWidth/2, window.screen.availWidth/2,window.screen.availHeight");
-        }
-    });
-}
-
-function ValidarInformacionDePerfil() {
-
-    if ($("#ddlTipoDeEmpresa option:selected").val() != '' && $("#ddlTipoDePerfil option:selected").val() != '' && $("#ddlTipoDeEmpleo option:selected").val() != '' && $("#ddlBuroActual option:selected").val() != '')
-        $("#modalActualizarInformacionPerfil").modal();
-}
-
-function ActualizarInformacionDePerfil() {
-
-    let ddlTipoDeEmpresa = $("#ddlTipoDeEmpresa option:selected").val();
-    let ddlTipoDePerfil = $("#ddlTipoDePerfil option:selected").val();
-    let ddlTipoDeEmpleo = $("#ddlTipoDeEmpleo option:selected").val();
-    let ddlBuroActual = $("#ddlBuroActual option:selected").val();
-
-    if (ddlTipoDeEmpresa != '' && ddlTipoDePerfil != '' && ddlTipoDeEmpleo != '' && ddlBuroActual != '') {
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/ActualizarInformacionPerfil",
-            data: JSON.stringify({ tipoEmpresa: ddlTipoDeEmpresa, tipoPerfil: ddlTipoDePerfil, tipoEmpleo: ddlTipoDeEmpleo, buroActual: ddlBuroActual, dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('No se pudo guardar la información de perfil, contacte al administrador');
-            },
-            success: function (data) {
-
-                if (data.d != false) {
-
-                    $("#ddlTipoDeEmpresa,#ddlTipoDePerfil,#ddlTipoDeEmpleo,#ddlBuroActual").prop('disabled', true);
-                    $("#modalActualizarInformacionPerfil").modal('hide');
-                    MensajeExito('La información de perfil se guardó correctamente');
-                    CargarDetallesDelProcesamientoDeLaSolicitud();
-                }
-                else
-                    MensajeError('No se pudo guardar la información de perfil, contacte al administrador');
-            }
-        });
-    }
-}
 
 /* Actualizar ingresos del cliente */
 $("#actualizarIngresosCliente").click(function () {
@@ -1181,8 +911,8 @@ $("#formActualizarIngresos").submit(function (e) {
 
         var sueldoBaseReal = $("#txtIngresosReales").val().replace(/,/g, '');
         var bonosComisionesReal = $("#txtBonosComisiones").val().replace(/,/g, '');
-        var obligaciones = ESTADO_SOLICITUD.fdObligacionesPrecalificado;
-        var codigoProducto = ESTADO_SOLICITUD.fiIDTipoPrestamo;
+        var obligaciones = objSolicitud.fdObligacionesPrecalificado;
+        var codigoProducto = objSolicitud.fiIDTipoPrestamo;
 
         $.ajax({
             type: "POST",
@@ -1197,17 +927,17 @@ $("#formActualizarIngresos").submit(function (e) {
 
                     $('#lblIngresosMensualesCliente').text('');
                     var ingresos = parseFloat(sueldoBaseReal) + parseFloat(bonosComisionesReal);
-                    $('#lblIngresosMensualesCliente').text(ConvertirAFormatoNumerico(ingresos));
+                    $('#lblIngresosMensualesCliente').text(addFormatoNumerico(ingresos));
                     var totalIngresosReales = ingresos;
-                    $("#lblIngresosReales").text(ConvertirAFormatoNumerico(totalIngresosReales));
-                    $('#lblObligacionesReales').text(ConvertirAFormatoNumerico(obligaciones));
-                    $('#lblDisponibleReal').text(ConvertirAFormatoNumerico(totalIngresosReales - obligaciones));
+                    $("#lblIngresosReales").text(addFormatoNumerico(totalIngresosReales));
+                    $('#lblObligacionesReales').text(addFormatoNumerico(obligaciones));
+                    $('#lblDisponibleReal').text(addFormatoNumerico(totalIngresosReales - obligaciones));
                     var capacidadPagoReal = calcularCapacidadPago(codigoProducto, obligaciones, totalIngresosReales);
-                    $('#lblCapacidadPagoMensualReal').text(ConvertirAFormatoNumerico(capacidadPagoReal));
-                    $('#lblCapacidadPagoQuincenalReal').text(ConvertirAFormatoNumerico(capacidadPagoReal / 2));
+                    $('#lblCapacidadPagoMensualReal').text(addFormatoNumerico(capacidadPagoReal));
+                    $('#lblCapacidadPagoQuincenalReal').text(addFormatoNumerico(capacidadPagoReal / 2));
                     $("#divRecalculoReal").css('display', '');
                     MensajeExito('Ingresos actualizados correctamente');
-                    cargarPrestamosSugeridos(ESTADO_SOLICITUD.fnValorGarantia, ESTADO_SOLICITUD.fnPrima);
+                    cargarPrestamosSugeridos(objSolicitud.fnValorGarantia, objSolicitud.fnPrima);
                     $("#modalActualizarIngresos").modal('hide');
                 }
                 else {
@@ -1216,6 +946,56 @@ $("#formActualizarIngresos").submit(function (e) {
             }
         });
     } else { $($("#formActualizarIngresos")).parsley().validate(); }
+});
+
+
+/* Cuando la nueva capacidad de pago es insuficiente */
+$("#btnRechazarIncapPagoConfirmar").click(function () {
+
+    var objBitacora = {
+        fcComentarioResolucion: 'Rechazado por incapcidad de pago'
+    };
+    var solicitud = {
+        fiEstadoSolicitud: 4
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion",
+        data: JSON.stringify({ objBitacora: objBitacora, objSolicitud: solicitud, dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Ocurrió un error al determinar resolucion de la solicitud, contacte al administrador');
+        },
+        success: function (data) {
+            if (data.d != 0) {
+
+                /* Informacion del analisis */
+                $("#tipoEmpresa").prop('disabled', true);
+                $("#tipoEmpresa").val('');
+                $("#tipoPerfil").prop('disabled', true);
+                $("#tipoPerfil").val('');
+                $("#tipoEmpleo").prop('disabled', true);
+                $("#tipoEmpleo").val('');
+                $("#buroActual").prop('disabled', true);
+                $("#buroActual").val('');
+                $("#montoFinalAprobado").prop('disabled', true);
+                $("#montoFinalAprobado").val('');
+                $("#montoFinalFinanciar").prop('disabled', true);
+                $("#montoFinalFinanciar").val('');
+                $("#plazoFinalAprobado").prop('disabled', true);
+                $("#plazoFinalAprobado").val('');
+                $("#modalRechazar,#modalRechazarPorIncapcidadPago").modal('hide');
+                $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud,#btnDigitarMontoManualmente,#btnDigitarValoresManualmente,#btnRechazarIncapacidadPagoModal,#btnRechazarIncapPagoConfirmar").prop('disabled', true);
+                $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud,#btnDigitarMontoManualmente,#btnDigitarValoresManualmente,#btnRechazarIncapacidadPagoModal,#btnRechazarIncapPagoConfirmar").prop('title', 'La solicitud ya fue rechazada');
+                $("#actualizarIngresosCliente").css('display', 'none');
+                $("#pencilOff").css('display', '');
+                MensajeExito('¡Solicitud rechazada correctamente!');
+                actualizarEstadoSolicitud();
+            }
+            else { MensajeError('E006 Error al actualizar estado de la solicitud, contacte al administrador'); }
+        }
+    });
 });
 
 $("#btnDigitarMontoManualmente,#btnDigitarValoresManualmente").click(function () {
@@ -1297,7 +1077,7 @@ $("#btnActualizarMontoManualmente").click(function () {
             },
             success: function (data) {
                 if (data.d == true) {
-                    $("#lblMontoPrestamoEscogido").text(ConvertirAFormatoNumerico(montoFinanciarCalculado));
+                    $("#lblMontoPrestamoEscogido").text(addFormatoNumerico(montoFinanciarCalculado));
                     $("#lblPlazoEscogido").text(cantidadPlazos);
                     gMontoFinal = montoFinanciarCalculado;
                     gPlazoFinal = cantidadPlazos;
@@ -1360,17 +1140,737 @@ $("#btnConfirmarPrestamoAprobado").click(function () {
     });
 });
 
-//#endregion Funciones de analisis
+/* Condicionar solicitud */
+$("#btnCondicionarSolicitud").click(function () {
 
+    var ddlCondiciones = $("#ddlCondiciones");
 
-// #region Calculos * Pendiente *
+    listaCondicionamientos = [];
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Analisis.aspx/GetCondiciones",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al cargar el lista de condiciones');
+            $("#modalCondicionarSolicitud").modal();
+        },
+        success: function (data) {
+            var listaCondiciones = data.d;
+            $("#tblCondiciones tbody").empty();
+            $("#txtComentarioAdicional").val('');
+            ddlCondiciones.empty();
+            for (var i = 0; i < listaCondiciones.length; i++) {
+                ddlCondiciones.append('<option value="' + listaCondiciones[i].fiIDCondicion + '">' + listaCondiciones[i].fcCondicion + ' | ' + listaCondiciones[i].fcDescripcionCondicion + '</option>');
+            }
+            $("#modalCondicionarSolicitud").modal();
+        }
+    });
+});
 
+var contadorCondiciones = 0;
+var listaCondicionamientos = [];
+$("#btnAgregarCondicion").click(function () {
+
+    if ($($("#frmAddCondicion")).parsley().isValid()) {
+        var tblCondiciones = $("#tblCondiciones tbody");
+        var condicionID = $("#ddlCondiciones :selected").val();
+        var descripcionCondicion = $("#ddlCondiciones :selected").text();
+        var comentarioAdicional = $("#txtComentarioAdicional").val();
+        var btnQuitarCondicion = '<button data-id=' + condicionID + ' data-comentario="' + comentarioAdicional + '" id="btnQuitarCondicion" class="btn btn-sm btn-danger">Quitar</button>';
+        var newRowContent = '<tr><td>' + descripcionCondicion + '</td><td>' + comentarioAdicional + '</td><td>' + btnQuitarCondicion + '</td></tr>';
+        $("#tblCondiciones tbody").append(newRowContent);
+        $("#txtComentarioAdicional").val('');
+
+        listaCondicionamientos.push({
+            fiIDCondicion: condicionID,
+            fcComentarioAdicional: comentarioAdicional
+        });
+        contadorCondiciones = contadorCondiciones + 1;
+
+    } else { $($("#frmAddCondicion")).parsley().validate(); }
+});
+
+$(document).on('click', 'button#btnQuitarCondicion', function () {
+
+    $(this).closest('tr').remove()
+    var condicion = {
+        fiIDCondicion: $(this).data('id').toString(),
+        fcComentarioAdicional: $(this).data('comentario')
+    };
+    var list = [];
+    if (listaCondicionamientos.length > 0) {
+
+        for (var i = 0; i < listaCondicionamientos.length; i++) {
+
+            var iter = {
+                fiIDCondicion: listaCondicionamientos[i].fiIDCondicion,
+                fcComentarioAdicional: listaCondicionamientos[i].fcComentarioAdicional
+            };
+            if (JSON.stringify(iter) != JSON.stringify(condicion)) {
+                list.push(iter);
+            }
+        }
+    }
+    listaCondicionamientos = list;
+    contadorCondiciones -= 1;
+});
+
+$("#btnCondicionarSolicitudConfirmar").click(function () {
+
+    var otroComentario = $("#razonCondicion").val() != '' ? $("#razonCondicion").val() : '';
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Analisis.aspx/CondicionarSolicitud",
+        data: JSON.stringify({ SolicitudCondiciones: listaCondicionamientos, fcCondicionadoComentario: otroComentario, dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo cargar la información, contacte al administrador');
+        },
+        success: function (data) {
+            if (data.d == true) {
+                $("#modalCondicionarSolicitud").modal('hide');
+                //$("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('disabled', true);
+                $("#btnCondicionarSolicitud, #btnCondicionarSolicitudConfirmar,#btnAgregarCondicion").prop('title', 'La solicitud ya está condicionada, esperando actualización de agente de ventas');
+                MensajeExito('Estado de la solicitud actualizado');
+                actualizarEstadoSolicitud();
+            }
+            else { MensajeError('E008 Error al condicionar la solicitud, contacte al administrador'); }
+        }
+    });
+});
+
+/* Guardar Informacion del Perfil */
+$("#tipoEmpresa, #tipoPerfil, #tipoEmpleo, #buroActual").change(function () {
+
+    var tipoEmpresa = $("#tipoEmpresa :selected").val();
+    var tipoPerfil = $("#tipoPerfil :selected").val();
+    var tipoEmpleo = $("#tipoEmpleo :selected").val();
+    var buroActual = $("#buroActual :selected").val();
+
+    if (tipoEmpresa != '' && tipoPerfil != '' && tipoEmpleo != '' && buroActual != '') {
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Analisis.aspx/GuardarInformacionAnalisis",
+            data: JSON.stringify({ tipoEmpresa: tipoEmpresa, tipoPerfil: tipoPerfil, tipoEmpleo: tipoEmpleo, buroActual: buroActual, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('No se pudo guardar la información de perfil, contacte al administrador');
+            },
+            success: function (data) {
+                if (data.d != false) {
+                    MensajeExito('Informacion de perfil guardada correctamente');
+                    actualizarEstadoSolicitud();
+                }
+                MensajeError('No se pudo guardar la información de perfil, contacte al administrador');
+            }
+        });
+
+    }
+});
+
+/* Enviar solicitud a campo */
+$("#btnEnviarCampo").click(function () {
+    /* Verificar si la solicitud ya fue enivada a campo antes */
+    if (objSolicitud.fiEstadoDeCampo == 0) {
+        $("#modalEnviarCampo").modal();
+    }
+});
+
+$("#btnEnviarCampoConfirmar").click(function () {
+
+    if ($($("#comentarioAdicional")).parsley().isValid()) {
+
+        var fcObservacionesDeCredito = $("#comentarioAdicional").val();
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Analisis.aspx/EnviarACampo",
+            data: JSON.stringify({ fcObservacionesDeCredito: fcObservacionesDeCredito, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('No se pudo cargar la información, contacte al administrador');
+            },
+            success: function (data) {
+                if (data.d != false) {
+                    $("#modalEnviarCampo").modal('hide');
+                    $("#btnEnviarCampo, #btnEnviarCampoConfirmar").prop('disabled', true);
+                    $("#btnEnviarCampo, #btnEnviarCampoConfirmar").removeClass('btn-warning').addClass('btn-success');
+                    $("#btnEnviarCampo, #btnEnviarCampoConfirmar").prop('title', 'La solicitud ya fue enviada a campo');
+                    MensajeExito('La solicitud ha sido enviada a campo correctamente');
+                    actualizarEstadoSolicitud();
+                }
+                else { MensajeError('Error al enviar la solicitud a campo, contacte al administrador'); }
+            }
+        });
+    } else { $($("#comentarioAdicional")).parsley().validate(); }
+});
+
+/* Resolucion de la solicitud */
+var resolucion = false;
+$("#btnRechazar").click(function () {
+    resolucion = false;
+    $($("#comentarioRechazar")).parsley().reset();
+    $("#comentarioRechazar").val('');
+    $("#modalRechazar").modal();
+});
+
+$("#btnConfirmarRechazar").click(function () {
+
+    if ($($("#comentarioRechazar")).parsley().isValid()) {
+
+        var objBitacora = {
+            fcComentarioResolucion: $("#comentarioRechazar").val()
+        };
+        var solicitud = {
+            fiEstadoSolicitud: 4
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion",
+            data: JSON.stringify({ objBitacora: objBitacora, objSolicitud: solicitud, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('Ocurrió un error, contacte al administrador');
+            },
+            success: function (data) {
+
+                if (data.d != 0) {
+                    /* Informacion del analisis */
+                    $("#tipoEmpresa").prop('disabled', true);
+                    $("#tipoEmpresa").val('');
+                    $("#tipoPerfil").prop('disabled', true);
+                    $("#tipoPerfil").val('');
+                    $("#tipoEmpleo").prop('disabled', true);
+                    $("#tipoEmpleo").val('');
+                    $("#buroActual").prop('disabled', true);
+                    $("#buroActual").val('');
+                    $("#montoFinalAprobado").prop('disabled', true);
+                    $("#montoFinalAprobado").val('');
+                    $("#montoFinalFinanciar").prop('disabled', true);
+                    $("#montoFinalFinanciar").val('');
+                    $("#plazoFinalAprobado").prop('disabled', true);
+                    $("#plazoFinalAprobado").val('');
+                    $("#modalRechazar").modal('hide');
+                    $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud").prop('disabled', true);
+                    $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud").prop('title', 'La solicitud ya fue rechazada');
+                    $("#actualizarIngresosCliente").css('display', 'none');
+                    $("#pencilOff").css('display', '');
+                    MensajeExito('¡Solicitud rechazada correctamente!');
+                    actualizarEstadoSolicitud();
+                }
+                else { MensajeError('E009 Error al actualizar estado de la solicitud, contacte al administrador'); }
+            }
+        });
+    }
+    else { $($("#comentarioRechazar")).parsley().validate(); }
+});
+
+$("#btnAprobar").click(function () {
+    resolucion = true;
+    $($("#comentarioAprobar")).parsley().reset();
+    $("#comentarioAprobar").val('');
+    $("#modalAprobar").modal();
+});
+
+$("#btnConfirmarAprobar").click(function () {
+
+    if ($($("#comentarioAprobar")).parsley().isValid()) {
+
+        if (resolucionHabilitada == false) {
+            MensajeError('Todavía no se puede determinar una resolución para esta solicitud, tiene procesos sin concluir');
+        }
+        else if (resolucionHabilitada == true) {
+
+            if ($($("#frmInfoAnalisis")).parsley().isValid()) {
+
+                var objBitacora = {
+                    fcComentarioResolucion: $("#comentarioAprobar").val()
+                };
+                var solicitud = {
+                    fiEstadoSolicitud: 7,
+                    fiMontoFinalSugerido: gMontoFinal,
+                    fiMontoFinalFinanciar: gMontoFinal,
+                    fiPlazoFinalAprobado: gPlazoFinal
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion",
+                    data: JSON.stringify({ objBitacora: objBitacora, objSolicitud: solicitud, dataCrypt: window.location.href }),
+                    contentType: 'application/json; charset=utf-8',
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        MensajeError('Ocurrió un error, contacte al administrador');
+                    },
+                    success: function (data) {
+
+                        if (data.d != 0) {
+                            /* Informacion del analisis */
+                            $("#tipoEmpresa").prop('disabled', true);
+                            $("#tipoPerfil").prop('disabled', true);
+                            $("#tipoEmpleo").prop('disabled', true);
+                            $("#buroActual").prop('disabled', true);
+                            $("#montoFinalAprobado").prop('disabled', true);
+                            $("#montoFinalFinanciar").prop('disabled', true);
+                            $("#plazoFinalAprobado").prop('disabled', true);
+                            $("#modalAprobar").modal('hide');
+                            $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud").prop('disabled', true);
+                            $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud").attr('title', 'La solicitud ya fue aprobada');
+                            $("#actualizarIngresosCliente").css('display', 'none');
+                            $("#pencilOff").css('display', '');
+                            MensajeExito('¡Solicitud aprobada correctamente!');
+                            actualizarEstadoSolicitud();
+                        }
+                        else { MensajeError('E010 Error al actualizar estado de la solicitud, contacte al administrador'); }
+                    }
+                });
+            }
+            else {
+                MensajeError('Información de análisis incompleta');
+                $($("#frmInfoAnalisis")).parsley().validate();
+            }
+        }
+    }
+    else { $($("#comentarioAprobar")).parsley().validate(); }
+});
+
+/* Cargar detalles del procesamiento de la solicitud en el modal */
+$('#tblEstadoSolicitud tbody').on('click', 'tr', function () {
+
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Analisis.aspx/CargarEstadoSolicitud",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo cargar la información, contacte al administrador');
+        },
+        success: function (data) {
+            if (data.d != null) {
+
+                var habilitarResolucion = true;
+                var rowDataSolicitud = data.d;
+                var ProcesoPendiente = '/Date(-2208967200000)/';
+
+                /* Limpiar tabla de detalles del estado de la solicitud */
+                var tablaEstatusSolicitud = $('#tblDetalleEstado tbody');
+                tablaEstatusSolicitud.empty();
+
+                var ingresoInicio = rowDataSolicitud.fdEnIngresoInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnIngresoInicio) : '';
+                var ingresoFin = rowDataSolicitud.fdEnIngresoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnIngresoFin) : '';
+                var tiempoIngreso = ingresoInicio != '' ? ingresoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnIngresoInicio, rowDataSolicitud.fdEnIngresoFin) : '' : '';
+
+                tablaEstatusSolicitud.append('<tr>' +
+                    '<td>Ingreso</td>' +
+                    '<td>' + ingresoInicio + '</td>' +
+                    '<td>' + ingresoFin + '</td>' +
+                    '<td>' + tiempoIngreso + '</td>' +
+                    '</tr>');
+
+                var EnTramiteInicio = rowDataSolicitud.fdEnTramiteInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnTramiteInicio) : '';
+                var EnTramiteFin = rowDataSolicitud.fdEnTramiteFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnTramiteFin) : '';
+                var tiempoTramite = EnTramiteInicio != '' ? EnTramiteFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnTramiteInicio, rowDataSolicitud.fdEnTramiteFin) : '' : '';
+
+                tablaEstatusSolicitud.append('<tr>' +
+                    '<td>Recepción</td>' +
+                    '<td>' + EnTramiteInicio + '</td>' +
+                    '<td>' + EnTramiteFin + '</td>' +
+                    '<td>' + tiempoTramite + '</td>' +
+                    '</tr>');
+
+                var EnAnalisisInicio = rowDataSolicitud.fdEnAnalisisInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnAnalisisInicio) : '';
+                var EnAnalisisFin = rowDataSolicitud.fdEnAnalisisFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnAnalisisFin) : '';
+                var tiempoAnalisis = EnAnalisisInicio != '' ? EnAnalisisFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnAnalisisInicio, rowDataSolicitud.fdEnAnalisisFin) : '' : '';
+                rowDataSolicitud.fdEnAnalisisInicio == ProcesoPendiente ? habilitarResolucion = false : '';
+
+                tablaEstatusSolicitud.append('<tr>' +
+                    '<td>Análisis</td>' +
+                    '<td>' + EnAnalisisInicio + '</td>' +
+                    '<td>' + EnAnalisisFin + '</td>' +
+                    '<td>' + tiempoAnalisis + '</td>' +
+                    '</tr>');
+
+                var EnCampoInicio = rowDataSolicitud.fdEnvioARutaAnalista != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnvioARutaAnalista) : '';
+                var EnCampoFin = rowDataSolicitud.fdEnCampoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnCampoFin) : '';
+                var tiempoCampo = EnCampoInicio != '' ? EnCampoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnvioARutaAnalista, rowDataSolicitud.fdEnCampoFin) : '' : '';
+                tiempoCampo == '' ? habilitarResolucion = false : '';
+
+                tablaEstatusSolicitud.append('<tr>' +
+                    '<td>Campo</td>' +
+                    '<td>' + EnCampoInicio + '</td>' +
+                    '<td>' + EnCampoFin + '</td>' +
+                    '<td>' + tiempoCampo + '</td>' +
+                    '</tr>');
+
+                var CondicionadoInicio = rowDataSolicitud.fdCondicionadoInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdCondicionadoInicio) : '';
+                var CondificionadoFin = rowDataSolicitud.fdCondificionadoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdCondificionadoFin) : '';
+                var tiempoCondicionado = CondicionadoInicio != '' ? CondificionadoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdCondicionadoInicio, rowDataSolicitud.fdCondificionadoFin) : '' : '';
+
+                if (rowDataSolicitud.fdCondicionadoInicio != ProcesoPendiente) {
+
+                    if (rowDataSolicitud.fdCondificionadoFin == ProcesoPendiente) {
+                        habilitarResolucion = false;
+                    }
+                }
+                tablaEstatusSolicitud.append('<tr>' +
+                    '<td>Condicionado</td>' +
+                    '<td>' + CondicionadoInicio + '</td>' +
+                    '<td>' + CondificionadoFin + '</td>' +
+                    '<td>' + tiempoCondicionado + '</td>' +
+                    '</tr>');
+
+                var ReprogramadoInicio = rowDataSolicitud.fdReprogramadoInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdReprogramadoInicio) : '';
+                var ReprogramadoFin = rowDataSolicitud.fdReprogramadoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdReprogramadoFin) : '';
+                var tiempoReprogramado = ReprogramadoInicio != '' ? ReprogramadoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdReprogramadoInicio, rowDataSolicitud.fdReprogramadoFin) : '' : '';
+
+                if (rowDataSolicitud.fdReprogramadoInicio != ProcesoPendiente) {
+
+                    if (rowDataSolicitud.fdReprogramadoFin == ProcesoPendiente) {
+                        habilitarResolucion = false;
+                    }
+                }
+                tablaEstatusSolicitud.append('<tr>' +
+                    '<td>Reprogramado</td>' +
+                    '<td>' + ReprogramadoInicio + '</td>' +
+                    '<td>' + ReprogramadoFin + '</td>' +
+                    '<td>' + tiempoReprogramado + '</td>' +
+                    '</tr>');
+
+                var ValidacionInicio = rowDataSolicitud.PasoFinalInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.PasoFinalInicio) : '';
+                var ValidacionFin = rowDataSolicitud.PasoFinalFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.PasoFinalFin) : '';
+                var tiempoValidacion = ValidacionInicio != '' ? ValidacionFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.PasoFinalInicio, rowDataSolicitud.PasoFinalFin) : '' : '';
+
+                tablaEstatusSolicitud.append('<tr>' +
+                    '<td>Validación</td>' +
+                    '<td>' + ValidacionInicio + '</td>' +
+                    '<td>' + ValidacionFin + '</td>' +
+                    '<td>' + tiempoValidacion + '</td>' +
+                    '</tr>');
+
+                var timer = rowDataSolicitud.fcTiempoTotalTranscurrido.split(':');
+                tablaEstatusSolicitud.append('<tr>' +
+                    '<td colspan="4" class="text-center">Tiempo total transcurrido: <strong>' + timer[0] + ' horas con ' + timer[1] + ' minutos y ' + timer[2] + ' segundos </strong></td>' +
+                    '</tr >');
+
+                /* Verificar si ya se tomó una resolución de la solicitud */
+                if (rowDataSolicitud.fiEstadoSolicitud == 7) {
+                    $("#lblResolucion").text('Aprobado');
+                    $("#lblResolucion").removeClass('text-warning');
+                    $("#lblResolucion").addClass('text-success');
+                    habilitarResolucion = false;
+                }
+                else if (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5) {
+                    $("#lblResolucion").text('Rechazado');
+                    $("#lblResolucion").removeClass('text-warning');
+                    $("#lblResolucion").addClass('text-danger');
+                    habilitarResolucion = false;
+                }
+                else if (rowDataSolicitud.fdEnTramiteFin != ProcesoPendiente) {
+                    $("#lblResolucion").text('En análisis');
+                }
+                var contadorComentariosDetalle = 0;
+
+                /* Razon reprogramado */
+                if (rowDataSolicitud.fcReprogramadoComentario != '') {
+                    $("#lblReprogramado").text(rowDataSolicitud.fcReprogramadoComentario);
+                    $("#divReprogramado").css('display', '');
+                    contadorComentariosDetalle += 1;
+                }
+                /* Razon condicionado */
+                if (rowDataSolicitud.fcCondicionadoComentario != '') {
+                    $("#lblCondicionado").text(rowDataSolicitud.fcCondicionadoComentario);
+                    $("#divCondicionado").css('display', '');
+                    contadorComentariosDetalle += 1;
+                }
+                /* Observaciones documentacion */
+                if (rowDataSolicitud.fcComentarioValidacionDocumentacion != '') {
+                    $("#lblDocumentacionComentario").text(rowDataSolicitud.fcComentarioValidacionDocumentacion);
+                    $("#divDocumentacionComentario").css('display', '');
+                    contadorComentariosDetalle += 1;
+                }
+                /* Observaciones info personal */
+                if (rowDataSolicitud.fcComentarioValidacionInfoPersonal != '') {
+                    $("#lblInfoPersonalComentario").text(rowDataSolicitud.fcComentarioValidacionInfoPersonal);
+                    $("#divInfoPersonal").css('display', '');
+                    contadorComentariosDetalle += 1;
+                }
+                /* Observaciones info laboral */
+                if (rowDataSolicitud.fcComentarioValidacionInfoLaboral != '') {
+                    $("#lblInfoLaboralComentario").text(rowDataSolicitud.fcComentarioValidacionInfoLaboral);
+                    $("#divInfoLaboral").css('display', '');
+                    contadorComentariosDetalle += 1;
+                }
+                /* Observaciones referencias */
+                if (rowDataSolicitud.fcComentarioValidacionReferenciasPersonales != '') {
+                    $("#lblReferenciasComentario").text(rowDataSolicitud.fcComentarioValidacionReferenciasPersonales);
+                    $("#divReferencias").css('display', '');
+                    contadorComentariosDetalle += 1;
+                }
+                /* Comentario para campo depto de gestoria */
+                if (rowDataSolicitud.fcObservacionesDeCredito != '') {
+                    $("#lblCampoComentario").text(rowDataSolicitud.fcObservacionesDeCredito);
+                    $("#divCampo").css('display', '');
+                    contadorComentariosDetalle += 1;
+                }
+                /* Observaciones de gestoria */
+                if (rowDataSolicitud.fcObservacionesDeGestoria != '') {
+                    $("#lblGestoriaComentario").text(rowDataSolicitud.fcObservacionesDeGestoria);
+                    $("#divGestoria").css('display', '');
+                    contadorComentariosDetalle += 1;
+                }
+                /* Observaciones de gestoria */
+                if (rowDataSolicitud.fcComentarioResolucion != '') {
+                    $("#lblResolucionComentario").text(rowDataSolicitud.fcComentarioResolucion);
+                    $("#divComentarioResolucion").css('display', '');
+                    contadorComentariosDetalle += 1;
+                }
+                /* Validar si no hay detalles que mostrar */
+                if (contadorComentariosDetalle == 0) {
+                    $("#divNoHayMasDetalles").css('display', '');
+                }
+                else {
+                    $("#divNoHayMasDetalles").css('display', 'none');
+                }
+                $("#modalEstadoSolicitud").modal();
+
+                /* Validar si ya se puede tomar una resolucion */
+                resolucionHabilitada = habilitarResolucion;
+                $("#btnRechazar").prop('disabled', false);
+                $("#btnRechazar").prop('title', 'Resolución final de la solicitud');
+
+                if (habilitarResolucion == true) {
+                    $("#btnAprobar").prop('disabled', false);
+                    $("#btnAprobar").prop('title', 'Resolución final de la solicitud');
+                    $("#actualizarIngresosCliente").css('display', 'none');
+                    $("#pencilOff").css('display', '');
+                }
+                if (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7) {
+                    var decision = rowDataSolicitud.fiEstadoSolicitud == 7 ? 'aprobada' : 'rechazada';
+                    $("#btnRechazar, #btnAprobar").prop('disabled', true);
+                    $("#btnRechazar, #btnAprobar").prop('title', 'La solicitud ya fue ' + decision);
+                    $("#actualizarIngresosCliente").css('display', 'none');
+                    $("#pencilOff").css('display', '');
+                }
+            }
+            else { MensajeError('Error al cargar estado de la solicitud, contacte al administrador'); }
+        }
+    });
+});
+
+/* Actualizar comentario sobre una referencia personal radiofaro */
+var comentarioActual = '';
+var IDReferencia = '';
+var btnReferenciaSeleccionada = '';
+
+$(document).on('click', 'button#btnComentarioReferencia', function () {
+
+    btnReferenciaSeleccionada = $(this);
+    comentarioActual = $(this).data('comment');
+    IDReferencia = $(this).data('id');
+    var nombreReferencia = $(this).data('nombreref');
+
+    $("#txtObservacionesReferencia").val(comentarioActual);
+    $("#lblNombreReferenciaModal").text(nombreReferencia);
+
+    if (comentarioActual != '' && comentarioActual != 'Sin comunicacion') {
+        $("#txtObservacionesReferencia").prop('disabled', true);
+        $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', true).removeClass('btn-primary').addClass('btn-secondary');
+    }
+    else if (comentarioActual == 'Sin comunicacion') {
+        $("#txtObservacionesReferencia").prop('disabled', false);
+        $("#btnReferenciaSinComunicacion").prop('disabled', true);
+        $("#btnComentarioReferenciaConfirmar").prop('disabled', false).removeClass('btn-secondary').addClass('btn-primary');
+    }
+    else {
+        $("#txtObservacionesReferencia").prop('disabled', false);
+        $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', false);
+    }
+    $("#modalComentarioReferencia").modal();
+});
+
+$("#btnComentarioReferenciaConfirmar").click(function () {
+
+    if ($($("#frmObservacionReferencia")).parsley().isValid()) {
+
+        $("#frmObservacionReferencia").submit(function (e) { e.preventDefault(); });
+        comentarioActual = $('#txtObservacionesReferencia').val();
+
+        $.ajax({
+            type: "POST",
+            url: 'SolicitudesCredito_Analisis.aspx/ComentarioReferenciaPersonal',
+            data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('Error al actualizar estado de la referencia personal');
+            },
+            success: function (data) {
+                if (data.d == true) {
+                    $("#modalComentarioReferencia").modal('hide');
+                    MensajeExito('Observaciones de la referencia personal actualizadas correctamente');
+                    btnReferenciaSeleccionada.data('comment', comentarioActual);
+                    btnReferenciaSeleccionada.closest('tr').removeClass('text-danger').addClass('tr-exito');
+                    btnReferenciaSeleccionada.removeClass('mdi mdi-pencil').removeClass('mdi mdi-call-missed text-danger').addClass('mdi mdi-check-circle-outline tr-exito');
+                }
+                else { MensajeError('Error al actualizar observaciones de la referencia personal'); }
+            }
+        });
+    }
+    else { $($("#frmObservacionReferencia")).parsley().validate(); }
+});
+
+$("#btnReferenciaSinComunicacion").click(function () {
+
+    comentarioActual = 'Sin comunicacion';
+
+    $.ajax({
+        type: "POST",
+        url: 'SolicitudesCredito_Analisis.aspx/ComentarioReferenciaPersonal',
+        data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al actualizar estado de la referencia personal');
+        },
+        success: function (data) {
+            if (data.d == true) {
+                $("#modalComentarioReferencia").modal('hide');
+                MensajeExito('Estado de la referencia personal actualizado correctamente');
+                btnReferenciaSeleccionada.data('comment', comentarioActual);
+                btnReferenciaSeleccionada.removeClass('mdi mdi-check-circle-outline tr-exito').removeClass('mdi mdi-pencil').addClass('mdi mdi-call-missed text-danger');
+                btnReferenciaSeleccionada.closest('tr').addClass('text-danger');
+            }
+            else { MensajeError('Error al actualizar estado de la referencia personal'); }
+        }
+    });
+});
+
+$("#btnEliminarReferencia").click(function () {
+    $("#modalComentarioReferencia").modal('hide');
+    $("#modalEliminarReferencia").modal('show');
+});
+
+$("#btnEliminarReferenciaConfirmar").click(function () {
+
+    $.ajax({
+        type: "POST",
+        url: 'SolicitudesCredito_Analisis.aspx/EliminarReferenciaPersonal',
+        data: JSON.stringify({ IDReferencia: IDReferencia, dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al eliminar referencia personal');
+        },
+        success: function (data) {
+            if (data.d == true) {
+                $(btnReferenciaSeleccionada).closest('tr').remove();
+                $("#modalEliminarReferencia").modal('hide');
+                MensajeExito('La referencia personal ha sido eliminada correctamente');
+            }
+            else { MensajeError('Error al eliminar referencia personal'); }
+        }
+    });
+});
+
+/* Visualizar informacion de aval del cliente */
+var avalID = 0;
+$(document).on('click', 'button#btnDetalleAvalModal', function () {
+
+    var IDAval = $(this).data('id');
+    avalID = $(this).data('id');
+
+    $.ajax({
+        type: "POST",
+        url: 'SolicitudesCredito_Analisis.aspx/DetallesAval',
+        data: JSON.stringify({ IDAval: IDAval, dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al cargar detalles del aval');
+        },
+        success: function (data) {
+
+            if (data.d != null) {
+                var info = data.d;
+                avalID = info.fiIDAval;
+                $("#lblIdentidadAval").html(info.fcIdentidadAval);
+                $("#lblFechaCreacionAval").html(FechaFormato(info.fdFechaCrea));
+                $("#lblEstadoAval").html(info.fbAvalActivo == true ? 'Activo' : 'Inactivo');
+                var classEstado = info.fbAvalActivo == true ? 'text-info' : 'text-danger';
+                $("#lblEstadoAval").addClass(classEstado);
+                var nombreCompletoAval = info.fcPrimerNombreAval + ' ' + info.fcSegundoNombreAval + ' ' + info.fcPrimerApellidoAval + ' ' + info.fcSegundoApellidoAval;
+                $("#txtNombreCompletoAval").val(nombreCompletoAval);
+                $("#txtTelefonoAval").val(info.fcTelefonoAval);
+                $("#txtRTNAval").val(info.RTNAval);
+                var fechaNacAval = FechaFormato(info.fdFechaNacimientoAval);
+                $("#txtFechaNacimientoAval").val(fechaNacAval.split(' ')[0]);
+                $("#txtSexoAval").val(info.fcSexoAval == 'M' ? 'Masculino' : 'Femenino');
+                $("#txtCorreoAval").val(info.fcCorreoElectronicoAval);
+                $("#txtLugarTrabajoAval").val(info.fcNombreTrabajo);
+                var fechaIngresoAval = FechaFormato(info.fcFechaIngreso);
+                $("#txtFechaIngresoAval").val(fechaIngresoAval.split(' ')[0]);
+                $("#txtPuestoAsignadoAval").val(info.fcPuestoAsignado);
+                $("#txtIngresosMensualesAval").val(addFormatoNumerico(info.fiIngresosMensuales));
+                $("#txtTelEmpresaAval").val(info.fdTelefonoEmpresa);
+                $("#txtExtensionRRHHAval").val(info.fcExtensionRecursosHumanos);
+                $("#txtExtensionAval").val(info.fcExtensionAval);
+                $("#modalDetallesAval").modal();
+            } else {
+                MensajeError('Error al cargar detalles del aval');
+            }
+        }
+    });
+});
+
+$("#btnMasDetallesAval").click(function () {
+
+    if (avalID != 0) {
+        $.ajax({
+            type: "POST",
+            url: 'SolicitudesCredito_Analisis.aspx/EncriptarParametroDetallesAval',
+            data: JSON.stringify({ parametro: avalID, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('Error al redireccionar a pantalla de detalles del aval');
+            },
+            success: function (data) {
+                if (data.d != null) {
+                    var parametros = data.d;
+                    window.open('../Aval/Aval_Detalles.aspx?' + parametros);
+                }
+                else { MensajeError('Error al redireccionar a pantalla de detalles del aval'); }
+            }
+        });
+    }
+    else { MensajeError('Error al cargar detalles del aval'); }
+});
+
+/* Cargar buro externo */
+$("#btnHistorialExterno").click(function () {
+
+    MensajeInformacion('Cargando buro externo');
+    $.ajax({
+        type: "POST",
+        url: 'SolicitudesCredito_Analisis.aspx/ObtenerUrlEncriptado',
+        data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al cargar buro externo');
+        },
+        success: function (data) {
+            var parametros = data.d;
+            window.open("http://portal.prestadito.corp/corefinanciero/Clientes/Precalificado_Analista.aspx?" + parametros, "_blank",
+                "toolbar=yes, scrollbars=yes,resizable=yes," +
+                "top=0,left=window.screen.availWidth/2," +
+                "window.screen.availWidth/2,window.screen.availHeight");
+        }
+    });
+});
+
+/* Calculos de los prestamos */
 function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
 
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo',
-        data: JSON.stringify({ ValorPrestamo: prestamoAprobado, ValorPrima: '0', CantidadPlazos: plazoQuincenal, dataCrypt: window.location.href }),
+        data: JSON.stringify({ ValorPrestamo: prestamoAprobado, ValorPrima: 0.00, CantidadPlazos: plazoQuincenal, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError('Error al realizar calculo del préstamo');
@@ -1385,8 +1885,8 @@ function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
                 /* Variables globales */
                 gMontoFinal = objCalculo.ValoraFinanciar;
                 gPlazoFinal = plazoQuincenal;
-                $("#lblMontoFinanciarEfectivo").text(ConvertirAFormatoNumerico(objCalculo.ValoraFinanciar));
-                $("#lblMontoCuotaEfectivo").text(ConvertirAFormatoNumerico(objCalculo.CuotaQuincenal));
+                $("#lblMontoFinanciarEfectivo").text(addFormatoNumerico(objCalculo.ValoraFinanciar));
+                $("#lblMontoCuotaEfectivo").text(addFormatoNumerico(objCalculo.CuotaQuincenal));
                 $("#lblTituloCuotaEfectivo").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota);
 
                 /* Mostrar div del calculo del prestamo efectivo */
@@ -1396,10 +1896,10 @@ function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
                 $("#LogoPrestamo").css('display', '');
                 $("#divPrestamoEfectivo").css('display', '');
 
-                //$('#lblResumenValorGarantia').text(ConvertirAFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // Ficha de resumen
-                //$('#lblResumenValorPrima').text(ConvertirAFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // Ficha de resumen
-                $('#lblResumenValorFinanciar').text(ConvertirAFormatoNumerico(objCalculo.ValoraFinanciar)); // ficha de resumen
-                $('#lblResumenCuota').text(ConvertirAFormatoNumerico(objCalculo.CuotaQuincenal)); // ficha de resumen
+                //$('#lblResumenValorGarantia').text(addFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // Ficha de resumen
+                //$('#lblResumenValorPrima').text(addFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // Ficha de resumen
+                $('#lblResumenValorFinanciar').text(addFormatoNumerico(objCalculo.ValoraFinanciar)); // ficha de resumen
+                $('#lblResumenCuota').text(addFormatoNumerico(objCalculo.CuotaQuincenal)); // ficha de resumen
                 $("#lblResumenCuotaTitulo").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota); // ficha de resumen
             } else {
                 MensajeError('Error al realizar calculo del préstamo');
@@ -1430,9 +1930,9 @@ function prestamoMoto(ValorPrima, valorDeLaMoto, plazoQuincenal) {
                 /* variables globales */
                 gMontoFinal = objCalculo.ValoraFinanciar;
                 gPlazoFinal = plazoQuincenal;
-                $("#lblMontoFinanciarMoto").text(ConvertirAFormatoNumerico(objCalculo.ValoraFinanciar));
+                $("#lblMontoFinanciarMoto").text(addFormatoNumerico(objCalculo.ValoraFinanciar));
                 $("#lblTituloCuotaMoto").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota);
-                $("#lblMontoCuotaMoto").text(ConvertirAFormatoNumerico(objCalculo.CuotaQuincenal));
+                $("#lblMontoCuotaMoto").text(addFormatoNumerico(objCalculo.CuotaQuincenal));
 
                 /* Mostrar div del calculo del prestamo moto */
                 $("#divCargando,#divCargandoAnalisis").css('display', 'none');
@@ -1440,10 +1940,54 @@ function prestamoMoto(ValorPrima, valorDeLaMoto, plazoQuincenal) {
                 $("#divPrestamoMoto").css('display', '');
 
                 $("#lblResumenValorGarantiaTitulo,#lblResumenValorGarantia, #lblResumenValorPrimaTitulo,#lblResumenValorPrima").css('display', '');
-                $('#lblResumenValorGarantia').text(ConvertirAFormatoNumerico(valorDeLaMoto)); // Ficha de resumen
-                $('#lblResumenValorPrima').text(ConvertirAFormatoNumerico(ValorPrima)); // Ficha de resumen
-                $('#lblResumenValorFinanciar').text(ConvertirAFormatoNumerico(objCalculo.ValoraFinanciar)); // Ficha de resumen
-                $('#lblResumenCuota').text(ConvertirAFormatoNumerico(objCalculo.CuotaQuincenal)); // Ficha de resumen
+                $('#lblResumenValorGarantia').text(addFormatoNumerico(valorDeLaMoto)); // Ficha de resumen
+                $('#lblResumenValorPrima').text(addFormatoNumerico(ValorPrima)); // Ficha de resumen
+                $('#lblResumenValorFinanciar').text(addFormatoNumerico(objCalculo.ValoraFinanciar)); // Ficha de resumen
+                $('#lblResumenCuota').text(addFormatoNumerico(objCalculo.CuotaQuincenal)); // Ficha de resumen
+                $("#lblResumenCuotaTitulo").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota); //Ficha de resumen
+            } else {
+                MensajeError('Error al realizar calculo del préstamo');
+                gMontoFinal = 0;
+                gPlazoFinal = 0;
+            }
+        }
+    });
+}
+
+function prestamoConsumo(ValorPrima, valorDelArticulo, plazoQuincenal) {
+
+    $.ajax({
+        type: "POST",
+        url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo',
+        data: JSON.stringify({ ValorPrestamo: valorDelArticulo, ValorPrima: ValorPrima, CantidadPlazos: plazoQuincenal, dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al realizar calculo del préstamo');
+            gMontoFinal = 0;
+            gPlazoFinal = 0;
+        },
+        success: function (data) {
+
+            var objCalculo = data.d;
+            if (objCalculo != null) {
+
+                /* variables globales */
+                gMontoFinal = objCalculo.ValoraFinanciar;
+                gPlazoFinal = plazoQuincenal;
+                $("#lblMontoFinanciarMoto").text(addFormatoNumerico(objCalculo.ValoraFinanciar));
+                $("#lblTituloCuotaMoto").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota);
+                $("#lblMontoCuotaMoto").text(addFormatoNumerico(objCalculo.CuotaQuincenal));
+
+                /* Mostrar div del calculo del prestamo moto */
+                $("#divCargando,#divCargandoAnalisis").css('display', 'none');
+                $("#LogoPrestamo").css('display', '');
+                $("#divPrestamoMoto").css('display', '');
+
+                $("#lblResumenValorGarantiaTitulo,#lblResumenValorGarantia, #lblResumenValorPrimaTitulo,#lblResumenValorPrima").css('display', '');
+                $('#lblResumenValorGarantia').text(addFormatoNumerico(valorDelArticulo)); // Ficha de resumen
+                $('#lblResumenValorPrima').text(addFormatoNumerico(ValorPrima)); // Ficha de resumen
+                $('#lblResumenValorFinanciar').text(addFormatoNumerico(objCalculo.ValoraFinanciar)); // Ficha de resumen
+                $('#lblResumenCuota').text(addFormatoNumerico(objCalculo.CuotaQuincenal)); // Ficha de resumen
                 $("#lblResumenCuotaTitulo").text(plazoQuincenal + ' Cuotas ' + objCalculo.TipoCuota); //Ficha de resumen
             } else {
                 MensajeError('Error al realizar calculo del préstamo');
@@ -1458,7 +2002,7 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
 
     $.ajax({
         type: "POST",
-        url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo',
+        url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamoVehiculo',
         data: JSON.stringify({ ValorPrestamo: valorDelAuto, ValorPrima: ValorPrima, CantidadPlazos: plazoMensual, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
@@ -1473,8 +2017,8 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
                 /* variables globales */
                 gMontoFinal = objCalculo.ValoraFinanciar;
                 gPlazoFinal = plazoMensual;
-                $("#lblMontoFinanciarAuto").text(ConvertirAFormatoNumerico(objCalculo.ValoraFinanciar));
-                $("#lblMontoCuotaTotalAuto").text(ConvertirAFormatoNumerico(objCalculo.CuotaMensualNeta));
+                $("#lblMontoFinanciarAuto").text(addFormatoNumerico(objCalculo.ValoraFinanciar));
+                $("#lblMontoCuotaTotalAuto").text(addFormatoNumerico(objCalculo.CuotaMensualNeta));
                 $("#lblTituloCuotaAuto").text(plazoMensual + ' Cuotas ' + objCalculo.TipoCuota);
                 /* Mostrar div del calculo del prestamo auto */
                 $("#divCargando,#divCargandoAnalisis").css('display', 'none');
@@ -1482,10 +2026,10 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
                 $("#divPrestamoAuto").css('display', '');
 
                 $("#lblResumenValorGarantiaTitulo,#lblResumenValorGarantia, #lblResumenValorPrimaTitulo,#lblResumenValorPrima").css('display', '');
-                $('#lblResumenValorGarantia').text(ConvertirAFormatoNumerico(valorDelAuto)); // ficha de resumen
-                $('#lblResumenValorPrima').text(ConvertirAFormatoNumerico(ValorPrima)); // ficha de resumen
-                $('#lblResumenValorFinanciar').text(ConvertirAFormatoNumerico(objCalculo.ValoraFinanciar)); // ficha de resumen
-                $('#lblResumenCuota').text(ConvertirAFormatoNumerico(objCalculo.CuotaMensualNeta)); // ficha de resumen
+                $('#lblResumenValorGarantia').text(addFormatoNumerico(valorDelAuto)); // ficha de resumen
+                $('#lblResumenValorPrima').text(addFormatoNumerico(ValorPrima)); // ficha de resumen
+                $('#lblResumenValorFinanciar').text(addFormatoNumerico(objCalculo.ValoraFinanciar)); // ficha de resumen
+                $('#lblResumenCuota').text(addFormatoNumerico(objCalculo.CuotaMensualNeta)); // ficha de resumen
                 $("#lblResumenCuotaTitulo").text(plazoMensual + ' Cuotas ' + objCalculo.TipoCuota); // ficha de resumen
 
             } else {
@@ -1499,7 +2043,6 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
 
 var VALORPRIMA_CARGADA_EN_PRESTAMOSSUGERIDOS = 0;
 var VALORGARANTIA_CARGADA_EN_PRESTAMOSSUGERIDOS = 0;
-
 function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
 
     $("#cargandoPrestamosSugeridosReales").css('display', '');
@@ -1549,254 +2092,223 @@ function cargarPrestamosSugeridos(ValorProducto, ValorPrima) {
     });
 }
 
-// #endregion Calculos
-
-
-// #region Aprobar solicitud * Pendiente *
-
-$("#btnAprobar").click(function () {
-    resolucion = true;
-    $($("#comentarioAprobar")).parsley().reset();
-    $("#comentarioAprobar").val('');
-    $("#modalAprobar").modal();
-});
-
-$("#btnConfirmarAprobar").click(function () {
-
-    if ($($("#comentarioAprobar")).parsley().isValid()) {
-
-        if (resolucionHabilitada == false) {
-            MensajeError('Todavía no se puede determinar una resolución para esta solicitud, tiene procesos sin concluir');
-        }
-        else if (resolucionHabilitada == true) {
-
-            if ($($("#frmInfoAnalisis")).parsley().isValid()) {
-
-                var objBitacora = {
-                    fcComentarioResolucion: $("#comentarioAprobar").val()
-                };
-                var solicitud = {
-                    fiEstadoSolicitud: 7,
-                    fiMontoFinalSugerido: gMontoFinal,
-                    fiMontoFinalFinanciar: gMontoFinal,
-                    fiPlazoFinalAprobado: gPlazoFinal
-                };
-
-                $.ajax({
-                    type: "POST",
-                    url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion",
-                    data: JSON.stringify({ objBitacora: objBitacora, ESTADO_SOLICITUD: solicitud, dataCrypt: window.location.href }),
-                    contentType: 'application/json; charset=utf-8',
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        MensajeError('Ocurrió un error, contacte al administrador');
-                    },
-                    success: function (data) {
-
-                        if (data.d != 0) {
-                            /* Informacion del analisis */
-                            $("#tipoEmpresa").prop('disabled', true);
-                            $("#tipoPerfil").prop('disabled', true);
-                            $("#tipoEmpleo").prop('disabled', true);
-                            $("#buroActual").prop('disabled', true);
-                            $("#montoFinalAprobado").prop('disabled', true);
-                            $("#montoFinalFinanciar").prop('disabled', true);
-                            $("#plazoFinalAprobado").prop('disabled', true);
-                            $("#modalAprobar").modal('hide');
-                            $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud").prop('disabled', true);
-                            $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud").attr('title', 'La solicitud ya fue aprobada');
-                            $("#actualizarIngresosCliente").css('display', 'none');
-                            $("#pencilOff").css('display', '');
-                            MensajeExito('¡Solicitud aprobada correctamente!');
-                            actualizarEstadoSolicitud();
-                        }
-                        else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
-                    }
-                });
-            }
-            else {
-                MensajeError('Información de análisis incompleta');
-                $($("#frmInfoAnalisis")).parsley().validate();
-            }
-        }
-    }
-    else { $($("#comentarioAprobar")).parsley().validate(); }
-});
-
-// #endregion Aprobar solicitud
-
-
-// #region Rechazar solicitud * Pendiente *
-
-$("#btnRechazar").click(function () {
-    resolucion = false;
-    $($("#comentarioRechazar")).parsley().reset();
-    $("#comentarioRechazar").val('');
-    $("#modalRechazar").modal();
-});
-
-$("#btnConfirmarRechazar").click(function () {
-
-    if ($($("#comentarioRechazar")).parsley().isValid()) {
-
-        var objBitacora = {
-            fcComentarioResolucion: $("#comentarioRechazar").val()
-        };
-        var solicitud = {
-            fiEstadoSolicitud: 4
-        };
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion",
-            data: JSON.stringify({ objBitacora: objBitacora, ESTADO_SOLICITUD: solicitud, dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Ocurrió un error, contacte al administrador');
-            },
-            success: function (data) {
-
-                if (data.d != 0) {
-                    /* Informacion del analisis */
-                    $("#tipoEmpresa").prop('disabled', true);
-                    $("#tipoEmpresa").val('');
-                    $("#tipoPerfil").prop('disabled', true);
-                    $("#tipoPerfil").val('');
-                    $("#tipoEmpleo").prop('disabled', true);
-                    $("#tipoEmpleo").val('');
-                    $("#buroActual").prop('disabled', true);
-                    $("#buroActual").val('');
-                    $("#montoFinalAprobado").prop('disabled', true);
-                    $("#montoFinalAprobado").val('');
-                    $("#montoFinalFinanciar").prop('disabled', true);
-                    $("#montoFinalFinanciar").val('');
-                    $("#plazoFinalAprobado").prop('disabled', true);
-                    $("#plazoFinalAprobado").val('');
-                    $("#modalRechazar").modal('hide');
-                    $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud").prop('disabled', true);
-                    $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud").prop('title', 'La solicitud ya fue rechazada');
-                    $("#actualizarIngresosCliente").css('display', 'none');
-                    $("#pencilOff").css('display', '');
-                    MensajeExito('¡Solicitud rechazada correctamente!');
-                    actualizarEstadoSolicitud();
-                }
-                else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
-            }
-        });
-    }
-    else {
-        $($("#comentarioRechazar")).parsley().validate();
-    }
-});
-
-/* Cuando la nueva capacidad de pago es insuficiente */
-$("#btnRechazarIncapPagoConfirmar").click(function () {
-
-    var objBitacora = {
-        fcComentarioResolucion: 'Rechazado por incapcidad de pago'
-    };
-    var solicitud = {
-        fiEstadoSolicitud: 4
-    };
+/* Cargar nuevo estado de la solicitud despues de realizarse algun proceso */
+function actualizarEstadoSolicitud() {
 
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/SolicitudResolucion",
-        data: JSON.stringify({ objBitacora: objBitacora, ESTADO_SOLICITUD: solicitud, dataCrypt: window.location.href }),
+        url: "SolicitudesCredito_Analisis.aspx/CargarEstadoSolicitud",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('Ocurrió un error al determinar resolucion de la solicitud, contacte al administrador');
+            MensajeError('No se pudo cargar la información, contacte al administrador');
         },
         success: function (data) {
-            if (data.d != 0) {
+            if (data.d != null) {
 
-                /* Informacion del analisis */
-                $("#tipoEmpresa").prop('disabled', true);
-                $("#tipoEmpresa").val('');
-                $("#tipoPerfil").prop('disabled', true);
-                $("#tipoPerfil").val('');
-                $("#tipoEmpleo").prop('disabled', true);
-                $("#tipoEmpleo").val('');
-                $("#buroActual").prop('disabled', true);
-                $("#buroActual").val('');
-                $("#montoFinalAprobado").prop('disabled', true);
-                $("#montoFinalAprobado").val('');
-                $("#montoFinalFinanciar").prop('disabled', true);
-                $("#montoFinalFinanciar").val('');
-                $("#plazoFinalAprobado").prop('disabled', true);
-                $("#plazoFinalAprobado").val('');
-                $("#modalRechazar,#modalRechazarPorIncapcidadPago").modal('hide');
-                $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud,#btnDigitarMontoManualmente,#btnDigitarValoresManualmente,#btnRechazarIncapacidadPagoModal,#btnRechazarIncapPagoConfirmar").prop('disabled', true);
-                $("#modalAprobar, #btnRechazar, #btnCondicionarSolicitud,#btnDigitarMontoManualmente,#btnDigitarValoresManualmente,#btnRechazarIncapacidadPagoModal,#btnRechazarIncapPagoConfirmar").prop('title', 'La solicitud ya fue rechazada');
-                $("#actualizarIngresosCliente").css('display', 'none');
-                $("#pencilOff").css('display', '');
-                MensajeExito('¡Solicitud rechazada correctamente!');
-                actualizarEstadoSolicitud();
+                var rowDataSolicitud = data.d;
+                var habilitarResolucion = true;
+                var ProcesoPendiente = '/Date(-2208967200000)/';
+                var IconoExito = '<i class="mdi mdi-check-circle-outline mdi-18px text-success"></i>';
+                var IconoPendiente = '<i class="mdi mdi-check-circle-outline mdi-18px text-warning"></i>';
+                var IconoRojo = '<i class="mdi mdi mdi-close-circle-outline mdi-18px text-danger"></i>';
+
+                var statusIngreso = '';
+                if (rowDataSolicitud.fdEnIngresoInicio != ProcesoPendiente) {
+                    statusIngreso = rowDataSolicitud.fdEnIngresoFin != ProcesoPendiente ? IconoExito : IconoPendiente;
+                }
+                var statusTramite = '';
+                if (rowDataSolicitud.fdEnTramiteInicio != ProcesoPendiente) {
+
+                    statusTramite = rowDataSolicitud.fdEnTramiteFin != ProcesoPendiente ? IconoExito : IconoPendiente;
+                    if (rowDataSolicitud.fdEnTramiteFin == ProcesoPendiente && rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7) {
+                        statusTramite = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
+                    }
+                }
+                var statusAnalisis = '';
+                if (rowDataSolicitud.fdEnAnalisisInicio != ProcesoPendiente) {
+
+                    if (rowDataSolicitud.fdEnAnalisisFin != ProcesoPendiente) {
+                        statusAnalisis = IconoExito;
+                    }
+                    else {
+                        statusAnalisis = IconoPendiente;
+                        habilitarResolucion = false;
+                    }
+                    if (rowDataSolicitud.fdEnAnalisisFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                        statusAnalisis = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
+                    }
+                }
+                else { habilitarResolucion = false; }
+
+                var statusCampo = '';
+                if (rowDataSolicitud.fdEnvioARutaAnalista != ProcesoPendiente || rowDataSolicitud.fiEstadoDeCampo != 0) {
+
+                    if (rowDataSolicitud.fdEnCampoFin != ProcesoPendiente || rowDataSolicitud.fiEstadoDeCampo == 2) {
+                        statusCampo = IconoExito;
+                    }
+                    else {
+                        statusCampo = IconoPendiente;
+                        habilitarResolucion = false;
+                    }
+                    if (rowDataSolicitud.fdEnCampoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                        statusCampo = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
+                    }
+                    if (rowDataSolicitud.fiEstadoSolicitud == 5) {
+                        statusCampo = IconoRojo;
+                        habilitarResolucion = false;
+                    }
+                }
+                else { habilitarResolucion = false; }
+
+                var statusCondicionada = '';
+                if (rowDataSolicitud.fdCondicionadoInicio != ProcesoPendiente) {
+
+                    if (rowDataSolicitud.fdCondificionadoFin != ProcesoPendiente) {
+                        statusCondicionada = IconoExito;
+                    }
+                    else {
+                        statusCondicionada = IconoPendiente;
+                        habilitarResolucion = false;
+                    }
+                    if (rowDataSolicitud.fdCondificionadoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                        statusCondicionada = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
+                    }
+                }
+
+                var statusReprogramado = '';
+                if (rowDataSolicitud.fdReprogramadoInicio != ProcesoPendiente) {
+
+                    if (rowDataSolicitud.fdReprogramadoFin != ProcesoPendiente) {
+                        statusReprogramado = IconoExito;
+                    }
+                    else {
+                        statusReprogramado = IconoPendiente;
+                        habilitarResolucion = false;
+                    }
+                    if (rowDataSolicitud.fdReprogramadoFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                        statusReprogramado = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
+                    }
+                }
+
+                var statusPasoFinal = '';
+                if (rowDataSolicitud.PasoFinalInicio != ProcesoPendiente) {
+
+                    if (rowDataSolicitud.PasoFinalFin != ProcesoPendiente) {
+                        statusPasoFinal = IconoExito;
+                    } else {
+                        statusPasoFinal = IconoPendiente;
+                    }
+
+                    if (rowDataSolicitud.PasoFinalFin == ProcesoPendiente && (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7)) {
+                        statusPasoFinal = rowDataSolicitud.fiEstadoSolicitud == 7 ? IconoExito : IconoRojo;
+                    }
+                }
+                var resolucionFinal = '';
+                if (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7) {
+
+                    if (rowDataSolicitud.fiEstadoSolicitud == 7) {
+                        resolucionFinal = IconoExito;
+                        habilitarResolucion = false;
+                    } else {
+                        resolucionFinal = IconoRojo;
+                        habilitarResolucion = false;
+                    }
+                }
+                else {
+                    resolucionFinal = rowDataSolicitud.PasoFinalInicio != ProcesoPendiente ? IconoPendiente : '';
+                }
+                $('#tblEstadoSolicitud tbody').empty();
+                $('#tblEstadoSolicitud tbody').append('<tr>' +
+                    '<td class="text-center">' + statusIngreso + '</td>' +
+                    '<td class="text-center">' + statusTramite + '</td>' +
+                    '<td class="text-center">' + statusAnalisis + '</td>' +
+                    '<td class="text-center">' + statusCampo + '</td>' +
+                    '<td class="text-center">' + statusCondicionada + '</td>' +
+                    '<td class="text-center">' + statusReprogramado + '</td>' +
+                    '<td class="text-center">' + statusPasoFinal + '</td>' +
+                    '<td class="text-center">' + resolucionFinal + '</td>' +
+                    '</tr>');
+
+                /* Calcular tiempos */
+                //var ingresoInicio = rowDataSolicitud.fdEnIngresoInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnIngresoInicio) : '';
+                //var ingresoFin = rowDataSolicitud.fdEnIngresoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnIngresoFin) : '';
+                //var tiempoIngreso = ingresoInicio != '' ? ingresoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnIngresoInicio, rowDataSolicitud.fdEnIngresoFin) : '' : '';
+
+                //var EnTramiteInicio = rowDataSolicitud.fdEnTramiteInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnTramiteInicio) : '';
+                //var EnTramiteFin = rowDataSolicitud.fdEnTramiteFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnTramiteFin) : '';
+                //var tiempoTramite = EnTramiteInicio != '' ? EnTramiteFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnTramiteInicio, rowDataSolicitud.fdEnTramiteFin) : '' : '';
+
+                //var EnAnalisisInicio = rowDataSolicitud.fdEnAnalisisInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnAnalisisInicio) : '';
+                //var EnAnalisisFin = rowDataSolicitud.fdEnAnalisisFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnAnalisisFin) : '';
+                //var tiempoAnalisis = EnAnalisisInicio != '' ? EnAnalisisFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnAnalisisInicio, rowDataSolicitud.fdEnAnalisisFin) : '' : '';
+
+                //var EnCampoInicio = rowDataSolicitud.fdEnvioARutaAnalista != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnvioARutaAnalista) : '';
+                //var EnCampoFin = rowDataSolicitud.fdEnCampoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdEnCampoFin) : '';
+                //var tiempoCampo = EnCampoInicio != '' ? EnCampoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdEnvioARutaAnalista, rowDataSolicitud.fdEnCampoFin) : '' : '';
+
+                //var CondicionadoInicio = rowDataSolicitud.fdCondicionadoInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdCondicionadoInicio) : '';
+                //var CondificionadoFin = rowDataSolicitud.fdCondificionadoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdCondificionadoFin) : '';
+                //var tiempoCondicionado = CondicionadoInicio != '' ? CondificionadoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdCondicionadoInicio, rowDataSolicitud.fdCondificionadoFin) : '' : '';
+
+                //var ReprogramadoInicio = rowDataSolicitud.fdReprogramadoInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdReprogramadoInicio) : '';
+                //var ReprogramadoFin = rowDataSolicitud.fdReprogramadoFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.fdReprogramadoFin) : '';
+                //var tiempoReprogramado = ReprogramadoInicio != '' ? ReprogramadoFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.fdReprogramadoInicio, rowDataSolicitud.fdReprogramadoFin) : '' : '';
+
+                //var ValidacionInicio = rowDataSolicitud.PasoFinalInicio != ProcesoPendiente ? FechaFormato(rowDataSolicitud.PasoFinalInicio) : '';
+                //var ValidacionFin = rowDataSolicitud.PasoFinalFin != ProcesoPendiente ? FechaFormato(rowDataSolicitud.PasoFinalFin) : '';
+                //var tiempoValidacion = ValidacionInicio != '' ? ValidacionFin != '' ? diferenciasEntreDosFechas(rowDataSolicitud.PasoFinalInicio, rowDataSolicitud.PasoFinalFin) : '' : '';
+                //var timer = rowDataSolicitud.fcTiempoTotalTranscurrido.split(':');
+                //$('#tblEstadoSolicitud tbody').append('<tr>' +
+                // '<td class="text-center">' + tiempoIngreso + '</td>' +
+                // '<td class="text-center">' + tiempoTramite + '</td>' +
+                // '<td class="text-center">' + tiempoAnalisis + '</td>' +
+                // '<td class="text-center">' + tiempoCampo + '</td>' +
+                // '<td class="text-center">' + tiempoCondicionado + '</td>' +
+                // '<td class="text-center">' + tiempoReprogramado + '</td>' +
+                // '<td class="text-center">' + tiempoValidacion + '</td>' +
+                // '<td class="text-center">' + timer + '</td>' +
+                // '</tr>');
+
+                /* Validar si ya se puede tomar una resolucion */
+                if (rowDataSolicitud.ftAnalisisTiempoValidacionReferenciasPersonales != ProcesoPendiente) {
+                    $("#btnEliminarReferenciaConfirmar, #btnValidoReferenciasModal, #btnValidoReferenciasConfirmar,#btnEliminarReferencia,#btnReferenciaSinComunicacion,#btnComentarioReferenciaConfirmar").prop('disabled', true).prop('title', 'Las referencias personales ya fueron validadas').removeClass('btn-warning').addClass('btn-success');
+                }
+
+                rowDataSolicitud.ftAnalisisTiempoValidacionReferenciasPersonales == ProcesoPendiente ? habilitarResolucion = false : '';
+                rowDataSolicitud.ftAnalisisTiempoValidarDocumentos == ProcesoPendiente ? habilitarResolucion = false : '';
+                rowDataSolicitud.ftAnalisisTiempoValidarInformacionLaboral == ProcesoPendiente ? habilitarResolucion = false : '';
+                rowDataSolicitud.ftAnalisisTiempoValidarInformacionPersonal == ProcesoPendiente ? habilitarResolucion = false : '';
+                resolucionHabilitada = habilitarResolucion;
+
+                if (rowDataSolicitud.fcTipoEmpresa != '' && rowDataSolicitud.fcTipoPerfil != '' && rowDataSolicitud.fcTipoEmpleado != '' && rowDataSolicitud.fcBuroActual != '' && rowDataSolicitud.fiEstadoDeCampo == 0 && rowDataSolicitud.ftAnalisisTiempoValidarDocumentos != ProcesoPendiente && rowDataSolicitud.ftAnalisisTiempoValidarInformacionPersonal != ProcesoPendiente && rowDataSolicitud.ftAnalisisTiempoValidarInformacionLaboral != ProcesoPendiente) {
+                    $("#btnEnviarCampo, #btnEnviarCampoConfirmar").prop('disabled', false);
+                }
+
+                if (habilitarResolucion == true) {
+                    $("#btnAprobar").prop('disabled', false);
+                    $("#btnAprobar").prop('title', 'Resolución final de la solicitud');
+                } else {
+                    $("#btnRechazar").prop('disabled', false);
+                    $("#btnRechazar").prop('title', 'Resolución final de la solicitud');
+                }
+
+                if (rowDataSolicitud.fiEstadoSolicitud == 4 || rowDataSolicitud.fiEstadoSolicitud == 5 || rowDataSolicitud.fiEstadoSolicitud == 7) {
+                    var decision = rowDataSolicitud.fiEstadoSolicitud == 7 ? 'aprobada' : 'rechazada';
+                    $("#btnRechazar, #btnAprobar").prop('disabled', true);
+                    $("#btnRechazar, #btnAprobar").prop('title', 'La solicitud ya fue ' + decision);
+                    $("#actualizarIngresosCliente,#divPrestamosSugeridosReales").css('display', 'none');
+                    $("#pencilOff").css('display', '');
+                }
             }
-            else { MensajeError('Error al actualizar estado de la solicitud, contacte al administrador'); }
+            else {
+                MensajeError('E011 Error al actualizar estado de la solicitud, contacte al administrador');
+            }
         }
     });
-});
-
-// #endregion Rechazar solicitud
-
-
-//#region Funciones utilitarias * Listo *
-
-countdown.setLabels(
-    'ms | seg | min | hr | d | sem | mes |año | dec | sig | mil ',
-    'ms | seg | min | hr | d | sem | mes |año | dec | sig | mil ',
-    ' y ',
-    ' : ',
-    'ahora',
-    function (n) { return n.toString(); });
-
-function InicializarContador(fechaInicio, fechaFin, identificadorEtiqueta) {
-
-    var fechaInicial = fechaInicio == '/Date(-2208967200000)/' ? null : new Date(parseInt(fechaInicio.substr(6, 19)));
-
-    var fechaFinal = fechaFin == '/Date(-2208967200000)/' ? null : new Date(parseInt(fechaFin.substr(6, 19)));
-
-    /* Verificar si ya se determinó una resolución para la solicitud y el el proceso se quedó pendiente y */
-    if (fechaInicio != '/Date(-2208967200000)/' && fechaFin == '/Date(-2208967200000)/' && (ID_ESTADO_SOLICITUD == '7' || ID_ESTADO_SOLICITUD == '5' || ID_ESTADO_SOLICITUD == '4')) {
-
-        document.getElementById('' + identificadorEtiqueta + '').innerHTML = '-';
-    }
-    else if (fechaFin == '/Date(-2208967200000)/' && fechaInicio == '/Date(-2208967200000)/') { /* Verificar si el proceso todavía no ha empezado */
-
-        document.getElementById('' + identificadorEtiqueta + '').innerHTML = '-';
-    }
-    else if (fechaFin != '/Date(-2208967200000)/' && fechaInicio != '/Date(-2208967200000)/') { /* Verificar si el proceso ya empezó y finalizó */
-
-        document.getElementById('' + identificadorEtiqueta + '').innerHTML = countdown(
-            fechaInicial,
-            fechaFinal,
-            countdown.YEARS | countdown.MONTHS | countdown.WEEKS | countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS
-        ).toHTML("");
-    }
-    else if (fechaInicio != '/Date(-2208967200000)/') { /* Verificar si el proceso ya empezó y todavía no ha finalizado */
-
-        countdown(
-            fechaInicial,
-            function (ts) {
-
-                document.getElementById('' + identificadorEtiqueta + '').innerHTML = ts.toHTML("");
-            },
-            fechaFinal,
-            countdown.YEARS | countdown.MONTHS | countdown.WEEKS | countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS
-        );
-    }
 }
 
-function ObtenerFechaFormateada(fecha) {
-
-    return fecha == '/Date(-2208967200000)/' ? '-' : moment(fecha).locale('es').format('YYYY/MM/DD hh:mm:ss A');
-}
-
-function ValidarFecha(fecha) {
-
-    return fecha == '/Date(-2208967200000)/' ? null : fecha;
-}
-
+/* Funciones varias */
 function MensajeInformacion(mensaje) {
     iziToast.info({
         title: 'Info',
@@ -1818,8 +2330,37 @@ function MensajeError(mensaje) {
     });
 }
 
-function ConvertirAFormatoNumerico(nStr) {
+function diferenciasEntreDosFechas(fechaInicio, fechaFin) {
 
+    var inicio = new Date(FechaFormatoGuiones(fechaInicio));
+    var fin = new Date(FechaFormatoGuiones(fechaFin));
+    var tiempoResta = (fin.getTime() - inicio.getTime()) / 1000;
+    /* Calcular dias */
+    var dias = Math.floor(tiempoResta / 86400);
+    //tiempoResta = tiempoResta >= 86400 ? dias * 86400 : tiempoResta;
+
+    /* Calcular horas */
+    var horas = Math.floor(tiempoResta / 3600) % 24;
+    //tiempoResta = tiempoResta >= 3600 ? horas * 3600 : tiempoResta;
+
+    /* Calcular minutos */
+    var minutos = Math.floor(tiempoResta / 60) % 60;
+    //tiempoResta = tiempoResta >= 3600 ? minutos * 3600 : tiempoResta;
+
+    /* Calcular segundos */
+    var segundos = tiempoResta % 60;
+    var diferencia = pad2(dias) + ':' + pad2(horas) + ':' + pad2(minutos) + ':' + pad2(segundos);
+    return diferencia;
+
+    //var now = moment(fechaInicio);
+    //var then = moment(fechaFin);
+
+    //var ms = moment(now, "DD/MM/YYYY HH:mm:ss").diff(moment(then, "DD/MM/YYYY HH:mm:ss"));
+    //var d = moment.duration(ms);
+    //var s = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
+}
+
+function addFormatoNumerico(nStr) {
     nStr += '';
     x = nStr.split('.');
     x1 = x[0];
@@ -1831,30 +2372,42 @@ function ConvertirAFormatoNumerico(nStr) {
     return x1 + x2;
 }
 
-function DeshabilitarElementoPorId(idElemento) {
-    $('#' + idElemento + '').prop('disabled', true);
-};
-
-function HabilitarElementoPorId(idElemento) {
-    $('#' + idElemento + '').prop('disabled', false);
-};
-
-function MostrarLoader() {
-    $("#imgLogo").css('display', 'none');
-    $("#divCargandoAnalisis").css('display', '');
+function pad2(number) {
+    return (number < 10 ? '0' : '') + number
 }
 
-function OcultarLoader() {
-    $("#divCargandoAnalisis").css('display', 'none');
-    $("#imgLogo").css('display', '');
+function FechaFormato(pFecha) {
+    if (!pFecha)
+        return "Sin modificaciones";
+    var fechaString = pFecha.substr(6, 19);
+    var fechaActual = new Date(parseInt(fechaString));
+    var mes = pad2(fechaActual.getMonth() + 1);
+    var dia = pad2(fechaActual.getDate());
+    var anio = fechaActual.getFullYear();
+    var hora = pad2(fechaActual.getHours());
+    var minutos = pad2(fechaActual.getMinutes());
+    var segundos = pad2(fechaActual.getSeconds().toString());
+    var FechaFinal = dia + "/" + mes + "/" + anio + " " + hora + ":" + minutos + ":" + segundos;
+    return FechaFinal;
 }
 
-//#endregion Funciones utilitarias
+function FechaFormatoGuiones(pFecha) {
+    if (!pFecha)
+        return "Sin modificaciones";
+    var fechaString = pFecha.substr(6, 19);
+    var fechaActual = new Date(parseInt(fechaString));
+    var mes = pad2(fechaActual.getMonth() + 1);
+    var dia = pad2(fechaActual.getDate());
+    var anio = fechaActual.getFullYear();
+    var hora = pad2(fechaActual.getHours());
+    var minutos = pad2(fechaActual.getMinutes());
+    var segundos = pad2(fechaActual.getSeconds().toString());
+    var FechaFinal = anio + "/" + mes + "/" + dia + " " + hora + ":" + minutos + ":" + segundos;
+    return FechaFinal;
+}
 
-// #region Otras funciones * Listo *
-
-$(window).on('hide.bs.modal', function () { /* cuando se abra un modal, ocultar el scroll del BODY y deja solo el del modal (en caso de que este tenga scroll) */
-
+$(window).on('hide.bs.modal', function () {
+    /* cuando se abra un modal, ocultar el scroll del BODY y deja solo el del modal (en caso de que este tenga scroll) */
     const body = document.body;
     const scrollY = body.style.top;
     body.style.position = '';
@@ -1863,8 +2416,8 @@ $(window).on('hide.bs.modal', function () { /* cuando se abra un modal, ocultar 
     $("body").css('padding-right', '0');
 });
 
-$(window).on('show.bs.modal', function () { /* Cuando se cierre el modal */
-
+$(window).on('show.bs.modal', function () {
+    /* Cuando se cierre el modal */
     const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
     const body = document.body;
     body.style.position = 'fixed';
@@ -1875,5 +2428,3 @@ $(window).on('show.bs.modal', function () { /* Cuando se cierre el modal */
 window.addEventListener('scroll', () => {
     document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
 });
-
-// #endregion Otras funciones

@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <meta name="description" content="Bandeja de solicitudes de crédito" />
     <title>Bandeja de solicitudes</title>
-    <link href="/Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/Content/css/icons.css" rel="stylesheet" />
-    <link href="/Content/css/style.css?v=202010031105" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031105" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" />
     <link href="/Scripts/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" />
@@ -95,7 +95,7 @@
                     </label>
                     <label class="btn btn-secondary cursor-pointer">
                         <input id="reprogramadas" type="radio" name="filtros" value="10" />
-                        Reprogramadas
+                        Incompleta
                     </label>
                     <label class="btn btn-secondary cursor-pointer">
                         <input id="validacion" type="radio" name="filtros" value="11" />
@@ -141,13 +141,13 @@
                 <div class="col-lg-3 col-md-3 col-sm-6 col-6">
                     <label class="col-form-label">Búsqueda por Fecha</label>
                     <div class="input-daterange input-group" id="date-range">
-                        <input type="text" class="form-control form-control-sm" name="fecha-minima" id="fecha-minima" role="textbox" />
-                        <input type="text" class="form-control form-control-sm" name="fecha-maxima" id="fecha-maxima" role="textbox" />
+                        <input type="text" class="form-control form-control-sm" name="fecha-minima" id="fecha-minima" />
+                        <input type="text" class="form-control form-control-sm" name="fecha-maxima" id="fecha-maxima" />
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-6 align-self-end">
                     <label class="col-form-label">Búsqueda por Año</label>
-                    <input id="ddlAnioIngreso" class="form-control form-control-sm" type="text" role="textbox" />
+                    <input id="ddlAnioIngreso" class="form-control form-control-sm" type="text" />
                 </div>
             </div>
 
@@ -165,16 +165,12 @@
                             <th>Anális.</th>
                             <th>Campo</th>
                             <th>Condic.</th>
-                            <th>Reprog.</th>
+                            <th>Incom.</th>
                             <th>Valida.</th>
                             <th>Resolución</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="13" class="text-center">Cargando información...</td>
-                        </tr>
-                    </tbody>
+                    <tbody></tbody>
                     <tfoot></tfoot>
                 </table>
             </div>

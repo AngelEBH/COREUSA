@@ -9,16 +9,10 @@ using System.Web.UI.WebControls;
 
 public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
 {
-    #region Propiedades
-
     public string pcIDApp = "";
     public string pcIDSesion = "";
     public string pcIDUsuario = "";
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
-
-    #endregion
-
-    #region Page_Load, ValidarPuesto, CargarListados
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -295,10 +289,6 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
         }
     }
 
-    #endregion
-
-    #region Cargar solicitud por id Solicitud
-
     [WebMethod]
     public static SolicitudesCredito_Mantenimiento_ViewModel CargarInformacion(int idSolicitud, string dataCrypt)
     {
@@ -341,6 +331,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                             informacionDeClienteSolicitud.GestorAsignado = sqlResultado["fcNombreGestor"].ToString();
                             informacionDeClienteSolicitud.Agencia = sqlResultado["fcNombreAgencia"].ToString();
                             informacionDeClienteSolicitud.IdFondo = (int)sqlResultado["fiIDFondo"];
+                            informacionDeClienteSolicitud.Tasa = sqlResultado["fnTasaAnualAplicada"].ToString();
                             informacionDeClienteSolicitud.Fondo = sqlResultado["fcRazonSocial"].ToString().ToUpper();
                         }
 
@@ -454,9 +445,6 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
         }
         return informacionDeClienteSolicitud;
     }
-    #endregion
-
-    #region Mantenimientos de procesos de campo
 
     [WebMethod]
     public static bool ResolucionCampo(int idSolicitud, int resolucionCampo, string observaciones, string dataCrypt)
@@ -553,7 +541,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static bool ReiniciarCampo(int idSolicitud, bool reiniciarInvestigacionDomicilio, bool reiniciarInvestigacionTrabajo, string observaciones, string dataCrypt)
+    public static bool ReasignarVendedorSolicitud(int idSolicitud, int idUsuarioAsignado, string observaciones, string dataCrypt)
     {
         var resultado = false;
         try
@@ -567,12 +555,11 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
             {
                 sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ReiniciarCampo", sqlConexion))
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ReasignarSolicitud", sqlConexion))
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piReiniciarDomicilio", reiniciarInvestigacionDomicilio);
-                    sqlComando.Parameters.AddWithValue("@piReiniciarTrabajo", reiniciarInvestigacionTrabajo);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuarioAsignado", idUsuarioAsignado);
                     sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -599,9 +586,100 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
         }
         return resultado;
     }
-    #endregion
 
-    #region Mantenimiento de procesos de credito
+    [WebMethod]
+    public static bool AnularCondicion(int idSolicitud, int idSolicitudCondicion, string observaciones, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_AnularCondicion", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitudCondicion", idSolicitudCondicion);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool EliminarDocumento(int idSolicitud, int idSolicitudDocumento, string observaciones, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_EliminarDocumento", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitudDocumento", idSolicitudDocumento);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
 
     [WebMethod]
     public static bool CambiarResolucionSolicitud(int idSolicitud, int idNuevaResolucion, string observaciones, string dataCrypt)
@@ -623,6 +701,54 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
                     sqlComando.Parameters.AddWithValue("@piNuevaResolucion", idNuevaResolucion);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    [WebMethod]
+    public static bool ReiniciarCampo(int idSolicitud, bool reiniciarInvestigacionDomicilio, bool reiniciarInvestigacionTrabajo, string observaciones, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ReiniciarCampo", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piReiniciarDomicilio", reiniciarInvestigacionDomicilio);
+                    sqlComando.Parameters.AddWithValue("@piReiniciarTrabajo", reiniciarInvestigacionTrabajo);
                     sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
@@ -793,104 +919,6 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static bool ReasignarVendedorSolicitud(int idSolicitud, int idUsuarioAsignado, string observaciones, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_ReasignarSolicitud", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuarioAsignado", idUsuarioAsignado);
-                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                            {
-                                resultado = true;
-                            }
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            resultado = false;
-        }
-        return resultado;
-    }
-
-    [WebMethod]
-    public static bool AnularCondicion(int idSolicitud, int idSolicitudCondicion, string observaciones, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_AnularCondicion", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitudCondicion", idSolicitudCondicion);
-                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                            {
-                                resultado = true;
-                            }
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            resultado = false;
-        }
-        return resultado;
-    }
-
-    #endregion
-
-    #region Mantenimiento de referencias personales
-
-    [WebMethod]
     public static bool RegistrarReferenciaPersonal(int idSolicitud, int idCliente, SolicitudesCredito_Mantenimiento_Cliente_ReferenciaPersonal_ViewModel referenciaPersonal, string observaciones, string dataCrypt)
     {
         var resultado = false;
@@ -1043,57 +1071,6 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
         return resultado;
     }
 
-    #endregion
-
-    #region Mantenimientos generales
-
-    [WebMethod]
-    public static bool EliminarDocumento(int idSolicitud, int idSolicitudDocumento, string observaciones, string dataCrypt)
-    {
-        var resultado = false;
-        try
-        {
-            var lURLDesencriptado = DesencriptarURL(dataCrypt);
-            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
-            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
-
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-
-                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_EliminarDocumento", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitudDocumento", idSolicitudDocumento);
-                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
-
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
-                            {
-                                resultado = true;
-                            }
-                        }
-                    } // using sqlResultado
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            ex.Message.ToString();
-            resultado = false;
-        }
-        return resultado;
-    }
-
     [WebMethod]
     public static bool CambiarFondosPrestamo(int idSolicitud, int idFondo, string observaciones, string dataCrypt)
     {
@@ -1140,9 +1117,53 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
         }
         return resultado;
     }
-    #endregion
 
-    #region Funciones utilitarias
+    [WebMethod]
+    public static bool CambiarTasaPrestamo(int idSolicitud, string Tasa, string observaciones, string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_Mantenimiento_CambiarTasa", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@pnTasa", Tasa);
+                    sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
 
     public static Uri DesencriptarURL(string URL)
     {
@@ -1156,6 +1177,7 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
             {
                 var pcEncriptado = URL.Substring(liParamStart + 1, URL.Length - (liParamStart + 1));
                 var lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
+
                 lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
             }
         }
@@ -1165,7 +1187,6 @@ public partial class SolicitudesCredito_Mantenimiento : System.Web.UI.Page
         }
         return lURLDesencriptado;
     }
-    #endregion
 }
 
 #region View Models
@@ -1188,6 +1209,7 @@ public class SolicitudesCredito_Mantenimiento_ViewModel
     public int IdEstadoSolicitud { get; set; }
     public string EstadoSolicitud { get; set; }
     public int IdFondo { get; set; }
+    public string Tasa { get; set; }
     public string Fondo { get; set; }
     public List<SolicitudesCredito_Mantenimiento_Documentos_Solicitud_ViewModel> Documentos { get; set; }
     public List<SolicitudesCredito_Mantenimiento_Solicitud_Condicion_ViewModel> Condiciones { get; set; }

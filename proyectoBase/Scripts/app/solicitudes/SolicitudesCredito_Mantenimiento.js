@@ -422,6 +422,51 @@ $("#btnReiniciarValidacionConfirmar").click(function (e) {
 });
 
 
+/* Cambiar tasa del préstamo */
+$("#btnCambiarTasa").on('click', function () {
+
+    $("#txtObservacionesCambiarTasa").val('');
+    $("#modalCambiarTasa").modal();
+});
+
+$("#btnCambiarTasaConfirmar").click(function (e) {
+
+    if ($("#txtNuevaTasa").parsley().isValid() && $("#txtObservacionesCambiarTasa").parsley().isValid())
+    {
+        let TasaNueva = $("#txtNuevaTasa").val();
+        let observaciones = $("#txtObservacionesCambiarTasa").val();
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Mantenimiento.aspx/CambiarTasaPrestamo",
+            data: JSON.stringify({ idSolicitud: idSolicitud, Tasa: TasaNueva, observaciones: observaciones, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError)
+            {
+                /*MensajeError("E0001: No se pudo cambiar la tasa, contacte al administrador.");*/
+                MensajeError(ajaxOptions);
+            },
+            success: function (data) {
+
+                if (data.d == true) {
+                    MensajeExito('La tasa se cambió correctamente.');
+                    BuscarSolicitud();
+                }
+                else {
+                    MensajeError("E0002: No se pudo cambiar la tasa, contacte al administrador.");
+                }
+
+                $("#modalCambiarTasa").modal('hide');
+            }
+        });
+
+    }
+    else {
+        $("#txtNuevaTasa").parsley().validate();
+        $("#txtObservacionesCambiarFondos").parsley().validate();
+    }
+});
+
 /* Cambiar fondos del préstamo */
 $("#btnCambiarFondos").on('click', function () {
 
@@ -748,6 +793,7 @@ function BuscarSolicitud() {
                     $("#lblAgenciaYVendedorAsignado").text(resultado.Agencia + ' | ' + resultado.UsuarioAsignado);
                     $("#lblGestorAsignado").text(resultado.GestorAsignado);
                     $("#lblFondoActual").text(resultado.Fondo);
+                    $("#lblTasaActual").text(resultado.Tasa);
                     $("#ddlFondos").val(resultado.IdFondo);
 
                     var datatableLenguage = {
@@ -879,7 +925,7 @@ function BuscarSolicitud() {
                             {
                                 "data": "FechaMantenimiento",
                                 "render": function (value) {
-                                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm:ss a')
+                                    return moment(value).locale('es').format('YYYY/MM/DD hh:mm a')
                                 }
                             },
                             { "data": "AgenciaUsuario" },

@@ -101,36 +101,36 @@ public partial class SolicitudesCredito_ListadoGarantias : System.Web.UI.Page
         ddlUbicacionInstalacion_Detalle.Items.Clear();
         ddlUbicacionInstalacion_Detalle.Items.Add(new ListItem("Seleccione una opción", ""));
 
-        try
-        {
-            using (var sqlConexion = new SqlConnection(ConnectionString))
-            {
-                sqlConexion.Open();
+        //try
+        //{
+        //    using (var sqlConexion = new SqlConnection(ConnectionString))
+        //    {
+        //        sqlConexion.Open();
 
-                using (var sqlComando = new SqlCommand("sp_CREDGarantias_UbicacionesInstalacionGPS", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.CommandTimeout = 120;
+        //        using (var sqlComando = new SqlCommand("sp_CREDGarantias_UbicacionesInstalacionGPS", sqlConexion))
+        //        {
+        //            sqlComando.CommandType = CommandType.StoredProcedure;
+        //            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+        //            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+        //            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+        //            sqlComando.CommandTimeout = 120;
 
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
-                            ddlUbicacionInstalacion.Items.Add(new ListItem(sqlResultado["fcNombreAgencia"].ToString(), sqlResultado["fiIDAgencia"].ToString()));
-                            ddlUbicacionInstalacion_Actualizar.Items.Add(new ListItem(sqlResultado["fcNombreAgencia"].ToString(), sqlResultado["fiIDAgencia"].ToString()));
-                            ddlUbicacionInstalacion_Detalle.Items.Add(new ListItem(sqlResultado["fcNombreAgencia"].ToString(), sqlResultado["fiIDAgencia"].ToString()));
-                        }
-                    }
-                } // using sqlComando
-            } // using sqlConexion
-        }
-        catch (Exception ex)
-        {
-            MostrarMensajeError("Ocurrió un error al cargar parte de la información: " + ex.Message.ToString());
-        }
+        //            using (var sqlResultado = sqlComando.ExecuteReader())
+        //            {
+        //                while (sqlResultado.Read())
+        //                {
+        //                    ddlUbicacionInstalacion.Items.Add(new ListItem(sqlResultado["fcNombreAgencia"].ToString(), sqlResultado["fiIDAgencia"].ToString()));
+        //                    ddlUbicacionInstalacion_Actualizar.Items.Add(new ListItem(sqlResultado["fcNombreAgencia"].ToString(), sqlResultado["fiIDAgencia"].ToString()));
+        //                    ddlUbicacionInstalacion_Detalle.Items.Add(new ListItem(sqlResultado["fcNombreAgencia"].ToString(), sqlResultado["fiIDAgencia"].ToString()));
+        //                }
+        //            }
+        //        } // using sqlComando
+        //    } // using sqlConexion
+        //}
+        //catch (Exception ex)
+        //{
+        //    MostrarMensajeError("Ocurrió un error al cargar parte de la información: " + ex.Message.ToString());
+        //}
     }
 
     #endregion

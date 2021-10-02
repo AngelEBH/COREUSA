@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using proyectoBase.Models.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -82,136 +81,143 @@ namespace proyectoBase.Forms.Aval
                     pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
-
                     string NombreCliente = String.Empty;
-                    string IDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
-                    string IDCliente = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("cltID");
-                    string IDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    int IDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+                    int IDCliente = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("cltID"));
                     pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
-                    pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
-                    GuardarDetallesPrecalificado();
+                    string IDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    GuardarDetallesPrecalificado(pcID, IDUsuario);
 
-                    using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+                    SqlConnection sqlConexion = null;
+                    string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                    sqlConexion = new SqlConnection(sqlConnectionString);
+                    SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Listar", sqlConexion);
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDCliente", IDCliente);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", IDUsuario);
+                    sqlConexion.Open();
+                    SqlDataReader reader = sqlComando.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        sqlConexion.Open();
-
-                        using (SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Listar", sqlConexion))
-                        {
-                            sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDCliente", IDCliente);
-                            sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
-                            sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                            sqlComando.Parameters.AddWithValue("@piIDUsuario", IDUsuario);
-
-                            using (SqlDataReader reader = sqlComando.ExecuteReader())
-                            {
-                                reader.Read();
-                                NombreCliente = (string)reader["fcPrimerNombreCliente"] + " " + (string)reader["fcSegundoNombreCliente"] + " " + (string)reader["fcPrimerApellidoCliente"] + " " + (string)reader["fcSegundoApellidoCliente"];
-                            }
-                        }
+                        NombreCliente = (string)reader["fcPrimerNombreCliente"] + " " + (string)reader["fcSegundoNombreCliente"] + " " + (string)reader["fcPrimerApellidoCliente"] + " " + (string)reader["fcSegundoApellidoCliente"];
                     }
+
+                    if (sqlConexion != null)
+                    {
+                        if (sqlConexion.State == ConnectionState.Open)
+                            sqlConexion.Close();
+                    }
+                    if (reader != null)
+                        reader.Close();
+
                     lblIDSolicitud.Text = IDSolicitud;
                     lblNombreCliente.Text = NombreCliente;
                 }
             }
         }
 
-        public void GuardarDetallesPrecalificado()
+        public void GuardarDetallesPrecalificado(string identidad, int pcIDUsuario)
         {
             PrecalificadoViewModel objPrecalificado = null;
             List<cotizadorProductosViewModel> listaCotizadorProductos = new List<cotizadorProductosViewModel>();
-            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+            string connectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = WebUser; Password = WebUser123*;Max Pool Size=200;MultipleActiveResultSets=true";
+            SqlConnection conn = null;
+            SqlDataReader reader = null;
             try
             {
-                using (SqlConnection conn = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+                conn = new SqlConnection(connectionString);
+                SqlCommand cmd = new SqlCommand("EXEC CoreAnalitico.dbo.sp_info_ConsultaEjecutivos @piIDApp, @piIDUsuario, @pcIdentidad", conn);
+                cmd.Parameters.AddWithValue("@piIDApp", 103);
+                cmd.Parameters.AddWithValue("@piIDUsuario", 1);
+                cmd.Parameters.AddWithValue("@pcIdentidad", identidad);
+                conn.Open();
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    conn.Open();
-
-                    using (SqlCommand cmd = new SqlCommand("EXEC CoreAnalitico.dbo.sp_info_ConsultaEjecutivos @piIDApp, @piIDUsuario, @pcIdentidad", conn))
+                    identidadAval.Text = (string)reader["fcIdentidad"];
+                    identidadAval.Enabled = false;
+                    primerNombreAval.Text = (string)reader["fcPrimerNombre"];
+                    primerNombreAval.Enabled = false;
+                    SegundoNombreAval.Text = (string)reader["fcSegundoNombre"];
+                    SegundoNombreAval.Enabled = false;
+                    primerApellidoAval.Text = (string)reader["fcPrimerApellido"];
+                    primerApellidoAval.Enabled = false;
+                    segundoApellidoAval.Text = (string)reader["fcSegundoApellido"];
+                    segundoApellidoAval.Enabled = false;
+                    numeroTelefono.Text = (string)reader["fcTelefono"];
+                    numeroTelefono.Enabled = false;
+                    objPrecalificado = new PrecalificadoViewModel()
                     {
-                        cmd.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                        cmd.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                        cmd.Parameters.AddWithValue("@pcIdentidad", pcID);
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            reader.Read();
-                            identidadAval.Text = (string)reader["fcIdentidad"];
-                            identidadAval.Enabled = false;
-                            primerNombreAval.Text = (string)reader["fcPrimerNombre"];
-                            primerNombreAval.Enabled = false;
-                            SegundoNombreAval.Text = (string)reader["fcSegundoNombre"];
-                            SegundoNombreAval.Enabled = false;
-                            primerApellidoAval.Text = (string)reader["fcPrimerApellido"];
-                            primerApellidoAval.Enabled = false;
-                            segundoApellidoAval.Text = (string)reader["fcSegundoApellido"];
-                            segundoApellidoAval.Enabled = false;
-                            numeroTelefono.Text = (string)reader["fcTelefono"];
-                            numeroTelefono.Enabled = false;
-                            objPrecalificado = new PrecalificadoViewModel()
-                            {
-                                identidad = (string)reader["fcIdentidad"],
-                                primerNombre = (string)reader["fcPrimerNombre"],
-                                segundoNombre = (string)reader["fcSegundoNombre"],
-                                primerApellido = (string)reader["fcPrimerApellido"],
-                                segundoApellido = (string)reader["fcSegundoApellido"],
-                                telefono = (string)reader["fcTelefono"],
-                                obligaciones = Decimal.Parse(reader["fnTotalObligaciones"].ToString()),
-                                ingresos = Decimal.Parse(reader["fnIngresos"].ToString()),
-                                disponible = Decimal.Parse(reader["fnCapacidadDisponible"].ToString()),
-                                fechaNacimiento = DateTime.Parse(reader["fdFechadeNacimiento"].ToString()),
-                                tipoSolicitud = (int)reader["fiTipoSolicitudCliente"],
-                                tipoProducto = (int)reader["fiIDProducto"],
-                                Producto = (string)reader["fcProducto"]
-                            };
-                        }
-                    }
-
-                    using (SqlCommand cmd = new SqlCommand("CoreFinanciero.dbo.sp_CotizadorProductos", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                        cmd.Parameters.AddWithValue("@piIDProducto", objPrecalificado.tipoProducto);
-                        cmd.Parameters.AddWithValue("@pcIdentidad", objPrecalificado.identidad);
-                        cmd.Parameters.AddWithValue("@piConObligaciones", objPrecalificado.obligaciones == 0 ? "0" : "1");
-                        cmd.Parameters.AddWithValue("@pnIngresosBrutos", objPrecalificado.ingresos);
-                        cmd.Parameters.AddWithValue("@pnIngresosDisponibles", objPrecalificado.disponible);
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            cotizadorProductosViewModel objCotizador = new cotizadorProductosViewModel();
-                            decimal valorMasAlto = 0;
-                            int IDContador = 1;
-
-                            while (reader.Read())
-                            {
-                                if (valorMasAlto < decimal.Parse(reader["fnMontoOfertado"].ToString()))
-                                {
-                                    objCotizador = new cotizadorProductosViewModel()
-                                    {
-                                        IDCotizacion = IDContador,
-                                        IDProducto = (int)reader["fiIDProducto"],
-                                        ProductoDescripcion = reader["fcProducto"].ToString(),
-                                        fnMontoOfertado = decimal.Parse(reader["fnMontoOfertado"].ToString()),
-                                        fiPlazo = int.Parse(reader["fiPlazo"].ToString()),
-                                        fnCuotaQuincenal = decimal.Parse(reader["fnCuotaQuincenal"].ToString())
-                                    };
-                                }
-                                valorMasAlto = decimal.Parse(reader["fnMontoOfertado"].ToString());
-                                IDContador += 1;
-                            }
-                            //objPrecalificado.cotizadorProductos = listaCotizadorProductos;
-                            objPrecalificado.cotizadorProductos = new List<cotizadorProductosViewModel>();
-                            objPrecalificado.cotizadorProductos.Add(objCotizador);
-                        }
-                    }                    
+                        identidad = (string)reader["fcIdentidad"],
+                        primerNombre = (string)reader["fcPrimerNombre"],
+                        segundoNombre = (string)reader["fcSegundoNombre"],
+                        primerApellido = (string)reader["fcPrimerApellido"],
+                        segundoApellido = (string)reader["fcSegundoApellido"],
+                        telefono = (string)reader["fcTelefono"],
+                        obligaciones = Decimal.Parse(reader["fnTotalObligaciones"].ToString()),
+                        ingresos = Decimal.Parse(reader["fnIngresos"].ToString()),
+                        disponible = Decimal.Parse(reader["fnCapacidadDisponible"].ToString()),
+                        fechaNacimiento = DateTime.Parse(reader["fdFechadeNacimiento"].ToString()),
+                        tipoSolicitud = (int)reader["fiTipoSolicitudCliente"],
+                        tipoProducto = (int)reader["fiIDProducto"],
+                        Producto = (string)reader["fcProducto"]
+                    };
                 }
+
+                cmd = new SqlCommand("EXEC CoreFinanciero.dbo.sp_CotizadorProductos @piIDUsuario, @piIDProducto, @pcIdentidad, @piConObligaciones, @pnIngresosBrutos, @pnIngresosDisponibles", conn);
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                cmd.Parameters.AddWithValue("@piIDProducto", objPrecalificado.tipoProducto);
+                cmd.Parameters.AddWithValue("@pcIdentidad", objPrecalificado.identidad);
+                cmd.Parameters.AddWithValue("@piConObligaciones", objPrecalificado.obligaciones == 0 ? "0" : "1");
+                cmd.Parameters.AddWithValue("@pnIngresosBrutos", objPrecalificado.ingresos);
+                cmd.Parameters.AddWithValue("@pnIngresosDisponibles", objPrecalificado.disponible);
+                reader = cmd.ExecuteReader();
+                //cambios nuevos
+                cotizadorProductosViewModel objCotizador = new cotizadorProductosViewModel();
+                decimal valorMasAlto = 0;
+
+                int IDContador = 1;
+                while (reader.Read())
+                {
+                    if (valorMasAlto < decimal.Parse(reader["fnMontoOfertado"].ToString()))
+                    {
+                        objCotizador = new cotizadorProductosViewModel()
+                        {
+                            IDCotizacion = IDContador,
+                            IDProducto = (int)reader["fiIDProducto"],
+                            ProductoDescripcion = reader["fcProducto"].ToString(),
+                            fnMontoOfertado = decimal.Parse(reader["fnMontoOfertado"].ToString()),
+                            fiPlazo = int.Parse(reader["fiPlazo"].ToString()),
+                            fnCuotaQuincenal = decimal.Parse(reader["fnCuotaQuincenal"].ToString())
+                        };
+                    }
+                    valorMasAlto = decimal.Parse(reader["fnMontoOfertado"].ToString());
+                    IDContador += 1;
+                }
+                //objPrecalificado.cotizadorProductos = listaCotizadorProductos;
+                objPrecalificado.cotizadorProductos = new List<cotizadorProductosViewModel>();
+                objPrecalificado.cotizadorProductos.Add(objCotizador);
+
                 HttpContext.Current.Session["precalificadoDelCliente"] = objPrecalificado;
             }
             catch (Exception ex)
             {
                 ex.Message.ToString();
+            }
+            finally
+            {
+                if (conn != null)
+                {
+                    if (conn.State == ConnectionState.Open)
+                        conn.Close();
+                }
+                if (reader != null)
+                    reader.Close();
             }
         }
 
@@ -233,7 +239,7 @@ namespace proyectoBase.Forms.Aval
             string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             string nombreUsuario = "";
             DateTime fechaActual = DateTime.Now;
-            sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+            sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
             //sqlConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
             using (sqlConexion = new SqlConnection(sqlConnectionString))
@@ -529,20 +535,21 @@ namespace proyectoBase.Forms.Aval
 
                         foreach (SolicitudesDocumentosViewModel documento in SolicitudesDocumentos)
                         {
-                            using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitudes_Documentos_Guardar", sqlConexion, tran))
+                            using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_Documentos_Insert", sqlConexion, tran))
                             {
                                 sqlComando.CommandType = CommandType.StoredProcedure;
-                                sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
-                                sqlComando.Parameters.AddWithValue("@pcNombreArchivo", documento.fcNombreArchivo);
-                                sqlComando.Parameters.AddWithValue("@pcTipoArchivo", ".png");
-                                sqlComando.Parameters.AddWithValue("@pcRutaArchivo", documento.fcRutaArchivo);
-                                sqlComando.Parameters.AddWithValue("@pcURL", documento.URLArchivo);
-                                sqlComando.Parameters.AddWithValue("@piTipoDocumento", documento.fiTipoDocumento);
+                                sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
+                                sqlComando.Parameters.AddWithValue("@fcNombreArchivo", documento.fcNombreArchivo);
+                                sqlComando.Parameters.AddWithValue("@fcTipoArchivo", ".png");
+                                sqlComando.Parameters.AddWithValue("@fcRutaArchivo", documento.fcRutaArchivo);
+                                sqlComando.Parameters.AddWithValue("@fcURL", documento.URLArchivo);
+                                sqlComando.Parameters.AddWithValue("@fiTipoDocumento", documento.fiTipoDocumento);
+                                sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", idUsuario);
                                 sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                                 sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                                sqlComando.Parameters.AddWithValue("@piIDUsuario", "1");
-                                sqlComando.CommandTimeout = 120;
-
+                                sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);
+                                sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
+                                sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
                                 using (reader = sqlComando.ExecuteReader())
                                 {
                                     while (reader.Read())
@@ -623,9 +630,205 @@ namespace proyectoBase.Forms.Aval
                 }
             }
 
+
             return resultadoProceso;
         }
+        
+        
+        [WebMethod]
+        public static  SolicitudIngresarDDLViewModel CargarListas()
+        {
+            SqlConnection sqlConexion = null;
+            SqlDataReader reader = null;
+            string sqlConnectionString;
+            DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+            SolicitudIngresarDDLViewModel ddls = new SolicitudIngresarDDLViewModel();
+            try
+            {
+                //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
+                //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConexion = new SqlConnection(sqlConnectionString);
 
+                #region DEPARTAMENTOS
+                List<DepartamentosViewModel> viewModelDepto = new List<DepartamentosViewModel>();
+                SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoDepartamento", sqlConexion);
+                sqlComando.CommandType = CommandType.StoredProcedure;
+                sqlComando.Parameters.AddWithValue("@piPais", 1);
+                sqlComando.Parameters.AddWithValue("@piDepartamento", 0);
+                sqlConexion.Open();
+                reader = sqlComando.ExecuteReader();
+                while (reader.Read())
+                {
+                    viewModelDepto.Add(new DepartamentosViewModel()
+                    {
+                        fiIDDepto = (short)reader["fiCodDepartamento"],
+                        fcNombreDepto = (string)reader["fcDepartamento"]
+                    });
+                }
+                ddls.Departamentos = viewModelDepto;
+
+                if (reader != null)
+                    reader.Close();
+                sqlComando.Dispose();
+                #endregion
+
+                #region VIVIENDAS
+                List<ViviendaViewModel> viewModelVivienda = new List<ViviendaViewModel>();
+                sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCatalogo_Vivienda_Listar", sqlConexion);
+                sqlComando.CommandType = CommandType.StoredProcedure;
+                sqlComando.Parameters.AddWithValue("@fiIDVivienda", 0);
+                sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                sqlComando.Parameters.AddWithValue("@piIDApp", "107");
+                sqlComando.Parameters.AddWithValue("@piIDUsuario", "1");
+                reader = sqlComando.ExecuteReader();
+                while (reader.Read())
+                {
+                    viewModelVivienda.Add(new ViviendaViewModel()
+                    {
+                        fiIDVivienda = (int)reader["fiIDVivienda"],
+                        fcDescripcionVivienda = (string)reader["fcDescripcionVivienda"],
+                        fbViviendaActivo = (bool)reader["fbViviendaActivo"],
+                        fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                        fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                        fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                        fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
+                    });
+                }
+                ddls.Vivienda = viewModelVivienda;
+
+                if (reader != null)
+                    reader.Close();
+                sqlComando.Dispose();
+                #endregion
+
+                #region ESTADOS CIVILES
+                List<EstadosCivilesViewModel> viewModelEstadosCiviles = new List<EstadosCivilesViewModel>();
+                sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredCatalogo_EstadosCiviles_Listar", sqlConexion);
+                sqlComando.CommandType = CommandType.StoredProcedure;
+                sqlComando.Parameters.AddWithValue("@fiIDEstadoCivil", 0);
+                sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                sqlComando.Parameters.AddWithValue("@piIDApp", "107");
+                sqlComando.Parameters.AddWithValue("@piIDUsuario", "1");
+                reader = sqlComando.ExecuteReader();
+                while (reader.Read())
+                {
+                    viewModelEstadosCiviles.Add(new EstadosCivilesViewModel()
+                    {
+                        fiIDEstadoCivil = (int)reader["fiIDEstadoCivil"],
+                        fcDescripcionEstadoCivil = (string)reader["fcDescripcionEstadoCivil"],
+                        fbEstadoCivilActivo = (bool)reader["fbEstadoCivilActivo"],
+                        fbRequiereInformacionConyugal = (bool)reader["fbRequiereInformacionConyugal"],
+                        fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                        fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                        fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                        fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
+                    });
+                }
+                ddls.EstadosCiviles = viewModelEstadosCiviles;
+
+                if (reader != null)
+                    reader.Close();
+                sqlComando.Dispose();
+                #endregion
+
+                #region NACIONALIDADES
+                List<NacionalidadesViewModel> NacionalidadesViewModel = new List<NacionalidadesViewModel>();
+                sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCatalogo_Nacionalidades_Listar", sqlConexion);
+                sqlComando.CommandType = CommandType.StoredProcedure;
+                sqlComando.Parameters.AddWithValue("@fiIDNacionalidad", 0);
+                sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                sqlComando.Parameters.AddWithValue("@piIDApp", "107");
+                sqlComando.Parameters.AddWithValue("@piIDUsuario", "1");
+                reader = sqlComando.ExecuteReader();
+                while (reader.Read())
+                {
+                    NacionalidadesViewModel.Add(new NacionalidadesViewModel()
+                    {
+                        fiIDNacionalidad = (int)reader["fiIDNacionalidad"],
+                        fcDescripcionNacionalidad = (string)reader["fcDescripcionNacionalidad"],
+                        fbNacionalidadActivo = (bool)reader["fbNacionalidadActivo"],
+                        fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                        fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                        fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                        fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
+                    });
+                }
+                ddls.Nacionalidades = NacionalidadesViewModel;
+
+                if (reader != null)
+                    reader.Close();
+                sqlComando.Dispose();
+                #endregion
+
+                #region TIPOS DE DOCUMENTO
+                List<TipoDocumentoViewModel> TipoDocumentoViewModel = new List<TipoDocumentoViewModel>();
+                sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredCatalogo_TipoDocumento_RegistrarAval", sqlConexion);
+                sqlComando.CommandType = CommandType.StoredProcedure;
+                reader = sqlComando.ExecuteReader();
+                while (reader.Read())
+                {
+                    TipoDocumentoViewModel.Add(new TipoDocumentoViewModel()
+                    {
+                        IDTipoDocumento = (short)reader["fiIDTipoDocumento"],
+                        DescripcionTipoDocumento = (string)reader["fcDescripcionTipoDocumento"],
+                        CantidadMaximaDoucmentos = (byte)reader["fiCantidadDocumentos"],
+                        TipoVisibilidad = (byte)reader["fiTipodeVisibilidad"]
+                    });
+                }
+              //    ddls.TipoDocumento = TipoDocumentoViewModel;
+
+                if (reader != null)
+                    reader.Close();
+                sqlComando.Dispose();
+                #endregion
+
+                #region PARENTESCOS
+                List<ParentescosViewModel> ParentescosViewModel = new List<ParentescosViewModel>();
+                sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCatalogo_Parentescos_Listar", sqlConexion);
+                sqlComando.CommandType = CommandType.StoredProcedure;
+                sqlComando.Parameters.AddWithValue("@fiIDParentesco", 0);
+                sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                sqlComando.Parameters.AddWithValue("@piIDApp", "107");
+                sqlComando.Parameters.AddWithValue("@piIDUsuario", "1");
+                reader = sqlComando.ExecuteReader();
+                while (reader.Read())
+                {
+                    ParentescosViewModel.Add(new ParentescosViewModel()
+                    {
+                        fiIDParentescos = (int)reader["fiIDParentesco"],
+                        fcDescripcionParentesco = (string)reader["fcDescripcionParentesco"],
+                        fbParentescoActivo = (bool)reader["fbParentescoActivo"],
+                        fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                        fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                        fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                        fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
+                    });
+                }
+                ddls.Parentescos = ParentescosViewModel;
+
+                if (reader != null)
+                    reader.Close();
+                sqlComando.Dispose();
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+            }
+            finally
+            {
+                if (sqlConexion != null)
+                {
+                    if (sqlConexion.State == ConnectionState.Open)
+                        sqlConexion.Close();
+                }
+                if (reader != null)
+                    reader.Close();
+            }
+            return ddls;
+        }
+        
         [WebMethod]
         public static List<MunicipiosViewModel> CargarMunicipios(int CODDepto)
         {
@@ -638,7 +841,7 @@ namespace proyectoBase.Forms.Aval
             {
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
                 SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoMunicipio", sqlConexion);
                 sqlComando.CommandType = CommandType.StoredProcedure;
@@ -686,7 +889,7 @@ namespace proyectoBase.Forms.Aval
             {
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
                 SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoPoblado", sqlConexion);
                 sqlComando.CommandType = CommandType.StoredProcedure;
@@ -737,7 +940,7 @@ namespace proyectoBase.Forms.Aval
             {
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
                 SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_GeoBarrios", sqlConexion);
                 sqlComando.CommandType = CommandType.StoredProcedure;

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Aval_Registrar.aspx.cs" Inherits="proyectoBase.Forms.Aval.Aval_Registrar" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Aval_Registrar.aspx.cs" Inherits="proyectoBase.Forms.Aval.Aval_Registrar" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -10,21 +10,19 @@
     <link href="/Content/css/style.css" rel="stylesheet" />
     <title>Registrar Aval</title>
     <!-- BOOTSTRAP -->
-    <link href="../../Content/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../../Content/css/metismenu.min.css" rel="stylesheet" />
-    <link href="../../Content/css/icons.css" rel="stylesheet" />
-    <link href="../../Content/css/style.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/morris/morris.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/icons.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/style.css?v=202010031056" rel="stylesheet" />
     <!-- ARCHIVOS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
-    <link href="../../Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
-    <link href="../../Content/css/font/familyRoboto.css" rel="stylesheet" />
-    <link href="../../Content/css/font/font-fileuploader.css" rel="stylesheet" />
-    <link href="../../Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
-    <link href="../../Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
-    <link href="../../Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
-    <link href="../../CSS/Estilos_CSS.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/iziToast/css/iziToast.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/steps/css/smart_wizard.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/familyRoboto.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
+    <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
 </head>
 <body class="EstiloBody">
     <h4 class="text-center">Registrar aval para el cliente:&nbsp;<asp:Label ID="lblNombreCliente" runat="server"></asp:Label>
@@ -68,11 +66,11 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Identidad</label>
                         <div class="col-sm-2">
-                            <asp:TextBox ID="identidadAval" CssClass="form-control identidad informacionPersonal" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
+                            <asp:TextBox ID="identidadAval" CssClass="form-control  informacionPersonal" type="text" required="required" data-parsley-group="informacionPersonal" runat="server"></asp:TextBox>
                         </div>
                         <label class="col-sm-2 col-form-label">RTN</label>
                         <div class="col-sm-2">
-                            <asp:TextBox ID="rtnAval" CssClass="form-control formatoRTN informacionPersonal" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                            <asp:TextBox ID="rtnAval" CssClass="form-control  informacionPersonal" type="text" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -381,30 +379,11 @@
         </div>
     </form>
 
-    <script src="../../Scripts/js/jquery.min.js"></script>
-    <script src="../../Scripts/js/bootstrap.bundle.min.js"></script>
-    <script src="../../Scripts/js/metisMenu.min.js"></script>
-    <script src="../../Scripts/js/jquery.slimscroll.js"></script>
-    <script src="../../Scripts/js/waves.min.js"></script>
-    <script src="../../Scripts/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="../../Scripts/js/app.js"></script>
-    <script src="../../Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
+    <script src="/Scripts/js/jquery.min.js"></script>
+    <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
+    <script src="/Scripts/plugins/mascarasDeEntrada/js/jquery.inputmask.bundle.js"></script>
     <script>
         $(document).ready(function () {
-
-            $("input").not($(":button")).keypress(function (evt) {
-                if (evt.keyCode == 13) {
-                    iname = $(this).val();
-                    if (iname !== 'Submit') {
-                        var fields = $(this).parents('form:eq(0),body').find('button, input, textarea, select');
-                        var index = fields.index(this);
-                        if (index > -1 && (index + 1) < fields.length) {
-                            fields.eq(index + 1).focus();
-                        }
-                        return false;
-                    }
-                }
-            });
             $(".MascaraCantidad").inputmask("decimal", {
                 alias: 'numeric',
                 groupSeparator: ',',
@@ -423,13 +402,12 @@
         });
     </script>
     <!-- SCRIPTS NECESARIOS PARA EL FUNCIONAMIENTO DE LA PAGINA -->
-    <script src="../../Scripts/plugins/steps/js/jquery.smartWizard.js"></script>
-    <script src="../../Scripts/plugins/iziToast/js/iziToast.js"></script>
-    <script src="../../Scripts/plugins/iziToast/js/iziToast.min.js"></script>
-    <script src="../../Scripts/plugins/parsleyjs/parsley.js"></script>
+    <script src="/Scripts/plugins/steps/js/jquery.smartWizard.js"></script>
+    <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
+    <script src="/Scripts/plugins/parsleyjs/parsley.js"></script>
     <script src="../../Scripts/app/uploader/SolicitudesCredito_RegistrarAval/jquery.fileuploader.min.js"></script>
-    <script src="../../Scripts/plugins/select2/js/select2.full.min.js"></script>
-    <script src="../../Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="/Scripts/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
     <script src="../../Scripts/app/Aval/Aval_Registrar.js"></script>
 </body>
 </html>

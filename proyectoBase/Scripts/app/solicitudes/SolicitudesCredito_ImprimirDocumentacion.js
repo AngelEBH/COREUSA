@@ -7,6 +7,9 @@ MostrarLoader();
 /***********************************************************************************************/
 /************************************ Inicializar galerias  ************************************/
 /***********************************************************************************************/
+
+try {
+
 $("#divGaleriaGarantia").unitegallery({
     gallery_width: 900,
     gallery_height: 600
@@ -33,6 +36,13 @@ $("#divPortadaExpediente_Revision").unitegallery({
     grid_num_rows: 15
 });
 
+
+
+}
+catch (e) { }
+
+
+
 $("#divContenedorInspeccionSeguro,#divContenedorPortadaExpediente").css('margin-top', '999px');
 $("#divInspeccionSeguroPDF,#divContenedorInspeccionSeguro,#divPortadaExpedientePDF,#divContenedorPortadaExpediente").css('display', 'none');
 
@@ -48,6 +58,9 @@ $('.lblMes_Firma').text(MES_FIRMA);
 $('.lblAnio_Firma').text(ANIO_FIRMA);
 
 $(".img-logo-empresa").attr('src', FONDOS_PRESTAMO.UrlLogo);
+//var logo = $(".img-logo-empresa").attr('src', FONDOS_PRESTAMO.UrlLogo);
+//logo.style.width = "500px";
+
 $('.lblRazonSocial').text(FONDOS_PRESTAMO.RazonSocial);
 $('.lblNombreComercial').text(FONDOS_PRESTAMO.NombreComercial);
 $('.lblRTNEmpresa').text(FONDOS_PRESTAMO.EmpresaRTN);

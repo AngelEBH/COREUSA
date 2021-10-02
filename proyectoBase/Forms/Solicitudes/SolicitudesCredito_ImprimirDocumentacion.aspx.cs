@@ -26,6 +26,7 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     public string pcIDSesion = "";
     public string pcIDUsuario = "";
     public string pcIDSolicitud = "";
+   
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     public string DiasFirma { get; set; }
@@ -42,6 +43,16 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
     public string UrlCodigoQR { get; set; }
     public string ListaDocumentosDelExpedienteJSON { get; set; }
+    public string Frecuencia = "";
+    public string  CuotaTotal { get; set; }
+    public int IdProducto { get; set; }
+    public decimal MontoFinal { get; set; }
+    public string IdPlazo { get; set; }
+    public string CantidadPLazo { get; set; }
+    public decimal CantidadLienholder { get; set; }
+    public decimal TasaInteres { get; set; }
+
+
 
     #endregion
 
@@ -78,6 +89,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                     CargarInformacion();
                     CargarExpedienteDeLaSolicitud();
+                    CargarPlanDePagos();
+                    CalcularPrestamo();
 
                     HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                     HttpContext.Current.Session["ListaDocumentosParaAsegurar"] = null;
@@ -95,13 +108,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                 var uploadDir = @"C:\inetpub\wwwroot\Documentos\Solicitudes\Temp\";
 
                 var fileUploader = new FileUploader("files", new Dictionary<string, dynamic>() {
-{ "limit", 1 },
-{ "title", "auto" },
-{ "uploadDir", uploadDir },
-{ "extensions", new string[] { "jpg", "png", "jpeg"} },
-{ "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
-{ "fileMaxSize", 20 }, /* Peso máximo por archivo */
-});
+                    { "limit", 1 },
+                    { "title", "auto" },
+                    { "uploadDir", uploadDir },
+                    { "extensions", new string[] { "jpg", "png", "jpeg"} },
+                    { "maxSize", 500 }, /* Peso máximo de todos los archivos seleccionado en megas (MB) */
+                    { "fileMaxSize", 20 }, /* Peso máximo por archivo */
+                    });
 
                 switch (type)
                 {
@@ -227,31 +240,50 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             var monedaAbreviatura = sqlResultado["fcAbreviaturaMoneda"].ToString();
                             var tasaDeInteresSimpleMensual = decimal.Parse(sqlResultado["fnTasaMensualAplicada"].ToString());
                             var tasaDeInteresAnualAplicada = decimal.Parse(sqlResultado["fnTasaAnualAplicada"].ToString());
+                            var CuotalTotal = decimal.Parse(sqlResultado["CuotaTotal"].ToString());
+                            var RazonSocial = sqlResultado["fcRazonSocial"].ToString().ToUpper();
+                            var fcFrecuencia = sqlResultado["Frecuensia"].ToString();
+                            var TotalCuotaConSeguro = decimal.Parse(sqlResultado["CuotaTotalConSeguro"].ToString());
+                            var LienHolder =          decimal.Parse(sqlResultado["lienholder"].ToString());
+                            var TipoIDPLazo = int.Parse(sqlResultado["TipoPlazo"].ToString());
+                           // var Frecuensia = sqlResultado["Frecuensia"].ToString();
 
-                            /* Información de los fondos del préstamo y el representante legal del mismo */
-                            var fondosPrestamo = new Fondo_RepresentanteLegal_ViewModel()
+                            if (fcFrecuencia == "Catorcenal") { lblFrecuanciaContrato.Text = "Bi-Weekly"; lblFrecuenciaPago_PlanDePagos.Text = "Bi-Weekly"; }
+                            else if(fcFrecuencia == "Semanal") { lblFrecuanciaContrato.Text = "Weekly"; lblFrecuenciaPago_PlanDePagos.Text = "Weekly"; }
+                            else if(fcFrecuencia == "Mensual") { lblFrecuanciaContrato.Text = "Monthly"; lblFrecuenciaPago_PlanDePagos.Text = "Monthly"; }
+                           
+
+                            IdProducto = Convert.ToInt32(idProducto);
+                            Frecuencia = fcFrecuencia;
+                            MontoFinal = montoTotalContrato;
+                            IdPlazo = Convert.ToString(TipoIDPLazo);
+                            CantidadPLazo = plazoFinalAprobado;
+                            CantidadLienholder = LienHolder;
+
+                           /* Información de los fondos del préstamo y el representante legal del mismo */
+                           var fondosPrestamo = new Fondo_RepresentanteLegal_ViewModel()
                             {
-                                IdFondo = (int)sqlResultado["fiIDFondo"],
-                                RazonSocial = sqlResultado["fcRazonSocial"].ToString().ToUpper(),
-                                NombreComercial = sqlResultado["fcNombreComercial"].ToString().ToUpper(),
-                                EmpresaRTN = sqlResultado["fcRTNEmpresa"].ToString(),
-                                EmpresaCiudadDomiciliada = sqlResultado["fcCiudadDomiciliada"].ToString(),
-                                EmpresaDepartamentoDomiciliada = sqlResultado["fcDepartamentoDomiciliada"].ToString(),
-                                Telefono = sqlResultado["fcTelefono"].ToString(),
-                                Email = sqlResultado["fcEmail"].ToString(),
-                                Constitucion = sqlResultado["fcConstitucionFondo"].ToString(),
+                                //IdFondo = (int)sqlResultado["fiIDFondo"],
+                                //RazonSocial = sqlResultado["fcRazonSocial"].ToString().ToUpper(),
+                                //NombreComercial = sqlResultado["fcNombreComercial"].ToString().ToUpper(),
+                                //EmpresaRTN = sqlResultado["fcRTNEmpresa"].ToString(),
+                                //EmpresaCiudadDomiciliada = sqlResultado["fcCiudadDomiciliada"].ToString(),
+                                //EmpresaDepartamentoDomiciliada = sqlResultado["fcDepartamentoDomiciliada"].ToString(),
+                                //Telefono = sqlResultado["fcTelefono"].ToString(),
+                                //Email = sqlResultado["fcEmail"].ToString(),
+                                //Constitucion = sqlResultado["fcConstitucionFondo"].ToString(),
                                 UrlLogo = sqlResultado["fcUrlLogo"].ToString(),
 
                                 RepresentanteLegal = new RepresentanteLegal_ViewModel()
                                 {
-                                    IdRepresentanteLegal = (int)sqlResultado["fiIDFondo"],
-                                    NombreCompleto = sqlResultado["fcNombreRepresentanteLegal"].ToString().ToUpper(),
-                                    Identidad = sqlResultado["fcIdentidadRepresentanteLegal"].ToString(),
-                                    EstadoCivil = sqlResultado["fcEstadoCivilRepresentanteLegal"].ToString(),
-                                    Nacionalidad = sqlResultado["fcNacionalidadRepresentanteLegal"].ToString(),
-                                    Prefesion = sqlResultado["fcProfesionRepresentanteLegal"].ToString(),
-                                    CiudadDomicilio = sqlResultado["fcCiudadDomicilioRepresentanteLegal"].ToString(),
-                                    DepartamentoDomicilio = sqlResultado["fcDepartamentoDomicilioRepresentanteLegal"].ToString()
+                                    //IdRepresentanteLegal = (int)sqlResultado["fiIDFondo"],
+                                    //NombreCompleto = sqlResultado["fcNombreRepresentanteLegal"].ToString().ToUpper(),
+                                    //Identidad = sqlResultado["fcIdentidadRepresentanteLegal"].ToString(),
+                                    //EstadoCivil = sqlResultado["fcEstadoCivilRepresentanteLegal"].ToString(),
+                                    //Nacionalidad = sqlResultado["fcNacionalidadRepresentanteLegal"].ToString(),
+                                    //Prefesion = sqlResultado["fcProfesionRepresentanteLegal"].ToString(),
+                                    //CiudadDomicilio = sqlResultado["fcCiudadDomicilioRepresentanteLegal"].ToString(),
+                                    //DepartamentoDomicilio = sqlResultado["fcDepartamentoDomicilioRepresentanteLegal"].ToString()
                                 }
                             };
 
@@ -259,10 +291,12 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
 
                             lblIdSolicitud.InnerText = pcIDSolicitud;
                             txtNombreCliente.Text = nombreCliente;
+                            //lblNombreCliente.InnerText = nombreCliente;
                             txtIdentidadCliente.Text = identidad;
                             txtRtn.Text = RTN;
                             txtTelefonoCliente.Text = telefonoPrimario;
                             txtProducto.Text = producto;
+
                             txtMontoFinalAFinanciar.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
                             txtPlazoFinanciar.Text = plazoFinalAprobado;
                             lblTipoDePlazo.InnerText = tipoDePlazoSufijoAl;
@@ -603,6 +637,43 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblCilindraje_ActaDeCompromiso.Text = cilindraje;
                                     lblColor_ActaDeCompromiso.Text = color;
                                     lblMotor_ActaDeCompromiso.Text = serieMotor;
+                                    //lblMontoFinalAFinanciar_Cash.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
+                                    
+
+                                    //Prestadito Cash Contrato
+
+                                    LblNombreCLiente_Cash.Text = nombreCliente;
+                                    LblNombreCLienteFirma_Cash.Text = nombreCliente;
+                                    LblDireccionCliente_Cash.Text = direccionCliente;
+                                    LblAnio_Cash.Text = anio;
+                                    lblMarca_Cash.Text = marca;
+                                    lblModelo_Cash.Text = modelo;
+                                    lblSerie_Cash.Text = serieChasis;
+                                    lblNombrePropietarioGarantia_Cash.Text = RazonSocial;
+                                    //lblNombrePropietarioGarantiaFirma_Cash.Text = nombrePropietarioGarantia;
+                                    lblFirmaFechaContrato.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+                                    lblFirmaContrato2.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+                                    FechaFirmaContratoCash.Text = "CESAR ROSENTHAL" + "   "+"  "+ " " +"Date:"+"   "+ DateTime.Now.ToString("dd-MMM-yyyy");
+                                    //  lblNumeroPrestamo_Cash.Text = numeroPrestamo;
+                                    lblLienHolher_Cash.Text = LienHolder.ToString();
+                                    
+
+                                    //blValorTotalCuota_Cash.Text = monedaSimbolo + " "  + CuotalTotal.ToString("n"); blValorTotalCuota_Cash
+                                      blValorTotalCuota_Cash.Text = monedaSimbolo + " " + TotalCuotaConSeguro.ToString("n"); 
+                                    
+                                    //blValorTotalCuota_Cash.Text = MotontoTotalCash.ToString("n");
+                                    lblValorCuota_Cash.Text = DecimalToString(valorCuotaTotal + valorCuotaSeguro) ;
+                                    lblValorCuota_Cash2.Text = DecimalToString(valorCuotaTotal + valorCuotaSeguro);
+                                    var plazo = Convert.ToInt32(plazoFinalAprobado) -1 ;
+                                    
+                                    lblPlazoFinanciar_Cash.Text = Convert.ToString(plazo);
+                                    lblPlazoFinanciarTabla3_Cash.Text = monedaSimbolo + " " + TotalCuotaConSeguro.ToString("n");
+
+                                    //lblMontoFinalAFinanciarTabla2_Cash.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
+                                    lblMontoFinalAFinanciarTabla_Cash.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
+                                  //  lblPrimerPago_Cash.Text = fechaPrimerPago.ToString("dd/MMM/yyyy");
+
+
 
                                     /**** DIFERENCIAS ENTRE CONTRAROS SEGÚN EL TIPO DE PRODUCTO ***********/
                                     var parraforFinalNotaEntrega = "En virtud de lo anterior se le emite esta <b>NOTA DE ENTREGA</b> y al mismo tiempo ratificamos nuestro compromiso de hacer el pago correspondiente en efectivo, en cheque o en transferencia";
@@ -687,9 +758,9 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         {
             var mensajeExtra = string.Empty;
 
-            if (int.Parse(pcIDSolicitud) < 802)
-                mensajeExtra = ". Esta opción está disponible a partir de la solicitud de crédito No. 802.";
-
+            //if (int.Parse(pcIDSolicitud) < 802)
+            //    mensajeExtra = ". Esta opción está disponible a partir de la solicitud de crédito No. 802.";
+           // mensajeExtra = ex.InnerException.Message.ToString();
             MostrarMensaje("Error al cargar información de la solicitud " + pcIDSolicitud + ": " + ex.Message.ToString() + mensajeExtra);
             divInspeccionSeguroPDF.Visible = false;
             divPortadaExpedientePDF.Visible = false;
@@ -782,6 +853,159 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         }
     }
 
+    private void CargarPlanDePagos()
+    {
+        try
+        {
+            decimal  tasaInteresPlanPago = 0;
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_Prestamo_PlandePago_ConsultarPorSolicitud ", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;                 
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        /* Primer resultado: Información principal*/
+                        while (sqlResultado.Read())
+                        {
+                            lblPrestamo_PlanDePagos.Text = sqlResultado["fcIDPrestamo"].ToString();
+                            lblNombreCliente_PlanDePagos.Text = sqlResultado["fcNombreCliente"].ToString();
+                            lblFechaInicio_PlanDePagos.Text = Convert.ToDateTime(sqlResultado["fdFechaPrimerPago"].ToString()).ToString("dd/MMM/yyyy");
+                            lblFechaFinal_PlanDePagos.Text = Convert.ToDateTime(sqlResultado["fdFechaVencimiento"].ToString()).ToString("dd/MMM/yyyy");
+                            lblTasaInteres_PlanDePagos.Text = Convert.ToDecimal(sqlResultado["fiTasadeInteres"].ToString()).ToString("n") + " %";
+                            lblCapitalFinanciado_PlanDePagos.Text = "$ " +Convert.ToDecimal(sqlResultado["fnCapitalFinanciado"].ToString()).ToString("n");
+
+                            
+                            lblInceptionDate_PlanDePagos.Text = Convert.ToDateTime(sqlResultado["fdFechaDesembolso"].ToString()).ToString("dd/MMM/yyyy");
+                            lblProducto_PlanDePagos.Text = sqlResultado["fcProducto"].ToString();
+                           // lblFrecuenciaPago_PlanDePagos.Text = sqlResultado["fcFrecuenciadePago"].ToString();
+
+
+                            lblValorCuota_PlanDePagos.Text = "$ " + Convert.ToDecimal(sqlResultado["fnValorCuota"].ToString()).ToString("n");
+                            lblTotalCuotas_PlanDePagos.Text = sqlResultado["fiPlazo"].ToString();
+                            //cash
+                            lblPrestamo_Cash.Text = sqlResultado["fcIDPrestamo"].ToString();
+                            //lblTasaInteres_CahsTable2.Text = Convert.ToDecimal(sqlResultado["fiTasadeInteres"].ToString()).ToString("n") + " %";
+                            //lblTasaInteres_CahsTable4.Text = Convert.ToDecimal(sqlResultado["fiTasadeInteres"].ToString()).ToString("n") + " %";
+                            lblFechaVencimiento_Cash.Text = Convert.ToDateTime(sqlResultado["fdFechaVencimiento"].ToString()).ToString("dd/MMM/yyyy");
+                            lblFechaDesembolso_Cash.Text = Convert.ToDateTime(sqlResultado["fdFechaDesembolso"].ToString()).ToString("dd/MMM/yyyy");
+                            lblPrimerPago_Cash.Text = Convert.ToDateTime(sqlResultado["fdFechaPrimerPago"].ToString()).ToString("dd/MMM/yyyy");
+                            tasaInteresPlanPago = Convert.ToDecimal(sqlResultado["fiTasadeInteres"].ToString());
+
+
+                        }
+                        TasaInteres = tasaInteresPlanPago;
+                        /* Segundo resultado: listado plan de pagos */
+                        sqlResultado.NextResult();
+
+                 
+
+                        TableRow tRowPlanDePagos = null;
+                        var InteresTotal = 0m;
+                        var collateral = 0m;
+                        while (sqlResultado.Read())
+                        {
+                            tRowPlanDePagos = new TableRow();
+                            tRowPlanDePagos.Cells.Add(new TableCell() { Text = sqlResultado["fiCuota"].ToString(), CssClass = "mt-0 mb-0 pt-0 pb-0" });
+                            tRowPlanDePagos.Cells.Add(new TableCell() { Text = Convert.ToDateTime(sqlResultado["fdFechadeCuota"].ToString()).ToString("dd/MMM/yyyy"), CssClass = "mt-0 mb-0 pt-0 pb-0" });
+                            tRowPlanDePagos.Cells.Add(new TableCell() { Text = "$" + Convert.ToDecimal(sqlResultado["fnCapitalAnterior"].ToString()).ToString("n") , CssClass = "mt-0 mb-0 pt-0 pb-0" ,HorizontalAlign = HorizontalAlign.Right } );
+                            tRowPlanDePagos.Cells.Add(new TableCell() { Text = "$" +Convert.ToDecimal(sqlResultado["fnCapitalPactado"].ToString()).ToString("n"), CssClass = "mt-0 mb-0 pt-0 pb-0", HorizontalAlign = HorizontalAlign.Right });
+                            tRowPlanDePagos.Cells.Add(new TableCell() { Text = "$" + Convert.ToDecimal(sqlResultado["fnInteresPactado"].ToString()).ToString("n"), CssClass = "mt-0 mb-0 pt-0 pb-0", HorizontalAlign = HorizontalAlign.Right });
+                            tRowPlanDePagos.Cells.Add(new TableCell() { Text = "$" + Convert.ToDecimal(sqlResultado["fnSeguro1"].ToString()).ToString("n"), CssClass = "mt-0 mb-0 pt-0 pb-0", HorizontalAlign = HorizontalAlign.Right });
+                            tRowPlanDePagos.Cells.Add(new TableCell() { Text = "$" + Convert.ToDecimal(sqlResultado["fnSeguro2"].ToString()).ToString("n"), CssClass = "mt-0 mb-0 pt-0 pb-0", HorizontalAlign = HorizontalAlign.Right });                           
+
+                            tRowPlanDePagos.Cells.Add(new TableCell() { Text = "$" + Convert.ToDecimal(sqlResultado["fnTotalCuota"].ToString()).ToString("n"), CssClass = "mt-0 mb-0 pt-0 pb-0", HorizontalAlign = HorizontalAlign.Right });
+                            tRowPlanDePagos.Cells.Add(new TableCell() { Text = "$" + Convert.ToDecimal(sqlResultado["fnCapitalBalanceFinal"].ToString()).ToString("n"), CssClass = "mt-0 mb-0 pt-0 pb-0", HorizontalAlign = HorizontalAlign.Right });
+
+                            tbl_PlanDePagos.Rows.Add(tRowPlanDePagos);
+
+                            InteresTotal +=  Convert.ToDecimal(sqlResultado["fnInteresPactado"]);
+                            collateral += Convert.ToDecimal(sqlResultado["fnSeguro1"]);
+
+                          
+                            
+                        }
+
+                        lblInteresesTotal_Cash.Text = "$" + " " +  InteresTotal.ToString("n");
+                        lblInteresesTotalTabla2_Cash.Text = "$" + " " + InteresTotal;
+
+                        lblCollateral.Text = "$" + " " + collateral.ToString("n");
+                        lblCollatelaTabla3_Cash.Text = "$" + " " + collateral.ToString("n");
+
+                       // lblFrecuenciaPago_PlanDePagos.Text = Frecuencia;
+
+
+
+
+
+                    }
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            MostrarMensaje("Error al cargar el plan de pagos de la solicitud " + pcIDSolicitud + ": " + ex.Message.ToString());
+        }
+    }
+
+    public void CalcularPrestamo()
+    {
+        // SolicitudesCredito_Detalles_Calculo_ViewModel resultado = null;
+        decimal TasaPR = 0;
+        try
+        {
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (var sqlComando = new SqlCommand("sp_CredSolicitud_CalculoPrestamo", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDProducto", IdProducto);
+                    sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", MontoFinal);
+                    sqlComando.Parameters.AddWithValue("@liPlazo", CantidadPLazo);
+                    sqlComando.Parameters.AddWithValue("@piIDPlazo", IdPlazo);
+                    sqlComando.Parameters.AddWithValue("@piLienHolder", 0);
+                    sqlComando.Parameters.AddWithValue("@pnValorPrima", 0);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", 1);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", 1);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            TasaPR = (decimal)sqlResultado["fnTasaDeInteresAnual"];
+                        }
+                    }
+                }
+
+               if( IdProducto == 100)
+                {
+                     //lblTasaInteres_CahsTable2.Text = Convert.ToDecimal(sqlResultado["fiTasadeInteres"].ToString()).ToString("n") + " %";
+                    //lblTasaInteres_CahsTable4.Text = Convert.ToDecimal(sqlResultado["fiTasadeInteres"].ToString()).ToString("n") + " %";
+                    lblTasaInteres_CahsTable2.Text = TasaPR.ToString("n") + " %";
+                    lblTasaInteres_CahsTable4.Text = TasaPR.ToString("n") + " %";
+                }
+               else
+                {
+                    lblTasaInteres_CahsTable2.Text = TasaInteres.ToString("n") + " %";
+                    lblTasaInteres_CahsTable4.Text = TasaInteres.ToString("n") + " %";
+
+                }
+            }//
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+           // resultado = null;
+        }
+      //  return resultado;
+    }
     #endregion
 
     #region Guardar expediente de la solicitud
@@ -1522,6 +1746,24 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         public int IdEstadoDocumento { get; set; }
         public string Url { get; set; }
         public string Ruta { get; set; }
+    }
+
+    public class SolicitudesCredito_Detalles_Calculo_ViewModel
+    {
+        public decimal ValorSeguroDeDeuda { get; set; }
+        public decimal ValorSeguroDeVehiculo { get; set; }
+        public decimal ValorGastosDeCierre { get; set; }
+        public decimal ValorAFinanciar { get; set; }
+        public decimal ValorCuotaPrestamo { get; set; }
+        public decimal CostoAparatoGPS { get; set; }
+        public decimal ValorCuotaServicioGPS { get; set; }
+        public decimal TotalSeguroVehiculo { get; set; }
+        public decimal ValorCuotaSeguroDeVehiculo { get; set; }
+        public decimal ValorCuotaNeta { get; set; }
+        public int Plazo { get; set; }
+        public string TipoDePlazo { get; set; }
+        public decimal TasaAnualAplicada { get; set; }
+        public decimal TasaMensualAplicada { get; set; }
     }
 
     #endregion

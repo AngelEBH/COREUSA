@@ -1,0 +1,151 @@
+﻿p {
+    font-family: Arial;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+.ParBold {
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.ClaseTDJ {
+    font-family: Arial;
+    font-size: 16px;
+    text-align: justify;
+}
+
+.ClaseTDC {
+    font-family: Arial;
+    font-size: 16px;
+    text-align: center;
+}
+
+.ClaseTDL {
+    font-family: Arial;
+    font-size: 16px;
+    text-align: justify;
+}
+
+.ClaseTDDerecha {
+    font-family: Arial;
+    font-size: 16px;
+    text-align: right;
+}
+
+.ClaseTDDerechaBold {
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: right;
+}
+
+.ClaseTDDerechaGrande {
+    font-family:Arial;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: right;
+}
+
+.ClaseTDCB {
+    font-family: Arial;
+    font-weight: bold;
+    font-size:xx-large;
+    text-align: center;
+}
+
+.ClaseTDB {
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    border-left: solid;
+    border-right: solid;
+    border-width: 1px;
+}
+
+.ClaseTDBU {
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    border-bottom: solid;
+    border-width: 1px;
+    border-bottom-color:black;
+}
+
+.ClaseTDBUR {
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    border-bottom: solid;
+    border-width: 1px;
+    border-bottom-color:black;
+    text-align:right;
+}
+
+.ClaseTDBD {
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    border-top: solid;
+    border-width: 1px;
+}
+
+.ClaseTDBUD {
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    border-left: solid;
+    border-right: solid;
+    border-bottom: solid;
+    border-width: 1px;
+}
+
+.ClaseTDLB {
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: justify;
+}
+
+.DivImpresion {
+    border-color: lightgray;
+    background-color: white;
+}
+
+/* Titulos */
+.TableFormatoTituloImpresion {
+    color: white;
+    font-family: Arial;
+    Font-Size: 12px;
+    font-weight: bold;
+    text-indent: 5px;
+}
+
+.DivTituloPanelImpresion {
+    height: 16px;
+    background-color: black;
+    color: white;
+    font-family: Arial;
+    Font-Size: small;
+    font-weight: bold;
+}
+
+.EquitetaBold
+{
+    font-family: Arial;
+    font-size: 16px;
+    font-weight:bold;
+}
+
+.Equiteta {
+    font-family: Arial;
+    font-size: 16px;
+}
+

@@ -26,6 +26,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     public string pcIDUsuario = "";
     public string pcEncriptado = "";
     public int IdProducto { get; set; }
+    public static int IDProductoActual = 0;
 
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
     public List<CoreFinanciero_TipoDocumento_ViewModel> DocumentosRequeridos = new List<CoreFinanciero_TipoDocumento_ViewModel>();
@@ -35,7 +36,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
     #endregion
 
-    #region Page_Load, CargarListas, CargarInformacion, CargarPrecalificado
+    #region Page_Load, CargarInformacion, CargarListas, CargarPrecalificado
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -63,10 +64,12 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
                 HttpContext.Current.Session["ListaSolicitudesDocumentos"] = null;
                 Session.Timeout = 10080;
-
-                CargarListas();
                 CargarInformacion();
-                CargarPrecalificado();
+                CargarListas();
+               
+               
+               
+               // CargarPrecalificado();
                 jsonPrecalicado = JsonConvert.SerializeObject(Precalificado);
             }
             else
@@ -127,8 +130,9 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                 {
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
-                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion); 
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDProducto", IDProductoActual);
                     sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
@@ -158,6 +162,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         ddlBarrioColoniaDomicilio.Items.Add(new ListItem("Seleccione una ciudad/poblado", ""));
                         ddlBarrioColoniaEmpresa.Items.Clear();
                         ddlBarrioColoniaEmpresa.Items.Add(new ListItem("Seleccione una ciudad/poblado", ""));
+
+                        sqlResultado.NextResult();
+
+                        sqlResultado.NextResult();
 
                         /**** Viviendas ****/
                         sqlResultado.NextResult();
@@ -267,6 +275,36 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         {
                             ddlTipoDeCliente.Items.Add(new ListItem(sqlResultado["fcTipoCliente"].ToString(), sqlResultado["fiTipoCliente"].ToString()));
                         }
+
+                        sqlResultado.NextResult();
+                        //
+                        sqlResultado.NextResult();
+
+                        //dllDoctoIdPersonal.Clear();
+                        dllDoctoIdPersonal.Items.Add(new ListItem("Seleccionar", ""));
+                        while (sqlResultado.Read())
+                        {
+                            dllDoctoIdPersonal.Items.Add(new ListItem(sqlResultado["fcNombreDoctosIdPersonal"].ToString(), sqlResultado["fiDoctosIdPersonal"].ToString()));
+                        }
+
+
+                        sqlResultado.NextResult();
+                        //dllDocumentoIDFiscar.Clear();
+                        dllDocumentoIDFiscal.Items.Add(new ListItem("Seleccionar", ""));
+                        while (sqlResultado.Read())
+                        {
+                            dllDocumentoIDFiscal.Items.Add(new ListItem(sqlResultado["fcDescripcionDoctosFiscal"].ToString(), sqlResultado["fiDoctosIdFiscal"].ToString()));
+                        }
+
+
+                        sqlResultado.NextResult();
+                       // dllOrigenEtnico.Clear();
+                        dllOrigenEtnico.Items.Add(new ListItem("Seleccionar", ""));
+                        while (sqlResultado.Read())
+                        {
+                            dllOrigenEtnico.Items.Add(new ListItem(sqlResultado["fcDescricpcionOrigenEtnicoORacial"].ToString(), sqlResultado["fiOrigenEtnicoORacial"].ToString()));
+                        }
+
                     } // using sqlResultado
                 } // using sqlComando
             } // using sqlConexion
@@ -302,6 +340,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             IdCliente = sqlResultado["fiIDCliente"].ToString();
 
                             IdProducto = (int)sqlResultado["fiIDProducto"];
+                            IDProductoActual = IdProducto;
 
                             lblTipoDePlazo.InnerText = "quincenal";
 
@@ -315,6 +354,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     ddlTipoGastosDeCierre.Enabled = true;
                                     ddlTipoDeSeguro.Enabled = true;
                                     ddlGps.Enabled = true;
+									ddlPagoGPS.Enabled = true;
                                     txtValorPrima.Enabled = true;
 
                                     ddlTipoGastosDeCierre.Items.Add(new ListItem("Seleccionar", ""));
@@ -325,6 +365,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     ddlGps.Items.Add("No");
                                     ddlGps.Items.Add("Si - CPI");
                                     ddlGps.Items.Add("Si - CableColor");
+
+									ddlPagoGPS.Items.Add(new ListItem("Seleccionar", ""));
+									ddlPagoGPS.Items.Add("Si");
+									ddlPagoGPS.Items.Add("No");
 
                                     ddlTipoDeSeguro.Items.Add(new ListItem("Seleccionar", ""));
                                     ddlTipoDeSeguro.Items.Add("A - Full Cover");
@@ -344,6 +388,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     ddlTipoGastosDeCierre.Enabled = true;
                                     ddlTipoDeSeguro.Enabled = true;
                                     ddlGps.Enabled = true;
+									ddlPagoGPS.Enabled = true;
 
                                     ddlTipoGastosDeCierre.Items.Add(new ListItem("Seleccionar", ""));
                                     ddlTipoGastosDeCierre.Items.Add("Financiado");
@@ -353,6 +398,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                                     ddlGps.Items.Add("No");
                                     ddlGps.Items.Add("Si - CPI");
                                     ddlGps.Items.Add("Si - CableColor");
+
+									ddlPagoGPS.Items.Add(new ListItem("Seleccionar", ""));
+									ddlPagoGPS.Items.Add("Si");
+									ddlPagoGPS.Items.Add("No");
 
                                     ddlTipoDeSeguro.Items.Add(new ListItem("Seleccionar", ""));
                                     ddlTipoDeSeguro.Items.Add("A - Full Cover");
@@ -493,6 +542,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             txtCorreoElectronico.Text = sqlResultado["fcCorreoElectronicoCliente"].ToString();
                             txtNumeroTelefono.Text = sqlResultado["fcTelefonoPrimarioCliente"].ToString();
                             txtFechaDeNacimiento.Text = fechaNacimiento.ToString("yyyy-MM-dd");
+                            txtNoIdFiscal.Text = sqlResultado["NumeroFiscal"].ToString();
 
                             txtEdadDelCliente.Text = edad + " años";
                             if (sqlResultado["fcSexoCliente"].ToString() == "F")
@@ -762,8 +812,8 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         {
                             municipios.Add(new Municipios_ViewModel()
                             {
-                                IdDepartamento = (short)sqlResultado["fiCodDepartamento"],
-                                IdMunicipio = (short)sqlResultado["fiCodMunicipio"],
+                                IdDepartamento =  sqlResultado["fiCodDepartamento"].ToString(),
+                                IdMunicipio =  sqlResultado["fiCodMunicipio"].ToString(),
                                 NombreMunicipio = sqlResultado["fcMunicipio"].ToString(),
                             });
                         }
@@ -803,9 +853,9 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         {
                             ciudades.Add(new Ciudades_ViewModel()
                             {
-                                IdDepartamento = (short)sqlResultado["fiCodDepartamento"],
-                                IdMunicipio = (short)sqlResultado["fiCodMunicipio"],
-                                IdCiudadPoblado = (short)sqlResultado["fiCodPoblado"],
+                                IdDepartamento = sqlResultado["fiCodDepartamento"].ToString(),
+                                IdMunicipio =  sqlResultado["fiCodMunicipio"].ToString(),
+                                IdCiudadPoblado =  sqlResultado["fiCodPoblado"].ToString(),
                                 NombreCiudadPoblado = sqlResultado["fcPoblado"].ToString(),
                             });
                         }
@@ -846,10 +896,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         {
                             barriosColonias.Add(new BarriosColonias_ViewModel()
                             {
-                                IdDepartamento = (short)sqlResultado["fiCodDepartamento"],
-                                IdMunicipio = (short)sqlResultado["fiCodMunicipio"],
-                                IdCiudadPoblado = (short)sqlResultado["fiCodPoblado"],
-                                IdBarrioColonia = (short)sqlResultado["fiCodBarrio"],
+                                IdDepartamento = sqlResultado["fiCodDepartamento"].ToString(),
+                                IdMunicipio =  sqlResultado["fiCodMunicipio"].ToString(),
+                                IdCiudadPoblado =  sqlResultado["fiCodPoblado"].ToString(),
+                                IdBarrioColonia =  sqlResultado["fiCodBarrio"].ToString(),
                                 NombreBarrioColonia = sqlResultado["fcBarrioColonia"].ToString()
                             });
                         }
@@ -914,7 +964,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
             var resultadoActualizacion = string.Empty;
             var json_serializer = new JavaScriptSerializer();
 
-            var listaCondicionesDeDocumentacion = new int[] { 1, 2, 3, 4, 5, 6 };
+            var listaCondicionesDeDocumentacion = new int[] { 1, 2, 3, 4, 5, 6 ,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
 
             /* validar si hay condiciones de documentación */
             if (listaCondicionesDeDocumentacion.Contains(idTipoDeCondicion))
@@ -946,18 +996,18 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
             }
 
             /* condiciones de la información del domicilio */
-            if (idTipoDeCondicion == 11)
-            {
-                var informacionDomicilio = json_serializer.Deserialize<Cliente_InformacionDomicilio_ViewModel>(objSeccion);
-                resultadoActualizacion = ActualizarInformacionDomicilio(informacionDomicilio, idSolicitud, pcIDSesion, pcIDUsuario, pcIDApp);
-            }
+             if (idTipoDeCondicion == 11)
+             {
+                 var informacionDomicilio = json_serializer.Deserialize<Cliente_InformacionDomicilio_ViewModel>(objSeccion);
+                 resultadoActualizacion = ActualizarInformacionDomicilio(informacionDomicilio, idSolicitud, pcIDSesion, pcIDUsuario, pcIDApp);
+             }
 
-            /* condiciones de la informacion laboral */
-            if (idTipoDeCondicion == 12)
+            // // /* condiciones de la informacion laboral */
+             if (idTipoDeCondicion == 12)
             {
-                var informacionLaboral = json_serializer.Deserialize<Cliente_InformacionLaboral_ViewModel>(objSeccion);
-                resultadoActualizacion = ActualizarInformacionLaboral(informacionLaboral, idSolicitud, pcIDSesion, pcIDUsuario, pcIDApp);
-            }
+             var informacionLaboral = json_serializer.Deserialize<Cliente_InformacionLaboral_ViewModel>(objSeccion);
+                 resultadoActualizacion = ActualizarInformacionLaboral(informacionLaboral, idSolicitud, pcIDSesion, pcIDUsuario, pcIDApp);
+             }
 
             /* condiciones de la informacion conyugal */
             if (idTipoDeCondicion == 13)
@@ -1038,6 +1088,10 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piDocumentoPersonal", cliente.DocumentoIDPersonal);
+                    sqlComando.Parameters.AddWithValue("@pcNumeroFiscal", cliente.fcDescripcionDoctosFiscal);
+                    sqlComando.Parameters.AddWithValue("@piDocumentoFiscal", cliente.IDDocumentoFiscal);
+                    sqlComando.Parameters.AddWithValue("@piOrigenEtnico", cliente.IdOrigenEtnico);
                     sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
@@ -1646,14 +1700,14 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                             calculo = new SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel()
                             {
                                 SegurodeDeuda = decimal.Parse(sqlResultado["fnSegurodeDeuda"].ToString()),
-                                TotalSeguroVehiculo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()) : decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
+                                TotalSeguroVehiculo = (idProducto == 102) ? decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()) : decimal.Parse(sqlResultado["fnSegurodeVehiculo"].ToString()),
                                 CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
                                 GastosdeCierre = decimal.Parse(sqlResultado["fnGastosdeCierre"].ToString()),
                                 TotalAFinanciar = decimal.Parse(sqlResultado["fnValoraFinanciar"].ToString()),
-                                CuotaDelPrestamo = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()) : (decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()) - decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString())),
-                                CuotaTotal = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
+                                CuotaDelPrestamo = (idProducto == 102) ? decimal.Parse(sqlResultado["fnCuotaMensual"].ToString()) : (decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()) - decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString())),
+                                CuotaTotal = (idProducto == 102) ? decimal.Parse(sqlResultado["fnCuotaMensualNeta"].ToString()) : decimal.Parse(sqlResultado["fnCuotaQuincenal"].ToString()),
                                 CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
-                                TipoCuota = (idProducto == 202 || idProducto == 203 || idProducto == 204) ? "Meses" : "Quincenas",
+                                TipoCuota = (idProducto == 102) ? "Meses" : "Quincenas",
                                 ValorDelPrestamo = valorGlobal - valorPrima,
                                 TasaInteresAnual = decimal.Parse(sqlResultado["fnTasaDeInteresAnual"].ToString()),
                             };
@@ -1671,7 +1725,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel CalculoPrestamoVehiculo(int idProducto, decimal valorVehiculo, decimal valorPrimaOEmpenio, int plazo, string scorePromedio, int tipoSeguro, int tipoGps, int gastosDeCierreFinanciados, string dataCrypt)
+    public static SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel CalculoPrestamoVehiculo(int idProducto, decimal valorVehiculo, decimal valorPrimaOEmpenio, int plazo, string scorePromedio, int tipoSeguro, int tipoGps, int pagoGPS, int gastosDeCierreFinanciados, string dataCrypt)
     {
         var calculo = new SolicitudesCredito_Actualizar_CalculoPrestamo_ViewModel();
         try
@@ -1699,6 +1753,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                     sqlComando.Parameters.AddWithValue("@piTipodeSeguro", tipoSeguro);
                     sqlComando.Parameters.AddWithValue("@piTipodeGPS", tipoGps);
                     sqlComando.Parameters.AddWithValue("@piFinanciandoGastosdeCierre", gastosDeCierreFinanciados);
+					sqlComando.Parameters.AddWithValue("@piFinanciandoAparatoGPS", pagoGPS);
                     sqlComando.CommandTimeout = 120;
 
                     using (var sqlResultado = sqlComando.ExecuteReader())
@@ -1936,25 +1991,25 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
 
     public class BarriosColonias_ViewModel
     {
-        public int IdCiudadPoblado { get; set; }
-        public int IdMunicipio { get; set; }
-        public int IdDepartamento { get; set; }
-        public int IdBarrioColonia { get; set; }
+        public string IdCiudadPoblado { get; set; }
+        public string IdMunicipio { get; set; }
+        public string IdDepartamento { get; set; }
+        public string IdBarrioColonia { get; set; }
         public string NombreBarrioColonia { get; set; }
     }
 
     public class Ciudades_ViewModel
     {
-        public int IdDepartamento { get; set; }
-        public int IdMunicipio { get; set; }
-        public int IdCiudadPoblado { get; set; }
+        public string IdDepartamento { get; set; }
+        public string IdMunicipio { get; set; }
+        public string IdCiudadPoblado { get; set; }
         public string NombreCiudadPoblado { get; set; }
     }
 
     public class Municipios_ViewModel
     {
-        public int IdDepartamento { get; set; }
-        public int IdMunicipio { get; set; }
+        public string IdDepartamento { get; set; }
+        public string IdMunicipio { get; set; }
         public string NombreMunicipio { get; set; }
     }
 
@@ -1988,6 +2043,11 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
         public int IdTiempoResidir { get; set; }
         public bool ClienteActivo { get; set; }
         public string RazonInactivo { get; set; }
+
+        public string fcDescripcionDoctosFiscal { get; set; }
+        public int DocumentoIDPersonal { get; set; }
+        public int IdOrigenEtnico { get; set; }
+        public int IDDocumentoFiscal { get; set; }
 
         public Cliente_InformacionDomicilio_ViewModel InformacionDomicilio { get; set; }
         public Cliente_InformacionLaboral_ViewModel InformacionLaboral { get; set; }

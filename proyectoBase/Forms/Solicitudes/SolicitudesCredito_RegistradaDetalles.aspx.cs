@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -49,6 +49,8 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
 
                     CargarInformacionClienteSolicitud();
                     CargarInformacionGarantia();
+
+                    //btnLinkDocumentos.NavigateUrl = "http://crediflash.prestadito.corp/DealerApplication/ViewMainApplicationForm?id=1008";
                 }
                 else
                 {
@@ -230,9 +232,15 @@ public partial class SolicitudesCredito_RegistradaDetalles : System.Web.UI.Page
                             txtValorGarantia.Text = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()).ToString("N");
                             txtValorPrima.Text = decimal.Parse(sqlResultado["fnValorPrima"].ToString()).ToString("N");
                             txtPlazoSeleccionado.Text = sqlResultado["fiPlazoSeleccionado"].ToString();
-                            lblTipoDePlazo_Solicitado.InnerText = (IdProducto == "202" || IdProducto == "203" || IdProducto == "204") ? "Mensual" : "Quincenal";
+                            lblTipoDePlazo_Solicitado.InnerText = sqlResultado["fcTipoDePlazo"].ToString();
+                            txtMontoTotalAFinanciar_Calculo.Text = sqlResultado["fnValorAPrestar"].ToString();
+                            txtCuotaDelPrestamo_Calculo.Text = sqlResultado["fnCuotaTotal"].ToString();
+                            txtTasaAnualAplicada_Calculo.Text = sqlResultado["fnTasaAnualAplicada"].ToString();
+                            txtTasaMensualAplicada_Calculo.Text = sqlResultado["fnTasaMensualAplicada"].ToString();
                             txtOrigen.Text = sqlResultado["fcOrigen"].ToString();
 
+                            txtFrecuencia.Text = sqlResultado["fcTipoDePlazo"].ToString();
+                            txtCollateral.Text = "";
                             /*** Calculo del prestamo SOLICITADO ***/
                             var montoPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) != 0 ? decimal.Parse(sqlResultado["fnValorGarantia"].ToString()) : decimal.Parse(sqlResultado["fnValorSeleccionado"].ToString());
                             var valorPrimaPrestamoSolicitado = decimal.Parse(sqlResultado["fnValorPrima"].ToString());

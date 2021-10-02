@@ -1,6 +1,7 @@
-﻿const iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">iconoExito</label></i>';
+const iconoExito = '<i class="mdi mdi-check-circle mdi-24px text-success p-0"><label style="display:none;">iconoExito</label></i>';
 const iconoPendiente = '<i class="mdi mdi-check-circle mdi-24px text-secondary p-0"><label style="display:none;">iconoPendiente</label></i>';
 const iconoRojo = '<i class="mdi mdi mdi-close-circle mdi-24px text-danger p-0"></i>';
+const iconoIncompleto = '<i class="mdi mdi-alert mdi-24px text-warning p-0"><label style="display:none;">iconoPendiente</label></i>';
 const procesoPendiente = "/Date(-2208967200000)/";
 
 var idCliente = 0;
@@ -70,9 +71,10 @@ $(document).ready(function () {
                 "render": function (data, type, row) {
 
                     return '<div class="dropdown mo-mb-2">' +
-                        '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="'+ 'Opciones solicitud de credito ' + row["IdSolicitud"] + '"><i class="fa fa-bars"></i></button >' +
+                        '<button class="btn pt-0 pb-0 mt-0 mb-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Opciones"><i class="fa fa-bars"></i></button >' +
                         '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
                         (row["PermitirAbrirAnalisis"] == true ? '<button type="button" class="dropdown-item" id="btnAbrirAnalisis" onclick="RedirigirAccion(' + "'SolicitudesCredito_Analisis.aspx'" + ',' + "'análisis de la solicitud'" + ')" aria-label="Analisis"><i class="far fa-edit"></i> Abrir análisis</button>' : '') +
+                        (row["PermitirAbrirAnalisis"] == true ? '<button type="button" class="dropdown-item" id="btnCrearPrestamo" onclick="RedirigirAccion(' + "'SolicitudesCredito_CrearPrestamo.aspx'" + ',' + "'crear prestamo'" + ')" aria-label="Crear"><i class="far fa-edit"></i> Crear prestamo</button>' : '') +
                         '<button type="button" class="dropdown-item" id="btnAbrirDetalles" onclick="RedirigirAccion(' + "'SolicitudesCredito_Detalles.aspx'" + ',' + "'detalles de la solicitud'" + ')" aria-label="Detalles"><i class="far fa-file-alt"></i> Ver detalles</button>' +
                         (row["IdEstadoSolicitud"] == 7 ? '<button type="button" class="dropdown-item" id="btnImprimirDocumentacion" onclick="RedirigirAccion(' + "'SolicitudesCredito_ImprimirDocumentacion.aspx'" + ',' + "'imprimir documentación'" + ')"><i class="far fa-file-pdf"></i> Imprimir Documentos</button>' : '') +
                         '<button type="button" class="dropdown-item" id="btnExpedienteSolicitud" onclick="MostrarExpedienteSolicitudGarantia(' + row["IdSolicitud"] + ',' + row["IdGarantia"] + ')" aria-label="Expediente de la solicitud"><i class="far fa-folder"></i> Expediente de la solicitud</button>' +
@@ -140,7 +142,7 @@ $(document).ready(function () {
                     let Resultado = '';
                     if (row["EnvioARutaAnalista"] != procesoPendiente) {
 
-                        Resultado = (row["EnCampoInicio"] != procesoPendiente) ? (row["IdEstadoDeCampo"] == 2 ? iconoExito : iconoPendiente) : '';
+                        Resultado = (row["EnCampoInicio"] != procesoPendiente) ? (row["IdEstadoDeCampo"] == 2 ? iconoExito : iconoPendiente) : iconoPendiente;
 
                         if (row["EnCampoInicio"] == procesoPendiente && (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7)) {
                             Resultado = row["IdEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;

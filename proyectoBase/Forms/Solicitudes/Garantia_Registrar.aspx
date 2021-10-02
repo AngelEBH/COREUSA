@@ -16,6 +16,7 @@
     <link href="/CSS/Content/css/font/font-fileuploader.css" rel="stylesheet" />
     <link href="/CSS/Content/css/jquery.fileuploader.min.css" rel="stylesheet" />
     <link href="/CSS/Content/css/jquery.fileuploader-theme-dragdrop.css" rel="stylesheet" />
+    <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
         .card {
             border: none;
@@ -121,11 +122,11 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Transmisión</label>
-                                            <asp:TextBox ID="txtTransmision" placeholder="EJ. Automático" CssClass="form-control form-control-sm" type="text" required="required" ReadOnly="true" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtTransmision" placeholder="EJ. Automático" CssClass="form-control form-control-sm" type="text" required="required" ReadOnly="false" runat="server"></asp:TextBox>
                                         </div>
                                         <div class="col-sm-4">
                                             <label class="col-form-label">Tipo de combustible</label>
-                                            <asp:TextBox ID="txtTipoDeCombustible" placeholder="EJ. Gasolina" CssClass="form-control form-control-sm" type="text" ReadOnly="true" required="required" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtTipoDeCombustible" placeholder="EJ. Gasolina" CssClass="form-control form-control-sm" type="text" ReadOnly="false" required="required" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                     <h6 class="mb-1">Valores de la garantía</h6>

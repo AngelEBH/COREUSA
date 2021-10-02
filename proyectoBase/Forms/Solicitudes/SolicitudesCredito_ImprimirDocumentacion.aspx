@@ -39,7 +39,7 @@
                                 <asp:TextBox ID="txtNombreCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
                             </div>
                             <div class="col-md-6 col-12">
-                                <label class="col-form-label">Identidad</label>
+                                <label class="col-form-label">Identidad Personal</label>
                                 <asp:TextBox ID="txtIdentidadCliente" ReadOnly="true" CssClass="form-control form-control-sm col-form-label" runat="server"></asp:TextBox>
                             </div>
                             <div class="col-6">
@@ -74,54 +74,64 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-12">
-                                <button type="button" id="btnContrato" onclick="ExportToPDF('CONTRATO','divContenedorContrato','divContratoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                
+                               <%-- <button type="button" id="btnContrato" onclick="ExportToPDF('CONTRATO','divContenedorContrato','divContratoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
                                     Contrato
+                                </button>--%>
+                                  <button type="button" id="" onclick="ExportToPDF('CONTRATO','divContenedorContratoPrestaditoCash','divContratoPrestaditoCashPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    Contrato 
                                 </button>
-                                <button type="button" id="btnPagare" onclick="ExportToPDF('PAGARE','divContenedorPagare','divPagarePDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                <button type="button" id="btnPagare" onclick="ExportToPDF('PAGARE','divContenedorPagare','divPagarePDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png'); display: none">
                                     Pagaré
                                 </button>
-                                <button type="button" id="btnCompromisoLegal" onclick="ExportToPDF('COMPROMISO_LEGAL','divContenedorCompromisoLegal','divCompromisoLegalPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+
+                                 <button type="button" id="btnPlanPago" onclick="ExportToPDF('PLANPAGO','divContenedorPlanDePagos','divPlanDePagosPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    Plan de Pago
+                                </button>
+
+
+                                <button type="button" id="btnCompromisoLegal" onclick="ExportToPDF('COMPROMISO_LEGAL','divContenedorCompromisoLegal','divCompromisoLegalPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');  display: none" >
                                     Compromiso legal
                                 </button>
-                                <button type="button" id="btnActaDeCompromiso" onclick="ExportToPDF('ACTA_DE_COMPROMISO','divContenedorActaDeCompromiso','divActaDeCompromisoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                <button type="button" id="btnActaDeCompromiso" onclick="ExportToPDF('ACTA_DE_COMPROMISO','divContenedorActaDeCompromiso','divActaDeCompromisoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');  display: none">
                                     Acta de compromiso
                                 </button>
-                                <button type="button" id="btnConvenioComprayVenta" onclick="ExportToPDF('CONVENIO_DE_COMPRA_Y_VENTA_DE_VEHICULOS_PARA_FINANCIAMIENTO','divContenedorConvenioCyV','divConevionCyVPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                <button type="button" id="btnConvenioComprayVenta" onclick="ExportToPDF('CONVENIO_DE_COMPRA_Y_VENTA_DE_VEHICULOS_PARA_FINANCIAMIENTO','divContenedorConvenioCyV','divConevionCyVPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');  display: none">
                                     C. y V. de vehic. finan.
                                 </button>
-                                <a href="/Documentos/Recursos/INSPECCION%20DE%20VEHICULO.pdf" download="Inspección vehículo" id="btnInspeccionVehiculo" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');">Inspección de vehículo
+                                <a href="/Documentos/Recursos/INSPECCION%20DE%20VEHICULO.pdf" download="Inspección vehículo" id="btnInspeccionVehiculo" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');  display: none">Inspección de vehículo
                                 </a>
-                                <button type="button" id="btnInspeccionSeguroDeVehiculo" onclick="ExportToPDF('INSPECCION_SEGURO_VEHICULO','divContenedorInspeccionSeguro','divInspeccionSeguroPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');">
+                                <button type="button" id="btnInspeccionSeguroDeVehiculo" onclick="ExportToPDF('INSPECCION_SEGURO_VEHICULO','divContenedorInspeccionSeguro','divInspeccionSeguroPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/inspection_40px.png');  display: none">
                                     Inspección seguro
                                 </button>
-                                <button type="button" id="btnTraspaso" onclick="ExportToPDF('TRASPASO_CLIENTE','divContenedorTraspaso','divTraspasoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
+                                <button type="button" id="btnTraspaso" onclick="ExportToPDF('TRASPASO_CLIENTE','divContenedorTraspaso','divTraspasoPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');  display: none">
                                     Traspaso cliente
                                 </button>
-                                <button type="button" id="btnTraspasoVendedor" onclick="ExportToPDF('TRASPASO_PROPIETARIO','divContenedorTraspasoVendedor','divTraspasoVendedorPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
+                                <button type="button" id="btnTraspasoVendedor" onclick="ExportToPDF('TRASPASO_PROPIETARIO','divContenedorTraspasoVendedor','divTraspasoVendedorPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');  display: none">
                                     Traspaso propietario
                                 </button>
-                                <button type="button" id="btnRecibo" onclick="ExportToPDF('RECIBO','divContenedorRecibo','divReciboPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/receipt_40px.png');">
+                                <button type="button" id="btnRecibo" onclick="ExportToPDF('RECIBO','divContenedorRecibo','divReciboPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/receipt_40px.png'); display: none">
                                     Recibo
                                 </button>
-                                <button type="button" id="btnBasicoCPI" onclick="ExportToPDF('BASICO_CPI','divContenedorBasicoCPI','divBasicoCPIPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/vehicle_insurance_40px.png');">
+                                <button type="button" id="btnBasicoCPI" onclick="ExportToPDF('BASICO_CPI','divContenedorBasicoCPI','divBasicoCPIPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/vehicle_insurance_40px.png');  display: none">
                                     Básico + CPI
                                 </button>
-                                <button type="button" id="btnNotaDeEntrega" onclick="ExportToPDF('NOTA_DE_ENTREGA', 'divContenedorNotaDeEntrega', 'divNotaDeEntregaPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
+                                <button type="button" id="btnNotaDeEntrega" onclick="ExportToPDF('NOTA_DE_ENTREGA', 'divContenedorNotaDeEntrega', 'divNotaDeEntregaPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');  display: none">
                                     Nota de entrega
                                 </button>
-                                <button type="button" id="btnEnviarCorreoLiquidacion" onclick="EnviarCorreo('Liquidación', 'Liquidación', 'divCorreoLiquidacionPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
+                                <button type="button" id="btnEnviarCorreoLiquidacion" onclick="EnviarCorreo('Liquidación', 'Liquidación', 'divCorreoLiquidacionPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');  display: none">
                                     Correo Liquidación
                                 </button>
-                                <button type="button" id="btnEnviarCorreoSeguro" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');">
+                                <button type="button" id="btnEnviarCorreoSeguro" runat="server" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/send_email_40px.png');  display: none">
                                     Correo Seguro
                                 </button>
-                                <button type="button" id="btnPortadaExpediente" onclick="ExportToPDF('PORTADA_EXPEDIENTE','divContenedorPortadaExpediente','divPortadaExpedientePDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');">
+                                <button type="button" id="btnPortadaExpediente" onclick="ExportToPDF('PORTADA_EXPEDIENTE','divContenedorPortadaExpediente','divPortadaExpedientePDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/resume_40px.png');  display: none">
                                     Portada Expediente
                                 </button>
-                                <button type="button" id="btnExpediente" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/check_list_40px.png');">
+                                <button type="button" id="btnExpediente" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/check_list_40px.png');  display: none">
                                     CHECK LIST
                                 </button>
-                                <button type="button" id="btnMemorandumExpediente" onclick="ExportToPDF('MEMORANDUM','divContenedorMemorandum','divMemorandumPDF')" runat="server" visible="false" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                <button type="button" id="btnMemorandumExpediente" onclick="ExportToPDF('MEMORANDUM','divContenedorMemorandum','divMemorandumPDF')" runat="server" visible="false" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');  display: none">
                                     Memorandum
                                 </button>
                             </div>
@@ -484,8 +494,8 @@
                                 el vehículo comprado con el dinero objeto del presente préstamo, quedándose
                                 <b class="lblNombreComercial"></b>
                                 con la documentación original del vehículo y el <b>CLIENTE</b> en posesión del vehículo del cual será responsable mientras se encuentre en su poder y no se haya cancelado el precio total pactado para la terminación del presente contrato.
-                                Sin perjuicio de la <b>designación de garantías fiduciarias como ser Menaje de Hogar y demás bienes pertenecientes AL CLIENTE</b>, por lo que está terminantemente prohibido para el <b>CLIENTE</b> utilizar el vehículo para transporte público como ser taxi en todas sus modalidades incluyendo VIP,
-                                asi como también transporte de carga o similares, también se le prohibe enajenar, vender, permutar, donar, gravar, prestar o dar en prenda el vehículo dado en propiedad, sin la autorización por escrito otorgada por
+                                Sin perjuicio de la <b>designación de garantías fiduciarias como ser Menaje de Hogar y demás bienes pertenecientes AL CLIENTE</b>, por lo que está <b>terminantemente prohibido para el CLIENTE utilizar el vehículo para transporte público como ser taxi en todas sus modalidades incluyendo VIP,
+                                asi como también transporte de carga o similares</b>, también se le prohibe enajenar, vender, permutar, donar, gravar, prestar o dar en prenda el vehículo dado en propiedad, sin la autorización por escrito otorgada por
                                 <b class="lblNombreComercial"></b>,
                                 el incumplimiento de las prohibiciones faculta a
                                 <b class="lblNombreComercial"></b>
@@ -588,8 +598,8 @@
                                 <b class="lblNombreComercial"></b>
                                 se reserva el derecho de ejercer acciones legales contra el <b>CLIENTE</b> por el pago de saldo total adeudado, que incluye capital, intereses, otros cargos o gastos que incurra por recuperacion, reparacion, impuestos u otros.
                                 <b>- DÉCIMO TERCERA: PROHIBICIONES PARA EL CLIENTE:</b> Mientras este contrato no haya sido cancelado en su totalidad es se le Prohibe realizar las siguientes acciones:
-                                <b>A)</b> utilizar el vehiculo para transporte publico como ser taxi en todas sus modalidades incluyendo VIP,
-                                <b>B)</b> utilzar el vehiculo como transporte de carga comercial.
+                                <b>A) utilizar el vehiculo para transporte publico como ser taxi en todas sus modalidades incluyendo VIP</b>,
+                                <b>B) utilzar el vehiculo como transporte de carga comercial</b>.
                                 <b>-C)</b> Adulterar el GPS o mandarlo a retirar o negarse
                                 <span runat="server" id="lblNegarseRevisionGpsAuto" visible="false">a la revisión o al mantenimiento programado por
                                     <b class="lblNombreComercial"></b>
@@ -2482,6 +2492,765 @@
                 </div>
             </div>
         </div>
+       
+
+        
+                <!-- ================================== HTML PLAN DE PAGOS ================================ -->
+        <div id="divContenedorPlanDePagos" class="contenedorPDF">
+            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divPlanDePagosPDF" style="display: none;">
+                <div class="card-body pt-0 pr-5 pl-5">
+                     <div class="row">
+                        <div class="col-12 m-0 p-0">
+                            <img src="//:0" class="img-fluid img-logo-empresa" />
+                        </div>
+                        <div class="col-12">
+                            <h6 class="text-center font-weight-bold">PAYMENT PLAN</h6>
+                           
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-between">
+                        <div class="row">
+                          <small class="col-4">
+                             <b>Loan Number:</b> <asp:Label runat="server" ID="lblPrestamo_PlanDePagos"></asp:Label>  
+                          </small>
+
+                          <small class="col-4">   
+                               <b>First Payment:</b> <asp:Label runat="server" ID="lblFechaInicio_PlanDePagos"></asp:Label> 
+                                  
+                         </small>
+
+                              <small class="col-4">
+                              <b>Loan Amount:</b>  <asp:Label runat="server" ID="lblCapitalFinanciado_PlanDePagos"></asp:Label> 
+                          </small>
+                          
+
+                         
+                           <!-- ==================================row================================ -->
+
+                         <small class="col-4">
+                              <b>Product:</b>  <asp:Label runat="server" ID="lblProducto_PlanDePagos"></asp:Label> 
+                         </small>
+
+
+                         
+
+                          <small class="col-4">
+                               <b>Final Payment:</b> <asp:Label runat="server" ID="lblFechaFinal_PlanDePagos"></asp:Label>          
+                          </small>
+                        
+                              <small class="col-4" >
+                                <b>Payment Amount:</b>  <asp:Label runat="server" ID="lblValorCuota_PlanDePagos"></asp:Label> 
+                          </small>
+
+                        
+                           <!-- ==================================row================================ -->
+                           <small class="col-4">
+                              <b>Customer:</b>  <asp:Label runat="server" ID="lblNombreCliente_PlanDePagos"></asp:Label> 
+                          </small>
+
+                       
+
+                      
+                          <small class="col-4">
+                              <b>Frequency:</b>  <asp:Label runat="server" ID="lblFrecuenciaPago_PlanDePagos"></asp:Label> 
+                          </small>
+
+                            <small class="col-4">                              
+                              <b style="display: none">Tasa Anual:</b>  <asp:Label runat="server" ID="lblTasaInteres_PlanDePagos" style="display: none"></asp:Label> 
+                          </small>
+                          <!-- ==================================row================================ -->
+
+
+                
+
+                           <small class="col-4">
+                              <b>Inception Date:</b>  <asp:Label runat="server" ID="lblInceptionDate_PlanDePagos"></asp:Label> 
+                          </small>
+
+
+                           <small class="col-4">
+                              <b>Total Payments:</b>  <asp:Label runat="server" ID="lblTotalCuotas_PlanDePagos"></asp:Label> 
+                          </small>
+
+
+                        </div>
+                         
+                    
+                     
+                    </div>
+                    
+                   <%--  <hr />--%>
+                   <%-- <div class="row border border-gray mb-2 mt-2">
+                        
+               </div>--%>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 p-0">
+                            <asp:Table ID="tbl_PlanDePagos" CssClass="table table-condensed table-bordered" runat="server">
+                                  <asp:TableHeaderRow TableSection="TableHeader">
+                                    <asp:TableHeaderCell RowSpan="2"># PMT</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell RowSpan="2" CssClass="text-center">Payment Due Date</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell RowSpan="2" CssClass="text-center">Beginning Principal Balance</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell  ColumnSpan="4" CssClass="text-center">Payment Details</asp:TableHeaderCell>
+                                  
+                                     <asp:TableHeaderCell RowSpan="2" CssClass="text-center">Total Payment</asp:TableHeaderCell>
+                                     <asp:TableHeaderCell RowSpan="2" CssClass="text-center">Ending Principal Balance</asp:TableHeaderCell>
+                                </asp:TableHeaderRow>
+
+                                <asp:TableHeaderRow TableSection="TableHeader">
+                                   
+                                    <asp:TableHeaderCell CssClass="text-center">Principal</asp:TableHeaderCell>
+                                     <asp:TableHeaderCell CssClass="text-center">Interest</asp:TableHeaderCell>
+                                     <asp:TableHeaderCell CssClass="text-center">CPP 1</asp:TableHeaderCell>
+                                     <asp:TableHeaderCell CssClass="text-center">CPP 2</asp:TableHeaderCell>
+                                     <%--  <asp:TableHeaderCell CssClass="text-center">GPS</asp:TableHeaderCell> --%>
+                                   
+                                </asp:TableHeaderRow>
+                            </asp:Table>
+                        </div>
+                    
+                      
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+
+
+      <!-- ================================== HTML Contrato Prestadito Cash =================================== -->
+      <div id="divContenedorContratoPrestaditoCash" class="contenedorPDF">         
+        <div class="card m-0 pt-4 divImprimir" runat="server" visible="true" id="divContratoPrestaditoCashPDF" style="display: none;">
+           <div class="card-body pt-0">
+               <div class="row">
+                
+                   <div class="col-12">
+                       <h6 class="text-center font-weight-bold">DISCLOSURE STATEMENT, NOTE AND SECURITY AGREEMENT</h6>
+                       <hr />
+                   </div>
+               </div>
+          
+              <table style="width:100% ; border:1px solid black; font-size:10px!important;" >
+            <tr  style="border-right: 1px solid;" >
+              <td  >Borrower(s) Name and mailing Address </td>
+              <td >LENDER (NAME, ADDRESS, CITY AND STATE)</td>        
+              <td >loan No:</td>          
+            </tr>
+
+            <tr>
+              <td><b><asp:Label runat="server" ID="LblNombreCLiente_Cash"></asp:Label></b></td>
+              <td><b><asp:Label runat="server" ID="lblNombrePropietarioGarantia_Cash"></asp:Label></b> </td>  
+               <td><b><asp:Label runat="server" ID="lblPrestamo_Cash"></asp:Label></b></td>
+            </tr>
+
+            <tr>
+             <td> <b><asp:Label runat="server" ID="LblDireccionCliente_Cash"></asp:Label></b> </td> 
+             <td><b>17880 S. Dixie Hwy, Miami FI 33157</b></td> 
+             <td>Date of Loan</td> 
+            </tr>
+
+            <tr>
+             <td></td>
+             <td></td>
+             <td><b><asp:Label runat="server" ID="lblFechaDesembolso_Cash"></asp:Label></b></td>
+            </tr>
+
+           </table>
+           <br/>
+               <table style="width:100% ; border:1px solid black; font-size:10px!important; " >
+                    <tr>
+                      <td  >Anual Percentage Rate </td>
+                      <td  >Finance Charge</td>        
+                      <td  >Amount financed</td>
+                      <td style=" width:10%">Collateral</td>  
+                      <td  >Total of Payment</td>          
+                    </tr>
+
+                    <tr >
+                      <td>The cost of Borrower's credit </td>
+                      <td>the dollar amount the </td>
+                      <td>the amount of credtit provided </td>
+                      <td  style=" width:15%">Protection plan</td>
+                      <td>the amount Borrower will have </td>   
+        
+                    </tr>
+
+                <tr >
+                        <td>credit as a yearly rate </td>
+                        <td>credit will cost borrower </td>
+                        <td>to Borrower or on Borrober' </td>
+                        <td></td>
+                        <td>paid after borrower has made </td>  
+                </tr>
+                   <tr>
+                       <td></td>
+                       <td></td>
+                       <td>s behalf</td>
+                       <td></td>
+                       <td>all payments as sheduled</td>
+                   </tr>
+
+                <tr style="width:30% ; ">
+                     <td><b>&nbsp; &nbsp; <asp:Label runat="server" ID="lblTasaInteres_CahsTable2"></asp:Label></b></td>
+                     <td><b><asp:Label runat="server" ID="lblInteresesTotal_Cash"></asp:Label></b></td>
+                     <td><b><asp:Label runat="server" ID="lblMontoFinalAFinanciarTabla_Cash"></asp:Label></b></td>                        
+                     <td width:15%"><b><asp:Label runat="server" ID="lblCollateral"></asp:Label> </b></td>
+                    <td><b><asp:Label runat="server" ID="blValorTotalCuota_Cash"></asp:Label></b></td>
+                </tr>
+
+
+               </table>
+               <br/>
+               <%--tabla 2--%>
+               <div>
+                       <div class="containerCash flexCash ">
+                      <div class="leftCash">
+                        <div><p  style=" font-size:11px!important;">Payment Schedule:</p></div>
+                        <div class="flexCash">
+                          <div class="columnCash"><p style="font-size:10px!important;"><b>Number of Payments </b></p> </div>
+                          <div class="columnCash"><p style="font-size:10px!important;"><b>Amount of payments</b> </p> </div>
+                          <div class="columnCash"><p style="font-size:10px!important;"><b>When Payments are Due </b> </p> </div>
+                        </div>
+                        <div class="flexCash" >
+                          <div class="columnCash">
+                           <table>
+                             <tr>
+                               <td  style="font-size:10px!important;">&nbsp; &nbsp; <asp:Label runat="server" ID="lblPlazoFinanciar_Cash"></asp:Label></td>          
+                             </tr>
+                             <tr>
+                               <td  style="font-size:10px!important;">&nbsp; &nbsp;&nbsp;1</td>
+                             </tr>
+                           </table>
+                          </div>
+                          <div class="columnCash">
+                               <table>
+                              <tr>
+                                <td style="font-size:10px!important;">$&nbsp; &nbsp;<asp:Label runat="server" ID="lblValorCuota_Cash"></asp:Label></td>                               
+                              </tr>                             
+                              <tr>
+                                <td style="font-size:10px!important;">$&nbsp; &nbsp; <asp:Label runat="server" ID="lblValorCuota_Cash2"></asp:Label></td>
+                              </tr>
+             
+                            </table>
+                          </div>
+                          <div class="columnCash">
+                                <table>                                         
+                              <tr><td  style="font-size:10px!important;">beginning on:  <asp:Label runat="server" ID="lblPrimerPago_Cash"></asp:Label> </td></tr>
+                              <tr><td  style="font-size:10px!important;">Last payment on:<asp:Label runat="server" ID="lblFechaVencimiento_Cash"></asp:Label> </td></tr>
+                              <tr><td style="font-size:10px!important;">Frecuency:<asp:Label runat="server" ID="lblFrecuanciaContrato"></asp:Label></td></tr>  
+                            </table>
+                          </div>
+                        </div>
+                        <div class="descriptionCash">
+                          <p style="font-size:11px!important;">
+                           See the Disclosure Statement, Note and Security Agreement for any additional
+                            information about nonpayment, default, any required repayment in full before
+                            the scheduled date, and prepayment refunds and penalties.
+                          </p>
+                        </div>
+                      </div>
+                      <div  style="width :50% !important" class="rightCash">
+                        <div class="rowCash">
+                          <p  style=" font-size:11px!important;">Security: Borrower is giving a security intereset in:</p>
+                          <div>
+                            <div class="controlsCash space-bottom">
+                              <div class="controlCash">
+                                <input type="checkbox" class="checkbox-controlCash" checked />
+                                <label for=""  style=" font-size:10px!important;">Motor Vehicle</label>
+                              </div>
+                              <div class="controlCash">
+                                <input type="checkbox" class="checkbox-controlCash"/>
+                                <label for=""  style=" font-size:10px!important;">Motor Vehicle</label>
+                              </div>
+                            </div>
+                          <p  style=" font-size:11px!important;">
+
+                             <b>Late Charge:</b> If a payment is more than 10 days late,
+                                        Borrower will be required to pay a late charge of $15.00            
+                            </p>
+                          </div>
+                        </div>
+                        <div class="rowCash">
+                          <p  style=" font-size:11px!important;">Prepayment if borrower pays off early, Borrower:</p>
+                          <div class="halfCash">
+                            <div class="controlsCash wrap">
+                              <div class="controlCash size-two">
+                                <input type="checkbox" class="checkbox-controlCash" checked />
+                                <label for="" style=" font-size:10px!important;">Willnot</label>
+                              </div>
+                              <div class="controlCash size-two">
+                                <input type="checkbox" class="checkbox-controlCash" /> 
+                                <label for="" style=" font-size:10px!important;">may</label>
+                              </div>
+                              <div class="controlCash size-two">
+                                <input type="checkbox" class="checkbox-controlCash"  />
+                                <label for="" style=" font-size:10px!important;">Willnot</label>
+                              </div>
+                              <div class="controlCash size-two">
+                                <input type="checkbox" class="checkbox-controlCash" checked />
+                                <label for="" style=" font-size:10px!important;">may</label>
+                              </div>
+                            </div>
+                            <div>
+                              <p  style=" font-size:10px!important;" >
+                               have to pay a penalty and be entitle to a refund of party of the finance charge
+                              </p>
+                            </div>
+                          </div>
+                            <div class="rowCash">
+                          <p style=" font-size:10px!important;" >Demand Feature:</p>
+                        <div class="half">
+                          <div class="controlsCash wrap">
+                            <div class="controlCash size-two">
+                              <input type="checkbox" class="checkbox-controlCash" checked />
+                              <label for=""  style=" font-size:10px!important;" >Not applicate</label>
+                            </div>
+                            <div class="controlCash size-two">
+                              <input type="checkbox" class="checkbox-controlCash" />
+                              <label for=""  style=" font-size:10px!important;" >This obligation has a demand feature</label>
+                            </div>
+                            
+                          </div>
+        
+                        </div>
+                       </div>
+                        </div>
+                      </div>
+                    </div>
+                   </div>
+               <br/>
+
+            <%--  Tabla 3--%>
+            <table style="width:100% ; border:1px solid black; font-size:12px!important;  " >
+
+        <tr style="height: 50; border: 1px solid black" >
+                <td>ITEMIZATION OF AMOUNT FINANCED</td>
+                <td><b><asp:Label runat="server" ID="lblPlazoFinanciarTabla3_Cash"></asp:Label></b></td>                 
+        </tr>
+        <tr style="border: 1px solid black">
+                <td><asp:Label runat="server" ID="lblTasaInteres_CahsTable4"></asp:Label></td>
+                <td>Agreed rate of interest</td>                          
+    
+           </tr>
+           <tr style="border: 1px solid black">
+                <td>$0.00</td>
+                <td>Amount given to borrower directly (check to borrower)</td>                    
+           </tr>
+           <tr  style="border: 1px solid black">
+                <td><asp:Label runat="server" ID="lblCollatelaTabla3_Cash"></asp:Label></td>
+                <td>Collateral Protection plan(If apply)</td>                    
+           </tr>
+           <tr  style="border: 1px solid black">
+                <td>$ <asp:Label runat="server" ID="lblLienHolher_Cash"></asp:Label></td>
+                <td>License/Title/ Registraction Fee / Other</td>                    
+           </tr>
+           <tr  style="border: 1px solid black">
+                <td> <asp:Label runat="server" ID="lblInteresesTotalTabla2_Cash"></asp:Label></td> 
+                <td>Finance Charge</td>                    
+           </tr>
+           <tr  style="border: 1px solid black">
+                <td></td>
+                <td>Check number</td>                    
+           </tr>
+   </table>
+        
+          <div class="row">
+             <div class="col-12">                      
+               <p style="font-size:12px!important;">                        
+                  <u> TERMS:</u> In this Disclosure Statement, Note and Security Agreement, the word "Borrower" refers to the persons signing below as Borrower, whether one or
+                   more. If more than one Borrower signs, each will be responsible, individually and together, for all promises made and for repaying the loan in full.
+                   The word "Lender" refers to the Lender, whose name and address are shown above.
+             
+                </p>
+               <p style="font-size:12px!important;"  > 
+                  <u>PROMISE TO PAY:</u> In return for a loan that Borrower has received, Borrower promises to pay to the order of Lender the Total of Payments (which includes  interest charges) shown  above  in  substantially equal,  
+                   consecutive  monthly installments as  shown  above  except that any appropriate adjustments will be made to the first and final payments, until the Total of Payments is fully paid. Each payment will be applied to any allowable expenses late charges and/or attorney fees/expenses and then to a combined total of the Amount Financed and interest charges. 
+                   If any part of the balance remains unpaid on the final payment date, Lender, at its option, may collect interest 
+                   from and after maturity upon the then unpaid Amount Financed at the maximum rate permitted by the then applicable law or, if no maximum rate is prescribed, then the rate of interest prevailing under this note. Any amount shown above as an Origination Fee has been 
+                   paid by the Borrower and is considered a prepaid charge. If Borrower prepays this Note, the Origination Fee is not refundable.
+
+                </p>
+              
+          </div>
+
+              <div class="row">
+                   <div class="col-12">
+                  
+                       <p style="font-size:13px!important;">
+                          <u>PREPAYMENT:</u> 
+                       </p>
+                       <table>
+                           <tr>
+                               <td> <input type="checkbox" name="vehicle1" value="Bike"  style="width:25px;height:25px;"  checked></td>
+                               <td>
+                                    <ul>
+                           <li>A.&nbsp;&nbsp;If this box is checked, you may prepay this loan in whole or in part at any time without penalty. However, upon partial prepayment, 
+                               interest will continue to accrue. Partial prepayment and the application of a refund to the unpaid balance of the loan will not affect the 
+                               amount or due date of subsequent scheduled payments on the loan, but may reduce the number of such payments. Upon prepayment in 
+                               full, Borrower may receive a credit or rebate of the unearned Finance Charges according to Cuota Fija Niv / Calculo de Ints. al Inicio del 
+                               Plan. Refunds of less than $1.00 will not be made. In the event of any prepayment of a loan whether or not pre-computed, the credit 
+                               may collect the minimum loan Finance Charge of $45, as if earned.
+                           </li>
+                                        </ul>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td> <input type="checkbox" name="vehicle1" value="Bike"  style="width:25px;height:25px;"></td>
+                               <td><ul>
+                                        <li>B.&nbsp;&nbsp;If this box is checked and this loan is primarily secured by an interest in land, Borrower will be required to pay a prepayment penalty of 
+                                           two
+                                          percent (2%) of the net unpaid balance (after deducting all refunds and rebates) if this loan is prepaid in full during the first three years 
+                                          of the loan. A prepayment penalty will not apply if Borrower refinances or consolidates this loan with Lender or the loan is prepaid by        
+                                         insurance
+                                         proceeds or after acceleration after default. 
+                           </li>                              
+                          
+                       </ul>
+                               </td>
+                           </tr>
+                       </table>
+                        
+                      
+                      
+                       <p style="font-size:12px!important;">
+                         <u> SECURITY AGREEMENT:</u>
+                       </p>
+                       <table>
+                           <tr>
+                               <td> <input type="checkbox" name="vehicle1" value="Bike"  style="width:25px;height:25px;"> </td>
+                               <td>                                        
+                                   <ul>
+                                    <li>A.&nbsp;&nbsp; If this box is checked, this loan is unsecured.</li>
+                                   </ul>
+                               </td>                            
+                          </tr>
+                           <tr>
+                               <td> <input type="checkbox" name="vehicle1" value="Bike"  style="width:25px;height:25px;"  checked> </td>
+                               <td> <ul>
+                                      <li>
+                                            B.&nbsp;&nbsp; If this box is checked, to secure the payment and performance hereof, Borrower gives to Lender a security interest under the Uniform 
+                                             Commercial Code in any property for which a description is completed below and all parts and equipment now or later added to the 
+                                             property and any proceeds of the property, all of which will be called "Property". See below for additional terms applicable to this 
+                                             security interest.
+
+                                       </li>
+                                    </ul>
+                               </td>
+                        
+                        </tr>
+                      
+                    </table>
+                   </div>
+               </div>
+               <div class="row">
+                    <ol>
+                        <li  value="1">
+                            Motor vehicle/mobile Home;
+                        </li>
+                    </ol>
+                <div class="col-12">
+                       <table class="table table-sm table-bordered">
+                           <tr>
+                             <th>Make, No Cylinders</th>
+                             <th>Year/Model</th>
+                             <th>Model No.Or Name</th>
+                             <th>Body Type</th>
+                             <th>Identification Number</th>
+                           </tr>
+                           <tr>                                  
+                               <td>
+                                   <asp:Label runat="server" ID="lblMarca_Cash"></asp:Label>
+                               </td>
+                                <td>
+                                   <asp:Label runat="server" ID="LblAnio_Cash"></asp:Label>,
+                               </td>
+                                <td>
+                                   <asp:Label runat="server" ID="lblModelo_Cash"></asp:Label>
+                               </td>
+                                <td>
+                                   <asp:Label runat="server" ID="Label4"></asp:Label>
+                               </td>
+                                <td>
+                                   <asp:Label runat="server" ID="lblSerie_Cash"></asp:Label>
+                               </td>
+                           </tr>
+                        
+                       </table>
+                    <ol>
+                        <li value="2">
+                            Other Property;
+                        </li>
+                    </ol>
+                    <br />
+                    <div class="Idletra" >
+                   <table>
+                       <tr>
+                           <td>  <input type="checkbox" name="vehicle1" value="Bike"  style="width:25px;height:25px;"  checked>  </td>
+                           <td>
+                             <ul>
+                        
+                                <li >
+                                   C.&nbsp;&nbsp;If this box is checked, Borrower's loan is secured by Deed of Trust or Mortgage of even date on real property which requires Lender's X
+                                   written consent to a sale or transfer of the encumbered real property
+
+                                </li>
+                           </ul>
+                           </td>
+                       </tr>
+                   </table>
+                      <br />  <br />  <br />
+                    <p style="font-size:12px!important;">
+                         <u>OWNERSHIP OF PROPERTY:</u> Borrower represents that the Property is owned by Borrower free and clear of all liens and encumbrances except those of which Borrower 
+                        has informed Lender in writing. Prior to any default, Borrower may keep and use the Property at Borrower's own risk, subject to the provisions of the Uniform 
+                        Commercial Code. If the Property includes a motor vehicle or mobile home, Borrower will, upon request, deliver the certificate of title to the motor vehicle or 
+                        mobile home to Lender.
+                    </p>
+                    
+                    <p  style="font-size:12px!important;">
+                        <u>USE OF PROPERTY:</u> Borrower will not sell, lease, encumber, or otherwise dispose of the Property without Lender's prior written consent. 
+                        Borrower will keep the Property at the Borrower's 
+                        address (as shown on page 1) unless Lender has granted permission in writing for the Property to be
+                    </p>
+                    <p style="font-size:12px!important;">
+                         located elsewhere. The Property will be used only in the state in which Borrower lives unless Property is a motor vehicle, in which case it will be used outside the state
+                        only in the course of Borrower's normal use of the Property. Borrower will not use or permit the use of the Property to hire or for illegal purposes.
+                    </p>
+                    <p style="font-size:12px!important;">
+                       <u> TAXES AND FEES:</u> Borrower will pay all taxes, assessments, and other fees payable on the Property, this Disclosure Statement, Note and Security
+                                Agreement, or the loan, including but not limited to any fee required by a public official to record the satisfaction of this loan, and/or the release of Lender's 
+                                interest in the Property. If Borrower fails to pay S\.lCh amounts, Lender may pay such amounts for Borrower and the amounts paid by Lender will be 
+                                added to the unpaid balance of the loan.
+                    </p>
+                 
+                    <p style="font-size:12px!important;">
+                       <u> INSURANCE:</u> If Borrower purchases any insurance at Lender's office, Borrower understand and acknowledges that (1) the insurance company may be affiliated with Lender, 
+                        employee(s) may be an agent for the insurance company, (3) such employees(s) is not acting as the agent, broker or fiduciary for Borrower on this loan, but may be the agent of the insurance company, 
+                        and (4) Lender or the insurance company may realize some benefits from the sale of that insurance. If Borrower fails to obtain or maintain any required insurance or fails to designate an agent through 
+                        whom the insurance is to be obtained, Lender may purchase such required insurance for Borrower through an agent of Lender's choice, and the amounts paid by Lender will be added to the unpaid balance of the loan.
+                    </p>
+                    
+                    <p style="font-size:12px!important;">
+                       <u> FINANCING STATEMENTS:</u>   Borrower will sign all financing statements, continuation statements, security interest filing statements, and similar documents with respect to the Property at Lender's request.
+                    </p>
+                    
+                    <p style="font-size:12px!important;">
+                       <u> RETURNED CHECK FEE:</u> Lender may charge a fee of $ 20.00 if a check, negotiable order of withdrawal or share draft is returned for insufficient funds or insufficient credit.
+                    </p>
+                    
+                    <p style="font-size:12px!important;">
+                          <u> DEFERMENTS:</u> Borrower agrees to pay a deferment charge equal to interest at the agreed upon rate on the unpaid balance for one month if Lender, in its sole discretion allows Borrower to defer payment of any monthly 
+                        installment prior to or on its due date without the account being considered in default. Any such deferment will extend the final payment date by one month. All other terms and conditions of the Disclosure Statement, 
+                        Note and Security Agreement including the expiration dates of insurance coverage, remain unchanged by authorized deferments
+                    </p>
+                    
+                    <p style="font-size:12px!important;">
+                      <u> LOAN CHARGES:</u> If a law that applies to this loan and that sets maximum loan charges, is finally interpreted so that the interest or other loan charges collected or to be collected in connection with this loan exceed the permitted limits, 
+                        then (i) any such loan charge will be reduced by the amount necessary to reduce the charge to the permitted limit, and (ii) any sums already collected from Borrower that exceeded permitted limits will be refunded to Borrower. Lender may 
+                        choose to make this refund by reducing the principal owed under this loan or by making a direct payment to Borrower. If a refund reduces principal, the reduction will be treated as a partial prepayment without any prepayment charge.
+                    </p>
+                    <p style="font-size:12px!important;"  >
+                        DEFAULT: Borrower will be in default if:
+                    </p><br /> <br />
+                    <ol style = "font-size:11px!important;">
+                        <li>
+                            Borrower does not make any scheduled payment on time;
+                        </li>
+                        <li>
+                            Borrower is (or any other person puts Borrower) in bankruptcy, insolvency or receivership;
+                        </li>
+                        <li>
+                            Any of Borrower's creditors attempts by legal process to take and keep any property of Borrower, including the Property securing this loan; 
+                        </li>
+                        <li>
+                             Borrower fails to fulfill any promise made under this agreement; or
+                        </li>
+                        <li>
+                                A default occurs under any Real Estate Mortgage or Deed of Trust which secures this loan or under any other mortgage or deed of trust on the real property.
+                        </li>
+                    </ol>
+                
+                    <p style="font-size:12px!important;">
+                        Subject to Borrower's right to any notice of default, right to cure default, and any other applicable laws, if Borrower defaults, Lender may require Borrower to repay the unpaid balance of the Total of Payments plus any allowable expenses, 
+                        late charges, and/or attorney fees/expenses, minus rebates of any unearned finance charges and/or refunds of unearned insurance premiums. Lender's failure to exercise or delay in exercising any of its rights when default occurs does not constitute a waiver of those or any other rights under this agreement, or the Mortgage, Deed of Trust or Deed to Secure Debt. 
+                        In the case of default Lender may exercise any or all of its rights under the Mortgage, Deed of Trust or Deed to Secure Debt. If this debt is referred for collection to an attorney, Lender shall be entitled to collect all reasonable costs and expenses of collection, including, but not limited to, court costs and reasonable attorney's fees as permitted by law.
+                    </p>
+                    <p style="font-size:12px!important;">
+                        EFFECTS OF DEFAULT: If Borrower defaults, Borrower will deliver the Property to Lender or, upon Lender's demand, assemble the Property and make it available to Lender at a reasonably convenient place. Lender may, without previous notice or demand and without legal process, peacefully enter any place where the Property is located and take possession of it. The Property may
+                        be sold with notice at a private or public sale at a location chosen by Lender. At such public sale, Under may purchase the Property. The proceeds of the sale, minus the expenses of taking, removing, holding, repairing, and selling the Property including reasonable attorney's fees, and minus the cost of paying off and removing any superior liens or claims on the Property,
+                        will be credited to the unpaid balance of Borrower's loan. If Borrower has left other property in the repossessed Property, Lender may hold such property temporarily for Borrower without any responsibility or liability for the property.
+                    </p>
+                    <p style="font-size:12px!important;">
+                        Notice of the time and place of a public sale or notice of the time after which a private sale will occur is reasonable if mailed to the Borrower's address at least five days before the sale. The notice may be mailed to the Borrower's last address shown on Lender's records.
+                    </p>
+                    <p style="font-size:12px!important;">
+                        LAW THAT APPLIES: Florida Consumer Credit Code and federal law, as applicable, govern this agreement. In no event will Borrower be required to pay interest or charges in excess of those permitted by law.
+                    </p>
+                    <p style="font-size:12px!important;">
+                        OTHER RIGHTS: Lender may accept payments after maturity or after a default without waiving its rights with respect to any subsequent default in payment. Borrower agrees that Lender may extend time for payment after maturity without notice. The terms of this agreement can be waived or changed only in a writing signed by Lender.
+                    </p>
+                    <p style="font-size:12px!important;">
+                        Borrower, endorsers, sureties and guarantors, to the extent permitted by law, severally waive their right to require Lender to demand payment of amounts due, to give notice of amounts that have not been paid, to receive notice of any extensions of time to pay which Lender allows to any Borrower and to require Lender to show particular diligence in bringing suit against anyone responsible for repayment of this loan, and additionally, waive benefit of homestead and exemption laws now in force or later enacted, including stay of execution and condemnation, on any property securing this loan and waive the benefit of valuation and appraisement.
+                    </p>
+                   
+                    <p style="font-size:12px!important;">
+                        If any part of the Disclosure Statement, Note and Security Agreement and, if applicable, the Mortgage or Deed of Trust and accompanying Itemization of Amount Financed and Arbitration Agreement is unenforceable, this will not make any other part unenforceable. Where the context requires, singular words may be read in the plural and plural words in the singular, and references to the masculine gender may be read to apply to the feminine gender.
+                    </p>
+                    <p style="font-size:12px!important;">
+                      REFINANCING: The overall cost of refinancing an existing loan balance may be greater than the cost of keeping the existing loan and obtaining a second loan for any additional funds Borrower wishes to borrow.
+                    </p>
+                    <p style="font-size:13px!important;">
+                        AUTHORIZATION TO USE CREDIT REPORT: By signing below, Borrower authorizes Lender to obtain, review and use information contained in the Borrower's credit report in order to determine whether the Borrower may qualify for products and services offered by Lender. This authorization terminates when Borrower's outstanding balance due under this Disclosure Statement, Note and Security Agreement is paid in full. Borrower may cancel such authorization at any time by writing the following: Crediflash LLC, 17880 S. Dixie Hwy, Miami FI 33157. In order to process Borrower's request, Lender must be provided Borrower's full name, address, social security number and loan number.
+                    </p>
+                    
+                        <table>
+                            <tr> <td style="width:80%;">  <p style="font-size:13px!important;">The following notice applies only if this box is checked.</p> </td>
+                                <td>  <input type="checkbox" name="vehicle1" value="Bike"  style="width:25px;height:25px;">   </td>
+                            </tr>
+                        </table>
+              
+
+              <table style="width:100% ; border:1px solid black; font-size:12px!important;  " >
+                  <tr style="border: 1px solid black" >
+                      <td>
+                    <p style="font-size:13px!important;"> <b> NOTICE </b></p>
+                    <p style="font-size:13px!important;"><b> 
+                        ANY HOLDER OF THIS CONSUMER CREDIT CONTRACT IS SUBJET TO ALL CLAIMS AND DEFENSES WHICH THE DEBTOR COULD ASSERT AGAINST THE SELLER OF GOODS OR SERVICES OBTAINED WITH THE PROCEEDS HEREOF. RECOVERY HEREUNDER BY THE DEBTOR SH NOT EXCEED AMOUNTS PAID BY THE DEBTOR HEREUNDER.
+                  </b></p>
+                    </td>
+                 </tr>
+              </table>
+
+                   </div>
+                    </div>
+                 </div>
+              <div>
+               
+              </div>
+
+               </div>
+           <br/>
+               <div class="row mt-2">
+                   <div class="col-1"></div>
+                   <div class="col-5 text-center">
+                       <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                       <asp:Label class="mt-0 d-block" runat="server" ID="Label42"></asp:Label>
+                       <asp:Label class="mt-0 d-block" runat="server" ID="Label43"></asp:Label>
+                     
+                     
+                   </div>
+                   <div class="col-5 text-center">
+                       <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                       <label class="mt-0 d-block lblNombreRepresentanteLegal"></label>
+                       <label class="mt-0 d-block lblIdentidadRepresentanteLegal"></label>
+                       <label class="mt-0 d-block">Borrower's Name</label>
+                   </div>
+                   <div class="col-1"></div>
+
+                 <div class="col-1"></div>
+                   <div class="col-5 text-center">
+                       <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                       <asp:Label class="mt-0 d-block" runat="server" ID="Label6"></asp:Label>
+                       <asp:Label class="mt-0 d-block" runat="server" ID="Label7"></asp:Label>
+                     
+                     
+                   </div>
+                   <div class="col-5 text-center">
+                       <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                       <label class="mt-0 d-block lblNombreRepresentanteLegal"></label>
+                       <label class="mt-0 d-block lblIdentidadRepresentanteLegal"></label>
+                       <label class="mt-0 d-block">Borrower's Signature</label>
+                   </div>
+                   <div class="col-1"></div>
+                  <%-- ///--%>
+                 <div class="col-1"></div>
+                   <div class="col-5 text-center">
+                       <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                       <asp:Label class="mt-0 d-block" runat="server" ID="Label8"></asp:Label>
+                       <asp:Label class="mt-0 d-block" runat="server" ID="Label9"></asp:Label>
+                     
+                     
+                   </div>
+                   <div class="col-5 text-center">
+                       <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                       <label class="mt-0 d-block lblNombreRepresentanteLegal"></label>
+                       <label class="mt-0 d-block lblIdentidadRepresentanteLegal"></label>
+                       <label class="mt-0 d-block">Borrower's Name</label>
+                   </div>
+                   <div class="col-1"></div>
+                   <div class="col-1"></div>
+                   <div class="col-5 text-center">
+                       <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>                           
+                     
+                     
+                   </div>
+                   <div class="col-5 text-center">
+                       <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>                           
+                       <label class="mt-0 d-block">Borrower's Signature</label>
+                   </div>
+                   <div class="col-1"></div>
+                  <%-- //--%>
+                 <div class="col-1"></div>
+                   <div class="col-5 text-center">
+                       <label></label>
+                       <asp:Label class="mt-0 d-block" runat="server" ID="Label12"></asp:Label>
+                       <asp:Label class="mt-0 d-block" runat="server" ID="Label13"></asp:Label>
+                     
+                     
+                   </div>
+                   <div class="col-5 text-center">
+                       <asp:Label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" ForeColor="Black" Style="border-radius: 0px;" runat="server" ID="Crediflash">Crediflash LLC</asp:Label>
+                                              
+                   </div>
+                   <div class="col-1"></div>
+                   <div class="col-1"></div>
+                   <div class="col-5 text-center">
+                       <label ></label>                                                
+                     
+                   </div>
+                   <div class="col-5 ">
+                       <label class="mt-1 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;">By:</label>
+                      
+                      <%-- <label class="mt-0 d-block">CESAR ROSENTHAL</label>--%>
+                        <%-- <label class="mt-0 d-block">President</label>--%>
+                     <asp:Label runat="server" ID="FechaFirmaContratoCash"></asp:Label>
+                            <label class="mt-0 d-block">President</label>
+                            
+                    
+                      
+                   </div>
+                   <div class="col-1"></div>
+               </div>
+       
+               <br /> <br /> <br />  <br />  <br />
+               <div class:"row">
+                   <div class="col-12">
+                       <p style="font-size:12px!important;">
+                           SECURITY INTEREST OF NONOBLIGOR: Borrower only is personally liable for payment of the loan. Nonobligor is liable and bound by all other terms, 
+                           conditions, covenants, and agreements contained in this Disclosure Statement, Note and Security Agreement, including but not limited to the 
+                           right and power of Lender to repossess and sell the Property securing this loan, in the event of default by Borrower in payment of this loan.
+
+                       </p>
+                   </div>
+               </div>
+                 <div class="row justify-content-center">
+                   <div class="col-5 text-center mt-1">
+                       <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>
+                       <asp:Label runat="server" ID="LblNombreCLienteFirma_Cash"></asp:Label><br />
+                       <asp:Label runat="server" ID="lblFirmaFechaContrato"></asp:Label>
+
+                   </div>
+                   <div class="col-5 text-center mt-1">
+                       <label class="mt-5 form-control border-top-0 border-left-0 border-right-0 border-dark" style="border-radius: 0px;"></label>                          
+                       <label class="mt-0 d-block ">CESAR ROSENTHAL</label>
+                        <label class="mt-0 d-block">President</label>
+                       <asp:Label runat="server" ID="lblFirmaContrato2"></asp:Label>
+                   </div>
+               </div>
+             
+           </div>
+       </div>
+   </div>
+
     </form>
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
@@ -2508,5 +3277,116 @@
         var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=ListaDocumentosDelExpedienteJSON%>');
     </script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210323105125"></script>
+   <style>
+      p {
+        padding: 10px;
+      }
+
+      .flexCash {
+        display: flex;
+       
+      }
+
+      .containerCash {
+        border: 2px solid black;
+        box-sizing: border-box;
+      
+      }
+
+      .leftCash {
+        min-width: 60%;
+        border-right: 2px solid black;
+      }
+
+      .columnCash {
+        width: 33.33%;
+        border-right: 2px solid black;
+        border-top: 2px solid black;
+        min-height: 100px;
+      }
+
+      .columnCash:last-child {
+        border-right: none;
+      }
+
+      .rowCash {
+        min-height: 45%;
+      }
+
+      .descriptionCash {
+        min-height: 250px;
+        border-top: 2px solid black;
+      }
+
+      .description p {
+        max-width: 350px;
+      }
+
+      .rightCash {
+        min-width: 40%;
+      }
+
+      .rightCash > div:first-child {
+        border-bottom: 2px solid black !important;
+      }
+
+      .controlsCash {
+        display: flex;
+        justify-content: center;
+      }
+
+      .space-bottom {
+        margin-bottom: 20px;
+      }
+
+      .controlsCash > div {
+        display: flex;
+      }
+
+      .checkbox-controlCash {
+        display: inline-block;
+        -webkit-appearance: initial;
+        appearance: initial;
+        border: 2px solid black;
+        background-color: white;
+        width: 20px;
+        height: 20px;
+        position: relative;
+      }
+
+      .checkbox-controlCash:checked::after {
+        content: "X";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+      }
+
+      .controlCash {
+        align-items: center;
+        width: 30%;
+        justify-content: center;
+      }
+
+      .wrap {
+        flex-wrap: wrap;
+      }
+
+      .halfCash {
+        display: flex;
+      }
+
+      .halfCash > div {
+        width: 50%;
+      }
+
+      .size-two {
+        width: 50%;
+      }
+    </style>
 </body>
+    
 </html>

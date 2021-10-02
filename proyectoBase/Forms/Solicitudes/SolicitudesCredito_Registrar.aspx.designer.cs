@@ -9,9 +9,8 @@
 
 
 
-public partial class SolicitudesCredito_Registrar
-{
-
+public partial class SolicitudesCredito_Registrar {
+    
     /// <summary>
     /// Control frmSolicitud.
     /// </summary>
@@ -20,7 +19,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlForm frmSolicitud;
-
+    
     /// <summary>
     /// Control lblMensaje.
     /// </summary>
@@ -29,7 +28,16 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblMensaje;
-
+    
+    /// <summary>
+    /// Control btnLinkAplicacionCredito.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.HyperLink btnLinkAplicacionCredito;
+    
     /// <summary>
     /// Control Loader.
     /// </summary>
@@ -38,7 +46,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl Loader;
-
+    
     /// <summary>
     /// Control step_garantia_titulo.
     /// </summary>
@@ -47,7 +55,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlAnchor step_garantia_titulo;
-
+    
     /// <summary>
     /// Control lblTipodeSolicitud.
     /// </summary>
@@ -56,7 +64,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTipodeSolicitud;
-
+    
     /// <summary>
     /// Control lblProducto.
     /// </summary>
@@ -65,7 +73,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblProducto;
-
+    
     /// <summary>
     /// Control lblScoreCliente.
     /// </summary>
@@ -74,7 +82,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblScoreCliente;
-
+    
     /// <summary>
     /// Control txtIdentidadCliente.
     /// </summary>
@@ -83,16 +91,34 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtIdentidadCliente;
-
+    
     /// <summary>
-    /// Control txtRtnCliente.
+    /// Control txtDocumentoIdPersonal.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtRtnCliente;
-
+    protected global::System.Web.UI.WebControls.TextBox txtDocumentoIdPersonal;
+    
+    /// <summary>
+    /// Control txtNoIdFiscal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtNoIdFiscal;
+    
+    /// <summary>
+    /// Control txtDoctoIdFiscal.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtDoctoIdFiscal;
+    
     /// <summary>
     /// Control txtPrimerNombre.
     /// </summary>
@@ -101,7 +127,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtPrimerNombre;
-
+    
     /// <summary>
     /// Control txtSegundoNombre.
     /// </summary>
@@ -110,7 +136,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtSegundoNombre;
-
+    
     /// <summary>
     /// Control txtPrimerApellido.
     /// </summary>
@@ -119,7 +145,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtPrimerApellido;
-
+    
     /// <summary>
     /// Control txtSegundoApellido.
     /// </summary>
@@ -128,7 +154,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtSegundoApellido;
-
+    
     /// <summary>
     /// Control txtIngresosPrecalificados.
     /// </summary>
@@ -137,16 +163,25 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtIngresosPrecalificados;
-
+    
     /// <summary>
-    /// Control txtPrestamoMaximo.
+    /// Control txtPaisNaciemiento.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtPrestamoMaximo;
-
+    protected global::System.Web.UI.WebControls.TextBox txtPaisNaciemiento;
+    
+    /// <summary>
+    /// Control txtOrigenEtnico.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtOrigenEtnico;
+    
     /// <summary>
     /// Control lblTituloPlazoMaximo.
     /// </summary>
@@ -155,7 +190,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblTituloPlazoMaximo;
-
+    
     /// <summary>
     /// Control txtPlazoMaximo.
     /// </summary>
@@ -164,7 +199,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtPlazoMaximo;
-
+    
     /// <summary>
     /// Control lblTituloCuotaMaxima.
     /// </summary>
@@ -173,7 +208,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblTituloCuotaMaxima;
-
+    
     /// <summary>
     /// Control txtCuotaMaxima.
     /// </summary>
@@ -182,88 +217,34 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtCuotaMaxima;
-
+    
     /// <summary>
-    /// Control lblTituloMontoPrestmo.
+    /// Control txtPrestamoMaximo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblTituloMontoPrestmo;
-
+    protected global::System.Web.UI.WebControls.TextBox txtPrestamoMaximo;
+    
     /// <summary>
-    /// Control btnSeleccionarPrecioDeMercado.
+    /// Control divProducto.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlButton btnSeleccionarPrecioDeMercado;
-
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divProducto;
+    
     /// <summary>
-    /// Control txtValorGlobal.
+    /// Control ddlProducto.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtValorGlobal;
-
-    /// <summary>
-    /// Control divPrima.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPrima;
-
-    /// <summary>
-    /// Control lblTituloPrima.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTituloPrima;
-
-    /// <summary>
-    /// Control txtValorPrima.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtValorPrima;
-
-    /// <summary>
-    /// Control divPlazo.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPlazo;
-
-    /// <summary>
-    /// Control lblTituloPlazo.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Label lblTituloPlazo;
-
-    /// <summary>
-    /// Control ddlPlazosDisponibles.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlPlazosDisponibles;
-
+    protected global::System.Web.UI.WebControls.DropDownList ddlProducto;
+    
     /// <summary>
     /// Control divOrigen.
     /// </summary>
@@ -272,7 +253,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divOrigen;
-
+    
     /// <summary>
     /// Control ddlOrigen.
     /// </summary>
@@ -281,79 +262,124 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlOrigen;
-
+    
     /// <summary>
-    /// Control divCotizadorAutos.
+    /// Control divFrecuencia.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divCotizadorAutos;
-
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divFrecuencia;
+    
     /// <summary>
-    /// Control ddlTipoGastosDeCierre.
+    /// Control ddlFrecuencia.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlTipoGastosDeCierre;
-
+    protected global::System.Web.UI.WebControls.DropDownList ddlFrecuencia;
+    
     /// <summary>
-    /// Control ddlTipoDeSeguro.
+    /// Control divContrato.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeSeguro;
-
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divContrato;
+    
     /// <summary>
-    /// Control ddlGps.
+    /// Control lblInicioContrato.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlGps;
-
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblInicioContrato;
+    
     /// <summary>
-    /// Control txtValorDePrestamo.
+    /// Control txtIniciodeContrato.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtValorDePrestamo;
-
+    protected global::System.Web.UI.WebControls.TextBox txtIniciodeContrato;
+    
     /// <summary>
-    /// Control divValorFinanciar.
+    /// Control lblTituloMontoPrestmo.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divValorFinanciar;
-
+    protected global::System.Web.UI.WebControls.Label lblTituloMontoPrestmo;
+    
     /// <summary>
-    /// Control txtValorFinanciar.
+    /// Control btnSeleccionarPrecioDeMercado.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtValorFinanciar;
-
+    protected global::System.Web.UI.HtmlControls.HtmlButton btnSeleccionarPrecioDeMercado;
+    
     /// <summary>
-    /// Control txtValorCuota.
+    /// Control txtValorGlobal.
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtValorCuota;
-
+    protected global::System.Web.UI.WebControls.TextBox txtValorGlobal;
+    
+    /// <summary>
+    /// Control divPrima.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPrima;
+    
+    /// <summary>
+    /// Control lblTituloPrima.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTituloPrima;
+    
+    /// <summary>
+    /// Control txtValorPrima.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtValorPrima;
+    
+    /// <summary>
+    /// Control lblTituloPlazo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label lblTituloPlazo;
+    
+    /// <summary>
+    /// Control txtPlazosDisponibles.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtPlazosDisponibles;
+    
     /// <summary>
     /// Control txtTasaDeInteresAnual.
     /// </summary>
@@ -362,7 +388,97 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtTasaDeInteresAnual;
-
+    
+    /// <summary>
+    /// Control divCotizadorAutos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divCotizadorAutos;
+    
+    /// <summary>
+    /// Control ddlTipoGastosDeCierre.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoGastosDeCierre;
+    
+    /// <summary>
+    /// Control ddlTipoDeSeguro.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeSeguro;
+    
+    /// <summary>
+    /// Control ddlGps.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList ddlGps;
+    
+    /// <summary>
+    /// Control txtValorDePrestamo.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtValorDePrestamo;
+    
+    /// <summary>
+    /// Control divLienHolder.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divLienHolder;
+    
+    /// <summary>
+    /// Control txtLienHolder.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtLienHolder;
+    
+    /// <summary>
+    /// Control divValorFinanciar.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.HtmlControls.HtmlGenericControl divValorFinanciar;
+    
+    /// <summary>
+    /// Control txtValorFinanciar.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtValorFinanciar;
+    
+    /// <summary>
+    /// Control txtValorCuota.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtValorCuota;
+    
     /// <summary>
     /// Control step_garantia.
     /// </summary>
@@ -371,7 +487,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl step_garantia;
-
+    
     /// <summary>
     /// Control txtBuscarVIN.
     /// </summary>
@@ -380,7 +496,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtBuscarVIN;
-
+    
     /// <summary>
     /// Control txtVIN.
     /// </summary>
@@ -389,7 +505,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtVIN;
-
+    
     /// <summary>
     /// Control txtTipoDeGarantia.
     /// </summary>
@@ -398,7 +514,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtTipoDeGarantia;
-
+    
     /// <summary>
     /// Control txtTipoDeVehiculo.
     /// </summary>
@@ -407,7 +523,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtTipoDeVehiculo;
-
+    
     /// <summary>
     /// Control txtMarca.
     /// </summary>
@@ -416,7 +532,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtMarca;
-
+    
     /// <summary>
     /// Control txtModelo.
     /// </summary>
@@ -425,7 +541,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtModelo;
-
+    
     /// <summary>
     /// Control txtAnio.
     /// </summary>
@@ -434,7 +550,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtAnio;
-
+    
     /// <summary>
     /// Control txtColor.
     /// </summary>
@@ -443,7 +559,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtColor;
-
+    
     /// <summary>
     /// Control txtMatricula.
     /// </summary>
@@ -452,7 +568,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtMatricula;
-
+    
     /// <summary>
     /// Control txtCilindraje.
     /// </summary>
@@ -461,7 +577,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtCilindraje;
-
+    
     /// <summary>
     /// Control txtRecorrido.
     /// </summary>
@@ -470,7 +586,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtRecorrido;
-
+    
     /// <summary>
     /// Control ddlUnidadDeMedida.
     /// </summary>
@@ -479,7 +595,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlUnidadDeMedida;
-
+    
     /// <summary>
     /// Control txtTransmision.
     /// </summary>
@@ -488,7 +604,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtTransmision;
-
+    
     /// <summary>
     /// Control txtTipoDeCombustible.
     /// </summary>
@@ -497,7 +613,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtTipoDeCombustible;
-
+    
     /// <summary>
     /// Control txtSerieUno.
     /// </summary>
@@ -506,7 +622,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtSerieUno;
-
+    
     /// <summary>
     /// Control txtSerieMotor.
     /// </summary>
@@ -515,7 +631,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtSerieMotor;
-
+    
     /// <summary>
     /// Control txtSerieChasis.
     /// </summary>
@@ -524,7 +640,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtSerieChasis;
-
+    
     /// <summary>
     /// Control txtSerieDos.
     /// </summary>
@@ -533,7 +649,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtSerieDos;
-
+    
     /// <summary>
     /// Control txtGPS.
     /// </summary>
@@ -542,7 +658,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtGPS;
-
+    
     /// <summary>
     /// Control txtIdentidadPropietario.
     /// </summary>
@@ -551,7 +667,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtIdentidadPropietario;
-
+    
     /// <summary>
     /// Control txtNombrePropietario.
     /// </summary>
@@ -560,7 +676,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtNombrePropietario;
-
+    
     /// <summary>
     /// Control ddlEstadoCivilPropietario.
     /// </summary>
@@ -569,7 +685,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlEstadoCivilPropietario;
-
+    
     /// <summary>
     /// Control ddlNacionalidadPropietario.
     /// </summary>
@@ -578,7 +694,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlNacionalidadPropietario;
-
+    
     /// <summary>
     /// Control txtIdentidadVendedor.
     /// </summary>
@@ -587,7 +703,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtIdentidadVendedor;
-
+    
     /// <summary>
     /// Control txtNombreVendedor.
     /// </summary>
@@ -596,7 +712,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtNombreVendedor;
-
+    
     /// <summary>
     /// Control ddlEstadoCivilVendedor.
     /// </summary>
@@ -605,7 +721,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlEstadoCivilVendedor;
-
+    
     /// <summary>
     /// Control ddlNacionalidadVendedor.
     /// </summary>
@@ -614,7 +730,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlNacionalidadVendedor;
-
+    
     /// <summary>
     /// Control txtComentario.
     /// </summary>
@@ -623,7 +739,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtComentario;
-
+    
     /// <summary>
     /// Control ddlNacionalidad.
     /// </summary>
@@ -632,7 +748,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlNacionalidad;
-
+    
     /// <summary>
     /// Control txtProfesion.
     /// </summary>
@@ -641,7 +757,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtProfesion;
-
+    
     /// <summary>
     /// Control ddlEstadoCivil.
     /// </summary>
@@ -650,7 +766,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlEstadoCivil;
-
+    
     /// <summary>
     /// Control txtFechaDeNacimiento.
     /// </summary>
@@ -659,7 +775,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtFechaDeNacimiento;
-
+    
     /// <summary>
     /// Control txtEdadDelCliente.
     /// </summary>
@@ -668,7 +784,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtEdadDelCliente;
-
+    
     /// <summary>
     /// Control rbSexoMasculino.
     /// </summary>
@@ -677,7 +793,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton rbSexoMasculino;
-
+    
     /// <summary>
     /// Control rbSexoFemenino.
     /// </summary>
@@ -686,7 +802,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlInputRadioButton rbSexoFemenino;
-
+    
     /// <summary>
     /// Control txtCorreoElectronico.
     /// </summary>
@@ -695,7 +811,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtCorreoElectronico;
-
+    
     /// <summary>
     /// Control txtNumeroTelefono.
     /// </summary>
@@ -704,7 +820,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtNumeroTelefono;
-
+    
     /// <summary>
     /// Control divInformacionPreSolicitud_Domicilio.
     /// </summary>
@@ -713,34 +829,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInformacionPreSolicitud_Domicilio;
-
-    /// <summary>
-    /// Control ddlDepartamentoDomicilio.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlDepartamentoDomicilio;
-
-    /// <summary>
-    /// Control ddlMunicipioDomicilio.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlMunicipioDomicilio;
-
-    /// <summary>
-    /// Control ddlCiudadPobladoDomicilio.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlCiudadPobladoDomicilio;
-
+    
     /// <summary>
     /// Control ddlBarrioColoniaDomicilio.
     /// </summary>
@@ -749,7 +838,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlBarrioColoniaDomicilio;
-
+    
     /// <summary>
     /// Control ddlTipoDeVivienda.
     /// </summary>
@@ -758,7 +847,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlTipoDeVivienda;
-
+    
     /// <summary>
     /// Control ddlTiempoDeResidir.
     /// </summary>
@@ -767,7 +856,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlTiempoDeResidir;
-
+    
     /// <summary>
     /// Control txtTelefonoCasa.
     /// </summary>
@@ -776,7 +865,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtTelefonoCasa;
-
+    
     /// <summary>
     /// Control txtDireccionDetalladaDomicilio.
     /// </summary>
@@ -785,7 +874,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtDireccionDetalladaDomicilio;
-
+    
     /// <summary>
     /// Control txtReferenciasDelDomicilio.
     /// </summary>
@@ -794,7 +883,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtReferenciasDelDomicilio;
-
+    
     /// <summary>
     /// Control divInformacionPreSolicitud_Trabajo.
     /// </summary>
@@ -803,7 +892,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divInformacionPreSolicitud_Trabajo;
-
+    
     /// <summary>
     /// Control txtNombreDelTrabajo.
     /// </summary>
@@ -812,7 +901,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtNombreDelTrabajo;
-
+    
     /// <summary>
     /// Control txtFechaDeIngreso.
     /// </summary>
@@ -821,7 +910,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtFechaDeIngreso;
-
+    
     /// <summary>
     /// Control txtPuestoAsignado.
     /// </summary>
@@ -830,7 +919,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtPuestoAsignado;
-
+    
     /// <summary>
     /// Control txtIngresosMensuales.
     /// </summary>
@@ -839,7 +928,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtIngresosMensuales;
-
+    
     /// <summary>
     /// Control txtTelefonoEmpresa.
     /// </summary>
@@ -848,7 +937,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtTelefonoEmpresa;
-
+    
     /// <summary>
     /// Control txtExtensionRecursosHumanos.
     /// </summary>
@@ -857,7 +946,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtExtensionRecursosHumanos;
-
+    
     /// <summary>
     /// Control txtExtensionCliente.
     /// </summary>
@@ -866,7 +955,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtExtensionCliente;
-
+    
     /// <summary>
     /// Control txtFuenteDeOtrosIngresos.
     /// </summary>
@@ -875,7 +964,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtFuenteDeOtrosIngresos;
-
+    
     /// <summary>
     /// Control txtValorOtrosIngresos.
     /// </summary>
@@ -884,34 +973,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtValorOtrosIngresos;
-
-    /// <summary>
-    /// Control ddlDepartamentoEmpresa.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlDepartamentoEmpresa;
-
-    /// <summary>
-    /// Control ddlMunicipioEmpresa.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlMunicipioEmpresa;
-
-    /// <summary>
-    /// Control ddlCiudadPobladoEmpresa.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlCiudadPobladoEmpresa;
-
+    
     /// <summary>
     /// Control ddlBarrioColoniaEmpresa.
     /// </summary>
@@ -920,7 +982,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlBarrioColoniaEmpresa;
-
+    
     /// <summary>
     /// Control txtDireccionDetalladaEmpresa.
     /// </summary>
@@ -929,7 +991,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtDireccionDetalladaEmpresa;
-
+    
     /// <summary>
     /// Control txtReferenciasEmpresa.
     /// </summary>
@@ -938,7 +1000,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtReferenciasEmpresa;
-
+    
     /// <summary>
     /// Control txtIdentidadConyugue.
     /// </summary>
@@ -947,7 +1009,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtIdentidadConyugue;
-
+    
     /// <summary>
     /// Control txtNombresConyugue.
     /// </summary>
@@ -956,7 +1018,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtNombresConyugue;
-
+    
     /// <summary>
     /// Control txtFechaNacimientoConyugue.
     /// </summary>
@@ -965,7 +1027,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtFechaNacimientoConyugue;
-
+    
     /// <summary>
     /// Control txtTelefonoConyugue.
     /// </summary>
@@ -974,7 +1036,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtTelefonoConyugue;
-
+    
     /// <summary>
     /// Control txtLugarDeTrabajoConyuge.
     /// </summary>
@@ -983,7 +1045,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtLugarDeTrabajoConyuge;
-
+    
     /// <summary>
     /// Control txtIngresosMensualesConyugue.
     /// </summary>
@@ -992,7 +1054,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtIngresosMensualesConyugue;
-
+    
     /// <summary>
     /// Control txtTelefonoTrabajoConyugue.
     /// </summary>
@@ -1001,7 +1063,16 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtTelefonoTrabajoConyugue;
-
+    
+    /// <summary>
+    /// Control btnLinkDocumentos.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.HyperLink btnLinkDocumentos;
+    
     /// <summary>
     /// Control txtNombreReferencia.
     /// </summary>
@@ -1010,7 +1081,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtNombreReferencia;
-
+    
     /// <summary>
     /// Control txtTelefonoReferencia.
     /// </summary>
@@ -1019,7 +1090,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtTelefonoReferencia;
-
+    
     /// <summary>
     /// Control ddlTiempoDeConocerReferencia.
     /// </summary>
@@ -1028,7 +1099,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlTiempoDeConocerReferencia;
-
+    
     /// <summary>
     /// Control ddlParentescos.
     /// </summary>
@@ -1037,7 +1108,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlParentescos;
-
+    
     /// <summary>
     /// Control txtLugarTrabajoReferencia.
     /// </summary>
@@ -1046,7 +1117,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtLugarTrabajoReferencia;
-
+    
     /// <summary>
     /// Control txtNuevoScore.
     /// </summary>
@@ -1055,7 +1126,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtNuevoScore;
-
+    
     /// <summary>
     /// Control txtCambiarScoreComentarioAdicional.
     /// </summary>
@@ -1064,7 +1135,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtCambiarScoreComentarioAdicional;
-
+    
     /// <summary>
     /// Control ddlMarca.
     /// </summary>
@@ -1073,7 +1144,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlMarca;
-
+    
     /// <summary>
     /// Control ddlModelo.
     /// </summary>
@@ -1082,7 +1153,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlModelo;
-
+    
     /// <summary>
     /// Control ddlAnio.
     /// </summary>
@@ -1091,7 +1162,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlAnio;
-
+    
     /// <summary>
     /// Control txtPrecioDeMercadoActual.
     /// </summary>
@@ -1100,7 +1171,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtPrecioDeMercadoActual;
-
+    
     /// <summary>
     /// Control txtPrecioDeMercadoSolicitado.
     /// </summary>
@@ -1109,7 +1180,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtPrecioDeMercadoSolicitado;
-
+    
     /// <summary>
     /// Control txtComentarioSolicitarPrecioDeMercado.
     /// </summary>
@@ -1118,7 +1189,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlTextArea txtComentarioSolicitarPrecioDeMercado;
-
+    
     /// <summary>
     /// Control txtMarcaAgregar.
     /// </summary>
@@ -1127,7 +1198,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtMarcaAgregar;
-
+    
     /// <summary>
     /// Control txtModeloAgregar.
     /// </summary>
@@ -1136,7 +1207,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtModeloAgregar;
-
+    
     /// <summary>
     /// Control txtVersionAgregar.
     /// </summary>
@@ -1145,7 +1216,7 @@ public partial class SolicitudesCredito_Registrar
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox txtVersionAgregar;
-
+    
     /// <summary>
     /// Control ddlAnioAgregarAnioModelo.
     /// </summary>
