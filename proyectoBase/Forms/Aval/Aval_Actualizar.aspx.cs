@@ -134,7 +134,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
 
                 #region VERIFICAR EL ACCESO DEL USUARIO AL ANALISIS DE LA SOLICITUD
@@ -235,7 +235,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
                 sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredSolicitud_ActualizarCondicion", sqlConexion);
                 sqlComando.CommandType = CommandType.StoredProcedure;
@@ -375,7 +375,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
                 sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredAval_InformacionDomicilio_Actualizar", sqlConexion);
                 sqlComando.CommandType = CommandType.StoredProcedure;
@@ -442,7 +442,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
 
                 sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredAval_InformacionLaboral_Actualizar", sqlConexion);
@@ -518,7 +518,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
 
                 sqlConexion = new SqlConnection(sqlConnectionString);
                 sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredAval_InformacionConyugal_Actualizar", sqlConexion);
@@ -625,7 +625,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
 
                 using (sqlConexion = new SqlConnection(sqlConnectionString))
                 {
@@ -732,7 +732,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
 
                 sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_SolicitudCondiciones_Listar", sqlConexion);
@@ -794,7 +794,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
 
                 #region DEPARTAMENTOS
@@ -1055,7 +1055,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
 
                 #region OBTENER MUNICIPIOS
@@ -1119,7 +1119,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
 
                 #region OBTENER CIUDADES/POBLADOS
@@ -1185,7 +1185,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
 
                 #region OBTENER BARRIOS/COLONIAS
@@ -1298,7 +1298,7 @@ namespace proyectoBase.Forms.Aval
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
 
-                string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                string sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                 sqlConexion = new SqlConnection(sqlConnectionString);
 
                 SqlCommand sqlComando = new SqlCommand("SELECT dbo.fn_CredGenerarNombreArchivo (" + TipoDocumentacion + "," + IDSolicitud + "," + TipoDocumento + "," + IDOrigen + ") AS fcNombreArchivo", sqlConexion);

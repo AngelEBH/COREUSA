@@ -18,6 +18,7 @@ namespace proyectoBase.Forms.Aval
         private string lcParametroDesencriptado = "";
         private Uri lURLDesencriptado = null;
         private string pcIDApp = "";
+        public static  int IdSolicitud = 0;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -37,11 +38,13 @@ namespace proyectoBase.Forms.Aval
                     lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
                     int IDAval = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDAval"));
                     int IDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
+
                     string IDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+                    IdSolicitud = Convert.ToInt16(IDSolicitud);
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     string NombreCliente = String.Empty;
-                    string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
-                    
+                    string sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+
                     //informacion del cliente y la solicitud la que pertenece el usuario
                     SqlConnection sqlConexion = new SqlConnection(sqlConnectionString);
                     SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitud_ListarSolicitudesCredito", sqlConexion);
@@ -69,7 +72,7 @@ namespace proyectoBase.Forms.Aval
                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                     sqlComando.Parameters.AddWithValue("@piIDUsuario", IDUsuario);
                     reader = sqlComando.ExecuteReader();
-                    
+
                     while (reader.Read())
                         NombreCliente = (string)reader["fcPrimerNombreCliente"] + " " + (string)reader["fcSegundoNombreCliente"] + " " + (string)reader["fcPrimerApellidoCliente"] + " " + (string)reader["fcSegundoApellidoCliente"];
 
@@ -105,7 +108,7 @@ namespace proyectoBase.Forms.Aval
                 string nombreUsuario = String.Empty;
                 //sqlConnectionString = ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString;
                 //sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
-                sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
 
                 using (sqlConexion = new SqlConnection(sqlConnectionString))
                 {
@@ -124,12 +127,12 @@ namespace proyectoBase.Forms.Aval
                         {
                             while (reader.Read())
                             {
-                                Aval.AvalMaster = new AvalMasterViewModel()
+                                Aval.AvalMaster = new AvalMaestroViewModel()
                                 {
                                     fiIDAval = (int)reader["fiIDAval"],
                                     fiIDSolicitud = (int)reader["fiIDSolicitud"],
                                     fiIDCliente = (int)reader["fiIDCliente"],
-                                    TipoAval = (int)reader["fiTipoAval"],
+                                   // TipoAval = (int)reader["fiTipoAval"],
                                     fcIdentidadAval = (string)reader["fcIdentidadAval"],
                                     RTNAval = (string)reader["fcRTNAval"],
                                     fcPrimerNombreAval = (string)reader["fcPrimerNombreAval"],
@@ -137,23 +140,25 @@ namespace proyectoBase.Forms.Aval
                                     fcPrimerApellidoAval = (string)reader["fcPrimerApellidoAval"],
                                     fcSegundoApellidoAval = (string)reader["fcSegundoApellidoAval"],
                                     fcTelefonoAval = (string)reader["fcTelefonoPrimarioAval"],
-                                    fiNacionalidad = (int)reader["fiNacionalidadAval"],
+                                  // fiNacionalidad = (int)reader["fiNacionalidadAval"],
                                     fcDescripcionNacionalidad = (string)reader["fcDescripcionNacionalidad"],
                                     fdFechaNacimientoAval = (DateTime)reader["fdFechaNacimientoAval"],
                                     fcCorreoElectronicoAval = (string)reader["fcCorreoElectronicoAval"],
                                     fcProfesionOficioAval = (string)reader["fcProfesionOficioAval"],
                                     fcSexoAval = (string)reader["fcSexoAval"],
-                                    fiIDEstadoCivil = (int)reader["fiIDEstadoCivil"],
+                                    //fiIDEstadoCivil = (int)reader["fiIDEstadoCivil"],
                                     fcDescripcionEstadoCivil = (string)reader["fcDescripcionEstadoCivil"],
-                                    fiIDVivienda = (int)reader["fiIDVivienda"],
-                                    fcDescripcionVivienda = (string)reader["fcDescripcionVivienda"],
-                                    fiTiempoResidir = (short)reader["fiTiempoResidir"],
-                                    fbAvalActivo = (bool)reader["fbAvalActivo"],
-                                    fcRazonInactivo = (string)reader["fcRazonInactivo"],
-                                    fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
-                                    fdFechaCrea = (DateTime)reader["fdFechaCrea"],
-                                    fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
-                                    fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
+                                    //fiIDVivienda = (int)reader["fiIDVivienda"],
+                                    fcDescripcionVivienda = (string)reader["fcDescripcionVivienda"]
+                                   
+                                    //fiTiempoResidir = (short)reader["fiTiempoResidir"],
+                                    //fbAvalActivo = (bool)reader["fbAvalActivo"],
+                                    //fcRazonInactivo = (string)reader["fcRazonInactivo"],
+                                    //fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                                    //fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                                    ///fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                                    //fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
+                                 //  fiTipoAval = (int)reader["fiTipoAval"]
                                 };
                             }
                         }
@@ -164,7 +169,8 @@ namespace proyectoBase.Forms.Aval
                     using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredAval_InformacionLaboral_Listar", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@fiIDAval", Aval.AvalMaster.fiIDAval);
+                        sqlComando.Parameters.AddWithValue("@piIDAval", Aval.AvalMaster.fiIDAval);
+                        sqlComando.Parameters.AddWithValue("@piIDSolicitud", IdSolicitud);
                         sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);
@@ -180,7 +186,7 @@ namespace proyectoBase.Forms.Aval
                                     fcNombreTrabajo = (string)reader["fcNombreTrabajo"],
                                     fiIngresosMensuales = (decimal)reader["fnIngresosMensuales"],
                                     fcPuestoAsignado = (string)reader["fcPuestoAsignado"],
-                                    fcFechaIngreso = (DateTime)reader["fdFechaIngresoAval"],
+                                   // fcFechaIngreso = (DateTime)reader["fdFechaIngresoAval"],
                                     fdTelefonoEmpresa = (string)reader["fcTelefonoEmpresa"],
                                     fcExtensionRecursosHumanos = (string)reader["fcExtensionRecursosHumanos"],
                                     fcExtensionAval = (string)reader["fcExtensionAval"],
@@ -193,7 +199,7 @@ namespace proyectoBase.Forms.Aval
                                     fiIDBarrioColonia = (int)reader["fiIDBarrioColonia"],
                                     fcNombreBarrioColonia = (string)reader["fcBarrio"],
                                     fcDireccionDetalladaEmpresa = (string)reader["fcDireccionDetalladaEmpresaAval"],
-                                    fcReferenciasDireccionDetallada = (string)reader["fcReferenciasDireccionDetalladaAval"],
+                                    fcReferenciasDireccionDetallada = (string)reader["fcDireccionDetalladaEmpresaAval"],
                                     fcFuenteOtrosIngresos = (string)reader["fcFuenteOtrosIngresos"],
                                     fiValorOtrosIngresosMensuales = (decimal)reader["fnValorOtrosIngresosMensuales"],
                                     fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
@@ -210,7 +216,8 @@ namespace proyectoBase.Forms.Aval
                     using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredAval_InformacionDomicilio_Listar", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@fiIDAval", Aval.AvalMaster.fiIDAval);
+                        sqlComando.Parameters.AddWithValue("@piIDAval", Aval.AvalMaster.fiIDAval);
+                        sqlComando.Parameters.AddWithValue("@piIDSolicitud", IdSolicitud);
                         sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);
@@ -223,13 +230,13 @@ namespace proyectoBase.Forms.Aval
                                 int fiIDSolicitud = (int)reader["fiIDSolicitud"];
                                 short fiIDDepto = (short)reader["fiCodDepartamento"];
                                 string fcNombreDepto = (string)reader["fcDepartamento"];
-                                int fiIDMunicipio = (short)reader["fiCodMunicipio"];
+                                int fiIDMunicipio = (int)reader["fiCodMunicipio"];
                                 string fcNombreMunicipio = (string)reader["fcMunicipio"];
-                                int fiIDCiudad = (short)reader["fiCodPoblado"];
+                                int fiIDCiudad = (int)reader["fiCodPoblado"];
                                 string fcNombreCiudad = (string)reader["fcPoblado"];
-                                int fiIDBarrioColonia = (short)reader["fiCodBarrio"];
+                                int fiIDBarrioColonia = (int)reader["fiCodBarrio"];
                                 string fcNombreBarrioColonia = (string)reader["fcBarrio"];
-                                string fcTelefonoCasa = (string)reader["fcTelefonoCasaAval"];
+                                string fcTelefonoCasa = (string)reader["fcTelefonoCasa"];
                                 string fcDireccionDetallada = (string)reader["fcDireccionDetalladaAval"];
                                 string fcReferenciasDireccionDetallada = (string)reader["fcReferenciasDireccionDetalladaAval"];
                                 int fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"];
@@ -237,22 +244,22 @@ namespace proyectoBase.Forms.Aval
                                 int fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"];
                                 DateTime fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"];
 
-                                Aval.AvalInformacionDomiciliar = new AvalInformacionDomiciliarViewModel()
+                                Aval.AvalInformacionDomiciliar = new AvalInformacionDomicilioViewModel()
                                 {
                                     fiIDInformacionDomicilioAval = (int)reader["fiIDInformacionDomicilioAval"],
                                     fiIDAval = (int)reader["fiIDAval"],
                                     fiIDSolicitud = (int)reader["fiIDSolicitud"],
                                     fiIDDepto = (short)reader["fiCodDepartamento"],
                                     fcNombreDepto = (string)reader["fcDepartamento"],
-                                    fiIDMunicipio = (short)reader["fiCodMunicipio"],
+                                    fiIDMunicipio = (int)reader["fiCodMunicipio"],
                                     fcNombreMunicipio = (string)reader["fcMunicipio"],
-                                    fiIDCiudad = (short)reader["fiCodPoblado"],
+                                    fiIDCiudad = (int)reader["fiCodPoblado"],
                                     fcNombreCiudad = (string)reader["fcPoblado"],
-                                    fiIDBarrioColonia = (short)reader["fiCodBarrio"],
+                                    fiIDBarrioColonia = (int)reader["fiCodBarrio"],
                                     fcNombreBarrioColonia = (string)reader["fcBarrio"],
-                                    fcTelefonoCasa = (string)reader["fcTelefonoCasaAval"],
+                                    fcTelefonoCasa = (string)reader["fcTelefonoCasa"],
                                     fcDireccionDetallada = (string)reader["fcDireccionDetalladaAval"],
-                                    fcReferenciasDireccionDetallada = (string)reader["fcReferenciasDireccionDetalladaAval"],
+                                    fcReferenciasDireccionDetallada = (string)reader["fcDireccionDetalladaAval"],
                                     fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
                                     fdFechaCrea = (DateTime)reader["fdFechaCrea"],
                                     fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
@@ -267,7 +274,8 @@ namespace proyectoBase.Forms.Aval
                     using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredAval_InformacionConyugal_Listar", sqlConexion))
                     {
                         sqlComando.CommandType = CommandType.StoredProcedure;
-                        sqlComando.Parameters.AddWithValue("@fiIDAval", Aval.AvalMaster.fiIDAval);
+                        sqlComando.Parameters.AddWithValue("@piIDAval", Aval.AvalMaster.fiIDAval);
+                        sqlComando.Parameters.AddWithValue("@piIDSolicitud", IdSolicitud);
                         sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);

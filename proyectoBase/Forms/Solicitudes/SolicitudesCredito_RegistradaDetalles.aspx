@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Codebehind="SolicitudesCredito_RegistradaDetalles.aspx.cs" Inherits="SolicitudesCredito_RegistradaDetalles" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_RegistradaDetalles.aspx.cs" Inherits="SolicitudesCredito_RegistradaDetalles" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -74,7 +74,7 @@
                     </div>
                     <div class="col-lg-auto col-md-auto col-sm-auto col-auto align-self-end">
                         <asp:Label runat="server" class="h6 font-weight-bold">Identidad:</asp:Label>
-                        <asp:Label ID="lblIdentidadCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label> 
+                        <asp:Label ID="lblIdentidadCliente" CssClass="h6 font-weight-bold" runat="server"></asp:Label> / 
                         <asp:Label runat="server" class="h6 font-weight-bold">Score promedio:</asp:Label>
                         <asp:Label ID="lblScorePromedio" CssClass="col-form-label h6 font-weight-bold" runat="server"></asp:Label>
                     </div>
@@ -420,7 +420,7 @@
                                                         <tr>
                                                             <th>Nombre referencia</th>
                                                             <th>Lugar de trabajo</th>
-                                                            <th>Tiempo de conocer</th>
+                                                           <%-- <th>Tiempo de conocer</th>--%>
                                                             <th>Telefono</th>
                                                             <th>Parentesco</th>
                                                             <th></th>

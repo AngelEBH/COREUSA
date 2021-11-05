@@ -1,5 +1,6 @@
 ﻿using adminfiles;
 using Newtonsoft.Json;
+//using proyectoBase.Models.ViewModel;
 using proyectoBase.Models.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Services;
 using UI.Web.Models.ViewModel;
+using System.Configuration;
+using static DSCore;
 
 namespace proyectoBase.Forms.Aval
 {
@@ -20,6 +23,13 @@ namespace proyectoBase.Forms.Aval
         private string pcIDUsuario = "";
         private string pcID = "";
         private string pcIDApp = "";
+        public static int IDCondicionActual = 0;
+        public static int FiIDCondicionActual = 0;
+        public int IdSolicitudCondicion { get; set; }
+
+        //public static Precalificado_ViewModel Precalificado;
+        public List<TipoDocumento_ViewModel> DocumentosRequeridos;
+        private static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -81,16 +91,27 @@ namespace proyectoBase.Forms.Aval
                     pcEncriptado = lcURL.Substring((liParamStart + 1), lcURL.Length - (liParamStart + 1));
                     string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                     Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
+                    var pcEncriptadoAc = lcURL.Substring(liParamStart + 1, lcURL.Length - (liParamStart + 1));
+                    var lcParametroDesencriptadoAC = DSC.Desencriptar(pcEncriptado);
+                    var lURLDesencriptadoAC = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
+
+
+
+
                     string NombreCliente = String.Empty;
                     int IDUsuario = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr"));
                     int IDCliente = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("cltID"));
                     pcID = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("ID");
                     pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                     string IDSolicitud = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
-                    GuardarDetallesPrecalificado(pcID, IDUsuario);
+                    int IDCondicion = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDCOND"));
+                    IDCondicionActual = IDCondicion;
 
+                    GuardarDetallesPrecalificado(pcID, IDUsuario);
+                   // CargarListas();
                     SqlConnection sqlConexion = null;
-                    string sqlConnectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
+                    string sqlConnectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = SA; Password = Password2009;Max Pool Size=200;MultipleActiveResultSets=true";
                     sqlConexion = new SqlConnection(sqlConnectionString);
                     SqlCommand sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCliente_Maestro_Listar", sqlConexion);
                     sqlComando.CommandType = CommandType.StoredProcedure;
@@ -124,7 +145,7 @@ namespace proyectoBase.Forms.Aval
         {
             PrecalificadoViewModel objPrecalificado = null;
             List<cotizadorProductosViewModel> listaCotizadorProductos = new List<cotizadorProductosViewModel>();
-            string connectionString = "Data Source=172.20.3.150;Initial Catalog = CoreFinanciero; User ID = WebUser; Password = WebUser123*;Max Pool Size=200;MultipleActiveResultSets=true";
+            string connectionString = "Data Source=172.20.3.152;Initial Catalog = CoreFinanciero; User ID = WebUser; Password = WebUser123*;Max Pool Size=200;MultipleActiveResultSets=true";
             SqlConnection conn = null;
             SqlDataReader reader = null;
             try
@@ -259,8 +280,8 @@ namespace proyectoBase.Forms.Aval
                         using (sqlComando = new SqlCommand("dbo.sp_CredAval_ValidarDuplicidadIdentidades", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fcIdentidadAval", avalMaster.fcIdentidadAval);
-                            sqlComando.Parameters.AddWithValue("@RTNAVAL", avalMaster.RTNAval);
+                            sqlComando.Parameters.AddWithValue("@pcIdentidad", avalMaster.fcIdentidadAval);
+                            sqlComando.Parameters.AddWithValue("@pcRTN", avalMaster.fcIdentidadAval);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);
@@ -294,30 +315,30 @@ namespace proyectoBase.Forms.Aval
                         using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredAval_Maestro_Crear", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                            sqlComando.Parameters.AddWithValue("@fiIDCliente", IDCliente);
-                            sqlComando.Parameters.AddWithValue("@fiTipoAval", "1");
-                            sqlComando.Parameters.AddWithValue("@fcIdentidadAval", avalMaster.fcIdentidadAval);
-                            sqlComando.Parameters.AddWithValue("@fcRTN", avalMaster.RTNAval);
-                            sqlComando.Parameters.AddWithValue("@fcPrimerNombreAval", avalMaster.fcPrimerNombreAval);
-                            sqlComando.Parameters.AddWithValue("@fcSegundoNombreAval", avalMaster.fcSegundoNombreAval);
-                            sqlComando.Parameters.AddWithValue("@fcPrimerApellidoAval", avalMaster.fcPrimerApellidoAval);
-                            sqlComando.Parameters.AddWithValue("@fcSegundoApellidoAval", avalMaster.fcSegundoApellidoAval);
-                            sqlComando.Parameters.AddWithValue("@fcTelefonoAval", avalMaster.fcTelefonoAval);
-                            sqlComando.Parameters.AddWithValue("@fiNacionalidadAval", avalMaster.fiNacionalidad);
-                            sqlComando.Parameters.AddWithValue("@fdFechaNacimientoAval", avalMaster.fdFechaNacimientoAval);
-                            sqlComando.Parameters.AddWithValue("@fcCorreoElectronicoAval", avalMaster.fcCorreoElectronicoAval);
-                            sqlComando.Parameters.AddWithValue("@fcProfesionOficioAval", avalMaster.fcProfesionOficioAval);
-                            sqlComando.Parameters.AddWithValue("@fcSexoAval", avalMaster.fcSexoAval);
-                            sqlComando.Parameters.AddWithValue("@fiIDEstadoCivil", avalMaster.fiIDEstadoCivil);
-                            sqlComando.Parameters.AddWithValue("@fiIDVivienda", avalMaster.fiIDVivienda);
-                            sqlComando.Parameters.AddWithValue("@fiTiempoResidir", avalMaster.fiTiempoResidir);
-                            sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", idUsuario);
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                            sqlComando.Parameters.AddWithValue("@piIDCliente", IDCliente);
+                            sqlComando.Parameters.AddWithValue("@piIDTipoAval", "1");
+                            sqlComando.Parameters.AddWithValue("@pcIdentidadAval", avalMaster.fcIdentidadAval);
+                            sqlComando.Parameters.AddWithValue("@pcRTN", avalMaster.RTNAval);
+                            sqlComando.Parameters.AddWithValue("@pcPrimerNombreAval", avalMaster.fcPrimerNombreAval);
+                            sqlComando.Parameters.AddWithValue("@pcSegundoNombreAval", avalMaster.fcSegundoNombreAval);
+                            sqlComando.Parameters.AddWithValue("@pcPrimerApellidoAval", avalMaster.fcPrimerApellidoAval);
+                            sqlComando.Parameters.AddWithValue("@pcSegundoApellidoAval", avalMaster.fcSegundoApellidoAval);
+                            sqlComando.Parameters.AddWithValue("@pcTelefonoAval", avalMaster.fcTelefonoAval);
+                            sqlComando.Parameters.AddWithValue("@piIDNacionalidadAval", avalMaster.fiNacionalidad);
+                            sqlComando.Parameters.AddWithValue("@pdFechaNacimientoAval", avalMaster.fdFechaNacimientoAval);
+                            sqlComando.Parameters.AddWithValue("@pcCorreoElectronicoAval", avalMaster.fcCorreoElectronicoAval);
+                            sqlComando.Parameters.AddWithValue("@pcProfesionOficioAval", avalMaster.fcProfesionOficioAval);
+                            sqlComando.Parameters.AddWithValue("@pcSexoAval", avalMaster.fcSexoAval);
+                            sqlComando.Parameters.AddWithValue("@piIDEstadoCivil", avalMaster.fiIDEstadoCivil);
+                            sqlComando.Parameters.AddWithValue("@piIDVivienda", avalMaster.fiIDVivienda);
+                            sqlComando.Parameters.AddWithValue("@piTiempoResidir", avalMaster.fiTiempoResidir);
+                            //sqlComando.Parameters.AddWithValue("@piIDUsuarioCrea", idUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);
-                            sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
-                            sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
+                            //sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
+                            //sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
                             using (reader = sqlComando.ExecuteReader())
                             {
                                 while (reader.Read())
@@ -341,32 +362,52 @@ namespace proyectoBase.Forms.Aval
                         #endregion
 
                         #region REGISTRAR AVAL INFORMACION LABORAL
-                        using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredAval_InformacionLaboral_Crear", sqlConexion, tran))
+
+                        using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CodigoPostal_ListarDetalle", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDAval", IDAvalMaster);
-                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                            sqlComando.Parameters.AddWithValue("@fcNombreTrabajo", avalInformacionLaboral.fcNombreTrabajo);
-                            sqlComando.Parameters.AddWithValue("@fnIngresosMensuales", avalInformacionLaboral.fiIngresosMensuales);
-                            sqlComando.Parameters.AddWithValue("@fcPuestoAsignado", avalInformacionLaboral.fcPuestoAsignado);
-                            sqlComando.Parameters.AddWithValue("@fdFechaIngreso", avalInformacionLaboral.fcFechaIngreso);
-                            sqlComando.Parameters.AddWithValue("@fcTelefonoEmpresa", avalInformacionLaboral.fdTelefonoEmpresa);
-                            sqlComando.Parameters.AddWithValue("@fcExtensionRecursosHumanos", avalInformacionLaboral.fcExtensionRecursosHumanos);
-                            sqlComando.Parameters.AddWithValue("@fcExtensionAval", avalInformacionLaboral.fcExtensionAval);
-                            sqlComando.Parameters.AddWithValue("@fiIDDepartamento", avalInformacionLaboral.fiIDDepto);
-                            sqlComando.Parameters.AddWithValue("@fiIDMunicipio", avalInformacionLaboral.fiIDMunicipio);
-                            sqlComando.Parameters.AddWithValue("@fiIDCiudad", avalInformacionLaboral.fiIDCiudad);
-                            sqlComando.Parameters.AddWithValue("@fiIDBarrioColonia", avalInformacionLaboral.fiIDBarrioColonia);
-                            sqlComando.Parameters.AddWithValue("@fcDireccionDetalladaEmpresa", avalInformacionLaboral.fcDireccionDetalladaEmpresa);
-                            sqlComando.Parameters.AddWithValue("@fcReferenciasDireccionDetallada", avalInformacionLaboral.fcReferenciasDireccionDetallada);
-                            sqlComando.Parameters.AddWithValue("@fcFuenteOtrosIngresos", avalInformacionLaboral.fcFuenteOtrosIngresos);
-                            sqlComando.Parameters.AddWithValue("@fnValorOtrosIngresosMensuales", avalInformacionLaboral.fiValorOtrosIngresosMensuales);
-                            sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", idUsuario);
+                            sqlComando.Parameters.AddWithValue("@piPoblado", avalInformacionLaboral.fiIDBarrioColonia);
+                            using (var sqlResultado = sqlComando.ExecuteReader())
+                            {
+                                while (sqlResultado.Read())
+                                {
+                                    avalInformacionLaboral.fiIDCiudad = (int)sqlResultado["fiCodPoblado"];
+                                    avalInformacionLaboral.fiIDMunicipio = (int)sqlResultado["fiCodMunicipio"];
+                                    avalInformacionLaboral.fiIDDepto = (short)sqlResultado["fiCodDepartamento"];
+                                }
+
+                            }
+
+                        }
+
+
+                            using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredAval_InformacionLaboral_Crear", sqlConexion, tran))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piIDAval", IDAvalMaster);
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                            sqlComando.Parameters.AddWithValue("@pcNombreTrabajo", avalInformacionLaboral.fcNombreTrabajo);
+                            sqlComando.Parameters.AddWithValue("@pnIngresosMensuales", avalInformacionLaboral.fiIngresosMensuales);
+                            sqlComando.Parameters.AddWithValue("@pcPuestoAsignado", avalInformacionLaboral.fcPuestoAsignado);
+                            sqlComando.Parameters.AddWithValue("@pdFechaIngreso", avalInformacionLaboral.fcFechaIngreso);
+                            sqlComando.Parameters.AddWithValue("@pcTelefonoEmpresa", avalInformacionLaboral.fdTelefonoEmpresa);
+                            sqlComando.Parameters.AddWithValue("@pcExtensionRecursosHumanos", avalInformacionLaboral.fcExtensionRecursosHumanos);
+                            sqlComando.Parameters.AddWithValue("@pcExtensionAval", avalInformacionLaboral.fcExtensionAval);
+                            sqlComando.Parameters.AddWithValue("@piIDPais", 1);
+                            sqlComando.Parameters.AddWithValue("@piIDDepartamento", avalInformacionLaboral.fiIDDepto);
+                            sqlComando.Parameters.AddWithValue("@piIDMunicipio", avalInformacionLaboral.fiIDMunicipio);
+                            sqlComando.Parameters.AddWithValue("@piIDCiudad", avalInformacionLaboral.fiIDCiudad);
+                            sqlComando.Parameters.AddWithValue("@piIDBarrioColonia", avalInformacionLaboral.fiIDBarrioColonia);
+                            sqlComando.Parameters.AddWithValue("@pcDireccionDetalladaEmpresa", avalInformacionLaboral.fcDireccionDetalladaEmpresa);
+                            sqlComando.Parameters.AddWithValue("@pcReferenciasDireccionDetalladaEmpresa", avalInformacionLaboral.fcReferenciasDireccionDetallada);
+                            sqlComando.Parameters.AddWithValue("@pcFuenteOtrosIngresos", avalInformacionLaboral.fcFuenteOtrosIngresos);
+                            sqlComando.Parameters.AddWithValue("@pnValorOtrosIngresosMensuales", avalInformacionLaboral.fiValorOtrosIngresosMensuales);
+                            //sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", idUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);
-                            sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
-                            sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
+                            //sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
+                            //sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
                             using (reader = sqlComando.ExecuteReader())
                             {
                                 while (reader.Read())
@@ -388,24 +429,42 @@ namespace proyectoBase.Forms.Aval
                         #endregion
 
                         #region REGISTRAR AVAL INFORMACION DOMICILIAR
+
+                        using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CodigoPostal_ListarDetalle", sqlConexion, tran))
+                        {
+                            sqlComando.CommandType = CommandType.StoredProcedure;
+                            sqlComando.Parameters.AddWithValue("@piPoblado", avalInformacionDomiciliar.fiIDBarrioColonia);
+                            using (var sqlResultado = sqlComando.ExecuteReader())
+                            {
+                                while (sqlResultado.Read())
+                                {
+                                    avalInformacionDomiciliar.fiIDCiudad = (int)sqlResultado["fiCodPoblado"];
+                                    avalInformacionDomiciliar.fiIDMunicipio = (int)sqlResultado["fiCodMunicipio"];
+                                    avalInformacionDomiciliar.fiIDDepto = (short)sqlResultado["fiCodDepartamento"];
+                                }
+
+                            }
+
+                        }
                         using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredAval_InformacionDomicilio_Crear", sqlConexion, tran))
                         {
                             sqlComando.CommandType = CommandType.StoredProcedure;
-                            sqlComando.Parameters.AddWithValue("@fiIDAval", IDAvalMaster);
-                            sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IDSOL);
-                            sqlComando.Parameters.AddWithValue("@fcTelefonoCasa", avalInformacionDomiciliar.fcTelefonoCasa);
-                            sqlComando.Parameters.AddWithValue("@fiIDDepartamento", avalInformacionDomiciliar.fiIDDepto);
-                            sqlComando.Parameters.AddWithValue("@fiIDMunicipio", avalInformacionDomiciliar.fiIDMunicipio);
-                            sqlComando.Parameters.AddWithValue("@fiIDCiudad", avalInformacionDomiciliar.fiIDCiudad);
-                            sqlComando.Parameters.AddWithValue("@fiIDBarrioColonia", avalInformacionDomiciliar.fiIDBarrioColonia);
-                            sqlComando.Parameters.AddWithValue("@fcDireccionDetallada", avalInformacionDomiciliar.fcDireccionDetallada);
-                            sqlComando.Parameters.AddWithValue("@fcReferenciasDireccionDetallada", avalInformacionDomiciliar.fcReferenciasDireccionDetallada);
-                            sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", idUsuario);
+                            sqlComando.Parameters.AddWithValue("@piIDAval", IDAvalMaster);
+                            sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                            sqlComando.Parameters.AddWithValue("@piIDPais", 1);
+                            sqlComando.Parameters.AddWithValue("@pcTelefonoCasa", avalInformacionDomiciliar.fcTelefonoCasa);
+                            sqlComando.Parameters.AddWithValue("@piIDDepartamento", avalInformacionDomiciliar.fiIDDepto);
+                            sqlComando.Parameters.AddWithValue("@piIDMunicipio", avalInformacionDomiciliar.fiIDMunicipio);
+                            sqlComando.Parameters.AddWithValue("@piIDCiudad", avalInformacionDomiciliar.fiIDCiudad);
+                            sqlComando.Parameters.AddWithValue("@piIDBarrioColonia", avalInformacionDomiciliar.fiIDBarrioColonia);
+                            sqlComando.Parameters.AddWithValue("@pcDireccionDetallada", avalInformacionDomiciliar.fcDireccionDetallada);
+                            sqlComando.Parameters.AddWithValue("@pcReferenciasDireccionDetallada", avalInformacionDomiciliar.fcReferenciasDireccionDetallada);
+                            //sqlComando.Parameters.AddWithValue("@piIDUsuarioCrea", idUsuario);
                             sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                             sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                             sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);
-                            sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
-                            sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
+                            //sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
+                            //sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
                             using (reader = sqlComando.ExecuteReader())
                             {
                                 while (reader.Read())
@@ -435,20 +494,20 @@ namespace proyectoBase.Forms.Aval
                                 using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CredAval_InformacionConyugal_Crear", sqlConexion, tran))
                                 {
                                     sqlComando.CommandType = CommandType.StoredProcedure;
-                                    sqlComando.Parameters.AddWithValue("@fiIDAval", IDAvalMaster);
-                                    sqlComando.Parameters.AddWithValue("@fcNombreCompletoConyugue", avalInformacionConyugal.fcNombreCompletoConyugue);
-                                    sqlComando.Parameters.AddWithValue("@fcIndentidadConyugue", avalInformacionConyugal.fcIndentidadConyugue);
-                                    sqlComando.Parameters.AddWithValue("@fdFechaNacimientoConyugue", avalInformacionConyugal.fdFechaNacimientoConyugue);
-                                    sqlComando.Parameters.AddWithValue("@fcTelefonoConyugue", avalInformacionConyugal.fcTelefonoConyugue);
-                                    sqlComando.Parameters.AddWithValue("@fcLugarTrabajoConyugue", avalInformacionConyugal.fcLugarTrabajoConyugue);
-                                    sqlComando.Parameters.AddWithValue("@fnIngresosMensualesConyugue", avalInformacionConyugal.fcIngresosMensualesConyugue);
-                                    sqlComando.Parameters.AddWithValue("@fcTelefonoTrabajoConyugue", avalInformacionConyugal.fcTelefonoTrabajoConyugue);
-                                    sqlComando.Parameters.AddWithValue("@fiIDUsuarioCrea", idUsuario);
+                                    sqlComando.Parameters.AddWithValue("@piIDAval", IDAvalMaster);
+                                    sqlComando.Parameters.AddWithValue("@pcNombreCompletoConyugue", avalInformacionConyugal.fcNombreCompletoConyugue);
+                                    sqlComando.Parameters.AddWithValue("@pcIndentidadConyugue", avalInformacionConyugal.fcIndentidadConyugue);
+                                    sqlComando.Parameters.AddWithValue("@pdFechaNacimientoConyugue", avalInformacionConyugal.fdFechaNacimientoConyugue);
+                                    sqlComando.Parameters.AddWithValue("@pcTelefonoConyugue", avalInformacionConyugal.fcTelefonoConyugue);
+                                    sqlComando.Parameters.AddWithValue("@pcLugarTrabajoConyugue", avalInformacionConyugal.fcLugarTrabajoConyugue);
+                                    sqlComando.Parameters.AddWithValue("@pnIngresosMensualesConyugue", avalInformacionConyugal.fcIngresosMensualesConyugue);
+                                    sqlComando.Parameters.AddWithValue("@pcTelefonoTrabajoConyugue", avalInformacionConyugal.fcTelefonoTrabajoConyugue);
+                                    sqlComando.Parameters.AddWithValue("@piIDUsuarioCrea", idUsuario);
                                     sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                                     sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                                     sqlComando.Parameters.AddWithValue("@piIDUsuario", idUsuario);
-                                    sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
-                                    sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual);
+                                   // sqlComando.Parameters.AddWithValue("@pcUserNameCreated", nombreUsuario);
+                                   ///* sqlComando.Parameters.AddWithValue("@pdDateCreated", fechaActual)*/;
                                     using (reader = sqlComando.ExecuteReader())
                                     {
                                         while (reader.Read())
@@ -604,8 +663,63 @@ namespace proyectoBase.Forms.Aval
                             resultadoProceso.message = "Error al finalizar condicion de la solicitud por registro de Aval";
                             return resultadoProceso;
                         }
-                        #endregion
 
+                     
+                        #endregion
+                        /*  Condicionamiento Aval   */
+                        if (IDCondicionActual == 7)
+                        {
+                            int fIDCondicion = 0;
+
+                            //using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDAval_CondicionesAvalSolicitud", sqlConexion, tran))
+                            //{
+                            //    sqlComando.CommandType = CommandType.StoredProcedure;
+                            //    sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                            //    using (var sqlResultado = sqlComando.ExecuteReader())
+                            //    {
+                            //        while (sqlResultado.Read())
+                            //        {
+                            //            fIDCondicion = (int)sqlResultado["fiIDSolicitudCondicion"];
+                                      
+                            //        }
+
+                            //    }
+                            //    FiIDCondicionActual = fIDCondicion;
+                            //}
+                     
+
+
+                            using (sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDSolicitudes_Condiciones_Actualizar", sqlConexion, tran))
+                            {
+                                sqlComando.CommandType = CommandType.StoredProcedure;
+                                sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                                sqlComando.Parameters.AddWithValue("@piIDSolicitudCondicion", 7);                            
+                                sqlComando.Parameters.AddWithValue("@piIDSolicitud ", IDSOL);
+                                sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
+                                sqlComando.Parameters.AddWithValue("@piIDUsuario", 1);
+                              
+
+                                using (reader = sqlComando.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        MensajeError = (string)reader["MensajeError"];
+                                        if (MensajeError.StartsWith("-1"))
+                                            contadorErrores++;
+                                    }
+                                }
+                               
+                           
+                            }
+                      
+                            if (contadorErrores > 0)
+                            {
+                                tran.Rollback();
+                                resultadoProceso.response = false;
+                                resultadoProceso.message = "Error al finalizar condicion de la solicitud por registro de Aval";
+                                return resultadoProceso;
+                            }
+                        }
                         tran.Commit();
                         resultadoProceso.response = true;
                         resultadoProceso.message = "Aval registrado de forma correcta";
@@ -677,7 +791,7 @@ namespace proyectoBase.Forms.Aval
                 List<ViviendaViewModel> viewModelVivienda = new List<ViviendaViewModel>();
                 sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCatalogo_Vivienda_Listar", sqlConexion);
                 sqlComando.CommandType = CommandType.StoredProcedure;
-                sqlComando.Parameters.AddWithValue("@fiIDVivienda", 0);
+                sqlComando.Parameters.AddWithValue("@piIDVivienda", 0);
                 sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                 sqlComando.Parameters.AddWithValue("@piIDApp", "107");
                 sqlComando.Parameters.AddWithValue("@piIDUsuario", "1");
@@ -736,7 +850,7 @@ namespace proyectoBase.Forms.Aval
                 List<NacionalidadesViewModel> NacionalidadesViewModel = new List<NacionalidadesViewModel>();
                 sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CREDCatalogo_Nacionalidades_Listar", sqlConexion);
                 sqlComando.CommandType = CommandType.StoredProcedure;
-                sqlComando.Parameters.AddWithValue("@fiIDNacionalidad", 0);
+                sqlComando.Parameters.AddWithValue("@piIDNacionalidad", 0);
                 sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
                 sqlComando.Parameters.AddWithValue("@piIDApp", "107");
                 sqlComando.Parameters.AddWithValue("@piIDUsuario", "1");
@@ -776,7 +890,7 @@ namespace proyectoBase.Forms.Aval
                         TipoVisibilidad = (byte)reader["fiTipodeVisibilidad"]
                     });
                 }
-              //    ddls.TipoDocumento = TipoDocumentoViewModel;
+                  ddls.TipoDocumento = TipoDocumentoViewModel;
 
                 if (reader != null)
                     reader.Close();
@@ -811,6 +925,35 @@ namespace proyectoBase.Forms.Aval
                     reader.Close();
                 sqlComando.Dispose();
                 #endregion
+
+                //codigo postal 
+                #region  CODIGO POSTAL
+
+
+                List<CodigoPostalViewModal> CodigoPostalViewModel = new List<CodigoPostalViewModal>();
+                sqlComando = new SqlCommand("CoreFinanciero.dbo.sp_CodigoPostal", sqlConexion);
+                sqlComando.CommandType = CommandType.StoredProcedure;
+                //sqlComando.Parameters.AddWithValue("@fiIDParentesco", 0);
+                //sqlComando.Parameters.AddWithValue("@piIDSesion", "1");
+                //sqlComando.Parameters.AddWithValue("@piIDApp", "107");
+                //sqlComando.Parameters.AddWithValue("@piIDUsuario", "1");
+                reader = sqlComando.ExecuteReader();
+                while (reader.Read())
+                {
+                    CodigoPostalViewModel.Add(new CodigoPostalViewModal()
+                    {
+                        fiCodBarrio = (int)reader["fiCodBarrio"],
+                        DirrecionCompleta = (string)reader["DirrecionCompleta"]
+                       
+                    });
+                }
+                ddls.CodigoPostal = CodigoPostalViewModel;
+
+                if (reader != null)
+                    reader.Close();
+                sqlComando.Dispose();
+
+                #endregion
             }
             catch (Exception ex)
             {
@@ -828,7 +971,11 @@ namespace proyectoBase.Forms.Aval
             }
             return ddls;
         }
-        
+        /*    Actualizacion  Angel       */
+
+ 
+
+
         [WebMethod]
         public static List<MunicipiosViewModel> CargarMunicipios(int CODDepto)
         {
@@ -1009,6 +1156,207 @@ namespace proyectoBase.Forms.Aval
                 ex.Message.ToString();
             }
             return lURLDesencriptado;
+        }
+
+
+
+        public class TipoDocumento_ViewModel
+        {
+            public int IdTipoDocumento { get; set; }
+            public string DescripcionTipoDocumento { get; set; }
+            public int CantidadMaximaDoucmentos { get; set; }
+            public int TipoVisibilidad { get; set; }
+        }
+        public class AvalMaestroViewModel
+        {
+            public int fiIDSolicitud { get; set; }
+            public int TipoAval { get; set; }
+            public int fiIDCliente { get; set; }
+            public int fiIDAval { get; set; }
+            public string fcIdentidadAval { get; set; }
+            public string RTNAval { get; set; }
+            public string fcTelefonoAval { get; set; }
+            public int fiNacionalidad { get; set; }
+            public System.DateTime fdFechaNacimientoAval { get; set; }
+            public string fcCorreoElectronicoAval { get; set; }
+            public string fcProfesionOficioAval { get; set; }
+            public string fcSexoAval { get; set; }
+            public int fiIDEstadoCivil { get; set; }
+            public int fiIDVivienda { get; set; }
+            public Nullable<int> fiTiempoResidir { get; set; }
+            public bool fbAvalActivo { get; set; }
+            public string fcRazonInactivo { get; set; }
+            public int fiIDUsuarioCrea { get; set; }
+            public string fcNombreUsuarioCrea { get; set; }
+            public System.DateTime fdFechaCrea { get; set; }
+            public Nullable<int> fiIDUsuarioModifica { get; set; }
+            public string fcNombreUsuarioModifica { get; set; }
+            public Nullable<System.DateTime> fdFechaUltimaModifica { get; set; }
+            public string fcPrimerNombreAval { get; set; }
+            public string fcSegundoNombreAval { get; set; }
+            public string fcPrimerApellidoAval { get; set; }
+            public string fcSegundoApellidoAval { get; set; }
+
+            //nacionalidad del Aval
+            public string fcDescripcionNacionalidad { get; set; }
+            public bool fbNacionalidadActivo { get; set; }
+
+            public string fcDescripcionEstadoCivil { get; set; }
+            public bool fbEstadoCivilActivo { get; set; }
+
+            public string fcDescripcionVivienda { get; set; }
+            public bool fbViviendaActivo { get; set; }
+        }
+
+
+        public class AvalInformacionLaboralViewModel
+        {
+            public int fiIDInformacionLaboralAval { get; set; }
+            public int fiIDAval { get; set; }
+            public int fiIDSolicitud { get; set; }
+            public string fcNombreTrabajo { get; set; }
+            public decimal fiIngresosMensuales { get; set; }
+            public string fcPuestoAsignado { get; set; }
+            public System.DateTime fcFechaIngreso { get; set; }
+            public string fdTelefonoEmpresa { get; set; }
+            public string fcExtensionRecursosHumanos { get; set; }
+            public string fcExtensionAval { get; set; }
+            public string fcDireccionDetalladaEmpresa { get; set; }
+            public string fcFuenteOtrosIngresos { get; set; }
+            public Nullable<decimal> fiValorOtrosIngresosMensuales { get; set; }
+            public int fiIDUsuarioCrea { get; set; }
+            public string fcNombreUsuarioCrea { get; set; }
+            public System.DateTime fdFechaCrea { get; set; }
+            public Nullable<int> fiIDUsuarioModifica { get; set; }
+            public string fcNombreUsuarioModifica { get; set; }
+            public Nullable<System.DateTime> fdFechaUltimaModifica { get; set; }
+            public Nullable<int> fiIDBarrioColonia { get; set; }
+            public string fcReferenciasDireccionDetallada { get; set; }
+
+            //colonia del Aval
+            public string fcNombreBarrioColonia { get; set; }
+            public bool fbBarrioColoniaActivo { get; set; }
+
+            //ciudad del Aval
+            public int fiIDCiudad { get; set; }
+            public string fcNombreCiudad { get; set; }
+            public bool fbCiudadActivo { get; set; }
+
+            //ciudad del Aval
+            public int fiIDMunicipio { get; set; }
+            public string fcNombreMunicipio { get; set; }
+            public bool fbMunicipioActivo { get; set; }
+
+            //departamento del Aval
+            public int fiIDDepto { get; set; }
+            public string fcNombreDepto { get; set; }
+            public bool fbDepartamentoActivo { get; set; }
+
+            // proceso de campo
+            public string fcLatitud { get; set; }
+            public string fcLongitud { get; set; }
+            public int fiIDGestorValidador { get; set; }
+            public string fcGestorValidadorDomicilio { get; set; }
+            public int fiIDInvestigacionDeCampo { get; set; }
+            public string fcGestionDomicilio { get; set; }
+            public int IDTipoResultado { get; set; }
+            public string fcResultadodeCampo { get; set; }
+            public DateTime fdFechaValidacion { get; set; }
+            public string fcObservacionesCampo { get; set; }
+            public int fiIDEstadoDeGestion { get; set; }
+            public int fiEstadoDomicilio { get; set; }
+        }
+
+        public class AvalInformacionDomicilioViewModel
+        {
+            public int fiIDInformacionDomicilioAval { get; set; }
+            public int fiIDAval { get; set; }
+            public int fiIDSolicitud { get; set; }
+            public string fcTelefonoCasa { get; set; }
+            public string fcDireccionDetallada { get; set; }
+            public int fiIDUsuarioCrea { get; set; }
+            public string fcNombreUsuarioCrea { get; set; }
+            public System.DateTime fdFechaCrea { get; set; }
+            public Nullable<int> fiIDUsuarioModifica { get; set; }
+            public string fcNombreUsuarioModifica { get; set; }
+            public Nullable<System.DateTime> fdFechaUltimaModifica { get; set; }
+            public Nullable<int> fiIDBarrioColonia { get; set; }
+            public string fcReferenciasDireccionDetallada { get; set; }
+
+            //colonia del Aval
+            public string fcNombreBarrioColonia { get; set; }
+            public bool fbBarrioColoniaActivo { get; set; }
+
+            //ciudad del Aval
+            public int fiIDCiudad { get; set; }
+            public string fcNombreCiudad { get; set; }
+            public bool fbCiudadActivo { get; set; }
+
+            //ciudad del Aval
+            public int fiIDMunicipio { get; set; }
+            public string fcNombreMunicipio { get; set; }
+            public bool fbMunicipioActivo { get; set; }
+
+            //departamento del Aval
+            public int fiIDDepto { get; set; }
+            public string fcNombreDepto { get; set; }
+            public bool fbDepartamentoActivo { get; set; }
+
+            // proceso de campo
+            public string fcLatitud { get; set; }
+            public string fcLongitud { get; set; }
+            public int fiIDGestorValidador { get; set; }
+            public string fcGestorValidadorDomicilio { get; set; }
+            public int fiIDInvestigacionDeCampo { get; set; }
+            public string fcGestionDomicilio { get; set; }
+            public int IDTipoResultado { get; set; }
+            public string fcResultadodeCampo { get; set; }
+            public DateTime fdFechaValidacion { get; set; }
+            public string fcObservacionesCampo { get; set; }
+            public int fiIDEstadoDeGestion { get; set; }
+            public int fiEstadoDomicilio { get; set; }
+        }
+
+        public class AvalInformacionConyugalViewModel
+        {
+            public int fiIDInformacionConyugalAval { get; set; }
+            public int fiIDAval { get; set; }
+            public string fcNombreCompletoConyugue { get; set; }
+            public string fcIndentidadConyugue { get; set; }
+            public Nullable<System.DateTime> fdFechaNacimientoConyugue { get; set; }
+            public string fcTelefonoConyugue { get; set; }
+            public string fcLugarTrabajoConyugue { get; set; }
+            public Nullable<decimal> fcIngresosMensualesConyugue { get; set; }
+            public string fcTelefonoTrabajoConyugue { get; set; }
+            public int fiIDUsuarioCrea { get; set; }
+            public string fcNombreUsuarioCrea { get; set; }
+            public System.DateTime fdFechaCrea { get; set; }
+            public Nullable<int> fiIDUsuarioModifica { get; set; }
+            public string fcNombreUsuarioModifica { get; set; }
+            public Nullable<System.DateTime> fdFechaUltimaModifica { get; set; }
+        }
+
+        public class CodigoPostalViewModal
+        {
+            public int fiCodBarrio { get; set; }
+            public string DirrecionCompleta { get; set; }
+        }
+
+        public class SolicitudIngresarDDLViewModel
+        {
+            public List<DepartamentosViewModel> Departamentos { get; set; }
+            public List<MunicipiosViewModel> Municipios { get; set; }
+            public List<CiudadesViewModel> Ciudades { get; set; }
+            public List<BarriosColoniasViewModel> BarriosColonias { get; set; }
+
+            public List<CodigoPostalViewModal> CodigoPostal { get; set; }
+
+            public List<EstadosCivilesViewModel> EstadosCiviles { get; set; }
+            public List<NacionalidadesViewModel> Nacionalidades { get; set; }
+            public List<TipoPrestamoViewModel> TipoPrestamo { get; set; }
+            public List<ViviendaViewModel> Vivienda { get; set; }
+            public List<ParentescosViewModel> Parentescos { get; set; }
+            public List<TipoDocumentoViewModel> TipoDocumento { get; set; }
         }
     }
 }

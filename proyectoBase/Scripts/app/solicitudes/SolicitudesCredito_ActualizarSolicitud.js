@@ -1,6 +1,7 @@
 ﻿var objSeccion = '';
 COTIZADOR = null;
 
+
 $('#smartwizard').smartWizard({
     selected: 0,
     theme: 'default',
@@ -59,6 +60,7 @@ $(document).ready(function () {
     });
 
     /* Cuando se muestre un step */
+    
     $("#smartwizard").on("showStep", function (e, anchorObject, stepNumber, stepDirection, stepPosition) {
 
         /* si es el primer paso, deshabilitar el boton "anterior" */
@@ -97,7 +99,7 @@ $(document).ready(function () {
 
 /* Cargar los inputs de los documentos requeridos */
 function CargarDocumentosRequeridos() {
-
+    console.log("entrabdo");
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_ActualizarSolicitud.aspx/CargarDocumentosRequeridos",
@@ -232,69 +234,19 @@ function CargarDocumentosRequeridos() {
     }); /* Termina Ajax */
 }
 
-/* Cargar municipios del departamento seleccionado del domicilio */
-$("#ddlDepartamentoDomicilio").change(function () {
-
-    $(this).parsley().validate();
-
-    var idDepartamento = $("#ddlDepartamentoDomicilio option:selected").val();
-    CargarMunicipios(idDepartamento, 'Domicilio', true, 0);
-});
-
-/* Cargar ciudades del Municipio seleccionado del domicilio */
-$("#ddlMunicipioDomicilio").change(function () {
-
-    $(this).parsley().validate();
-
-    var idDepartamento = $("#ddlDepartamentoDomicilio option:selected").val();
-    var idMunicipio = $("#ddlMunicipioDomicilio option:selected").val();
-    CargarCiudadesPoblados(idDepartamento, idMunicipio, 'Domicilio', true, 0);
-});
-
-/* Cargar barrios y colonias de la ciudad/poblado seleccionada del domicilio */
-$("#ddlCiudadPobladoDomicilio").change(function () {
-
-    $(this).parsley().validate();
-
-    var idDepartamento = $("#ddlDepartamentoDomicilio option:selected").val();
-    var idMunicipio = $("#ddlMunicipioDomicilio option:selected").val();
-    var idCiudadPoblado = $("#ddlCiudadPobladoDomicilio option:selected").val();
-    CargarBarriosColonias(idDepartamento, idMunicipio, idCiudadPoblado, 'Domicilio', 0);
-});
-
-/* Cargar municipios del departamento seleccionado de la empresa */
-$("#ddlDepartamentoEmpresa").change(function () {
-
-    $(this).parsley().validate();
-
-    var idDepartamentoEmpresa = $("#ddlDepartamentoEmpresa option:selected").val();
-    CargarMunicipios(idDepartamentoEmpresa, 'Empresa', true, 0);
-});
-
-/* Cargar ciudades del Municipio seleccionado de la empresa */
-$("#ddlMunicipioEmpresa").change(function () {
-
-    $(this).parsley().validate();
-
-    var idDepartamentoEmpresa = $("#ddlDepartamentoEmpresa option:selected").val();
-    var idMunicipioEmpresa = $("#ddlMunicipioEmpresa option:selected").val();
-    CargarCiudadesPoblados(idDepartamentoEmpresa, idMunicipioEmpresa, 'Empresa', true, 0);
-});
-
-/* Cargar barrios y colonias de la ciudad/poblado seleccionada de la empresa */
-$("#ddlCiudadPobladoEmpresa").change(function () {
-
-    $(this).parsley().validate();
-
-    var idDepartamentoEmpresa = $("#ddlDepartamentoEmpresa option:selected").val();
-    var idMunicipioEmpresa = $("#ddlMunicipioEmpresa option:selected").val();
-    var idCiudadPobladoEmpresa = $("#ddlCiudadPobladoEmpresa option:selected").val();
-    CargarBarriosColonias(idDepartamentoEmpresa, idMunicipioEmpresa, idCiudadPobladoEmpresa, 'Empresa', 0);
-});
 
 /* Validar listas desplegables */
 $("select").on('change', function () {
     $(this).parsley().validate();
+});
+// 
+$("#ddlBarrioColoniaDomicilio").change(function () {
+
+    $(this).parsley().validate();
+
+    var DetalleCodigoPostal = $("#ddlBarrioColoniaDomicilio option:selected").text(); 
+    $("#txtReferenciasDelDomicilio").val(DetalleCodigoPostal.trim());
+
 });
 
 
@@ -470,7 +422,7 @@ var idSolicitudCondicion = 0;
 var idTipoDeCondicion = 0;
 var objSeccion = {};
 $(document).on('click', 'button#btnFinalizarCondicion', function () {
-
+    debugger;
     idSolicitudCondicion = $(this).data('id');
     idTipoDeCondicion = $(this).data('idtipocondicion');
     objSeccion = {};
@@ -478,7 +430,7 @@ $(document).on('click', 'button#btnFinalizarCondicion', function () {
     $('.modal').modal('hide');
     $("#modalFinalizarCondicion_Confirmar").modal();
 
-});
+ });
 
 /* Finalizar condicionamientos */
 $("#btnFinalizarCondicion_Confirmar").click(function () {
@@ -493,6 +445,7 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
         objSeccion = {};
 
     }
+
     /* Referencias personales */
     else if (idTipoDeCondicion == '8' || idTipoDeCondicion == '14') {
 
@@ -500,7 +453,7 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
     }
     /* Informacion de la solicitud */
     else if (idTipoDeCondicion == '9') {
-
+        debugger;
         if ($('#frmSolicitud').parsley().isValid({ group: 'informacionPrestamo' })) {
 
             objSeccion = {
@@ -510,7 +463,11 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
                 ValorSeleccionado: $("#txtValorDePrestamo").val().replace(/,/g, '') == '' ? 0 : $("#txtValorDePrestamo").val().replace(/,/g, ''),
                 PlazoSeleccionado: $("#txtPlazoSeleccionado").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazoSeleccionado").val().replace(/,/g, ''),
                 ValorGarantia: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
-                ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, '')                
+                ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
+                CuotaDelPrestamo: $("#txtValorCuota").val().replace(/,/g, ''),
+                TotalFinanciadoConIntereses: $("#txtValorFinanciar").val().replace(/,/g, ''),
+                TasaInteresAnual: $("#txtTasaDeInteresAnual").val().replace(/,/g, ''),
+
             };
 
             cotizador = COTIZADOR;
@@ -521,13 +478,13 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
             return false;
         }
     }
-    
+
     /* Informacion personal */
-    
+
     else if (idTipoDeCondicion == '10') {
-        debugger;
+       
         if ($('#frmSolicitud').parsley().isValid({ group: 'informacionPersonal' })) {
-           
+
             objSeccion = {
                 IdCliente: ID_CLIENTE,
                 IdTipoCliente: $("#ddlTipoDeCliente :selected").val(),
@@ -549,8 +506,9 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
                 DocumentoIDPersonal: $("#dllDoctoIdPersonal :selected").val(),
                 fcDescripcionDoctosFiscal: $("#txtNoIdFiscal").val(),
                 IDDocumentoFiscal: $("#dllDocumentoIDFiscal :selected").val(),
-                IdOrigenEtnico: $("#dllOrigenEtnico :selected").val()
-                
+                IdOrigenEtnico: $("#dllOrigenEtnico :selected").val(),
+                IdPaisNacimiento: $("#dllPaisNacimiento :selected").val()
+
             }
         }
         else {
@@ -561,18 +519,19 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
     }
     /* Informacion del domicilio */
     else if (idTipoDeCondicion == '11') {
-
+       
         if ($('#frmSolicitud').parsley().isValid({ group: 'informacionDomicilio' })) {
 
             objSeccion = {
                 IdCliente: ID_CLIENTE,
                 IdSolicitud: ID_SOLICITUD,
                 TelefonoCasa: $("#txtTelefonoCasa").val(),
-                IdDepartamento: $("#ddlDepartamentoDomicilio :selected").val(),
-                IdMunicipio: $("#ddlMunicipioDomicilio :selected").val(),
-                IdCiudadPoblado: $("#ddlCiudadPobladoDomicilio :selected").val(),
+                IdDepartamento: 0,/*$("#ddlDepartamentoDomicilio :selected").val(),*/
+                IdMunicipio: 0,/* $("#ddlMunicipioDomicilio :selected").val(),*/
+                IdCiudadPoblado: 0,/*$("#ddlCiudadPobladoDomicilio :selected").val(),*/
                 IdBarrioColonia: $("#ddlBarrioColoniaDomicilio :selected").val(),
-                DireccionDetallada: $("#txtDireccionDetalladaDomicilio").val(),
+                //DireccionDetallada: $("#txtDireccionDetalladaDomicilio").val(),
+                DireccionDetallada: $("#txtReferenciasDelDomicilio").val(),
                 ReferenciasDireccionDetallada: $("#txtReferenciasDelDomicilio").val()
             }
 
@@ -598,12 +557,12 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
                 TelefonoEmpresa: $("#txtTelefonoEmpresa").val(),
                 ExtensionRecursosHumanos: $("#txtExtensionRecursosHumanos").val(),
                 ExtensionCliente: $("#txtExtensionCliente").val(),
-                IdDepartamento: $("#ddlDepartamentoEmpresa :selected").val(),
-                IdMunicipio: $("#ddlMunicipioEmpresa :selected").val(),
-                IdCiudadPoblado: $("#ddlCiudadPobladoEmpresa :selected").val(),
+                IdDepartamento: 0, /*$("#ddlDepartamentoEmpresa :selected").val(),*/
+                IdMunicipio: 0,/*$("#ddlMunicipioEmpresa :selected").val(),*/
+                IdCiudadPoblado: 0, /*$("#ddlCiudadPobladoEmpresa :selected").val(),*/
                 IdBarrioColonia: $("#ddlBarrioColoniaEmpresa :selected").val(),
                 DireccionDetalladaEmpresa: $("#txtDireccionDetalladaEmpresa").val(),
-                ReferenciasDireccionDetallada: $("#txtReferenciasEmpresa").val(),
+                ReferenciasDireccionDetallada: $("#txtDireccionDetalladaEmpresa").val(),
                 FuenteOtrosIngresos: $("#txtFuenteDeOtrosIngresos").val(),
                 ValorOtrosIngresos: $("#txtValorOtrosIngresos").val().replace(/,/g, '') == '' ? 0 : $("#txtValorOtrosIngresos").val().replace(/,/g, '')
             }
@@ -639,6 +598,8 @@ $("#btnFinalizarCondicion_Confirmar").click(function () {
         }
     }
 
+ 
+
     objSeccion = JSON.stringify(objSeccion);
 
     FinalizarSeccionCondicionamientos(idSolicitudCondicion, idTipoDeCondicion, objSeccion, cotizador);
@@ -671,154 +632,7 @@ function FinalizarSeccionCondicionamientos(idSolicitudCondicion, idTipoDeCondici
     });
 }
 
-function CargarMunicipios(idDepartamento, tipoLista, desabilitarListasDependientes, idMunicipioSeleccionar) {
 
-    var ddlMunicipio = $('#ddlMunicipio' + tipoLista + '');
-    var ddlCiudadPoblado = $('#ddlCiudadPoblado' + tipoLista + '');
-    var ddlBarrioColonia = $('#ddlBarrioColonia' + tipoLista + '');
-
-    if (idDepartamento != '') {
-
-        ddlMunicipio.empty();
-        ddlMunicipio.append("<option value=''>Seleccione una opción</option>");
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_ActualizarSolicitud.aspx/CargarListaMunicipios",
-            data: JSON.stringify({ idDepartamento: idDepartamento }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Error al cargar municipios de este departamento');
-            },
-            success: function (data) {
-
-                var listaMunicipios = data.d;
-                $.each(listaMunicipios, function (i, iter) {
-                    ddlMunicipio.append("<option value='" + iter.IdMunicipio + "'>" + iter.NombreMunicipio + "</option>"); /* Agregar municipios del departamento seleccionado */
-                });
-                ddlMunicipio.attr('disabled', false);
-
-                if (idMunicipioSeleccionar != 0) {
-                    ddlMunicipio.val(idMunicipioSeleccionar);
-                }
-
-                if (desabilitarListasDependientes == true) {
-                    ddlCiudadPoblado.empty();
-                    ddlCiudadPoblado.append("<option value=''>Seleccione un municipio</option>");
-                    ddlCiudadPoblado.attr('disabled', true);
-
-                    ddlBarrioColonia.empty();
-                    ddlBarrioColonia.append("<option value=''>Seleccione una ciudad/poblado</option>");
-                    ddlBarrioColonia.attr('disabled', true);
-                }
-            }
-        });
-    }
-    else {
-        ddlMunicipio.empty();
-        ddlMunicipio.append("<option value=''>Seleccione un depto.</option>");
-        ddlMunicipio.attr('disabled', true);
-
-        ddlCiudadPoblado.empty();
-        ddlCiudadPoblado.append("<option value=''>Seleccione un municipio</option>");
-        ddlCiudadPoblado.attr('disabled', true);
-
-        ddlBarrioColonia.empty();
-        ddlBarrioColonia.append("<option value=''>Seleccione una ciudad/poblado</option>");
-        ddlBarrioColonia.attr('disabled', true);
-    }
-}
-
-function CargarCiudadesPoblados(idDepartamento, idMunicipio, tipoLista, desabilitarListasDependientes, idCiudadPobladoSeleccionar) {
-
-    var ddlCiudadPoblado = $('#ddlCiudadPoblado' + tipoLista + '');
-    var ddlBarrioColonia = $('#ddlBarrioColonia' + tipoLista + '');
-
-    if (idMunicipio != '') {
-
-        ddlCiudadPoblado.empty();
-        ddlCiudadPoblado.append("<option value=''>Seleccione una opción</option>");
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_ActualizarSolicitud.aspx/CargarListaCiudadesPoblados",
-            data: JSON.stringify({ idDepartamento: idDepartamento, idMunicipio: idMunicipio }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-
-                MensajeError('Error al cargar ciudades de este municipio');
-            },
-            success: function (data) {
-
-                var listaCiudades = data.d;
-
-                $.each(listaCiudades, function (i, iter) {
-                    ddlCiudadPoblado.append("<option value='" + iter.IdCiudadPoblado + "'>" + iter.NombreCiudadPoblado + "</option>"); // Agregar ciudades/poblados del municipio
-                });
-                ddlCiudadPoblado.attr('disabled', false);
-
-                if (idCiudadPobladoSeleccionar != 0) {
-                    ddlCiudadPoblado.val(idCiudadPobladoSeleccionar);
-                }
-
-                if (desabilitarListasDependientes == true) {
-                    ddlBarrioColonia.empty();
-                    ddlBarrioColonia.append("<option value=''>Seleccione una ciudad/poblado</option>");
-                    ddlBarrioColonia.attr('disabled', true);
-                }
-            }
-        });
-    }
-    else {
-        ddlCiudadPoblado.empty();
-        ddlCiudadPoblado.append("<option value=''>Seleccione un municipio</option>");
-        ddlCiudadPoblado.attr('disabled', true);
-
-        ddlBarrioColonia.empty();
-        ddlBarrioColonia.append("<option value=''>Seleccione una ciudad/poblado</option>");
-        ddlBarrioColonia.attr('disabled', true);
-    }
-}
-
-function CargarBarriosColonias(idDepartamento, idMunicipio, idCiudadPoblado, tipoLista, idBarrioColoniaSeleccionar) {
-
-    var ddlBarrioColonia = $('#ddlBarrioColonia' + tipoLista + '');
-
-    if (idCiudadPoblado != '') {
-
-        ddlBarrioColonia.empty();
-        ddlBarrioColonia.append("<option value=''>Seleccione una opción</option>");
-
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_ActualizarSolicitud.aspx/CargarListaBarriosColonias",
-            data: JSON.stringify({ idDepartamento: idDepartamento, idMunicipio: idMunicipio, idCiudadPoblado: idCiudadPoblado }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-
-                MensajeError('Error al cargar los barrios y colonias de esta ciudad/poblado');
-            },
-            success: function (data) {
-
-                var listaBarriosColonias = data.d;
-
-                $.each(listaBarriosColonias, function (i, iter) {
-                    ddlBarrioColonia.append("<option value='" + iter.IdBarrioColonia + "'>" + iter.NombreBarrioColonia + "</option>"); // Agregar barrios/colonias de la ciudad seleccionada
-                });
-                ddlBarrioColonia.attr('disabled', false);
-
-                if (idBarrioColoniaSeleccionar != 0) {
-                    ddlBarrioColonia.val(idBarrioColoniaSeleccionar);
-                }
-            }
-        });
-    }
-    else {
-        ddlBarrioColonia.empty();
-        ddlBarrioColonia.append("<option value=''>Seleccione una ciudad/poblado</option>");
-        ddlBarrioColonia.attr('disabled', true);
-    }
-}
 
 function CargarReferenciasPersonales() {
 
@@ -889,120 +703,65 @@ function RecargarInformacion() {
     });
 }
 
-$('#txtValorGlobal,#txtValorPrima,#txtPlazoSeleccionado,#ddlTipoGastosDeCierre,#ddlTipoDeSeguro,#ddlGps, #ddlPagoGps').blur(function () {
-
+$('#txtValorFinanciar').blur(function () {
+    debugger;
     var valorGlobal = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
     var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
-    var plazo = parseInt($("#txtPlazoSeleccionado").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazoSeleccionado").val().replace(/,/g, ''));    
-
-    if (valorGlobal > 0 && plazo > 0) {
-        CalculoPrestamo(valorGlobal.toString(), valorPrima.toString(), plazo.toString());
+    var plazo = parseInt($("#txtPlazoSeleccionado").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazoSeleccionado").val().replace(/,/g, '')); 
+    var valorFinanciar = parseFloat($("#txtValorFinanciar").val().replace(/,/g, ''));
+   
+    var InteresAnual = parseFloat($("#txtTasaDeInteresAnual").val().replace(/,/g, ''));
+    if (valorFinanciar > 0 && plazo > 0) {
+        CalculoPrestamo(valorFinanciar.toString(), plazo.toString(), InteresAnual.toString());
     }
 });
 
 
 /* Cargar prestamos disponibles consultados en el cotizador */
-function CalculoPrestamo(valorGlobal, valorPrima, plazo) {
+function CalculoPrestamo(valoraFinanciar, plazo, tasadeinteres) {
+    debugger;
+    var frecuencia = 0;
+    var frecuenciaseleccionada = $("#ddlFrecuencia option:selected").val();
 
-    if (PRECALIFICADO.IdProducto == 202 || PRECALIFICADO.IdProducto == 203 || PRECALIFICADO.IdProducto == 204) {
-
-        var lcSeguro = '';
-        var lcGPS = '';
-		var lcPagoGPS = '';
-        var lcGastosdeCierre = '';
-
-        if ($("#ddlTipoDeSeguro :selected").val() == "A - Full Cover") {
-            lcSeguro = "1";
-        }
-        if ($("#ddlTipoDeSeguro :selected").val() == "B - Basico + Garantía") {
-            lcSeguro = "2";
-        }
-
-        if ($("#ddlTipoDeSeguro :selected").val() == "C - Basico") {
-            lcSeguro = "3";
-        }
-
-        lcGastosdeCierre = $("#ddlTipoGastosDeCierre :selected").val() == "Financiado" ? "1" : "0";
-
-        if ($("#ddlGps :selected").val() == "Si - CPI") {
-            lcGPS = "1";
-        }
-        if ($("#ddlGps :selected").val() == "Si - CableColor") {
-            lcGPS = "2";
-        }
-        if ($("#ddlGps :selected").val() == "No") {
-            lcGPS = "0";
-        }
-
-		if ($("#ddlPagoGPS :selected").val() == "Si") {
-            lcPagoGPS = "1";
-        }
-        if ($("#ddlPagoGPS :selected").val() == "No") {
-            lcPagoGPS = "0";
-        }
-		
-		lcPagoGPS="1";
-		
-        if (lcSeguro != '' && lcGPS != '' && lcGastosdeCierre != '') {
-
-            $.ajax({
-                type: "POST",
-                url: "SolicitudesCredito_ActualizarSolicitud.aspx/CalculoPrestamoVehiculo",
-                data: JSON.stringify(
-                    {
-                        idProducto: PRECALIFICADO.IdProducto,
-                        valorVehiculo: valorGlobal,
-                        valorPrimaOEmpenio: valorPrima,
-                        plazo: plazo,
-                        scorePromedio: PRECALIFICADO.ScorePromedio,
-                        tipoSeguro: lcSeguro,
-                        tipoGps: lcGPS,
-						pagoGPS: lcPagoGPS,
-                        gastosDeCierreFinanciados: lcGastosdeCierre,
-                        dataCrypt: window.location.href
-                    }),
-                contentType: 'application/json; charset=utf-8',
-                error: function (xhr, ajaxOptions, thrownError) {
-
-                    MensajeError('No se pudo realizar el cálculo del préstamo, contacte al administrador');
-                },
-                success: function (data) {
-
-                    var objCalculo = data.d;
-
-                    $("#txtValorDePrestamo").val(objCalculo.ValorDelPrestamo);
-                    $("#txtValorCuota").val(objCalculo.CuotaTotal);
-                    $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
-                    $("#txtTasaDeInteresAnual").val(objCalculo.TasaInteresAnual + '%');
-
-                    COTIZADOR = objCalculo;
-                }
-            });
-        }
+    if (frecuenciaseleccionada == 1) {
+        frecuencia = 26;
     }
-    else {
 
-        $.ajax({
-            type: "POST",
-            url: "SolicitudesCredito_ActualizarSolicitud.aspx/CalculoPrestamo",
-            data: JSON.stringify({ idProducto: PRECALIFICADO.IdProducto, valorGlobal: valorGlobal, valorPrima: valorPrima, plazo: plazo, dataCrypt: window.location.href }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-
-                MensajeError('No se pudo realizar el cálculo del préstamo, contacte al administrador');
-            },
-            success: function (data) {
-
-                var objCalculo = data.d;
-                $("#txtValorDePrestamo").val(objCalculo.ValorDelPrestamo);
-                $("#txtValorCuota").val(objCalculo.CuotaTotal);
-                $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
-                $("#txtTasaDeInteresAnual").val(objCalculo.TasaInteresAnual + '%');
-
-                COTIZADOR = objCalculo;
-            }
-        });
+    if (frecuenciaseleccionada == 3) {
+        frecuencia = 12;
     }
+
+    if (frecuenciaseleccionada == 10) {
+        frecuencia = 52;
+    }
+    var lnPlazoAnual = (plazo / frecuencia)
+    var lnTotalInteres = ((valoraFinanciar * lnPlazoAnual * tasadeinteres) / 100);
+    var lnTotalFinanciado = ((parseFloat(valoraFinanciar) + lnTotalInteres) / plazo);
+
+    $("#txtValorCuota").val(lnTotalFinanciado.toFixed(2));
+
+
+  //      $.ajax({
+  //          type: "POST",
+  //          url: "SolicitudesCredito_ActualizarSolicitud.aspx/CalculoPrestamo",
+  //          data: JSON.stringify({ idProducto: PRECALIFICADO.IdProducto, valorGlobal: valorGlobal, valorPrima: valorPrima, plazo: plazo, dataCrypt: window.location.href }),
+  //          contentType: 'application/json; charset=utf-8',
+  //          error: function (xhr, ajaxOptions, thrownError) {
+
+  //              MensajeError('No se pudo realizar el cálculo del préstamo, contacte al administrador');
+  //          },
+  //          success: function (data) {
+
+  //              var objCalculo = data.d;
+  //              $("#txtValorDePrestamo").val(objCalculo.ValorDelPrestamo);
+  //              $("#txtValorCuota").val(objCalculo.CuotaTotal);
+  //              $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
+  //              $("#txtTasaDeInteresAnual").val(objCalculo.TasaInteresAnual + '%');
+
+  //              COTIZADOR = objCalculo;
+  //          }
+  //      });
+ 
 }
 
 //function RecargarInformacion() {

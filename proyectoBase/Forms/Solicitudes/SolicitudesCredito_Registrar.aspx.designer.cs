@@ -237,13 +237,13 @@ public partial class SolicitudesCredito_Registrar {
     protected global::System.Web.UI.HtmlControls.HtmlGenericControl divProducto;
     
     /// <summary>
-    /// Control ddlProducto.
+    /// Control   .
     /// </summary>
     /// <remarks>
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.DropDownList ddlProducto;
+    protected global::System.Web.UI.WebControls.DropDownList   ;
     
     /// <summary>
     /// Control divOrigen.
@@ -522,7 +522,7 @@ public partial class SolicitudesCredito_Registrar {
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtTipoDeVehiculo;
+    protected global::System.Web.UI.WebControls.DropDownList txtTipoDeVehiculo;
     
     /// <summary>
     /// Control txtMarca.
@@ -603,7 +603,7 @@ public partial class SolicitudesCredito_Registrar {
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtTransmision;
+    protected global::System.Web.UI.WebControls.DropDownList txtTransmision;
     
     /// <summary>
     /// Control txtTipoDeCombustible.
@@ -612,7 +612,7 @@ public partial class SolicitudesCredito_Registrar {
     /// Campo generado automáticamente.
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtTipoDeCombustible;
+    protected global::System.Web.UI.WebControls.DropDownList txtTipoDeCombustible;
     
     /// <summary>
     /// Control txtSerieUno.
@@ -840,6 +840,15 @@ public partial class SolicitudesCredito_Registrar {
     protected global::System.Web.UI.WebControls.DropDownList ddlBarrioColoniaDomicilio;
     
     /// <summary>
+    /// Control txtTelefonoCasa.
+    /// </summary>
+    /// <remarks>
+    /// Campo generado automáticamente.
+    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.TextBox txtTelefonoCasa;
+    
+    /// <summary>
     /// Control ddlTipoDeVivienda.
     /// </summary>
     /// <remarks>
@@ -856,15 +865,6 @@ public partial class SolicitudesCredito_Registrar {
     /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList ddlTiempoDeResidir;
-    
-    /// <summary>
-    /// Control txtTelefonoCasa.
-    /// </summary>
-    /// <remarks>
-    /// Campo generado automáticamente.
-    /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox txtTelefonoCasa;
     
     /// <summary>
     /// Control txtDireccionDetalladaDomicilio.

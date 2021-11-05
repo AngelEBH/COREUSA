@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
 namespace proyectoBase.Models.ViewModel
 {
     public class ClientesMasterViewModel
     {
         public int fiIDCliente { get; set; }
-        public int IDTipoCliente { get; set; }
+        public int TipoCliente { get; set; }
         public string fcNoCliente { get; set; }
         public string fcIdentidadCliente { get; set; }
         public string RTNCliente { get; set; }
@@ -31,12 +34,7 @@ namespace proyectoBase.Models.ViewModel
         public string fcPrimerApellidoCliente { get; set; }
         public string fcSegundoApellidoCliente { get; set; }
 
-        // datos
-        public string DocumentosFiscal { get; set; }
-        public int IdFiscal { get; set; }
-        public string DocumentoIdPersonal { get; set; }
-
-        // nacionalidad del cliente
+        //nacionalidad del cliente
         public string fcDescripcionNacionalidad { get; set; }
         public bool fbNacionalidadActivo { get; set; }
 

@@ -77,6 +77,13 @@ $('.lblProfesionRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.Pre
 $('.lblCiudadDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.CiudadDomicilio);
 $('.lblDepartamentoDomicilioRepresentanteLegal').text(FONDOS_PRESTAMO.RepresentanteLegal.DepartamentoDomicilio);
 
+if (IdProducto == 101) {
+    
+    $('#LblNombreCLiente_Cash').text(NombreCliente);
+    $('#LblNombreCLienteFirma_Cash').text(NombreCliente);
+    $('#LblDireccionCliente_Cash').text(DireccionCliente);
+}
+
 OcultarLoader();
 
 
@@ -191,7 +198,10 @@ $("#btnExpediente").click(function () {
         $("#modalGuardarExpedienteSolicitud").modal();
     }
 });
+$("#btnPrueba").click(function () {
 
+    $("#modalValidarToken").modal(); 
+});
 $("#btnGuardarExpedienteSolicitud").click(function () {
 
     var modelStateIsValid = true;

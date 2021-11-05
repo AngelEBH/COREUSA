@@ -21,9 +21,46 @@
     <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <style>
+
+
+        .animacion {
+       /*position: absolute;*/
+
+                  animation-name: parpadeo;
+                  animation-duration: 1s;
+                  animation-timing-function: linear;
+                  animation-iteration-count: infinite;
+
+                  -webkit-animation-name:parpadeo;
+                  -webkit-animation-duration: 1s;
+                  -webkit-animation-timing-function: linear;
+                  -webkit-animation-iteration-count: infinite;
+                }
+
+                @-moz-keyframes parpadeo{  
+                  0% { opacity: 1.0; }
+                  50% { opacity: 0.0; }
+                  100% { opacity: 1.0; }
+                }
+
+                @-webkit-keyframes parpadeo {  
+                  0% { opacity: 1.0; }
+                  50% { opacity: 0.0; }
+                   100% { opacity: 1.0; }
+                }
+
+                @keyframes parpadeo {  
+                  0% { opacity: 1.0; }
+                   50% { opacity: 0.0; }
+                  100% { opacity: 1.0; }
+                }
+
+
+
         .cursor-pointer {
             cursor: pointer;
         }
+
 
         #datatable-bandeja tbody tr {
             cursor: pointer;
@@ -331,6 +368,7 @@
                                         <tr>
                                             <th>Documento</th>
                                             <th class="text-center no-sort"></th>
+                                            <th class="text-center no-sort"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -354,21 +392,54 @@
         </div>
     </div>
 
-
-    <div id="modalCrearExpedientePrestamo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCrearExpedientePrestamoLabel" aria-hidden="true">
+    
+    <!-- modal detall condicionamiento -->
+    <div id="modalCrearExpedientePrestamo" class="modal fade"  width ="100%" tabindex="-1" role="dialog" aria-labelledby="modalCrearExpedientePrestamoLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title mt-0" id="modalCrearExpedientePrestamoLabel">Crear expediente del préstamo | Solicitud de crédito <span class="lblNoSolicitudCredito"></span></h6>
+                    <h6 class="modal-title mt-0" id="modalCrearExpedientePrestamoLabel">Detalle Condicion <span class="lblNoSolicitudCredito"></span></h6>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="col-form-label">Comentarios/Obseraciones (Opcional)</label>
-                        <textarea id="txtComentariosExpediente" runat="server" class="form-control form-control-sm" data-parsley-group="expediente_crear" data-parsley-maxlength="500" rows="3"></textarea>
+                          <table id="tblListaSolicitudCondiciones" class="table table-condensed table-striped" width ="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo Condición</th>
+                                        <th>Descripción</th>
+                                        <th style="width:80%!important;">Comentario Adicional</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                     </div>
                 </div>
                 <div class="modal-footer pt-2 pb-2">
-                    <button type="button" id="btnCrearExpediente_Confirmar" class="btn btn-primary waves-effect waves-light">
+                 
+                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div id="modalValidarToken" class="modal fade"  width ="100%" tabindex="-1" role="dialog" aria-labelledby="modalCrearExpedientePrestamoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title mt-0" id="modalValidacionTokenDocumentoEliminacion">Eliminar Documento(Token) <span class="lblNoSolicitudCredito"></span></h6>
+                </div>
+                <div class="modal-body">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-8 align-self-end">
+                    <label class="col-form-label">Ingrese Token</label>
+                    <input id="ddlToken" class="form-control form-control-sm" type="text" />
+                </div>
+                </div>
+                <div class="modal-footer pt-2 pb-2">
+                 <button  id="btnValidoTokenConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
                         Confirmar
                     </button>
                     <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
@@ -379,6 +450,7 @@
         </div>
     </div>
 
+    
 
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>

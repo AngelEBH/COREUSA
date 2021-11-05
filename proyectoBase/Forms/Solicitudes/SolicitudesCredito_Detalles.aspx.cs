@@ -59,7 +59,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                     CargarInformacionClienteSolicitud();
                     CargarInformacionGarantia();
                     CargarInformacionClienteEquifax();
-                    CargarInformacionPlanPago();
+                    //CargarInformacionPlanPago();
                 }
                 else
                 {
@@ -227,6 +227,7 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                             lblAgenteDeVentas.Text = sqlResultado["fcNombreUsuarioAsignado"].ToString();
                             lblAgencia.Text = sqlResultado["fcNombreAgencia"].ToString();
                             lblNombreGestor.Text = sqlResultado["fcNombreGestor"].ToString();
+                           
 
                             /* Información del precalificado */
                             txtIngresosPrecalificado.Text = decimal.Parse(sqlResultado["fnIngresoPrecalificado"].ToString()).ToString("N");
@@ -244,7 +245,11 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                             lblTipoDePlazo_Solicitado.InnerText = (IdProducto == "202" || IdProducto == "203" || IdProducto == "204") ? "Mensual" : "Quincenal";
                             txtOrigen.Text = sqlResultado["fcOrigen"].ToString();
                             // txtFrecuencia.Text = sqlResultado["fcTipoDePlazo"].ToString();
-                            //txtCollateral.Text = "";
+
+                            txtCollateral.Text = sqlResultado["Collateral"].ToString();
+                            var  Collateral = Convert.ToDecimal(sqlResultado["Collateral"].ToString());
+                           
+                           
                             txtLienholder.Text = sqlResultado["lienholder"].ToString();
 
                             /*** Calculo del prestamo SOLICITADO ***/
@@ -259,10 +264,13 @@ public partial class SolicitudesCredito_Detalles : System.Web.UI.Page
                             txtMontoTotalAFinanciar_Calculo.Text = (decimal.Parse(sqlResultado["fnValorAPrestar"].ToString())).ToString("N");
                             txtCuotaDelPrestamo_Calculo.Text = sqlResultado["fnCuotaTotal"].ToString();
                             txtTasaAnualAplicada_Calculo.Text = sqlResultado["fnTasaAnualAplicada"].ToString();
-                            txtTasaMensualAplicada_Calculo.Text = sqlResultado["fnTasaMensualAplicada"].ToString();
+                            
+
                             var montoFinalAFinanciar = decimal.Parse(sqlResultado["fnMontoFinalFinanciar"].ToString());
 
                             TotaCuota = Convert.ToDecimal(txtCuotaDelPrestamo_Calculo.Text);
+                            var TotalCuotaC = Collateral + TotaCuota;
+                            txtCuotaAuto.Text = TotalCuotaC.ToString();
 
                             /*** Prestamo FINAL APROBADO ***/
                             if (montoFinalAFinanciar != 0 || IdProducto == "202" || IdProducto == "203" || IdProducto == "204")
@@ -741,41 +749,41 @@ public void CargarInformacionClienteEquifax()
         }
     }
 
-    public void CargarInformacionPlanPago()
-    {
-        try
-        {
-            decimal Collateral = 0;
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-                using (var sqlComando = new SqlCommand("sp_Prestamo_PlandePago_ConsultarPorSolicitud", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    //sqlComando.Parameters.AddWithValue("@piIDApp", 107);
-                    //sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
-                    sqlComando.CommandTimeout = 120;
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        sqlResultado.NextResult();
-                        while (sqlResultado.Read())
-                        {
-                            txtCollateral.Text =  "$" + Convert.ToDecimal(sqlResultado["fnSeguro1"].ToString()).ToString("n");
-                            Collateral = Convert.ToDecimal(sqlResultado["fnSeguro1"].ToString()); 
-                        }
-                    }
-                    var TotalCuotaC = Collateral + TotaCuota;
-                    txtCuotaAuto.Text = TotalCuotaC.ToString();
-                }
-            }
-        }
-        catch (Exception ex)
-        {
+    //public void CargarInformacionPlanPago()
+    //{
+    //    try
+    //    {
+    //        decimal Collateral = 0;
+    //        using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+    //        {
+    //            sqlConexion.Open();
+    //            using (var sqlComando = new SqlCommand("sp_Prestamo_PlandePago_ConsultarPorSolicitud", sqlConexion))
+    //            {
+    //                sqlComando.CommandType = CommandType.StoredProcedure;
+    //                //sqlComando.Parameters.AddWithValue("@piIDApp", 107);
+    //                //sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+    //                sqlComando.Parameters.AddWithValue("@piIDSolicitud", pcIDSolicitud);
+    //                sqlComando.CommandTimeout = 120;
+    //                using (var sqlResultado = sqlComando.ExecuteReader())
+    //                {
+    //                    sqlResultado.NextResult();
+    //                    while (sqlResultado.Read())
+    //                    {
+    //                        txtCollateral.Text =  "$" + Convert.ToDecimal(sqlResultado["fnSeguro1"].ToString()).ToString("n");
+    //                        Collateral = Convert.ToDecimal(sqlResultado["fnSeguro1"].ToString()); 
+    //                    }
+    //                }
+    //                var TotalCuotaC = Collateral + TotaCuota;
+    //                txtCuotaAuto.Text = TotalCuotaC.ToString();
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
 
-            ex.Message.ToString();
-        }
-    }
+    //        ex.Message.ToString();
+    //    }
+    //}
 
     [WebMethod]
     public static SolicitudesCredito_Detalles_EstadoProcesos_ViewModel CargarEstadoSolicitud(string dataCrypt)

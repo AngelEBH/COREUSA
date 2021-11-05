@@ -51,6 +51,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
     public string CantidadPLazo { get; set; }
     public decimal CantidadLienholder { get; set; }
     public decimal TasaInteres { get; set; }
+    public string NombreCliente { get; set; }
+    public  string DireccionCliente { get; set; }
 
 
 
@@ -259,9 +261,19 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             IdPlazo = Convert.ToString(TipoIDPLazo);
                             CantidadPLazo = plazoFinalAprobado;
                             CantidadLienholder = LienHolder;
+                            NombreCliente = nombreCliente;
+                            DireccionCliente = direccionCliente;
+                          
+                                lblFirmaFechaContrato.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+                                lblFirmaContrato2.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+                                FechaFirmaContratoCash.Text = "CESAR ROSENTHAL" + "   " + "  " + " " + "Date:" + "   " + DateTime.Now.ToString("dd-MMM-yyyy");
+                                blValorTotalCuota_Cash.Text = monedaSimbolo + " " + TotalCuotaConSeguro.ToString("n");
+                            
+                         
 
-                           /* Información de los fondos del préstamo y el representante legal del mismo */
-                           var fondosPrestamo = new Fondo_RepresentanteLegal_ViewModel()
+
+                            /* Información de los fondos del préstamo y el representante legal del mismo */
+                            var fondosPrestamo = new Fondo_RepresentanteLegal_ViewModel()
                             {
                                 //IdFondo = (int)sqlResultado["fiIDFondo"],
                                 //RazonSocial = sqlResultado["fcRazonSocial"].ToString().ToUpper(),
@@ -284,7 +296,13 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     //Prefesion = sqlResultado["fcProfesionRepresentanteLegal"].ToString(),
                                     //CiudadDomicilio = sqlResultado["fcCiudadDomicilioRepresentanteLegal"].ToString(),
                                     //DepartamentoDomicilio = sqlResultado["fcDepartamentoDomicilioRepresentanteLegal"].ToString()
+                                },
+
+                                DatosContrato = new DatosContratoDisclosure_ViewModel()
+                                {
+
                                 }
+
                             };
 
                             FondoPrestamoJSON = JsonConvert.SerializeObject(fondosPrestamo);
@@ -296,12 +314,20 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             txtRtn.Text = RTN;
                             txtTelefonoCliente.Text = telefonoPrimario;
                             txtProducto.Text = producto;
-
+                            /* Datos Contrato Cash */
                             txtMontoFinalAFinanciar.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
                             txtPlazoFinanciar.Text = plazoFinalAprobado;
                             lblTipoDePlazo.InnerText = tipoDePlazoSufijoAl;
                             txtValorCuota.Text = DecimalToString(valorCuotaTotal);
                             lblTipoDePlazoCuota.InnerText = tipoDePlazoSufijoAl;
+                            lblValorCuota_Cash.Text = DecimalToString(valorCuotaTotal + valorCuotaSeguro);
+                            lblValorCuota_Cash2.Text = DecimalToString(valorCuotaTotal + valorCuotaSeguro);
+                            var plazo = Convert.ToInt32(plazoFinalAprobado) - 1;
+                            lblMontoFinalAFinanciarTabla_Cash.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
+                            lblNombrePropietarioGarantia_Cash.Text = RazonSocial;
+
+                            lblPlazoFinanciar_Cash.Text = Convert.ToString(plazo);
+                            lblPlazoFinanciarTabla3_Cash.Text = monedaSimbolo + " " + TotalCuotaConSeguro.ToString("n");
 
                             if ((byte)sqlResultado["fiRequiereGarantia"] == 1)
                             {
@@ -649,28 +675,21 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                                     lblMarca_Cash.Text = marca;
                                     lblModelo_Cash.Text = modelo;
                                     lblSerie_Cash.Text = serieChasis;
-                                    lblNombrePropietarioGarantia_Cash.Text = RazonSocial;
+                                   
                                     //lblNombrePropietarioGarantiaFirma_Cash.Text = nombrePropietarioGarantia;
-                                    lblFirmaFechaContrato.Text = DateTime.Now.ToString("dd-MMM-yyyy");
-                                    lblFirmaContrato2.Text = DateTime.Now.ToString("dd-MMM-yyyy");
-                                    FechaFirmaContratoCash.Text = "CESAR ROSENTHAL" + "   "+"  "+ " " +"Date:"+"   "+ DateTime.Now.ToString("dd-MMM-yyyy");
+                                   
                                     //  lblNumeroPrestamo_Cash.Text = numeroPrestamo;
                                     lblLienHolher_Cash.Text = LienHolder.ToString();
                                     
 
                                     //blValorTotalCuota_Cash.Text = monedaSimbolo + " "  + CuotalTotal.ToString("n"); blValorTotalCuota_Cash
-                                      blValorTotalCuota_Cash.Text = monedaSimbolo + " " + TotalCuotaConSeguro.ToString("n"); 
+                                     // blValorTotalCuota_Cash.Text = monedaSimbolo + " " + TotalCuotaConSeguro.ToString("n"); 
                                     
                                     //blValorTotalCuota_Cash.Text = MotontoTotalCash.ToString("n");
-                                    lblValorCuota_Cash.Text = DecimalToString(valorCuotaTotal + valorCuotaSeguro) ;
-                                    lblValorCuota_Cash2.Text = DecimalToString(valorCuotaTotal + valorCuotaSeguro);
-                                    var plazo = Convert.ToInt32(plazoFinalAprobado) -1 ;
-                                    
-                                    lblPlazoFinanciar_Cash.Text = Convert.ToString(plazo);
-                                    lblPlazoFinanciarTabla3_Cash.Text = monedaSimbolo + " " + TotalCuotaConSeguro.ToString("n");
+                                   
 
                                     //lblMontoFinalAFinanciarTabla2_Cash.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
-                                    lblMontoFinalAFinanciarTabla_Cash.Text = monedaSimbolo + " " + string.Format("{0:#,###0.00}", Convert.ToDecimal(valorTotalFinanciamiento));
+                                  
                                   //  lblPrimerPago_Cash.Text = fechaPrimerPago.ToString("dd/MMM/yyyy");
 
 
@@ -1716,9 +1735,22 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
         public string Constitucion { get; set; }
         public string UrlLogo { get; set; }
         public RepresentanteLegal_ViewModel RepresentanteLegal { get; set; }
+        public DatosContratoDisclosure_ViewModel DatosContrato { get; set; }
     }
 
     public class RepresentanteLegal_ViewModel
+    {
+        public int IdRepresentanteLegal { get; set; }
+        public string NombreCompleto { get; set; }
+        public string Identidad { get; set; }
+        public string EstadoCivil { get; set; }
+        public string Nacionalidad { get; set; }
+        public string Prefesion { get; set; }
+        public string CiudadDomicilio { get; set; }
+        public string DepartamentoDomicilio { get; set; }
+    }
+
+    public class DatosContratoDisclosure_ViewModel
     {
         public int IdRepresentanteLegal { get; set; }
         public string NombreCompleto { get; set; }

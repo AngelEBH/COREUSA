@@ -41,5 +41,6 @@ namespace proyectoBase.Models.ViewModel
 
         public string fcDescripcionVivienda { get; set; }
         public bool fbViviendaActivo { get; set; }
+        public int fiTipoAval { get; set; }
     }
 }

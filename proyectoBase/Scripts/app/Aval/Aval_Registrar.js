@@ -32,7 +32,7 @@ $(document).ready(function () {
 
                 var AvalMaster = {
                     fcIdentidadAval: $("#identidadAval").val(),
-                    RTNAval: $("#rtnAval").val(),
+                    RTNAval: $("#identidadAval").val(),
                     fcTelefonoAval: $("#numeroTelefono").val(),
                     fiNacionalidad: $("#nacionalidad :selected").val(),
                     fdFechaNacimientoAval: $("#fechaNacimiento").val(),
@@ -56,21 +56,21 @@ $(document).ready(function () {
                     fcExtensionRecursosHumanos: $("#extensionRRHH").val(),
                     fcExtensionAval: $("#extensionAval").val(),
                     fiCiudadEmpresa: $("#ciudadEmpresa").val(),
-                    fiIDBarrioColonia: $("#barrioColoniaEmpresa").val(),
-                    fiIDDepto: CODDeptoEmpresa,
-                    fiIDMunicipio: CODMunicipioEmpresa,
-                    fiIDCiudad: CODCiudadEmpresa,
+                    fiIDBarrioColonia: $("#barrioColoniaEmpresaAval").val(),
+                    fiIDDepto: 0 /*CODDeptoEmpresa*/,
+                    fiIDMunicipio: 0 /*CODMunicipioEmpresa*/,
+                    fiIDCiudad:0 /*CODCiudadEmpresa*/,
                     fcDireccionDetalladaEmpresa: $("#direccionDetalladaEmpresa").val(),
                     fcReferenciasDireccionDetallada: $("#referenciaDireccionDetalladaEmpresa").val(),
                     fcFuenteOtrosIngresos: $("#fuenteOtrosIngresos").val(),
                     fiValorOtrosIngresosMensuales: $("#valorOtrosIngresos").val().replace(/,/g, '') == '' ? 0 : $("#valorOtrosIngresos").val().replace(/,/g, ''),
                 };
                 var AvalInformacionDomiciliar = {
-                    fiIDCiudad: $("#ciudad").val(),
-                    fiIDBarrioColonia: $("#barrioColonia").val(),
-                    fiIDDepto: CODDepto,
-                    fiIDMunicipio: CODMunicipio,
-                    fiIDCiudad: CODCiudad,
+                    fiIDCiudad:0 /*$("#ciudad").val()*/,
+                    fiIDBarrioColonia: $("#barrioColoniaAval").val(),
+                    fiIDDepto:0  /*CODDepto*/,
+                    fiIDMunicipio: 0 /*CODMunicipio*/,
+                    fiIDCiudad: 0/* CODCiudad*/,
                     fcTelefonoCasa: $("#telefonoCasa").val(),
                     fcTelefonoMovil: $("#telefonoMovil").val(),
                     fcDireccionDetallada: $("#direccionDetallada").val(),
@@ -102,6 +102,7 @@ $(document).ready(function () {
                             MensajeExito(data.d.message);
                             clienteID = 0;
                             resetForm($("#frmSolicitud"));
+                           
                             window.top.location = '../Solicitudes/SolicitudesCredito_Ingresadas.aspx' + qString;
                         }
                         else {
@@ -236,318 +237,318 @@ $(document).ready(function () {
 });
 
 //habilitar ddl municipios cliente cuando se seleccione un departamento cliente
-var CODDepto = 0;
-$("#departamento").change(function () {
+//var CODDepto = 0;
+//$("#departamento").change(function () {
 
-    $(this).parsley().validate();
-    var idDepto = $("#departamento option:selected").val();//obtener id del departamento seleccionado
-    CODDepto = idDepto;
-    var municipioDdl = $("#municipio");
-    var ciudadDdl = $("#ciudad");
-    var BarrioColoniaDdl = $("#barrioColonia");
+//    $(this).parsley().validate();
+//    var idDepto = $("#departamento option:selected").val();//obtener id del departamento seleccionado
+//    CODDepto = idDepto;
+//    var municipioDdl = $("#municipio");
+//    var ciudadDdl = $("#ciudad");
+//    var BarrioColoniaDdl = $("#barrioColonia");
 
-    if (idDepto != '') {
+//    if (idDepto != '') {
 
-        $("#spinnerCargando").css('display', '');
-        municipioDdl.empty();//vaciar dropdownlist de municipios
-        municipioDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
+//        $("#spinnerCargando").css('display', '');
+//        municipioDdl.empty();//vaciar dropdownlist de municipios
+//        municipioDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
 
-        $.ajax({
-            type: "POST",
-            url: "Aval_Registrar.aspx/CargarMunicipios",
-            data: JSON.stringify({ CODDepto: idDepto }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Error al cargar municipios de este departamento');
-                $("#spinnerCargando").css('display', 'none');
-            },
-            success: function (data) {
+//        $.ajax({
+//            type: "POST",
+//            url: "Aval_Registrar.aspx/CargarMunicipios",
+//            data: JSON.stringify({ CODDepto: idDepto }),
+//            contentType: 'application/json; charset=utf-8',
+//            error: function (xhr, ajaxOptions, thrownError) {
+//                MensajeError('Error al cargar municipios de este departamento');
+//                $("#spinnerCargando").css('display', 'none');
+//            },
+//            success: function (data) {
 
-                var municipiosDelDepto = data.d;
-                $.each(municipiosDelDepto, function (i, iter) {
-                    municipioDdl.append("<option value='" + iter.fiIDMunicipio + "'>" + iter.fcNombreMunicipio + "</option>");
-                });
-                municipioDdl.attr('disabled', false);//habilitar dropdownlist
+//                var municipiosDelDepto = data.d;
+//                $.each(municipiosDelDepto, function (i, iter) {
+//                    municipioDdl.append("<option value='" + iter.fiIDMunicipio + "'>" + iter.fcNombreMunicipio + "</option>");
+//                });
+//                municipioDdl.attr('disabled', false);//habilitar dropdownlist
 
-                ciudadDdl.empty();//vaciar dropdownlist de ciudades
-                ciudadDdl.append("<option value=''>Seleccione un municipio</option>");//agregar opciones
-                ciudadDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
+//                ciudadDdl.empty();//vaciar dropdownlist de ciudades
+//                ciudadDdl.append("<option value=''>Seleccione un municipio</option>");//agregar opciones
+//                ciudadDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
 
-                BarrioColoniaDdl.empty();//vaciar dropdownlist de barrios y colonias
-                BarrioColoniaDdl.append("<option value=''>Seleccione una ciudad</option>");
-                BarrioColoniaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
-                $("#spinnerCargando").css('display', 'none');
-            }
-        });
-    }
-    else {
-        municipioDdl.empty();
-        municipioDdl.append("<option value=''>Seleccione un depto.</option>");
-        municipioDdl.attr('disabled', true);//deshabilitar dropdownlist de municipio
+//                BarrioColoniaDdl.empty();//vaciar dropdownlist de barrios y colonias
+//                BarrioColoniaDdl.append("<option value=''>Seleccione una ciudad</option>");
+//                BarrioColoniaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
+//                $("#spinnerCargando").css('display', 'none');
+//            }
+//        });
+//    }
+//    else {
+//        municipioDdl.empty();
+//        municipioDdl.append("<option value=''>Seleccione un depto.</option>");
+//        municipioDdl.attr('disabled', true);//deshabilitar dropdownlist de municipio
 
-        ciudadDdl.empty();//vaciar dropdownlist de ciudades
-        ciudadDdl.append("<option value=''>Seleccione un municipio</option>");
-        ciudadDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
+//        ciudadDdl.empty();//vaciar dropdownlist de ciudades
+//        ciudadDdl.append("<option value=''>Seleccione un municipio</option>");
+//        ciudadDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
 
-        BarrioColoniaDdl.empty();//vaciar dropdownlist de barrios y colonias
-        BarrioColoniaDdl.append("<option value=''>Seleccione una ciudad</option>");
-        BarrioColoniaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
-    }
-});
+//        BarrioColoniaDdl.empty();//vaciar dropdownlist de barrios y colonias
+//        BarrioColoniaDdl.append("<option value=''>Seleccione una ciudad</option>");
+//        BarrioColoniaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
+//    }
+//});
 
 //habilitar ddl ciudades cliente cuando se seleccione un municipio cliente
-var CODMunicipio = 0;
-$("#municipio").change(function () {
+//var CODMunicipio = 0;
+//$("#municipio").change(function () {
 
-    $(this).parsley().validate();
-    var idMunicipio = $("#municipio option:selected").val();//obtener id del municipio seleccionado
-    CODMunicipio = idMunicipio;
-    var ciudadDdl = $("#ciudad");
-    var BarrioColoniaDdl = $("#barrioColonia");
+//    $(this).parsley().validate();
+//    var idMunicipio = $("#municipio option:selected").val();//obtener id del municipio seleccionado
+//    CODMunicipio = idMunicipio;
+//    var ciudadDdl = $("#ciudad");
+//    var BarrioColoniaDdl = $("#barrioColonia");
 
-    if (idMunicipio != '') {
+//    if (idMunicipio != '') {
 
-        $("#spinnerCargando").css('display', '');
-        ciudadDdl.empty();//vaciar dropdownlist
-        ciudadDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
+//        $("#spinnerCargando").css('display', '');
+//        ciudadDdl.empty();//vaciar dropdownlist
+//        ciudadDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
 
-        $.ajax({
-            type: "POST",
-            url: "Aval_Registrar.aspx/CargarPoblados",
-            data: JSON.stringify({ CODDepto: CODDepto, CODMunicipio: CODMunicipio }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Error al cargar ciudades de este municipio');
-                $("#spinnerCargando").css('display', 'none');
-            },
-            success: function (data) {
+//        $.ajax({
+//            type: "POST",
+//            url: "Aval_Registrar.aspx/CargarPoblados",
+//            data: JSON.stringify({ CODDepto: CODDepto, CODMunicipio: CODMunicipio }),
+//            contentType: 'application/json; charset=utf-8',
+//            error: function (xhr, ajaxOptions, thrownError) {
+//                MensajeError('Error al cargar ciudades de este municipio');
+//                $("#spinnerCargando").css('display', 'none');
+//            },
+//            success: function (data) {
 
-                var ciudadesDelMunicipio = data.d;
-                $.each(ciudadesDelMunicipio, function (i, iter) {
-                    ciudadDdl.append("<option value='" + iter.fiIDCiudad + "'>" + iter.fcNombreCiudad + "</option>");
-                });
-                ciudadDdl.attr('disabled', false);//habilitar dropdownlist
+//                var ciudadesDelMunicipio = data.d;
+//                $.each(ciudadesDelMunicipio, function (i, iter) {
+//                    ciudadDdl.append("<option value='" + iter.fiIDCiudad + "'>" + iter.fcNombreCiudad + "</option>");
+//                });
+//                ciudadDdl.attr('disabled', false);//habilitar dropdownlist
 
-                BarrioColoniaDdl.empty();//vaciar dropdownlist de barrios y colonias
-                BarrioColoniaDdl.append("<option value=''>Seleccione una ciudad</option>");
-                BarrioColoniaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
-                $("#spinnerCargando").css('display', 'none');
-            }
-        });
-    }
-    else {
+//                BarrioColoniaDdl.empty();//vaciar dropdownlist de barrios y colonias
+//                BarrioColoniaDdl.append("<option value=''>Seleccione una ciudad</option>");
+//                BarrioColoniaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
+//                $("#spinnerCargando").css('display', 'none');
+//            }
+//        });
+//    }
+//    else {
 
-        ciudadDdl.empty();//vaciar dropdownlist de ciudades
-        ciudadDdl.append("<option value=''>Seleccione un municipio</option>");
-        ciudadDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
+//        ciudadDdl.empty();//vaciar dropdownlist de ciudades
+//        ciudadDdl.append("<option value=''>Seleccione un municipio</option>");
+//        ciudadDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
 
-        BarrioColoniaDdl.empty();//vaciar dropdownlist de barrios y colonias
-        BarrioColoniaDdl.append("<option value=''>Seleccione una ciudad</option>");
-        BarrioColoniaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
-    }
-});
-
-//habilitar ddl barrios y colonias cliente cuando se seleccione una ciudad cliente
-var CODCiudad = 0;
-$("#ciudad").change(function () {
-
-    var idCiudad = $("#ciudad option:selected").val();
-    CODCiudad = idCiudad;
-    $(this).parsley().validate();
-    var BarrioColoniaDdl = $("#barrioColonia");
-
-    if (idCiudad != '') {
-
-        $("#spinnerCargando").css('display', '');
-        BarrioColoniaDdl.empty();//vaciar dropdownlist
-        BarrioColoniaDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
-        $.ajax({
-            type: "POST",
-            url: "Aval_Registrar.aspx/CargarBarrios",
-            data: JSON.stringify({ CODDepto: CODDepto, CODMunicipio: CODMunicipio, CODPoblado: CODCiudad }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Error al cargar barrios de esta ciudad');
-                $("#spinnerCargando").css('display', 'none');
-            },
-            success: function (data) {
-
-                var barriosDeLaCiudad = data.d;//agregar ciudades que pertenecen al municipio seleccionado
-                $.each(barriosDeLaCiudad, function (i, iter) {
-                    BarrioColoniaDdl.append("<option value='" + iter.fiIDBarrioColonia + "'>" + iter.fcNombreBarrioColonia + "</option>");
-                });
-                BarrioColoniaDdl.attr('disabled', false);//habilitar dropdownlist
-                $("#spinnerCargando").css('display', 'none');
-            }
-        });
-    }
-    else {
-
-        BarrioColoniaDdl.empty();//vaciar dropdownlist
-        BarrioColoniaDdl.append("<option value=''>Seleccione una ciudad</option>");
-        BarrioColoniaDdl.attr('disabled', true);//deshabilitar dropdownlist
-    }
-});
+//        BarrioColoniaDdl.empty();//vaciar dropdownlist de barrios y colonias
+//        BarrioColoniaDdl.append("<option value=''>Seleccione una ciudad</option>");
+//        BarrioColoniaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
+//    }
+//});
 
 //habilitar ddl barrios y colonias cliente cuando se seleccione una ciudad cliente
-$("#barrioColonia").change(function () {
-    $(this).parsley().validate();
-});
+//var CODCiudad = 0;
+//$("#ciudad").change(function () {
+
+//    var idCiudad = $("#ciudad option:selected").val();
+//    CODCiudad = idCiudad;
+//    $(this).parsley().validate();
+//    var BarrioColoniaDdl = $("#barrioColonia");
+
+//    if (idCiudad != '') {
+
+//        $("#spinnerCargando").css('display', '');
+//        BarrioColoniaDdl.empty();//vaciar dropdownlist
+//        BarrioColoniaDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
+//        $.ajax({
+//            type: "POST",
+//            url: "Aval_Registrar.aspx/CargarBarrios",
+//            data: JSON.stringify({ CODDepto: CODDepto, CODMunicipio: CODMunicipio, CODPoblado: CODCiudad }),
+//            contentType: 'application/json; charset=utf-8',
+//            error: function (xhr, ajaxOptions, thrownError) {
+//                MensajeError('Error al cargar barrios de esta ciudad');
+//                $("#spinnerCargando").css('display', 'none');
+//            },
+//            success: function (data) {
+
+//                var barriosDeLaCiudad = data.d;//agregar ciudades que pertenecen al municipio seleccionado
+//                $.each(barriosDeLaCiudad, function (i, iter) {
+//                    BarrioColoniaDdl.append("<option value='" + iter.fiIDBarrioColonia + "'>" + iter.fcNombreBarrioColonia + "</option>");
+//                });
+//                BarrioColoniaDdl.attr('disabled', false);//habilitar dropdownlist
+//                $("#spinnerCargando").css('display', 'none');
+//            }
+//        });
+//    }
+//    else {
+
+//        BarrioColoniaDdl.empty();//vaciar dropdownlist
+//        BarrioColoniaDdl.append("<option value=''>Seleccione una ciudad</option>");
+//        BarrioColoniaDdl.attr('disabled', true);//deshabilitar dropdownlist
+//    }
+//});
+
+//habilitar ddl barrios y colonias cliente cuando se seleccione una ciudad cliente
+//$("#barrioColonia").change(function () {
+//    $(this).parsley().validate();
+//});
 
 //habilitar ddl municipios cliente cuando se seleccione un departamento cliente
-var CODDeptoEmpresa = 0;
-$("#departamentoEmpresa").change(function () {
+//var CODDeptoEmpresa = 0;
+//$("#departamentoEmpresa").change(function () {
 
-    $(this).parsley().validate();
-    var idDepto = $("#departamentoEmpresa option:selected").val();//obtener id del departamento seleccionado
-    CODDeptoEmpresa = idDepto;
-    var municipioEmpresaDdl = $("#municipioEmpresa");
-    var ciudadaEmpresaDdl = $("#ciudadEmpresa");
-    var barrioColoniaEmpresaDdl = $("#barrioColoniaEmpresa");
+//    $(this).parsley().validate();
+//    var idDepto = $("#departamentoEmpresa option:selected").val();//obtener id del departamento seleccionado
+//    CODDeptoEmpresa = idDepto;
+//    var municipioEmpresaDdl = $("#municipioEmpresa");
+//    var ciudadaEmpresaDdl = $("#ciudadEmpresa");
+//    var barrioColoniaEmpresaDdl = $("#barrioColoniaEmpresa");
 
-    if (idDepto != '') {
+//    if (idDepto != '') {
 
-        $("#spinnerCargando").css('display', '');
-        municipioEmpresaDdl.empty();//vaciar dropdownlist de municipios
-        municipioEmpresaDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
-        $.ajax({
-            type: "POST",
-            url: "Aval_Registrar.aspx/CargarMunicipios",
-            data: JSON.stringify({ CODDepto: CODDeptoEmpresa }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Error al cargar municipios de este departamento');
-                $("#spinnerCargando").css('display', 'none');
-            },
-            success: function (data) {
+//        $("#spinnerCargando").css('display', '');
+//        municipioEmpresaDdl.empty();//vaciar dropdownlist de municipios
+//        municipioEmpresaDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
+//        $.ajax({
+//            type: "POST",
+//            url: "Aval_Registrar.aspx/CargarMunicipios",
+//            data: JSON.stringify({ CODDepto: CODDeptoEmpresa }),
+//            contentType: 'application/json; charset=utf-8',
+//            error: function (xhr, ajaxOptions, thrownError) {
+//                MensajeError('Error al cargar municipios de este departamento');
+//                $("#spinnerCargando").css('display', 'none');
+//            },
+//            success: function (data) {
 
-                var municipiosDelDepto = data.d;
-                $.each(municipiosDelDepto, function (i, iter) {
-                    municipioEmpresaDdl.append("<option value='" + iter.fiIDMunicipio + "'>" + iter.fcNombreMunicipio + "</option>");
-                });
-                municipioEmpresaDdl.attr('disabled', false);//habilitar dropdownlist
+//                var municipiosDelDepto = data.d;
+//                $.each(municipiosDelDepto, function (i, iter) {
+//                    municipioEmpresaDdl.append("<option value='" + iter.fiIDMunicipio + "'>" + iter.fcNombreMunicipio + "</option>");
+//                });
+//                municipioEmpresaDdl.attr('disabled', false);//habilitar dropdownlist
 
-                ciudadaEmpresaDdl.empty();//vaciar dropdownlist de ciudades
-                ciudadaEmpresaDdl.append("<option value=''>Seleccione un municipio</option>");
-                ciudadaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
+//                ciudadaEmpresaDdl.empty();//vaciar dropdownlist de ciudades
+//                ciudadaEmpresaDdl.append("<option value=''>Seleccione un municipio</option>");
+//                ciudadaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
 
-                barrioColoniaEmpresaDdl.empty();//vaciar dropdownlist de barrios y colonias
-                barrioColoniaEmpresaDdl.append("<option value=''>Seleccione una ciudad</option>");
-                barrioColoniaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
-                $("#spinnerCargando").css('display', 'none');
-            }
-        });
+//                barrioColoniaEmpresaDdl.empty();//vaciar dropdownlist de barrios y colonias
+//                barrioColoniaEmpresaDdl.append("<option value=''>Seleccione una ciudad</option>");
+//                barrioColoniaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
+//                $("#spinnerCargando").css('display', 'none');
+//            }
+//        });
 
-    }
-    else {
-        municipioEmpresaDdl.empty();//vaciar dropdownlist de municipio
-        municipioEmpresaDdl.append("<option value=''>Seleccione un depto.</option>");
-        municipioEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de municipio
+//    }
+//    else {
+//        municipioEmpresaDdl.empty();//vaciar dropdownlist de municipio
+//        municipioEmpresaDdl.append("<option value=''>Seleccione un depto.</option>");
+//        municipioEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de municipio
 
-        ciudadaEmpresaDdl.empty();//vaciar dropdownlist de ciudades
-        ciudadaEmpresaDdl.append("<option value=''>Seleccione un municipio</option>");
-        ciudadaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
+//        ciudadaEmpresaDdl.empty();//vaciar dropdownlist de ciudades
+//        ciudadaEmpresaDdl.append("<option value=''>Seleccione un municipio</option>");
+//        ciudadaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
 
-        barrioColoniaEmpresaDdl.empty();//vaciar dropdownlist de barrios y colonias
-        barrioColoniaEmpresaDdl.append("<option value=''>Seleccione una ciudad</option>");
-        barrioColoniaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
-    }
-});
+//        barrioColoniaEmpresaDdl.empty();//vaciar dropdownlist de barrios y colonias
+//        barrioColoniaEmpresaDdl.append("<option value=''>Seleccione una ciudad</option>");
+//        barrioColoniaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
+//    }
+//});
 
 //habilitar ddl ciudades cliente cuando se seleccione un municipio cliente
-var CODMunicipioEmpresa = 0;
-$("#municipioEmpresa").change(function () {
+//var CODMunicipioEmpresa = 0;
+//$("#municipioEmpresa").change(function () {
 
-    $(this).parsley().validate();
-    var idMunicipio = $("#municipioEmpresa option:selected").val();//obtener id del municipio seleccionado
-    CODMunicipioEmpresa = idMunicipio;
-    var ciudadaEmpresaDdl = $("#ciudadEmpresa");
-    var barrioColoniaEmpresaDdl = $("#barrioColoniaEmpresa");
+//    $(this).parsley().validate();
+//    var idMunicipio = $("#municipioEmpresa option:selected").val();//obtener id del municipio seleccionado
+//    CODMunicipioEmpresa = idMunicipio;
+//    var ciudadaEmpresaDdl = $("#ciudadEmpresa");
+//    var barrioColoniaEmpresaDdl = $("#barrioColoniaEmpresa");
 
-    if (idMunicipio != '') {
+//    if (idMunicipio != '') {
 
-        $("#spinnerCargando").css('display', '');
-        ciudadaEmpresaDdl.empty();//vaciar dropdownlist
-        ciudadaEmpresaDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
-        $.ajax({
-            type: "POST",
-            url: "Aval_Registrar.aspx/CargarPoblados",
-            data: JSON.stringify({ CODDepto: CODDeptoEmpresa, CODMunicipio: CODMunicipioEmpresa }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Error al cargar ciudades de este municipio');
-                $("#spinnerCargando").css('display', 'none');
-            },
-            success: function (data) {
+//        $("#spinnerCargando").css('display', '');
+//        ciudadaEmpresaDdl.empty();//vaciar dropdownlist
+//        ciudadaEmpresaDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
+//        $.ajax({
+//            type: "POST",
+//            url: "Aval_Registrar.aspx/CargarPoblados",
+//            data: JSON.stringify({ CODDepto: CODDeptoEmpresa, CODMunicipio: CODMunicipioEmpresa }),
+//            contentType: 'application/json; charset=utf-8',
+//            error: function (xhr, ajaxOptions, thrownError) {
+//                MensajeError('Error al cargar ciudades de este municipio');
+//                $("#spinnerCargando").css('display', 'none');
+//            },
+//            success: function (data) {
 
-                var ciudadesDelMunicipio = data.d;//agregar ciudades que pertenecen al municipio seleccionado
-                $.each(ciudadesDelMunicipio, function (i, iter) {
-                    ciudadaEmpresaDdl.append("<option value='" + iter.fiIDCiudad + "'>" + iter.fcNombreCiudad + "</option>");
-                });
-                ciudadaEmpresaDdl.attr('disabled', false);//habilitar dropdownlist
-                barrioColoniaEmpresaDdl.empty();//vaciar dropdownlist de barrios y colonias
-                barrioColoniaEmpresaDdl.append("<option value=''>Seleccione una ciudad</option>");
-                barrioColoniaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
-                $("#spinnerCargando").css('display', 'none');
-            }
-        });
-    }
-    else {
-        ciudadaEmpresaDdl.empty();//vaciar dropdownlist de ciudades
-        ciudadaEmpresaDdl.append("<option value=''>Seleccione un municipio</option>");
-        ciudadaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
+//                var ciudadesDelMunicipio = data.d;//agregar ciudades que pertenecen al municipio seleccionado
+//                $.each(ciudadesDelMunicipio, function (i, iter) {
+//                    ciudadaEmpresaDdl.append("<option value='" + iter.fiIDCiudad + "'>" + iter.fcNombreCiudad + "</option>");
+//                });
+//                ciudadaEmpresaDdl.attr('disabled', false);//habilitar dropdownlist
+//                barrioColoniaEmpresaDdl.empty();//vaciar dropdownlist de barrios y colonias
+//                barrioColoniaEmpresaDdl.append("<option value=''>Seleccione una ciudad</option>");
+//                barrioColoniaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
+//                $("#spinnerCargando").css('display', 'none');
+//            }
+//        });
+//    }
+//    else {
+//        ciudadaEmpresaDdl.empty();//vaciar dropdownlist de ciudades
+//        ciudadaEmpresaDdl.append("<option value=''>Seleccione un municipio</option>");
+//        ciudadaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de ciudades
 
-        barrioColoniaEmpresaDdl.empty();//vaciar dropdownlist de barrios y colonias
-        barrioColoniaEmpresaDdl.append("<option value=''>Seleccione una ciudad</option>");
-        barrioColoniaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
-    }
-});
+//        barrioColoniaEmpresaDdl.empty();//vaciar dropdownlist de barrios y colonias
+//        barrioColoniaEmpresaDdl.append("<option value=''>Seleccione una ciudad</option>");
+//        barrioColoniaEmpresaDdl.attr('disabled', true);//deshabilitar dropdownlist de barrios y colonias
+//    }
+//});
 
 //habilitar ddl barrios y colonias cliente cuando se seleccione una ciudad cliente
-var CODCiudadEmpresa = 0;
-$("#ciudadEmpresa").change(function () {
+//var CODCiudadEmpresa = 0;
+//$("#ciudadEmpresa").change(function () {
 
-    $(this).parsley().validate();
-    var idCiudad = $("#ciudadEmpresa option:selected").val();//obtener id del municipio seleccionado
-    CODCiudadEmpresa = idCiudad;
-    var barriosEmpresaDdl = $("#barrioColoniaEmpresa");
+//    $(this).parsley().validate();
+//    var idCiudad = $("#ciudadEmpresa option:selected").val();//obtener id del municipio seleccionado
+//    CODCiudadEmpresa = idCiudad;
+//    var barriosEmpresaDdl = $("#barrioColoniaEmpresa");
 
-    if (idCiudad != '') {
+//    if (idCiudad != '') {
 
-        $("#spinnerCargando").css('display', '');
-        barriosEmpresaDdl.empty();//vaciar dropdownlist
-        barriosEmpresaDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
-        $.ajax({
-            type: "POST",
-            url: "Aval_Registrar.aspx/CargarBarrios",
-            data: JSON.stringify({ CODDepto: CODDeptoEmpresa, CODMunicipio: CODMunicipioEmpresa, CODPoblado: CODCiudadEmpresa }),
-            contentType: 'application/json; charset=utf-8',
-            error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Error al cargar barrios de esta ciudad');
-                $("#spinnerCargando").css('display', 'none');
-            },
-            success: function (data) {
+//        $("#spinnerCargando").css('display', '');
+//        barriosEmpresaDdl.empty();//vaciar dropdownlist
+//        barriosEmpresaDdl.append("<option value=''>Seleccione una opción</option>");//agregar opciones
+//        $.ajax({
+//            type: "POST",
+//            url: "Aval_Registrar.aspx/CargarBarrios",
+//            data: JSON.stringify({ CODDepto: CODDeptoEmpresa, CODMunicipio: CODMunicipioEmpresa, CODPoblado: CODCiudadEmpresa }),
+//            contentType: 'application/json; charset=utf-8',
+//            error: function (xhr, ajaxOptions, thrownError) {
+//                MensajeError('Error al cargar barrios de esta ciudad');
+//                $("#spinnerCargando").css('display', 'none');
+//            },
+//            success: function (data) {
 
-                var barriosDeLaCiudad = data.d;//agregar ciudades que pertenecen al municipio seleccionado
-                $.each(barriosDeLaCiudad, function (i, iter) {
-                    barriosEmpresaDdl.append("<option value='" + iter.fiIDBarrioColonia + "'>" + iter.fcNombreBarrioColonia + "</option>");
-                });
-                barriosEmpresaDdl.attr('disabled', false);//habilitar dropdownlist
-                $("#spinnerCargando").css('display', 'none');
-            }
-        });
-    }
-    else {
-        barriosEmpresaDdl.empty();
-        barriosEmpresaDdl.append("<option value=''>Seleccione una ciudad</option>");
-        barriosEmpresaDdl.attr('disabled', true);
-    }
-});
+//                var barriosDeLaCiudad = data.d;//agregar ciudades que pertenecen al municipio seleccionado
+//                $.each(barriosDeLaCiudad, function (i, iter) {
+//                    barriosEmpresaDdl.append("<option value='" + iter.fiIDBarrioColonia + "'>" + iter.fcNombreBarrioColonia + "</option>");
+//                });
+//                barriosEmpresaDdl.attr('disabled', false);//habilitar dropdownlist
+//                $("#spinnerCargando").css('display', 'none');
+//            }
+//        });
+//    }
+//    else {
+//        barriosEmpresaDdl.empty();
+//        barriosEmpresaDdl.append("<option value=''>Seleccione una ciudad</option>");
+//        barriosEmpresaDdl.attr('disabled', true);
+//    }
+//});
 
 //habilitar ddl barrios y colonias empresa
-$("#barrioColoniaEmpresa").change(function () {
-    $(this).parsley().validate();
-});
+//$("#barrioColoniaEmpresa").change(function () {
+//    $(this).parsley().validate();
+//});
 
 //validar si se requiere información conyugal
 $('input:radio[name="estadoCivil"]').change(function () {
@@ -584,6 +585,18 @@ function llenarDropDownLists() {
                 nacionalidadDdl.append("<option value='" + iter.fiIDNacionalidad + "'>" + iter.fcDescripcionNacionalidad + "</option>");
             });
 
+            var CodigoPostalDdl = $("#barrioColoniaEmpresaAval");
+            nacionalidadDdl.append("<option value=''>Seleccione una opción</option>");
+            $.each(data.d.CodigoPostal, function (i, iter) {
+                CodigoPostalDdl.append("<option value='" + iter.fiCodBarrio + "'>" + iter.DirrecionCompleta + "</option>");
+            });
+
+            var CodigoPostalDdlColonia = $("#barrioColoniaAval");
+            nacionalidadDdl.append("<option value=''>Seleccione una opción</option>");
+            $.each(data.d.CodigoPostal, function (i, iter) {
+                CodigoPostalDdlColonia .append("<option value='" + iter.fiCodBarrio + "'>" + iter.DirrecionCompleta + "</option>");
+            });
+
             var divEstadoCivil = $("#divEstadoCivil");// llenar select de estados civiles
 
             $.each(data.d.EstadosCiviles, function (i, iter) {
@@ -605,24 +618,24 @@ function llenarDropDownLists() {
                 viviendaDdl.append("<option value='" + iter.fiIDVivienda + "'>" + iter.fcDescripcionVivienda + "</option>");
             });
 
-            var departamentoDdl = $("#departamento");// llenar select de departamentos
-            departamentoDdl.append("<option value=''>Seleccione una opción</option>");
-            $.each(data.d.Departamentos, function (i, iter) {
-                departamentoDdl.append("<option value='" + iter.fiIDDepto + "'>" + iter.fcNombreDepto + "</option>");
-            });
+            //var departamentoDdl = $("#departamento");// llenar select de departamentos
+            //departamentoDdl.append("<option value=''>Seleccione una opción</option>");
+            //$.each(data.d.Departamentos, function (i, iter) {
+            //    departamentoDdl.append("<option value='" + iter.fiIDDepto + "'>" + iter.fcNombreDepto + "</option>");
+            //});
 
-            $("#municipio").append("<option value=''>Seleccione un depto.</option>");// llenar lista de municipios
-            $("#ciudad").append("<option value=''>Seleccione un municipio</option>");// llenar lista de ciudad
-            $("#barrioColonia").append("<option value=''>Seleccione una ciudad</option>");// llenar lista de barrios y colonias
+            //$("#municipio").append("<option value=''>Seleccione un depto.</option>");// llenar lista de municipios
+            //$("#ciudad").append("<option value=''>Seleccione un municipio</option>");// llenar lista de ciudad
+            //$("#barrioColonia").append("<option value=''>Seleccione una ciudad</option>");// llenar lista de barrios y colonias
 
-            var departamentoEmpresaDdl = $("#departamentoEmpresa");// llenar select de departamento Empresa //aqui
-            departamentoEmpresaDdl.append("<option value=''>Seleccione una opción</option>");
-            $.each(data.d.Departamentos, function (i, iter) {
-                departamentoEmpresaDdl.append("<option value='" + iter.fiIDDepto + "'>" + iter.fcNombreDepto + "</option>");
-            });
-            $("#municipioEmpresa").append("<option value=''>Seleccione un depto</option>");// llenar select de municipios de la empresa            
-            $("#ciudadEmpresa").append("<option value=''>Seleccione un municipio</option>");// llenar select de ciudadEmpresa            
-            $("#barrioColoniaEmpresa").append("<option value=''>Seleccione una ciudad</option>");// llenar select de barrios y colonias de la empresa
+            //var departamentoEmpresaDdl = $("#departamentoEmpresa");// llenar select de departamento Empresa //aqui
+            //departamentoEmpresaDdl.append("<option value=''>Seleccione una opción</option>");
+            //$.each(data.d.Departamentos, function (i, iter) {
+            //    departamentoEmpresaDdl.append("<option value='" + iter.fiIDDepto + "'>" + iter.fcNombreDepto + "</option>");
+            //});
+            //$("#municipioEmpresa").append("<option value=''>Seleccione un depto</option>");// llenar select de municipios de la empresa            
+            //$("#ciudadEmpresa").append("<option value=''>Seleccione un municipio</option>");// llenar select de ciudadEmpresa            
+            //$("#barrioColoniaEmpresa").append("<option value=''>Seleccione una ciudad</option>");// llenar select de barrios y colonias de la empresa
 
             var parentescoRefDdl = $("#parentescoRef");// llenar select de parentescos de referencias personales (modal)
             parentescoRefDdl.append("<option value=''>Seleccione una opción</option>");

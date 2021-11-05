@@ -12,7 +12,7 @@ function CargarDetallesAval() {
             MensajeError('No se pudo carga la información, contacte al administrador');
         },
         success: function (data) {
-            debugger;
+            
             var infoPersonal = data.d.AvalMaster;
             var infoLaboral = data.d.AvalInformacionLaboral;
             var infoDomiciliar = data.d.AvalInformacionDomiciliar;
@@ -88,7 +88,7 @@ function CargarDetallesAval() {
             var contador = 0;
             for (var i = 0; i < AvalDocumentos.length; i++) {
 
-                debugger;
+                
                 var ruta = AvalDocumentos[i].URLArchivo;
 
                 if (AvalDocumentos[i].fiTipoDocumento == 7) {

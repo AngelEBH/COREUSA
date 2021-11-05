@@ -8,6 +8,7 @@ var idCliente = 0;
 var idGarantia = 0;
 var idSolicitud = 0;
 var idExpediente = 0;
+var idSolicitudDocumento = 0;
 var identidadCliente = "";
 var filtroActual = "";
 
@@ -171,17 +172,36 @@ $(document).ready(function () {
                 }
             },
             {
-                "data": "ReprogramadoInicio", "className": "text-center",
-                "render": function (data, type, row) {
+                //"data": "ReprogramadoInicio", "className": "text-center",
+                //"render": function (data, type, row) {
 
+                //    let Resultado = '';
+                //    if (row["ReprogramadoInicio"] != procesoPendiente) {
+
+                //        Resultado = row["ReprogramadoFin"] != procesoPendiente ? iconoExito : iconoPendiente;
+
+                //        if (row["ReprogramadoFin"] == procesoPendiente && (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7)) {
+                //            Resultado = row["IdEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
+                //        }
+                //    }
+                //    return Resultado;
+                //}
+
+                data: null,
+                render: function (data, row) {
                     let Resultado = '';
-                    if (row["ReprogramadoInicio"] != procesoPendiente) {
-
-                        Resultado = row["ReprogramadoFin"] != procesoPendiente ? iconoExito : iconoPendiente;
-
-                        if (row["ReprogramadoFin"] == procesoPendiente && (row["IdEstadoSolicitud"] == 4 || row["IdEstadoSolicitud"] == 5 || row["IdEstadoSolicitud"] == 7)) {
-                            Resultado = row["IdEstadoSolicitud"] == 7 ? iconoExito : iconoRojo;
-                        }
+                   
+                    if (data.IdEstadoSolicitud == 4 || data.IdEstadoSolicitud == 5 ) {
+                        Resultado = `<a href="javascript:void(0)" onclick="Prueba('${data.IdSolicitud}')" > <span class="btn-sm btn-block btn-danger text-center">${data.ConteoIncompleto}</span></a>`;
+                     }
+                    else if (data.IdEstadoSolicitud == 7) {
+                        Resultado = `<a href="javascript:void(0)" onclick="Prueba('${data.IdSolicitud}')" > <span class="btn-sm btn-block btn-success text-center">${data.ConteoIncompleto}</span></a>`;
+                    }
+                    else if (data.ConteoIncompleto >= 20) {
+                        Resultado = `<div class="animacion"><a href="javascript:void(0)" onclick="Prueba('${data.IdSolicitud}')" ><span class="btn-sm btn-block btn-danger text-center">${data.ConteoIncompleto}</span></a></div>`;
+                    } 
+                    else {
+                        Resultado = `<a href="javascript:void(0)" onclick="Prueba('${data.IdSolicitud}')" ><span class="btn-sm btn-block btn-warning text-center">${data.ConteoIncompleto}</a></span>`;
                     }
                     return Resultado;
                 }
@@ -333,7 +353,7 @@ $(document).ready(function () {
                 dtBandeja.columns(9).search("iconoPendiente").columns(12).search("Pendiente").draw();
                 break;
             case "10": // Reprogramadas
-                dtBandeja.columns(10).search("iconoPendiente").columns(12).search("Pendiente").draw();
+                dtBandeja.columns(12).search("iconoPendiente").columns(12).search("Pendiente").draw();
                 break;
             case "11": // Validación
                 dtBandeja.columns(11).search("iconoPendiente").columns(12).search("Pendiente").draw();
@@ -411,11 +431,13 @@ $(document).ready(function () {
     $("#datatable-bandeja tbody").on("click", "tr", function () {
 
         let row = dtBandeja.row(this).data();
+        console.log(row);
         idCliente = row.IdCliente;
         idGarantia = row.IdGarantia;
         idSolicitud = row.IdSolicitud;
         idExpediente = row.IdExpediente;
         identidadCliente = row.IdentidadCliente;
+        //idSolicitudDocumento = row.IdSolicitudDocumento;
 
         $(".lblNoSolicitudCredito").text(row.IdSolicitud)
         $(".lblNombreCliente").text(row.NombreCliente);
@@ -498,7 +520,7 @@ function MostrarExpedienteSolicitudGarantia(idSolicitud, idGarantia) {
         success: function (data) {
 
             if (data.d != null) {
-
+              
                 /* Inicializar datatables de documentos */
                 $('#tblExpedienteSolicitudGarantia').DataTable({
                     "destroy": true,
@@ -538,7 +560,15 @@ function MostrarExpedienteSolicitudGarantia(idSolicitud, idGarantia) {
                             "data": "URLArchivo", "className": "text-center",
                             "render": function (data, type, row) {
                                 return '<button class="btn btn-sm btn-secondary" data-url="' + row["URLArchivo"] + '" data-descripcion="' + row["DescripcionTipoDocumento"] + '" onclick="MostrarVistaPrevia(this)" type="button" aria-label="Vista previa del documento"><i class="fas fa-search"></i></button>'
-                            }
+                            },
+                          
+                        },
+                        {
+                            "data": "URLArchivo", "className": "text-center",
+                            "render": function (data, type, row) {
+                                return '<button class="btn btn-sm btn-danger" data-url="' + row["URLArchivo"] + '" data-descripcion="' + row["IdSolicitudDocumento"] + '" onclick=" EliminacionImagenToken(this)" type="button" aria-label="Eliminacion Documento"><i class="fas fa-trash-alt"></i></button>'
+                            },
+                           //  + '" data-IdSolicitudDoc="' + row["IdSolicitudDocumento"]
                         },
                     ],
                     columnDefs: [
@@ -548,7 +578,7 @@ function MostrarExpedienteSolicitudGarantia(idSolicitud, idGarantia) {
 
                 $("#divPrevisualizacionDocumento").empty();
 
-                $("#modalDocumentosGarantiaSolicitud").modal();
+                $("#modalDocumentosGarantiaSolicitud").modal(); //modalValidarToken
             }
             else
                 MensajeError('No se pudo cargar el expediente, contacte al administrador.');
@@ -563,6 +593,76 @@ function MostrarVistaPrevia(btnVistaPrevia) {
     let imgTemplate = '<img alt="' + descripcion + '" src="' + urlImagen + '" data-image="' + urlImagen + '" data-description="' + descripcion + '"/>';
 
     $("#divPrevisualizacionDocumento").empty().append(imgTemplate).unitegallery();
+}
+
+function EliminacionImagenToken(btnVistaPrevia) {
+    
+    //let urlImagen = $(btnVistaPrevia).data('url');
+    let descripcion = $(btnVistaPrevia).data('descripcion');
+   // let imgTemplate = '<img alt="' + descripcion + '" src="' + urlImagen + '" data-image="' + urlImagen + '" data-description="' + descripcion + '"/>';
+    let IdSolicitudDocumento = $(btnVistaPrevia).data('descripcion');
+   
+    $("#modalValidarToken").modal(); 
+
+    $("#btnValidoTokenConfirmar").click(function () {
+        var token = $("#ddlToken").val();
+
+
+        $.ajax({
+            type: "POST",
+            url: "SolicitudesCredito_Bandeja.aspx/ValidarToken",
+            data: JSON.stringify({ token: token, dataCrypt: window.location.href }),
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('Ocurrió un error al Validae el token ');
+            },
+            success: function (data) {
+               
+                if (data.d == 'Token Autorizado!') {
+                                  
+                    
+                    $('#modalValidarToken').modal('toggle');
+                    EliminarDocumento(btnVistaPrevia);
+                }
+                else
+                 MensajeError("Token Invalido!");    
+
+           
+            },
+
+        });
+    });
+
+    
+}
+
+function EliminarDocumento(btnVistaPrevia) {
+
+    var prueba = btnVistaPrevia;
+    let idSolicitudDocumento = $(btnVistaPrevia).data('descripcion');   
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Bandeja.aspx/EliminarDocumento",
+        data: JSON.stringify({ idSolicitud: idSolicitud, idSolicitudDocumento: idSolicitudDocumento, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo eliminar el documento, contacte al administrador.');
+        },
+        success: function (data) {
+            
+            //if (data.d == true) {
+            //    debugger;
+                MensajeExito('El documento fue eliminado correctamente.');
+                $("#modalDocumentosGarantiaSolicitud").modal('toggle');
+            //}
+            //else {
+            //    MensajeError("No se eliminar el documento, contacte al administrador.");
+            //}
+           
+           
+        },
+
+    });
 }
 
 /* Expediente final */
@@ -632,6 +732,72 @@ function FiltrarSolicitudesMesActual() {
     dtBandeja.columns(13).search('/' + moment().format("MM") + '/').draw();
 }
 
+function Prueba(IdSolicitud) {
+
+   
+    $("#modalCrearExpedientePrestamo").modal();
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Bandeja.aspx/ListaCondiciones",
+        data: JSON.stringify({ IdSolicitud: IdSolicitud,dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError("No se pudo redireccionar a " + accion);
+        },
+        success: function (data) {
+
+            $('#tblListaSolicitudCondiciones').DataTable({
+                "destroy": true,
+                "pageLength": 100,
+              //  "aaSorting": [],
+                "language": {
+                    "sProcessing": "Cargando información...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando información...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    },
+                    "decimal": ".",
+                    "thousands": ","
+                },
+               dom: 'f',
+                data: data.d,
+                "columns": [
+                    { data: 'fcCondicion'},
+                    {
+                        data: 'fcDescripcionCondicion',
+                      
+                    },
+                    { data: 'fcComentarioAdicional' },
+                    { data: 'EstadoCondicion' },
+                ],
+                //columnDefs: [
+                //    { targets: 'no-sort', orderable: false },
+                //]
+            });
+     
+            $("#modalCrearExpedientePrestamo").modal();
+        }
+    });
+ 
+}
+
 function ConvertirADecimal(nStr) {
 
     nStr += '';
@@ -654,3 +820,12 @@ $('.table-responsive').on('show.bs.dropdown', function () {
 $('.table-responsive').on('hide.bs.dropdown', function () {
     $('.table-responsive').css("overflow", "auto");
 });
+
+function MensajeExito(mensaje) {
+
+
+    iziToast.success({
+        title: 'Exito',
+        message: mensaje
+    });
+}

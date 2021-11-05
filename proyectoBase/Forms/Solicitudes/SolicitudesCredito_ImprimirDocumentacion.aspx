@@ -89,6 +89,9 @@
                                     Plan de Pago
                                 </button>
 
+                                 <button type="button" id="btnPrueba" onclick="ImprimirForm()" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    prueba 
+                                </button>
 
                                 <button type="button" id="btnCompromisoLegal" onclick="ExportToPDF('COMPROMISO_LEGAL','divContenedorCompromisoLegal','divCompromisoLegalPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');  display: none" >
                                     Compromiso legal
@@ -3252,6 +3255,8 @@
    </div>
 
     </form>
+  
+
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
     <script src="/Scripts/plugins/iziToast/js/iziToast.min.js"></script>
@@ -3272,11 +3277,19 @@
         const DIAS_FIRMA = '<%=DiasFirma%>';
         const MES_FIRMA = '<%=MesFirma%>';
         const ANIO_FIRMA = '<%=AnioFirma%>';
+        const IdProducto = '<%=IdProducto %>';
+
+        const NombreCliente = '<%=NombreCliente %>';
+        const DireccionCliente = '<%=DireccionCliente %>';
 
         const URL_CODIGO_QR = '<%=UrlCodigoQR%>';
         var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=ListaDocumentosDelExpedienteJSON%>');
     </script>
     <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210323105125"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+
+   
+    
    <style>
       p {
         padding: 10px;

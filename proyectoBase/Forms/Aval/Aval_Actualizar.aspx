@@ -166,7 +166,7 @@
                 <div id="step-2" class="form-section">
                     <h5 class="border-bottom border-gray pb-2">Información domiciliar (Aval)</h5>
 
-                    <div class="form-group row">
+                  <%--  <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Departamento</label>
                         <div class="col-sm-3">
                             <select name="departamento" id="departamento" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-depto" data-parsley-group="informacionDomiciliar">
@@ -181,15 +181,15 @@
                             </select>
                             <span id="error-municipio"></span>
                         </div>
-                    </div>
+                    </div>--%>
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Ciudad</label>
+                    <%--    <label class="col-sm-3 col-form-label">Ciudad</label>
                         <div class="col-sm-3">
                             <select disabled="disabled" name="ciudad" id="ciudad" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-ciudad" data-parsley-group="informacionDomiciliar">
                                 <option value="">Seleccione una opción</option>
                             </select>
                             <span id="error-ciudad"></span>
-                        </div>
+                        </div>--%>
                         <label class="col-sm-3 col-form-label">Barrio o Colonia</label>
                         <div class="col-sm-3">
                             <select disabled="disabled" name="barrioColonia" id="barrioColonia" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-colonia" data-parsley-group="informacionDomiciliar">
@@ -269,7 +269,7 @@
                             <h5 class="">Ubicación Empresa</h5>
                         </div>
                     </div>
-                    <div class="form-group row">
+                <%--    <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Departamento empresa</label>
                         <div class="col-sm-3">
                             <select name="departamentoEmpresa" id="departamentoEmpresa" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-deptoEmpresa" data-parsley-group="informacionLaboral">
@@ -284,15 +284,15 @@
                             </select>
                             <span id="error-municipioEmpresa"></span>
                         </div>
-                    </div>
+                    </div>--%>
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Ciudad empresa</label>
+                     <%--   <label class="col-sm-3 col-form-label">Ciudad empresa</label>
                         <div class="col-sm-3">
                             <select disabled="disabled" name="ciudadEmpresa" id="ciudadEmpresa" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-ciudadEmpresa" data-parsley-group="informacionLaboral">
                                 <option value="">Seleccione una opción</option>
                             </select>
                             <span id="error-ciudadEmpresa"></span>
-                        </div>
+                        </div--%>>
                         <label class="col-sm-3 col-form-label">Barrio o Colonia empresa</label>
                         <div class="col-sm-3">
                             <select disabled="disabled" name="barrioColoniaEmpresa" id="barrioColoniaEmpresa" class="form-control buscadorddl" required="required" data-parsley-errors-container="#error-coloniaEmpresa" data-parsley-group="informacionLaboral">

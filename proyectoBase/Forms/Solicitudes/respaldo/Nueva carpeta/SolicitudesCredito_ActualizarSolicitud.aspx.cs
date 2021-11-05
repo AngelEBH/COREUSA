@@ -183,7 +183,7 @@ public partial class SolicitudesCredito_ActualizarSolicitud : System.Web.UI.Page
                         ddlTipoDeVivienda.Items.Add(new ListItem("Seleccionar", ""));
                         while (sqlResultado.Read())
                         {
-                            //ddlTipoDeVivienda.Items.Add(new ListItem(sqlResultado["fcDescripcionVivienda"].ToString(), sqlResultado["fiIDVivienda"].ToString()));
+                            ///ddlTipoDeVivienda.Items.Add(new ListItem(sqlResultado["fcDescripcionVivienda"].ToString(), sqlResultado["fiIDVivienda"].ToString()));fcDescripcionTipoVivienda
                             ddlTipoDeVivienda.Items.Add(new ListItem(sqlResultado["fcDescripcionTipoVivienda"].ToString(), sqlResultado["fiIDTipoVivienda"].ToString()));
                         }
 

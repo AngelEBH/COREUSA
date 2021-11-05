@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace proyectoBase.Models.ViewModel
 {
@@ -30,7 +31,7 @@ namespace proyectoBase.Models.ViewModel
         public int fiIDUsuarioCrea { get; set; }
         public int? fiIDUsuarioVendedor { get; set; }
         public string fcNombreCortoVendedor { get; set; }
-
+        public string fcNombreUsuarioModifica { get; set; }
         // informacion de la agencia donde fue registrado
         public string fcNoAgencia { get; set; }
         public string fcAgencia { get; set; }
@@ -121,5 +122,7 @@ namespace proyectoBase.Models.ViewModel
         public int IDUsuarioPasoFinal { get; set; }
         public string ComentarioPasoFinal { get; set; }
         public Nullable<System.DateTime> PasoFinalFin { get; set; }
+
+   
     }
 }

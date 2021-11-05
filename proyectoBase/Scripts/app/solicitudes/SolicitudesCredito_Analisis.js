@@ -4,10 +4,12 @@ var objSolicitud = [];
 var resolucionHabilitada = false;
 cargarInformacionSolicitud();
 
+
 /* Cargar la informacion de la solicitud que se va a analizar */
 function cargarInformacionSolicitud() {
-
+    
     $.ajax({
+
         type: "POST",
         url: "SolicitudesCredito_Analisis.aspx/CargarInformacionSolicitud",
         data: JSON.stringify({ dataCrypt: window.location.href }),
@@ -17,7 +19,7 @@ function cargarInformacionSolicitud() {
         },
         success: function (data) {
 
-           // debugger;
+           //debugger;
 
             /* Variable de informacion del cliente */
             var rowDataCliente = data.d.cliente;
@@ -512,6 +514,9 @@ function cargarInformacionSolicitud() {
             $('#lblResumenCapacidadPagoQuincenal').text(addFormatoNumerico(CapacidaddePagoQuincenal)); // ficha de resumen
             $('#lblResumenPrestamoSugeridoSeleccionado').text(addFormatoNumerico(rowDataSolicitud.fdValorPmoSugeridoSeleccionado)); // ficha de resumen
 
+
+
+            //debugger;
             var tipodeCuota = 'Quincenal';
             if (rowDataSolicitud.fiIDTipoPrestamo == '101') {
 
@@ -664,6 +669,49 @@ function cargarInformacionSolicitud() {
             /* Ficha de resumen*/
             $("#lblResumenVendedor").text(rowDataSolicitud.fcNombreCortoVendedor); // Ficha de resumen
             $("#lblResumenAnalista").text(rowDataSolicitud.fcNombreUsuarioModifica); // Ficha de resumen
+        }
+    });
+    CargarInformacionClienteEquifax();
+}
+
+function CargarInformacionClienteEquifax(){
+   // alert("prueba");
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Analisis.aspx/CargarInformacionClienteEquifax",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo carga la información, contacte al administrador');
+        },
+        success: function (data){
+        //console.log(data);
+        //console.log(data.d.fcDescricpcionOrigenEtnicoORacial);
+
+           // alert("prueba");
+           $("#lblDocumentoFiscal").text(data.d.fcDescripcionDoctosFiscal);
+           $("#lblNIdFiscal").text(data.d.fcNoIdFiscal );
+           $("#spanDocumentoPersonal").text(data.d.fcNombreDoctosIdPersonal);
+           $("#lblOrigenEtnico").text(data.d.fcDescricpcionOrigenEtnicoORacial);
+
+        }
+    });
+}
+
+
+function CargarInformacionAval() {
+    // alert("prueba");
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Analisis.aspx/CargarDatosAval",
+        data: JSON.stringify({ dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('No se pudo carga la información, contacte al administrador');
+        },
+        success: function (data) {
+            console.log(data);
+
         }
     });
 }
@@ -1005,7 +1053,7 @@ $("#btnDigitarMontoManualmente,#btnDigitarValoresManualmente").click(function ()
 
 // -- DEBUGGEANDO ESTE
 $('#txtValorGlobalManual,#txtValorPrimaManual,#txtValorPlazoManual').blur(function () {
-
+    debugger;
     /* Calcular Cuota y valor a Financiar */
     var valorGlobal = $("#txtValorGlobalManual").val().replace(/,/g, '') == '' ? 0 : $('#txtValorGlobalManual').val().replace(/,/g, '');
     valorGlobal = parseFloat(valorGlobal);
@@ -1021,7 +1069,7 @@ $('#txtValorGlobalManual,#txtValorPrimaManual,#txtValorPlazoManual').blur(functi
     if (valorGlobal > 0 && valorPrima >= 0 && valorGlobal > valorPrima && cantidadPlazos > 0 && montoFinanciar > 0) {
 
         $('#divCalculandoCuotaManual').css('display', '');
-
+        debugger;
         $.ajax({
             type: "POST",
             url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo',
@@ -1866,20 +1914,22 @@ $("#btnHistorialExterno").click(function () {
 
 /* Calculos de los prestamos */
 function prestamoEfectivo(plazoQuincenal, prestamoAprobado) {
-
+//debugger;
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamo',
         data: JSON.stringify({ ValorPrestamo: prestamoAprobado, ValorPrima: 0.00, CantidadPlazos: plazoQuincenal, dataCrypt: window.location.href }),
         contentType: 'application/json; charset=utf-8',
         error: function (xhr, ajaxOptions, thrownError) {
+            //debugger;
             MensajeError('Error al realizar calculo del préstamo');
             gMontoFinal = 0;
             gPlazoFinal = 0;
         },
         success: function (data) {
-
+           // debugger;
             var objCalculo = data.d;
+            console.log(objCalculo);
             if (objCalculo != null) {
 
                 /* Variables globales */
@@ -1969,6 +2019,7 @@ function prestamoConsumo(ValorPrima, valorDelArticulo, plazoQuincenal) {
         success: function (data) {
 
             var objCalculo = data.d;
+         
             if (objCalculo != null) {
 
                 /* variables globales */
@@ -1999,7 +2050,7 @@ function prestamoConsumo(ValorPrima, valorDelArticulo, plazoQuincenal) {
 }
 
 function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
-
+    //debugger;
     $.ajax({
         type: "POST",
         url: 'SolicitudesCredito_Analisis.aspx/CalculoPrestamoVehiculo',
@@ -2011,7 +2062,7 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
             gPlazoFinal = 0;
         },
         success: function (data) {
-
+            //console.log(objCalculo);
             var objCalculo = data.d;
             if (objCalculo != null) {
                 /* variables globales */
@@ -2023,7 +2074,7 @@ function prestamoAuto(ValorPrima, valorDelAuto, plazoMensual) {
                 /* Mostrar div del calculo del prestamo auto */
                 $("#divCargando,#divCargandoAnalisis").css('display', 'none');
                 $("#LogoPrestamo").css('display', '');
-                $("#divPrestamoAuto").css('display', '');
+                //$("#divPrestamoAuto").css('display', '');
 
                 $("#lblResumenValorGarantiaTitulo,#lblResumenValorGarantia, #lblResumenValorPrimaTitulo,#lblResumenValorPrima").css('display', '');
                 $('#lblResumenValorGarantia').text(addFormatoNumerico(valorDelAuto)); // ficha de resumen

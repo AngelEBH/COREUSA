@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
@@ -187,7 +187,7 @@ public partial class Prestamos_Prestamo_Ficha : System.Web.UI.Page
         if (pcFechaaVerificar.Trim() != "")
         {
             lcConvertirFecha = Convert.ToDateTime(pcFechaaVerificar, CultureInfo.InvariantCulture);
-            lcFecha = lcConvertirFecha.ToString("dd/MM/yyyy");
+            lcFecha = lcConvertirFecha.ToString("dd/MMM/yyyy");
         }
         else
         {
@@ -337,6 +337,7 @@ public partial class Prestamos_Prestamo_Ficha : System.Web.UI.Page
                 txtVINVehiculo.Text = sqlResultado["fcVINVehiculo"].ToString();
                 txtVINVehiculo.Text = sqlResultado["fcVINVehiculo"].ToString();
                 txtFrecuenciadePago.Text = sqlResultado["fcFrecuenciadePago"].ToString();
+                txtComentarioDesembolsado.Text= sqlResultado["fcComentarioLiquidacion"].ToString();
 
                 if (sqlResultado["fiIDProducto"].ToString() == "102")
                 {

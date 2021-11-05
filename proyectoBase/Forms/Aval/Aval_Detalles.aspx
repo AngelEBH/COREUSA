@@ -93,8 +93,8 @@
                                                                 <label class="col-sm-6">Fecha de nacimiento</label>
                                                                 <asp:Label ID="lblFechaNacimientoAval" CssClass="col-sm-6" runat="server"></asp:Label>
 
-                                                                <label class="col-sm-6">Edad</label>
-                                                                <asp:Label ID="lblEdadAval" CssClass="col-sm-6" runat="server"></asp:Label>
+                                                                <%--<label class="col-sm-6">Edad</label>
+                                                                <asp:Label ID="lblEdadAval" CssClass="col-sm-6" runat="server"></asp:Label>--%>
 
                                                                 <label class="col-sm-6">Correo electrónico</label>
                                                                 <asp:HyperLink ID="lblCorreoAval" CssClass="col-sm-6" NavigateUrl="mailto:correo@gmail.com" runat="server"></asp:HyperLink>

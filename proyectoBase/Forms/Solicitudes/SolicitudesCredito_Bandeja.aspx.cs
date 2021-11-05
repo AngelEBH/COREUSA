@@ -5,10 +5,13 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web;
 using System.Web.Services;
+using System.Web.UI.HtmlControls;
 
 public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
 {
     public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public int FechaDesembolso = 0;
+    public static int CantidadDias = 0;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -24,6 +27,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
             var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
             var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
             var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            //var fechaDesembolsoDePrestamo = 0;
 
             using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
             {
@@ -41,6 +45,22 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                     {
                         while (sqlResultado.Read())
                         {
+                            //var EstadoSolicitud = (byte)sqlResultado["fiEstadoSolicitud"];
+                            //var fechaDesembolsoDePrestamo = (DateTime)sqlResultado["fcFechaDesembolso"];
+                            //var fechaPasoFinal = (DateTime)sqlResultado["fdPasoFinalFin"];
+                            //var fechaHoy = DateTime.Now;
+
+                            //if (EstadoSolicitud == 7 || EstadoSolicitud == 4)
+                            //{
+                            //     CantidadDias = (fechaPasoFinal - fechaDesembolsoDePrestamo ).Days;
+                            //}
+                            //else {
+                            //     CantidadDias = (fechaHoy - fechaDesembolsoDePrestamo).Days;
+                            //}
+
+                            var fiTiempoIncompleto = (int)sqlResultado["fiTiempoIncompleto"];
+
+
                             solicitudes.Add(new SolicitudesCredito_Bandeja_ViewModel()
                             {
                                 IdSolicitud = (int)sqlResultado["fiIDSolicitud"],
@@ -100,6 +120,9 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                                 CuotaSeguro = (decimal)sqlResultado["fnCuotaMensualSeguro"],
                                 CuotaGPS = (decimal)sqlResultado["fnCuotaMensualGPS"],
                                 IdExpediente = (int)sqlResultado["fiIDExpediente"],
+                               
+                               // FechaDesembolso = fiTiempoIncompleto,
+                                ConteoIncompleto = fiTiempoIncompleto,
                                 PermitirAbrirAnalisis = pcIDUsuario.Trim() == "27" || pcIDUsuario.Trim() == "1" || pcIDUsuario.Trim() == "28",
                             });
                         }
@@ -111,9 +134,107 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         {
             ex.Message.ToString();
         }
+
+      
+
+
+
         return solicitudes;
     }
 
+    [WebMethod]
+    public static List<DetalleCondicion_ViewModel> ListaCondiciones(int IdSolicitud, string dataCrypt)
+    {
+        var condiciones = new List<DetalleCondicion_ViewModel>();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            int IDPRODUCTO = 0;
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitud_SolicitudCondiciones_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IdSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        //HtmlTableRow tRowSolicitudCondiciones = null;
+                        string EstadoCondicion = String.Empty;
+                        int contadorCondiciones = 1;
+                        while (sqlResultado.Read())
+                        {
+                            condiciones.Add(new DetalleCondicion_ViewModel()
+                            {
+                                fcCondicion = sqlResultado["fcCondicion"].ToString(),
+                                fcDescripcionCondicion = sqlResultado["fcDescripcionCondicion"].ToString(),
+                                fcComentarioAdicional = sqlResultado["fcComentarioAdicional"].ToString(),
+                                EstadoCondicion = (bool)sqlResultado["fbEstadoCondicion"] != true ? "<label class='btn btn-sm btn-block btn-success mb-0'>Completado</label>" : "<label class='btn btn-sm btn-block btn-danger mb-0'>Pendiente</label>"
+
+                        });
+                        }
+                    }
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            //throw;
+        }
+        return condiciones;
+       
+    }
+    [WebMethod]
+    public static string ValidarToken(string token,  string dataCrypt)
+    {
+        var idTokenMensaje = "";
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("CoreSeguridad.dbo.sp_Token_Aplicar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;                   
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@pcIP", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@pcToken", token);
+                    sqlComando.Parameters.AddWithValue("@pcCodigoAplicacion", "S001");
+                  
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                          //  if( !sqlResultado["fcMensaje"].ToString().StartsWith("1"))
+                                idTokenMensaje = sqlResultado["fcMensaje"].ToString();
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return idTokenMensaje;
+    }
     #region Obtener documentos de la garantía y de la solicitud
 
     [WebMethod]
@@ -221,6 +342,7 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
                         {
                             documentosDeLaSolicitud.Add(new Documento_ViewModel()
                             {
+                                IdSolicitudDocumento = (int)sqlResultado["fiIDSolicitudDocs"],
                                 NombreArchivo = sqlResultado["fcNombreArchivo"].ToString(),
                                 Extension = sqlResultado["fcTipoArchivo"].ToString(),
                                 RutaArchivo = sqlResultado["fcRutaArchivo"].ToString(),
@@ -243,6 +365,54 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
     }
 
     #endregion
+
+    [WebMethod]
+    public static bool EliminarDocumento(int idSolicitud, int idSolicitudDocumento,  string dataCrypt)
+    {
+        var resultado = false;
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp") ?? "0";
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_EliminarDocumento_token", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", idSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitudDocumento", idSolicitudDocumento);
+                    //sqlComando.Parameters.AddWithValue("@pcObservaciones", observaciones.Trim());
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+                            if (!sqlResultado["MensajeError"].ToString().StartsWith("-1"))
+                            {
+                                resultado = true;
+                            }
+                        }
+                    } // using sqlResultado
+                } // using sqlComando
+            } // using sqlConexion
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+            resultado = false;
+        }
+        return resultado;
+    }
+
 
     #region Crear expediente del prestamo
 
@@ -422,10 +592,13 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         public decimal CuotaGPS { get; set; }
         public int IdExpediente { get; set; }
         public bool PermitirAbrirAnalisis { get; set; }
+        public int FechaDesembolso { get; set; }
+        public int ConteoIncompleto { get; set; }
     }
 
     public class Documento_ViewModel
     {
+        public int IdSolicitudDocumento { get; set; }
         public string NombreArchivo { get; set; }
         public int IdTipoDocumento { get; set; }
         public string DescripcionTipoDocumento { get; set; }
@@ -438,6 +611,16 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         public string UsuarioCreador { get; set; }
         public DateTime FechaCreador { get; set; }
         public string HashTag { get; set; }
+    }
+
+
+    public class DetalleCondicion_ViewModel
+    {
+        public string fcCondicion { get; set; }       
+        public string fcDescripcionCondicion { get; set; }
+        public string fcComentarioAdicional { get; set; }
+        public string EstadoCondicion { get; set; }
+
     }
     #endregion
 }

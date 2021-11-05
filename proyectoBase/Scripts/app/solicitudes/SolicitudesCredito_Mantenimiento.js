@@ -188,7 +188,7 @@ $("#btnAnularCondicionConfirmar").click(function (e) {
 /* Eliminar documentos */
 $("#btnSolicitudDocumentos").on('click', function () {
 
-    $("#modalDocumentacionSolicitud").modal();
+    $("#modalDocumentacionSolicitud").modal()
 });
 
 var idDocumentoSeleccionado = 0;

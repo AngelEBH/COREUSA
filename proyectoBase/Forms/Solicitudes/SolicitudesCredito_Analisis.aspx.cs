@@ -18,7 +18,10 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
     private string pcIDApp = "";
     private string pcIDSesion = "";
     private int IdSolicitud = 0;
-    //public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public static string  IdentidadPersona ="";
+    public static int IDSOL = 0;
+   
+    public static DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -40,11 +43,12 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 string lcParametroDesencriptado = DSC.Desencriptar(pcEncriptado);
                 Uri lURLDesencriptado = new Uri("http://localhost/web.aspx?" + lcParametroDesencriptado);
                 IdSolicitud = Convert.ToInt32(HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL"));
+                 IDSOL = IdSolicitud;
                 pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
                 pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
                 //pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
                 pcIDSesion = "1";
-
+                 CargarInformacionClienteSolicitud();
                 bool AccesoAlAnalisis = ValidarAnalista(IdSolicitud);
 
                 //if (AccesoAlAnalisis == false) {
@@ -54,6 +58,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 //Response.Write("</script>");
                 //}
                 //CargarSolicitud(IDSOL);
+              
           
             }
             else
@@ -218,6 +223,63 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         return resultado;
     }
 
+       public void CargarInformacionClienteSolicitud()
+    {
+        try
+        {
+            decimal Collateral = 0;
+            decimal TotaCuota = 0;
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDSolicitudes_SolicitudClientePorIdSolicitud", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDSolicitud", IDSOL);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", 1);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", 1);
+                    sqlComando.CommandTimeout = 120;
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                    {
+                         txtValorAFinanciarSeleccionado.Text = decimal.Parse(reader["fnValorSeleccionado"].ToString()).ToString("N");
+                        txtMonedaSolicitada.Text = "$";    //reader["fcNombreMoneda"].ToString();
+                        txtValorGarantia.Text = decimal.Parse(reader["fnValorGarantia"].ToString()).ToString("N");
+                        txtValorPrima.Text = decimal.Parse(reader["fnValorPrima"].ToString()).ToString("N");
+                        txtPlazoSeleccionado.Text = reader["fiPlazoSeleccionado"].ToString();
+                        //lblTipoDePlazo_Solicitado.InnerText = (IdProducto == "202" || IdProducto == "203" || IdProducto == "204") ? "Mensual" : "Quincenal";
+                        txtOrigen.Text = reader["fcOrigen"].ToString();
+                       lblValorMontoFinanciar.Text =  (decimal.Parse(reader["fnValorAPrestar"].ToString())).ToString("N");
+                       txtMontoTasaAnualAplicada_Calculo.Text = reader["fnTasaAnualAplicada"].ToString();
+                       txtLienholder.Text = reader["lienholder"].ToString();
+                       txtTasaMensualAplicada_Calculo.Text = reader["fnTasaMensualAplicada"].ToString();
+                       txtCuotaDelPrestamo_Calculo.Text = reader["fnCuotaTotal"].ToString();
+                       txtCollateral.Text = reader["Collateral"].ToString();
+                      Collateral = Convert.ToDecimal(reader["Collateral"].ToString()); 
+                      txtFrecuencia.Text = reader["fcTipoDePlazo"].ToString();
+                    }
+                     TotaCuota = Convert.ToDecimal(txtCuotaDelPrestamo_Calculo.Text);
+                     var TotalCuotaC = Collateral + TotaCuota;
+                     txtCuotaAuto.Text = TotalCuotaC.ToString();
+                    }
+
+                }
+
+            }
+
+        }
+
+        catch (Exception ex)
+        {
+
+              ex.Message.ToString();
+        }
+    }
+ 
+
     [WebMethod]
     public static SolicitudAnalisisViewModel CargarInformacionSolicitud(string dataCrypt)
     {
@@ -376,7 +438,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                     }
                     ObjSolicitud.documentos = ListadoDocumentos;
                 }
-                lcPasoOperativo="InformacionCliente";
+                    lcPasoOperativo="InformacionCliente";
                 /* Informacion del cliente */
                 ClientesViewModel objCliente = new ClientesViewModel();
 
@@ -429,12 +491,12 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                                 fdFechaCrea = (DateTime)reader["fdFechaCrea"],
                                 fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
                                 fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"]
+                                // IdentidadPersona = fcIdentidadCliente
                             };
                         }
                     }
                 }
-
-
+                         IdentidadPersona = objCliente.clientesMaster.fcIdentidadCliente;
 
                 lcPasoOperativo="ListaLaboral";
 
@@ -639,6 +701,7 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 objCliente.Avales = new List<ClienteAvalesViewModel>();
                 using (SqlCommand sqlComando = new SqlCommand("sp_CredAval_Maestro_Listar", sqlConexion))
                 {
+
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@fiIDCliente", objCliente.clientesMaster.fiIDCliente);
                     sqlComando.Parameters.AddWithValue("@fiIDAval", 0);
@@ -687,27 +750,10 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 }
                 ObjSolicitud.cliente = objCliente;
 
-                //using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
-                //{
-                //    sqlComando.CommandType = CommandType.StoredProcedure;
-                //    sqlComando.Parameters.AddWithValue("@piIDApp", 107);
-                //    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-                //    sqlComando.Parameters.AddWithValue("@pcIdentidad", fcIdentidadCliente);
-                //    sqlComando.CommandTimeout = 120;
-                //    using (var sqlResultado = sqlComando.ExecuteReader())
-                //    {
-                //        while (sqlResultado.Read())
-                //        {
-                //            //  var  LbLDocumentoCliente = sqlResultado["fcNombreDoctosIdPersonal"].ToString();
-                //            lblDocumentoCliente.Text = sqlResultado["fcNombreDoctosIdPersonal"].ToString();
-                //            txtNIdFiscal.Text = sqlResultado["fcNoIdFiscal"].ToString();
-                //            txtDocumentoFiscal.Text = sqlResultado["fcDescripcionDoctosFiscal"].ToString();
-                //        }
-
-                //    }
-
-                //}
+           
             }
+
+             // CargarInformacionClienteEquifax();
         }
         catch (Exception ex)
         {
@@ -972,6 +1018,131 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         }
         return objEstadoSolicitud;
     }
+    [WebMethod]
+    public static ClienteAvalesViewModel CargarDatosAval(string dataCrypt)
+    {
+        ClienteAvalesViewModel DatosAval = new ClienteAvalesViewModel();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_CredAval_Maestro_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDCliente", 73);
+                    sqlComando.Parameters.AddWithValue("@fiIDAval", 22);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", 117);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", 1);
+                    sqlComando.CommandTimeout = 120;
+                    using (var reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            DatosAval = new ClienteAvalesViewModel()
+                            {
+                                fiIDAval = (int)reader["fiIDAval"],
+                                fiIDCliente =  "hola",//(int)reader["fiIDCliente"],
+                                fcIdentidadAval = (string)reader["fcIdentidadAval"],
+                                RTNAval = (string)reader["fcRTNAval"],
+                                fcPrimerNombreAval = (string)reader["fcPrimerNombreAval"],
+                                fcSegundoNombreAval = (string)reader["fcSegundoNombreAval"],
+                                fcPrimerApellidoAval = (string)reader["fcPrimerApellidoAval"],
+                                fcSegundoApellidoAval = (string)reader["fcSegundoApellidoAval"],
+                                fcTelefonoAval = (string)reader["fcTelefonoPrimarioAval"],
+                                fdFechaNacimientoAval = (DateTime)reader["fdFechaNacimientoAval"],
+                                fcCorreoElectronicoAval = (string)reader["fcCorreoElectronicoAval"],
+                                fcProfesionOficioAval = (string)reader["fcProfesionOficioAval"],
+                                fcSexoAval = (string)reader["fcSexoAval"],
+                                fbAvalActivo = (bool)reader["fbAvalActivo"],
+                                fcRazonInactivo = (string)reader["fcRazonInactivo"],
+                                fiTipoAval = (int)reader["fiTipoAval"],
+                                fcNombreTrabajo = (string)reader["fcNombreTrabajo"],
+                                fdTelefonoEmpresa = (string)reader["fcTelefonoEmpresa"],
+                                fcExtensionRecursosHumanos = (string)reader["fcExtensionRecursosHumanos"],
+                                fcExtensionAval = (string)reader["fcExtensionAval"],
+                                fiIngresosMensuales = (decimal)reader["fiIngresosMensuales"],
+                                fcPuestoAsignado = (string)reader["fcPuestoAsignado"],
+                                fcFechaIngreso = (DateTime)reader["fdFechaIngresoAval"],
+                                fiIDUsuarioCrea = (int)reader["fiIDUsuarioCrea"],
+                                fdFechaCrea = (DateTime)reader["fdFechaCrea"],
+                                fiIDUsuarioModifica = (int)reader["fiIDUsuarioModifica"],
+                                fdFechaUltimaModifica = (DateTime)reader["fdFechaUltimaModifica"],
+                            };
+
+
+
+
+                        }
+
+                    }
+
+                }
+            }
+ 
+        }
+        catch (Exception ex)
+        {
+
+            ex.Message.ToString();
+        }
+        return DatosEquifaxModel;
+
+    }
+    [WebMethod]
+       public static EquifaxClientesViewModel CargarInformacionClienteEquifax(string dataCrypt)
+    {
+        EquifaxClientesViewModel DatosEquifaxModel = new EquifaxClientesViewModel();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDApp", 107);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", 1);
+                    sqlComando.Parameters.AddWithValue("@pcIdentidad", IdentidadPersona);
+                    sqlComando.CommandTimeout = 120;
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        while (sqlResultado.Read())
+                        {
+
+                            DatosEquifaxModel = new EquifaxClientesViewModel()
+                            {
+                                fcDescripcionDoctosFiscal = (string)sqlResultado["fcDescripcionDoctosFiscal"],
+                                fcNoIdFiscal  = (string)sqlResultado["fcNoIdFiscal"],
+                                fcNombreDoctosIdPersonal = (string)sqlResultado["fcNombreDoctosIdPersonal"],
+                                fcDescricpcionOrigenEtnicoORacial =(string)sqlResultado["fcDescricpcionOrigenEtnicoORacial"]
+                            };
+
+                             
+
+
+                        }
+
+                    }
+
+                }
+            }
+            // lblDocumentoCliente.Text = LbLDocumentoClie;
+        }
+        catch (Exception ex)
+        {
+
+            ex.Message.ToString();
+        }
+        return DatosEquifaxModel;
+
+    }
+
+  
 
     [WebMethod]
     public static string ObtenerUrlEncriptado(string dataCrypt)
@@ -1216,6 +1387,8 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                         sqlComando.Parameters.AddWithValue("@piIDProducto", idProducto);
                         sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", ValorPrestamo);
                         sqlComando.Parameters.AddWithValue("@liPlazo", CantidadPlazos);
+                        sqlComando.Parameters.AddWithValue("@piIDPlazo", 1);
+                        sqlComando.Parameters.AddWithValue("@piLienHolder", 100);
                         sqlComando.Parameters.AddWithValue("@pnValorPrima", ValorPrima);
                         sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
                         sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
@@ -1401,6 +1574,10 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
                 }
                 objPrecalificado.cotizadorProductos = listaCotizadorProductos;
             }
+            IdentidadPersona =identidad;
+
+
+        
         }
         catch (Exception ex)
         {
@@ -1719,59 +1896,115 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         else
             return (T)obj;
     }
-
-    public static EquifaxClientesViewModel CargarInformacionClienteEquifax(string dataCrypt)
+/* View Models */
+/*
+    public class ClientesInformacionDomiciliarViewModel
     {
-        EquifaxClientesViewModel DatosEquifaxModel = new EquifaxClientesViewModel();
-        try
-        {
-            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
-            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
-            {
-                sqlConexion.Open();
-                using (var sqlComando = new SqlCommand("CoreAnalitico.dbo.sp_info_ConsultaEjecutivos", sqlConexion))
-                {
-                    sqlComando.CommandType = CommandType.StoredProcedure;
-                    sqlComando.Parameters.AddWithValue("@piIDApp", 107);
-                    sqlComando.Parameters.AddWithValue("@piIDUsuario", 1);
-                    sqlComando.Parameters.AddWithValue("@pcIdentidad", IdentidadPersona);
-                    sqlComando.CommandTimeout = 120;
-                    using (var sqlResultado = sqlComando.ExecuteReader())
-                    {
-                        while (sqlResultado.Read())
-                        {
+        public int fiIDInformacionDomicilio { get; set; }
+        public int fiIDCliente { get; set; }
+        public string fcTelefonoCasa { get; set; }
+        public string fcDireccionDetallada { get; set; }
+        public int fiIDUsuarioCrea { get; set; }
+        public string fcNombreUsuarioCrea { get; set; }
+        public System.DateTime fdFechaCrea { get; set; }
+        public Nullable<int> fiIDUsuarioModifica { get; set; }
+        public string fcNombreUsuarioModifica { get; set; }
+        public Nullable<System.DateTime> fdFechaUltimaModifica { get; set; }
+        public string fiIDBarrioColonia { get; set; }
+        public string fcReferenciasDireccionDetallada { get; set; }
 
-                            DatosEquifaxModel = new EquifaxClientesViewModel()
-                            {
-                                fcDescripcionDoctosFiscal = (string)sqlResultado["fcDescripcionDoctosFiscal"]
+        //colonia del cliente
+        public string fcNombreBarrioColonia { get; set; }
+        public bool fbBarrioColoniaActivo { get; set; }
 
-                            };
+        //ciudad del cliente
+        public string fiIDCiudad { get; set; }
+        public string fcNombreCiudad { get; set; }
+        public bool fbCiudadActivo { get; set; }
 
-                                // //  var  LbLDocumentoCliente = sqlResultado["fcNombreDoctosIdPersonal"].ToString();
-                                // spanDocumentoPersonal.Text = sqlResultado["fcNombreDoctosIdPersonal"].ToString();
-                                // lblNIdFiscal.Text = sqlResultado["fcNoIdFiscal"].ToString();
-                                // lblDocumentoFiscal.Text = sqlResultado["fcDescripcionDoctosFiscal"].ToString();
+        //ciudad del cliente
+        public string fiIDMunicipio { get; set; }
+        public string fcNombreMunicipio { get; set; }
+        public bool fbMunicipioActivo { get; set; }
 
-
-                        }
-
-                    }
-
-                }
-            }
-            // lblDocumentoCliente.Text = LbLDocumentoClie;
-        }
-        catch (Exception ex)
-        {
-
-            ex.Message.ToString();
-        }
-        return DatosEquifaxModel;
+        //departamento del cliente
+        public string fiIDDepto { get; set; }
+        public string fcNombreDepto { get; set; }
+        public bool fbDepartamentoActivo { get; set; }
+        public string fcLatitud { get; set; }
+        public string fcLongitud { get; set; }
+        public int fiIDGestorValidador  { get; set; }
+        public string fcGestorValidadorDomicilio { get; set; }
+        public int fiIDInvestigacionDeCampo { get; set; }
+        public string fcGestionDomicilio { get; set; }
+        public string fcResultadodeCampo { get; set; }
+        public DateTime fdFechaValidacion { get; set; }
+        public string fcObservacionesCampo { get; set; }
+        public string fiIDEstadoDeGestion { get; set; }
+        public string fiEstadoLaboral { get; set; }
+        public byte IDTipoResultado { get; set; }
+        public byte fiEstadoDomicilio  { get; set; }
 
     }
 
-    /* View Models */
-    public class EquifaxClientesViewModel
+    public class ClientesInformacionLaboralViewModel
+    {
+        public int fiIDInformacionLaboral { get; set; }
+        public int fiIDCliente { get; set; }
+        public string fcNombreTrabajo { get; set; }
+        public decimal fiIngresosMensuales { get; set; }
+        public string fcPuestoAsignado { get; set; }
+        public System.DateTime fcFechaIngreso { get; set; }
+        public string fdTelefonoEmpresa { get; set; }
+        public string fcExtensionRecursosHumanos { get; set; }
+        public string fcExtensionCliente { get; set; }
+        public string fcDireccionDetalladaEmpresa { get; set; }
+        public string fcFuenteOtrosIngresos { get; set; }
+        public Nullable<decimal> fiValorOtrosIngresosMensuales { get; set; }
+        public int fiIDUsuarioCrea { get; set; }
+        public string fcNombreUsuarioCrea { get; set; }
+        public System.DateTime fdFechaCrea { get; set; }
+        public Nullable<int> fiIDUsuarioModifica { get; set; }
+        public string fcNombreUsuarioModifica { get; set; }
+        public Nullable<System.DateTime> fdFechaUltimaModifica { get; set; }
+        public string fiIDBarrioColonia { get; set; }
+        public string fcReferenciasDireccionDetallada { get; set; }
+
+        //colonia del cliente
+        public string fcNombreBarrioColonia { get; set; }
+        public bool fbBarrioColoniaActivo { get; set; }
+
+        //ciudad del cliente
+        public string fiIDCiudad { get; set; }
+        public string fcNombreCiudad { get; set; }
+        public bool fbCiudadActivo { get; set; }
+
+        //ciudad del cliente
+        public string fiIDMunicipio { get; set; }
+        public string fcNombreMunicipio { get; set; }
+        public bool fbMunicipioActivo { get; set; }
+
+        //departamento del cliente
+        public string fiIDDepto { get; set; }
+        public string fcNombreDepto { get; set; }
+        public bool fbDepartamentoActivo { get; set; }
+
+        public string fcLatitud { get; set; }
+        public string fcLongitud { get; set; }
+        public int fiIDGestorValidador  { get; set; }
+        public string fcGestorValidadorTrabajo{ get; set; }
+        public int fiIDInvestigacionDeCampo { get; set; }
+        public string fcGestionTrabajo { get; set; }
+        public string fcResultadodeCampo { get; set; }
+        public DateTime fdFechaValidacion { get; set; }
+        public string fcObservacionesCampo { get; set; }
+        public byte fiIDEstadoDeGestion { get; set; }
+        public byte fiEstadoLaboral { get; set; }
+        public byte IDTipoResultado { get; set; }
+        public byte fiEstadoDomicilio  { get; set; }
+    }
+*/
+   public class EquifaxClientesViewModel
     {
         public string fcDescripcionDoctosFiscal { get; set; }
         public string fcDescricpcionOrigenEtnicoORacial { get; set; }
@@ -1779,5 +2012,40 @@ public partial class SolicitudesCredito_Analisis : System.Web.UI.Page
         public string fcNombrePaisNacimiento { get; set; }
         public string fcNoIdFiscal { get; set; }
         public int fiIDProducto { get; set; }
+    }
+
+    public class ClienteAvalesViewModel
+    {
+        public int fiIDAval { get; set; }
+        public int fiIDCliente { get; set; }
+        public int fiIDSolicitud { get; set; }
+        public string fcIdentidadAval { get; set; }
+        public string RTNAval { get; set; }
+        public string fcPrimerNombreAval { get; set; }
+        public string fcSegundoNombreAval { get; set; }
+        public string fcPrimerApellidoAval { get; set; }
+        public string fcSegundoApellidoAval { get; set; }
+        public string fcTelefonoAval { get; set; }
+        public DateTime fdFechaNacimientoAval { get; set; }
+        public string fcCorreoElectronicoAval { get; set; }
+        public string fcProfesionOficioAval { get; set; }
+        public string fcSexoAval { get; set; }
+        public bool fbAvalActivo { get; set; }
+        public string fcRazonInactivo { get; set; }
+        public int fiTipoAval { get; set; }
+        public string fcNombreTrabajo { get; set; }
+        public string fdTelefonoEmpresa { get; set; }
+        public string fcExtensionRecursosHumanos { get; set; }
+        public string fcExtensionAval { get; set; }
+        public decimal fiIngresosMensuales { get; set; }
+        public string fcPuestoAsignado { get; set; }
+        public DateTime fcFechaIngreso { get; set; }
+        //auditoria
+        public int fiIDUsuarioCrea { get; set; }
+        public string fcNombreUsuarioCrea { get; set; }
+        public DateTime fdFechaCrea { get; set; }
+        public int fiIDUsuarioModifica { get; set; }
+        public string fcNombreUsuarioModifica { get; set; }
+        public DateTime fdFechaUltimaModifica { get; set; }
     }
 }
