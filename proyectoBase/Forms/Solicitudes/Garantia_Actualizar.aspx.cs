@@ -272,7 +272,7 @@ public partial class Garantia_Actualizar : System.Web.UI.Page
             } // using sqlConexion
 
             ddlUnidadDeMedida.Items.Clear();
-            ddlUnidadDeMedida.Items.Add(new ListItem("Kilómetros", "KM"));
+            //ddlUnidadDeMedida.Items.Add(new ListItem("Kilómetros", "KM"));
             ddlUnidadDeMedida.Items.Add(new ListItem("Millas", "M"));
 
          

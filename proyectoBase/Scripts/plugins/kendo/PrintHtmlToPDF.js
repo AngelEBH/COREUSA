@@ -1,4 +1,11 @@
 ﻿function ExportHtmlToPdf(element, docName) {
+    $(element).show();
+    $("#contenedorPDF").show();
+    $("#divPlanDePagosPDF").show();
+    $("#contenedorPDF").css('display', '');
+    $("#divPlanDePagosPDF").css('display', '');
+    $("#divContenedorPlanDePagos").css('display', '');
+
     kendo.drawing.drawDOM(element,
         {
             forcePageBreak: ".page-break", // add this class to each element where you want manual page break
@@ -11,5 +18,7 @@
         })
         .then(function (group) {
             kendo.drawing.pdf.saveAs(group, docName + ".pdf")
+            $("#divPlanDePagosPDF").css('display', 'none');
         });
+   
 }

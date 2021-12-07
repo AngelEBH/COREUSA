@@ -16,9 +16,12 @@ public partial class Prestamos_PickUpPayments : System.Web.UI.Page
 {
     private string pcEncriptado = "";
     private string pcIDUsuario = "";
-    private string pcIDApp = "";
-    private string pcIDSesion = "";
-    private DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+    public string pcIDApp = "";
+    public string pcIDSesion = "";
+    public static  string NombreCliente = "";
+    public static string Identificacion = "";
+    public static decimal ValorTotalPickupPayments = 0;
+    public static  DSCore.DataCrypt DSC = new DSCore.DataCrypt();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -106,15 +109,107 @@ public partial class Prestamos_PickUpPayments : System.Web.UI.Page
 
     protected void btnAgregarPickUpPayment_Click(object sender, EventArgs e)
     {
+        //PanelErrores.Visible = true;
+        //string mensaje = "Mensaje el monto de Pick Up Payments son mayores al monto de DownPayment";
+        //lblMensaje.Visible = true;
+        //lblMensaje.Text = mensaje;
         PanelAgregarPickUpPayment.Visible = true;
     }
+   
+  
 
-    protected void btnRegistrar_Click(object sender, EventArgs e)
+    protected void gvPickUpPayments_RowCommand(object sender, GridViewCommandEventArgs e)
     {
-        if(Convert.ToDouble(txtMontoDownPayment.Text)<=0)
+     
+        if (e.CommandName == "Agregar")
+        {
+            int index = Convert.ToInt32(e.CommandArgument);
+            GridViewRow selectedRow = gvPickUpPayments.Rows[index];
+            string idTransaccion = selectedRow.Cells[0].Text;
+            
+           var lista= ObtenerDetallePickUpPayments(Convert.ToInt32(idTransaccion));
+            gvPickUpPaymentsDetalle.DataSource = lista;
+            gvPickUpPaymentsDetalle.DataBind();
+            txtNombre_Detalle.Text = NombreCliente;
+            txtIdentificación_Detalle.Text = Identificacion;
+            txtMontoDownPayment_Detalle.Text = Convert.ToString(ValorTotalPickupPayments);
+            PanelDetalle.Visible = true;
+        }
+
+    }
+
+    public static List<PickUpPayments_ViewModel> ObtenerDetallePickUpPayments(int idTransaccion)
+    { 
+        
+        string dataCrypt;
+        var ListaPickUpPayments = new List<PickUpPayments_ViewModel>();
+      
+        try
+        {
+             
+            //idTransaccion = 92;
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (var sqlComando = new SqlCommand("sp_PickUpPayments_ListaDetalle", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@piIDTransaccion", idTransaccion);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", 1);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", 1);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", 1);
+                    sqlComando.CommandTimeout = 120;
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                        var NombreCliente  = "";
+                        var MontoTotal = 0;
+                        while (sqlResultado.Read())
+                        {
+                            ListaPickUpPayments.Add(new PickUpPayments_ViewModel()
+                            {
+                                IdTransaccion = (int)sqlResultado["fiIDTransaccion"],
+                                fnNumeroCuota = (int)sqlResultado["fnNumeroCuota"],
+                                fdFecha = (DateTime)sqlResultado["fdFecha"],
+                                fnValorDownPayment = (decimal)sqlResultado["fnValorDownPayment"],
+                                fnSaldoCuota = (decimal)sqlResultado["fnSaldoCuota"],
+                                fcNombreCliente = (string)sqlResultado["fcNombreCliente"],                            
+                                Identificacion = (string)sqlResultado["fcIdentificacion"],
+                                fnValorDownPaymentTotal = (decimal)sqlResultado["fnValorDownPaymentTotal"]
+                            });
+
+                        }
+                    }
+
+               
+                    foreach(var item in ListaPickUpPayments)
+                    {
+                        NombreCliente = item.fcNombreCliente;
+                        Identificacion = item.Identificacion;
+                        ValorTotalPickupPayments = item.fnValorDownPaymentTotal;
+                    }
+               
+                    
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+           
+        }
+        return ListaPickUpPayments;
+    }
+
+   protected void btnRegistrar_Click(object sender, EventArgs e)
+    {
+
+        
+        if (Convert.ToDouble(txtMontoDownPayment.Text) <= 0)
         {
             return;
         }
+
 
         PanelAgregarPickUpPayment.Visible = false;
         String lcSQLInstruccion = "";
@@ -127,18 +222,39 @@ public partial class Prestamos_PickUpPayments : System.Web.UI.Page
         sqlConexion = new SqlConnection(DSC.Desencriptar(sqlConnectionString));
         try
         {
-            sqlConexion.Open();
-            lcSQLInstruccion = "sp_PickUpPayments_Agregar ";
-            sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion);
-            sqlComando.CommandType = CommandType.StoredProcedure;
-            sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
-            sqlComando.Parameters.AddWithValue("@pcIdentificacion", txtIdentificacion.Text.Trim());
-            sqlComando.Parameters.AddWithValue("@pnValorDownPayment", txtMontoDownPayment.Text.Trim());
-            sqlComando.Parameters.AddWithValue("@pdFechaVencimiento", txtFechaVencimiento.Text.Trim());
-            sqlComando.Parameters.AddWithValue("@pcComentarios", txtComentarios.Text.Trim());
-            sqlComando.ExecuteNonQuery();
+            var montoTotalPickUpPayment = Convert.ToDouble(txtMontoDownPayment1.Text) + Convert.ToDouble(txtMontoDownPayment2.Text) + Convert.ToDouble(txtMontoDownPayment3.Text);
 
-            PanelAgregarPickUpPayment.Visible = false;
+            if (montoTotalPickUpPayment > Convert.ToDouble(txtMontoDownPayment.Text))
+            {
+                PanelErrores.Visible = true;
+                string mensaje = "Mensaje el monto de Pick Up Payments son mayores al monto de DownPayment";
+                lblMensaje.Visible = true;
+                lblMensaje.Text = mensaje;
+            }
+            else
+            {
+                sqlConexion.Open();
+                lcSQLInstruccion = "sp_PickUpPayments_Agregar ";
+                sqlComando = new SqlCommand(lcSQLInstruccion, sqlConexion);
+                sqlComando.CommandType = CommandType.StoredProcedure;
+                sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                sqlComando.Parameters.AddWithValue("@pcIdentificacion", txtIdentificacion.Text.Trim());
+                sqlComando.Parameters.AddWithValue("@pnValorDownPayment", txtMontoDownPayment.Text.Trim());
+                sqlComando.Parameters.AddWithValue("@pdFechaVencimiento", txtFechaVencimiento.Text.Trim());
+                sqlComando.Parameters.AddWithValue("@pcComentarios", txtComentarios.Text.Trim());
+
+                sqlComando.Parameters.AddWithValue("@pnValorDownPayment1", txtMontoDownPayment1.Text.Trim());
+                sqlComando.Parameters.AddWithValue("@pdFechaVencimiento1", txtFechaVencimiento1.Text.Trim());
+                sqlComando.Parameters.AddWithValue("@pnValorDownPayment2", txtMontoDownPayment2.Text.Trim());
+                sqlComando.Parameters.AddWithValue("@pdFechaVencimiento2", txtFechaVencimiento2.Text.Trim());
+                sqlComando.Parameters.AddWithValue("@pnValorDownPayment3", txtMontoDownPayment3.Text.Trim());
+                sqlComando.Parameters.AddWithValue("@pdFechaVencimiento3", txtFechaVencimiento3.Text.Trim());
+
+                sqlComando.ExecuteNonQuery();
+
+                PanelAgregarPickUpPayment.Visible = false;
+            }
+           
         }
         catch (Exception ex)
         {
@@ -155,14 +271,16 @@ public partial class Prestamos_PickUpPayments : System.Web.UI.Page
 
     protected void btnCerrar_Click(object sender, EventArgs e)
     {
+        txtNombre_Detalle.Text = "";
+        txtIdentificación_Detalle.Text = "";
+        txtMontoDownPayment_Detalle.Text = "";
+      
         PanelAgregarPickUpPayment.Visible = false;
+        PanelDetalle.Visible = false;
+       
     }
 
-    protected void gvPickUpPayments_SelectedIndexChanged(object sender, EventArgs e)
-    {
-
-    }
-
+  
     protected void btnBuscarCliente_Click(object sender, EventArgs e)
     {
         String lcSQLInstruccion = "";
@@ -203,4 +321,18 @@ public partial class Prestamos_PickUpPayments : System.Web.UI.Page
         }
 
     }
+
+    public class PickUpPayments_ViewModel
+    {
+        public int IdTransaccion { get; set; }
+        public int fnNumeroCuota { get; set; }
+        public DateTime fdFecha { get; set; }
+        public decimal fnValorDownPayment { get; set; }
+        public decimal fnSaldoCuota { get; set; }
+        public string fcNombreCliente { get; set; }
+        public decimal fnValorDownPaymentTotal { get; set; }
+        public string Identificacion { get; set; }
+
+    }
+
 }

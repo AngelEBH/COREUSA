@@ -142,6 +142,70 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         return solicitudes;
     }
 
+
+    [WebMethod]
+    public static List<ClientesReferenciasViewModel> ListaReferenciaCliente(int IdSolicitud, int IdCliente, string dataCrypt)
+    {
+        var Referencia = new List<ClientesReferenciasViewModel>();
+        Referencia.Clear();
+        try
+        {
+            var lURLDesencriptado = DesencriptarURL(dataCrypt);
+            var pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            var pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID") ?? "0";
+            var pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+          
+            using (var sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (var sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Listar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDCliente", IdCliente);
+                    sqlComando.Parameters.AddWithValue("@fiIDSolicitud", IdSolicitud);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.CommandTimeout = 120;
+                    using (var sqlResultado = sqlComando.ExecuteReader())
+                    {
+                      
+                        while (sqlResultado.Read())
+                        {
+                            Referencia.Add(new ClientesReferenciasViewModel()
+                            {
+                                fiIDReferencia = (int)sqlResultado["fiIDReferencia"],
+                                fiIDCliente = (int)sqlResultado["fiIDCliente"],
+                                fcNombreCompletoReferencia = (string)sqlResultado["fcNombreCompletoReferencia"],
+                                fcLugarTrabajoReferencia = (string)sqlResultado["fcLugarTrabajoReferencia"],
+                                fiTiempoConocerReferencia = (short)sqlResultado["fiTiempoConocerReferencia"],
+                                fcTelefonoReferencia = (string)sqlResultado["fcTelefonoReferencia"],
+                                fiIDParentescoReferencia = (int)sqlResultado["fiIDParentescoReferencia"],
+                                fcDescripcionParentesco = (string)sqlResultado["fcDescripcionParentesco"],
+                                fbReferenciaActivo = (bool)sqlResultado["fbReferenciaActivo"],
+                                fcRazonInactivo = (string)sqlResultado["fcRazonInactivo"],
+                                fiIDUsuarioCrea = (int)sqlResultado["fiIDUsuarioCrea"],
+                                fdFechaCrea = (DateTime)sqlResultado["fdFechaCrea"],
+                                fiIDUsuarioModifica = (int)sqlResultado["fiIDUsuarioModifica"],
+                                fdFechaUltimaModifica = (DateTime)sqlResultado["fdFechaUltimaModifica"],
+                                fcComentarioDeptoCredito = (string)sqlResultado["fcComentarioDeptoCredito"],
+                                fiAnalistaComentario = (int)sqlResultado["fiAnalistaComentario"]
+                            
+                            });
+                        }
+                    }
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();         
+        }
+        return Referencia;
+
+    }
+
     [WebMethod]
     public static List<DetalleCondicion_ViewModel> ListaCondiciones(int IdSolicitud, string dataCrypt)
     {
@@ -242,7 +306,91 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
     {
         return ObtenerDocumentosGarantiaPorIdGarantia(idGarantia, dataCrypt);
     }
+    [WebMethod]
+    public static bool ComentarioReferenciaPersonal(int IDReferencia, string comentario, string dataCrypt)
+    {
+        bool resultadoProceso = false;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string IDSOL = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDSOL");
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
 
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+                using (SqlCommand sqlComando = new SqlCommand("sp_CREDCliente_Referencias_Comentario", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDReferencia", IDReferencia);
+                    sqlComando.Parameters.AddWithValue("@fcComentarioDeptoCredito", comentario);
+                    sqlComando.Parameters.AddWithValue("@fiAnalistaComentario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+                    sqlComando.Parameters.AddWithValue("@pcUserNameCreated", "");
+                    sqlComando.Parameters.AddWithValue("@pdDateCreated", DateTime.Now);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
+                                resultadoProceso = true;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
+
+    [WebMethod]
+    public static bool EliminarReferenciaPersonal(int IDReferencia, string dataCrypt)
+    {
+        bool resultadoProceso = false;
+        DSCore.DataCrypt DSC = new DSCore.DataCrypt();
+        try
+        {
+            Uri lURLDesencriptado = DesencriptarURL(dataCrypt);
+            string pcIDUsuario = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("usr");
+            string pcIDApp = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("IDApp");
+            //string pcIDSesion = HttpUtility.ParseQueryString(lURLDesencriptado.Query).Get("SID");
+            string pcIDSesion = "1";
+
+            using (SqlConnection sqlConexion = new SqlConnection(DSC.Desencriptar(ConfigurationManager.ConnectionStrings["ConexionEncriptada"].ConnectionString)))
+            {
+                sqlConexion.Open();
+
+                using (SqlCommand sqlComando = new SqlCommand("dbo.sp_CREDCliente_Referencias_Eliminar", sqlConexion))
+                {
+                    sqlComando.CommandType = CommandType.StoredProcedure;
+                    sqlComando.Parameters.AddWithValue("@fiIDReferencia", IDReferencia);
+                    sqlComando.Parameters.AddWithValue("@piIDSesion", pcIDSesion);
+                    sqlComando.Parameters.AddWithValue("@piIDApp", pcIDApp);
+                    sqlComando.Parameters.AddWithValue("@piIDUsuario", pcIDUsuario);
+
+                    using (SqlDataReader reader = sqlComando.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            if (!reader["MensajeError"].ToString().StartsWith("-1"))
+                                resultadoProceso = true;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Message.ToString();
+        }
+        return resultadoProceso;
+    }
     [WebMethod]
     public static List<Documento_ViewModel> CargarExpedienteSolicitudGarantia(int idSolicitud, int idGarantia, string dataCrypt)
     {
@@ -622,5 +770,28 @@ public partial class SolicitudesCredito_Bandeja : System.Web.UI.Page
         public string EstadoCondicion { get; set; }
 
     }
+
+    public class ClientesReferenciasViewModel
+    {
+        public int fiIDReferencia { get; set; }
+        public int fiIDCliente { get; set; }
+        public string fcNombreCompletoReferencia { get; set; }
+        public string fcLugarTrabajoReferencia { get; set; }
+        public short fiTiempoConocerReferencia { get; set; }
+        public string fcTelefonoReferencia { get; set; }
+        public int fiIDParentescoReferencia { get; set; }
+        public string fcDescripcionParentesco { get; set; }
+        public bool fbReferenciaActivo { get; set; }
+        public string fcRazonInactivo { get; set; }
+        public int fiIDUsuarioCrea { get; set; }
+        public string fcNombreUsuarioCrea { get; set; }
+        public System.DateTime fdFechaCrea { get; set; }
+        public Nullable<int> fiIDUsuarioModifica { get; set; }
+        public string fcNombreUsuarioModifica { get; set; }
+        public Nullable<System.DateTime> fdFechaUltimaModifica { get; set; }
+        public string fcComentarioDeptoCredito { get; set; }
+        public Nullable<int> fiAnalistaComentario { get; set; }
+    }
+
     #endregion
 }

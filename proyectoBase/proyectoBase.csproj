@@ -1101,6 +1101,7 @@
     <Content Include="Forms\Solicitudes\Garantia_Detalles.aspx" />
     <Content Include="Forms\Solicitudes\Garantia_Registrar.aspx" />
     <Content Include="Forms\Solicitudes\PreciosDeMercado_Listado.aspx" />
+    <Content Include="Forms\Solicitudes\SolicitudesCredito_Analisis.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Bandeja.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_ClientesPrecalificados.aspx" />
     <Content Include="Forms\Solicitudes\SolicitudesCredito_Cliente_ActualizarBarrioColonia.aspx" />
@@ -1448,6 +1449,7 @@
     <Content Include="Scripts\app\CoreMovil\CotizadorMovil.js" />
     <Content Include="Scripts\app\Expedientes\Expedientes_Mantenimiento.js" />
     <Content Include="Scripts\app\Expedientes\Expedientes_Consultar.js" />
+    <Content Include="Scripts\app\Prestamos\Prestamos_Lista.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_RegistroInstalacionGPS.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_RevisionGarantia.js" />
     <Content Include="Scripts\app\SolicitudesGPS\SolicitudesGPS_Listado.js" />
@@ -2105,6 +2107,13 @@
     </Compile>
     <Compile Include="Forms\Solicitudes\PreciosDeMercado_Listado.aspx.designer.cs">
       <DependentUpon>PreciosDeMercado_Listado.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Analisis.aspx.cs">
+      <DependentUpon>SolicitudesCredito_Analisis.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\Solicitudes\SolicitudesCredito_Analisis.aspx.designer.cs">
+      <DependentUpon>SolicitudesCredito_Analisis.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\Solicitudes\SolicitudesCredito_Bandeja.aspx.cs">
       <DependentUpon>SolicitudesCredito_Bandeja.aspx</DependentUpon>

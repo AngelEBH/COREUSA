@@ -170,6 +170,10 @@
                                             <label class="col-form-label">Cuota Final</label>
                                             <asp:TextBox ID="txtPrestamoMaximo" CssClass="form-control form-control-sm mascara-cantidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
                                         </div>
+                                           <div class="col-sm-4">
+                                            <label class="col-form-label" id="TxtPlazoFrecuencialSeleccionado" ></label>
+                                            <asp:TextBox ID="txtPlazoFrecuencia" CssClass="form-control form-control-sm mascara-cantidad" type="text" Enabled="false" required="required" data-parsley-group="informacionPrestamo" runat="server"></asp:TextBox>
+                                        </div>
                                     </div>
 
                             
@@ -1182,7 +1186,7 @@
                     <div class="modal-header pb-2">
                         <div class="form-group row mb-0">
                             <div class="col-12">
-                                <h6 class="m-0" id="modalConfirmarAval">Desea registrar Aval?</h6>
+                                <h6 class="m-0" id="modalConfirmarAva">Desea registrar Aval?</h6>
                             </div>
                        
                         </div>

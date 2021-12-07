@@ -2,6 +2,7 @@
 gPlazoFinal = 0;
 var objSolicitud = [];
 var resolucionHabilitada = false;
+var nombreCompletoClienteR = "";
 cargarInformacionSolicitud();
 
 
@@ -19,13 +20,16 @@ function cargarInformacionSolicitud() {
         },
         success: function (data) {
 
-           //debugger;
+          
+           console.log(data);
 
             /* Variable de informacion del cliente */
+
             var rowDataCliente = data.d.cliente;
 
             /* Variable de informacion de la solicitud */
             var rowDataSolicitud = data.d.solicitud;
+            
 
             /* Variable de documentacion de la solicitud */
             var rowDataDocumentos = data.d.documentos;
@@ -235,12 +239,23 @@ function cargarInformacionSolicitud() {
             /* Informacion principal de la solicitud */
             $('#lblNoSolicitud').text(rowDataSolicitud.fiIDSolicitud);
             $('#lblNoCliente').text(rowDataSolicitud.fiIDCliente);
+            $('#lblMarcaReferencia').text(rowDataSolicitud.fcMarca);
+            $('#lblModeloReferencia').text(rowDataSolicitud.fcModelo);
+            $('#lblVinReferencia').text(rowDataSolicitud.fcVin);
+            $('#lblAnioReferencia').text(rowDataSolicitud.fiAnio); 
+
+
+
+
+
             //MensajeError('Mensaje '+rowDataCliente.clientesMaster.fiIDCliente);
             $('#lblNombreGestor').text(rowDataSolicitud.NombreGestor);
             var nombreCompletoCliente = rowDataCliente.clientesMaster.fcPrimerNombreCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoNombreCliente + ' ' + rowDataCliente.clientesMaster.fcPrimerApellidoCliente + ' ' + rowDataCliente.clientesMaster.fcSegundoApellidoCliente;
+            nombreCompletoClienteR = nombreCompletoCliente;
             $('#lblNombreCliente').text(nombreCompletoCliente);
             $('#lblResumenCliente').text(nombreCompletoCliente); // Ficha de resumen
             $("#spanNombreCliente").text(nombreCompletoCliente);
+            $("#spanNombreClienteReferencia").text(nombreCompletoCliente);
             $('#lblIdentidadCliente').text(rowDataCliente.clientesMaster.fcIdentidadCliente);
             $("#spanIdentidadCliente").text(rowDataCliente.clientesMaster.fcIdentidadCliente);
             $('#lblTipoPrestamo').text(rowDataSolicitud.fcDescripcion);
@@ -291,9 +306,13 @@ function cargarInformacionSolicitud() {
             /* Informacion laboral */
             var infoLaboral = rowDataCliente.ClientesInformacionLaboral;
             $('#lblNombreTrabajoCliente').text(infoLaboral.fcNombreTrabajo);
+            $('#lblLugarTrabajo_Referencia').text(infoLaboral.fcNombreTrabajo);
             $('#lblResumenTrabajo').text(infoLaboral.fcNombreTrabajo); // ficha de resumen
             $('#lblIngresosMensualesCliente').text(addFormatoNumerico(infoLaboral.fiIngresosMensuales));
+            $('#lblIngresosMensualesReferencia').text(addFormatoNumerico(infoLaboral.fiIngresosMensuales));
             $('#lblPuestoAsignadoCliente').text(infoLaboral.fcPuestoAsignado);
+            $('#lblPuestoAsignado_Referencia').text(infoLaboral.fcPuestoAsignado);
+
             $('#lblResumenPuesto').text(infoLaboral.fcPuestoAsignado); // ficha de resumen
             var fechaIngresoCliente = FechaFormato(infoLaboral.fcFechaIngreso);
             $('#lblFechaIngresoCliente').text(fechaIngresoCliente.split(' ')[0]);
@@ -306,6 +325,9 @@ function cargarInformacionSolicitud() {
             $('#lblCiudadEmpresa').text(infoLaboral.fcNombreCiudad);
             $('#lblBarrioColoniaEmpresa').text(infoLaboral.fcNombreBarrioColonia);
             $('#lblDireccionDetalladaEmpresa').text(infoLaboral.fcDireccionDetalladaEmpresa);
+            $('#lblDireccionEmpresa_Referecia').text(infoLaboral.fcDireccionDetalladaEmpresa);
+
+            $('#lblDireccionDomicilio_Referencia').text(infoLaboral.fcDireccionDetalladaEmpresa);
             $('#lblReferenciaUbicacionEmpresa').text(infoLaboral.fcReferenciasDireccionDetallada);
 
             /* Si el proceso de campo del trabajo ya se completo, mostrarlo */
@@ -344,13 +366,11 @@ function cargarInformacionSolicitud() {
 
                     var tblReferencias = $('#tblReferencias tbody');
                     for (var i = 0; i < ListaReferencias.length; i++) {
-                        var pencil = ListaReferencias[i].fcComentarioDeptoCredito != '' ? ListaReferencias[i].fcComentarioDeptoCredito != 'Sin comunicacion' ? 'tr-exito' : 'text-danger' : '';
+                        var pencil = ListaReferencias[i].fcComentarioDeptoCredito != '' ? ListaReferencias[i].fcComentarioDeptoCredito.includes("(SIN CONFIRMAR)") ? 'text-danger':'tr-exito'   : '';
 
                         var ClaseBoton = ListaReferencias[i].fcComentarioDeptoCredito != '' ?
-                            ListaReferencias[i].fcComentarioDeptoCredito != 'Sin comunicacion' ?
-                                'btn mdi mdi-check-circle-outline tr-exito' :
-                                'btn mdi mdi-call-missed text-danger' :
-                            'btn mdi mdi-pencil';
+                            ListaReferencias[i].fcComentarioDeptoCredito.includes("(SIN CONFIRMAR)") ? 'btn mdi mdi-call-missed text-danger' :
+                                'btn mdi mdi-check-circle-outline tr-exito' :'btn mdi mdi-pencil';
 
                         var btnAgregarComentarioReferencia = '<button id="btnComentarioReferencia" data-id="' + ListaReferencias[i].fiIDReferencia + '" data-comment="' + ListaReferencias[i].fcComentarioDeptoCredito + '" data-nombreref="' + ListaReferencias[i].fcNombreCompletoReferencia + '" class="' + ClaseBoton + '" title="Observaciones"></button>';
                         var tiempoConocerRef = ListaReferencias[i].fiTiempoConocerReferencia <= 2 ? ListaReferencias[i].fiTiempoConocerReferencia + ' años' : 'Más de 2 años'
@@ -368,7 +388,7 @@ function cargarInformacionSolicitud() {
                 }
             }
             /* Avales del cliente */
-            if (rowDataCliente.Avales != null) {
+            if (rowDataCliente.Avales == null) {
 
                 var listaAvales = rowDataCliente.Avales;
                 if (listaAvales.length > 0) {
@@ -397,7 +417,7 @@ function cargarInformacionSolicitud() {
                 }
                 else { $('#divAval').css('display', 'none'); }
             }
-            else { $('#divAval').css('display', 'none'); }
+          //  else { $('#divAval').css('display', 'none'); }
 
             /* Cargar documentación de la solicitud */
             var divDocumentacionCedula = $("#divDocumentacionCedula");
@@ -550,6 +570,8 @@ function cargarInformacionSolicitud() {
             $('#lblMontoPrima').text(addFormatoNumerico(rowDataSolicitud.fnPrima));
             $('#lblEdadCliente').text(rowDataSolicitud.fiEdadCliente + ' años');
             $('#lblResumenEdad').text(rowDataSolicitud.fiEdadCliente + ' años'); // Ficha de resumen
+            $('#lblEdadCliente_Referencia').text(rowDataSolicitud.fiEdadCliente + ' años');
+
 
             /* Validar si ya se definio un monto a financiar */
             if (rowDataSolicitud.fiMontoFinalFinanciar != 0) {
@@ -672,6 +694,8 @@ function cargarInformacionSolicitud() {
         }
     });
     CargarInformacionClienteEquifax();
+    CargarInformacionAval();
+    MostrarDocumentosGarantia();
 }
 
 function CargarInformacionClienteEquifax(){
@@ -699,22 +723,94 @@ function CargarInformacionClienteEquifax(){
 }
 
 
-function CargarInformacionAval() {
-    // alert("prueba");
+function MostrarDocumentosGarantia() {
+  //  var idGarantia = 0;
+   
     $.ajax({
         type: "POST",
-        url: "SolicitudesCredito_Analisis.aspx/CargarDatosAval",
+        url: "SolicitudesCredito_Analisis.aspx/CargarDocumentosGarantia",
         data: JSON.stringify({ dataCrypt: window.location.href }),
-        contentType: 'application/json; charset=utf-8',
+        contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
-            MensajeError('No se pudo carga la información, contacte al administrador');
+            MensajeError('No se pudieron cargar los documentos de la garantía, contacte al administrador.');
         },
         success: function (data) {
-            console.log(data);
+           
+            if (data.d != null) {
 
+                var documentos = data.d;
+                var divGaleriaGarantia = $("#divGaleriaGarantia").empty();
+                var templateDocumentos = '';
+
+                if (documentos != null) {
+
+                    if (documentos.length > 0) {
+
+                        for (var i = 0; i < documentos.length; i++) {
+
+                            templateDocumentos += '<img alt="' + documentos[i].DescripcionTipoDocumento + '" src="' + documentos[i].URLArchivo + '" data-image="' + documentos[i].URLArchivo + '" data-description="' + documentos[i].DescripcionTipoDocumento + '"/>';
+                        }
+                    }
+                }
+
+                var imgNoHayFotografiasDisponibles = '<img alt="No hay fotografías disponibles" src="/Imagenes/Imagen_no_disponible.png" data-image="/Imagenes/Imagen_no_disponible.png" data-description="No hay fotografías disponibles"/>';
+                templateDocumentos = templateDocumentos == '' ? imgNoHayFotografiasDisponibles : templateDocumentos;
+
+                divGaleriaGarantia.append(templateDocumentos);
+
+                $("#divGaleriaGarantia").unitegallery();
+
+                //$("#modalDocumentosDeLaGarantia").modal();
+            }
+            else
+                MensajeError('No se pudieron cargar los documentos de la garantía, contacte al administrador.');
         }
     });
 }
+
+function CargarInformacionAval(){
+    // alert("prueba");
+     $.ajax({
+         type: "POST",
+         url: "SolicitudesCredito_Analisis.aspx/CargarDatosAval",
+         data: JSON.stringify({ dataCrypt: window.location.href }),
+         contentType: 'application/json; charset=utf-8',
+         error: function (xhr, ajaxOptions, thrownError) {
+             debugger;
+             MensajeError('No se pudo carga la información, contacte al administrador');
+         },
+         success: function (data){
+             
+             var ListaAval = data.d;
+         // console.log(data);
+         //console.log(ListaAval.d.fcTelefonoAval);
+         var tblReferencias = $('#tblAvales tbody');
+         if (data.length > 0) {
+             console.log(Entrando);
+         }
+         for (var i = 0; i < ListaAval.length; i++) {
+           
+            var estadoAval = ListaAval[i].fbAvalActivo == false ? 'Inactivo' : 'Activo';
+            var classEstadoAval = estadoAval == false ? 'text-danger' : '';
+            var btnDetalleAvalModal = '<button id="btnDetalleAvalModal" data-id="' + ListaAval[i].fiIDAval + '" class="btn btn-sm ' + (classEstadoAval != '' ? 'btn-danger' : 'btn-info') + '" title="Detalles del aval">Detalles</button>';
+            var nombreCompletoAval = ListaAval[i].fcPrimerNombreAval + ' ' + ListaAval[i].fcSegundoNombreAval + ' ' + ListaAval[i].fcPrimerApellidoAval + ' ' + ListaAval[i].fcSegundoApellidoAval;
+            tblReferencias.append('<tr class="' + classEstadoAval + '">' +
+                            '<td class="FilaCondensada">' + nombreCompletoAval + '</td>' +
+                            '<td class="FilaCondensada">' + ListaAval[i].fcIdentidadAval + '</td>' +
+                            '<td class="FilaCondensada">' +
+                            '<a href="tel:+' + ListaAval[i].fcTelefonoAval.replace(' ', '').replace('-', '').replace('(', '').replace(')', '') + '" class="col-form-label ' + classEstadoAval + '">' + ListaAval[i].fcTelefonoAval + '</a>' +
+                            '</td>' +
+                            '<td class="FilaCondensada">' + ListaAval[i].fcNombreTrabajo + '</td>' +
+                            '<td class="FilaCondensada">' + ListaAval[i].fcPuestoAsignado + '</td>' +
+                            '<td class="FilaCondensada">' + addFormatoNumerico(ListaAval[i].fiIngresosMensuales) + '</td>' +
+                            '<td class="FilaCondensada">' + estadoAval + '</td>' +
+                            '<td class="FilaCondensada">' + btnDetalleAvalModal + '</td>' +
+                            '</tr>');
+         }
+ 
+         }
+     });
+ }
 
 
 /* Validaciones de analisis */
@@ -975,8 +1071,10 @@ $("#formActualizarIngresos").submit(function (e) {
 
                     $('#lblIngresosMensualesCliente').text('');
                     var ingresos = parseFloat(sueldoBaseReal) + parseFloat(bonosComisionesReal);
-                    $('#lblIngresosMensualesCliente').text(addFormatoNumerico(ingresos));
+                    $('#lblIngresosMensualesCliente').text(addFormatoNumerico(ingresos));                  
+
                     var totalIngresosReales = ingresos;
+                   
                     $("#lblIngresosReales").text(addFormatoNumerico(totalIngresosReales));
                     $('#lblObligacionesReales').text(addFormatoNumerico(obligaciones));
                     $('#lblDisponibleReal').text(addFormatoNumerico(totalIngresosReales - obligaciones));
@@ -1712,18 +1810,29 @@ var IDReferencia = '';
 var btnReferenciaSeleccionada = '';
 
 $(document).on('click', 'button#btnComentarioReferencia', function () {
-
+    //debugger;
     btnReferenciaSeleccionada = $(this);
     comentarioActual = $(this).data('comment');
     IDReferencia = $(this).data('id');
     var nombreReferencia = $(this).data('nombreref');
+    var nombreReferencia2 = nombreReferencia;
 
     $("#txtObservacionesReferencia").val(comentarioActual);
+    var InformacionDetalleReferencia = "Muy Buen Dia Sr" + " " + nombreReferencia2 + " " + "Le Saludamos de parte de Crediflash" + "\n" + "El Motivo de mi llamada es porque el señor " + nombreCompletoClienteR  + " lo puso como su referencia,"
+        + "\n" + "Solo queremos validar unos datos , tiene un minuto de su tiempo que me pueda brindar." + "\n"
+        +  "1) Usted conoce al señor(a) " + nombreCompletoClienteR + "\n" + "2)  Me podría confirmar a que se dedica el señor(a) " + nombreCompletoClienteR + "\n"
+        + "3) Usted sabe donde reside actualmente el señor(a) " + nombreCompletoClienteR + "\n" + " Gracias por atender mi llamada" + "\n" + " Pase un excelente Dia "
+
+  
+    $("#txtDetalleReferencia").text(InformacionDetalleReferencia);
+
+
+
     $("#lblNombreReferenciaModal").text(nombreReferencia);
 
     if (comentarioActual != '' && comentarioActual != 'Sin comunicacion') {
-        $("#txtObservacionesReferencia").prop('disabled', true);
-        $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', true).removeClass('btn-primary').addClass('btn-secondary');
+        //$("#txtObservacionesReferencia").prop('disabled', true);
+       // $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', true).removeClass('btn-primary').addClass('btn-secondary');
     }
     else if (comentarioActual == 'Sin comunicacion') {
         $("#txtObservacionesReferencia").prop('disabled', false);
@@ -1739,10 +1848,14 @@ $(document).on('click', 'button#btnComentarioReferencia', function () {
 
 $("#btnComentarioReferenciaConfirmar").click(function () {
 
+   
+
     if ($($("#frmObservacionReferencia")).parsley().isValid()) {
 
         $("#frmObservacionReferencia").submit(function (e) { e.preventDefault(); });
-        comentarioActual = $('#txtObservacionesReferencia').val();
+
+
+        comentarioActual = "(CONFIRMAR) " + $('#txtObservacionesReferencia').val();
 
         $.ajax({
             type: "POST",
@@ -1769,7 +1882,8 @@ $("#btnComentarioReferenciaConfirmar").click(function () {
 
 $("#btnReferenciaSinComunicacion").click(function () {
 
-    comentarioActual = 'Sin comunicacion';
+    //comentarioActual = 'Sin comunicacion';
+     comentarioActual ="(SIN CONFIRMAR) " +  $('#txtObservacionesReferencia').val();
 
     $.ajax({
         type: "POST",
@@ -1821,6 +1935,7 @@ $("#btnEliminarReferenciaConfirmar").click(function () {
 /* Visualizar informacion de aval del cliente */
 var avalID = 0;
 $(document).on('click', 'button#btnDetalleAvalModal', function () {
+    
 
     var IDAval = $(this).data('id');
     avalID = $(this).data('id');
@@ -1881,7 +1996,8 @@ $("#btnMasDetallesAval").click(function () {
             success: function (data) {
                 if (data.d != null) {
                     var parametros = data.d;
-                    window.open('../Aval/Aval_Detalles.aspx?' + parametros);
+                    //window.open('../Aval/Aval_Detalles.aspx?', "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400" );
+                    window.open("../Aval/Aval_Detalles.aspx?" + parametros  , "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=700,height=600");
                 }
                 else { MensajeError('Error al redireccionar a pantalla de detalles del aval'); }
             }

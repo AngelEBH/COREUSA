@@ -909,8 +909,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                             lblTotalCuotas_PlanDePagos.Text = sqlResultado["fiPlazo"].ToString();
                             //cash
                             lblPrestamo_Cash.Text = sqlResultado["fcIDPrestamo"].ToString();
-                            //lblTasaInteres_CahsTable2.Text = Convert.ToDecimal(sqlResultado["fiTasadeInteres"].ToString()).ToString("n") + " %";
-                            //lblTasaInteres_CahsTable4.Text = Convert.ToDecimal(sqlResultado["fiTasadeInteres"].ToString()).ToString("n") + " %";
+                            lblTasaInteres_CahsTable2.Text = Convert.ToDecimal(sqlResultado["fiTasadeInteres"].ToString()).ToString("n") + " %";
+                            lblTasaInteres_CahsTable4.Text = Convert.ToDecimal(sqlResultado["fiTasadeInteres"].ToString()).ToString("n") + " %";
                             lblFechaVencimiento_Cash.Text = Convert.ToDateTime(sqlResultado["fdFechaVencimiento"].ToString()).ToString("dd/MMM/yyyy");
                             lblFechaDesembolso_Cash.Text = Convert.ToDateTime(sqlResultado["fdFechaDesembolso"].ToString()).ToString("dd/MMM/yyyy");
                             lblPrimerPago_Cash.Text = Convert.ToDateTime(sqlResultado["fdFechaPrimerPago"].ToString()).ToString("dd/MMM/yyyy");
@@ -986,8 +986,8 @@ public partial class SolicitudesCredito_ImprimirDocumentacion : System.Web.UI.Pa
                     sqlComando.CommandType = CommandType.StoredProcedure;
                     sqlComando.Parameters.AddWithValue("@piIDProducto", IdProducto);
                     sqlComando.Parameters.AddWithValue("@pnMontoPrestamo", MontoFinal);
-                    sqlComando.Parameters.AddWithValue("@liPlazo", CantidadPLazo);
-                    sqlComando.Parameters.AddWithValue("@piIDPlazo", IdPlazo);
+                    sqlComando.Parameters.AddWithValue("@liPlazo", IdPlazo);
+                    sqlComando.Parameters.AddWithValue("@piIDPlazo", CantidadPLazo); 
                     sqlComando.Parameters.AddWithValue("@piLienHolder", 0);
                     sqlComando.Parameters.AddWithValue("@pnValorPrima", 0);
                     sqlComando.Parameters.AddWithValue("@piIDApp", 1);

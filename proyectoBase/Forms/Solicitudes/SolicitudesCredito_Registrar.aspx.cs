@@ -1309,7 +1309,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                 ValorDelPrestamo = valorGlobal - valorPrima,
                                 TasaInteresAnual = decimal.Parse(sqlResultado["fnTasaDeInteresAnual"].ToString()),
                                 CuotaAuto = decimal.Parse(sqlResultado["CuotaAuto"].ToString()),
-
+                                lnNCuotas = decimal.Parse(sqlResultado["NCuotas"].ToString()),
                                 //TasaPR = int.Parse(sqlResultado["fnTasaApr"].ToString()),
                             };
                         }
@@ -1376,10 +1376,11 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                                     CuotaSegurodeVehiculo = decimal.Parse(sqlResultado["fnCuotaSegurodeVehiculo"].ToString()),
                                     CuotaServicioGPS = decimal.Parse(sqlResultado["fnCuotaServicioGPS"].ToString()),
                                     CuotaTotal = decimal.Parse(sqlResultado["fnTotalCuota"].ToString()),
-                                    TipoCuota = "Semanal",
+                                    TipoCuota = sqlResultado["fcTipodeCuota"].ToString(),
                                     ValorDelPrestamo = montoPrestamo,
                                     TotalSeguroVehiculo = decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()),
                                     TasaPR = decimal.Parse(sqlResultado["fnTasaDeInteresAnual"].ToString()),
+                                    lnNCuotas = decimal.Parse(sqlResultado["NCuotas"].ToString()),
                                     //TotalCuotaConCollateral = decimal.Parse(sqlResultado["fnTotalSeguroVehiculo"].ToString()),
                                 };
                             }
@@ -1720,7 +1721,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                         decimal tasaInteresAnual = (precalificado.IdProducto == IdProducto_AutoLoan || precalificado.IdProducto == IdProducto_PrestaditoCash ) ? cotizador.TasaInteresAnual : ObtenerTasaInteresAnualPorIdProducto(precalificado.IdProducto);
                         decimal tasaInteresMensual = tasaInteresAnual / 12;
                         decimal totalAFinanciarConIntereses = (precalificado.IdProducto == IdProducto_AutoLoan || precalificado.IdProducto == IdProducto_PrestaditoCash ) ? cotizador.TotalFinanciadoConIntereses : CalcularTotalAFinanciarConIntereses(cotizador.TotalAFinanciar, solicitud.PlazoSeleccionado, tasaInteresAnual, precalificado.IdProducto);
-                        cotizador.TipoCuota = "Mensual";
+                        //cotizador.TipoCuota = "Mensual";
                         using (var sqlComando = new SqlCommand("sp_CREDSolicitudes_InformacionPrestamo_Guardar", sqlConexion, sqlTransaction))
                         {
                             lcMensajeCodificado = "sp_CREDSolicitudes_InformacionPrestamo_Guardar";
@@ -1738,7 +1739,7 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
                             sqlComando.Parameters.AddWithValue("@pnTasaMensualAplicada", tasaInteresMensual);
                             sqlComando.Parameters.AddWithValue("@pnTasaAnualAplicada", tasaInteresAnual);
                             sqlComando.Parameters.AddWithValue("@piPlazo", solicitud.PlazoSeleccionado);
-                            sqlComando.Parameters.AddWithValue("@pcTipoDePlazo", cotizador.TipoCuota);
+                            sqlComando.Parameters.AddWithValue("@pcTipoDePlazo", solicitud.TipoCuota);
                             sqlComando.Parameters.AddWithValue("@pnCuotaMensualPrestamo", cotizador.CuotaDelPrestamo);
                             sqlComando.Parameters.AddWithValue("@pnCuotaMensualGPS", cotizador.CuotaServicioGPS);
                             sqlComando.Parameters.AddWithValue("@pnCuotaMensualSeguro", cotizador.CuotaSegurodeVehiculo);
@@ -3149,6 +3150,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public decimal TasaPR { get; set; }
         public decimal  TotalCuotaConCollateral { get; set; }
         public decimal CuotaAuto { get; set; }
+        public string fcTipoPlazo { get; set; }
+        public decimal lnNCuotas { get; set; }
     }
 
     public class SolicitudesCredito_Registrar_Constantes
@@ -3332,6 +3335,8 @@ public partial class SolicitudesCredito_Registrar : System.Web.UI.Page
         public int IdOrigen { get; set; }
         public DateTime EnIngresoInicio { get; set; }
         public DateTime FechaContrato { get; set; }
+        public string TipoCuota { get; set; }
+
 
     }
 

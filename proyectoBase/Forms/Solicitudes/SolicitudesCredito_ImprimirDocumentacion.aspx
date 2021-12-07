@@ -85,13 +85,14 @@
                                     Pagaré
                                 </button>
 
-                                 <button type="button" id="btnPlanPago" onclick="ExportToPDF('PLANPAGO','divContenedorPlanDePagos','divPlanDePagosPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                               <%--  <button type="button" id="btnPlanPago" onclick="ExportToPDF('PLANPAGO','divContenedorPlanDePagos','divPlanDePagosPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
+                                    Plan de Pago
+                                </button>--%>
+
+                                   <button type="button" id="btnPlanPago" onclick="ExportHtmlToPdf('#divPlanDePagosPDF','PLANPAGO')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
                                     Plan de Pago
                                 </button>
 
-                                 <button type="button" id="btnPrueba" onclick="ImprimirForm()" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');">
-                                    prueba 
-                                </button>
 
                                 <button type="button" id="btnCompromisoLegal" onclick="ExportToPDF('COMPROMISO_LEGAL','divContenedorCompromisoLegal','divCompromisoLegalPDF')" class="FormatoBotonesIconoCuadrado40" style="position: relative; margin-top: 3px; margin-left: 5px; background-image: url('/Imagenes/document_40px.png');  display: none" >
                                     Compromiso legal
@@ -2499,32 +2500,31 @@
 
         
                 <!-- ================================== HTML PLAN DE PAGOS ================================ -->
-        <div id="divContenedorPlanDePagos" class="contenedorPDF">
-            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divPlanDePagosPDF" style="display: none;">
+        <div id="divContenedorPlanDePagos" style =" font-size:15px!important;" >
+            <div class="card m-0 divImprimir font-12" runat="server" visible="true" id="divPlanDePagosPDF"  style=" display:none !important;">
                 <div class="card-body pt-0 pr-5 pl-5">
                      <div class="row">
                         <div class="col-12 m-0 p-0">
                             <img src="//:0" class="img-fluid img-logo-empresa" />
                         </div>
                         <div class="col-12">
-                            <h6 class="text-center font-weight-bold">PAYMENT PLAN</h6>
-                           
+                            <h6 class="text-center font-weight-bold"  style ="font-size:18px!important;">PAYMENT PLAN</h6>                           
                         </div>
                     </div>
 
-                    <div class="row justify-content-between">
-                        <div class="row">
+                    <div class="row justify-content-between" style ="font-size:15px!important;">
+                        <div class="row" >
                           <small class="col-4">
-                             <b>Loan Number:</b> <asp:Label runat="server" ID="lblPrestamo_PlanDePagos"></asp:Label>  
+                             <b style ="font-size:18px!important;">Loan Number:</b> <asp:Label runat="server" style ="font-size:18px!important;"  ID="lblPrestamo_PlanDePagos"></asp:Label>  
                           </small>
 
                           <small class="col-4">   
-                               <b>First Payment:</b> <asp:Label runat="server" ID="lblFechaInicio_PlanDePagos"></asp:Label> 
+                               <b style ="font-size:18px!important;">First Payment:</b> <asp:Label runat="server"  style ="font-size:18px!important;" ID="lblFechaInicio_PlanDePagos"></asp:Label> 
                                   
                          </small>
 
                               <small class="col-4">
-                              <b>Loan Amount:</b>  <asp:Label runat="server" ID="lblCapitalFinanciado_PlanDePagos"></asp:Label> 
+                              <b style ="font-size:18px!important;">Loan Amount:</b>  <asp:Label runat="server"  style ="font-size:18px!important;" ID="lblCapitalFinanciado_PlanDePagos"></asp:Label> 
                           </small>
                           
 
@@ -2532,31 +2532,31 @@
                            <!-- ==================================row================================ -->
 
                          <small class="col-4">
-                              <b>Product:</b>  <asp:Label runat="server" ID="lblProducto_PlanDePagos"></asp:Label> 
+                              <b style ="font-size:18px!important;">Product:</b>  <asp:Label runat="server" style ="font-size:18px!important;"  ID="lblProducto_PlanDePagos"></asp:Label> 
                          </small>
 
 
                          
 
                           <small class="col-4">
-                               <b>Final Payment:</b> <asp:Label runat="server" ID="lblFechaFinal_PlanDePagos"></asp:Label>          
+                               <b style ="font-size:18px!important;">Final Payment:</b> <asp:Label runat="server"  style ="font-size:18px!important;" ID="lblFechaFinal_PlanDePagos"></asp:Label>          
                           </small>
                         
                               <small class="col-4" >
-                                <b>Payment Amount:</b>  <asp:Label runat="server" ID="lblValorCuota_PlanDePagos"></asp:Label> 
+                                <b style ="font-size:18px!important;">Payment Amount:</b>  <asp:Label runat="server"  style ="font-size:18px!important;" ID="lblValorCuota_PlanDePagos"></asp:Label> 
                           </small>
 
                         
                            <!-- ==================================row================================ -->
                            <small class="col-4">
-                              <b>Customer:</b>  <asp:Label runat="server" ID="lblNombreCliente_PlanDePagos"></asp:Label> 
+                              <b style ="font-size:18px!important;">Customer:</b>  <asp:Label runat="server" style ="font-size:17px!important;" ID="lblNombreCliente_PlanDePagos"></asp:Label> 
                           </small>
 
                        
 
                       
                           <small class="col-4">
-                              <b>Frequency:</b>  <asp:Label runat="server" ID="lblFrecuenciaPago_PlanDePagos"></asp:Label> 
+                              <b style ="font-size:18px!important;">Frequency:</b>  <asp:Label runat="server" style ="font-size:18px!important;" ID="lblFrecuenciaPago_PlanDePagos"></asp:Label> 
                           </small>
 
                             <small class="col-4">                              
@@ -2568,12 +2568,12 @@
                 
 
                            <small class="col-4">
-                              <b>Inception Date:</b>  <asp:Label runat="server" ID="lblInceptionDate_PlanDePagos"></asp:Label> 
+                              <b style ="font-size:18px!important;">Inception Date:</b>  <asp:Label runat="server" style ="font-size:18px!important;" ID="lblInceptionDate_PlanDePagos"></asp:Label> 
                           </small>
 
-
+                               
                            <small class="col-4">
-                              <b>Total Payments:</b>  <asp:Label runat="server" ID="lblTotalCuotas_PlanDePagos"></asp:Label> 
+                              <b style ="font-size:18px!important;">Total Payments:</b>  <asp:Label runat="server" style ="font-size:18px!important;" ID="lblTotalCuotas_PlanDePagos"></asp:Label> 
                           </small>
 
 
@@ -2590,23 +2590,23 @@
                     <br />
                     <div class="row">
                         <div class="col-12 p-0">
-                            <asp:Table ID="tbl_PlanDePagos" CssClass="table table-condensed table-bordered" runat="server">
+                            <asp:Table ID="tbl_PlanDePagos" CssClass="table table-condensed table-bordered ; font-16" runat="server">
                                   <asp:TableHeaderRow TableSection="TableHeader">
-                                    <asp:TableHeaderCell RowSpan="2"># PMT</asp:TableHeaderCell>
-                                    <asp:TableHeaderCell RowSpan="2" CssClass="text-center">Payment Due Date</asp:TableHeaderCell>
-                                    <asp:TableHeaderCell RowSpan="2" CssClass="text-center">Beginning Principal Balance</asp:TableHeaderCell>
-                                    <asp:TableHeaderCell  ColumnSpan="4" CssClass="text-center">Payment Details</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell RowSpan="2" CssClass="text-center; font-16"># PMT</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell RowSpan="2" CssClass="text-center; font-14;">Payment Due Date</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell RowSpan="2" CssClass="text-center; font-16" >Beginning Principal Balance</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell  ColumnSpan="4" CssClass="text-center; font-16">Payment Details</asp:TableHeaderCell>
                                   
-                                     <asp:TableHeaderCell RowSpan="2" CssClass="text-center">Total Payment</asp:TableHeaderCell>
-                                     <asp:TableHeaderCell RowSpan="2" CssClass="text-center">Ending Principal Balance</asp:TableHeaderCell>
+                                     <asp:TableHeaderCell RowSpan="2" CssClass="text-center ; font-16">Total Payment</asp:TableHeaderCell>
+                                     <asp:TableHeaderCell RowSpan="2" CssClass="text-center; font-16">Ending Principal Balance</asp:TableHeaderCell>
                                 </asp:TableHeaderRow>
 
                                 <asp:TableHeaderRow TableSection="TableHeader">
                                    
-                                    <asp:TableHeaderCell CssClass="text-center">Principal</asp:TableHeaderCell>
-                                     <asp:TableHeaderCell CssClass="text-center">Interest</asp:TableHeaderCell>
-                                     <asp:TableHeaderCell CssClass="text-center">CPP 1</asp:TableHeaderCell>
-                                     <asp:TableHeaderCell CssClass="text-center">CPP 2</asp:TableHeaderCell>
+                                    <asp:TableHeaderCell CssClass="text-center; font-16">Principal</asp:TableHeaderCell>
+                                     <asp:TableHeaderCell CssClass="text-center; font-16">Interest</asp:TableHeaderCell>
+                                     <asp:TableHeaderCell CssClass="text-center; font-16">CPP 1</asp:TableHeaderCell>
+                                     <asp:TableHeaderCell CssClass="text-center; font-16">CPP 2</asp:TableHeaderCell>
                                      <%--  <asp:TableHeaderCell CssClass="text-center">GPS</asp:TableHeaderCell> --%>
                                    
                                 </asp:TableHeaderRow>
@@ -3285,12 +3285,66 @@
         const URL_CODIGO_QR = '<%=UrlCodigoQR%>';
         var LISTA_DOCUMENTOS_EXPEDIENTES = JSON.parse('<%=ListaDocumentosDelExpedienteJSON%>');
     </script>
-    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210323105125"></script>
+    <script src="/Scripts/app/solicitudes/SolicitudesCredito_ImprimirDocumentacion.js?v=20210323105125"></script>    
+    <script src="/Scripts/plugins/kendo/jszip.min.js"></script>
+    <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
+    <script src="/Scripts/plugins/kendo/PrintHtmlToPDF.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
-
+       <script src="https://kendo.cdn.telerik.com/2017.3.913/js/pako_deflate.min.js"></script>
    
-    
+        <script type="x/kendo-template" id="page-template">
+            <div class="page-template">
+                <div class="header">
+                   
+                </div>
+                <div class="footer">
+                <%--    Page #: pageNum # of #: totalPages #--%>
+                </div>
+            </div>
+        </script>
+
    <style>
+
+        /* Page Template for the exported PDF */
+    .page-template {
+        font-family: "DejaVu Sans", "Arial", sans-serif;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+
+        .page-template .header {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            right: 30px;
+            border-bottom: 1px solid #888;
+            color: #888;
+            margin-bottom: 50px;
+        }
+
+        .page-template .footer {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            border-top: 1px solid #888;
+            text-align: center;
+            color: #888;
+        }
+
+        .page-template .watermark {
+            font-weight: bold;
+            font-size: 400%;
+            text-align: center;
+            margin-top: 30%;
+            color: #aaaaaa;
+            opacity: 0.1;
+            transform: rotate(-35deg) scale(1.7, 1.5);
+        }
+       /*           */
       p {
         padding: 10px;
       }
@@ -3400,6 +3454,8 @@
         width: 50%;
       }
     </style>
+
+   
 </body>
     
 </html>

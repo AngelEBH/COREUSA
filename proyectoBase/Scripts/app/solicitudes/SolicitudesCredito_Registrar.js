@@ -60,17 +60,42 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
         }
 
         if (modelStateInformacionPrestamo == true && modelStateInformacionPersonal == true && modelStateInformacionDomicilio == true && modelStateInformacionLaboral == true && modelStateInformacionConyugal == true && cantidadReferencias >= CONSTANTES.CantidadMinimaDeReferenciasPersonales /*&& PRECALIFICADO.PermitirIngresarSolicitud == true*/) {
+            var fcTipoCuota = "";
+            var TipoCuota = $("#ddlFrecuencia option:selected").val();
+            var garantia = null;
+            if (TipoCuota == 1) {
+                fcTipoCuota = "Catorcenal";
+            }
+
+            if (TipoCuota == 3) {
+                fcTipoCuota = "Mensual";
+            }
+
+            if (TipoCuota == 10) {
+                fcTipoCuota = "Semanal";
+            }
+
+            var plazo = 0;
+               
+            if (PRECALIFICADO.IdProducto == 100) {
+               plazo = $("#txtPlazoFrecuencia");
+            } else {
+               plazo = $("#txtPlazosDisponibles").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazosDisponibles").val().replace(/,/g, '');
+            }
+           
 
             var solicitud = {
                 IdCliente: CONSTANTES.IdCliente,
                 ValorPrima: $("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''),
                 ValorGlobal: $("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''),
                 ValorSeleccionado: $("#txtValorDePrestamo").val().replace(/,/g, '') == '' ? 0 : $("#txtValorDePrestamo").val().replace(/,/g, ''),
-                PlazoSeleccionado: $("#txtPlazosDisponibles").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazosDisponibles").val().replace(/,/g, ''),  //$("#txtPlazosDisponibles option:selected").val() == '' ? 0 : $("#txtPlazosDisponibles option:selected").val(),
+                PlazoSeleccionado: plazo,  // $("#txtPlazosDisponibles").val().replace(/,/g, '') == '' ? 0 : $("#txtPlazosDisponibles").val().replace(/,/g, ''),  
                 IdOrigen: $("#ddlOrigen option:selected").val() == null ? 1 : parseInt($("#ddlOrigen option:selected").val()),
                 EnIngresoInicio: ConvertirFechaJavaScriptAFechaCsharp(localStorage.getItem("EnIngresoInicio")),
                 //IdTipoMoneda: $("#ddlMoneda option:selected").val()
                 FechaContrato: $("#txtIniciodeContrato").val(),
+                TipoCuota: fcTipoCuota,
+
             };
 
             var Cliente_InformacionConyugal = {};
@@ -137,17 +162,18 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                 InformacionConyugal: Cliente_InformacionConyugal,
                 ListaReferenciasPersonales: listaReferenciasPersonales
             };
-
-            var garantia = null;
-
+           
             if (CONSTANTES.RequiereGarantia == 1) {
-                debugger;
+                
 
                 var valorMercado = parseFloat($("#txtValorGlobal").val().replace(/,/g, '') == '' ? 0 : $("#txtValorGlobal").val().replace(/,/g, ''));
                 var valorPrima = parseFloat($("#txtValorPrima").val().replace(/,/g, '') == '' ? 0 : $("#txtValorPrima").val().replace(/,/g, ''));
                 var valorFinanciado = valorMercado - valorPrima;
                 var ValorCollateral = parseFloat($("#txtCuotaMaxima").val().replace(/,/g, '') == '' ? 0 : $("#txtCuotaMaxima").val().replace(/,/g, ''));
                 var ValorLienholder = parseFloat($("#txtLienHolder").val().replace(/,/g, '') == '' ? 0 : $("#txtLienHolder").val().replace(/,/g, '')); 
+               
+                
+  
                    
 
                 garantia = {
@@ -195,6 +221,7 @@ var btnFinalizar = $('<button type="button" id="btnGuardarSolicitud"></button>')
                 TotalFinanciadoConIntereses: $("#txtValorFinanciar").val().replace(/,/g, ''),
                 LienHolder: ValorLienholder,
                 CuotaSegurodeVehiculo: ValorCollateral,
+                //TipoCuota: fcTipoCuota,
             };
            
             $.ajax({
@@ -246,7 +273,34 @@ $('#smartwizard').smartWizard({
     }
 });
 
+
+$("#ddlFrecuencia").change(function () {
+
+    $(this).parsley().validate();
+
+    var fcTipoCuota = "";
+    var TipoCuota = $("#ddlFrecuencia option:selected").val();
+    var garantia = null;
+    if (TipoCuota == 1) {
+        fcTipoCuota = "Catorcenal";
+    }
+
+    if (TipoCuota == 3) {
+        fcTipoCuota = "Mensual";
+    }
+
+    if (TipoCuota == 10) {
+        fcTipoCuota = "Semanal";
+    }
+
+    $("#TxtPlazoFrecuencialSeleccionado").text("Plazo" + "" + "(" + fcTipoCuota + ")" );
+   
+
+});
+
 $(document).ready(function () {
+
+    $("#TxtPlazoFrecuencialSeleccionado").text("Plazo");
 
     $("#smartwizard").on("showStep", function (e, anchorObject, stepNumber, stepDirection, stepPosition) {
 
@@ -266,6 +320,8 @@ $(document).ready(function () {
         if (stepNumber == 4) {
             $('#frmSolicitud').parsley().reset({ group: 'informacionConyugal', force: true }); /* Validar información conyugal del formulario cada vez que se muestre*/
         }
+
+
     });
 
     $("#smartwizard").on("endReset", function () {
@@ -816,10 +872,12 @@ function CargarDocumentosRequeridos() {
 function CalculoPrestamo(valoraFinanciar, plazo, tasadeinteres) {
    
     var frecuencia = 0;
+    
     var frecuenciaseleccionada = $("#ddlFrecuencia option:selected").val();
 
     if (frecuenciaseleccionada==1)
     {
+
         frecuencia = 26;
     }
 
@@ -839,7 +897,7 @@ function CalculoPrestamo(valoraFinanciar, plazo, tasadeinteres) {
         var ResultadoPrima = $("#txtValorPrima").val();
         var lienHolder = $("#txtLienHolder").val().replace(/,/g, '') == '' ? 0 : $("#txtLienHolder").val().replace(/,/g, '');
         var valorPrima = 0;
-        var Prueba = "";
+      
 
     $.ajax({
             type: "POST",
@@ -854,15 +912,15 @@ function CalculoPrestamo(valoraFinanciar, plazo, tasadeinteres) {
             
                 console.log(data);
                 var objCalculo = data.d;
-
+            
                 $("#txtValorDePrestamo").val(objCalculo.ValorDelPrestamo);
                 $("#txtValorCuota").val(objCalculo.CuotaAuto);
                 $("#txtValorFinanciar").val(objCalculo.TotalAFinanciar);
                 $("#txtCuotaMaxima").val(objCalculo.CuotaSegurodeVehiculo);
                 $("#txtPlazoMaximo").val(objCalculo.CuotaAuto); 
                 $("#txtPrestamoMaximo").val(objCalculo.CuotaTotal);
-
-            $("#txtTasaDeInteresAnual").val(objCalculo.TasaInteresAnual);
+                $("#txtPlazoFrecuencia").val(objCalculo.lnNCuotas);
+                $("#txtTasaDeInteresAnual").val(objCalculo.TasaInteresAnual);
                // $("#txtValorPrima").val().replace(/,/g, ''));
 
 

@@ -11,6 +11,7 @@ var idExpediente = 0;
 var idSolicitudDocumento = 0;
 var identidadCliente = "";
 var filtroActual = "";
+var IDReferencia = '';
 
 $(document).ready(function () {
 
@@ -102,10 +103,11 @@ $(document).ready(function () {
             {
                 "data": "NombreCliente", "className": "td-responsive",
                 "render": function (data, type, row) {
-                    return row["NombreCliente"] + ' <br/><span class="text-muted">' + row["IdentidadCliente"] + "</span>" + (row["IdCanal"] == 3 ? ' <span class="btn btn-sm btn-info pt-0 pb-0 m-0">canex</span>' : '')
+                    return row["NombreCliente"] + ' <a href="javascript:void(0)" onclick="AbrirRefrenciaPersonal(' + row["IdSolicitud"] + ',' + row["IdCliente"] + ')" > <br/> <span class="text-muted"  ">' + row["IdentidadCliente"] + "</span>" +"</a>" + (row["IdCanal"] == 3 ? ' <span class="btn btn-sm btn-info pt-0 pb-0 m-0"   >canex</span>' : '')
                 }
             },
             {
+                
                 "data": "VIN", "className": "td-responsive",
                 "render": function (data, type, row) {
                     return row["RequiereGarantia"] == 0 ? '<span class="text-muted">No aplica</span>' : '<label class="cursor-zoom-in m-0" onclick="MostrarDocumentosGarantia(' + row["IdGarantia"] + ')">' + row["Marca"] + ' ' + row["Modelo"] + ' ' + row["Anio"] + ' <br/><span class="text-muted">' + 'VIN: ' + row["VIN"] + '</span></label>'
@@ -431,7 +433,7 @@ $(document).ready(function () {
     $("#datatable-bandeja tbody").on("click", "tr", function () {
 
         let row = dtBandeja.row(this).data();
-        console.log(row);
+        //console.log(row);
         idCliente = row.IdCliente;
         idGarantia = row.IdGarantia;
         idSolicitud = row.IdSolicitud;
@@ -614,7 +616,7 @@ function EliminacionImagenToken(btnVistaPrevia) {
             data: JSON.stringify({ token: token, dataCrypt: window.location.href }),
             contentType: "application/json; charset=utf-8",
             error: function (xhr, ajaxOptions, thrownError) {
-                MensajeError('Ocurrió un error al Validae el token ');
+                MensajeError('Ocurrió un error al Validar el token ');
             },
             success: function (data) {
                
@@ -622,7 +624,7 @@ function EliminacionImagenToken(btnVistaPrevia) {
                                   
                     
                     $('#modalValidarToken').modal('toggle');
-                    EliminarDocumento(btnVistaPrevia);
+                    //EliminarDocumento(btnVistaPrevia);
                 }
                 else
                  MensajeError("Token Invalido!");    
@@ -650,14 +652,14 @@ function EliminarDocumento(btnVistaPrevia) {
         },
         success: function (data) {
             
-            //if (data.d == true) {
-            //    debugger;
+            if (data.d == true) {
+                debugger;
                 MensajeExito('El documento fue eliminado correctamente.');
                 $("#modalDocumentosGarantiaSolicitud").modal('toggle');
-            //}
-            //else {
-            //    MensajeError("No se eliminar el documento, contacte al administrador.");
-            //}
+            }
+            else {
+                MensajeError("No se eliminar el documento, contacte al administrador.");
+            }
            
            
         },
@@ -734,12 +736,12 @@ function FiltrarSolicitudesMesActual() {
 
 function Prueba(IdSolicitud) {
 
-   
+
     $("#modalCrearExpedientePrestamo").modal();
     $.ajax({
         type: "POST",
         url: "SolicitudesCredito_Bandeja.aspx/ListaCondiciones",
-        data: JSON.stringify({ IdSolicitud: IdSolicitud,dataCrypt: window.location.href }),
+        data: JSON.stringify({ IdSolicitud: IdSolicitud, dataCrypt: window.location.href }),
         contentType: "application/json; charset=utf-8",
         error: function (xhr, ajaxOptions, thrownError) {
             MensajeError("No se pudo redireccionar a " + accion);
@@ -749,7 +751,7 @@ function Prueba(IdSolicitud) {
             $('#tblListaSolicitudCondiciones').DataTable({
                 "destroy": true,
                 "pageLength": 100,
-              //  "aaSorting": [],
+                //  "aaSorting": [],
                 "language": {
                     "sProcessing": "Cargando información...",
                     "sLengthMenu": "Mostrar _MENU_ registros",
@@ -776,13 +778,13 @@ function Prueba(IdSolicitud) {
                     "decimal": ".",
                     "thousands": ","
                 },
-               dom: 'f',
+                dom: 'f',
                 data: data.d,
                 "columns": [
-                    { data: 'fcCondicion'},
+                    { data: 'fcCondicion' },
                     {
                         data: 'fcDescripcionCondicion',
-                      
+
                     },
                     { data: 'fcComentarioAdicional' },
                     { data: 'EstadoCondicion' },
@@ -791,12 +793,208 @@ function Prueba(IdSolicitud) {
                 //    { targets: 'no-sort', orderable: false },
                 //]
             });
-     
+
             $("#modalCrearExpedientePrestamo").modal();
         }
     });
- 
+
 }
+
+function AbrirRefrenciaPersonal(IdSolicitud,IdCliente) {
+    debugger;
+    $("#modalReferenciaPersonal").modal();
+    $.ajax({
+        type: "POST",
+        url: "SolicitudesCredito_Bandeja.aspx/ListaReferenciaCliente",
+        data: JSON.stringify({ IdSolicitud: IdSolicitud, IdCliente: IdCliente, dataCrypt: window.location.href }),
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError("Error ");
+        },
+        success: function (data) {    
+            
+            var rowDataCliente = 0;
+               rowDataCliente = data.d;
+            /* Referencias personales del cliente */
+           
+            if (rowDataCliente != null) {
+                if (rowDataCliente.length > 0) {
+
+                    var ListaReferencias = rowDataCliente;
+
+                    var tblReferencias = $('#tblListaSolicitudReferencia tbody');
+                    tblReferencias.empty();
+                    for (var i = 0; i < ListaReferencias.length; i++) {
+                        var pencil = ListaReferencias[i].fcComentarioDeptoCredito != '' ? ListaReferencias[i].fcComentarioDeptoCredito.includes("(SIN CONFIRMAR)") ? 'text-danger' : 'tr-exito' : '';
+
+                        var ClaseBoton = ListaReferencias[i].fcComentarioDeptoCredito != '' ?
+                            ListaReferencias[i].fcComentarioDeptoCredito.includes("(SIN CONFIRMAR)") ? 'btn mdi mdi-call-missed text-danger' :
+                                'btn mdi mdi-check-circle-outline tr-exito' : 'btn mdi mdi-pencil';
+
+                        var btnAgregarComentarioReferencia = '<button id="btnComentarioReferencia" data-id="' + ListaReferencias[i].fiIDReferencia + '" data-comment="' + ListaReferencias[i].fcComentarioDeptoCredito + '" data-nombreref="' + ListaReferencias[i].fcNombreCompletoReferencia + '" class="' + ClaseBoton + '" title="Observaciones"></button>';
+                        var tiempoConocerRef = ListaReferencias[i].fiTiempoConocerReferencia <= 2 ? ListaReferencias[i].fiTiempoConocerReferencia + ' años' : 'Más de 2 años'
+                        tblReferencias.append('<tr class="' + pencil + '">' +
+                            '<td class="FilaCondensada">' + ListaReferencias[i].fcNombreCompletoReferencia + '</td>' +
+                            '<td class="FilaCondensada">' + ListaReferencias[i].fcLugarTrabajoReferencia + '</td>' +
+                            '<td class="FilaCondensada">' + tiempoConocerRef + '</td>' +
+                            '<td class="FilaCondensada">' +
+                            '<a href="tel:+' + ListaReferencias[i].fcTelefonoReferencia.replace(' ', '').replace('-', '').replace('(', '').replace(')', '') + '" class="col-form-label">' + ListaReferencias[i].fcTelefonoReferencia + '</a>' +
+                            '</td>' +
+                            '<td class="FilaCondensada">' + ListaReferencias[i].fcDescripcionParentesco + '</td>' +
+                            '<td class="FilaCondensada">' + btnAgregarComentarioReferencia + '</td>' +
+                            '</tr>');
+                    }  
+                }
+            }
+    
+            $("#modalReferenciaPersonal").modal();
+        }
+    });
+}
+
+$(document).on('click', 'button#btnComentarioReferencia', function () {
+    //debugger;
+    btnReferenciaSeleccionada = $(this);
+    comentarioActual = $(this).data('comment');
+    IDReferencia = $(this).data('id');
+    var nombreReferencia = $(this).data('nombreref');
+    //var nombreReferencia2 = nombreReferencia;
+
+    $("#txtObservacionesReferencia").val(comentarioActual);
+    //var InformacionDetalleReferencia = "Muy Buen Dia Sr" + " " + nombreReferencia2 + " " + "Le Saludamos de parte de Crediflash" + "\n" + "El Motivo de mi llamada es porque el señor " + nombreCompletoClienteR + " lo puso como su referencia,"
+    //    + "\n" + "Solo queremos validar unos datos , tiene un minuto de su tiempo que me pueda brindar." + "\n"
+    //    + "1) Usted conoce al señor(a) " + nombreCompletoClienteR + "\n" + "2)  Me podría confirmar a que se dedica el señor(a) " + nombreCompletoClienteR + "\n"
+    //    + "3) Usted sabe donde reside actualmente el señor(a) " + nombreCompletoClienteR + "\n" + " Gracias por atender mi llamada" + "\n" + " Pase un excelente Dia "
+
+
+   // $("#txtDetalleReferencia").text(InformacionDetalleReferencia);
+
+
+
+    $("#lblNombreReferenciaModal").text(nombreReferencia);
+
+    if (comentarioActual != '' && comentarioActual != 'Sin comunicacion') {
+        //$("#txtObservacionesReferencia").prop('disabled', true);
+        // $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', true).removeClass('btn-primary').addClass('btn-secondary');
+    }
+    else if (comentarioActual == 'Sin comunicacion') {
+        $("#txtObservacionesReferencia").prop('disabled', false);
+        $("#btnReferenciaSinComunicacion").prop('disabled', true);
+        $("#btnComentarioReferenciaConfirmar").prop('disabled', false).removeClass('btn-secondary').addClass('btn-primary');
+    }
+    else {
+        $("#txtObservacionesReferencia").prop('disabled', false);
+        $("#btnComentarioReferenciaConfirmar,#btnReferenciaSinComunicacion").prop('disabled', false);
+    }
+    $("#modalComentarioReferencia").modal();
+});
+
+$("#btnReferenciaSinComunicacion").click(function () {
+
+    //comentarioActual = 'Sin comunicacion';
+    comentarioActual = "(SIN CONFIRMAR) " + $('#txtObservacionesReferencia').val();
+
+    $.ajax({
+        type: "POST",
+        url: 'SolicitudesCredito_Analisis.aspx/ComentarioReferenciaPersonal',
+        data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al actualizar estado de la referencia personal');
+        },
+        success: function (data) {
+            if (data.d == true) {
+                $("#modalComentarioReferencia").modal('hide');
+                MensajeExito('Estado de la referencia personal actualizado correctamente');
+                btnReferenciaSeleccionada.data('comment', comentarioActual);
+                btnReferenciaSeleccionada.removeClass('mdi mdi-check-circle-outline tr-exito').removeClass('mdi mdi-pencil').addClass('mdi mdi-call-missed text-danger');
+                btnReferenciaSeleccionada.closest('tr').addClass('text-danger');
+            }
+            else { MensajeError('Error al actualizar estado de la referencia personal'); }
+        }
+    });
+});
+
+$("#btnComentarioReferenciaConfirmar").click(function () {
+
+
+
+    if ($($("#frmObservacionReferencia")).parsley().isValid()) {
+
+        $("#frmObservacionReferencia").submit(function (e) { e.preventDefault(); });
+
+
+        comentarioActual = "(CONFIRMAR) " + $('#txtObservacionesReferencia').val();
+
+        $.ajax({
+            type: "POST",
+            url: 'SolicitudesCredito_Analisis.aspx/ComentarioReferenciaPersonal',
+            data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
+            contentType: 'application/json; charset=utf-8',
+            error: function (xhr, ajaxOptions, thrownError) {
+                MensajeError('Error al actualizar estado de la referencia personal');
+            },
+            success: function (data) {
+                if (data.d == true) {
+                    $("#modalComentarioReferencia").modal('hide');
+                    MensajeExito('Observaciones de la referencia personal actualizadas correctamente');
+                    btnReferenciaSeleccionada.data('comment', comentarioActual);
+                    btnReferenciaSeleccionada.closest('tr').removeClass('text-danger').addClass('tr-exito');
+                    btnReferenciaSeleccionada.removeClass('mdi mdi-pencil').removeClass('mdi mdi-call-missed text-danger').addClass('mdi mdi-check-circle-outline tr-exito');
+                }
+                else { MensajeError('Error al actualizar observaciones de la referencia personal'); }
+            }
+        });
+    }
+    else { $($("#frmObservacionReferencia")).parsley().validate(); }
+});
+
+$("#btnReferenciaSinComunicacion").click(function () {
+
+    //comentarioActual = 'Sin comunicacion';
+    comentarioActual = "(SIN CONFIRMAR) " + $('#txtObservacionesReferencia').val();
+
+    $.ajax({
+        type: "POST",
+        url: 'SolicitudesCredito_Analisis.aspx/ComentarioReferenciaPersonal',
+        data: JSON.stringify({ IDReferencia: IDReferencia, comentario: comentarioActual, dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al actualizar estado de la referencia personal');
+        },
+        success: function (data) {
+            if (data.d == true) {
+                $("#modalComentarioReferencia").modal('hide');
+                MensajeExito('Estado de la referencia personal actualizado correctamente');
+                btnReferenciaSeleccionada.data('comment', comentarioActual);
+                btnReferenciaSeleccionada.removeClass('mdi mdi-check-circle-outline tr-exito').removeClass('mdi mdi-pencil').addClass('mdi mdi-call-missed text-danger');
+                btnReferenciaSeleccionada.closest('tr').addClass('text-danger');
+            }
+            else { MensajeError('Error al actualizar estado de la referencia personal'); }
+        }
+    });
+});
+
+$("#btnEliminarReferenciaConfirmar").click(function () {
+
+    $.ajax({
+        type: "POST",
+        url: 'SolicitudesCredito_Analisis.aspx/EliminarReferenciaPersonal',
+        data: JSON.stringify({ IDReferencia: IDReferencia, dataCrypt: window.location.href }),
+        contentType: 'application/json; charset=utf-8',
+        error: function (xhr, ajaxOptions, thrownError) {
+            MensajeError('Error al eliminar referencia personal');
+        },
+        success: function (data) {
+            if (data.d == true) {
+                $(btnReferenciaSeleccionada).closest('tr').remove();
+                $("#modalEliminarReferencia").modal('hide');
+                MensajeExito('La referencia personal ha sido eliminada correctamente');
+            }
+            else { MensajeError('Error al eliminar referencia personal'); }
+        }
+    });
+});
 
 function ConvertirADecimal(nStr) {
 

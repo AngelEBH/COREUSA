@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="SolicitudesCredito_Analisis.aspx.cs" Inherits="SolicitudesCredito_Analisis" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SolicitudesCredito_Analisis.aspx.cs" Inherits="SolicitudesCredito_Analisis" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -17,6 +17,8 @@
     <link href="/Scripts/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="/CSS/Estilos_CSS.css" rel="stylesheet" />
     <link href="/Scripts/plugins/imgBox/style.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/css/unitegallery.min.css" rel="stylesheet" />
+    <link href="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.css" rel="stylesheet" />
     <style>
         .tr-exito {
             color: #00a803;
@@ -822,6 +824,34 @@
                                             </table>
                                         </div>
                                     </div>
+                               
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informacion del aval  -->
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading p-1 seccion-header" role="tab" id="headingFive">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <h6 class="m-0 font-14">
+                                        <a href="#collapsePersonalesAval" class="text-dark collapsed h5" data-toggle="collapse"
+                                            aria-expanded="false"
+                                            aria-controls="collapseFive">
+                                            <i class="mdi mdi-account-circle mdi-24px"></i>
+                                            Informacion Personales del Aval
+                                        </a>
+                                    </h6>
+                                </div>
+                             
+                            </div>
+                        </div>
+                        <div id="collapsePersonalesAval" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                            <div class="panel-body">
+                                <div class="card-body">
+                              
                                     <div class="form-group row" id="divAval">
                                         <h4>Aval</h4>
                                         <div class="table-responsive">
@@ -847,7 +877,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="panel panel-default" id="divInformaciondeCampo" style="display: none;">
                         <div class="panel-heading p-1 seccion-header" role="tab" id="headingEight" style="display: none;" >
                             <h6 class="m-0 font-14">
@@ -1477,7 +1506,7 @@
     </div>
 
     <!-- modal agregar comentario sobre una referencia personal -->
-    <div id="modalComentarioReferencia" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalComentarioReferenciaLabel" aria-hidden="true">
+    <div id="modalComentarioReferencia" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalComentarioReferenciaLabel" aria-hidden="true" >
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1485,7 +1514,174 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <form action="#" id="frmObservacionReferencia">
+
+                    <div class="panel-body">
+                      <div class="row mb-0">
+                        
+                          <div class="col-lg-5 col-md-5 col-10 border-left border-gray" id="div1" runat="server">
+                              <%--<h6 class="font-weight-bold">&nbsp;&nbsp;Garantia</h6>--%>
+                                   <div class="row" >
+                                    <%--<div class="form-group row">--%>
+                                     <div class="col-12">
+                                                <!-- Div donde se muestran las fotografías de la garantía -->
+                                                <div class="align-self-center" id="divGaleriaGarantia" runat="server" style="display: none;"></div>
+                                          <%--  </div>--%>
+                                     </div>
+                                 </div>   
+                         <div class="row mt-3 mb-0">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-sm" style="margin-bottom: 0px;">                              
+                                <tbody>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Marca</span></td>
+                                        <td>
+                                            <asp:Label class="label label-table label-success" ID="lblMarcaReferencia" runat="server"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                     <tr>
+                                        <td><span class="font-weight-bold text-muted">Modelo</span></td>
+                                        <td>
+                                            <asp:Label class="label label-table label-success" ID="lblModeloReferencia" runat="server"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Vin</span></td>
+                                        <td>
+                                            <asp:Label ID="lblVinReferencia" runat="server"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Añio</span></td>
+                                        <td>
+                                            <asp:Label ID="lblAnioReferencia" runat="server"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td colspan="3"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                  
+                </div>
+
+
+                             </div>
+
+                          <!-- -->
+                              <div class="col-lg-6 col-md-6 col-12 border-left border-gray" id="divPrestamoSolicitado" runat="server">
+                                        <h6 class="font-weight-bold"> <asp:Label ID="spanNombreClienteReferencia" CssClass="col-sm-6" runat="server"></asp:Label></h6>
+                                      <div class="row">
+                                        <div class="col-md-12">
+                                        <div class="form-group row">                                
+                                            <label class="col-sm-7">Edad</label>
+                                            <asp:label ID="lblEdadCliente_Referencia" CssClass="col-sm-5"  runat="server"></asp:label>
+                                            <label class="col-sm-7">Dirección Detallada Domicilio </label>
+                                            <asp:label ID="lblDireccionDomicilio_Referencia" CssClass="col-sm-5"  runat="server"></asp:label>
+                                            <label class="col-sm-7">Lugar de Trabajo</label>
+                                            <asp:label ID="lblLugarTrabajo_Referencia" CssClass="col-sm-5"  runat="server"></asp:label>
+                                            <label class="col-sm-7">Puesto Asignado</label>
+                                            <asp:label ID="lblPuestoAsignado_Referencia" CssClass="col-sm-5"  runat="server"></asp:label>
+                                            <label class="col-sm-7">Dirección Detallada de Trabajo</label>
+                                            <asp:label ID="lblDireccionEmpresa_Referecia" CssClass="col-sm-5"  runat="server"></asp:label>
+                                            <label class="col-sm-7">Ingresos Mensuales</label>
+                                            <asp:label ID="lblIngresosMensualesReferencia" CssClass="col-sm-5"  runat="server"></asp:label>                                                                          
+                                          
+                                        </div>  
+                                       </div>                              
+                                          
+                                     </div>
+                                  
+                                   <div class="row mt-3 mb-0">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-sm" style="margin-bottom: 0px;">                              
+                                <tbody>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Valor Mercado </span></td>
+                                        <td>
+                                            <asp:Label class="label label-table label-success" ID="txtValorMercadoReferencia" runat="server"></asp:Label>
+                                        </td>
+                                        <td><span class="font-weight-bold text-muted">Plazo </span></td>
+                                         <td>
+                                            <asp:Label class="label label-table label-success" ID="txtPlazoReferencia" runat="server"></asp:Label>
+                                        </td>
+                                    </tr>
+
+                                     <tr>
+                                        <td><span class="font-weight-bold text-muted">Valor Prima</span></td>
+                                        <td>
+                                            <asp:Label class="label label-table label-success" ID="txtValorPrimaReferencia" runat="server"></asp:Label>
+                                        </td>
+                                          <td><span class="font-weight-bold text-muted">Frecuencia</span></td>
+                                         <td>
+                                            <asp:Label class="label label-table label-success" ID="txtFrecuensiaReferencia" runat="server"></asp:Label>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Valor Prestar</span></td>
+                                        <td>
+                                            <asp:Label ID="txtValorPrestarReferencia" runat="server"></asp:Label>
+                                        </td>
+                                          <td><span class="font-weight-bold text-muted">Cuota Auto </span></td>
+                                         <td>
+                                            <asp:Label class="label label-table label-success" ID="txtCuotaAutoReferencia" runat="server"></asp:Label>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Valor Financiar</span></td>
+                                        <td>
+                                            <asp:Label ID="txtValorFinanciarReferencia" runat="server"></asp:Label>
+                                        </td>
+                                          <td><span class="font-weight-bold text-muted">Cuota Collateral </span></td>
+                                         <td>
+                                            <asp:Label class="label label-table label-success" ID="txtCuotaCollateralReferencia" runat="server"></asp:Label>
+                                        </td>
+                                    </tr>
+
+                                     <tr>
+                                        <td></td>
+                                        <td>                                       
+                                        </td>
+                                          <td><span class="font-weight-bold text-muted">Cuota Total </span></td>
+                                         <td>
+                                            <asp:Label class="label label-table label-success" ID="txtCuotaTotalReferencia" runat="server"></asp:Label>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td colspan="4"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                  
+                </div>
+
+
+          </div>       
+                          
+          </div>
+             </div>
+
+
                     <div class="modal-body">
+                          <div class="form-group">
+                           
+                            <textarea id="txtDetalleReferencia" required="required" class="form-control" rows="8" readonly  style="overflow:hidden!important">
+                             
+                            </textarea>
+                        </div>
                         ¿Está seguro de actualizar las observaciones de la referencia personal
                         <strong>
                             <label id="lblNombreReferenciaModal"></label>
@@ -1500,7 +1696,7 @@
                             Eliminar
                         </button>
                         <button type="button" id="btnReferenciaSinComunicacion" class="btn btn-primary waves-effect waves-light mr-1 validador">
-                            Sin comunicación
+                            Sin Confirmar
                         </button>
                         <button type="button" id="btnComentarioReferenciaConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
                             Confirmar
@@ -1834,6 +2030,8 @@
     <script src="/Scripts/plugins/kendo/jszip.min.js"></script>
     <script src="/Scripts/plugins/kendo/kendo.all.min.js"></script>
     <script src="/Scripts/plugins/kendo/PrintHtmlToPDF.js"></script>
+     <script src="/Scripts/plugins/unitegallery/js/unitegallery.min.js"></script>
+    <script src="/Scripts/plugins/unitegallery/themes/default/ug-theme-default.js"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Utilitarios.js?v=20210108041052"></script>
     <script src="../../Scripts/app/solicitudes/SolicitudesCredito_Analisis.js?v=20210108041158968578525"></script>
     <script type="x/kendo-template" id="page-template">

@@ -38,7 +38,7 @@ namespace proyectoBase.Models.ViewModel
         public bool fbCiudadActivo { get; set; }
 
         //ciudad del cliente
-        public string fiIDMunicipio { get; set; }
+        public int fiIDMunicipio { get; set; }
         public string fcNombreMunicipio { get; set; }
         public bool fbMunicipioActivo { get; set; }
 
@@ -60,5 +60,7 @@ namespace proyectoBase.Models.ViewModel
         public string fcObservacionesCampo { get; set; }
         public int fiIDEstadoDeGestion { get; set; }
         public int fiEstadoLaboral { get; set; }
+
+       
     }
 }

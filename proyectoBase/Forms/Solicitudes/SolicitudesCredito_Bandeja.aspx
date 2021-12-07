@@ -450,7 +450,246 @@
         </div>
     </div>
 
-    
+        <!-- modal detalle referencia  -->
+    <div id="modalReferenciaPersonal" class="modal fade bs-example-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="modalReferenciaPersonalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header pb-2">
+                    <h6 class="modal-title mt-0" id="modalReferenciaPersonalLabel">Referencias personales </h6>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                          <table id="tblListaSolicitudReferencia" class="table table-condensed table-striped">
+                                <thead>
+                                    <tr>
+                                       <th>Nombre referencia</th>
+                                         <th>Lugar de trabajo</th>
+                                         <th>Tiempo de conocer ref</th>
+                                         <th>Telefono ref</th>
+                                         <th>Parentesco ref</th>
+                                         <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
+                <div class="modal-footer pt-2 pb-2">
+                 
+                    <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- modal agregar comentario sobre una referencia personal -->
+    <div id="modalComentarioReferencia" class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="modalComentarioReferenciaLabel" aria-hidden="true" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="modalComentarioReferenciaLabel">Observaciones de referencia personal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <form action="#" id="frmObservacionReferencia">
+
+                    <div class="panel-body">
+                      <div class="row mb-0">
+                        
+                          <div class="col-lg-5 col-md-5 col-10 border-left border-gray" id="div1" runat="server">
+                              <%--<h6 class="font-weight-bold">&nbsp;&nbsp;Garantia</h6>--%>
+                                   <div class="row" >
+                                    <%--<div class="form-group row">--%>
+                                     <div class="col-12">
+                                                <!-- Div donde se muestran las fotografías de la garantía -->
+                                                <div class="align-self-center" id="div2" runat="server" style="display: none;"></div>
+                                          <%--  </div>--%>
+                                     </div>
+                                 </div>   
+                         <div class="row mt-3 mb-0">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-sm" style="margin-bottom: 0px;">                              
+                                <tbody>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Marca</span></td>
+                                        <td>
+                                            <asp:Label class="label label-table label-success" ID="lblMarcaReferencia" runat="server"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                     <tr>
+                                        <td><span class="font-weight-bold text-muted">Modelo</span></td>
+                                        <td>
+                                            <asp:Label class="label label-table label-success" ID="lblModeloReferencia" runat="server"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Vin</span></td>
+                                        <td>
+                                            <asp:Label ID="lblVinReferencia" runat="server"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Añio</span></td>
+                                        <td>
+                                            <asp:Label ID="lblAnioReferencia" runat="server"></asp:Label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td colspan="3"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                  
+                </div>
+
+
+                             </div>
+
+                          <!-- -->
+                              <div class="col-lg-6 col-md-6 col-12 border-left border-gray" id="divPrestamoSolicitado" runat="server">
+                                        <h6 class="font-weight-bold"> <asp:Label ID="spanNombreClienteReferencia" CssClass="col-sm-6" runat="server">prueba</asp:Label></h6>
+                                      <div class="row">
+                                        <div class="col-md-12">
+                                        <div class="form-group row">                                
+                                            <label class="col-sm-7">Edad</label>
+                                            <asp:label ID="lblEdadCliente_Referencia" CssClass="col-sm-5"  runat="server"></asp:label>
+                                            <label class="col-sm-7">Dirección Detallada Domicilio </label>
+                                            <asp:label ID="lblDireccionDomicilio_Referencia" CssClass="col-sm-5"  runat="server"></asp:label>
+                                            <label class="col-sm-7">Lugar de Trabajo</label>
+                                            <asp:label ID="lblLugarTrabajo_Referencia" CssClass="col-sm-5"  runat="server"></asp:label>
+                                            <label class="col-sm-7">Puesto Asignado</label>
+                                            <asp:label ID="lblPuestoAsignado_Referencia" CssClass="col-sm-5"  runat="server"></asp:label>
+                                            <label class="col-sm-7">Dirección Detallada de Trabajo</label>
+                                            <asp:label ID="lblDireccionEmpresa_Referecia" CssClass="col-sm-5"  runat="server"></asp:label>
+                                            <label class="col-sm-7">Ingresos Mensuales</label>
+                                            <asp:label ID="lblIngresosMensualesReferencia" CssClass="col-sm-5"  runat="server"></asp:label>                                                                          
+                                          
+                                        </div>  
+                                       </div>                              
+                                          
+                                     </div>
+                                  
+                                   <div class="row mt-3 mb-0">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-sm" style="margin-bottom: 0px;">                              
+                                <tbody>
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Valor Mercado </span></td>
+                                        <td>
+                                            <asp:Label class="label label-table label-success" ID="txtValorMercadoReferencia" runat="server"></asp:Label>
+                                        </td>
+                                        <td><span class="font-weight-bold text-muted">Plazo </span></td>
+                                         <td>
+                                            <asp:Label class="label label-table label-success" ID="txtPlazoReferencia" runat="server"></asp:Label>
+                                        </td>
+                                    </tr>
+
+                                     <tr>
+                                        <td><span class="font-weight-bold text-muted">Valor Prima</span></td>
+                                        <td>
+                                            <asp:Label class="label label-table label-success" ID="txtValorPrimaReferencia" runat="server"></asp:Label>
+                                        </td>
+                                          <td><span class="font-weight-bold text-muted">Frecuencia</span></td>
+                                         <td>
+                                            <asp:Label class="label label-table label-success" ID="txtFrecuensiaReferencia" runat="server"></asp:Label>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Valor Prestar</span></td>
+                                        <td>
+                                            <asp:Label ID="txtValorPrestarReferencia" runat="server"></asp:Label>
+                                        </td>
+                                          <td><span class="font-weight-bold text-muted">Cuota Auto </span></td>
+                                         <td>
+                                            <asp:Label class="label label-table label-success" ID="txtCuotaAutoReferencia" runat="server"></asp:Label>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><span class="font-weight-bold text-muted">Valor Financiar</span></td>
+                                        <td>
+                                            <asp:Label ID="txtValorFinanciarReferencia" runat="server"></asp:Label>
+                                        </td>
+                                          <td><span class="font-weight-bold text-muted">Cuota Collateral </span></td>
+                                         <td>
+                                            <asp:Label class="label label-table label-success" ID="txtCuotaCollateralReferencia" runat="server"></asp:Label>
+                                        </td>
+                                    </tr>
+
+                                     <tr>
+                                        <td></td>
+                                        <td>                                       
+                                        </td>
+                                          <td><span class="font-weight-bold text-muted">Cuota Total </span></td>
+                                         <td>
+                                            <asp:Label class="label label-table label-success" ID="txtCuotaTotalReferencia" runat="server"></asp:Label>
+                                        </td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td colspan="4"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                  
+                </div>
+
+
+          </div>       
+                          
+          </div>
+             </div>
+
+
+                    <div class="modal-body">
+                          <div class="form-group">
+                           
+                            <textarea id="txtDetalleReferencia" required="required" class="form-control" rows="8" readonly  style="overflow:hidden!important">
+                             
+                            </textarea>
+                        </div>
+                        ¿Está seguro de actualizar las observaciones de la referencia personal
+                        <strong>
+                            <label id="lblNombreReferenciaModal"></label>
+                        </strong>?<br />
+                        <div class="form-group">
+                            <label class="col-form-label">Observaciones</label>
+                            <textarea id="txtObservacionesReferencia" required="required" class="form-control" data-parsley-maxlength="255" rows="2" data-parsley-group="informacionLaboral"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnEliminarReferencia" data-toggle="modal" data-target="#modalEliminarReferencia" class="btn btn-danger float-left waves-effect waves-light mr-1 validador">
+                            Eliminar
+                        </button>
+                        <button type="button" id="btnReferenciaSinComunicacion" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                            Sin Confirmar
+                        </button>
+                        <button type="button" id="btnComentarioReferenciaConfirmar" class="btn btn-primary waves-effect waves-light mr-1 validador">
+                            Confirmar
+                        </button>
+                        <button type="reset" data-dismiss="modal" class="btn btn-secondary waves-effect">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <script src="/Scripts/js/jquery.min.js"></script>
     <script src="/Scripts/js/bootstrap.bundle.min.js"></script>
